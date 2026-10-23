@@ -27,3 +27,11 @@ body .exc-dialog .mat-mdc-dialog-surface {
   border-radius: 8px;
   overflow: visible;
 }
+
+// Les notes d'une scène en grand (`bol-scene-lecture-dialog`) : la lecture porte déjà son cadre et son fond, le panneau s'efface.
+body .lec-dialog .mat-mdc-dialog-surface {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 10px;
+  overflow: visible;
+}

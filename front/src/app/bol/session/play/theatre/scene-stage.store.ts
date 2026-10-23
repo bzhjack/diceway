@@ -5,23 +5,25 @@ import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} f
 import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
-import {RideauEtat, SceneActe} from '../../models/theatre.model';
+import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
 import {SceneActionsService} from '../../scene-actions.service';
 import {scenesOf} from '../scene-list/scene.util';
 import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
-import {sceneActs} from './theatre.util';
+import {CARTON_RYTHME, cartonTenue, sceneActs} from './theatre.util';
 
-/** Durée de fermeture du rideau avant que la scène ne change. */
-const RIDEAU_FERMETURE_MS = 750;
 /** Pause, rideau fermé, avant qu'il ne se rouvre sur la nouvelle scène. */
 const RIDEAU_PAUSE_MS = 250;
 /** Au plus, le temps d'attendre que la page montre la session chargée avant de rouvrir le rideau. */
 const RIDEAU_ATTENTE_MAX_MS = 3000;
 
+/** L'utilisateur demande moins d'animations. */
+function mouvementReduit(): boolean {
+  return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /** Durées du rideau : nulles quand l'utilisateur demande moins d'animations. */
-function rideauDurees(): {readonly fermeture: number; readonly pause: number} {
-  const reduit = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  return reduit ? {fermeture: 0, pause: 0} : {fermeture: RIDEAU_FERMETURE_MS, pause: RIDEAU_PAUSE_MS};
+function rideauDurees(reduit: boolean): {readonly fermeture: number; readonly pause: number} {
+  return reduit ? {fermeture: 0, pause: 0} : {fermeture: CARTON_RYTHME.fondu, pause: RIDEAU_PAUSE_MS};
 }
 
 /**
@@ -46,7 +48,7 @@ export class SceneStageStore {
   readonly scenes = this.scenesState.asReadonly();
   private readonly scenariosState = signal<readonly BolSceneScenarioRef[]>([]);
   readonly scenarios = this.scenariosState.asReadonly();
-  /** Scénario affiché dans la frise — `null` = « Sans scénario ». */
+  /** Scénario affiché dans la frise — `null` = « On improvise ». */
   private readonly scenarioIdState = signal<string | null>(null);
   readonly scenarioId = this.scenarioIdState.asReadonly();
   private readonly regionNomsState = signal<ReadonlyMap<number, string>>(new Map());
@@ -54,9 +56,9 @@ export class SceneStageStore {
 
   private readonly rideauState = signal<RideauEtat>('ouvert');
   readonly rideau = this.rideauState.asReadonly();
-  /** Titre de la scène qui se charge, affiché sur le rideau fermé. */
-  private readonly rideauTitreState = signal<string | null>(null);
-  readonly rideauTitre = this.rideauTitreState.asReadonly();
+  /** Le carton du chroniqueur de la scène qui se charge, affiché rideau fermé. */
+  private readonly cartonState = signal<SceneCarton | null>(null);
+  readonly carton = this.cartonState.asReadonly();
   private readonly busyState = signal(false);
   readonly busy = this.busyState.asReadonly();
 
@@ -65,6 +67,17 @@ export class SceneStageStore {
     sceneActs(this.scenes(), this.scenarioId(), this.knownScenarioIds(), this.currentSceneId(), this.played()),
   );
   readonly currentScene = computed(() => this.scenes().find((s) => s.id === this.currentSceneId()) ?? null);
+  /** La scène montrée sur le plateau : la scène courante, si elle appartient au scénario affiché dans la frise. Après un
+   * changement de scénario, le plateau reste vierge tant qu'aucune de ses scènes n'est chargée ; revenir au scénario de
+   * la scène courante la remontre. */
+  readonly displayedScene = computed(() => {
+    const scene = this.currentScene();
+    if (!scene) {
+      return null;
+    }
+    const scenarioId = scene.scenario_id && this.knownScenarioIds().has(scene.scenario_id) ? scene.scenario_id : null;
+    return scenarioId === this.scenarioId() ? scene : null;
+  });
   /** L'acte en cours, s'il est dans la frise affichée. */
   readonly currentActe = computed(() => this.acts().find((a) => a.statut === 'en-cours') ?? null);
 
@@ -77,6 +90,10 @@ export class SceneStageStore {
   /** Une scène est chargée, le rideau attend que la page montre la session à jour (prochain `sync`) : la pause avant
    * de le rouvrir, et la garde qui le rouvre de toute façon au bout de `RIDEAU_ATTENTE_MAX_MS`. */
   private attente: {readonly pause: number; readonly garde: Subscription} | null = null;
+  /** Quand le carton aura fini de s'afficher (`Date.now()`) : le rideau ne se rouvre pas avant. */
+  private finCarton = 0;
+  /** L'annonce de la scène chargée, faite à la réouverture du rideau (pas par-dessus le carton). */
+  private annonce: (() => void) | null = null;
 
   /** Session chargée par la page : sa scène courante et ses scènes jouées. Les scènes sont rechargées au
    * premier appel, ou si la scène courante n'est pas connue (créée depuis la réserve ou la barre de commande). */
@@ -132,7 +149,7 @@ export class SceneStageStore {
     this.scenarioIdState.set(id);
   }
 
-  /** Les autres scènes du scénario d'une scène (« Sans scénario » compris) — celles vers lesquelles ses pistes
+  /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes
    * peuvent mener —, quel que soit le scénario affiché dans la frise. */
   siblingsOf(scene: BolSceneModel): BolSceneModel[] {
     const known = this.knownScenarioIds();
@@ -160,9 +177,10 @@ export class SceneStageStore {
     this.scenesState.update((list) => list.map((s) => (s.id === updated.id ? updated : s)));
   }
 
-  /** Charge une scène sur la table, rideau fermé : il se ferme, la scène se charge, puis il se rouvre une fois la
-   * session chargée montrée par la page (son `sync` suivant, au plus `RIDEAU_ATTENTE_MAX_MS`) et après une pause.
-   * En cas d'erreur, il se rouvre après la pause. Émet `null` sans rien faire si un chargement est déjà en cours. */
+  /** Charge une scène sur la table, rideau fermé : il se ferme (fondu au noir) sur le carton du chroniqueur, la scène se
+   * charge, puis il se rouvre une fois la session chargée montrée par la page (son `sync` suivant, au plus
+   * `RIDEAU_ATTENTE_MAX_MS`), après une pause et pas avant la fin du carton. En cas d'erreur, il se rouvre après la
+   * pause. Émet `null` sans rien faire si un chargement est déjà en cours. */
   load(scene: BolSceneModel, mode: SceneLoadMode): Observable<BolSceneLoadResult | null> {
     return defer(() => {
       const sessionId = this.sessionId();
@@ -170,15 +188,20 @@ export class SceneStageStore {
         return of(null);
       }
       this.busyState.set(true);
-      this.rideauTitreState.set(scene.titre);
+      const reduit = mouvementReduit();
+      const durees = rideauDurees(reduit);
+      this.cartonState.set({titre: scene.titre});
+      this.finCarton = Date.now() + durees.fermeture + cartonTenue(reduit);
       this.rideauState.set('ferme');
-      const durees = rideauDurees();
-      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode)]).pipe(
+      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode, false)]).pipe(
         map(([, result]) => result),
         tap({
           // Avant que l'appelant ne reçoive le résultat : la page qui pose la session appellera `sync` ensuite.
-          next: () => this.attendreLaSession(durees.pause),
-          error: () => this.rouvrir(durees.pause),
+          next: (result) => {
+            this.annonce = () => this.sceneActions.announceLoad(scene.titre, result);
+            this.attendreLaSession(durees.pause);
+          },
+          error: () => this.rouvrir(durees.pause, false),
         }),
         finalize(() => this.busyState.set(false)),
       );
@@ -194,7 +217,13 @@ export class SceneStageStore {
     this.attente = {pause, garde};
   }
 
-  private rouvrir(pause: number): void {
-    timer(pause).subscribe(() => this.rideauState.set('ouvert'));
+  /** Rouvre le rideau après la pause, et, sauf erreur (`apresCarton` faux), pas avant la fin du carton. */
+  private rouvrir(pause: number, apresCarton = true): void {
+    const reste = apresCarton ? this.finCarton - Date.now() : 0;
+    timer(Math.max(pause, reste)).subscribe(() => {
+      this.rideauState.set('ouvert');
+      this.annonce?.();
+      this.annonce = null;
+    });
   }
 }

@@ -18,6 +18,7 @@ export interface SceneEditorValue {
   danger: number;
   image: string;
   lecture: string;
+  jeu: string;
   notes: string;
   pistes: {texte: string; scene_id: string | null}[];
 }

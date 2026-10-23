@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -334,6 +334,29 @@ describe('targetableKeys', () => {
   });
 });
 
+describe('cibleAuHasard', () => {
+  const hero1 = card('hero', 1);
+  const hero2 = card('hero', 2);
+  const allie = card('pnj', 8, {camp: 'heros'});
+  const adversaire = card('pnj', 7);
+
+  it('picks a hero at random for an adversary, never an ally while a hero can be targeted', () => {
+    expect(cibleAuHasard(adversaire, [allie, hero1, hero2], () => 0)?.key).toBe('hero-1');
+    expect(cibleAuHasard(adversaire, [allie, hero1, hero2], () => 0.99)?.key).toBe('hero-2');
+  });
+
+  it('falls back on an ally of the heroes when no hero is left', () => {
+    expect(cibleAuHasard(adversaire, [allie], () => 0.5)?.key).toBe('pnj-8');
+  });
+
+  it('preselects nothing for a card of the heroes’ camp, nor without targets', () => {
+    expect(cibleAuHasard(hero1, [adversaire], () => 0)).toBeNull();
+    expect(cibleAuHasard(allie, [adversaire], () => 0)).toBeNull();
+    expect(cibleAuHasard(adversaire, [], () => 0)).toBeNull();
+    expect(cibleAuHasard(null, [hero1], () => 0)).toBeNull();
+  });
+});
+
 describe('tokenForCard', () => {
   const tokens = [
     {kind: 'hero' as const, pivotId: 1},
@@ -517,5 +540,42 @@ describe('combatOutcome', () => {
     expect(combatOutcome([card('hero', 1, {vitaliteCourante: 0}), pnj], [])).toBe('defaite');
     const ally = card('pnj', 9, {camp: 'heros', vitaliteMax: 6, vitaliteCourante: 6});
     expect(combatOutcome([card('hero', 1, {vitaliteCourante: -2}), ally, pnj], [])).toBeNull();
+  });
+});
+
+describe('horde', () => {
+  const bandit = (pivotId: number, extra: Partial<TapisCard> = {}): TapisCard => card('pnj', pivotId, {rang: 'Piétaille', ...extra});
+  const B1 = bandit(11);
+  const B2 = bandit(12);
+  const B3 = bandit(13);
+  const CHEF = card('pnj', 14, {rang: 'Coriace'});
+  const ALLIE = bandit(15, {camp: 'heros'});
+
+  it('offers the piétailles of the same camp that still have to play, when the active card is a piétaille', () => {
+    const order = ordered(KALENA, B1, CHEF, B2, B3, ALLIE);
+    expect(hordeMates(order, etat(1, ['hero-1'])).map((c) => c.key)).toEqual(['pnj-12', 'pnj-13']);
+  });
+
+  it('offers nobody when the active card is not a piétaille, or once the others have played or are out', () => {
+    expect(hordeMates(ordered(CHEF, B1, B2), etat(1))).toEqual([]);
+    expect(hordeMates(ordered(B1, B2, B3), etat(1, ['pnj-12', 'pnj-13']))).toEqual([]);
+    const down = bandit(12, {vitaliteCourante: 0});
+    expect(hordeMates(ordered(B1, down, B3), etat(1)).map((c) => c.key)).toEqual(['pnj-13']);
+  });
+
+  it('ends the turn of the engaged piétailles with the active one', () => {
+    const order = ordered(B1, B2, B3, KALENA);
+    expect(endTurn(order, etat(1), [], undefined, ['pnj-12', 'pnj-13'])).toEqual(etat(1, ['pnj-11', 'pnj-12', 'pnj-13']));
+  });
+
+  it('ignores engaged cards that already played, and starts the next round when the horde was the last to play', () => {
+    const order = ordered(KALENA, B1, B2);
+    expect(endTurn(order, etat(1, ['hero-1', 'pnj-12']), [], undefined, ['pnj-12'])).toEqual(etat(2));
+    expect(endTurn(order, etat(1, ['hero-1']), [], undefined, ['pnj-12'])).toEqual(etat(2));
+  });
+
+  it('drops the effects an engaged piétaille kept until its next turn', () => {
+    const order = ordered(B1, B2, KALENA);
+    expect(endTurn(order, etat(1, [], [defended('pnj-12')]), [], undefined, ['pnj-12']).effets).toEqual([]);
   });
 });

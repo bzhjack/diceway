@@ -2,7 +2,7 @@ import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {acteLabel, ATTITUDES, compagnie, distributionPortraits, lieuTexte, sceneActs, sceneDecor, troupe} from './theatre.util';
+import {acteLabel, ATTITUDES, cartonTenue, compagnie, distributionPortraits, lieuTexte, sceneActs, sceneDecor, troupe} from './theatre.util';
 
 function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): BolSceneModel {
   return {
@@ -18,6 +18,7 @@ function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): B
     meteo: null,
     danger: null,
     lecture: null,
+    jeu: null,
     pistes: null,
     image: null,
     ...extra,
@@ -79,6 +80,13 @@ describe('lieuTexte', () => {
     expect(lieuTexte(null, 'Jungle de Qush')).toBe('Jungle de Qush');
     expect(lieuTexte('  Gué du Tyr ', null)).toBe('Gué du Tyr');
     expect(lieuTexte(' ', null)).toBeNull();
+  });
+});
+
+describe('cartonTenue', () => {
+  it('ne tient que le titre, et une durée fixe avec moins d’animations', () => {
+    expect(cartonTenue(false)).toBe(1300);
+    expect(cartonTenue(true)).toBe(1400);
   });
 });
 

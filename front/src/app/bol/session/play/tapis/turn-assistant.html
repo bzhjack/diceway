@@ -17,7 +17,7 @@
       <div class="tas-me">
         <span class="tas-med tas-med--active" aria-hidden="true">
           @if (card().avatar) {
-            <img [src]="card().avatar" alt="" />
+            <img dwAvatarFallback [src]="card().avatar" alt="" />
           } @else {
             {{ card().nom.charAt(0).toUpperCase() }}
           }
@@ -160,6 +160,24 @@
         </div>
       }
 
+      @if (hordeMates().length > 0) {
+        <!-- Règle de horde (livre p. 132) : les piétailles qui attaquent la même cible ne font qu'une attaque -->
+        <span class="tas-label" id="tas-horde">Horde : qui attaque avec {{ card().nom }} ?</span>
+        <div class="tas-chips" role="group" aria-labelledby="tas-horde">
+          @for (mate of hordeMates(); track mate.key) {
+            <button type="button" class="tas-chip" [attr.aria-pressed]="horde().includes(mate)" (click)="toggleHordeMate(mate.key)">
+              {{ mate.nom }}
+            </button>
+          }
+        </div>
+        @if (hordeSize() > 0) {
+          <span class="tas-note">
+            Une seule attaque pour {{ hordeSize() }} piétailles : +{{ hordeSize() }}, et {{ hordeDegats }} de dégâts si elle touche. Les piétailles
+            engagées passent leur tour.
+          </span>
+        }
+      }
+
       @if (usefulCarrieres().length > 0) {
         <span class="tas-label" id="tas-carriere">Carrière : manœuvre ou feinte</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-carriere">
@@ -275,7 +293,7 @@
         >
           <span class="tas-med tas-med--active" aria-hidden="true">
             @if (t.avatar) {
-              <img [src]="t.avatar" alt="" />
+              <img dwAvatarFallback [src]="t.avatar" alt="" />
             } @else {
               {{ t.nom.charAt(0).toUpperCase() }}
             }
@@ -342,7 +360,7 @@
             <button type="button" class="tas-target" [attr.data-kind]="t.kind" [class.tas-target--foe]="t.camp !== 'heros'" (click)="selectTarget(t)">
               <span class="tas-med tas-med--small" aria-hidden="true">
                 @if (t.avatar) {
-                  <img [src]="t.avatar" alt="" />
+                  <img dwAvatarFallback [src]="t.avatar" alt="" />
                 } @else {
                   {{ t.nom.charAt(0).toUpperCase() }}
                 }

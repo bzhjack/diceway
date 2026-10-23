@@ -7,8 +7,15 @@ export interface AfterCombatHealer {
   readonly carriere: ActionRollCarriere;
 }
 
+/** Les traits qui changent la récupération d'après combat (01-creation-heros.md) : Récupération rapide (1 point de plus) et Souffreteux
+ * (rien par le repos, seulement par des soins). */
+export interface RecoveryTraits {
+  readonly recuperationRapide?: boolean;
+  readonly souffreteux?: boolean;
+}
+
 /** Un blessé du camp des héros à la fin du combat. */
-interface AfterCombatWounded {
+interface AfterCombatWounded extends RecoveryTraits {
   readonly kind: InitiativeKind;
   readonly pivotId: number;
   readonly nom: string;

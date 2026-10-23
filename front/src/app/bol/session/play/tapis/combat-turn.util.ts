@@ -159,20 +159,34 @@ export function turnState(ordered: readonly OrderedCard[], etat: EtatCombat): Tu
   return {round: etat.round, activeKey, statuses};
 }
 
-/** « Fin du tour » : la carte active a joué, et ses effets durables naissent (`crees`). S'il ne reste personne à jouer ce round, le suivant
- * commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors combat). La carte qui devient active voit tomber
- * ses effets « jusqu'à son prochain tour ». */
-export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees: readonly NewEffect[] = [], genererId: EffectIdGenerator = nextEffectId): EtatCombat {
-  const activeKey = turnState(ordered, etat).activeKey;
+/** « Fin du tour » : la carte active a joué, et ses effets durables naissent (`crees`). Les piétailles engagées avec elle dans une
+ * attaque de horde (`horde`) ont joué aussi : leur tour commence et finit avec le sien. S'il ne reste personne à jouer ce round, le
+ * suivant commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors combat). La carte qui devient active voit
+ * tomber ses effets « jusqu'à son prochain tour ». */
+export function endTurn(
+  ordered: readonly OrderedCard[],
+  etat: EtatCombat,
+  crees: readonly NewEffect[] = [],
+  genererId: EffectIdGenerator = nextEffectId,
+  horde: readonly string[] = [],
+): EtatCombat {
+  const state = turnState(ordered, etat);
+  const activeKey = state.activeKey;
   if (activeKey === null) {
     return etat;
   }
 
+  // Seules comptent les piétailles qui avaient encore à jouer ce round.
+  const engagees = horde.filter((key) => key !== activeKey && state.statuses.get(key) === 'upcoming');
   const onTable = new Set(ordered.map((entry) => entry.card.key));
+  let effets = appliquerEvenement(etat.effets, {type: 'fin-tour', carte: activeKey, crees}, genererId);
+  for (const key of engagees) {
+    effets = appliquerEvenement(appliquerEvenement(effets, {type: 'debut-tour', carte: key}), {type: 'fin-tour', carte: key, crees: []}, genererId);
+  }
   let next: EtatCombat = {
     ...etat,
-    joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey],
-    effets: appliquerEvenement(etat.effets, {type: 'fin-tour', carte: activeKey, crees}, genererId),
+    joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey, ...engagees],
+    effets,
   };
 
   if (turnState(ordered, next).activeKey === null) {
@@ -199,6 +213,22 @@ export function effetsDerives(ordered: readonly OrderedCard[], round: number): C
   return ordered
     .filter((entry) => bouclierPerduRound1(round, entry.tier))
     .map((entry) => ({id: `derive-${entry.card.key}`, origine: SANS_BOUCLIER, porteur: entry.card.key, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: false}));
+}
+
+/** Rang en clair d'une carte de piétaille (`TapisCard.rang`). */
+const PIETAILLE = 'Piétaille';
+
+/** Les piétailles qui peuvent se joindre à l'attaque de la carte active, quand elle-même est une piétaille : celles de son camp qui
+ * n'ont pas encore joué ce round et peuvent jouer (04-pnj-creatures-demons.md, « Règle de horde » ; livre p. 132). Vide sinon. */
+export function hordeMates(ordered: readonly OrderedCard[], etat: EtatCombat): readonly TapisCard[] {
+  const state = turnState(ordered, etat);
+  const active = ordered.find((entry) => entry.card.key === state.activeKey)?.card;
+  if (!active || active.rang !== PIETAILLE) {
+    return [];
+  }
+  return ordered
+    .map((entry) => entry.card)
+    .filter((card) => card.rang === PIETAILLE && card.camp === active.camp && state.statuses.get(card.key) === 'upcoming');
 }
 
 /** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. */
@@ -239,6 +269,18 @@ export function targetableKeys(
       .filter((card) => card.camp !== active.camp && !isOut(card) && !exclus.includes(card.key))
       .map((card) => card.key),
   );
+}
+
+/** La cible présélectionnée quand un adversaire prend la main : un héros au hasard parmi ceux qu'il peut viser, ou, s'il n'en reste
+ * aucun, un allié des héros. Une carte du camp des héros n'en reçoit pas (le joueur choisit sa cible). `random` rend un nombre de
+ * [0, 1[ (`Math.random`). */
+export function cibleAuHasard(active: TapisCard | null, cibles: readonly TapisCard[], random: () => number = Math.random): TapisCard | null {
+  if (!active || active.camp === 'heros' || cibles.length === 0) {
+    return null;
+  }
+  const heros = cibles.filter((card) => card.kind === 'hero');
+  const candidats = heros.length > 0 ? heros : cibles;
+  return candidats[Math.floor(random() * candidats.length)] ?? null;
 }
 
 /** Règle de réaction : un héros en échec critique ne bénéficie pas de son bouclier en défense pendant le premier round

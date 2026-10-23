@@ -6,7 +6,7 @@
 // La rampe : un sol éclairé par la braise, sur lequel les cartes reposent.
 .trp {
   position: relative;
-  min-height: 11rem;
+  min-height: calc(11rem * var(--thr-k, 1));
   padding: 1rem 0.5rem 1.4rem;
   border: 2px dashed transparent;
   border-radius: 14px;
@@ -59,7 +59,7 @@
 
 // La piétaille se serre : deux cartes voisines se chevauchent de 2,6rem (l'écart entre cartes est repris en plus).
 .trp-slot--pietaille + .trp-slot--pietaille {
-  margin-left: calc(-2.6rem - var(--trp-ecart));
+  margin-left: calc(-2.6rem * var(--thr-k, 1) - var(--trp-ecart));
 }
 
 .trp-vide {

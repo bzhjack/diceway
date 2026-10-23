@@ -51,8 +51,8 @@ class BolSceneService
     }
 
     /**
-     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, pistes,
-     * illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
+     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, règles du MJ,
+     * pistes, illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
      * scène au dernier rang du scénario d'arrivée. Une piste ne garde son lien que vers une autre scène
      * de ce scénario.
      *
@@ -65,7 +65,7 @@ class BolSceneService
             return null;
         }
 
-        $changes = array_intersect_key($data, array_flip(['titre', 'notes', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'image']));
+        $changes = array_intersect_key($data, array_flip(['titre', 'notes', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'image']));
         if (array_key_exists('scenario_id', $data) && $data['scenario_id'] !== $scene->scenario_id) {
             if (!$this->scenarioAllowed($data['scenario_id'], $userId)) {
                 return null;
@@ -89,7 +89,7 @@ class BolSceneService
     }
 
     /**
-     * Réécrit l'ordre des scènes d'un scénario (ou de « Sans scénario » si `$scenarioId` est null)
+     * Réécrit l'ordre des scènes d'un scénario (ou de « On improvise » si `$scenarioId` est null)
      * selon la liste d'ids ; les ids étrangers à ce scénario ou à cet utilisateur sont ignorés.
      *
      * @param array<int, mixed> $sceneIds
@@ -229,7 +229,7 @@ class BolSceneService
         return $max === null ? 0 : ((int) $max) + 1;
     }
 
-    /** Un scénario null (« Sans scénario ») est toujours permis ; sinon il doit appartenir à l'utilisateur. */
+    /** Un scénario null (« On improvise ») est toujours permis ; sinon il doit appartenir à l'utilisateur. */
     private function scenarioAllowed(?string $scenarioId, string $userId): bool
     {
         return $scenarioId === null

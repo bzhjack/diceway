@@ -6,13 +6,14 @@ import {CombatSelectionService} from '../../../services/combat-selection.service
 import {ActeStatut} from '../../models/theatre.model';
 import {SceneAmbianceComponent} from './scene-ambiance';
 import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Aperçu d'une scène, en tête du menu d'un acte de la frise ou d'une piste : sa vignette, son lieu, son
- * ambiance et sa distribution. Les actions (« Lever le rideau »…) sont des `mat-menu-item` du menu lui-même,
+ * ambiance et sa distribution. Les actions (« Charger la scène »…) sont des `mat-menu-item` du menu lui-même,
  * pour rester atteignables au clavier. */
 @Component({
   selector: 'bol-scene-preview',
-  imports: [MatIconModule, MatTooltipModule, SceneAmbianceComponent],
+  imports: [AvatarFallbackDirective, MatIconModule, MatTooltipModule, SceneAmbianceComponent],
   template: `
     <div class="spv-vignette" aria-hidden="true">
       <img class="spv-vignette-img" [src]="vignette()" alt="" />
@@ -29,7 +30,7 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
           @for (portrait of portraits(); track $index) {
             <li class="spv-portrait" [matTooltip]="portrait.nom">
               @if (portrait.avatar) {
-                <img [src]="portrait.avatar" [alt]="portrait.nom" />
+                <img dwAvatarFallback [src]="portrait.avatar" [alt]="portrait.nom" />
               } @else {
                 <span class="spv-initiale" [attr.aria-label]="portrait.nom">{{ portrait.nom.charAt(0) }}</span>
               }

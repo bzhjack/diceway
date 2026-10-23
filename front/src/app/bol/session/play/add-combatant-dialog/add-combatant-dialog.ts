@@ -13,6 +13,7 @@ import {CombatSelectionService} from '../../../services/combat-selection.service
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
 import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel} from '../../combat-statblock.util';
 import {AddCombatantDialogData} from '../../models/add-combatant-dialog.model';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 type CatalogFilter = CombatantKind | 'all';
 
@@ -28,7 +29,7 @@ export function resolveAddCombatantCamp(kind: CombatantKind, toggleCamp: CombatC
 /** Dialog d'ajout d'un combattant à une session déjà lancée (contrairement au picker de préparation, chaque clic ajoute immédiatement côté backend). */
 @Component({
   selector: 'bol-add-combatant-dialog',
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [AvatarFallbackDirective, FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
   templateUrl: './add-combatant-dialog.html',
   styleUrl: './add-combatant-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

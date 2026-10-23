@@ -3,11 +3,12 @@ import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {EntityCardAccent, EntityCardBadge, EntityCardAction, EntityCardGauge, EntityCardChip} from '../models/entity-card.model';
 
 @Component({
   selector: 'bol-entity-card',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [AvatarFallbackDirective, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './entity-card.component.html',
   styleUrl: './entity-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

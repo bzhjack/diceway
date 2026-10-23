@@ -1,6 +1,6 @@
-// Scénario : le théâtre du mode libre. Une scène préparée se charge rideau fermé, son cartouche et son secret s'affichent, un
-// personnage entre depuis les coulisses ; le lieu ouvre la carte, la région cerclée ; une scène bondée ne fait pas défiler la
-// page en largeur ; une illustration cassée retombe sur l'image par défaut.
+// Scénario : le théâtre du mode libre. Une scène préparée se charge rideau fermé, son cartouche, ses règles (« En jeu ») et son
+// secret s'affichent, un personnage entre depuis les coulisses ; le lieu ouvre la carte, la région cerclée ; une scène bondée ne
+// fait pas défiler la page en largeur ; une illustration cassée retombe sur l'image par défaut.
 // Lancer son propre `npx ng serve --port 4400` d'abord ; ne jamais utiliser le port 4200 (serveur IntelliJ de Lionel).
 import {tmpdir} from 'node:os';
 import {chromium} from 'playwright';
@@ -77,6 +77,7 @@ try {
     meteo: 'pluie',
     danger: 3,
     lecture: 'La pluie chaude martèle les fougères géantes. '.repeat(60),
+    jeu: 'Gué : Agilité Ardu (-1).\nÉchec : emporté par le courant, d3 dégâts.',
     notes: 'Le sceau est dans la sacoche du chef.',
     pistes: [{texte: 'Suivre les traces vers le nord', scene_id: null}],
   });
@@ -87,10 +88,10 @@ try {
   const addCrowd = () => api('POST', `bol/fight-session/${sessionId}/combatant`, {kind: 'creature', sourceId: String(firstCreature.id), camp: 'adversaires', qty: 10});
   await addCrowd();
 
-  // 1-2. Lever le rideau sur la scène : il se ferme puis se rouvre, le cartouche montre son titre.
+  // 1-2. Charger la scène : le rideau se ferme puis se rouvre, le cartouche montre son titre.
   await page.goto(`${base}/session/${sessionId}/play`, {waitUntil: 'networkidle'});
   await page.getByRole('button', {name: /TMP Gué/}).click();
-  await page.getByRole('menuitem', {name: 'Lever le rideau'}).click();
+  await page.getByRole('menuitem', {name: 'Charger la scène'}).click();
   await page.waitForSelector('bol-rideau.rdo--ferme', {timeout: 3000}).catch(() => fail('le rideau ne s’est pas fermé'));
   await page.waitForSelector('bol-rideau:not(.rdo--ferme)', {timeout: 8000}).catch(() => fail('le rideau ne s’est pas rouvert'));
   await page.waitForTimeout(800);
@@ -116,10 +117,30 @@ try {
   // 3. Le chargement en remplacement a retiré les dix créatures et ramené le PNJ.
   if ((await troupeCount()) !== 1) fail(`la troupe compte ${await troupeCount()} cartes au lieu d’une`);
 
-  // 4. Le secret s'affiche à la demande.
-  await page.getByRole('button', {name: 'Afficher le secret'}).click();
-  const pressed = await page.getByRole('button', {name: 'Masquer le secret'}).getAttribute('aria-pressed');
-  if (pressed !== 'true') fail('le bouton du secret n’est pas pressé');
+  // 4. Le secret du MJ est affiché d'office ; son titre replie puis déplie la section.
+  const secret = page.locator('bol-scene-lecture .lec-secret');
+  const titreSecret = page.getByRole('button', {name: 'Secret du MJ'});
+  if (!(await secret.isVisible())) fail('le secret n’est pas affiché d’office');
+  await titreSecret.click();
+  await secret.waitFor({state: 'detached', timeout: 2000}).catch(() => fail('le secret ne se replie pas'));
+  if ((await titreSecret.getAttribute('aria-expanded')) !== 'false') fail('le titre du secret ne se dit pas replié');
+  await titreSecret.click();
+  await secret.waitFor({state: 'visible', timeout: 2000}).catch(() => fail('le secret ne se déplie pas'));
+
+  // 4 bis. « En jeu » montre les règles de la scène, lignes gardées ; l'éditeur les modifie.
+  const jeu = page.locator('bol-scene-lecture .lec-jeu');
+  if ((await jeu.innerText()).trim() !== 'Gué : Agilité Ardu (-1).\nÉchec : emporté par le courant, d3 dégâts.') fail(`« En jeu » montre « ${await jeu.innerText()} »`);
+  await page.getByRole('button', {name: 'Préparer la scène'}).first().click();
+  const champJeu = page.locator('#sed-jeu');
+  await champJeu.waitFor();
+  if (!(await champJeu.inputValue()).startsWith('Gué : Agilité')) fail('l’éditeur ne reprend pas « En jeu »');
+  await page.screenshot({path: `${shots}/theatre-1-editeur.png`});
+  await champJeu.fill('Gué : Vigueur Ardu (-1).');
+  await page.getByRole('button', {name: 'Enregistrer'}).click();
+  await page.locator('bol-scene-editor-dialog').waitFor({state: 'detached'});
+  await page.waitForTimeout(400);
+  if ((await jeu.innerText()).trim() !== 'Gué : Vigueur Ardu (-1).') fail('« En jeu » n’est pas mis à jour après l’éditeur');
+  await page.screenshot({path: `${shots}/theatre-1-en-jeu.png`});
 
   // 5. Un PNJ glissé des coulisses sur la troupe entre en scène (zone de dépôt `adversaires`).
   const avant = await troupeCount();

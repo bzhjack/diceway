@@ -1,11 +1,12 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NavigationStart, Router, RouterLink} from '@angular/router';
 import {filter} from 'rxjs';
+import {openImageDialog} from '../../../shared/dw-image-dialog/dw-image-dialog';
 import {BolStatblockData, BolStatblockEntry, BolStatblockTile} from '../models/bol-statblock.model';
 
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -51,6 +52,7 @@ export class BolStatblockComponent {
   readonly bare = input(false);
 
   protected readonly dialogRef = inject(MatDialogRef, {optional: true});
+  private readonly dialog = inject(MatDialog);
   private readonly avatarFailed = signal(false);
 
   constructor() {
@@ -121,6 +123,11 @@ export class BolStatblockComponent {
   protected navigationState(): Record<string, string> | undefined {
     const returnUrl = this.returnUrl();
     return returnUrl ? {returnUrl} : undefined;
+  }
+
+  /** Le portrait, en grand (1:1). */
+  protected openPortrait(): void {
+    openImageDialog(this.dialog, {src: this.imageSrc(), alt: `Portrait de ${this.displayName()}`});
   }
 
   protected onAvatarError(): void {

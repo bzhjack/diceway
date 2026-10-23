@@ -7,6 +7,7 @@ import {TapisCard} from '../../models/tapis.model';
 import {ReservePlacementService} from '../../reserve-placement.service';
 import {ActeurComponent} from './acteur';
 import {troupe} from './theatre.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** La troupe en scène, posée sur la rampe du plateau : les personnages du camp des adversaires, rangés par
  * rang, sur des cartes dont la taille dit le rang. C'est la zone de dépôt `adversaires` : un personnage glissé
@@ -14,7 +15,7 @@ import {troupe} from './theatre.util';
  * hormis l'état du glisser (`ReservePlacementService`). */
 @Component({
   selector: 'bol-troupe',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, MatButtonModule, MatIconModule, DwScrollerComponent, ActeurComponent],
+  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatButtonModule, MatIconModule, DwScrollerComponent, ActeurComponent],
   templateUrl: './troupe.html',
   styleUrl: './troupe.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

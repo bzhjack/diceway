@@ -35,8 +35,8 @@ export interface BolScenePiste {
 }
 
 /** Une scène : une distribution de PNJ, créatures et démons qu'on peut charger sur la table, rangée dans un
- * scénario, avec sa préparation — décor (région, lieu, illustration), ambiance, texte à lire, secret du MJ
- * (`notes`) et pistes. */
+ * scénario, avec sa préparation — décor (région, lieu, illustration), ambiance, texte à lire, règles du MJ
+ * (`jeu`), secret du MJ (`notes`) et pistes. */
 export interface BolSceneModel {
   id: string;
   scenario_id: string | null;
@@ -56,6 +56,8 @@ export interface BolSceneModel {
   danger: number | null;
   /** Texte à lire aux joueurs. */
   lecture: string | null;
+  /** Règles de la scène pour le MJ : jets, difficultés, tables d'effets. */
+  jeu: string | null;
   pistes: BolScenePiste[] | null;
   /** Adresse de l'illustration (`https://…` ou `/assets/…`). */
   image: string | null;
@@ -83,6 +85,7 @@ export interface BolSceneChanges {
   meteo?: SceneMeteo | null;
   danger?: number | null;
   lecture?: string | null;
+  jeu?: string | null;
   pistes?: BolScenePiste[] | null;
   image?: string | null;
 }

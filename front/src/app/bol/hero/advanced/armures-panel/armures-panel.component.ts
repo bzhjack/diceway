@@ -19,4 +19,5 @@ export class HeroAdvancedArmuresPanelComponent {
 
   readonly armureAdded = output<number>();
   readonly armureRemoved = output<number>();
+  readonly armureEquippedToggled = output<number>();
 }

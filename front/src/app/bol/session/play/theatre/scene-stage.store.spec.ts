@@ -22,6 +22,7 @@ function scene(id: string, scenarioId: string | null, ordre: number): BolSceneMo
     meteo: null,
     danger: null,
     lecture: null,
+    jeu: null,
     pistes: null,
     image: null,
   };
@@ -34,18 +35,20 @@ const RESULT = {session: {id: 'sess', titre: null, statut: 'libre'}, ignored: 0}
 describe('SceneStageStore', () => {
   let store: SceneStageStore;
   const loadAs = vi.fn();
+  const announceLoad = vi.fn();
   const open = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
     loadAs.mockReset();
+    announceLoad.mockReset();
     TestBed.configureTestingModule({
       providers: [
         SceneStageStore,
         {provide: BolSceneService, useValue: {scenes: () => of(SCENES)}},
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'sc1', titre: 'Le Sceau d’Ambre'}])}},
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
-        {provide: SceneActionsService, useValue: {loadAs}},
+        {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
         {provide: MatDialog, useValue: {open}},
       ],
     });
@@ -81,26 +84,33 @@ describe('SceneStageStore', () => {
     expect(loadAs).toHaveBeenCalledTimes(1);
   });
 
-  it('ferme le rideau pendant le chargement et le rouvre après', () => {
+  it('ferme le rideau pendant le chargement et le rouvre à la fin du carton', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     const values: unknown[] = [];
     store.load(S2, 'replace').subscribe((v) => values.push(v));
     expect(store.rideau()).toBe('ferme');
-    expect(store.rideauTitre()).toBe(S2.titre);
-    vi.advanceTimersByTime(750);
+    expect(store.carton()).toEqual({titre: S2.titre});
+    vi.advanceTimersByTime(1400);
     expect(values).toEqual([RESULT]);
     store.sync('sess', 's2', ['s1', 's2']);
-    vi.advanceTimersByTime(250);
+    // Le carton ne montre que le titre : 1,3 s après la brûlure.
+    vi.advanceTimersByTime(1299);
+    expect(store.rideau()).toBe('ferme');
+    expect(announceLoad).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1);
     expect(store.rideau()).toBe('ouvert');
     expect(store.busy()).toBe(false);
+    // Le chargement est annoncé à la réouverture, pas par-dessus le carton.
+    expect(loadAs).toHaveBeenCalledWith('sess', S2, 'replace', false);
+    expect(announceLoad).toHaveBeenCalledWith(S2.titre, RESULT);
   });
 
   it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe();
-    vi.advanceTimersByTime(1500);
+    vi.advanceTimersByTime(3000);
     expect(store.rideau()).toBe('ferme');
     store.sync('sess', 's2', ['s1', 's2']);
     vi.advanceTimersByTime(250);
@@ -111,10 +121,26 @@ describe('SceneStageStore', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe();
-    vi.advanceTimersByTime(750 + 2900);
+    vi.advanceTimersByTime(1400 + 2900);
     expect(store.rideau()).toBe('ferme');
     vi.advanceTimersByTime(100 + 250);
     expect(store.rideau()).toBe('ouvert');
+  });
+
+  it('laisse le plateau vierge quand la frise montre un autre scénario que celui de la scène courante', () => {
+    store.sync('sess', 's2', []);
+    expect(store.displayedScene()?.id).toBe('s2');
+    store.selectScenario(null);
+    expect(store.displayedScene()).toBeNull();
+    expect(store.currentActe()).toBeNull();
+    store.selectScenario('sc1');
+    expect(store.displayedScene()?.id).toBe('s2');
+  });
+
+  it('montre une scène sans scénario dans la frise « On improvise »', () => {
+    store.sync('sess', 'libre', []);
+    expect(store.scenarioId()).toBeNull();
+    expect(store.displayedScene()?.id).toBe('libre');
   });
 
   it('donne les scènes sœurs du scénario de la scène, même si la frise en montre un autre', () => {
@@ -146,6 +172,7 @@ describe('SceneStageStore', () => {
     store.load(S2, 'replace').subscribe({error: () => undefined});
     vi.advanceTimersByTime(1000);
     expect(store.rideau()).toBe('ouvert');
+    expect(announceLoad).not.toHaveBeenCalled();
     expect(store.busy()).toBe(false);
   });
 });

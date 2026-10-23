@@ -176,7 +176,7 @@ interface BolFightSessionPnjModel {
   /** Points de vilénie d'un rival (04-pnj-creatures-demons.md) — null pour un coriace ou une piétaille, absent des lignes posées avant. */
   vilenie_courante?: number | null;
   armes: BolFightSessionArmeModel[] | null;
-  pnj?: {origines: {avatar: string | null}};
+  pnj?: {user_id: string | null; origines: {avatar: string | null}};
 }
 
 /** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */

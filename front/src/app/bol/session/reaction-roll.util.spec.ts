@@ -70,6 +70,11 @@ describe('reactionVerdict', () => {
   it('recalls the double 1 behind a plain failure', () => {
     expect(reactionVerdict('echec', 2).detail).toBe('Double 1. Agit après les coriaces, avant la piétaille.');
   });
+
+  it('tells where a heroic success comes from: a double 6, or a success bought with 1 hero point', () => {
+    expect(reactionVerdict('heroique', 12).detail).toBe('Double 6. Au round 1, coriaces et piétaille ne jouent pas.');
+    expect(reactionVerdict('heroique', 9).detail).toBe('Pour 1 point d’héroïsme. Au round 1, coriaces et piétaille ne jouent pas.');
+  });
 });
 
 describe('reactionSumTerms', () => {

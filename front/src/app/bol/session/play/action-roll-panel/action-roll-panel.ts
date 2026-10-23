@@ -310,20 +310,18 @@ export class ActionRollPanelComponent {
     this.dice.set(diceFromTotal(total));
   }
 
-  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. Des dés lancés à l'écran se
-   * relancent à l'écran ; un total saisi (dés lancés à table) s'efface, et la case attend le total du second jet. */
-  protected async rollWithDivineFavor(): Promise<void> {
+  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. Le jet s'efface et la case
+   * attend le second : le joueur relance à table et saisit le total, ou lance à l'écran — même si le premier jet avait été lancé à
+   * l'écran, c'est à lui de choisir. */
+  protected rollWithDivineFavor(): void {
     if (this.heroisme() <= 0) {
       return;
     }
 
     applyHeroismeDelta(this.herosService, this.snackBar, this.data().herosId, this.heroisme, -1);
-    if (!this.manualEntry()) {
-      await this.roll();
-      return;
-    }
     this.resetTierChoices();
     this.favorPending.set(true);
+    this.rolled.set(null);
     this.dice.set(null);
     this.manualTotal.set(null);
     afterNextRender(() => this.manualInput()?.nativeElement.focus(), {injector: this.injector});

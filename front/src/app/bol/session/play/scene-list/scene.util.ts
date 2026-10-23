@@ -1,13 +1,13 @@
 import {BolSessionSceneRef} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneEntryKind} from '../../../models/bol-scene.model';
 
-/** Valeur du sélecteur de scénario pour « Sans scénario » (`mat-select` n'accepte pas `null` proprement). */
+/** Valeur du sélecteur de scénario pour « On improvise » (`mat-select` n'accepte pas `null` proprement). */
 export const NO_SCENARIO = '__none__';
 
 export const SCENE_TITLE_MAX = 120;
 
-/** Scènes d'un scénario (`null` = « Sans scénario »), triées par ordre puis par titre. Une scène dont
- * le scénario n'est pas connu (supprimé entre-temps) est rangée dans « Sans scénario ». */
+/** Scènes d'un scénario (`null` = « On improvise »), triées par ordre puis par titre. Une scène dont
+ * le scénario n'est pas connu (supprimé entre-temps) est rangée dans « On improvise ». */
 export function scenesOf(
   scenes: readonly BolSceneModel[],
   scenarioId: string | null,

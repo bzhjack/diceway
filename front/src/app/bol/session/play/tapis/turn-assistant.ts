@@ -53,6 +53,7 @@ import {ValueTracker} from '../../value-tracker';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -67,6 +68,9 @@ const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
   d6m: 'le moins bon de deux d6',
   d6b: 'le meilleur de deux d6',
 };
+
+/** Dégâts d'une attaque de horde qui touche, quelles que soient les armes des piétailles (livre p. 132). */
+const HORDE_DEGATS = 'd6M';
 
 /** Ce qu'est une carte, en clair. */
 const KIND_LABELS: Readonly<Record<TapisKind, string>> = {hero: 'Héros', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
@@ -149,7 +153,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
+  imports: [AvatarFallbackDirective, DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -179,8 +183,12 @@ export class TurnAssistantComponent {
   readonly carrieres = input<readonly ActionRollCarriere[]>([]);
   /** Un héros mourant du camp de la carte active peut être secouru : « Secourir » s'affiche. */
   readonly canRescue = input(false);
+  /** Les piétailles de son camp qui peuvent se joindre à l'attaque de la carte active, une piétaille : elles attaquent en horde. */
+  readonly hordeMates = input<readonly TapisCard[]>([]);
 
   readonly choiceChanged = output<AttackChoice | null>();
+  /** Les piétailles engagées dans la horde : leur tour finit avec celui de la carte active. */
+  readonly hordeChanged = output<readonly string[]>();
   /** La carte choisie comme cible, ou `null` pour « Changer d'adversaire ». */
   readonly targetSelected = output<TapisCard | null>();
   /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */
@@ -293,12 +301,27 @@ export class TurnAssistantComponent {
     return this.career() !== null && target !== null && !this.feintNoted() && aDejaFeinte(this.effets(), target.key, this.card().key);
   });
 
-  /** Le modificateur libre, la carrière et la portée d'un tir, en termes d'addition : ils entrent dans les jets comme les effets en
-   * cours. */
+  /** Règle de horde (04-pnj-creatures-demons.md ; livre p. 132) : des piétailles qui attaquent ensemble la même cible ne font qu'une
+   * attaque, à +1 par piétaille impliquée, et infligent d6M si elle touche. Le MJ coche celles qui se joignent à la carte active ;
+   * le choix repart de zéro à chaque nouvelle carte active. */
+  private readonly hordeChosen = linkedSignal<string, readonly string[]>({source: () => this.cardKey(), computation: () => []});
+  /** Les piétailles engagées avec la carte active — celles qui peuvent encore jouer. */
+  protected readonly horde = computed(() => this.hordeMates().filter((card) => this.hordeChosen().includes(card.key)));
+  /** Nombre de piétailles impliquées, la carte active comprise ; 0 sans horde. C'est aussi le bonus d'attaque. */
+  protected readonly hordeDegats = HORDE_DEGATS;
+  protected readonly hordeSize = computed(() => (this.horde().length > 0 ? this.horde().length + 1 : 0));
+
+  protected toggleHordeMate(key: string): void {
+    this.hordeChosen.update((keys) => (keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]));
+  }
+
+  /** Le modificateur libre, la carrière, la portée d'un tir et le bonus de horde, en termes d'addition : ils entrent dans les jets
+   * comme les effets en cours. */
   private readonly extraAttackTerms = computed<readonly ModifierTerm[]>(() => {
     const career = this.career();
     const range = this.range();
     return [
+      ...(this.hordeSize() > 0 ? [extraTerm(this.hordeSize(), 'horde')] : []),
       ...(range && range.modifier !== 0 ? [extraTerm(range.modifier, `portée ${range.label.toLowerCase()}`)] : []),
       ...(this.freeModifier() !== 0 ? [extraTerm(this.freeModifier(), 'modificateur')] : []),
       ...(career && this.careerOn() === 'attaque' ? [extraTerm(career.value, career.label)] : []),
@@ -377,7 +400,8 @@ export class TurnAssistantComponent {
     const option = this.effectiveOption();
     const mainDegats = degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, this.deuxMains());
     const offHand = this.effectiveOffHand();
-    const degats = option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
+    const degats =
+      this.hordeSize() > 0 ? HORDE_DEGATS : option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
 
     return {degats, posture: option && option.slug !== 'none' ? option : null};
   });
@@ -917,12 +941,13 @@ export class TurnAssistantComponent {
   protected readonly specialDamage = computed(() => this.damageSpec() === null);
   /** Dégâts fixes : pas de jet, ils sont connus dès que le coup touche. */
   protected readonly fixedDamage = computed(() => this.damageSpec()?.fixed ?? null);
-  /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le +1 d'un casque ; `null` sans dé. */
+  /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le bonus d'un casque ou de Peau dure
+   * (« d6-1 (3) +2 ») ; `null` sans dé. */
   protected readonly protectionDie = computed<{readonly malus: number; readonly bonus: number} | null>(() => {
     const text = this.targetStats()?.protectionText ?? '';
     // « d6-1 (3) » : un d6 moins 1 ; « d6 (4) » : un d6 sans retrait (certaines créatures).
     const match = text.match(/d6\s*(?:-\s*(\d+))?/i);
-    return match ? {malus: Number(match[1] ?? 0), bonus: /\)\s*\+1/.test(text) ? 1 : 0} : null;
+    return match ? {malus: Number(match[1] ?? 0), bonus: Number(text.match(/\)\s*\+(\d+)/)?.[1] ?? 0)} : null;
   });
   /** Face du dé de protection lancé à la place de la valeur fixe (le livre laisse le choix au MJ) ; `null` : valeur fixe. */
   protected readonly protectionFace = signal<number | null>(null);
@@ -945,9 +970,10 @@ export class TurnAssistantComponent {
     const face = this.protectionFace();
     return die && face !== null ? Math.max(0, face - die.malus) + die.bonus : (this.targetStats()?.protection ?? 0);
   });
+  /** La vigueur ajoutée aux dégâts ; aucune pour une horde, dont les d6M sont les dégâts du groupe. */
   protected readonly vigueur = computed(() => {
     const a = this.attacker();
-    return a ? vigueurBonus(a, this.isTir(), this.unarmed()) : 0;
+    return a && this.hordeSize() === 0 ? vigueurBonus(a, this.isTir(), this.unarmed()) : 0;
   });
   /** Nombre de coups dévastateurs pris : +6 dégâts chacun. */
   protected readonly devastating = computed(() => this.pickCounts().devastateur ?? 0);
@@ -1096,6 +1122,7 @@ export class TurnAssistantComponent {
 
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
+    effect(() => this.hordeChanged.emit(this.horde().map((card) => card.key)));
 
     this.bindVitalite(this.vitaliteControl, () => this.card());
     this.bindVitalite(this.targetVitaliteControl, () => this.target());

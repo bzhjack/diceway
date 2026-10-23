@@ -14,6 +14,7 @@ import {ReservePlacementService} from '../../reserve-placement.service';
 import {isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
 import {ActeurComponent} from './acteur';
 import {compagnie} from './theatre.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** La plaque d'un héros, avec ses valeurs déjà calculées. */
 interface Plaque {
@@ -33,7 +34,7 @@ interface Plaque {
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
 @Component({
   selector: 'bol-compagnie',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
+  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
   templateUrl: './compagnie.html',
   styleUrl: './compagnie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,6 +75,12 @@ export class CompagnieComponent {
       atMax: card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax,
     })),
   );
+
+  /** L'échelle des plaques selon la taille de la compagnie : plus grandes à deux ou trois, resserrées au-delà de six. */
+  protected readonly scale = computed(() => {
+    const count = this.plaques().length;
+    return count <= 3 ? 1.25 : count === 4 ? 1.12 : count <= 6 ? 1 : 0.9;
+  });
 
   protected readonly droppable = computed(() => this.placement.dragging() && this.placement.originCamp() !== 'heros');
   protected readonly hot = computed(() => this.placement.hoverCamp() === 'heros');

@@ -64,10 +64,11 @@ if ((await total()).trim().startsWith('≥')) fail('le jet a été effacé par l
 await roll(10);
 if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier a disparu à la relance');
 
-// Nouvelle attaque (changement d'arme) contre la même cible, même round : plus de bouclier.
-const armes = page.locator('.tas-chips[aria-labelledby="tas-arme"] .tas-chip');
-if ((await armes.count()) > 1) {
-  await armes.nth(1).click();
+// Nouvelle attaque (changement d'arme) contre la même cible, même round : plus de bouclier. L'arme par défaut est la première autorisée,
+// pas forcément la première (une arme lourde est interdite à un héros de vigueur négative) : on prend une autre arme autorisée.
+const armes = page.locator('.tas-chips[aria-labelledby="tas-arme"] .tas-chip[aria-pressed="false"]:not([aria-disabled="true"])');
+if ((await armes.count()) > 0) {
+  await armes.first().click();
   await page.waitForTimeout(1000);
   if ((await attackTerms()).includes('bouclier')) fail('le bouclier pèse encore sur la deuxième attaque du round');
 } else {
@@ -75,4 +76,9 @@ if ((await armes.count()) > 1) {
 }
 
 console.log(process.exitCode ? 'Scénario en échec.' : 'Scénario du petit bouclier : OK.');
+// La session de test ne reste pas sur le compte.
+await page.evaluate(async (id) => {
+  const {token} = JSON.parse(sessionStorage.getItem('diceway-session') ?? '{}');
+  await fetch(`/api/bol/fight-session/delete/${id}`, {method: 'DELETE', headers: {Accept: 'application/json', Authorization: 'Bearer ' + token}});
+}, id);
 await browser.close();

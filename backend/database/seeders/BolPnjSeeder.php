@@ -494,8 +494,9 @@ class BolPnjSeeder extends Seeder
             ]
         ];
 
-        BolHeros::whereNull('user_id')->delete();
-        // Insérer les données dans la table des régions
+        // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)
+        // les liens des scénarios et des combats. Seuls les PNJ système retirés de la liste sont supprimés.
+        BolHeros::whereNull('user_id')->whereNotIn('id', array_column($pnjs, 'id'))->delete();
         foreach ($pnjs as $pnj) {
             $carrieres = $pnj['carrieres'] ?? [];
             $armures = $pnj['armures'] ?? [];
@@ -507,23 +508,27 @@ class BolPnjSeeder extends Seeder
             unset($pnj['armes']);
             unset($pnj['traits']);
 
-            $hero = BolHeros::create($pnj);
+            $hero = BolHeros::updateOrCreate(['id' => $pnj['id']], $pnj);
 
+            BolHerosCarriere::where('heros_id', $hero->id)->delete();
             foreach ($carrieres as $carriere) {
                 $carriere['heros_id'] = $hero->id;
                 BolHerosCarriere::create($carriere);
             }
             // Un PNJ porte tout ce qu'il possède : armures sur le dos, armes en main.
+            BolHerosArmure::where('heros_id', $hero->id)->delete();
             foreach ($armures as $armure) {
                 $armure['heros_id'] = $hero->id;
                 $armure['equipee'] = true;
                 BolHerosArmure::create($armure);
             }
+            BolHerosArme::where('heros_id', $hero->id)->delete();
             foreach ($armes as $arme) {
                 $arme['heros_id'] = $hero->id;
                 $arme['equipee'] = true;
                 BolHerosArme::create($arme);
             }
+            BolHerosTrait::where('heros_id', $hero->id)->delete();
             foreach ($traits as $trait) {
                 $trait['heros_id'] = $hero->id;
                 BolHerosTrait::create($trait);

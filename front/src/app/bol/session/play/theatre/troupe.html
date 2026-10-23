@@ -24,7 +24,7 @@
               (toggled)="onFaceClick(acteur.card, $event)"
             />
             <div *cdkDragPreview class="trp-ghost">
-              <img class="trp-ghost-art" [src]="acteur.card.avatar" alt="" draggable="false" />
+              <img dwAvatarFallback class="trp-ghost-art" [src]="acteur.card.avatar" alt="" draggable="false" />
               <span class="trp-ghost-name">{{ acteur.card.nom }}</span>
             </div>
           </li>

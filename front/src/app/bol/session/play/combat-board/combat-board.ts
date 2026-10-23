@@ -46,6 +46,8 @@ export class CombatBoardComponent {
   readonly carrieres = input<readonly ActionRollCarriere[]>([]);
   /** Un héros mourant, du camp de la carte active, peut être secouru. */
   readonly canRescue = input(false);
+  /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, en horde. */
+  readonly hordeMates = input<readonly TapisCard[]>([]);
 
   readonly gaveBack = output<string>();
   readonly interruptRequested = output<string>();
@@ -55,6 +57,8 @@ export class CombatBoardComponent {
   /** `true` quand la fin du tour suit un coup qu'on vient de conclure (voir l'assistant). */
   readonly endTurnRequested = output<boolean>();
   readonly choiceChanged = output<AttackChoice | null>();
+  /** Les piétailles engagées dans la horde de la carte active. */
+  readonly hordeChanged = output<readonly string[]>();
   readonly targetSelected = output<TapisCard | null>();
   readonly sheetRequested = output<TapisCard>();
   readonly attackRolled = output<TapisCard>();

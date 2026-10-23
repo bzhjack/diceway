@@ -19,6 +19,14 @@ export const DESAVANTAGE_NON_COMBATTANT_ID = 33;
 export const AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID = 30;
 export const AVANTAGE_POUVOIR_DU_NEANT_ID = 44;
 
+/** Peau dure — +1 en protection, même sans armure. */
+export const AVANTAGE_PEAU_DURE_ID = 39;
+
+/** Récupération rapide — 1 point de vitalité de plus récupéré après un combat. */
+export const AVANTAGE_RECUPERATION_RAPIDE_ID = 45;
+/** Souffreteux — ne récupère sa vitalité que par des soins médicaux, jamais par le repos. */
+export const DESAVANTAGE_SOUFFRETEUX_ID = 41;
+
 /** Arme favorite — dé de bonus avec l'arme nommée par sa précision (régionale : l'arme régionale). */
 export const AVANTAGE_ARME_FAVORITE_ID = 6;
 

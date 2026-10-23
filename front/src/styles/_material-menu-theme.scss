@@ -13,6 +13,16 @@ html {
   border: 1px solid var(--dw-border);
 }
 
+// Choix du scénario (en-tête de la table) : un titre par ligne, sans retour à la ligne ; le panneau s'élargit au plus
+// long titre au lieu des 280px d'un menu ordinaire.
+.mat-mdc-menu-panel.thr-scenarios-menu {
+  max-width: calc(100vw - 2rem);
+
+  .mat-mdc-menu-item-text {
+    white-space: nowrap;
+  }
+}
+
 // Aperçu d'une scène (frise des actes, pistes) : la vignette touche les bords, le panneau est plus large
 // que les 280px d'un menu ordinaire.
 .mat-mdc-menu-panel.thr-apercu-menu {

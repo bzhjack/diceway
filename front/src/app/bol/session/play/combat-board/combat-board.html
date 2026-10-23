@@ -44,6 +44,8 @@
           (delayRequested)="delayRequested.emit()"
           (rescueRequested)="rescueRequested.emit()"
           [canRescue]="canRescue()"
+          [hordeMates]="hordeMates()"
+          (hordeChanged)="hordeChanged.emit($event)"
           [carrieres]="carrieres()"
           (endTurnRequested)="endTurnRequested.emit($event)"
           (heroismeAdjusted)="heroismeAdjusted.emit($event)"

@@ -32,7 +32,7 @@ export const ATTITUDES: readonly AmbianceOption<CombatantAttitude>[] = [
   {value: 'amical', label: 'Amical', icon: 'handshake'},
 ];
 
-/** Les actes de la frise : les scènes du scénario (`null` = « Sans scénario »), dans leur ordre, numérotées
+/** Les actes de la frise : les scènes du scénario (`null` = « On improvise »), dans leur ordre, numérotées
  * à partir de 1. La scène courante est « en cours » ; une scène déjà passée sur la table est « jouée ». */
 export function sceneActs(
   scenes: readonly BolSceneModel[],
@@ -72,6 +72,15 @@ export function distributionPortraits(distribution: readonly BolSceneEntry[], ca
 export function lieuTexte(lieu: string | null, region: string | null): string | null {
   const parts = [lieu?.trim(), region?.trim()].filter((part): part is string => !!part);
   return parts.length ? parts.join(', ') : null;
+}
+
+/** Rythme du rideau en brasier, en millisecondes : la brûlure qui monte du bas de la scène, puis le titre seul. Avec
+ * moins d'animations, le noir tombe d'un coup et le titre reste `reduit` ms. */
+export const CARTON_RYTHME = {fondu: 1400, titre: 1300, reduit: 1400} as const;
+
+/** Combien de temps le titre reste affiché une fois la scène brûlée. */
+export function cartonTenue(reduit: boolean): number {
+  return reduit ? CARTON_RYTHME.reduit : CARTON_RYTHME.titre;
 }
 
 const STATUT_LABELS: Record<ActeStatut, string | null> = {'en-cours': 'en cours', jouee: 'jouée', 'a-venir': null};

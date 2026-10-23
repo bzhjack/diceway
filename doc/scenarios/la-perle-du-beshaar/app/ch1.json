@@ -1,0 +1,275 @@
+{
+  "saga": "perle-du-beshaar",
+  "scenario": {
+    "cle": "ch1",
+    "titre": "Perle du Beshaar — 1. Sacrilège à Satarla",
+    "pitch": "Introduction et chapitre 1 de La Perle du Beshaar (Chroniques lémuriennes 4, livre p. 41-55).\n\nEn délicatesse avec Marsus, un patron de la pègre de Satarla, les héros doivent pénétrer dans le sanctuaire interdit de Shazzadion pour y relever sur une carte l'emplacement d'un lieu nommé Tolometh, pour le compte de Surdral Prados, un Malakuti. La mosaïque du sanctuaire s'éveille, c'est la fuite à bord de la Jalinha, puis une trahison en mer. À Malakut, maître Arjanek leur révèle l'existence de la « Perle aux yeux » et leur propose une expédition dans le désert du Beshaar.\n\nFin d'épisode : les héros récupèrent leurs points d'héroïsme dépensés et gagnent chacun 1 point d'expérience."
+  },
+  "personnages": {
+    "marsus": {
+      "kind": "pnj", "nom": "Marsus", "rang": "rival", "region": "Satarla",
+      "vigueur": 2, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 12, "vilenie": 3,
+      "carrieres": [{ "nom": "Voleur", "rang": 2 }, { "nom": "Mercenaire", "rang": 1 }],
+      "armes": ["Épée", "Dague"],
+      "avantages": ["Amis dans la pègre", "Intimidant"],
+      "desavantages": ["Cupide"],
+      "commentaire": "Patron de la pègre de Satarla (Cloaque). Le livre ne donne pas ses statistiques : fiche de rival inventée pour l'import.\nGrand, épais, mélange de muscles et d'embonpoint, calvitie précoce qu'il caresse en parlant. Violent, regard froid, méprisant."
+    },
+    "surdral": {
+      "kind": "pnj", "nom": "Surdral Prados", "rang": "rival", "region": "Malakut",
+      "vigueur": -1, "agilite": 3, "esprit": 2, "aura": 2,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 2,
+      "vitalite": 9, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Marchand", "rang": 0 },
+        { "nom": "Voleur", "rang": 4 },
+        { "nom": "Tentatrice", "rang": 1 },
+        { "nom": "Noble", "rang": 1 }
+      ],
+      "armes": [{ "nom": "Canne plombée", "degats": "d6", "type": "M", "notes": "La canne au pommeau plombé de Surdral Prados." }, "Dague"],
+      "avantages": ["Amis dans la pègre", "Amis haut placés", "Discret", "Doigts de fée", "Roi de l'évasion"],
+      "desavantages": [
+        "Inadapté au froid",
+        { "nom": "Manchot/unijambiste", "detail": "boiteux" },
+        { "nom": "Traqué", "detail": "roi d'Oomis" }
+      ],
+      "commentaire": "Stats : livre p. 101 (chapitre 4). Ses 5 points d'héroïsme sont portés en vilénie, la réserve de points d'un rival dans l'app. Carrière « tentateur » du livre = Tentatrice ici ; dégâts du livre (canne d6-1, dague d6M-1) avec sa Vigueur -1.\nLa soixantaine, petit et mince, teint bistre, cheveux noirs bouclés parsemés d'argent, barbiche soignée, boite appuyé sur une canne au pommeau d'ivoire. Légende des voleurs de Malakut (guilde des Guenillards), retiré au faîte de sa gloire, très riche et influent. Chaleureux, raffiné, homme de parole : à rendre vite sympathique, il est le contact récurrent de la saga."
+    },
+    "pretre": {
+      "kind": "pnj", "nom": "Prêtre de Shazzadion", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 6, "foi": 2,
+      "carrieres": [{ "nom": "Prêtre", "rang": 2 }],
+      "armes": ["Bâton"],
+      "commentaire": "Robe vert-bleu, petite conque en pendentif. Pas des combattants : faciles à mettre hors de combat sans les tuer."
+    },
+    "marin": {
+      "kind": "pnj", "nom": "Marin de la Jalinha", "rang": "pietaille", "region": "Satarla",
+      "melee": 1, "tir": 1,
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Marin", "rang": 1 }],
+      "armes": [{ "nom": "Armes de marin", "degats": "d3", "type": "M", "notes": "Armes diverses des équipages (coutelas, gourdins…)." }, "Javelot / fléchette"],
+      "commentaire": "Livre : Attaque +1, dégâts d3 (armes diverses), règle de horde (BoL p. 132). Des 48 marins de la Jalinha et du Dauphin, 30 sont armés ; plusieurs ont arcs et javelots."
+    },
+    "gallus": {
+      "kind": "pnj", "nom": "Gallus", "rang": "coriace", "region": "Satarla",
+      "vigueur": 1, "agilite": 2, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Marin", "rang": 2 }],
+      "armes": [{ "nom": "Sabre", "degats": "d6", "type": "M" }],
+      "desavantages": ["Cupide"],
+      "commentaire": "Capitaine contrebandier de la Jalinha, au service de Marsus. Sabre d6+1 dans le livre (avec sa Vigueur 1). Si son frère Tertus est tué, il se bat jusqu'à la mort."
+    },
+    "tertus": {
+      "kind": "pnj", "nom": "Tertus", "rang": "coriace", "region": "Satarla",
+      "vigueur": 1, "agilite": 2, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Marin", "rang": 2 }],
+      "armes": [{ "nom": "Sabre", "degats": "d6", "type": "M" }],
+      "desavantages": ["Cupide"],
+      "commentaire": "Frère de Gallus, capitaine du Dauphin. Sabre d6+1 dans le livre (avec sa Vigueur 1). Si son frère Gallus est tué, il se bat jusqu'à la mort."
+    },
+    "arjanek": {
+      "kind": "pnj", "nom": "Maître Arjanek", "rang": "coriace", "region": "Parsool",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 2,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Marchand", "rang": 2 }, { "nom": "Noble", "rang": 0 }],
+      "armes": ["Dague"],
+      "desavantages": ["Crédule"],
+      "commentaire": "Stats : livre p. 101 (chapitre 4). Désavantage « Crédule » ajouté pour l'import (le livre le dit naïf, sans le chiffrer).\nUne trentaine d'années, belle stature, cheveux châtain clair, teint pâle, noble allure. Négociant en épices de Parsool installé à Malakut depuis deux ans, érudit passionné d'histoire ancienne. Une jeune sœur, Marika. Naïf, enthousiaste, sincère."
+    },
+    "karstus": {
+      "kind": "pnj", "nom": "Karstus", "rang": "rival", "region": "Satarla",
+      "vigueur": 1, "agilite": 1, "esprit": 3, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 13, "vilenie": 5, "foi": 1, "pouvoir": 15,
+      "carrieres": [{ "nom": "Soldat", "rang": 1 }, { "nom": "Sorcier", "rang": 3 }],
+      "armes": ["Épée", "Dague"],
+      "armures": ["Armure légère"],
+      "avantages": ["Beau parleur", "Dur à cuire", "Pouvoir du Néant"],
+      "desavantages": [
+        "Arrogant",
+        "Fanatique",
+        { "nom": "Obsession", "detail": "plaire à son maître" },
+        { "nom": "Traqué", "detail": "sorciers de Zalut" }
+      ],
+      "commentaire": "SECRET : sorcier des druides noirs au service de Dazzandroth Zant, chargé de rapporter l'œil de Tolometh. Rien ne doit le trahir au chapitre 1.\nStats : livre p. 121 (chapitre 4). Carrières Érudit 1 et Druide 1 absentes du catalogue. Dégâts du livre : épée d6+1, dague d6M+1 (avec sa Vigueur 1).\nEn apparence : la cinquantaine, athlétique, cheveux et barbe blonds teintés d'argent, armure légère, épée au côté, port martial d'ancien soldat satarlan. Garde du corps silencieux et vigilant d'Arjanek."
+    },
+    "tentacule": {
+      "kind": "creature", "nom": "Tentacule de la mosaïque", "taille": "Moyenne",
+      "attaque": 2, "defense": 0, "vitalite": 6, "degats": "d6",
+      "capacites": [{ "nom": "Attaque spéciale", "detail": "s'enroule autour de sa cible : jet de Vigueur ou d'Agilité pour ne pas être emprisonné" }],
+      "commentaire": "Un à trois longs tentacules de pieuvre jaillissent de la mosaïque du sanctuaire de Shazzadion et fouettent l'air à la recherche des profanateurs."
+    },
+    "hippocampe": {
+      "kind": "creature", "nom": "Hippocampe géant", "taille": "Petite",
+      "attaque": 1, "defense": 0, "vitalite": 6, "degats": "d6M",
+      "commentaire": "Les deux hippocampes d'un mètre représentés de part et d'autre de l'autel se dressent hors de l'eau. L'un donne des coups de tête aux profanateurs ; l'autre va souffler dans la conque sacrée (alerte générale)."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "taverne",
+      "titre": "La taverne de Marsus",
+      "region": "Satarla",
+      "lieu": "Arrière-salle d'une taverne du Cloaque",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "C'est soir de fête à Satarla, le Joyau de la Lémurie, dans la chaleur étouffante du mois de Vina. Le Grand Jour célèbre Hurm, le père des dieux, dans un joyeux tintamarre de cloches et de clochettes. Le soleil couchant fait rougeoyer le ciel, et l'on allume des flambeaux sur les places : la fête durera tard dans la nuit.\n\nVous n'avez pas le cœur à la joie. Vous êtes dans l'arrière-salle d'une taverne sordide du Cloaque, délestés de vos armes, sous la surveillance d'hommes patibulaires de la bande de Marsus. Vous lui avez volé un butin pour son compte… avant de le jeter dans le fleuve, la garde sur les talons. Marsus estime que vous lui devez cette perte.\n\n« Bien, mes agneaux, vous êtes dans de beaux draps. Bien sûr, je pourrais vous donner aux crocators du fleuve et faire un exemple, mais ces bestioles sont bien assez grasses comme ça. J'ai mieux pour vous. Un boulot, quelque chose de simple, et même pas si dangereux que ça. Enfin, pas trop. C'est pour ce soir. Ensuite de quoi, vous décarrez de ma ville et vous allez vous faire pendre ailleurs. »\n\nUn acolyte ouvre une porte. Entre un homme d'une soixantaine d'années, petit et mince, le teint bistre, des cheveux noirs bouclés parsemés d'argent, une barbiche soignée. Il claudique, appuyé sur une canne au pommeau d'ivoire, et vous salue d'un sourire chaleureux. Marsus le présente : Surdral Prados, de Malakut.\n\n« Mes bons amis, je sais que certaines… infortunes vous obligent envers Marsus. Je vous invite à y voir une chance à saisir. En échange de vos bons offices, je solderai vos dettes auprès de ces messieurs.\n\nAu cœur du grand temple de Shazzadion, sur l'île d'Ajamba, se dresse une vieille bâtisse en bois vermoulu, le tout premier sanctuaire du dieu. Nul n'a le droit d'y pénétrer, hormis les prêtres de haut rang. Ce sanctuaire abrite une carte de la Lémurie. Trouvez-la, et repérez avec le plus d'exactitude possible un lieu indiqué sous le nom de “Tolometh”. C'est tout. Inutile de dérober la carte, ou quoi que ce soit d'autre.\n\nAvec la fête, le guet aura fort à faire, et les temples restent ouverts toute la nuit. Je vous attendrai sur une galère marchande amarrée au bout du quai du Pendu, au pied du fanal : sa figure de proue est une femme-oiseau. Vous serez mes hôtes jusqu'à Malakut, car l'air de Satarla risque de vous être… néfaste après cette nuit. Et vous n'aurez pas à le regretter, je m'y engage. »",
+      "jeu": "Aucun jet : scène de dialogue. Réponses aux questions des joueurs :\n• Pourquoi eux ? Le sacrilège est puni de mort et met le pouvoir sur les dents : Marsus ne veut pas s'en mêler de trop près. Il doit un service à des « amis » de Malakut.\n• Quitter la ville : si l'affaire tourne mal, Marsus balancera leurs noms aux autorités.\n• La porte du sanctuaire n'est pas fermée à clef. Deux prêtres sont dans le temple à toute heure.\n• Équipement : Marsus fournit toute demande raisonnable, y compris une robe bleu-vert de prêtre de Shazzadion et la petite conque en pendentif. Une barque peut attendre au bout de l'île d'Ajamba pour les mener à la galère.\n• La carte : Surdral ignore sa forme (parchemin, mur, stèle), mais elle est très ancienne. Il fournit un fin vélin et un fusain pour la recopier.\n• Voler quelque chose ? Surdral le déconseille (« plus votre visite restera discrète, mieux cela vaut »), mais laisse les héros juges.\n• Pourquoi pas lui ? « Je n'ai plus l'âge… et je crains d'être un fardeau en cas de poursuite » (il tapote sa jambe boiteuse).\n• Réticence : Surdral soupire, regrette, promet un nouveau départ à Malakut, riche d'occasions de s'enrichir.",
+      "notes": "Marsus : violent, froid, méprisant. Le genre à trancher une gorge pour une peccadille. Sa dette n'a aucune importance dans la saga : un prétexte pour une offre qu'on ne refuse pas.\nSurdral : à rendre immédiatement attachant (esprit, bonhomie, respect des héros) ; il tranche avec la racaille de Marsus et sera le contact récurrent de toute la saga.\nSi un PJ est un voleur malakuti, il peut être un compagnon de Surdral.",
+      "pistes": [{ "texte": "Se mettre en route vers le temple de Shazzadion", "vers": "trajet" }],
+      "distribution": [
+        { "perso": "marsus", "attitude": "hostile" },
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "trajet",
+      "titre": "Trajet jusqu'au temple",
+      "region": "Satarla",
+      "lieu": "Rues en fête, puis l'île d'Ajamba",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Sortis des venelles crasseuses du Cloaque, vous traversez rues et places où la fête bat son plein. La foule est encore dense malgré l'heure tardive, et il règne un joyeux tumulte dans la ville.\n\nAprès avoir franchi le pont qui relie l'île fluviale d'Ajamba au reste de la cité, vous gagnez la pointe de l'île. Les rues sont ici plus calmes. Sur la courte esplanade devant l'entrée monumentale du temple de Shazzadion, qui fait face à l'estuaire, un petit groupe de Satarlans avachis sur les marches de marbre du porche achèvent de s'enivrer en faisant circuler un gros cruchon.",
+      "jeu": "Aucun jet obligatoire. Un héros attentif (Esprit) remarque que le groupe est « escorté » par des hommes de Marsus, qui suivent — ou surveillent — sa progression.",
+      "pistes": [{ "texte": "Entrer dans le temple", "vers": "temple" }]
+    },
+    {
+      "cle": "temple",
+      "titre": "Le temple de Shazzadion",
+      "region": "Satarla",
+      "lieu": "Grand temple de Shazzadion, île d'Ajamba",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Passée l'imposante colonnade du porche, une grande double porte en bronze ornée de bas-reliefs est ouverte malgré l'heure tardive. L'intérieur baigne dans un demi-jour : quelques flambeaux et cierges laissent persister des ombres profondes. Une longue nef sous un toit de charpente, une véritable forêt de colonnes aux chapiteaux sculptés de motifs marins. Au fond, sur une haute estrade, la statue ivoirine du dieu des mers surplombe un petit édifice en bois vermoulu qui se dresse au milieu du temple de pierre.\n\nC'est une vieille grange croulante, d'environ cinq mètres sur quinze, aux murs aveugles, avec une seule porte à simple poignée à clenche. Il flotte autour d'elle une étrange odeur salée, comme si le vieux bois était gorgé d'eau de mer.\n\nDeux prêtres en robe vert-bleu, une petite conque en pendentif, déambulent entre les colonnes en rythmant leur pas de leur long bâton.",
+      "jeu": "Les joueurs choisissent comment neutraliser, distraire ou éviter les deux prêtres. Ce ne sont pas des combattants : faciles à mettre hors de combat sans les tuer.\nUn prêtre qui voit quelqu'un entrer dans le sanctuaire frappe le gong de la nef : une dizaine de prêtres arrivent du bâtiment attenant au bout de d6B rounds. Le gong se perd dans le vacarme de la fête : aucune patrouille du guet n'est alertée, mais des serviteurs partent en chercher une.",
+      "notes": "Ajouter le meurtre au sacrilège ? À eux de voir.",
+      "pistes": [{ "texte": "Pousser la porte du sanctuaire", "vers": "sanctuaire" }],
+      "distribution": [{ "perso": "pretre", "qty": 2, "attitude": "neutre" }]
+    },
+    {
+      "cle": "sanctuaire",
+      "titre": "Le sanctuaire interdit",
+      "region": "Satarla",
+      "lieu": "Sanctuaire de Shazzadion",
+      "moment": "nuit",
+      "danger": 2,
+      "lecture": "La porte s'ouvre sans difficulté, avec un léger grincement. Trois petites marches de pierre, polies et évasées par les ans, descendent dans le sanctuaire. Deux bougies au fond éclairent la salle d'une timide lumière orangée. Les murs de planches sont nus, mais le sol est entièrement tapissé d'une magnifique mosaïque : un paysage sous-marin aux nuances de bleu et de vert, rehaussé de tesselles d'or qui scintillent doucement. Bouquets d'algues, poissons, coquillages… Plus curieux, toute la mosaïque est couverte d'eau, jusqu'aux chevilles, et exhale un parfum iodé de bord de mer.\n\nAu fond se dresse un autel de pierre brute recouvert d'une lourde nappe de brocart, ses pieds massifs couverts d'algues et de concrétions. Derrière, une commode de bois accueille les deux cierges, qui encadrent une énorme conque marine incrustée de perles et de joyaux, posée sur un présentoir de bois précieux. Devant elle, un coffret d'argent incrusté de rangées de perles. De part et d'autre de l'autel, la mosaïque représente deux magnifiques hippocampes d'un mètre de long.\n\nAucune carte n'est en vue.",
+      "jeu": "Traverser au sec : grimper dans la charpente, une poutre centrale court sur toute la longueur.\nUn Satarlan reconnaît la conque sacrée de Shazzadion (sortie une fois l'an, à la Fête des Flots) : trop lourde pour un homme seul.\nLe coffret contient une dague sacrificielle très ancienne, ornée de pierreries (butin optionnel).\nLa carte : il suffit de soulever la nappe de l'autel. Une plaque de cuivre oxydée y est clouée, gravée d'une carte schématique de la Lémurie, avec des lieux surtout côtiers ou en mer, nommés en lémurien primitif. Tolometh se repère vite : à l'extrême nord-ouest du Beshaar, au pied des Besharoon, au fond d'une étroite vallée entre deux pics jumeaux. Dessin grossier, peu précis.",
+      "notes": "Les gardiens ne laisseront pas le temps de copier toute la carte. Laisser fouiner et trouver la carte, puis éveiller la mosaïque.",
+      "pistes": [{ "texte": "La mosaïque s'éveille", "vers": "gardiens" }]
+    },
+    {
+      "cle": "gardiens",
+      "titre": "Les gardiens s'éveillent",
+      "region": "Satarla",
+      "lieu": "Sanctuaire de Shazzadion",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Un frisson parcourt la surface de l'eau. Sous vos pieds, les tesselles ondulent, les algues ondoient, les poissons frémissent : la mosaïque prend vie !",
+      "jeu": "Piocher 2 ou 3 effets selon le nombre de héros entrés ; garder les hippocampes pour la fin.\n• Tentacules (1 à 3) : Att +2, dégâts d6, s'enroulent (jet de Vigueur ou d'Agilité pour ne pas être emprisonné). 6 PV chacun.\n• Coquillage : se referme sur un pied. Vigueur Ardu (-1) pour dégager sa jambe.\n• Poissons volants : d3 dégâts automatiques, puis à chaque round tant que le héros a les pieds dans l'eau (récupération comme des dégâts à mains nues).\n• Trou dans la mosaïque : Esprit pour repérer le bleu sombre uniforme si le joueur regarde où il marche ; sinon aspiré, Vigueur Ardu (-1) pour remonter.\n• Algues : Réaction Ardu (-1) pour ne pas tomber ; d3 rounds pour se dégager (un de moins avec l'aide d'un camarade).\n• Hippocampes géants (en dernier, quand les héros vont sortir) : Att +1, dégâts d6M, 6 PV. L'un donne des coups de tête ; l'autre va souffler dans la conque. Le son profond retentit alors que les héros s'éloignent : leur intrusion ne passera pas inaperçue.",
+      "notes": "Et si… un héros reste piégé (pied coincé dans une huître…) : capture possible. Après un interrogatoire musclé, une cage en osier pour nourrir les crocators du fleuve — ou une évasion à jouer plus tard. Les héros de remplacement peuvent être des compagnons de Surdral, sur le navire.",
+      "pistes": [{ "texte": "Fuir vers le quai du Pendu", "vers": "fuite" }],
+      "distribution": [
+        { "perso": "tentacule", "qty": 3, "attitude": "hostile" },
+        { "perso": "hippocampe", "qty": 2, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "fuite",
+      "titre": "Fuite et embarquement",
+      "region": "Satarla",
+      "lieu": "Quai du Pendu, la Jalinha",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La galère marchande est bien amarrée au bout du quai du Pendu, reconnaissable à sa figure de proue : une femme-oiseau dont les ailes déployées épousent la courbure de la coque. C'est sinon un navire de commerce banal, qui n'est plus de première jeunesse. La passerelle est baissée et un fanal éclaire le pont où s'affaire l'équipage. Accoudé au bastingage, Surdral Prados s'illumine d'un sourire en vous voyant sortir des ombres du quai, et vous fait signe de monter à bord.\n\nIl demande au capitaine Gallus de lever l'ancre sans attendre. Le capitaine ne se fait pas prier et met aussitôt son équipage à la manœuvre, en jetant des regards nerveux vers le quai. Dans la nuit noire, le navire glisse sur les eaux où scintillent les lumières de la ville et le feu du fanal. Il quitte l'estuaire à la rame, puis hisse bientôt ses voiles.",
+      "jeu": "Si les héros sont poursuivis, les hommes de Marsus les couvrent : prétendus fêtards qui bloquent le passage, faux badaud qui lance le guet sur une fausse piste.\nLa Jalinha : petite galère marchande (BoL p. 78), 24 marins qui rament pour les manœuvres. Des armes cachées dans la cale, une arbalète lourde montable à la proue. Pas de cabine : hamacs dans la cale, une tente à la proue pour les passagers.\nEn mer, Surdral s'enquiert de la mission, demande de garder l'information pour Malakut (il n'est qu'un intermédiaire ; le commanditaire, riche et bien introduit, attend là-bas), vante les délices de Malakut et son épouse Léhéné, « l'étoile de ma vie ». Un voyage reposant : tant mieux si les joueurs baissent la garde.",
+      "notes": "Gallus ignore la nature de la mission. Il prépare sa trahison pour la quatrième nuit.",
+      "pistes": [{ "texte": "La quatrième nuit en mer", "vers": "coup-fourre" }],
+      "distribution": [
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" },
+        { "perso": "gallus", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "coup-fourre",
+      "titre": "La nuit du coup fourré",
+      "region": "Satarla",
+      "lieu": "En mer, dans la baie de Satarla",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Une main se pose doucement sur votre bouche. Un chuchotement vous enjoint de garder le silence. Le visage de Surdral se détache au-dessus de vous dans la pénombre.\n\n« Chut, réveillez vos compagnons en silence. Il semblerait que nous ayons de la visite, et ce n'est pas une visite de courtoisie. »\n\nDes murmures s'entendent hors de la tente. Un coup d'œil discret : le capitaine Gallus est en conversation avec un inconnu, entouré de marins armés jusqu'aux dents. Un autre navire est accosté au flanc de la Jalinha.",
+      "jeu": "Options des joueurs :\n• Parlementer : les capitaines réclament le butin de Satarla et l'or du Malakuti contre la vie sauve (un mensonge). Ils refusent de croire qu'il ne s'agissait que d'une information sur une carte.\n• Mentionner Marsus : le trouble gagne les équipages ; bien joué, c'est un début de rébellion, d'autant que Surdral promet une belle prime à qui le ramènera sain et sauf à Malakut.\n• Tuer les deux capitaines : débandade immédiate et lourdes pertes (la moitié des hommes hors de combat) ; on peut alors négocier avec les survivants pour garder un équipage jusqu'à Malakut.\nMarins : 30 combattants sur 48, règle de horde (BoL p. 132) ; plusieurs ont arcs et javelots. Les cartes sur la table représentent la horde.\nSi l'un des frères meurt, l'autre se bat jusqu'à la mort.\nSurdral se bat activement : sa canne plombée fait des ravages. Il peut dévier une flèche ou parer un coup fatal destiné à un héros. Mais ce sont les héros qui doivent briller.",
+      "notes": "Le plan : Gallus en a assez de Marsus, maître peu généreux. Son frère Tertus (le Dauphin) attendait près d'un îlot de la baie. Ils comptent prendre le butin des voleurs et l'or du Malakuti, puis filer aux îles du Crâne avec navires et équipages. Les équipages ne savent pas tout : beaucoup n'ont pas envie de se mettre Marsus à dos ni de quitter Satarla pour toujours.",
+      "pistes": [
+        { "texte": "Parlementer avec les capitaines" },
+        { "texte": "Mentionner Marsus devant les équipages" },
+        { "texte": "Tuer les deux capitaines" },
+        { "texte": "Après quinze jours de mer, Malakut", "vers": "malakut" }
+      ],
+      "distribution": [
+        { "perso": "gallus", "attitude": "hostile" },
+        { "perso": "tertus", "attitude": "hostile" },
+        { "perso": "marin", "qty": 6, "attitude": "hostile" },
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "malakut",
+      "titre": "Arrivée à Malakut",
+      "region": "Malakut",
+      "lieu": "Les quais du Malak, puis la demeure de Surdral",
+      "moment": "jour",
+      "meteo": "clair",
+      "lecture": "Après une quinzaine de jours de navigation, la traversée du golfe de Satarla et la remontée du cours paresseux du Malak, la Jalinha s'amarre enfin aux longs quais fluviaux de Malakut, qui bruissent d'activité à toute heure.\n\nSurdral affiche un sourire satisfait. Dès qu'il pose le pied sur le quai, des passants le saluent, souvent avec déférence. Il vous guide à travers les rues populeuses en vous faisant les honneurs de sa belle cité, jusqu'à sa demeure : une magnifique bâtisse entourée d'un parc arboré. Le portail est déjà ouvert ; un domestique attend son maître.\n\nVous entrez dans un univers de luxe et de raffinement. Le jardin est magnifique, la façade de pierre blanche aux sculptures harmonieuses. Le hall s'ouvre sur un grand escalier d'apparat en marbre. Les serviteurs accueillent leur maître avec des visages heureux. Surdral s'excuse : il est pressé d'aller saluer son épouse.\n\nAlors qu'il monte l'escalier de son pas claudicant, une silhouette féminine apparaît brièvement sur le palier, voilée, deux pieds nus délicats aux chevilles ornées de bracelets dont le doux tintement résonne dans le hall. Un parfum flotte un instant, floral et capiteux, impossible à identifier.",
+      "jeu": "Un héros attentif remarque sur le portail, fixé par un clou doré, un blason : un jemadar rampant devant deux khastoks entrecroisés. Esprit + scribe ou soldat pour reconnaître les armoiries de la famille régnante (automatique pour un Malakuti). Plusieurs trous comblés de clous dorés : ce n'est pas la première fois que la maison reçoit cet honneur. Surdral en explique volontiers le sens.\nSi les héros se sont emparés de la Jalinha, Surdral n'y voit aucune objection (« une prime bien méritée ! ») et peut les aider à recruter un équipage ou faire surveiller le navire.",
+      "notes": "Léhéné, l'épouse de Surdral, est une demi-démone, fruit des expériences d'un démoniste ; Surdral l'a délivrée de sa cage. Elle subjugue malgré elle les esprits faibles (les domestiques lui sont farouchement attachés). Ne jamais la montrer : un parfum, un tintement, une silhouette. Surdral répond évasivement ; trop d'indiscrétion le contrarierait.",
+      "pistes": [{ "texte": "Au coucher du soleil, le salon de Surdral", "vers": "arjanek" }],
+      "distribution": [{ "perso": "surdral", "camp": "heros", "attitude": "amical" }]
+    },
+    {
+      "cle": "arjanek",
+      "titre": "Rencontre avec maître Arjanek",
+      "region": "Malakut",
+      "lieu": "Salon de la demeure de Surdral",
+      "moment": "crepuscule",
+      "lecture": "Au coucher du soleil, on vous introduit dans un salon richement meublé et décoré d'œuvres d'art. Surdral vous y attend en compagnie d'un homme qu'il vous présente : maître Arjanek. La trentaine, de belle stature, des cheveux châtain clair, des yeux marron sombre, le teint pâle — ce n'est pas un Malakuti —, plutôt noble allure et richement vêtu.\n\nDerrière lui, un peu en retrait, se tient un homme athlétique d'une cinquantaine d'années, cheveux et barbe blonds déjà teintés d'argent, armure légère et épée au côté, le port martial d'un ancien militaire. Il scrute votre entrée d'un œil vigilant.\n\nUn serviteur dépose des rafraîchissements et ferme la porte. Surdral explique que c'est à maître Arjanek que vous devez remettre votre information. L'homme se penche vers vous, les yeux brillants d'excitation, n'y tenant plus.\n\nÀ l'énoncé de Tolometh, il est saisi d'une joie espiègle. Il marmonne pour lui-même, les yeux levés : « Comme c'est intéressant… La Chronique d'Apétrus disait donc vrai. » Tolometh serait un très ancien palais, ou un sanctuaire. Des textes fragmentaires d'une haute antiquité laissent penser qu'on y aurait conservé un objet rare, la « Perle aux yeux » : un puissant instrument de divination, qui permettrait d'observer des événements éloignés dans le temps et dans l'espace.",
+      "jeu": "Aucun jet : scène de dialogue et de révélation. Arjanek répond volontiers en sirotant son vin.\n• La Perle : il l'imagine de la taille d'un melon (« comme la boule de cristal d'une diseuse de bonne aventure », sourit-il, gêné de sa naïveté). Mais l'histoire remonte à la fondation d'Oomis au moins : il n'y a sans doute plus rien à trouver.\n• Qui est-il : marchand de Parsool installé à Malakut depuis deux ans pour les affaires familiales, éducation soignée, passionné d'histoire ancienne de la Lémurie.\n• Le garde du corps : Karstus, un Satarlan, sans doute ancien soldat. Silencieux, vigilant, martial.",
+      "notes": "Karstus est un sorcier des druides noirs au service de Dazzandroth Zant, chargé de rapporter l'œil de Tolometh. Il s'est rapproché d'Arjanek pour un fragment de la Chronique d'Apétrus, a orienté sa curiosité vers la Perle et placé des complices parmi ses domestiques. Il trompe tout Malakut, Surdral compris. Arjanek est son « idiot utile » et ne se doute de rien. RIEN ne doit le trahir ce soir.",
+      "pistes": [{ "texte": "La proposition d'Arjanek", "vers": "proposition" }],
+      "distribution": [
+        { "perso": "arjanek", "attitude": "amical" },
+        { "perso": "karstus", "attitude": "neutre" },
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "proposition",
+      "titre": "La proposition et les préparatifs",
+      "region": "Malakut",
+      "lieu": "Demeure de Surdral",
+      "moment": "crepuscule",
+      "lecture": "Arjanek adresse un regard interrogateur à Surdral, qui l'encourage d'un hochement de tête. Il prend une grande inspiration.\n\n« Mon ami Surdral m'a expliqué les conditions qui vous ont amenés ici. Votre succès à Satarla et ce qui s'est passé sur le navire montrent que vous êtes des gens compétents, qui n'ont pas froid aux yeux. Seriez-vous disposés à entreprendre une expédition jusqu'au lieu indiqué sur la carte ? C'est au fin fond du désert, c'est loin et dangereux, mais votre rémunération sera à la hauteur de la tâche.\n\nJe ne suis pas homme à entreprendre un tel voyage, mais je suis disposé à vous rémunérer comme il convient. (Sur un signe, son garde du corps dépose sur la table une bourse : assez d'or pour vivre dans l'aisance plusieurs mois.) Voici une avance. Je prendrai aussi en charge tous les frais de votre expédition.\n\nSi le temps a fait son œuvre et qu'il n'y a plus rien à trouver, je reste intéressé par tout ce que vous pourrez glaner sur l'endroit : à votre retour, chacun de vous recevra une bourse équivalente. Mais si, par miracle, vous retrouvez la Perle aux yeux et me la rapportez, je triplerai votre récompense ! »\n\nSurdral se fera un plaisir de vous aider à préparer le voyage : remonter le Malak, franchir les monts Besharoon par le col de Yazik et redescendre jusqu'à Badhasar, la dernière ville aux portes du désert. Il y a des amis qui sauront vous équiper pour le Beshaar, et vous trouver un guide.",
+      "jeu": "Arjanek laisse quelques jours de réflexion et n'exige pas de départ immédiat.\nPréparatifs (quelques jours) : Arjanek paie l'équipement ordinaire (parvalus, armes, armures, provisions). Surdral trouve le plus spécifique (potions alchimiques…), dans la limite du raisonnable.\nSurdral remet une lettre pour Chamir, marchand de Badhasar, qui organisera l'expédition. Arjanek fait porter un solide coffret de bois bardé de fer, au capitonnage épais, pour protéger la Perle.\nDîner d'adieu, peut-être une offrande à Quathoomar, dieu des voyages.\nFIN D'ÉPISODE : les héros récupèrent leurs points d'héroïsme dépensés et gagnent chacun 1 point d'expérience.",
+      "notes": "Se renseigner sur Arjanek ne révèle rien de suspect : riche négociant en épices de Parsool, érudit, en ville depuis deux ans, une princesse royale a visité sa demeure, deux galères et un entrepôt sur le port, une jeune sœur, Marika. Rien non plus sur Karstus.\nChercher des informations sur Tolometh ou la Perle : chou blanc chez les érudits. Se renseigner au temple de Shazzadion de Malakut ne donne rien, mais pourra avoir des conséquences plus tard dans la saga.",
+      "pistes": [{ "texte": "Partir pour Badhasar et le désert (chapitre 2)" }],
+      "distribution": [
+        { "perso": "arjanek", "attitude": "amical" },
+        { "perso": "karstus", "attitude": "neutre" },
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" }
+      ]
+    }
+  ]
+}

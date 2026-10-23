@@ -4,7 +4,7 @@ import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {heroBadge} from '../../hero/library/hero-card/hero-card.component';
-import {equippedProtection} from '../../session/combat-attack.util';
+import {bonusPeauDure, equippedProtection} from '../../session/combat-attack.util';
 import {isArmeEquipee} from '../arme/arme-equipee';
 import {pnjBadge} from '../../pnj/library/pnj-card/pnj-card.component';
 import {BolStatblockChip, BolStatblockData, BolStatblockEntry, BolStatblockSection, BolStatblockTile} from '../models/bol-statblock.model';
@@ -183,7 +183,7 @@ function herosLikeStatblockData(
   // Ce qu'il a en main et sur le dos : la première arme équipée, et la protection de l'armure portée (casque compris). Un bouclier
   // ne protège pas des dégâts : il reste dans la liste des armures.
   const mainWeapon = weapons.find((arme) => (wearsEverything || isArmeEquipee(arme)) && arme.arme?.degats)?.arme ?? null;
-  const protection = equippedProtection(wearsEverything ? armors.map((armure) => ({...armure, equipee: true})) : armors).text;
+  const protection = equippedProtection(wearsEverything ? armors.map((armure) => ({...armure, equipee: true})) : armors, bonusPeauDure(heros.traits)).text;
 
   const vitals: BolStatblockTile[] = [
     {label: 'Vitalité', value: heros.ressources.vitalite, tone: 'health'},

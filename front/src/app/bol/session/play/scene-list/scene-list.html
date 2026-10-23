@@ -6,7 +6,7 @@
       [value]="selectedScenario() ?? noScenario"
       (selectionChange)="selectScenario($event)"
     >
-      <mat-option [value]="noScenario">Sans scénario</mat-option>
+      <mat-option [value]="noScenario">On improvise</mat-option>
       @for (scenario of sortedScenarios(); track scenario.id) {
         <mat-option [value]="scenario.id">{{ scenario.titre }}</mat-option>
       }

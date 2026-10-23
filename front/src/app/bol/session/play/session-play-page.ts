@@ -28,7 +28,7 @@ import {
   pnjStatblockData,
 } from '../../shared/statblock/bol-statblock.builders';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard} from '../combat-play.util';
+import {buildPlayBoard, traitsDeRecuperation} from '../combat-play.util';
 import {ActionRollCarriere, ActionRollDiceTrait} from '../models/action-roll.model';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
@@ -49,7 +49,7 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {bloqueeCeRound, combatOutcome, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, hordeMates, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
@@ -258,6 +258,11 @@ export class SessionPlayPageComponent {
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
   protected readonly attackChoice = signal<AttackChoice | null>({degats: null, posture: null});
 
+  /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, une piétaille, en horde. */
+  protected readonly hordeMates = computed(() => (this.mode() === 'combat' ? hordeMates(this.orderedCards(), this.etat()) : []));
+  /** Celles que le MJ a engagées dans la horde (choisies dans l'assistant) : leur tour finit avec celui de la carte active. */
+  protected readonly hordeKeys = signal<readonly string[]>([]);
+
   /** Cible visée par la carte active (choisie dans l'assistant ou d'un clic sur sa carte). */
   private readonly targetKey = signal<string | null>(null);
 
@@ -404,6 +409,20 @@ export class SessionPlayPageComponent {
         });
     });
 
+    // Un adversaire prend la main sans cible choisie : un héros au hasard est présélectionné comme cible ; le MJ peut en changer.
+    effect(() => {
+      const key = this.activeKey();
+      untracked(() => {
+        if (key === null || this.targetKey() !== null) {
+          return;
+        }
+        const cible = cibleAuHasard(this.activeCard(), this.targets());
+        if (cible) {
+          this.targetKey.set(cible.key);
+        }
+      });
+    });
+
     // Statistiques de toutes les cartes à portée, pour leurs jetons dans l'assistant : relues quand la carte active ou la liste des
     // cibles change. La cible choisie, elle, est relue à chaque changement de la table (ci-dessus) : son jet reste exact.
     effect(() => {
@@ -520,26 +539,29 @@ export class SessionPlayPageComponent {
       return;
     }
     const effets = this.etat().effets;
-    const wounded = this.cards()
-      .filter((card) => card.camp === 'heros' && card.vitaliteMax !== null && card.vitaliteMax > 0 && card.vitaliteCourante !== null && card.vitaliteCourante < card.vitaliteMax)
-      .map((card) => ({
-        kind: card.kind,
-        pivotId: card.pivotId,
-        nom: card.nom,
-        vitalite: card.vitaliteCourante!,
-        vitaliteMax: card.vitaliteMax!,
-        vitaliteDepart: Math.min(card.vitaliteMax!, this.etat().depart[card.key] ?? card.vitaliteMax!),
-        mainsNues: degatsMainsNues(effets, card.key),
-        etat: horsCombat(card, effets),
-      }));
+    const blesses = this.cards().filter(
+      (card) => card.camp === 'heros' && card.vitaliteMax !== null && card.vitaliteMax > 0 && card.vitaliteCourante !== null && card.vitaliteCourante < card.vitaliteMax,
+    );
 
-    this.combatHealers()
+    this.fichesDuCampDesHeros()
       .pipe(
-        switchMap((healers) =>
-          this.dialog
+        switchMap((fiches) => {
+          const wounded = blesses.map((card) => ({
+            kind: card.kind,
+            pivotId: card.pivotId,
+            nom: card.nom,
+            vitalite: card.vitaliteCourante!,
+            vitaliteMax: card.vitaliteMax!,
+            vitaliteDepart: Math.min(card.vitaliteMax!, this.etat().depart[card.key] ?? card.vitaliteMax!),
+            mainsNues: degatsMainsNues(effets, card.key),
+            etat: horsCombat(card, effets),
+            ...traitsDeRecuperation(fiches.get(card.key)?.traits),
+          }));
+          const healers = this.combatHealers(fiches);
+          return this.dialog
             .open<AfterCombatDialogComponent, AfterCombatDialogData, readonly AfterCombatGain[]>(AfterCombatDialogComponent, {width: '600px', data: {wounded, healers}})
-            .afterClosed(),
-        ),
+            .afterClosed();
+        }),
         switchMap((gains) => {
           if (!gains) {
             return EMPTY;
@@ -564,24 +586,30 @@ export class SessionPlayPageComponent {
       });
   }
 
-  /** Les héros de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. Leurs fiches sont
-   * relues ; si elles ne se chargent pas, personne ne soigne. */
-  private combatHealers(): Observable<readonly AfterCombatHealer[]> {
-    const heroes = this.cards().filter((card) => card.kind === 'hero' && card.camp === 'heros' && card.sourceId !== null);
-    if (heroes.length === 0) {
-      return of([]);
+  /** Les fiches du camp des héros — héros et PNJ alliés, qui sont aussi des fiches de héros —, par clé de carte : leurs traits changent
+   * la récupération d'après combat, et un héros soigneur y a sa carrière. Elles sont relues ; si elles ne se chargent pas, on fait sans
+   * (ni soigneur, ni trait). */
+  private fichesDuCampDesHeros(): Observable<ReadonlyMap<string, BolHerosModel>> {
+    const cards = this.cards().filter((card) => (card.kind === 'hero' || card.kind === 'pnj') && card.camp === 'heros' && card.sourceId !== null);
+    if (cards.length === 0) {
+      return of(new Map());
     }
-    return forkJoin(heroes.map((card) => this.herosService.heros(card.sourceId!))).pipe(
-      map((fiches) =>
-        fiches
-          .map((hero, i): AfterCombatHealer | null => {
-            const carriere = bestHealingCareer(heroDetails(hero).carrieres);
-            return carriere ? {nom: heroes[i].nom, carriere} : null;
-          })
-          .filter((healer): healer is AfterCombatHealer => healer !== null),
-      ),
-      catchError(() => of([])),
+    return forkJoin(cards.map((card) => this.herosService.heros(card.sourceId!))).pipe(
+      map((fiches) => new Map(cards.map((card, i) => [card.key, fiches[i]]))),
+      catchError(() => of(new Map<string, BolHerosModel>())),
     );
+  }
+
+  /** Les héros de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. */
+  private combatHealers(fiches: ReadonlyMap<string, BolHerosModel>): readonly AfterCombatHealer[] {
+    return this.cards()
+      .filter((card) => card.kind === 'hero' && card.camp === 'heros')
+      .map((card): AfterCombatHealer | null => {
+        const fiche = fiches.get(card.key);
+        const carriere = fiche ? bestHealingCareer(heroDetails(fiche).carrieres) : null;
+        return carriere ? {nom: card.nom, carriere} : null;
+      })
+      .filter((healer): healer is AfterCombatHealer => healer !== null);
   }
 
   protected toggleReserve(): void {
@@ -1193,7 +1221,7 @@ export class SessionPlayPageComponent {
     // La posture choisie pour ce tour dure : son bonus ou malus de défense pèse sur les attaques suivantes contre cette carte.
     const crees = active ? effetsDeTour(active.key, {posture: this.attackChoice()?.posture?.slug ?? null, defenseTotale: false}) : [];
     // La cible ne se vide que si la fin de tour est prise en compte : pendant un enregistrement elle est ignorée, et le jet en cours reste.
-    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire), {ignoreIfBusy: !afterHit})) {
+    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire, this.hordeKeys()), {ignoreIfBusy: !afterHit})) {
       this.targetKey.set(null);
     }
   }
@@ -1468,7 +1496,7 @@ export class SessionPlayPageComponent {
         this.askEndCombat();
         break;
       case 'saveScene':
-        // Rangée dans le scénario de la scène courante, sinon dans « Sans scénario ».
+        // Rangée dans le scénario de la scène courante, sinon dans « On improvise ».
         this.sceneActions.saveTable(sessionId, this.session()?.scene?.scenario?.id ?? null).subscribe({
           next: (scene) => {
             if (scene) {

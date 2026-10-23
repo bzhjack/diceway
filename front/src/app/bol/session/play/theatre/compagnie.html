@@ -1,5 +1,5 @@
 <section class="cmp" data-drop-camp="heros" aria-label="La compagnie" [class.cmp--droppable]="droppable()" [class.cmp--hot]="hot()">
-  <ul class="cmp-plaques" role="list">
+  <ul class="cmp-plaques" role="list" [style.--cmp-k]="scale()">
     @for (plaque of plaques(); track plaque.card.key) {
       <li class="cmp-plaque" [class.cmp-plaque--selected]="selectedKeys().has(plaque.card.key)">
         <button
@@ -101,7 +101,7 @@
         >
           <bol-acteur [card]="allie" taille="allie" [selected]="selectedKeys().has(allie.key)" (toggled)="onFaceClick(allie, $event)" />
           <div *cdkDragPreview class="cmp-ghost">
-            <img class="cmp-ghost-art" [src]="allie.avatar" alt="" draggable="false" />
+            <img dwAvatarFallback class="cmp-ghost-art" [src]="allie.avatar" alt="" draggable="false" />
             <span>{{ allie.nom }}</span>
           </div>
         </li>

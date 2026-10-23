@@ -18,7 +18,7 @@ function toggled(set: ReadonlySet<number>, index: number): ReadonlySet<number> {
 
 /** « Après combat » (02-actions-combat.md, « Récupération », livre p. 65-66), ouvert par « Terminer le combat » : pour chaque blessé du
  * camp des héros, le court repos d'après combat (la moitié des points perdus pendant ce combat, les dégâts à mains nues en entier ; rien
- * sous 0, rien pour une blessure d'avant le combat) et, si un
+ * sous 0, rien pour une blessure d'avant le combat ; 1 point de plus avec Récupération rapide, rien pour un Souffreteux) et, si un
  * héros a une carrière de soins, les soins médicaux (le rang du soigneur, tout de suite). Le MJ décoche ce qui ne s'applique pas ; rien
  * n'est enregistré avant « Terminer le combat », et « Annuler » laisse le combat en cours. */
 @Component({
@@ -47,7 +47,7 @@ export class AfterCombatDialogComponent {
   protected readonly rows = computed(() => {
     const rank = this.healer()?.carriere.value ?? 0;
     return this.data.wounded.map((w, index) => {
-      const restable = postCombatRecoveryAmount(w.vitalite, w.vitaliteDepart, w.mainsNues);
+      const restable = postCombatRecoveryAmount(w.vitalite, w.vitaliteDepart, w.mainsNues, w);
       const rest = this.resting().has(index) ? restable : 0;
       const careable = this.healer() ? medicalCareAmount(w.vitalite + rest, w.vitaliteMax, rank) : 0;
       const care = this.cared().has(index) ? careable : 0;

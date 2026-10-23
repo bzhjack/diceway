@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {SceneActe} from '../../models/theatre.model';
+import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 import {acteLabel} from './theatre.util';
@@ -13,7 +14,7 @@ import {acteLabel} from './theatre.util';
  * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée. */
 @Component({
   selector: 'bol-scene-acts',
-  imports: [MatIconModule, MatMenuModule, SceneApercuMenuComponent],
+  imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],
   template: `
     <div class="sca-titre">
       <span class="sca-sur">{{ sessionTitre() || 'Session' }}</span>
@@ -24,44 +25,46 @@ import {acteLabel} from './theatre.util';
         </button>
       </h1>
     </div>
-    <mat-menu #scenarios="matMenu">
-      <button mat-menu-item type="button" (click)="store.selectScenario(null)">Sans scénario</button>
+    <mat-menu #scenarios="matMenu" class="thr-scenarios-menu">
+      <button mat-menu-item type="button" (click)="store.selectScenario(null)">On improvise</button>
       @for (scenario of sortedScenarios(); track scenario.id) {
         <button mat-menu-item type="button" (click)="store.selectScenario(scenario.id)">{{ scenario.titre }}</button>
       }
     </mat-menu>
 
-    <nav class="sca-nav" aria-label="Scènes du scénario">
-      <ol class="sca-actes">
-        @for (acte of store.acts(); track acte.scene.id) {
-          <li class="sca-li">
-            <button
-              type="button"
-              class="sca-acte"
-              [class.sca-acte--en-cours]="acte.statut === 'en-cours'"
-              [class.sca-acte--jouee]="acte.statut === 'jouee'"
-              [attr.aria-current]="acte.statut === 'en-cours' ? 'step' : null"
-              [attr.aria-label]="label(acte)"
-              [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu.menu()"
-              [matMenuTriggerData]="{acte}"
-            >
-              <span class="sca-num" aria-hidden="true">
-                @if (acte.statut === 'jouee') {
-                  <mat-icon>check</mat-icon>
-                } @else {
-                  {{ acte.numero }}
+    <nav #nav class="sca-nav" aria-label="Scènes du scénario">
+      <dw-scroller class="sca-scroller" label="Scènes du scénario">
+        <ol class="sca-actes">
+          @for (acte of store.acts(); track acte.scene.id) {
+            <li class="sca-li">
+              <button
+                type="button"
+                class="sca-acte"
+                [class.sca-acte--en-cours]="acte.statut === 'en-cours'"
+                [class.sca-acte--jouee]="acte.statut === 'jouee'"
+                [attr.aria-current]="acte.statut === 'en-cours' ? 'step' : null"
+                [attr.aria-label]="label(acte)"
+                [attr.aria-disabled]="store.busy() ? 'true' : null"
+                [matMenuTriggerFor]="apercu.menu()"
+                [matMenuTriggerData]="{acte}"
+              >
+                <span class="sca-num" aria-hidden="true">
+                  @if (acte.statut === 'jouee') {
+                    <mat-icon>check</mat-icon>
+                  } @else {
+                    {{ acte.numero }}
+                  }
+                </span>
+                @if (acte.statut === 'en-cours') {
+                  <span class="sca-acte-titre" aria-hidden="true">{{ acte.scene.titre }}</span>
                 }
-              </span>
-              @if (acte.statut === 'en-cours') {
-                <span class="sca-acte-titre" aria-hidden="true">{{ acte.scene.titre }}</span>
-              }
-            </button>
-          </li>
-        } @empty {
-          <li class="sca-vide">Aucune scène dans ce scénario.</li>
-        }
-      </ol>
+              </button>
+            </li>
+          } @empty {
+            <li class="sca-vide">Aucune scène dans ce scénario.</li>
+          }
+        </ol>
+      </dw-scroller>
     </nav>
 
     <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />
@@ -139,19 +142,23 @@ import {acteLabel} from './theatre.util';
       white-space: nowrap;
     }
 
-    // La frise : centrée, défile si elle déborde (les marges automatiques centrent sans rogner).
+    // La frise : centrée ; si elle déborde, elle défile avec un chevron de chaque côté (les marges automatiques
+    // centrent sans rogner).
     .sca-nav {
       flex: 1;
       min-width: 0;
       display: flex;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
+    }
+
+    .sca-scroller {
+      flex: 1;
+      min-width: 0;
     }
 
     .sca-actes {
       display: flex;
       align-items: center;
+      width: max-content;
       margin: 0 auto;
       padding: 0.2rem 0.1rem;
       list-style: none;
@@ -287,12 +294,31 @@ export class SceneActsComponent {
     [...this.store.scenarios()].sort((left, right) => left.titre.localeCompare(right.titre, 'fr')),
   );
   protected readonly scenarioTitre = computed(
-    () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'Sans scénario',
+    () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'On improvise',
   );
+  private readonly nav = viewChild.required<ElementRef<HTMLElement>>('nav');
+  /** L'id seul : une copie de la même scène (préparation, rechargement) ne refait pas défiler la frise. */
+  private readonly acteEnCours = computed(() => this.store.acts().find((acte) => acte.statut === 'en-cours')?.scene.id ?? null);
 
   constructor() {
     // Les portraits de l'aperçu viennent du catalogue, chargé ici même si les coulisses restent fermées.
     inject(CombatSelectionService).loadCatalog();
+
+    // Une frise trop longue défile : l'acte en cours, seul à montrer son titre, revient au centre de la vue.
+    afterRenderEffect(() => {
+      if (!this.acteEnCours()) {
+        return;
+      }
+      // La piste du défileur (`dw-scroller`) est l'élément qui défile.
+      const piste = this.nav().nativeElement.querySelector<HTMLElement>('.dws-track');
+      const acte = piste?.querySelector<HTMLElement>('.sca-acte--en-cours');
+      if (!piste || !acte || piste.scrollWidth <= piste.clientWidth) {
+        return;
+      }
+      const pisteRect = piste.getBoundingClientRect();
+      const acteRect = acte.getBoundingClientRect();
+      piste.scrollLeft += acteRect.left - pisteRect.left - (pisteRect.width - acteRect.width) / 2;
+    });
   }
 
   protected label(acte: SceneActe): string {

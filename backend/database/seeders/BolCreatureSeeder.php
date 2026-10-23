@@ -674,7 +674,192 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6',
                 'protection' => '0',
                 'id_taille' => '4',
-            ]
+            ],
+
+            // ── Bestiaire du Beshaar (La Perle du Beshaar, p. 24-35) ──
+            // La slorth couronnée (Mélèshu, p. 35) est une rivale à carrières : elle relève des PNJ, pas du bestiaire.
+            [
+                'id' => '51',
+                'nom' => 'Chien de Zaggath',
+                'vigueur' => '2',
+                'agilite' => '1',
+                'esprit' => '1',
+                'vitalite' => '12',
+                'attaque' => '2',
+                'defense' => '1',
+                'degats' => 'd6',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "La Perle du Beshaar, p. 24. Déserts.\nSuint protecteur : ne subit qu'un quart des dégâts de feu (arrondi à l'inférieur) et jamais de malus dû à une forte chaleur. Son suint donne l'« onguent de chien », qui confère cette capacité.",
+            ],
+            [
+                'id' => '52',
+                'nom' => 'Dyrhunga',
+                'vigueur' => '7',
+                'agilite' => '2',
+                'esprit' => '0',
+                'vitalite' => '40',
+                'attaque' => '4',
+                'defense' => '2',
+                'degats' => 'd6B',
+                'protection' => '0',
+                'id_taille' => '7',  // Enorme
+                'commentaire' => 'La Perle du Beshaar, p. 25. Déserts, montagnes, plaines.',
+            ],
+            [
+                'id' => '53',
+                'nom' => 'Dragon de feu',
+                'vigueur' => '4',
+                'agilite' => '1',
+                'esprit' => '-2',
+                'vitalite' => '20',
+                'attaque' => '2',
+                'defense' => '1',
+                'degats' => 'd6',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => "La Perle du Beshaar, p. 26. Zones volcaniques.\nCréature du volcan : la chaleur qu'il irradie impose -1 en mêlée à ses adversaires.",
+            ],
+            [
+                'id' => '54',
+                'nom' => "Essaim de fourmis d'os",
+                'vigueur' => '0',
+                'agilite' => '0',
+                'esprit' => '0',
+                'vitalite' => '30',
+                'attaque' => '0',
+                'defense' => '0',
+                'degats' => '1',
+                'protection' => '0',
+                'id_taille' => '6',  // Très grande
+                'commentaire' => "La Perle du Beshaar, p. 26. Désert et contreforts des Besharoon, lors des essaimages ou au cœur d'une tempête de sable.\nLe livre ne donne pas de profil : vitalité = les 30 points de dégâts qui dispersent la nuée, taille « Très grande » retenue pour cette vitalité.",
+            ],
+            [
+                'id' => '55',
+                'nom' => 'Hyène du Beshaar',
+                'vigueur' => '0',
+                'agilite' => '1',
+                'esprit' => '-1',
+                'vitalite' => '5',
+                'attaque' => '0',
+                'defense' => '1',
+                'degats' => 'd6M',
+                'protection' => '0',
+                'id_taille' => '3',  // Petite
+                'commentaire' => "La Perle du Beshaar, p. 27. Déserts, plaines, montagnes. Chasse la nuit, par encerclement et harcèlement.\nMeute : sans être de la piétaille, utilise la règle de horde (+1 à l'attaque par hyène engagée dans la mêlée).",
+            ],
+            [
+                'id' => '56',
+                'nom' => 'Meneuse de meute (hyène du Beshaar)',
+                'vigueur' => '1',
+                'agilite' => '2',
+                'esprit' => '-1',
+                'vitalite' => '10',
+                'attaque' => '2',
+                'defense' => '1',
+                'degats' => 'd6',
+                'protection' => '0',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => 'La Perle du Beshaar, p. 27. Femelle robuste qui mène une meute de hyènes du Beshaar.',
+            ],
+            [
+                'id' => '57',
+                'nom' => 'Hyène géante',
+                'vigueur' => '6',
+                'agilite' => '1',
+                'esprit' => '-1',
+                'vitalite' => '30',
+                'attaque' => '4',
+                'defense' => '1',
+                'degats' => 'd6x2',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '6',  // Très grande
+                'commentaire' => 'La Perle du Beshaar, p. 27. Déserts, montagnes. Chasseuse solitaire, parfois en couple ou en petite meute familiale.',
+            ],
+            [
+                'id' => '58',
+                'nom' => "Qal'efr (pieuvre des sables)",
+                'vigueur' => '10',
+                'agilite' => '2',
+                'esprit' => '0',
+                'vitalite' => '50',
+                'attaque' => '3',
+                'defense' => '1',
+                'degats' => 'd6M+1',  // les tentacules ; la morsure (d6Bx2) est dans le commentaire et les capacités
+                'protection' => '0',
+                'id_taille' => '8',  // Massive
+                'commentaire' => "La Perle du Beshaar, p. 28. Dunes du désert profond, près des gisements de sable safran.\nAgilité 2 : tentacules uniquement. Dégâts : tentacule d6M+1 (déjà compté le +1 des tentacules corrosifs), morsure d6Bx2.",
+            ],
+            [
+                'id' => '59',
+                'nom' => 'Spicomallos',
+                'vigueur' => '7',
+                'agilite' => '-3',
+                'esprit' => '-2',
+                'vitalite' => '40',
+                'attaque' => '1',
+                'defense' => '0',
+                'degats' => 'd6x2',
+                'protection' => 'd6 (4)',
+                'id_taille' => '7',  // Enorme
+                'commentaire' => "La Perle du Beshaar, p. 29. Montagnes, plaines. Placide tant qu'on ne l'attaque pas.\nCuirasse hérissée de pointes : ses adversaires subissent -1 à leurs jets d'attaque.",
+            ],
+            [
+                'id' => '60',
+                'nom' => 'Ver des sables',
+                'vigueur' => '9',
+                'agilite' => '1',
+                'esprit' => '-1',
+                'vitalite' => '50',
+                'attaque' => '4',
+                'defense' => '1',
+                'degats' => 'd6x2',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '8',  // Massive
+                'commentaire' => 'La Perle du Beshaar, p. 30. Déserts.',
+            ],
+            [
+                'id' => '61',
+                'nom' => 'Gardien de bronze',
+                'vigueur' => '6',
+                'agilite' => '1',
+                'esprit' => '0',
+                'vitalite' => '20',
+                'attaque' => '4',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6 (4)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => "La Perle du Beshaar, p. 31. Ruines des cités des Rois-Sorciers. Esprit : aucun (0 ici).\nMonstre de métal : insensible au feu, au froid, aux poisons, aux maladies et aux sortilèges visant l'esprit.\nPoint faible : le cou (Coup précis) ; décapité, il combat encore mais ne peut plus sonner.",
+            ],
+            [
+                'id' => '62',
+                'nom' => "Momie noire d'humain",
+                'vigueur' => '2',
+                'agilite' => '0',
+                'esprit' => '-2',
+                'vitalite' => '8',
+                'attaque' => '2',
+                'defense' => '0',
+                'degats' => 'd6M+2',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "La Perle du Beshaar, p. 32-33. Marges occidentales du Beshaar (sable noir). Dégâts et protection : ou selon arme et armure.\nVulnérable au feu (dégâts doublés) et à l'eau (plongée ou aspergée : dé de malus à tous ses jets, « meurt » en 3 rounds).\nAutre créature : celle d'origine avec Vigueur +2, Esprit -2, Vitalité +2, Défense 0, Protection d6-3 (1) au moins, dégâts d'une taille au-dessus.",
+            ],
+            [
+                'id' => '63',
+                'nom' => 'Momie noire de coursier des sables',
+                'vigueur' => '5',
+                'agilite' => '2',
+                'esprit' => '-2',
+                'vitalite' => '14',
+                'attaque' => '1',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => "La Perle du Beshaar, p. 33. Marges occidentales du Beshaar (sable noir).\nVulnérable au feu (dégâts doublés) et à l'eau (plongée ou aspergée : dé de malus à tous ses jets, « meurt » en 3 rounds).",
+            ],
         ];
 
         // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)
@@ -872,9 +1057,93 @@ class BolCreatureSeeder extends Seeder
                 'capacite_id' => '4',
                 'detail' => 'Après une morsure faire un jet de vigueur difficile (-2). En cas d’échec, il subit 2 points de dégâts supplémentaires, puis 2 points de dégâts chaque round. Chaque point de vitalité perdu entraîne un malus de -1 aux jets. Si le héros tombe à 0 point de vitalité, il perd conscience et doit réussir un nouveau jet de vigueur difficile (-2). S\'il réussit, il reste stable mais ne reprend conscience qu’avec un jet de vigueur ardu (-1) chaque matin, ou après un soin médical (jet d\'action difficile -2) ou un antidote.'
             ],
+
+            // Bestiaire du Beshaar. Ids à partir de 1001 : les capacités des créatures d'utilisateur ont déjà pris
+            // les ids suivants (auto-incrément), qu'un updateOrCreate sur 32, 33… écraserait.
+            [
+                'id' => '1001',
+                'creature_id' => '52',
+                'capacite_id' => '5',
+                'detail' => 'Dans une tempête de sable ou un orage.'
+            ],
+            [
+                'id' => '1002',
+                'creature_id' => '52',
+                'capacite_id' => '3',
+                'detail' => 'Chasseur dans la tempête : au cœur d\'une tempête, ses proies subissent un dé de malus au jet de réaction et sa première attaque a un dé de bonus. Il ne subit aucun malus dû aux éléments.'
+            ],
+            [
+                'id' => '1003',
+                'creature_id' => '54',
+                'capacite_id' => '3',
+                'detail' => 'Essaim dévorant : chaque round, qui est pris dans la nuée perd 1 point de vitalité (armure sans effet) et subit un dé de malus à toutes ses actions. Frapper l\'essaim touche automatiquement et inflige d3 + vigueur/2 (arrondi à l\'inférieur), quelle que soit l\'arme. Dispersé après 30 points de dégâts.'
+            ],
+            [
+                'id' => '1004',
+                'creature_id' => '58',
+                'capacite_id' => '2',
+                'detail' => '3 attaques de tentacule par round au plus (5 points de vitalité par tentacule). Si deux tentacules touchent la même proie, elle est attirée vers la gueule au round suivant : morsure d6Bx2 chaque round, jusqu\'à trancher les tentacules ou réussir un jet de vigueur très difficile (-4).'
+            ],
+            [
+                'id' => '1005',
+                'creature_id' => '58',
+                'capacite_id' => '3',
+                'detail' => 'Piège de sable : sur la zone du piège, jet d\'agilité difficile (-2) ou chute dans l\'entonnoir. Pour s\'en extirper : agilité très difficile (-4) au 2e round, impossible (-6) au 3e ; un échec au 3e expose à la morsure. Sinon, il faut une aide extérieure (corde…) ou tuer le monstre.'
+            ],
+            [
+                'id' => '1006',
+                'creature_id' => '58',
+                'capacite_id' => '4',
+                'detail' => 'Tentacules corrosifs : +1 aux dégâts de chaque tentacule, puis 1 point de dégâts par round tant que la victime reste prisonnière.'
+            ],
+            [
+                'id' => '1007',
+                'creature_id' => '59',
+                'capacite_id' => '2',
+                'detail' => 'Deux attaques par round (tête, épaule ou queue).'
+            ],
+            [
+                'id' => '1008',
+                'creature_id' => '60',
+                'capacite_id' => '3',
+                'detail' => 'Attaque-surprise : quand il jaillit du sable, ses proies subissent un dé de malus au jet de réaction.'
+            ],
+            [
+                'id' => '1009',
+                'creature_id' => '60',
+                'capacite_id' => '5',
+                'detail' => 'Dans les sables du désert.'
+            ],
+            [
+                'id' => '1010',
+                'creature_id' => '60',
+                'capacite_id' => '8',
+                'detail' => 'Presque aveugle, il traque ses proies aux vibrations du sol.'
+            ],
+            [
+                'id' => '1011',
+                'creature_id' => '61',
+                'capacite_id' => '3',
+                'detail' => 'Attaque sonore : toute créature vivante à 20 m fait un jet de vigueur ardu (-1), sinon -1 à tous ses jets et -1 en défense pendant 2 rounds. Sonner occupe son action du round ; chaque sonnerie réveille et attire les gardiens de bronze à 500 m.'
+            ],
+            [
+                'id' => '1012',
+                'creature_id' => '62',
+                'capacite_id' => '3',
+                'detail' => 'Spores noires : au corps à corps, jet de vigueur ardu (-1) ou -1 aux attaques (nausées). Blessé par elle : vigueur difficile (-2) ou nécrose, 1 point de dégâts par heure jusqu\'à la mort. Soins : panacée, eau au sable safran, ou cautérisation (Soins difficile -2 : 1 dégât si réussi, d6M sinon). La victime se relève en momie noire en d3 heures.'
+            ],
+            [
+                'id' => '1013',
+                'creature_id' => '63',
+                'capacite_id' => '3',
+                'detail' => 'Spores noires : au corps à corps, jet de vigueur ardu (-1) ou -1 aux attaques (nausées). Blessé par elle : vigueur difficile (-2) ou nécrose, 1 point de dégâts par heure jusqu\'à la mort. Soins : panacée, eau au sable safran, ou cautérisation (Soins difficile -2 : 1 dégât si réussi, d6M sinon). La victime se relève en momie noire en d3 heures.'
+            ],
         ];
-        foreach ($capacites as $capacite) {
-            BolCreatureCapacite::updateOrCreate(['id' => $capacite['id']], $capacite);
-        }
+        // `id` n'est pas fillable : sans unguarded, la création l'ignorerait (auto-incrément) et chaque re-seed dupliquerait.
+        BolCreatureCapacite::unguarded(function () use ($capacites) {
+            foreach ($capacites as $capacite) {
+                BolCreatureCapacite::updateOrCreate(['id' => $capacite['id']], $capacite);
+            }
+        });
     }
 }

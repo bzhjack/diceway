@@ -49,6 +49,17 @@ ci-dessous pour les bornes PDF réelles de chaque fichier).
 | `11-chapitre5-tolometh.md` | Chapitre 5 | 125-141 | 126-143 |
 | `12-annexe-saltimbanques-de-kutas.md` | Annexe : culte des Saltimbanques de Kutas | 142-144 | 144-146 |
 
+## Fiches de session et version jouable dans l'app
+
+Chaque chapitre a une fiche de session condensée, établie en relisant le texte avec le PDF :
+`chapter-one/` à `chapter-five/` (l'annexe des saltimbanques est dans celle du chapitre 4). Les blocs de stats
+perdus dans les fichiers `05` à `12` y sont rétablis. Le PDF source est hors du dépôt, dans
+`~/Téléchargements/La-Perle-du-Beshaar.pdf` ; on l'extrait avec `pdftotext -layout`.
+
+Le dossier `app/` contient un fichier JSON par chapitre, importable dans l'app avec
+`php artisan bol:import-scenario` (format : `../format-import.md`). Les chapitres se suivent : un personnage
+défini dans un chapitre est repris par les suivants. Importer `ch1.json`, puis `ch2.json`, et ainsi de suite.
+
 ## Pour la séance de ce soir
 
 Lis dans l'ordre `00` → `01` → `02` → `03` → `04`, et pioche dans `05`

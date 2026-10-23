@@ -110,7 +110,7 @@ import {lieuTexte} from './theatre.util';
       margin: 0 0 0.7rem;
       color: var(--dw-color-text-bright);
       font-family: 'Muse Display Harmony', serif;
-      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-size: calc(clamp(2rem, 4vw, 3.4rem) * var(--thr-k, 1));
       font-weight: 400;
       line-height: 1.02;
       text-shadow:

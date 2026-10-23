@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, Injector, input, output} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {TapisCard} from '../../models/tapis.model';
 import {BraisesComponent} from './braises';
@@ -6,6 +7,7 @@ import {CompagnieComponent} from './compagnie';
 import {SceneCartoucheComponent} from './scene-cartouche';
 import {SceneDecorComponent} from './scene-decor';
 import {SceneLectureComponent} from './scene-lecture';
+import {SceneLectureDialogComponent} from './scene-lecture-dialog';
 import {SceneStageStore} from './scene-stage.store';
 import {TroupeComponent} from './troupe';
 
@@ -21,6 +23,8 @@ import {TroupeComponent} from './troupe';
 })
 export class TheatreComponent {
   protected readonly store = inject(SceneStageStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly injector = inject(Injector);
 
   readonly cards = input.required<readonly TapisCard[]>();
   readonly sessionId = input.required<string>();
@@ -34,5 +38,23 @@ export class TheatreComponent {
   readonly changed = output<void>();
   readonly coulissesRequested = output<void>();
 
-  protected readonly regionNom = computed(() => this.store.regionNom(this.store.currentScene()));
+  protected readonly regionNom = computed(() => this.store.regionNom(this.store.displayedScene()));
+
+  /** Ouvre les notes de la scène en grand ; une scène chargée depuis une piste y est relayée à la page. */
+  protected agrandirLecture(): void {
+    this.dialog
+      .open<SceneLectureDialogComponent, void, BolSceneLoadResult>(SceneLectureDialogComponent, {
+        // Le store de la scène est fourni par la page : la fenêtre doit le retrouver.
+        injector: this.injector,
+        panelClass: 'lec-dialog',
+        maxWidth: '96vw',
+        autoFocus: 'dialog',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.sceneChanged.emit(result);
+        }
+      });
+  }
 }

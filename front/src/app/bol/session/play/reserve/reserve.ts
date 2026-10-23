@@ -15,6 +15,7 @@ import {openCombatantStatblock} from '../../combat-statblock.util';
 import {ReservePlacementService} from '../../reserve-placement.service';
 import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, KIND_LABEL, RESERVE_TABS, reserveTab} from './reserve.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 interface ReserveRow {
   readonly entry: CombatCatalogEntry;
@@ -34,7 +35,7 @@ const AVATAR_CLICK_DELAY_MS = 220;
  * session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule, SceneStripComponent],
+  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule, SceneStripComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

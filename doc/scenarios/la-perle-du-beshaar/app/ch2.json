@@ -1,0 +1,358 @@
+{
+  "saga": "perle-du-beshaar",
+  "scenario": {
+    "cle": "ch2",
+    "titre": "Perle du Beshaar — 2. De sable et d'eau",
+    "pitch": "Chapitre 2 de La Perle du Beshaar (Chroniques lémuriennes 4, livre p. 56-83).\n\nDe Malakut à Badhasar par le col de Yazik, puis deux mois de désert. Les héros croisent une guerre entre tribus beshaaries, sauvent (ou non) la princesse Bethsida promise au puits des princes de Jalad Nût, où rôde la morte-vivante Djidaâ, et trouvent enfin la vallée des Nata Urdu, le peuple de l'eau, gardien de la Perle de Tolometh. Voler la Perle, rester, ou repartir bredouille : ce choix décide de la suite de la saga.\n\nFin d'épisode : les héros récupèrent leurs points d'héroïsme dépensés et gagnent chacun 1 point d'expérience."
+  },
+  "personnages": {
+    "pillard": {
+      "kind": "pnj", "nom": "Pillard beshaari", "rang": "coriace", "region": "Désert de Beshaar",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Barbare", "rang": 2 }],
+      "armes": ["Épée", "Javelot / fléchette"],
+      "commentaire": "Livre p. 60. Épée d6+1 dans le livre (avec sa Vigueur 1). Rencontre aléatoire : deux pillards par héros ; ils rompent le combat dès qu'ils sentent qu'ils n'auront pas l'avantage."
+    },
+    "guerrier-ilemah": {
+      "kind": "pnj", "nom": "Guerrier ilémah", "rang": "coriace", "region": "Désert de Beshaar",
+      "vigueur": 0, "agilite": 1, "esprit": 0, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Soldat", "rang": 1 }],
+      "armes": ["Épée", "Javelot / fléchette"],
+      "armures": ["Petit bouclier"],
+      "commentaire": "Livre p. 72 (guerriers beshaaris, coriaces). Une plume de coursier coupée et teinte en rouge sur le turban."
+    },
+    "pietaille-ilemah": {
+      "kind": "pnj", "nom": "Combattant ilémah", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 72 (guerriers beshaaris, piétaille) : Attaque +0, dégâts d3, règle de horde (BoL p. 132)."
+    },
+    "guerrier-beckeram": {
+      "kind": "pnj", "nom": "Guerrier beckéram", "rang": "coriace", "region": "Désert de Beshaar",
+      "vigueur": 0, "agilite": 1, "esprit": 0, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Soldat", "rang": 1 }],
+      "armes": ["Épée", "Javelot / fléchette"],
+      "armures": ["Petit bouclier"],
+      "commentaire": "Livre p. 72 (guerriers beshaaris, coriaces). Une petite palme en cuivre martelé sur le front."
+    },
+    "pietaille-beckeram": {
+      "kind": "pnj", "nom": "Combattant beckéram", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 72 (guerriers beshaaris, piétaille) : Attaque +0, dégâts d3, règle de horde (BoL p. 132)."
+    },
+    "djaloum": {
+      "kind": "pnj", "nom": "Djaloum ut Beckéram", "rang": "rival", "region": "Désert de Beshaar",
+      "vigueur": 1, "agilite": 2, "esprit": 0, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 1, "defense": 1,
+      "vitalite": 11, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Barbare", "rang": 0 },
+        { "nom": "Noble", "rang": 2 },
+        { "nom": "Chasseur", "rang": 1 },
+        { "nom": "Soldat", "rang": 1 }
+      ],
+      "armes": [{ "nom": "Cimeterre", "degats": "d6", "type": "M" }, "Javelot / fléchette"],
+      "avantages": ["Né en selle", "Renard du désert"],
+      "desavantages": ["Bouseux"],
+      "commentaire": "Livre p. 73. Ses 5 points d'héroïsme (3 restants au début du chapitre) sont portés en vilénie, la réserve de points d'un rival dans l'app. Cimeterre d6+1 dans le livre (avec sa Vigueur 1).\nLa trentaine, trapu, yeux vairons (marron et vert), cheveux d'un noir luisant, traits sévères taillés à la serpe, port noble. Chef de l'escorte funéraire du prince Yezra, il prend cet honneur avec gravité. Loyal à sa tribu et à ses coutumes."
+    },
+    "fossoyeur": {
+      "kind": "pnj", "nom": "Fossoyeur de Jalad Nût", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 1,
+      "carrieres": [{ "nom": "Ouvrier", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Pas de profil dans le livre : profil des villageois nata urdu (Attaque +0, dégâts d3, vitalité 1, règle de horde).\nGens de Kérêb Urdu, le « clan de la honte » : il manque à tous la première phalange de l'auriculaire gauche. Ne parlent que le beshaari. Serviles devant les Beckéram, pleins de ressentiment en secret."
+    },
+    "villageois": {
+      "kind": "pnj", "nom": "Villageois nata urdu", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 1,
+      "carrieres": [{ "nom": "Fermier", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 79 : Attaque +0, dégâts d3, carrière paysan 1 (Fermier ici), vitalité 1, règle de horde (BoL p. 132). Lances, haches, arcs et quelques épées. Personne n'est un vrai guerrier."
+    },
+    "mercenaire": {
+      "kind": "pnj", "nom": "Mercenaire beshaari", "rang": "coriace", "region": "Désert de Beshaar",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Mercenaire", "rang": 1 }],
+      "armes": ["Épée", "Javelot / fléchette"],
+      "armures": ["Petit bouclier"],
+      "commentaire": "Livre p. 81. Épée d6+1 dans le livre (avec sa Vigueur 1). Recrutés par Karstus à Badhasar. Ils fuient ou se rendent si le combat tourne mal. L'un d'eux, Muljab, parlera contre la vie sauve."
+    },
+    "shammaz": {
+      "kind": "pnj", "nom": "Shammaz", "rang": "rival", "region": "Malakut",
+      "vigueur": 1, "agilite": 3, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 13, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Soldat", "rang": 1 },
+        { "nom": "Mercenaire", "rang": 2 },
+        { "nom": "Chasseur", "rang": 1 },
+        { "nom": "Barbare", "rang": 1 }
+      ],
+      "armes": ["Épée", "Dague"],
+      "armures": ["Armure légère"],
+      "avantages": ["Dur à cuire", "Intrépide"],
+      "desavantages": ["Cupide"],
+      "commentaire": "Livre p. 81. Épée d6+1, dague d6M+1 dans le livre (avec sa Vigueur 1). Bretteur redoutable : combat habituellement à deux armes (BoL p. 65).\nTrapu, teint olivâtre, cheveux noirs bouclés, visage balafré : un Malakuti typique, vétéran de plusieurs guerres recruté à prix d'or par Karstus. Pas un fanatique : il se rend et parle contre la vie sauve."
+    },
+    "djidaa": {
+      "kind": "creature", "nom": "Grand-mère Djidaâ", "taille": "Grande",
+      "vigueur": 4, "agilite": 2, "esprit": 2, "attaque": 2, "defense": 0,
+      "vitalite": 20, "degats": "d6B", "protection": "2",
+      "capacites": [{ "nom": "Attaque spéciale", "detail": "Poussière de cadavre : au contact, Vigueur Ardu (-1) ou dé de malus" }],
+      "commentaire": "Livre p. 71, rivale morte-vivante. Taille « Grande » choisie pour lui donner le rang de rivale (elle a une taille humaine).\nPoussière de cadavre : un héros au corps à corps doit réussir un jet de Vigueur Ardu (-1) ou subir un dé de malus à toutes ses actions tant qu'il reste près d'elle ; il retente le jet au début de chaque round.\nVulnérabilité au feu : dégâts de feu doublés.\nCorps squelettique gris comme la pierre, hardes fanées, boucles d'oreille et bracelets d'or, yeux rouges au fond des orbites."
+    },
+    "fille-djidaa": {
+      "kind": "creature", "nom": "Fille de Djidaâ", "taille": "Moyenne",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "attaque": 1, "defense": 0,
+      "vitalite": 10, "degats": "d6M", "protection": "0",
+      "capacites": [{ "nom": "Attaque spéciale", "detail": "Fureur de l'outragée : dé de bonus aux jets d'attaque" }],
+      "commentaire": "Livre p. 71, coriaces morts-vivants (×5). Princesses beckéram condamnées comme Djidaâ, momifiées, vêtues de soieries souillées et parées de bijoux. Elles haïssent les vivants."
+    },
+    "crabe": {
+      "kind": "creature", "nom": "Crabe de sable", "taille": "Très grande",
+      "vigueur": 4, "agilite": 3, "esprit": 0, "attaque": 3, "defense": 0,
+      "vitalite": 99, "degats": "d6B", "protection": "0",
+      "commentaire": "Livre p. 78. Le gardien de l'œil de Tolometh : un golem de sable. Le livre ne lui donne aucune vitalité (99 ici : ignorer).\nGardien éternel : les coups portent, mais il se reconstitue aussitôt. Il ne quitte jamais le sanctuaire.\nCorps de sable : se reforme instantanément n'importe où dans le sanctuaire, seulement si on lui a pris l'œil.\nRapide comme le vent : dé de malus au jet de réaction des héros en début de combat ; agit comme un rival dans l'ordre de réaction.\nMagie des slorth : détruire ou déplacer les ossements des trois niches est le seul moyen de le détruire. S'il franchit le seuil à la poursuite du voleur, il explose en un jet de sable."
+    },
+    "hyene": { "kind": "creature", "catalogue": "Hyène du Beshaar" },
+    "meneuse": { "kind": "creature", "catalogue": "Meneuse de meute (hyène du Beshaar)" },
+    "chien-zaggath": { "kind": "creature", "catalogue": "Chien de Zaggath" },
+    "spicomallos": { "kind": "creature", "catalogue": "Spicomallos" },
+    "dinohyus": { "kind": "creature", "catalogue": "Dinohyus" },
+    "phororacos": { "kind": "creature", "catalogue": "Phororacos" },
+    "cathgan": { "kind": "creature", "catalogue": "Cathgan" },
+    "scorpion": { "kind": "creature", "catalogue": "Scorpion-araignée géant" }
+  },
+  "scenes": [
+    {
+      "cle": "route",
+      "titre": "Sur la route du col de Yazik",
+      "region": "Malakut",
+      "lieu": "La route du Malak, puis les contreforts des Besharoon",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "L'heure du départ a sonné. Surdral a tenu à vous accompagner jusqu'aux portes de la ville pour vous souhaiter bon voyage et bonne chance.\n\nLa route qui remonte le cours du Malak est assez fréquentée. Un grand pont enjambe le fleuve vers Halakh ; vous prenez la piste secondaire qui grimpe dans les contreforts des Besharoon, vers le col de Yazik et Badhasar.\n\nSur la route, vous croisez un marchand beshaari qui descend vers Malakut avec cinq compagnons armés et trois parvalus chargés. Il vous salue avec méfiance, la main près de son arme.\n\nAprès la chaleur moite de la vallée du Malak et de sa jungle, les Besharoon offrent un paysage plus minéral et plus frais. La végétation se clairsème à mesure que la route de terre, bordée de petits murs de soutènement, serpente en longs lacets.",
+      "jeu": "Al-Mirik, marchand de Badhasar, vend à Malakut des dagues (les lames de Badhasar sont réputées) et des pierres brutes achetées aux nomades. Méfiant (il craint les voleurs), puis volontiers bavard une fois rassuré : l'occasion de décrire le Beshaar (06-cadre-le-beshaar.md). Il n'a rencontré aucun danger particulier.\nDurée : une quinzaine de jours à dos de parvalus jusqu'à Badhasar, puis environ deux mois de désert.",
+      "pistes": [{ "texte": "À deux jours du col, des grognements dans les taillis", "vers": "festin" }]
+    },
+    {
+      "cle": "festin",
+      "titre": "Un sordide festin",
+      "region": "Désert de Beshaar",
+      "lieu": "Contreforts des Besharoon, à deux jours du col de Yazik",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "L'après-midi touche à sa fin quand des grognements se font entendre dans les taillis, un peu en contrebas de la piste. À travers une trouée dans la végétation, vous apercevez à une vingtaine de mètres un énorme phacochère qui fouille le sol de son groin.\n\nEn vous rapprochant, vous constatez que les bêtes sont en train de mâchouiller les cadavres de deux hommes. Leurs affaires sont répandues sur le sol piétiné, autour du petit cercle de pierres d'un feu de camp qui n'a jamais été allumé. Le plus gros des animaux, une femelle, porte quelques entailles au sang déjà coagulé. Elle relève la tête à votre approche, pas le moins du monde effrayée, et pousse un grognement sourd et menaçant. Son comparse garde le groin fourré dans une sacoche et semble mâcher avidement des herbes séchées. Trois petits marcassins fouillent le sol à côté de leurs parents.",
+      "jeu": "Chasseur ou dresseur : reconnaître des dinohyus (BoL p. 114). Esprit : remarquer de loin que la bête se repaît de restes humains. On peut passer son chemin sans les déranger.\nCombat : les dinohyus ne lâchent pas leur festin ; le feu les fait hésiter un instant, sans plus.\n• Femelle : blessée, vitalité 30 ; se bat jusqu'à la mort.\n• Mâle : gavé de meush, léthargique (perd son attaque féroce) ; rompt le combat à la moitié de sa vitalité.\n• Les trois marcassins fuient dès le début.\nAprès le combat : deux hommes petits, à la peau pâle et aux cheveux noirs (des Kashtiens, si l'origine ou les carrières des héros le justifient). Un marcassin abattu à la fléchette. Une sarbacane brisée, un bâton de marche, un poignard rudimentaire, une pipe en bois gravée au long tuyau, une sacoche de copeaux d'écorce séchée : du meush (reconnu par un Parsooli), de quoi fumer une dizaine de pipes. Sur un corps, un pendentif : une dent pointue de quinze centimètres, finement gravée.\nLa pipe qui rêve : qui y fume du meush le soir fait un rêve symbolique et gagne le lendemain un dé de bonus dans une situation choisie en secret par le MJ. À chaque pipe, 2d6 : sur un double 1, désavantage addiction (meush), dé de malus à tous les jets sans sa pipe quotidienne.",
+      "notes": "Le pendentif kashtien facilitera la vie des héros dans un chapitre futur (marais de Kasht). Ce que faisaient ces deux Kashtiens dans les Besharoon est une autre histoire.",
+      "pistes": [{ "texte": "Franchir le col de Yazik jusqu'à Badhasar", "vers": "badhasar" }],
+      "distribution": [{ "perso": "dinohyus", "qty": 2, "attitude": "hostile" }]
+    },
+    {
+      "cle": "badhasar",
+      "titre": "Badhasar, la porte du désert",
+      "region": "Désert de Beshaar",
+      "lieu": "Badhasar, la demeure de Chamir",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le col de Yazik est enfin atteint. L'endroit, nu et raviné, offre une vue époustouflante sur le désert du Beshaar qui se déploie de l'autre côté des Besharoon : une immense steppe rocailleuse, parsemée de massifs rocheux, jusqu'à un horizon brouillé par les brumes de chaleur. Le paysage, bien que magnifique, n'a vraiment rien d'engageant.\n\nLe versant sud contraste avec le versant nord : la végétation se fait rare et maigre, la chaleur et la sécheresse augmentent. La terre ravinée est crevassée et poussiéreuse. Quelques jours encore, et voici Badhasar.\n\nOn vous indique sans peine la demeure de Chamir. La lettre de Surdral vous ouvre grand sa porte : le vieux Beshaari à la peau ridée et aux yeux d'un bleu lumineux s'enquiert de la santé de son ami et vous offre l'hospitalité.",
+      "jeu": "Chamir fournit coursiers des sables et provisions, sans rien demander : tout est arrangé avec Surdral.\nIl présente un guide, Milik : une trentaine d'années, sourire édenté, pauvrement vêtu. Il ne s'est jamais aventuré aussi loin à l'ouest, mais connaît le désert comme sa poche.\nSe renseigner : personne ne sait rien de Tolometh ni de la Perle. Quelques légendes beshaaries et mises en garde sur les créatures du désert. Les astrologues de Sa'Tel peuvent dresser un horoscope (Dv p. 7 ; horoscope majeur : 3 rangs d'astrologue et 2 en Esprit).\nAccroche optionnelle : « Les larmes de jouvence » (BoL p. 180), avec Chamir oncle maternel de Manna et Denh Al'Tamûl.",
+      "pistes": [{ "texte": "Partir dans le désert avec Milik", "vers": "traversee" }]
+    },
+    {
+      "cle": "traversee",
+      "titre": "Traverser le désert",
+      "region": "Désert de Beshaar",
+      "lieu": "La steppe rocailleuse au pied des Besharoon",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Plein ouest, la ligne des Besharoon à main droite, vous traversez l'immense steppe rocailleuse et aride. Le soleil martèle la roche et le sable, et les jours se ressemblent : chevauchées épuisantes dans la fournaise, nuits glaciales sous les étoiles, points d'eau que Milik devine en lisant « les signes du sable et du vent ». Il estime qu'il faudra au moins deux lunes pour arriver à destination.",
+      "jeu": "Armures : sous le soleil du Beshaar, on ne porte qu'une armure légère, et seulement pour combattre. Se battre en armure moyenne ou lourde coûte 1 point de vitalité tous les 3 rounds.\nLangue : la plupart des Beshaaris connaissent des rudiments de lémurien, surtout au nord-est.\nRencontres (2d6) :\n2 — Murmures dans le vent du couchant : jet d'Esprit pour ne pas partir dans la nuit à leur recherche.\n3-5 — Tempête de sable, le « souffle de Karyzon » : s'abriter et endurer de longues heures.\n6 — Pillards : un cavalier suit le groupe, puis deux pillards beshaaris par héros attaquent pour les montures ; ils fuient s'ils n'ont pas l'avantage.\n7 — Hyènes du Beshaar (ou chiens de Zaggath) en chasse : décourager ces prédateurs patients.\n8 — Un spicomallos boit au point d'eau et compte y passer la nuit.\n9 — Une Djanaâ, rare femelle coursier aux plumes de queue bleues, dans un troupeau sauvage : Milik veut la capturer.\n10 — Un couple de phororacos (BoL p. 121) dépèce un coursier : faire un détour.\n11-12 — Un cathgan (BoL p. 113) dans une botte au matin : morsure venimeuse.\nLes fiches de ces créatures et des pillards sont dans les coulisses.",
+      "pistes": [{ "texte": "Deux mois plus tard, un tumulte derrière une colline", "vers": "embuscade" }]
+    },
+    {
+      "cle": "embuscade",
+      "titre": "La guerre au désert",
+      "region": "Désert de Beshaar",
+      "lieu": "Une colline basse, au-delà des terres connues de Milik",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Épuisés par votre progression sous un soleil de plomb, vous vous apprêtez à contourner une fois encore une longue colline quand le vent vous apporte les échos d'un tumulte : des cris furieux, le cliquetis des armes. Milik vous presse de passer votre chemin : si un scorpion et un serpent se battent, pourquoi aller y mettre les mains ?\n\nDu sommet de la colline, vous découvrez une véritable scène de guerre. Un convoi de Beshaaris est attaqué par d'autres Beshaaris. Les défenseurs, assaillis de toutes parts, protègent un travois accroché au dos d'un coursier, sur lequel repose un sarcophage de pierre blanche. Un deuxième travois porte une sorte de palanquin de toile. Beaucoup ont mis pied à terre ; la mêlée fait rage, et des corps ajoutent de grandes traînées écarlates à l'ocre du sable.\n\nÀ l'arrière du convoi, des assaillants atteignent le palanquin. Un guerrier en déchire la toile, en tire une femme par les cheveux et l'abat d'un coup d'épée. Avec un cri de bête blessée, une autre femme jaillit, richement vêtue, jeune, un poignard à la main, et lui saute à la gorge. Il l'envoie rouler au sol d'un revers de la main. Un deuxième assaillant s'approche…",
+      "jeu": "Observer : une trentaine d'assaillants contre une quinzaine de défenseurs, qui vont céder. Les combats les plus furieux ont lieu autour du sarcophage. Assaillants (Ilémah) : plume de coursier coupée et teinte en rouge sur le turban. Défenseurs (Beckéram) : petite palme de cuivre sur le front.\nEffectifs : Ilémah 10 coriaces et 20 piétaille ; Beckéram 5 coriaces et 10 piétaille. Les cartes représentent une partie de la mêlée.\nIntervenir : les deux assaillants près de Bethsida hésitent (ils veulent l'enlever, pas la tuer) : une vraie fenêtre pour la sauver. Après quelques rounds, Djaloum et 5 cavaliers surgissent (ajouter Djaloum depuis les coulisses) et mettent les Ilémah en fuite. Djaloum fait achever les blessés.\nRester cachés : le sarcophage est renversé, le corps desséché roule dans la poussière ; puis les 6 cavaliers renversent la bataille. Deux Ilémah enlèvent Bethsida ; 4 cavaliers les poursuivent. Le convoi repart vers l'ouest : les héros le retrouveront à Jalad Nût.",
+      "notes": "Les funérailles du prince Yezra ut Beckéram : mort dans son sommeil (de mort naturelle), embaumé, conduit à Jalad Nût, le « Puits des princes ». Sa veuve Bethsida, des Nûr Saâda, ignore la coutume : quand un prince meurt dans son lit, son épouse est soupçonnée et descendue vivante dans le puits avec lui. Elle est innocente.\nLes Ilémah, ennemis jurés, voulaient démembrer le corps du prince pour déshonorer la tribu. Djaloum a été attiré au loin par une diversion.",
+      "pistes": [
+        { "texte": "Intervenir pour sauver la jeune femme", "vers": "djaloum" },
+        { "texte": "Rester cachés, puis rejoindre Jalad Nût à la nuit", "vers": "jalad-nut" }
+      ],
+      "distribution": [
+        { "perso": "guerrier-ilemah", "qty": 4, "attitude": "hostile" },
+        { "perso": "pietaille-ilemah", "qty": 6, "attitude": "hostile" },
+        { "perso": "guerrier-beckeram", "qty": 2, "camp": "heros", "attitude": "mefiant" },
+        { "perso": "pietaille-beckeram", "qty": 3, "camp": "heros", "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "djaloum",
+      "titre": "Djaloum et Bethsida",
+      "region": "Désert de Beshaar",
+      "lieu": "Le convoi funéraire, après la bataille",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Les Ilémah rompent le combat et se dispersent. Le chef des cavaliers retient ses hommes de les poursuivre, mais leur ordonne d'achever les blessés. Après s'être assuré que le sarcophage est intact, il vient vers vous.\n\nC'est un Beshaari dans la trentaine, trapu, aux yeux vairons, l'un marron, l'autre vert, aux cheveux d'un noir luisant. Ses traits sévères sont taillés à la serpe, et son port noble en impose. Ses armes sont de qualité, et des bijoux de prix ornent le cou de son coursier : Djaloum ut Beckéram.\n\nLa jeune femme, remise du coup qu'elle a reçu, s'est précipitée sur le corps de sa servante, qu'elle serre dans ses bras avec un sanglot. Elle a dix-sept ans à peine. Elle n'est pas particulièrement belle, mais ses yeux violets sont saisissants. Elle porte des soieries brodées et de luxueux bijoux.",
+      "jeu": "Djaloum remercie les héros, tout en s'étonnant que des étrangers se mêlent d'une querelle qui ne les regarde pas. Il propose de faire route ensemble jusqu'à un camp à quelques heures à l'ouest, Jalad Nût. S'il a été aidé : un ami fidèle et loquace. Sinon : hospitalier mais réservé et méfiant (un bon jet d'Aura peut le radoucir).\nBethsida, fille du shaâr Azrim des Nûr Saâda, veuve depuis un an, sans enfant, rêve de rentrer chez son père. Sauvée par les héros : reconnaissance éternelle. Elle cherche l'amitié d'une héroïne (sa servante vient d'être tuée).\nMilik a profité du combat pour décamper avec son coursier et quelques provisions, en laissant les biens et montures des héros (sauf précautions des joueurs). Son absence ne change rien à la suite.\nEn chemin, Djaloum et Bethsida expliquent qui ils sont, qui est le défunt et où ils l'emmènent.",
+      "notes": "Bethsida ignore le sort qui l'attend à Jalad Nût. Djaloum, lui, le sait, et n'a jamais assisté à une inhumation au puits des princes.",
+      "pistes": [{ "texte": "Jalad Nût, avec le convoi", "vers": "jalad-nut" }],
+      "distribution": [
+        { "perso": "djaloum", "attitude": "amical" },
+        { "perso": "guerrier-beckeram", "qty": 2, "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "jalad-nut",
+      "titre": "Jalad Nût, le puits des princes",
+      "region": "Désert de Beshaar",
+      "lieu": "Jalad Nût, hameau du clan de la honte",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le hameau se terre dans une faille d'un plateau rocheux, à quelques dizaines de mètres au-dessus de la steppe : une douzaine de cabanes semi-troglodytes en pierres sèches et de tentes rondes sur une assise de pierres. Une citerne naturelle recueille l'eau qui ruisselle des parois. Dans l'à-pic, un escalier raide bordé d'un muret grimpe jusqu'à une grande grotte, six mètres plus haut ; un palan s'aperçoit à son entrée.\n\nL'endroit respire la misère et a quelque chose de lugubre. Des hommes et des femmes en vêtements sombres s'assemblent pour accueillir le convoi. Ils lèvent la main gauche en signe de salut : à tous, il manque la première phalange de l'auriculaire.\n\nDjaloum s'adresse avec morgue à un certain Amrir et ordonne que l'on nourrisse ses hommes, que l'on décharge le sarcophage et que l'on abreuve les coursiers. Les guerriers chassent sans ménagement les habitants de leurs tentes. Les villageois obéissent avec docilité.\n\nOn raconte, dans la région, qu'il existe plus à l'ouest une vallée bénie des dieux, au pied de deux pics jumeaux, où l'eau coule en abondance toute l'année : le pays des Nata Urdu, « le peuple de l'eau ». Des paysans paisibles et hospitaliers, que nul nomade n'oserait attaquer. Jadis, un chef razzia leur village et emmena ses habitants en esclavage ; aussitôt, tous les puits de sa tribu devinrent saumâtres et ses points d'eau s'asséchèrent. Il dut relâcher ses captifs pour que l'eau revienne. Depuis, nul n'ose s'en prendre à eux.",
+      "jeu": "Esprit : derrière la servilité de façade des villageois, des regards de ressentiment et de colère.\nDjaloum invite les héros sous la tente principale : ici reposent les rois et princes beckéram, gardés par les Kérêb Urdu, le « clan de la honte », condamnés pour le crime d'une ancêtre (« Que son nom et son forfait restent à jamais dans l'oubli »). L'inhumation aura lieu ce soir même : il craint une nouvelle attaque. Il convie les héros à y assister. Bethsida, épuisée, reste dans une autre tente (éventuellement avec une héroïne).\nParler aux fossoyeurs : ils ne parlent que le beshaari. Méfiants, mais un jet d'Aura et du respect les amadouent. Tolometh et la Perle ne leur disent rien ; une vallée au pied de deux pics jumeaux évoque aussitôt les Nata Urdu. On sent l'amertume d'un clan puni depuis des générations. Sur l'inhumation : « l'épouse accompagne son prince à sa dernière demeure », sans plus.\nDjaloum et Bethsida peuvent indiquer la vallée (une semaine de voyage) ; Bethsida y est allée enfant avec son père ; Djaloum peut fournir un guide.\nSi les héros ne sont pas intervenus à l'embuscade : ils arrivent de nuit, reçoivent l'hospitalité des fossoyeurs, retrouvent Djaloum (méfiant) et Bethsida, reprise à ses ravisseurs. Djaloum ne les invite pas à l'inhumation, sauf raison particulière.",
+      "notes": "La chose dans le puits : Djidaâ, l'ancêtre du clan, empoisonna son époux le shaâr et fut descendue vivante dans le gouffre. Elle maudit la tribu, invoqua les soixante-dix-sept démons du désert, mourut… et ne trouva pas le repos. Morte-vivante, elle ronge les morts et a fait de cinq princesses condamnées ses « filles ». Les gens de Jalad Nût savent qu'une « chose » dévore les corps ; ils n'en ont jamais rien dit aux Beckéram, par vengeance.",
+      "pistes": [{ "texte": "La nuit tombée, l'inhumation", "vers": "inhumation" }],
+      "distribution": [
+        { "perso": "djaloum", "attitude": "amical" },
+        { "perso": "fossoyeur", "qty": 3, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "inhumation",
+      "titre": "L'inhumation",
+      "region": "Désert de Beshaar",
+      "lieu": "Jalad Nût, la grotte du gouffre",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Après le repas du soir, Amrir vient annoncer que tout est prêt. Bethsida a revêtu des vêtements princiers ; ses bijoux luisent à la lueur des torches. Djaloum prend la tête de la procession dans l'escalier à flanc de falaise.\n\nLa grotte est large d'une quinzaine de mètres, basse de plafond. Deux torches l'éclairent faiblement. Après cinq mètres de pierre inégale s'ouvre un gouffre obscur qui occupe tout le fond. Six villageois finissent d'accrocher un gros cordage à un cabestan de bois clouté de fer. Une plate-forme est suspendue dans le vide contre le bord : le sarcophage du prince y repose, entre Amrir et un autre villageois.\n\nLes Beckéram se déploient en arc de cercle, graves et solennels. Djaloum s'avance avec Bethsida jusqu'à la plate-forme et incline un moment le front devant le sarcophage. Puis il adresse un signe de tête à Amrir. Les deux fossoyeurs tirent Bethsida à eux et entreprennent de lui lier les mains à un cordage de la plate-forme. Elle balbutie des protestations. Djaloum recule, le visage fermé, et se tourne vers le cabestan.\n\nComprenant qu'elle va être descendue vivante avec le mort, Bethsida se met à hurler, à supplier, et vous implore d'empêcher cette abomination.",
+      "jeu": "Si les héros protestent, Djaloum explique la coutume et rappelle qu'ils sont des hôtes, sans voix au chapitre sur les lois du désert.\nIntervenir = combat contre Djaloum et 5 guerriers beckéram (coriaces). Les 8 fossoyeurs (piétaille : 6 au cabestan, 2 sur la plate-forme) :\n• ralliés (discours et jet d'Aura, plus facile si les héros leur ont montré de l'intérêt) : l'un se laisse glisser le long du palan pour alerter le village, qui massacre les Beckéram restés en bas ; les autres se battent avec les héros ;\n• sinon : ils regardent sans intervenir, puis proposent d'éliminer les Beckéram restés au village : pas de témoins, sans quoi la tribu traquera les héros et massacrera Kérêb Urdu.\nBethsida promet aux héros une place dans la tribu de son père.\nNe pas intervenir : la plate-forme descend parmi les cris. Au bout d'une minute ou deux la corde se détend, puis s'agite. Elle remonte avec Amrir et son compagnon seuls, sombres, la joue de l'un zébrée de griffures sanglantes. Qui s'attarde entend un ultime hurlement de terreur.\nLa nuit, on peut redescendre en secret : les gens de Jalad Nût aident volontiers. Que les Beckéram ne le découvrent jamais : un tel affront ne se lave que dans le sang.",
+      "pistes": [
+        { "texte": "Descendre dans le gouffre", "vers": "puits" },
+        { "texte": "Au matin, reprendre la route", "vers": "reprendre" }
+      ],
+      "distribution": [
+        { "perso": "djaloum", "attitude": "neutre" },
+        { "perso": "guerrier-beckeram", "qty": 5, "attitude": "neutre" },
+        { "perso": "fossoyeur", "qty": 8, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "puits",
+      "titre": "Grand-mère Djidaâ",
+      "region": "Désert de Beshaar",
+      "lieu": "Jalad Nût, le fond du puits des princes",
+      "moment": "nuit",
+      "danger": 4,
+      "lecture": "À l'odeur minérale de la caverne se mêlent des relents de putréfaction. Le sarcophage du prince n'est pas là, mais de longues éraflures sur la pierre montrent qu'on l'a traîné plus loin. Bethsida n'est visible nulle part.\n\nQuelques mètres plus loin, un renfoncement est encombré d'une dizaine de sarcophages ouverts, aux couvercles brisés. Des ossements blanchis luisent çà et là ; un crâne vous contemple de ses orbites vides. Des lambeaux de vêtements pendent aux aspérités de la paroi, en une parodie de décoration.\n\nAu fond, une femme est assise sur un sarcophage, occupée à ronger la chair desséchée d'un avant-bras. Son corps squelettique a la teinte grise de la pierre, la peau collée aux os. Elle porte des hardes fanées, mais encore des boucles d'oreilles et des bracelets d'or. La lumière lui fait lever la tête ; ses yeux enfoncés luisent d'un éclat rouge et malsain.\n\n« Oh, grand-mère Djidaâ a de la visite », glousse-t-elle d'une voix rauque. « Levez-vous, mes chéries, il faut accueillir nos hôtes. »\n\nDes sarcophages se dressent des cadavres de femmes momifiés, vêtus de soieries souillées et parés de bijoux. Djidaâ jette le bras qu'elle grignotait et se lève avec un sourire d'une horrible gourmandise.",
+      "jeu": "Descendre (une quinzaine de mètres) : la plate-forme, en actionnant le cabestan (au moins 2 points de Vigueur cumulés), ou en glissant le long du cordage (Agilité selon les carrières pour descendre, Vigueur pour remonter).\nDjidaâ : poussière de cadavre (au contact, Vigueur Ardu -1 ou dé de malus, à retenter chaque round) ; dégâts de feu doublés.\nFilles : dé de bonus aux jets d'attaque.\nBethsida est enfermée dans un sarcophage fermé : on entend ses cris étouffés. Libérée, traumatisée mais vivante, infiniment reconnaissante.\nButin (piller des tombes reste discutable) : une jolie fortune en bijoux beshaaris ; une dague de Badhasar au pommeau d'émeraude (arme alchimique rare, dé de bonus aux dégâts) ; un cimeterre à la lame gravée à l'or fin (arme alchimique courante, relancer les 1 aux dégâts) ; une flûte beshaarie en ivoire (objet alchimique rare, dé de bonus pour en jouer).",
+      "notes": "Djidaâ voulait laisser Bethsida mourir dans le sarcophage pour en faire une nouvelle « fille ».",
+      "pistes": [{ "texte": "Remonter et reprendre la route", "vers": "reprendre" }],
+      "distribution": [
+        { "perso": "djidaa", "attitude": "hostile" },
+        { "perso": "fille-djidaa", "qty": 5, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "reprendre",
+      "titre": "Reprendre la route",
+      "region": "Désert de Beshaar",
+      "lieu": "Jalad Nût, au matin",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "L'aube se lève sur le plateau de Jalad Nût. Vous reprenez la route vers le couchant, avec une idée plus claire de votre destination : une vallée au pied de deux pics jumeaux, à une semaine de voyage.",
+      "jeu": "Selon ce qui s'est passé :\n• Bethsida sauvée au grand jour (Beckéram tués) : elle promet de « racheter » le clan de la honte et de l'accueillir dans la tribu de son père, qui ignorait cette coutume et y verra un affront. Les gens de Jalad Nût partent avec elle chez les Nûr Saâda (une petite semaine au sud-est). Elle offre aux héros la Larme de la nuit.\n• Bethsida sauvée en secret : elle guide les héros jusqu'aux Nata Urdu, se fait raccompagner chez elle depuis la vallée, et leur laisse la Larme de la nuit en cadeau d'adieu.\n• Bethsida non sauvée : les indications de Djaloum ou des fossoyeurs, éventuellement un guide… et le souvenir de ses cris.\nLa Larme de la nuit : pendentif d'or serti d'un saphir noir étoilé, célèbre chez les Nûr Saâda. Une fois par aventure, un coup de chance (BoL p. 58) sans dépenser de point d'héroïsme. Tout Nûr Saâda reconnaît son porteur comme un ami à aider en toutes circonstances.",
+      "pistes": [{ "texte": "Une semaine plus tard, les pics jumeaux", "vers": "nata-urdu" }]
+    },
+    {
+      "cle": "nata-urdu",
+      "titre": "Nata Urdu, le peuple de l'eau",
+      "region": "Désert de Beshaar",
+      "lieu": "La vallée des pics jumeaux",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une semaine vers le couchant, puis un peu au nord, vers les Besharoon. Les deux pics jumeaux se découpent bientôt sur le ciel. Une piste peu fréquentée grimpe en pente douce jusqu'à une étroite vallée.\n\nSoudain, une vision idyllique se déploie devant vous, totalement incongrue dans ce paysage minéral. La vallée, longue et étroite, est un petit paradis de verdure : des arbres ombragent des champs cultivés et des pâturages clos de haies vives, les pentes sont aménagées en terrasses. Un paysan relève la tête, lève une main hésitante, et le petit garçon à ses côtés file vers le village en poussant de grands cris.\n\nUn attroupement vous attend : hommes, femmes, enfants, quelques regards méfiants, rien d'hostile. Des Beshaaris pour la plupart, mais aussi des métis, et même une ou deux têtes blondes. Les maisons de pierre sont modestes et bien tenues. Un vieillard ridé comme une vieille pomme s'avance en s'aidant d'un bâton et vous salue dans un lémurien hésitant : Narkum, chef du village. Une femme lui tend un bol d'eau ; il y boit une gorgée, puis vous le tend. L'eau est délicieusement fraîche, comme puisée à un torrent de montagne.\n\nÀ l'ombre d'un grand figuier, sur des tapis et des coussins, on vous sert de l'eau claire, du vin doux, des fruits juteux et du fromage.",
+      "jeu": "Conversation avec Narkum, franc et sans détour :\n• Lui-même : jeune, il a traversé tout le désert, vu Halakh et le « désert bleu », la mer. Il est revenu sans hésiter.\n• La source : au fond du village, une conque marine très ancienne, enchâssée dans la roche au-dessus d'un bassin, laisse couler jour et nuit, depuis des siècles, une eau fraîche qui irrigue la vallée. Un don des dieux au peuple gardien. Les Nata Urdu fournissent de l'eau aux tribus en temps de sécheresse.\n• La Perle : il soupire, les villageois hochent gravement la tête. Ce que les héros appellent la Perle aux yeux est la Perle de Tolometh (le nom de Tolometh lui est inconnu) : une énorme perle conservée dans un sanctuaire au fond de la vallée. Elle ne doit pas quitter le sanctuaire. D'autres étrangers sont venus la chercher, du temps du grand-père de son grand-père ; ils ont eu la sagesse de renoncer et de rester.\n• Son plaidoyer : les dieux ont leurs raisons ; un gardien puissant protège la Perle, et nul voleur n'est ressorti du sanctuaire. Pourquoi ne pas rester ? Une maison, une terre, un époux ou une épouse… « Nous ne sommes pas de fiers guerriers, mais nous nous battrons. Vous êtes forts, mais nous sommes nombreux. »\nUne chèvre est rôtie pour le soir, une maison prêtée. Surveillance discrète jour et nuit, armes simples gardées à portée de main (lances, arcs, coutelas, quelques épées) : quelques jets d'Agilité et de bonnes idées suffisent à la déjouer, surtout la nuit. Elle se relâche en quelques semaines si les héros restent.",
+      "notes": "La Perle de Tolometh est en réalité l'œil d'un prince-démon. Ni Narkum ni les Nata Urdu ne le savent : pour eux, c'est un don sacré. Ne pas vendre la mèche.",
+      "pistes": [{ "texte": "Aller au sanctuaire, au fond de la vallée", "vers": "sanctuaire" }],
+      "distribution": [{ "perso": "villageois", "qty": 4, "attitude": "amical" }]
+    },
+    {
+      "cle": "sanctuaire",
+      "titre": "Le sanctuaire de Tolometh",
+      "region": "Désert de Beshaar",
+      "lieu": "Le cirque au fond de la vallée",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Au fond de la vallée, à dix minutes du village, s'ouvre un petit cirque d'une vingtaine de mètres, ceint de falaises de près de quarante mètres. Une grande étendue de sable, curieusement uniforme et vierge de tout caillou, en occupe la plus grande partie. En face, de l'autre côté de cette « mare » de sable, une grande arche maçonnée, précédée d'un perron de trois marches et flanquée de pilastres cannelés, s'ouvre dans la roche. Une corde est tendue au-dessus du sable entre deux crochets de fer ; un curieux radeau de bois est remisé sur le côté.\n\nPosé sur le sable, le radeau flotte comme sur de l'eau, en plus dense. L'expérience est troublante. Un instant, vous croyez apercevoir une longue ondulation sous la surface, comme si une créature y nageait.\n\nLe sanctuaire est très ancien, érodé, ses chapiteaux effacés. À l'intérieur, l'air est frais et sec, le sable crisse sous les pieds. Une longue salle de six mètres sur douze, taillée dans la roche, voûtée. Sur les murs, des fresques dont il ne reste que des traces de bleu. Au fond, trois niches à plus de trois mètres du sol abritent des ossements empilés, surmontés d'un crâne, sous une épaisse poussière. Devant elles, un monticule de sable d'un bon mètre et demi, et à son sommet une boule opalescente de la taille d'une pastèque.",
+      "jeu": "Narkum conduit les héros s'ils promettent de ne rien tenter ; sinon ils trouvent seuls (les Nata Urdu les supplient de ne pas y aller, puis les attendent au retour).\nMer de sable à pied : on s'enfonce. Vigueur Difficile (-2) pour garder la tête hors du sable ; trois échecs de suite = englouti, mort en 3 rounds sans secours. S'en sortir seul : Vigueur Très Difficile (-4). Avec une aide (corde, perche, radeau) : dé de bonus et difficulté Moyenne (+0).\nLes ossements : Esprit ou carrière adaptée pour remarquer qu'il n'y a aucun os long humain, et que les mâchoires des crânes ont quelque chose d'étrange.\nLa Perle : une trentaine de centimètres, surface laiteuse irisée, froide, granuleuse par endroits ; à l'intérieur, des compartiments en amande qui évoquent des yeux. Pratiquement indestructible.\nLe gardien : dès qu'on touche la Perle, le sable devient un crabe géant qui la porte sur sa carapace. Ses coups le défont, mais il se reforme aussitôt. Seul moyen de le vaincre : détruire ou faire tomber les ossements des trois niches. Si un voleur franchit le seuil avec la Perle, le crabe explose en un jet de sable.",
+      "notes": "Les ossements sont ceux de trois slorth du Beshaar, sacrifiés pour créer le gardien de l'œil de Tolometh. Les héros doivent le découvrir par eux-mêmes.\nSi les ossements sont en place et que l'œil est replacé, le sable reprend aussitôt sa forme de gardien.",
+      "pistes": [{ "texte": "Le choix : voler, rester ou repartir", "vers": "choix" }],
+      "distribution": [{ "perso": "crabe", "attitude": "hostile" }]
+    },
+    {
+      "cle": "choix",
+      "titre": "Partir ou rester",
+      "region": "Désert de Beshaar",
+      "lieu": "La vallée des Nata Urdu",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Devant la conque sacrée, le bassin est silencieux. Les Nata Urdu vous regardent.",
+      "jeu": "Le vrai choix de fin de chapitre ; aucune option n'est « la bonne ».\n• Voler la Perle : si les Nata Urdu sont prévenus, ils attendent de l'autre côté de la mer de sable, armés (8 villageois piétaille par héros, hommes et femmes). On se fraie un chemin avec plus ou moins de violence. En passant devant la conque, l'eau a cessé de couler : le village est condamné à terme. Narkum supplie de rendre la Perle ; si elle revient au sanctuaire, la source repart.\n• Rester chez les Nata Urdu, pour quelques mois ou pour toujours : branche « Puisqu'il faut tout faire soi-même… ».\n• Repartir sans la Perle, annoncer l'échec (ou la vérité) à Arjanek : la suite au chapitre 3.\nFIN D'ÉPISODE : les héros récupèrent leurs points d'héroïsme dépensés et gagnent chacun 1 point d'expérience.",
+      "notes": "Ce choix détermine la suite de la saga.",
+      "pistes": [
+        { "texte": "Voler la Perle et partir (chapitre 3)" },
+        { "texte": "Rester chez les Nata Urdu", "vers": "karstus" },
+        { "texte": "Repartir sans la Perle (chapitre 3)" }
+      ],
+      "distribution": [{ "perso": "villageois", "qty": 8, "attitude": "hostile" }]
+    },
+    {
+      "cle": "karstus",
+      "titre": "Puisqu'il faut tout faire soi-même…",
+      "region": "Désert de Beshaar",
+      "lieu": "Le village des Nata Urdu, puis le goulet du cirque",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Plusieurs mois ont passé dans la paix de la vallée. Une nuit de lune presque pleine, vous êtes réveillés en sursaut par un vacarme et des hurlements.\n\nUn gigantesque scorpion-araignée vient de fondre sur le village, détruisant tout sur son passage. Les murs des maisons ne résistent ni à ses pinces puissantes ni aux coups de sa queue au dard terrifiant. Les villageois fuient en tous sens dans l'affolement ; quelques-uns se portent au-devant du monstre avec des torches et des lances. Mais la bête semble enragée, résolue à semer la mort. Ce va être un carnage.",
+      "jeu": "Diversion : Karstus a évoqué le scorpion-araignée géant (BoL p. 123) avec ordre de tuer tout le monde. Pendant ce temps, il file vers le sanctuaire avec ses mercenaires (un héros peut entendre une troupe de coursiers longer les maisons). Le scorpion a détruit l'enclos : les montures ont fui. Dix minutes à pied jusqu'au sanctuaire.\nAu goulet du cirque : Shammaz et 5 mercenaires bloquent l'accès ; 10 coursiers montrent que d'autres sont passés. Karstus a traversé au radeau avec 3 hommes. Sans radeau : se suspendre à la corde (jet de Vigueur, et du temps).\nUne détonation de tonnerre fait trembler le sol. Karstus paraît un instant sur le seuil, la Perle en main, puis recule dans l'ombre et disparaît. Dans le sanctuaire : le sable dispersé, trois mercenaires morts (l'un coupé en deux, deux en pantins désarticulés), des crevasses, les ossements tombés des niches, et près de l'entrée les fragments d'une coquille d'œuf noire aux reflets mordorés.\nLa source de la conque se tarit. Le village pleure ses morts.\nPrisonniers : Muljab (mercenaire) parle de Karstus avec crainte : un sorcier qui a fait venir le scorpion et qui parle seul la nuit dans sa tente. Shammaz, contre la vie sauve : recruté à Malakut, il a logé chez Arjanek, une marionnette ; toute la maisonnée obéit à Karstus ; un gros homme pouilleux au visage rongé par la lèpre vit chez Arjanek, ne sort que la nuit, et parle avec Karstus de pirates des îles du Crâne ; Karstus a un « maître » à la voix de vieillard froide et autoritaire ; il a laissé des ordres, dont l'achat d'esclaves.",
+      "notes": "Ce qui s'est passé : faute de nouvelles, Dazzandroth Zant a envoyé un démon de l'éther, dévoreur de rêves, voler les souvenirs des héros, et appris que l'œil était dans le Beshaar. Karstus a jeté le masque : il a fait enlever Marika, la sœur d'Arjanek, et forcé celui-ci à assister à la torture d'une jeune domestique pour le briser. Oglar, un autre disciple, sorcier cruel, surveille Arjanek. Karstus a recruté ses mercenaires à Badhasar.\nAu sanctuaire, il a fait exploser le crabe d'un sortilège ; le souffle a dispersé les ossements des slorth, et le gardien n'a pu se reformer. Puis il a brisé un talisman de son maître, l'œuf noir (la « foulée de Quathoomar », 3e cercle), qui l'a ramené instantanément à Malakut, abandonnant ses hommes.",
+      "pistes": [{ "texte": "Rentrer à Malakut sur la piste de Karstus (chapitre 3)" }],
+      "distribution": [
+        { "perso": "scorpion", "attitude": "hostile" },
+        { "perso": "shammaz", "attitude": "hostile" },
+        { "perso": "mercenaire", "qty": 5, "attitude": "hostile" },
+        { "perso": "karstus", "attitude": "hostile" }
+      ]
+    }
+  ]
+}

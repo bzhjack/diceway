@@ -64,7 +64,7 @@ export class SceneListComponent {
   protected readonly busy = signal(false);
   private readonly scenes = signal<readonly BolSceneModel[]>([]);
   private readonly scenarios = signal<readonly BolSceneScenarioRef[]>([]);
-  /** Scénario affiché — `null` = « Sans scénario ». */
+  /** Scénario affiché — `null` = « On improvise ». */
   protected readonly selectedScenario = signal<string | null>(null);
   protected readonly expandedId = signal<string | null>(null);
 
@@ -87,7 +87,7 @@ export class SceneListComponent {
             .filter((s): s is typeof s & {id: string} => !!s.id)
             .map((s) => ({id: s.id, titre: s.titre})),
         );
-        // À l'ouverture : le scénario de la scène courante de la session, sinon « Sans scénario ».
+        // À l'ouverture : le scénario de la scène courante de la session, sinon « On improvise ».
         const current = scenes.find((s) => s.id === this.currentSceneId());
         const scenarioId = current?.scenario_id ?? null;
         this.selectedScenario.set(scenarioId && this.knownScenarioIds().has(scenarioId) ? scenarioId : null);

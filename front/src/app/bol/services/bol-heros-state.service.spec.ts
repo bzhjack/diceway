@@ -280,6 +280,11 @@ describe('BolHerosStateService', () => {
       expect(service.traitsModifiers()).toContainEqual({attr: 'vitalite', value: 2});
     });
 
+    it('compte dans la vitalité le bonus de vigueur d’un avantage (Vigueur céruléenne)', () => {
+      service.currentHeros.set(hero({vigueur: 2, traits: [trait(AVANTAGE_COSTAUD_ID, 'A')]}));
+      expect(service.traitsModifiers()).toContainEqual({attr: 'vitalite', value: 3});
+    });
+
     it('calcule pouvoir, création et foi depuis les rangs de carrière', () => {
       service.currentHeros.set(
         hero({
