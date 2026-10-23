@@ -182,3 +182,13 @@ Planche C (2026-10-23) : livrée en trois portraits verticaux d'environ 512×640
 x = 1024, deuxième ligne noire) au lieu de trois cases carrées. Chaque portrait a été recadré en carré de 508 px
 depuis le haut de sa colonne (têtes entières), puis réduit à 400×400. Les 15 portraits sont désormais dans le
 nouveau style.
+
+## Avancement
+
+| Planche | Ids | État | Date |
+| --- | --- | --- | --- |
+| A | 1 à 6 | fait | 2026-10-23 |
+| B | 7 à 12 | fait | 2026-10-23 |
+| C | 13 à 15 | fait (recadrée, voir plus haut) | 2026-10-23 |
+
+Les 15 portraits sont dans le nouveau style : rien à regénérer.

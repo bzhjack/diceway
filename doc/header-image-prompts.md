@@ -50,6 +50,10 @@ BD (façon Frazetta/Boris Vallejo/pulp fantasy des années 80), pas de cadre.
 
 ## Fond de battlemap (texture tuilable)
 
+> **Obsolète (2026-10-23)** : la battlemap a été retirée de l'app (`front/src/app/bol/session/play/battlemap/` n'existe
+> plus) ; `herbe.jpg` et `skins/dalles.jpg`, que plus aucun code ne lisait, ont été supprimés. Rien à générer ici ; section
+> gardée pour mémoire.
+
 Contrairement aux bannières ci-dessus, ces textures sont vues du dessus (plan
 zénithal, pas de perspective dramatique) et doivent se répéter sans coupure
 visible — utilisées en `background-repeat: repeat` sur `.cp-map`
@@ -63,3 +67,13 @@ attendus dans `front/src/assets/bol/` : `herbe.jpg` (déjà en place),
 ## Armures
 
 > Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80). Une armure de plates ornée est trempée dans un bac d'eau par un armurier, vapeur s'élevant dans l'air, rangée d'autres armures et boucliers exposés sur des présentoirs en arrière-plan dans une salle de pierre. Dominante chromatique bleu acier / gris froid, contrastée par la lueur orangée d'une forge en fond de scène. Contre-plongée légère. Aucun texte, logo ni watermark.
+
+## Avancement
+
+État au 2026-10-23 (dates des fichiers dans `front/src/assets/bol/`) : toutes les bannières sont en place.
+
+| Bannière | Fichier | Date |
+| --- | --- | --- |
+| Héros, PNJ, créatures, démons, intendance, armes, armures | `header-*.png` | 2026-07-17 |
+| Combat | `header-combat.png` | 2026-10-02 |
+| Fond de battlemap | — | sans objet (battlemap retirée, textures supprimées) |

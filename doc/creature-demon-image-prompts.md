@@ -183,7 +183,22 @@ la planche ou générer le portrait seul avec la même phrase.
 
 ## Avancement
 
-| Planche | Ids | Date | Remarque |
-| --- | --- | --- | --- |
-| C1 | 1 à 6 | 2026-10-23 | Grille respectée (bords pile à 512 et 1024 px) : découpe régulière. |
-| C2 | 7 à 12 | 2026-10-23 | Grille respectée : découpe régulière. |
+État au 2026-10-23. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
+la carte affiche l'avatar vide.
+
+| Planche | Ids | État | Date | Remarque |
+| --- | --- | --- | --- | --- |
+| C1 | 1 à 6 | fait | 2026-10-23 | Grille respectée (bords pile à 512 et 1024 px) : découpe régulière. |
+| C2 | 7 à 12 | fait | 2026-10-23 | Grille respectée : découpe régulière. |
+| C3 | 13 à 18 | à faire (ancien) | | |
+| C4 | 19 à 24 | à faire (ancien) | | |
+| C5 | 25 à 30 | à faire (ancien) | | |
+| C6 | 31 à 36 | à faire (ancien) | | |
+| C7 | 37 à 42 | à faire (ancien) | | |
+| C8 | 43 à 48 | à faire (ancien) | | |
+| C9 | 49 à 54 | à faire (49-50 ancien, **51-54 aucune**) | | Priorité : bestiaire du Beshaar sans image. |
+| C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
+| C11 | 61 à 63 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
+| D | démons 1 à 3 | à faire (ancien) | | |
+
+Ordre conseillé pour la suite : C9, C10 et C11 d'abord (13 créatures sans aucune image), puis D, puis C3 à C8.
