@@ -88,10 +88,10 @@ try {
   const addCrowd = () => api('POST', `bol/fight-session/${sessionId}/combatant`, {kind: 'creature', sourceId: String(firstCreature.id), camp: 'adversaires', qty: 10});
   await addCrowd();
 
-  // 1-2. Lever le rideau sur la scène : il se ferme puis se rouvre, le cartouche montre son titre.
+  // 1-2. Charger la scène : le rideau se ferme puis se rouvre, le cartouche montre son titre.
   await page.goto(`${base}/session/${sessionId}/play`, {waitUntil: 'networkidle'});
   await page.getByRole('button', {name: /TMP Gué/}).click();
-  await page.getByRole('menuitem', {name: 'Lever le rideau'}).click();
+  await page.getByRole('menuitem', {name: 'Charger la scène'}).click();
   await page.waitForSelector('bol-rideau.rdo--ferme', {timeout: 3000}).catch(() => fail('le rideau ne s’est pas fermé'));
   await page.waitForSelector('bol-rideau:not(.rdo--ferme)', {timeout: 8000}).catch(() => fail('le rideau ne s’est pas rouvert'));
   await page.waitForTimeout(800);
@@ -117,10 +117,15 @@ try {
   // 3. Le chargement en remplacement a retiré les dix créatures et ramené le PNJ.
   if ((await troupeCount()) !== 1) fail(`la troupe compte ${await troupeCount()} cartes au lieu d’une`);
 
-  // 4. Le secret s'affiche à la demande.
-  await page.getByRole('button', {name: 'Afficher le secret'}).click();
-  const pressed = await page.getByRole('button', {name: 'Masquer le secret'}).getAttribute('aria-pressed');
-  if (pressed !== 'true') fail('le bouton du secret n’est pas pressé');
+  // 4. Le secret du MJ est affiché d'office ; son titre replie puis déplie la section.
+  const secret = page.locator('bol-scene-lecture .lec-secret');
+  const titreSecret = page.getByRole('button', {name: 'Secret du MJ'});
+  if (!(await secret.isVisible())) fail('le secret n’est pas affiché d’office');
+  await titreSecret.click();
+  await secret.waitFor({state: 'detached', timeout: 2000}).catch(() => fail('le secret ne se replie pas'));
+  if ((await titreSecret.getAttribute('aria-expanded')) !== 'false') fail('le titre du secret ne se dit pas replié');
+  await titreSecret.click();
+  await secret.waitFor({state: 'visible', timeout: 2000}).catch(() => fail('le secret ne se déplie pas'));
 
   // 4 bis. « En jeu » montre les règles de la scène, lignes gardées ; l'éditeur les modifie.
   const jeu = page.locator('bol-scene-lecture .lec-jeu');

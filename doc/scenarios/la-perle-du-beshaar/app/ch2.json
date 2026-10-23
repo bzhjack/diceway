@@ -126,31 +126,10 @@
       "vitalite": 99, "degats": "d6B", "protection": "0",
       "commentaire": "Livre p. 78. Le gardien de l'œil de Tolometh : un golem de sable. Le livre ne lui donne aucune vitalité (99 ici : ignorer).\nGardien éternel : les coups portent, mais il se reconstitue aussitôt. Il ne quitte jamais le sanctuaire.\nCorps de sable : se reforme instantanément n'importe où dans le sanctuaire, seulement si on lui a pris l'œil.\nRapide comme le vent : dé de malus au jet de réaction des héros en début de combat ; agit comme un rival dans l'ordre de réaction.\nMagie des slorth : détruire ou déplacer les ossements des trois niches est le seul moyen de le détruire. S'il franchit le seuil à la poursuite du voleur, il explose en un jet de sable."
     },
-    "hyene": {
-      "kind": "creature", "nom": "Hyène du Beshaar", "taille": "Petite",
-      "vigueur": 0, "agilite": 1, "esprit": -1, "attaque": 0, "defense": 1,
-      "vitalite": 5, "degats": "d6M", "protection": "0",
-      "commentaire": "Bestiaire du Beshaar, livre p. 27. Meute : bien que n'étant pas de la piétaille, elles peuvent utiliser la règle de horde (+1 à l'attaque par hyène engagée). Chassent la nuit, par encerclement et harcèlement."
-    },
-    "meneuse": {
-      "kind": "creature", "nom": "Meneuse de meute (hyène)", "taille": "Moyenne",
-      "vigueur": 1, "agilite": 2, "esprit": -1, "attaque": 2, "defense": 1,
-      "vitalite": 10, "degats": "d6", "protection": "0",
-      "commentaire": "Bestiaire du Beshaar, livre p. 27. Mène une meute de hyènes du Beshaar."
-    },
-    "chien-zaggath": {
-      "kind": "creature", "nom": "Chien de Zaggath", "taille": "Moyenne",
-      "vigueur": 2, "agilite": 1, "esprit": 1, "attaque": 2, "defense": 1,
-      "vitalite": 12, "degats": "d6", "protection": "d6-3 (1)",
-      "commentaire": "Bestiaire du Beshaar, livre p. 24. Suint protecteur : ne subit qu'un quart des dégâts de feu (arrondi à l'inférieur) et jamais de malus dû à la chaleur. Son suint donne l'« onguent de chien », qui confère cette capacité."
-    },
-    "spicomallos": {
-      "kind": "creature", "nom": "Spicomallos", "taille": "Enorme",
-      "vigueur": 7, "agilite": -3, "esprit": -2, "attaque": 1, "defense": 0,
-      "vitalite": 40, "degats": "d6x2", "protection": "d6 (4)",
-      "capacites": [{ "nom": "Attaques multiples", "detail": "deux attaques par round (tête, épaule ou queue)" }],
-      "commentaire": "Bestiaire du Beshaar, livre p. 29. Cuirasse hérissée de pointes : ses adversaires subissent -1 à leurs jets d'attaque au corps à corps. Naturellement placide."
-    },
+    "hyene": { "kind": "creature", "catalogue": "Hyène du Beshaar" },
+    "meneuse": { "kind": "creature", "catalogue": "Meneuse de meute (hyène du Beshaar)" },
+    "chien-zaggath": { "kind": "creature", "catalogue": "Chien de Zaggath" },
+    "spicomallos": { "kind": "creature", "catalogue": "Spicomallos" },
     "dinohyus": { "kind": "creature", "catalogue": "Dinohyus" },
     "phororacos": { "kind": "creature", "catalogue": "Phororacos" },
     "cathgan": { "kind": "creature", "catalogue": "Cathgan" },

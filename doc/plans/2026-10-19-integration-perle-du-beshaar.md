@@ -73,7 +73,9 @@ permettre d'écrire dans le catalogue.
 
 **Exception (2026-10-20, à la demande de Lionel) :** le bestiaire du Beshaar (p. 24-35, 13 créatures) est ajouté au
 catalogue par `BolCreatureSeeder` (ids 51 à 63, capacités 1001 à 1013). Le reste (scénarios, scènes, PNJ, créatures
-propres aux chapitres) reste sur le compte de l'utilisateur.
+propres aux chapitres) reste sur le compte de l'utilisateur. Le 2026-10-23, les quatre créatures du bestiaire que `ch2.json` créait
+sur le compte (hyène, meneuse, chien de Zaggath, spicomallos) y deviennent des références au catalogue, et leurs copies
+sur le compte de Lionel sont supprimées.
 
 ## 2. Décisions
 
@@ -193,7 +195,8 @@ Fichier : `doc/scenarios/la-perle-du-beshaar/app/ch2.json`, importé sur le comp
 
 - **Scènes : 14.** Quatre scènes de prologue (route, dinohyus, Badhasar, traversée avec la table 2d6 dans
   « En jeu »), puis les 10 scènes de la fiche de session. La branche « rester » est la scène 14.
-- **Personnages :** 10 PNJ et 7 créatures, plus 4 créatures du catalogue. Karstus est repris du ch. 1 par sa
+- **Personnages :** 10 PNJ et 3 créatures, plus 8 créatures du catalogue (dont, depuis le 2026-10-23, la hyène du
+  Beshaar, sa meneuse, le chien de Zaggath et le spicomallos, passés du fichier au catalogue). Karstus est repris du ch. 1 par sa
   clé.
   - Ilémah et Beckéram ont des fiches distinctes, aux stats identiques, pour qu'on distingue les camps sur la
     rampe.

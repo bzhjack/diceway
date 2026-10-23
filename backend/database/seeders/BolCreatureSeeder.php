@@ -690,7 +690,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6',
                 'protection' => 'd6-3 (1)',
                 'id_taille' => '4',  // Moyenne
-                'commentaire' => "La Perle du Beshaar, p. 24. Déserts.\nSuint protecteur : ne subit qu'un quart des dégâts de feu (arrondi à l'inférieur) et jamais de malus dû à une forte chaleur.",
+                'commentaire' => "La Perle du Beshaar, p. 24. Déserts.\nSuint protecteur : ne subit qu'un quart des dégâts de feu (arrondi à l'inférieur) et jamais de malus dû à une forte chaleur. Son suint donne l'« onguent de chien », qui confère cette capacité.",
             ],
             [
                 'id' => '52',
@@ -746,7 +746,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6M',
                 'protection' => '0',
                 'id_taille' => '3',  // Petite
-                'commentaire' => "La Perle du Beshaar, p. 27. Déserts, plaines, montagnes.\nMeute : sans être de la piétaille, utilise la règle de horde (+1 à l'attaque par hyène engagée dans la mêlée).",
+                'commentaire' => "La Perle du Beshaar, p. 27. Déserts, plaines, montagnes. Chasse la nuit, par encerclement et harcèlement.\nMeute : sans être de la piétaille, utilise la règle de horde (+1 à l'attaque par hyène engagée dans la mêlée).",
             ],
             [
                 'id' => '56',
@@ -802,7 +802,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6x2',
                 'protection' => 'd6 (4)',
                 'id_taille' => '7',  // Enorme
-                'commentaire' => "La Perle du Beshaar, p. 29. Montagnes, plaines.\nCuirasse hérissée de pointes : ses adversaires subissent -1 à leurs jets d'attaque.",
+                'commentaire' => "La Perle du Beshaar, p. 29. Montagnes, plaines. Placide tant qu'on ne l'attaque pas.\nCuirasse hérissée de pointes : ses adversaires subissent -1 à leurs jets d'attaque.",
             ],
             [
                 'id' => '60',
