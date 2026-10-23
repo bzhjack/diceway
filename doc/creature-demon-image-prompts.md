@@ -180,3 +180,10 @@ Si ChatGPT ne respecte pas exactement la grille (cases décalées, léger
 débordement), recadrer à la main chaque case en carré autour du point focal
 plutôt que de forcer le découpage régulier ; en dernier recours, redemander
 la planche ou générer le portrait seul avec la même phrase.
+
+## Avancement
+
+| Planche | Ids | Date | Remarque |
+| --- | --- | --- | --- |
+| C1 | 1 à 6 | 2026-10-23 | Grille respectée (bords pile à 512 et 1024 px) : découpe régulière. |
+| C2 | 7 à 12 | 2026-10-23 | Grille respectée : découpe régulière. |

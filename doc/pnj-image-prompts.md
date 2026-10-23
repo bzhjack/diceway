@@ -177,3 +177,8 @@ Si ChatGPT ne respecte pas exactement la grille (cases décalées, léger
 débordement), recadrer à la main chaque case en carré autour du visage plutôt
 que de forcer le découpage régulier ; en dernier recours, redemander la planche
 ou générer le portrait seul avec le prompt individuel plus haut.
+
+Planche C (2026-10-23) : livrée en trois portraits verticaux d'environ 512×640 (filets sombres en x = 512 et
+x = 1024, deuxième ligne noire) au lieu de trois cases carrées. Chaque portrait a été recadré en carré de 508 px
+depuis le haut de sa colonne (têtes entières), puis réduit à 400×400. Les 15 portraits sont désormais dans le
+nouveau style.
