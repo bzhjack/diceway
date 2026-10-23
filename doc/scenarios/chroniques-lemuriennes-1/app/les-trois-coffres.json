@@ -1,0 +1,395 @@
+{
+  "saga": "cl1-les-trois-coffres",
+  "scenario": {
+    "cle": "les-trois-coffres",
+    "titre": "Chroniques lémuriennes — Les trois coffres",
+    "pitch": "Les Trois Coffres, d'Andrea Salvatores (Chroniques Lémuriennes 1.2, livre p. 102-124). Les joueurs incarnent des kalukans, eunuques muets à l'œil unique au service de Methyn Sarr, la Reine Sorcière de la Côte de Feu (cinq prétirés en fin de livre).\n\nDes kalukans au service de la Reine Sorcière se retrouvent momentanément mis à la disposition de Rutgarr, un druide gris de Nemmereth qui réside à Halakh. Ce dernier les charge de livrer trois coffres à d'étranges destinations — le Phare, au bord du Beshaar ; le Puits des Rois-Sorciers, sur le plateau de Lhend ; Ram Verda, à Malakut — dans un but qu'il ne se donne pas la peine de leur préciser. Mais l'issue de l'aventure apportera une terrible révélation : en réalité, les malheureux kalukans ont été manipulés par un ennemi juré de leur maîtresse, et ils ont récupéré pour lui un artefact, le Sablier Gris, qui pourrait bien causer la perte de Methyn Sarr."
+  },
+  "personnages": {
+    "rutgarr": {
+      "kind": "pnj", "nom": "Rutgarr", "rang": "rival", "region": "Halakh",
+      "vigueur": 0, "agilite": 1, "esprit": 4, "aura": 2,
+      "initiative": 1, "melee": 1, "tir": 0, "defense": 3,
+      "vitalite": 10, "vilenie": 5, "foi": 3, "pouvoir": 12,
+      "carrieres": [
+        { "nom": "Noble", "rang": 0 },
+        { "nom": "Prêtre", "rang": 3 },
+        { "nom": "Sorcier", "rang": 2 },
+        { "nom": "Scribe", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Beau parleur", "Érudit", "Odorat développé"],
+      "desavantages": [
+        "Fanatique",
+        "Marin d'eau douce",
+        { "nom": "Obsession", "detail": "la destruction de la Reine Sorcière" }
+      ],
+      "commentaire": "Druide gris d'Halakh. Stats : livre p. 124. Carrière « Druide (de Nemmereth) 3 » absente du catalogue : portée en Prêtre 3 (archétype druide du catalogue). Ses 5 points de vilénie sont ceux du livre.\nLa soixantaine, grand et élancé, peau tannée, maintien élégant, visage grêlé par la petite vérole ; longue toge grise richement ornée. Membre éminent du culte des Brasiers des Ténèbres, il traque le Sablier Gris depuis près de vingt ans pour assassiner Methyn Sarr. Passionné de roses (odorat développé)."
+    },
+    "acolyte": {
+      "kind": "pnj", "nom": "Acolyte de Rutgarr", "rang": "pietaille", "region": "Halakh",
+      "melee": 0,
+      "vitalite": 2, "pouvoir": 1,
+      "carrieres": [{ "nom": "Sorcier", "rang": 1 }],
+      "armes": [{ "nom": "Poignard d'acolyte", "degats": "d3", "type": "M", "notes": "Poignard des acolytes de Rutgarr (piétaille, règle de horde)." }],
+      "commentaire": "Livre p. 124 : Attaque +0, poignard d3, règle de horde (BoL p. 132), 1 point de pouvoir. Fidèles des Brasiers des Ténèbres en robe grise, prêts à mourir pour Rutgarr. Ils ignorent qu'ils seront sacrifiés à la fin du rituel d'illusion."
+    },
+    "assassin": {
+      "kind": "pnj", "nom": "Maître-assassin halakhi", "rang": "coriace", "region": "Halakh",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 1, "tir": -1, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Assassin", "rang": 2 }],
+      "armes": ["Kriss"],
+      "armures": ["Armure légère"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "kriss (capacité « Maître-assassin » du livre)" }],
+      "commentaire": "Livre p. 124. Armure de cuir noir, une paire de kriss halakhis : d6M dans le livre, le Kriss du catalogue fait d6M+1.\nCapacité spéciale « Maître-assassin » (dé de bonus aux jets d'attaque au kriss) portée en avantage Arme favorite (kriss) pour l'import. Fanatiques, ils ne fuient pas."
+    },
+    "ram-verda": {
+      "kind": "pnj", "nom": "Ram Verda", "rang": "rival", "region": "Malakut",
+      "vigueur": 0, "agilite": 2, "esprit": 2, "aura": 1,
+      "initiative": 2, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 10, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Mercenaire", "rang": 0 },
+        { "nom": "Marchand", "rang": 2 },
+        { "nom": "Voleur", "rang": 2 },
+        { "nom": "Assassin", "rang": 1 }
+      ],
+      "armes": [{ "nom": "Poignard de facture exceptionnelle", "degats": "d6", "type": "M", "notes": "Le poignard que Rutgarr fait remettre à Ram Verda : arme supérieure (dé de bonus aux jets de dégâts)." }],
+      "armures": ["Armure légère"],
+      "avantages": [
+        { "nom": "Amis dans la pègre", "detail": "bas-fonds de Malakut" },
+        { "nom": "Arme favorite", "detail": "poignard" },
+        "Perspicace"
+      ],
+      "desavantages": ["Arrogant", "Cupide"],
+      "commentaire": "Livre p. 123 ; ses 5 points de vilénie sont ceux du livre. Un des chefs des Poignards Sanglants, guilde de voleurs de Malakut : recel, trafic d'esclaves, exécutions commanditées. La cinquantaine, teint rougeaud, embonpoint, affabilité de marchand prospère. Cupide et audacieux. Acculé, il se rend et marchande sa vie contre des informations."
+    },
+    "homme-de-main": {
+      "kind": "pnj", "nom": "Homme de main de Ram Verda", "rang": "coriace", "region": "Malakut",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Voleur", "rang": 2 }],
+      "armes": ["Dague", "Épée"],
+      "armures": ["Armure légère"],
+      "commentaire": "Livre p. 123 (×6, dont les deux arbalétriers, fiche à part). Bruns de peau, secs et nerveux, mine de gibier de potence, pourpoints de cuir. Tueurs chevronnés et loyaux, pas fanatiques : ils fuient si le combat tourne mal."
+    },
+    "arbaletrier": {
+      "kind": "pnj", "nom": "Homme de main de Ram Verda (arbalète)", "rang": "coriace", "region": "Malakut",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 1,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Voleur", "rang": 2 }],
+      "armes": ["Arbalète", "Dague", "Épée"],
+      "armures": ["Armure légère"],
+      "commentaire": "Livre p. 123 : deux des hommes de main embusqués sont armés d'arbalètes (d6), avec initiative 0, mêlée 1, tir 1, défense 1. Le reste du profil est celui des hommes de main."
+    },
+    "grooth": {
+      "kind": "pnj", "nom": "Grooth du plateau de Lhend", "rang": "coriace", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2, "agilite": 1, "esprit": -1, "aura": 0,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 0,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": ["Gourdin"],
+      "commentaire": "Livre p. 121 (×10). Gourdin d6M+2 dans le livre (avec leur Vigueur 2). Hommes primitifs (BoL p. 91) exilés des jungles de Qo, installés sur le plateau de Lhend ; affamés, ils suivent les kalukans de loin, fuient si on va vers eux et attaquent au retour ou la nuit."
+    },
+    "gardien-rouge": {
+      "kind": "creature", "nom": "Gardien du Puits (guerrier rouge)", "taille": "Enorme",
+      "vigueur": 8, "agilite": 3, "esprit": 0, "attaque": 4, "defense": 2,
+      "vitalite": 40, "degats": "d6x2", "protection": "d6 (4)",
+      "capacites": [
+        { "nom": "Attaque féroce", "detail": "Combattant d'élite : dé de bonus aux jets d'attaque" },
+        { "nom": "Attaque spéciale", "detail": "Corps alchimique (création alchimique légendaire) : dé de bonus aux jets de dégâts, ignore les armures, dé de bonus au jet de protection, dégâts des succès héroïques ou légendaires divisés par deux" }
+      ],
+      "commentaire": "Livre p. 122, rival. Statue de près de trois mètres en pierre rouge sombre : guerrier barbu et enturbanné armé d'un long trident. Il veille LE JOUR : quiconque touche la porte de bronze l'éveille, et la porte se bloque. Immobile pendant l'éclipse.\nTaille « Enorme » retenue car elle correspond exactement au profil du livre (Vigueur 8, dégâts d6x2, vitalité 40) et donne le rang de rival."
+    },
+    "gardienne-bleue": {
+      "kind": "creature", "nom": "Gardienne du Puits (danseuse bleue)", "taille": "Enorme",
+      "vigueur": 8, "agilite": 3, "esprit": 0, "attaque": 4, "defense": 2,
+      "vitalite": 40, "degats": "d6x2", "protection": "d6 (4)",
+      "capacites": [
+        { "nom": "Attaque féroce", "detail": "Combattant d'élite : dé de bonus aux jets d'attaque" },
+        { "nom": "Attaque spéciale", "detail": "Corps alchimique (création alchimique légendaire) : dé de bonus aux jets de dégâts, ignore les armures, dé de bonus au jet de protection, dégâts des succès héroïques ou légendaires divisés par deux" }
+      ],
+      "commentaire": "Livre p. 122, rivale. Statue de près de trois mètres en pierre bleutée : femme au pagne armée de deux cimeterres, en pas de danse, croissant de lune au front. Elle veille LA NUIT ; c'est elle qui a massacré l'expédition de Parsi il y a dix ans. Immobile pendant l'éclipse.\nTaille « Enorme » retenue car elle correspond exactement au profil du livre (Vigueur 8, dégâts d6x2, vitalité 40) et donne le rang de rival."
+    },
+    "hyene": { "kind": "creature", "catalogue": "Hyène du Beshaar" },
+    "meneuse": { "kind": "creature", "catalogue": "Meneuse de meute (hyène du Beshaar)" },
+    "necropede": { "kind": "creature", "catalogue": "Nécropède" },
+    "lana": {
+      "kind": "pnj", "nom": "Lana", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 2,
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée pour l'import.\nFillette enlevée à une tribu beshaarie, en fuite du Phare. Robe écrue crasseuse, cheveux ébouriffés, yeux voilés : elle distingue à peine une silhouette de près. Elle ne veut plus entrer dans la tour et « finir aveugle comme toutes les autres »."
+    },
+    "shan": {
+      "kind": "pnj", "nom": "Shan, gardienne du Phare", "rang": "coriace", "region": "Désert de Beshaar",
+      "esprit": 1, "aura": 1,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée pour l'import.\nLa plus ancienne des gardiennes du Phare, vouées à Nemmereth ; elle dirige la communauté et garde la clef du coffre. Yeux d'un bleu terne, brûlés par le soleil des crémations. Elle obéit au rituel sans en comprendre le sens."
+    },
+    "parsi": {
+      "kind": "pnj", "nom": "Parsi", "rang": "coriace",
+      "esprit": 2,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Scribe", "rang": 2 }],
+      "desavantages": [{ "nom": "Manchot/unijambiste", "detail": "jambe perdue presque à la hanche" }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée pour l'import (astronome : carrière absente du catalogue, portée en Scribe).\nVieil adepte de Nemmereth, astronome de renom, seul survivant de l'expédition au Puits il y a dix ans : unijambiste, visage défiguré par une atroce balafre, béquille. Vit dans une bergerie des contreforts du plateau de Lhend, parmi ses livres et sa lunette."
+    },
+    "faldir": {
+      "kind": "pnj", "nom": "Faldir", "rang": "pietaille", "region": "Malakut",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Voleur", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée pour l'import.\nJeune adolescent pieds nus, crasseux, au regard fier de mille coups pendables : le guide envoyé par Ram Verda. Pompeux et malin, il fuit dès que le combat commence."
+    },
+    "assim": {
+      "kind": "pnj", "nom": "Assim", "rang": "pietaille", "region": "Halakh",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Fermier", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée pour l'import.\nLe vieux jardinier de Rutgarr, seul à la villa. Voix chevrotante ; il ne sait rien, sauf que son maître est parti pour sa roseraie."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "cave-rutgarr",
+      "titre": "Réveil chez Rutgarr",
+      "region": "Halakh",
+      "lieu": "Cave de la villa de Rutgarr, faubourgs d'Halakh",
+      "moment": "nuit",
+      "danger": 1,
+      "lecture": "Vous vous réveillez complètement désorientés, comme sortis d'un long sommeil mat, sans rêve. Aucun souvenir des jours précédents : les dernières choses dont vous vous rappelez, c'est votre service ordinaire dans la forteresse de la Reine Sorcière.\n\nIl vous faut un instant pour habituer votre œil à la pénombre d'une grotte qui regorge de caisses de toutes tailles et de tonneaux empilés sans soin, éclairée par une petite lampe à huile. Un astrolabe prend la poussière dans un recoin ; au fond, une alcôve creusée à même la terre laisse entrevoir un passage souterrain qui s'enfonce dans les ténèbres. Rien ne vous est familier. Et vous n'avez pas le moindre équipement : ni armes, ni armure, rien.\n\nUne voix sonore et pleine d'autorité résonne. Un homme à la silhouette élancée, drapé dans une longue toge grise richement ornée, sort des ombres. La soixantaine, des manières élégantes, des gestes précis ; seul son visage grêlé par la petite vérole ternit son apparence raffinée. Il vous examine un moment avec un plaisir non dissimulé.\n\n« Bienvenue à Halakh. Je suis Rutgarr, votre nouveau maître. Oui, la Reine Sorcière vous a prêtés à moi, le temps d'une mission qui l'intéresse au plus haut point. Elle a dit qu'elle m'envoyait les meilleurs de ses fidèles kalukans, aussi j'espère que vous saurez faire honneur à votre maîtresse ! Mais le temps nous est compté. Rassurez-vous, votre tâche sera simple : il s'agit d'apporter trois coffres en trois lieux différents, et de me rapporter à chaque fois la preuve de la bonne exécution de votre mission.\n\nPour commencer, vous porterez ce coffre à une vieille amie, qui vit un peu plus au sud, à la lisière du désert de Beshaar. Vous l'apporterez à la gardienne du Phare, avec ce petit sac. Vous suivrez ses instructions, et me rapporterez ce qu'elle vous remettra en échange. J'attends de vous diligence et la plus extrême discrétion. Oh, et vous avez la plus stricte interdiction d'ouvrir le coffre. Son contenu ne vous concerne pas. »\n\nLe coffre, à côté de deux autres tout aussi imposants, mesure plus d'un mètre de large. Un lourd cadenas couvert de symboles cabalistiques le ferme ; le fermoir est gravé d'un sablier. Il pèse plus de cent kilos.\n\n« La Reine Sorcière a pris ses dispositions pour faire apporter votre équipement, bien sûr. Vous trouverez aussi dans le sac des bracelets de longue parole. J'ai prévu de quoi vous déguiser : un groupe entier de kalukans dans les rues d'Halakh attirerait une attention… indésirable. Une carte vous indiquera votre destination, et une charrette tirée par deux bubalus vous attend dans la cour. Bien, j'imagine que vous n'avez pas de questions. Au travail, fidèles serviteurs de la Reine Sorcière ! »",
+      "jeu": "Peu de temps pour s'équiper, encore moins pour réfléchir.\n• Équipement : effets personnels dans un gros sac, armes alignées sur la table. Une petite sacoche de cuir sur le coffre (de la terre de la cave). Le coffre se porte à deux.\n• Bracelets de longue parole : une paire par kalukan. Tous les bracelets d'une même coulée se « parlent » comme à voix haute, portée une vingtaine de mètres ; ils ne lisent pas les pensées. Prêter une paire permet de converser avec quelqu'un (le prêteur est alors exclu). Le Puruleux en connaît le fonctionnement. Rutgarr en porte une paire.\n• Questions à Rutgarr : il répond évasivement et coupe court, cassant, si l'on insiste, en rappelant le devoir envers Methyn Sarr.\n• Carte sommaire : une croix à l'encre brunâtre, « le Phare ».\n• Déguisement : grandes robes grises dont la capuche est rembourrée d'une fausse tête en tissu. Ne trompe personne de près ; de loin, un groupe de pénitents ou de pèlerins.\n• En sortant : la cave est celle d'une belle bâtisse bourgeoise au grand jardin, dans les faubourgs d'Halakh. Coffre chargé sous une toile de jute ; Rutgarr les raccompagne au portail et repart en sifflotant s'occuper de ses rosiers. L'aube va se lever.",
+      "notes": "Rutgarr n'est PAS un allié de la Reine : druide gris de Nemmereth, membre éminent du culte des Brasiers des Ténèbres, ennemi juré des druides rouges de Zaggath. Il veut le Sablier Gris pour assassiner Methyn Sarr.\nLes kalukans ont été enlevés près de la forteresse par Ram Verda (Poignards Sanglants de Malakut) avec un soporifique, puis gardés endormis par des drogues alchimiques qui effacent les souvenirs récents. La Reine ne les a prêtés à personne ; mais cruelle et fantasque comme elle est, ce « prêt » n'aurait rien d'étonnant.\nLes trois coffres : 1. le corps d'un morgal (BoL p. 94) à incinérer au Phare ; 2. le démon gardien du Sablier, évoqué par Rutgarr ; 3. le paiement de Ram Verda, avec ordre de tuer les kalukans.\nLe Sablier Gris arrête le temps autour de son utilisateur, le temps que s'écoulent les cendres d'un morgal ; il vieillit brutalement et risque la folie. Accès au Puits : « ni jour ni nuit » (éclipse) et « ni homme ni femme » (kalukans).",
+      "pistes": [{ "texte": "Prendre la piste du Phare", "vers": "piste-phare" }],
+      "distribution": [{ "perso": "rutgarr", "attitude": "neutre" }]
+    },
+    {
+      "cle": "piste-phare",
+      "titre": "La piste du Phare — Lana et les hyènes",
+      "region": "Désert de Beshaar",
+      "lieu": "Piste sablonneuse vers le Phare, lisière du Beshaar",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La route se transforme peu à peu en piste sablonneuse. Les rencontres sont rares dans cette partie du désert de Beshaar, tristement célèbre pour l'aridité et la morosité de son paysage. Malgré la bâche, un nuage de mouches n'arrête pas de tournoyer autour du coffre ; de plus près, on voit un liquide noirâtre et poisseux suinter entre les planches du fond.\n\nAu début de la troisième journée, une petite fille à la robe écrue crasseuse et aux cheveux ébouriffés surgit au détour de la piste et s'avance en titubant vers vous. Elle a l'air paniqué et tâtonne dans le vide de ses petits bras tendus, la tête légèrement tournée de côté, comme si elle se guidait au grincement des roues de la charrette. Arrivée à quelques mètres, elle trébuche et appelle à l'aide d'une voix implorante.\n\nC'est alors que surgissent de derrière les rochers les gueules grimaçantes d'une meute de hyènes, qui ne comptent pas se laisser priver de leur repas…",
+      "jeu": "Trois jours de voyage jusqu'au Phare. Le coffre est solidement verrouillé : difficile de l'ouvrir sans l'abîmer. Dissuader subtilement toute tentative en rappelant le légendaire sens du devoir des kalukans.\nCombat : 9 hyènes de Beshaar (coriaces, Att +0, d6M, Déf 1, 5 PV) et 1 chef de meute (coriace, Att +2, d6, Déf 1, 10 PV). Meute : bien que coriaces, les hyènes utilisent la règle de horde (BoL p. 132).\nAprès le combat : Lana, agrippée à la manche d'un héros, bredouille qu'elle a fui le Phare, où on lui fait mener une vie de misère à travailler pour la communauté ; surtout, elle ne veut plus entrer dans la tour et finir aveugle comme toutes les autres. Elle distingue à peine une vague silhouette de très près.\nC'est l'occasion de comprendre qu'en passant une paire de bracelets de longue parole à quelqu'un, on peut converser avec lui (sauf le kalukan qui la prête).",
+      "notes": "Le coffre contient le corps d'un morgal, être vampirique rare et dangereux que le culte a eu les pires difficultés à capturer.",
+      "pistes": [{ "texte": "Arriver au Phare", "vers": "phare" }],
+      "distribution": [
+        { "perso": "hyene", "qty": 9, "attitude": "hostile" },
+        { "perso": "meneuse", "attitude": "hostile" },
+        { "perso": "lana", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "phare",
+      "titre": "Le Phare",
+      "region": "Désert de Beshaar",
+      "lieu": "Le Phare, à l'abri d'un groupe de rochers rouges",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "À l'abri d'un groupe de gros rochers rouges érodés par les tempêtes de sable se dresse un étrange complexe, qui semble bâti sur de très anciennes ruines : trois bâtiments en forme de dôme encadrent une haute tour légèrement conique, en torchis ocre. Une rampe d'escalier s'enroule autour d'elle jusqu'à une terrasse dont le centre est recouvert d'une bâche tendue. Derrière le premier dôme sont attachés trois coursiers des sables.\n\nDes femmes vous accueillent. Toutes ont le même regard étrange, énigmatique, d'un bleu terne : leurs yeux semblent brûlés.\n\nÀ la base de la tour, une porte de bois s'ouvre sur une antichambre, puis sur une grande salle circulaire qui occupe toute la hauteur de l'édifice. Les murs sont entièrement couverts de miroirs rectangulaires inclinés selon des angles savamment étudiés. Au centre, un système de poulies permet de hisser une petite plateforme métallique vers le sommet. Quelques maigres rayons filtrent par la bâche et rebondissent de miroir en miroir ; il fait chaud, très chaud.",
+      "jeu": "Le complexe : 1er dôme = réserve (vivres, bois en quantité, trois coursiers des sables à l'arrière) ; 2e dôme = réfectoire, four pour les galettes servies avec un miel d'arbuste local ; 3e dôme, le plus grand = une quinzaine de couchages. Les gardiennes chassent, entretiennent le camp, honorent Nemmereth chaque soir, et procèdent à une crémation rituelle chaque semaine.\nLa crémation : le corps et un peu de bois dans la nacelle hissée en haut de la tour ; à midi, la bâche est retirée (par l'escalier extérieur) et les miroirs concentrent le soleil : la tour devient une fournaise, on se replie dans le vestibule. Cendres recueillies au bout de trois jours.\nLe coffre est remis aux gardiennes ; les héros patientent trois jours dans la communauté. Avec une paire de bracelets prêtée, une gardienne raconte : la cérémonie se perpétue depuis la nuit des temps ; elles attendent la Grande Crémation, quand un membre éminent du culte de Nemmereth leur confie un corps selon des prescriptions particulières. La dernière a eu lieu il y a une dizaine d'années, déjà pour Rutgarr, qui vient au moins une fois l'an vérifier que tout reste conforme au rituel. Ce que sont le corps et les cendres ? Elles l'ignorent : elles obéissent à Nemmereth.\nSi Lana a été ramenée, sa présence peut créer des tensions.",
+      "notes": "Le Phare est l'unique moyen de fabriquer les cendres du Sablier Gris. Le culte des Brasiers des Ténèbres a retrouvé ses ruines et l'a rebâti selon le Traité du Temps. La communauté se renouvelle par des rapts de jeunes filles dans les tribus nomades beshaaries, initiées dès l'enfance. La plus ancienne dirige le groupe et garde la clef du coffre. Les cendres ordinaires sont dispersées aux quatre vents.\nLe corps du coffre est celui d'un morgal : la Grande Crémation fournit les cendres qui rempliront le Sablier.",
+      "pistes": [{ "texte": "Le soir du troisième jour, Shan remet l'urne", "vers": "pentacle" }],
+      "distribution": [{ "perso": "shan", "attitude": "neutre" }]
+    },
+    {
+      "cle": "pentacle",
+      "titre": "Le pentacle et l'échange des esprits",
+      "region": "Désert de Beshaar",
+      "lieu": "Grotte près du Phare, puis la cave de Rutgarr à Halakh",
+      "moment": "crepuscule",
+      "danger": 1,
+      "lecture": "Le soir du troisième jour, la gardienne responsable du Phare, Shan, vient vous remettre une urne en cuivre, scellée et gravée de runes : la preuve de l'accomplissement de votre mission, à rapporter à Rutgarr. Elle réclame le petit sac et vous conduit hors du village, jusqu'aux gros rochers. Elle se faufile entre deux blocs, vous mène à l'entrée d'une grotte, vous demande d'attendre quelques minutes et s'enfonce dans le boyau obscur.\n\nElle ressort et vous invite à entrer. Vous marchez dans le noir le plus complet sur une vingtaine de mètres… et vous voilà soudain dans l'alcôve d'une cave que vous connaissez : celle de Rutgarr. Le druide vous accueille avec un large sourire et s'empresse de se faire remettre l'urne.\n\nVotre première mission est accomplie, et pourtant quelque chose ne tourne pas rond. Une sensation de mal-être vous envahit, de la nausée, de courts moments de vertige. Dans une étrange confusion, chacun de vous a l'impression fugace d'un dédoublement de personnalité, comme s'il quittait une identité pour en adopter une autre…",
+      "jeu": "Dans la grotte, Shan dessine sur le sol un motif cabalistique avec la terre du sac (terre de la cave de Rutgarr, enchantée). En franchissant ce pentacle, les héros sont téléportés sans s'en rendre compte dans l'alcôve de la cave de Rutgarr : retour en un clin d'œil, car l'éclipse approche.\nÉCHANGE DE PERSONNAGES : lors de la téléportation, les corps et les esprits se sont mélangés. Chaque joueur prend la feuille de personnage de son voisin de droite et joue désormais ce kalukan.\nRutgarr ne relève pas ce moment de flottement : les kalukans ne sont que des instruments.",
+      "notes": "Les cendres du morgal sont dans l'urne. Rutgarr compte les verser dans le Sablier au tout dernier moment.",
+      "pistes": [{ "texte": "Rutgarr présente le deuxième coffre", "vers": "deuxieme-coffre" }],
+      "distribution": [
+        { "perso": "shan", "attitude": "neutre" },
+        { "perso": "rutgarr", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "deuxieme-coffre",
+      "titre": "Le deuxième coffre et l'ascension",
+      "region": "Halakh",
+      "lieu": "Cave de Rutgarr, puis la route des monts Besharoon",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Rutgarr vous désigne un deuxième coffre, semblable au premier. Vous devez le porter au pied des monts Besharoon et y retrouver un homme du nom de Parsi, qui vit dans un petit village de bergers des contreforts du plateau de Lhend. Il vous donnera les renseignements nécessaires pour la suite. Sa cabane est à l'écart du village ; vous la reconnaîtrez au poteau décoré de fanions qui se dresse à côté. Les règles restent les mêmes : ne pas ouvrir le coffre, toujours garder un œil dessus, et rester le plus discrets possible — remettez vos déguisements. Il vous confie aussi un parchemin pour Parsi. La charrette partira demain à la première heure.\n\nL'ascension vers les plateaux du Besharoon n'est pas simple. La route est très caillouteuse et la silhouette massive des plateaux grandit de jour en jour. Et le voyage est ponctué de tambourinements et de grondements sourds en provenance du coffre, comme si l'on tapait sur le couvercle depuis l'intérieur.",
+      "jeu": "Le parchemin : un héros curieux qui le déroule (de préférence hors de la vue de Rutgarr) découvre une carte du ciel ; jet d'Esprit pour reconnaître la Lune, le Soleil et la Terre.\nCinq jours de marche jusqu'au village.",
+      "notes": "Le coffre contient le démon gardien du Sablier Gris, évoqué par Rutgarr grâce au rituel du Traité du Temps : seul à pouvoir saisir le Sablier. Lié à son évocateur, il doit obéir. Le parchemin contient les calculs de l'éclipse.",
+      "pistes": [{ "texte": "Monter à la bergerie de Parsi", "vers": "parsi" }],
+      "distribution": [{ "perso": "rutgarr", "attitude": "neutre" }]
+    },
+    {
+      "cle": "parsi",
+      "titre": "La bergerie de Parsi",
+      "lieu": "Bergerie de Parsi, contreforts des monts Besharoon (plateau de Lhend)",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 1,
+      "lecture": "À environ un kilomètre au-dessus des maisons du village, une vieille bergerie en pierre sèche en grande partie délabrée s'accroche aux premiers versants des plateaux. Une trentaine de chèvres broutent dans les pentes rocailleuses ; à côté de la bâtisse, un poteau orné de fanions aux couleurs délavées claque au vent.\n\nUn vieil homme vous regarde monter. Il a perdu une jambe presque au niveau de la hanche et son visage est défiguré par une atroce balafre. Appuyé sur un bâton qui lui sert de béquille, il vous invite à entrer. Le dénuement est total : une table, deux tabourets, un tas de paille pour lit, une marmite de gruau douteux sur le foyer. Seuls détails surprenants : des piles de livres d'astronomie sur le sol et une belle lunette astronomique remisée dans un coin.\n\nD'abord sur la réserve, il inspecte votre groupe curieusement accoutré… puis un large sourire naît sur son visage.",
+      "jeu": "Les fanions sont des offrandes à Karyzon, seigneur des vents, fils de Nemmereth.\nSans bracelets, Parsi monologue en posant des questions pour qu'on lui confirme qu'ils viennent de Rutgarr. Avec une paire prêtée, il explique, plus loquace que Rutgarr :\n• Le Puits est une ancienne forteresse souterraine où un collège de Rois-Sorciers cherchait à vaincre le temps ; leurs recherches sont consignées dans le Traité du Temps, qu'il n'a jamais lu.\n• Le fruit de ces recherches, le Sablier Gris (il ignore ses pouvoirs), y est enfermé sous la garde de deux gardiens magiques. Le culte des Brasiers des Ténèbres le cherche depuis vingt ans, « car le temps n'est qu'une illusion de la Mort ».\n• Il y a dix ans, il est venu au Puits avec un coffre semblable, à une éclipse lunaire. Boucherie : « la belle statue de pierre bleue s'anima soudain et sema la mort parmi nous ! » Seul rescapé.\n• Le Traité dit que ceux qui entreront ne seront ni homme ni femme : Rutgarr a trouvé la réponse avec des kalukans. Tout devrait bien se passer, cette fois.\n• Le parchemin confirme ses calculs : une éclipse solaire aura lieu le surlendemain, vers midi. Elle ne durera pas plus d'un quart d'heure : agir vite.\n• Le Puits est à une journée de marche ; route trop escarpée pour la charrette, qu'il garde. Partir au matin. Il ne sait rien de l'intérieur : il faut y descendre le coffre, Nemmereth guidera leurs pas.",
+      "notes": "Parsi est un adepte de Nemmereth, resté près du Puits à la demande du culte pour de nouvelles tentatives. Il vient de comprendre le « ni femme ni homme » du grimoire en voyant les kalukans.",
+      "pistes": [{ "texte": "Partir au matin vers le Puits", "vers": "plateau" }],
+      "distribution": [{ "perso": "parsi", "attitude": "amical" }]
+    },
+    {
+      "cle": "plateau",
+      "titre": "Le plateau de Lhend et la descente",
+      "lieu": "Plateau de Lhend (contreforts des Besharoon), le gouffre du Puits",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 2,
+      "lecture": "Une pente abrupte mène au sommet d'un plateau des contreforts des Besharoon. La végétation est presque inexistante ; seuls quelques rochers rompent la monotonie de ce paysage lunaire. De violentes bourrasques soulèvent d'épais nuages de poussière rougeâtre.\n\nAprès plusieurs heures de marche s'ouvre enfin un gouffre béant au cœur du relief : un trou de plus de trente mètres de diamètre, légèrement conique, plus étroit en bas qu'en haut. Un escalier de petits rondins plantés dans la paroi s'enfonce en colimaçon sur une trentaine de mètres. Le bois est rongé par le climat, et il n'y a pas de rambarde.\n\nÀ une dizaine de mètres du fond, une nuée de chauves-souris jaillit autour de vous dans un tourbillon d'ailes.",
+      "jeu": "Jet d'Esprit avec une carrière appropriée (chasseur…) : une dizaine de grooth, exilés des jungles de Qo et installés sur le plateau, suivent les kalukans de loin (la nourriture est rare). Une fois repérés, présence oppressante. Si on va vers eux, ils fuient ; ils attaquent plutôt au retour, surtout si le groupe paraît affaibli, ou la nuit sans précautions.\nGrooth (×10, coriaces) : Vig 2, Agi 1, Esp -1, Aura 0 ; Init 0, Mêlée 2, Tir 0, Déf 0 ; gourdin d6M+2 ; 8 PV.\nUn héros perspicace peut voir dans le gouffre une symétrie inversée du Phare.\nChauves-souris : jet d'équilibre (Agilité + carrière appropriée), -2 pour le ou les porteurs du coffre. Échec : chute, d6M à d6B selon la hauteur, sans armure. Si le coffre tombe, il semble miraculeusement intact ; les tambourinements à l'intérieur se font un instant furieux, puis s'apaisent.",
+      "pistes": [{ "texte": "Au fond du Puits, devant la porte de bronze", "vers": "porte-puits" }],
+      "distribution": [{ "perso": "grooth", "qty": 10, "attitude": "mefiant" }]
+    },
+    {
+      "cle": "porte-puits",
+      "titre": "Les gardiens de pierre et l'éclipse",
+      "lieu": "Fond du Puits, devant la porte de bronze des Rois-Sorciers",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Le soleil éclaire une grande partie du fond du Puits. Deux énormes statues de près de trois mètres encadrent l'embrasure d'une grande porte en bronze.\n\nLa première, dans une pierre légèrement bleutée, représente une femme nue jusqu'à la taille, vêtue d'une sorte de pagne. Armée de deux cimeterres, elle semble amorcer un élégant pas de danse. Son visage d'une grande finesse exprime une détermination sereine ; un croissant de lune orne son front et retient sa longue chevelure.\n\nLa seconde, tout aussi imposante, est un guerrier sculpté dans une pierre rouge sombre, majestueux avec sa barbe et son turban. Armé d'un long trident, il semble défier du regard quiconque approche de la porte.\n\nDes ossements de plusieurs squelettes sont dispersés dans la poussière au pied des statues. Au centre du Puits gisent les restes d'un ancien brasero, éteint depuis longtemps.",
+      "jeu": "Les deux statues sont les gardiens du Puits. Le guerrier rouge veille le jour, la danseuse bleue la nuit. Toucher la porte éveille le gardien de garde, qui attaque sur-le-champ ; les portes de bronze se bloquent alors (impossible de faire diversion pour se faufiler).\nGardiens (rivaux) : Vig 8, Agi 3, Esp 0 ; Att +4, Dégâts d6x2, Déf 2, 40 PV, Protection d6 (4). Combattant d'élite : dé de bonus à l'attaque. Corps alchimique : dé de bonus aux dégâts, ignorent les armures, dé de bonus au jet de protection, dégâts des succès héroïques ou légendaires divisés par deux.\nL'ÉCLIPSE : comme prévu par Parsi, le soleil s'assombrit vers midi et une ombre s'étend sur la terre. La porte s'ouvre alors en poussant les lourds battants ; les gardiens restent immobiles sur leurs socles. Un quart d'heure au plus : faire sentir que le temps presse.",
+      "notes": "Les ossements sont ceux des compagnons de Parsi, tués il y a dix ans par la danseuse bleue lors d'une éclipse lunaire. Les Rois-Sorciers ont ainsi réservé l'accès aux jours d'éclipse.",
+      "pistes": [
+        { "texte": "Toucher la porte hors de l'éclipse : le gardien s'éveille" },
+        { "texte": "Pendant l'éclipse, pousser les battants", "vers": "salles-puits" }
+      ],
+      "distribution": [
+        { "perso": "gardien-rouge", "attitude": "hostile" },
+        { "perso": "gardienne-bleue", "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "salles-puits",
+      "titre": "Les salles des Rois-Sorciers",
+      "lieu": "Le Puits : rez-de-chaussée et premier sous-sol",
+      "moment": "jour",
+      "danger": 2,
+      "lecture": "La porte débouche sur une grande salle carrée de quarante mètres de côté, faite d'un large balcon qui court sur tout le pourtour et encadre un vide béant. L'endroit est sombre, à peine éclairé par la lueur spectrale de l'éclipse qui filtre par l'entrée. La pierre noire et lisse des murs et un silence oppressant renforcent la sensation de ténèbres.\n\nPar-dessus la balustrade, on devine deux autres niveaux, eux aussi organisés autour de la fosse centrale ; tout en bas, un bassin d'eau noire parfaitement immobile. La galerie dessert deux portes à gauche et deux à droite ; au nord, deux escaliers de pierre descendent.",
+      "jeu": "Rez-de-chaussée :\n• A (et B, seconde entrée) : bibliothèque cyclopéenne, étagères de pierre de plus de quatre mètres, allée centrale en deux tronçons. S'attarder = attaque d'un nécropède niché dans l'obscurité du plafond.\n• C : salle des astres. Gravures des trajectoires célestes au plafond, astres figurés par d'énormes diamants ; vaste planétaire en pierres semi-précieuses.\n• D : cloche de bronze monumentale ; heurtoir en bois de jallallabar suspendu à deux chaînes, encore utilisable.\n1er sous-sol (balcon, quatre portes, deux escaliers vers le bas) :\n• 1-A : grande pièce vide, lourds chandeliers sous les toiles d'araignée (ancienne salle commune ?).\n• 1-B : murs irréguliers, rochers affleurants, six cavités de plus d'un mètre (trois de chaque côté) : conduits de dix mètres vers une grotte de trente mètres de côté, pleine de débris, de bois, d'os blanchis et de ferrailles rouillées. Un nécropède y vit ; s'attarder attire son attention.\n• 1-C : grande pièce vide, murs percés d'encoches régulières (dortoir ? réserve ?).\n• 1-D : petit amphithéâtre semi-circulaire de trente places, pupitre de basalte au centre.\nNécropède : profil du catalogue (BoL p. 127).",
+      "notes": "Rappel : l'éclipse dure un quart d'heure au plus. Chaque minute passée à piller les diamants ou à fouiller la bibliothèque rapproche le réveil des gardiens.",
+      "pistes": [{ "texte": "Descendre au second sous-sol", "vers": "chambre-sablier" }],
+      "distribution": [{ "perso": "necropede", "attitude": "hostile" }]
+    },
+    {
+      "cle": "chambre-sablier",
+      "titre": "La chambre du Sablier",
+      "lieu": "Le Puits : second sous-sol, chambre octogonale du Sablier",
+      "moment": "jour",
+      "danger": 2,
+      "lecture": "Au dernier niveau, une série de colonnes dessine une sorte de cloître autour du bassin, profond d'à peine vingt centimètres. L'eau est froide, d'un vert sombre, et d'une étrange fluidité. Une porte à double battant occupe le mur nord.\n\nDerrière, une pièce octogonale. En son centre, sur un piédestal, repose un sablier d'une trentaine de centimètres, à l'armature de métal gris mat gravée de runes, aux deux compartiments de verre légèrement iridescent. Il baigne dans une colonne de lumière blanche qui semble surgir aussi bien du sol que du plafond.\n\nSur le côté droit, une clochette en métal argenté, couverte de poussière, est posée sur un guéridon de marbre noir.\n\nDans le coffre, l'agitation redouble.",
+      "jeu": "Impossible de saisir le Sablier directement : la lumière brûle les chairs, d6M de dégâts automatiques sans protection d'armure, et réduit en cendres tout objet approché. Un héros qui insiste reçoit assez de dégâts pour tomber à 0 en vitalité.\nÉNIGME : seul le démon du coffre peut prendre le Sablier. Il suffit d'agiter la clochette. Un carillon cristallin et mélodieux résonne et change inexplicablement de tonalité en se réverbérant. Cliquetis dans la serrure, le couvercle se soulève : un petit démon trapu, aux yeux globuleux et à la peau écailleuse d'un orange intense, jaillit, s'empare du Sablier, retourne dans le coffre en le serrant contre lui, toise les héros avec un sourire satisfait, referme le couvercle dans un ricanement strident. Une clef tourne dans la serrure.\nLe démon ne se combat pas (pas de profil dans le livre).",
+      "notes": "Le démon gardien est lié au Sablier : seul habilité à le sortir de son sanctuaire, il l'y ramène une fois qu'il a servi. Évoqué par Rutgarr, il lui obéit pour l'instant.",
+      "pistes": [{ "texte": "Remonter au plus vite", "vers": "remontee" }]
+    },
+    {
+      "cle": "remontee",
+      "titre": "La remontée",
+      "lieu": "Le Puits, puis le plateau de Lhend et la route d'Halakh",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 3,
+      "lecture": "Dehors, la lumière se fait de plus en plus intense : l'éclipse s'achève. Il faut remonter, vite.\n\nAu niveau du premier étage, quelque chose bouge sur le mur. Un énorme mille-pattes à l'aspect macabre, qui a suivi votre descente avec patience et délectation, escalade la paroi à la verticale et vous barre la route.",
+      "jeu": "Nécropède (catalogue, BoL p. 127) au premier étage.\nNe pas tuer les héros au fond du Puits : jouer avec leurs nerfs, les presser sur les derniers mètres avec la crainte de voir les gardiens de pierre s'éveiller.\nUne fois sortis : chaleur et morsure des vents du plateau de Lhend. Les grooth peuvent attaquer sur le chemin du retour (voir la scène du plateau), surtout si le groupe est affaibli ou la nuit. Récupérer la charrette chez Parsi.\nRetour à Halakh : Rutgarr taille paisiblement ses rosiers ; la vue du coffre le plonge dans une joie non dissimulée et il entraîne les héros dans sa cave pour leur ultime mission.",
+      "pistes": [{ "texte": "De retour à Halakh, la dernière mission", "vers": "troisieme-coffre" }],
+      "distribution": [{ "perso": "necropede", "attitude": "hostile" }]
+    },
+    {
+      "cle": "troisieme-coffre",
+      "titre": "Le troisième coffre et la route du Malak",
+      "region": "Halakh",
+      "lieu": "Cave de Rutgarr, puis la rive est du Malak",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Rutgarr vous remet le dernier coffre, qui tinte à chaque mouvement. Vous devez l'apporter à Malakut et le remettre à Ram Verda, un riche marchand qui a prospéré dans la vente d'objets anciens. Il vous donne sa parole qu'une fois cette mission terminée, il vous fera ramener à la forteresse de la Reine Sorcière, à qui il ne manquera pas de vanter votre efficacité et votre obéissance.\n\nIl vous confie aussi un poignard à remettre au marchand, et la moitié d'une pièce de monnaie ancienne, coupée en deux : elle vous servira à contacter le guide qui vous mènera à Ram Verda. Le rendez-vous est au pont qui franchit le Malak, pour rejoindre la ville sur la rive ouest. Comment reconnaître votre contact ? Rutgarr, plus hilare que jamais, lance pour toute explication : « Qui se ressemble, s'assemble… »\n\nComme toujours : interdiction d'ouvrir la malle, et la plus grande discrétion. Il est temps de remettre vos déguisements.\n\nLe voyage d'Halakh à Malakut est long et fastidieux : près de deux semaines à longer la rive est du Malak.",
+      "jeu": "Trajet monotone, à rompre au besoin par une attaque de brigands si les joueurs manquent d'action.",
+      "notes": "Le but réel : payer Ram Verda en or et en bijoux de prix pour l'enlèvement des kalukans, et faire disparaître tous les témoins. Le poignard est le signal : Ram doit tuer les porteurs. Le contact est un mendiant borgne (« qui se ressemble, s'assemble »).",
+      "pistes": [{ "texte": "Arriver au pont du Malak", "vers": "pont-malak" }],
+      "distribution": [{ "perso": "rutgarr", "attitude": "neutre" }]
+    },
+    {
+      "cle": "pont-malak",
+      "titre": "Le pont du Malak",
+      "region": "Malakut",
+      "lieu": "Le grand pont fortifié sur le Malak, rive est",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La route aboutit enfin au grand pont fortifié qui enjambe le Malak vers la grande cité de Malakut, sur l'autre rive. Quelques cahutes se dressent près du pont, et des groupes de porteurs patientent, assis dans la poussière, pour proposer leurs services aux caravanes. L'endroit bruisse d'activité.\n\nÀ l'écart, à l'entrée du pont, est assis un vieux mendiant. Borgne. Dans sa sébile luit la moitié d'une pièce de monnaie ancienne.\n\nUne heure plus tard, derrière un groupe de cabanes, un jeune adolescent vous rejoint. Pieds nus, crasseux, le regard fier de mille coups pendables, il se présente sous le nom de Faldir et vous transmet pompeusement les meilleures salutations et bons vœux de maître Ram Verda.",
+      "jeu": "Dès que la moitié de pièce tombe dans l'écuelle, le mendiant fait signe d'aller attendre derrière un groupe de cabanes, se lève et part vers la ville.\nFaldir ne s'étonne pas d'avoir affaire à des kalukans (il a été prévenu). Rendez-vous à la nuit tombée dans le Jardin des Martyrs, à côté de la statue de Plutt. Il raconte volontiers l'histoire du jardin : Plutt, érudit malakuti du temps du roi Lian Klodis, collectionneur de cactées ; le roi y faisait jeter traîtres et délateurs dans des fosses à cactus ; c'est aujourd'hui un lieu mal famé de rendez-vous clandestins.\nIl élude toute question sur Ram Verda : un riche marchand qui paie bien ses serviteurs. Pour lui parler, il faut lui prêter une paire de bracelets.",
+      "pistes": [{ "texte": "À la nuit tombée, le Jardin des Martyrs", "vers": "jardin-martyrs" }],
+      "distribution": [{ "perso": "faldir", "attitude": "amical" }]
+    },
+    {
+      "cle": "jardin-martyrs",
+      "titre": "Rendez-vous au Jardin des Martyrs",
+      "region": "Malakut",
+      "lieu": "Jardin des Martyrs, labyrinthe d'épines, statue de Plutt",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Un grand parc rectangulaire en périphérie de Malakut, clôturé de grilles rouillées et de haies d'arbustes épineux. Massifs de cactus aux fleurs improbables, cierges de plusieurs mètres alignés en colonnades, plantes grasses aux formes rebondies… et les fameuses fosses, profondes de plusieurs mètres, tapissées de cactus jaune pâle aux longues épines recourbées.\n\nÀ l'entrée, une jeune femme est adossée à un énorme baobab blanc, éclairée par une petite lampe à huile rouge. Sa tenue vulgaire et ses propositions sans équivoque ne laissent aucun doute sur son activité nocturne. Votre mutisme semble beaucoup l'amuser.\n\nFaldir vous entraîne vers le fond du parc, où se dessine la masse sombre d'un labyrinthe de buissons épineux hauts de deux mètres cinquante, et multiplie les détours. Au cœur du dédale, près d'une statue de marbre blanc, trois gardes lourdement armés encadrent un homme bedonnant d'une cinquantaine d'années, au teint rougeaud, au sourire carnassier, aux habits d'une richesse vulgaire.\n\nIl vous invite à approcher et, d'un ton mielleux, vous demande de lui remettre le précieux coffre… puis le poignard. Sa voix devient soudain cassante : « Savez-vous pourquoi votre “maître” vous a demandé de me remettre ce magnifique poignard ? Non ? Mais c'est tout simplement pour vous tuer ! »",
+      "jeu": "Fosses à cactus : d6M de dégâts par tour passé dedans (six fosses de 3 à 6 m de large, 8 m pour la « Fosse de la demoiselle » sur la place centrale). Aussi : maison délabrée du jardinier (rendez-vous à la sauvette), bassin croupissant (crapauds, petits serpents inoffensifs), statues de Lian Klodis (esplanade), d'Argos le premier martyr (hérissé de piquants) et de Plutt (au cœur du labyrinthe d'épines, une cinquantaine de mètres de côté).\nLa belle-de-nuit est un agent de Ram : sa lampe rouge signale l'entrée des kalukans. Elle ignore leur nature.\nLa statue de Plutt est à une vingtaine de mètres à vol d'oiseau de l'entrée du labyrinthe.\nEmbuscade : Ram Verda + 3 gardes visibles + 3 embusqués qui attaquent par surprise, dont 2 arbalétriers (arbalète d6 ; Init 0, Mêlée 1, Tir 1, Déf 1). Hommes de main (coriaces) : Vig 0, Agi 2, Esp 0, Aura 0 ; Init 0, Mêlée 2, Tir 0, Déf 1 ; voleur 2 ; armure légère d6-3 (1) ; dague d6M ou épée d6 ; 6 PV.\nRam Verda (rival) : Init 2, Mêlée 1, Déf 1, 10 PV, vilénie 5, poignard d6 (arme supérieure : dé de bonus aux dégâts), arme favorite (poignard), perspicace.\nDès le début du combat, Faldir prend la poudre d'escampette.\nLes hommes de main sont loyaux mais pas fanatiques : ils fuient si le combat tourne franchement mal (à l'appréciation du MJ). Ram Verda cherche aussi à éviter la mort et se rend s'il est acculé.",
+      "notes": "Capturé, Ram Verda marchande sa vie : Rutgarr a payé sa guilde une coquette somme pour enlever un petit groupe de sentinelles kalukans de la Reine Sorcière ; il s'en est chargé lui-même. Le coffre contient le solde de son paiement, avec instruction de les éliminer. « Rien de personnel, c'est les affaires. » Il ignore le reste des manigances de Rutgarr, mais sait que c'est un membre important des Brasiers des Ténèbres, druides gris de Nemmereth d'Halakh, ennemis jurés des fidèles de Zaggath — le dieu de leur maîtresse.\nEnsuite : retourner à la forteresse prendrait près de deux mois, de quoi laisser Rutgarr agir, et Methyn Sarr ne pardonne pas ; mieux vaut revenir le problème réglé. Rutgarr les croit morts : ils ont l'avantage de la surprise.",
+      "pistes": [
+        { "texte": "Faire parler Ram Verda" },
+        { "texte": "Retourner à Halakh demander des comptes à Rutgarr", "vers": "villa-rutgarr" },
+        { "texte": "Rentrer prévenir la Reine Sorcière (près de deux mois de route)" }
+      ],
+      "distribution": [
+        { "perso": "ram-verda", "attitude": "hostile" },
+        { "perso": "homme-de-main", "qty": 4, "attitude": "hostile" },
+        { "perso": "arbaletrier", "qty": 2, "attitude": "hostile" },
+        { "perso": "faldir", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "villa-rutgarr",
+      "titre": "La villa de Rutgarr",
+      "region": "Halakh",
+      "lieu": "Villa de Rutgarr, faubourgs d'Halakh",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La belle villa des faubourgs d'Halakh est déserte. Dans le jardin, seul un vieil homme s'affaire parmi les massifs : le jardinier.\n\nPour la première fois, vous pouvez explorer la demeure du druide gris. Au rez-de-chaussée, un vestibule, un grand salon richement meublé, une cuisine bien fournie ; une porte du vestibule donne sur l'escalier de la cave que vous connaissez si bien. À l'étage, deux chambres à coucher et une troisième pièce, fermée à clef.",
+      "jeu": "Assim, le vieux jardinier, est seul (les autres domestiques ont été congédiés). Interrogé avec les bracelets, il déclare d'une voix chevrotante qu'il n'est au courant de rien ; il sait seulement que Rutgarr est parti il y a deux jours pour sa roseraie, une propriété à quelques lieues à l'ouest d'Halakh.\nLa pièce fermée est le bureau de Rutgarr : murs couverts d'étagères et de bibliothèques, bureau finement sculpté. En le fouillant soigneusement (copies de lettres, notes, extraits recopiés du Traité du Temps), les héros reconstituent le puzzle (voir le secret).\nTrouvailles : la paire de bracelets de longue parole de Rutgarr ; une fiole à demi pleine d'un liquide épais et verdâtre (potion de sommeil instantané, BoL p. 141).\nAucune trace du Sablier Gris. Dans la cave, le coffre rapporté du Puits, ouvert et vide.",
+      "notes": "Ce que révèle le bureau : le culte des Brasiers des Ténèbres cherche de longue date le Sablier Gris pour assassiner la Reine Sorcière, la plus emblématique des druides rouges de Zaggath. Rutgarr a mis longtemps à trouver comment entrer dans le Puits et a tout planifié, depuis l'enlèvement des kalukans par Ram Verda, chargé aussi de les éliminer.\nPendant ce temps, Rutgarr a annoncé la nouvelle à ses frères du culte, recruté des assassins halakhis pour entrer dans la forteresse (et en ressortir), et prépare le rituel qui lui donnera, à lui et à ses compagnons, l'apparence des kalukans.",
+      "pistes": [{ "texte": "Courir à la roseraie", "vers": "roseraie" }],
+      "distribution": [{ "perso": "assim", "attitude": "neutre" }]
+    },
+    {
+      "cle": "roseraie",
+      "titre": "La roseraie",
+      "region": "Halakh",
+      "lieu": "La roseraie de Rutgarr, banlieue ouest d'Halakh (route du Phare)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Dans la banlieue ouest d'Halakh, sur la route du Phare, les habitations se font rares : quelques greniers, des constructions rudimentaires de paysans. Dans ce décor aride, jaune paille, la roseraie se repère de loin, à côté d'une petite oasis : une grande serre d'une cinquantaine de mètres de long sur trente de large, qui abrite des centaines de rosiers en fleurs. Une petite bâtisse à l'assise de pierre, surmontée d'un étage de bois, communique directement avec elle.\n\nDe l'intérieur vous parviennent des éclats de voix et le bruit sec de lames qui se plantent dans le bois.",
+      "jeu": "La ferme : une seule porte d'entrée sur l'unique pièce à vivre, une porte secondaire vers la serre (qui a aussi sa porte extérieure). Au-dessus, une vaste mezzanine (bottes de foin, sacs d'engrais).\n• Rez-de-chaussée : 4 maîtres-assassins halakhis (coriaces ; Init 1, Mêlée 1, Tir -1, Déf 1 ; armure légère d6-3 (1) ; deux kriss d6M ; 8 PV ; dé de bonus à l'attaque au kriss), pas forcément sur leurs gardes : concours de lancer de dague. Et 5 acolytes (piétaille ; Attaque +0, poignard d3, 2 PV, 1 point de pouvoir, règle de horde).\n• Mezzanine : Rutgarr (rival ; Vig 0, Agi 1, Esp 4, Aura 2 ; Init 1, Mêlée 1, Tir 0, Déf 3 ; dague d6M ; 10 PV ; foi 3, pouvoir 12, vilénie 5), en méditation profonde.\nSelon l'approche des héros : cache-cache sanglant dans les allées de rosiers. Ce sont des fanatiques : combat sanglant. Rutgarr ne fuit pas, sauf situation désespérée. Il hésite à utiliser le Sablier et il ne l'a pas encore rempli : ouvrir l'urne, verser les cendres, revisser le bouchon et le retourner prend un temps conséquent.\nOption « Kalukans contre kalukans » : faire arriver les héros juste après le sort ; ils font face à des kalukans qui leur ressemblent trait pour trait, et aux cinq corps des apprentis sacrifiés.\nLe petit démon orange peut apparaître, pour la tension. Attaqué, il disparaît dans une fumée orangée malodorante et réapparaît plus loin en montrant les crocs. Il n'intervient pas et n'empêche pas la destruction du Sablier.\nÉPILOGUE : les héros rentrent servir la Reine Sorcière. S'ils rapportent le Sablier, Methyn Sarr l'exige et les entraînera peut-être dans une mission d'envergure. Un petit démon écailleux orange hantera désormais ses couloirs, attendant de ramener le Sablier au Puits.",
+      "notes": "Rutgarr prépare un sort d'illusion du 2e cercle pour prendre, lui et les quatre assassins, l'apparence des kalukans et approcher la Reine Sorcière ; il a prélevé poils et rognures d'ongles sur les héros à leur arrivée chez lui. Il jeûne depuis une semaine. Les cinq apprentis l'ignorent : ils seront sacrifiés à la fin de l'incantation (une victime par bénéficiaire).\nIl sait que si les kalukans préviennent la Reine, son plan est mort et Methyn Sarr le traquera sans fin : il se bat jusqu'au bout.\nDétruire le Sablier libérerait le démon du pacte qui le lie à l'artefact.",
+      "pistes": [
+        { "texte": "Détruire le Sablier Gris" },
+        { "texte": "Rapporter le Sablier Gris à Methyn Sarr" }
+      ],
+      "distribution": [
+        { "perso": "rutgarr", "attitude": "hostile" },
+        { "perso": "assassin", "qty": 4, "attitude": "hostile" },
+        { "perso": "acolyte", "qty": 5, "attitude": "hostile" }
+      ]
+    }
+  ]
+}

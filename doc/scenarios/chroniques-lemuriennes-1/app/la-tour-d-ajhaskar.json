@@ -1,0 +1,478 @@
+{
+  "saga": "cl1-la-tour-d-ajhaskar",
+  "scenario": {
+    "cle": "la-tour-d-ajhaskar",
+    "titre": "Chroniques lémuriennes — La tour d'Ajhaskar",
+    "pitch": "Une aventure de Vincent Basset (Chroniques lémuriennes 1.2, livre p. 76-101).\n\nLe sorcier Ajhaskar, conseiller du roi Colmus de Lysor, n'a plus reparu à la cour depuis plusieurs jours, et les serviteurs envoyés à sa tour pour le quérir n'en sont plus jamais ressortis. Tirés des geôles de Lysor par le capitaine Dramik, les héros sont chargés (pas vraiment de leur plein gré) de pénétrer dans l'antre du redouté magicien pour découvrir ce qu'il est devenu. Mais cette tâche va les entraîner bien plus loin qu'ils ne l'auraient imaginé…\n\nPremière partie : la tour noire, scellée par sortilège, ses gardiens de pierre, son démon familier et le miroir d'étain d'un Roi-Sorcier. Deuxième partie : la Vallée de la Lune, refuge hors du monde de Shrinazor Shamaaraz, où la tribu des Xaliir attend toujours le Maître et où la démone Labashaah rêve de s'évader."
+  },
+  "personnages": {
+    "dramik": {
+      "kind": "pnj", "nom": "Capitaine Dramik", "rang": "coriace", "region": "Lysor",
+      "vigueur": 1, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée"],
+      "armures": ["Armure moyenne"],
+      "commentaire": "Pas de stats dans le livre : fiche inventée (coriace, soldat 2) pour la carte. Capitaine de la garde royale de Lysor, dans la force de l'âge, cheveux châtains, yeux verts perçants, cuirasse et épée. Ferme, mais il tient parole : si les héros réussissent, ils seront libres et très généreusement récompensés."
+    },
+    "jenko": { "kind": "pnj", "catalogue": "Sergent du guet" },
+    "ilda": {
+      "kind": "pnj", "nom": "Ilda, cuisinière d'Ajhaskar", "rang": "pietaille", "region": "Lysor",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante). Vieille femme rabougrie et voûtée, cheveux gris filasse, visage peu amène ; du sang-froid, mais les nerfs à rude épreuve. Cachée dans le garde-manger des cuisines. Les andraks de pierre ne s'en prennent pas à elle (elle l'ignore)."
+    },
+    "kurik": {
+      "kind": "pnj", "nom": "Kurik, neveu d'Ilda", "rang": "pietaille", "region": "Lysor",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Jeune homme roux d'environ seize ans, assiste sa tante. Il a été chassé de l'étage par Krulak ; il se souvient des caisses livrées il y a deux mois et de la grande caisse d'il y a trois ou quatre semaines."
+    },
+    "otos": {
+      "kind": "pnj", "nom": "Otos, serviteur du roi", "rang": "pietaille", "region": "Lysor",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Envoyé par le roi pour quérir Ajhaskar, piégé dans la tour depuis deux jours. Panique totale ; il n'a rien à apprendre aux héros."
+    },
+    "andrak-obsidienne": {
+      "kind": "creature", "nom": "Andrak d'obsidienne", "taille": "Moyenne",
+      "vigueur": 3, "agilite": 1, "esprit": 0, "attaque": 2, "defense": 1,
+      "vitalite": 15, "degats": "d6B", "protection": "d6 (4)",
+      "commentaire": "Livre p. 97 (Esprit : aucun, saisi 0). Lion de pierre animé par magie, un peu plus petit qu'un vrai andrak (1,80 m du museau à la queue). Gardien infatigable : il attaque à vue tout intrus qui entre dans la salle d'audience, le poursuit partout dans la tour et ne regagne sa place qu'une fois les intrus éliminés. Il ignore Ilda et Kurik.\nLes armes contondantes en métal (marteau, masse) ont un dé de bonus aux dégâts contre lui.\nÀ 0 de vitalité, il se brise en mille morceaux ; dans les débris, quelques ossements d'andrak gravés de symboles occultes."
+    },
+    "xolth-juvenile": {
+      "kind": "creature", "nom": "Xolth juvénile", "taille": "Grande",
+      "vigueur": 4, "agilite": -3, "esprit": -3, "attaque": 1, "defense": 0,
+      "vitalite": 20, "degats": "spécial", "protection": "d6-2 (2)",
+      "capacites": [
+        { "nom": "Attaque spéciale", "detail": "Enveloppe sa proie dans sa masse gélatineuse : le héros pris doit tuer le monstre pour en sortir et subit d6M de dégâts par round passé dedans. Trois proies au plus." }
+      ],
+      "commentaire": "Livre p. 97 (cf. BoL p. 126 pour le xolth adulte). Limace ignoble, déjà de la taille d'un homme adulte, affamée. Elle sommeille dans une fosse au fond de la cave ; elle attaque si l'on approche sans lui lancer à manger.\nPeur du feu : elle évite autant que possible le feu."
+    },
+    "krulak": {
+      "kind": "demon", "nom": "Krulak, démon gardien", "categorie": "Inférieur",
+      "vigueur": 1, "agilite": 3, "esprit": 2, "aura": 0,
+      "melee": 3, "tir": 1, "defense": 2,
+      "vitalite": 21, "degats": "d6",
+      "pouvoirs": [
+        { "nom": "Vulnérabilité", "detail": "Statuette de la bibliothèque : seule sa destruction le tue pour de bon. Deux jets de Vigueur (la projeter au sol ou contre un mur) ou deux attaques d'arme lourde (masse, lourde épée ; pas une dague), ou 1 point d'héroïsme." }
+      ],
+      "commentaire": "Livre p. 97-98, démon familier d'Ajhaskar (démon inférieur, coriace). Créature simiesque trapue au pelage ras d'un gris malsain, bras démesurés, jambes courtaudes, pattes à trois doigts griffus, quatre yeux rouges sans paupières, quatre petites cornes.\nCri démoniaque (pouvoir du livre) : « interdiiiiit ! » dès qu'il repère des intrus. Chaque héros à portée de voix fait un jet d'Esprit, sinon il s'écroule, incapable d'agir un round, et perd ses bonus de défense et de bouclier ; nouveau jet au round suivant, en cas d'échec encore un round, puis l'effet cesse.\nDédoublement (pouvoir du livre) : au combat, il se démultiplie en autant d'avatars que de héros (6 au plus). Chaque avatar tué devient une fumée bitumineuse ; quand tous sont vaincus, les fumées reforment Krulak, qui continue le combat. Détruit, il redevient fumée, aspirée par les narines de la statuette : il réapparaît au bout de dix rounds si elle n'est pas brisée. Statuette brisée : Krulak et ses avatars disparaissent dans un dernier hurlement."
+    },
+    "avatar-krulak": {
+      "kind": "demon", "nom": "Avatar de Krulak", "categorie": "Mineur",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 0,
+      "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 10, "degats": "d6M",
+      "commentaire": "Livre p. 98 (démon mineur). Un par héros, 6 au plus. Tué, il se dissipe en un petit nuage de fumée malodorante et bitumineuse ; les nuages s'agrègent et reforment Krulak quand tous les avatars sont vaincus. Ils disparaissent si la statuette est brisée."
+    },
+    "ajhaskar": {
+      "kind": "pnj", "nom": "Ajhaskar", "rang": "rival", "region": "Lysor",
+      "vigueur": 0, "agilite": 1, "esprit": 4, "aura": 2,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 2,
+      "vitalite": 11, "vilenie": 4, "pouvoir": 15,
+      "carrieres": [
+        { "nom": "Sorcier", "rang": 3 },
+        { "nom": "Alchimiste", "rang": 2 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Marchand", "rang": 0 }
+      ],
+      "armes": [
+        { "nom": "Kriss halakhi damasquiné", "degats": "d6", "type": "M", "notes": "Arme supérieure : dé de bonus aux jets de dégâts. Belle opale enchâssée dans le pommeau." },
+        "Bâton"
+      ],
+      "avantages": ["Bibliothèque savante", "Pouvoir du Néant", "Savant"],
+      "desavantages": [
+        "Inquiétant",
+        { "nom": "Obsession", "detail": "l'antique pouvoir des Rois-Sorciers" },
+        { "nom": "Signe distinctif", "detail": "yeux de chat aux pupilles verticales" }
+      ],
+      "commentaire": "Livre p. 99. Kriss halakhi d6 dans le livre : arme créée (le Kriss du catalogue fait d6M+1). Bâton = son solide bâton de marche. Pouvoir du Néant (+2 pouvoir) et Savant (+1 Esprit) sont déjà comptés. Inquiétant : dé de malus dans les interactions sociales ou avec les animaux.\nPossessions : talismans et amulettes, fiole d'antidote universel (soigne instantanément tout empoisonnement, même magique).\nSceau de protection mystique (2e cercle ; objet spécial, sacrifice rituel ; Difficile -2 ; 9 points) : 24 h de protection contre un démon précis (Labashaah) pour lui et une personne par rang de sorcier ; le démon a un dé de malus pour attaquer au corps à corps un protégé, qui a un dé de bonus pour résister à ses sorts et pouvoirs. Version modifiée (secret) : Ajhaskar a un dé de bonus quand il lance un sort contre un héros marqué.\nConseiller du roi Colmus, plus de soixante-dix ans, près de deux mètres, peau brune, chevelure noire sans un fil d'argent, yeux verts aux pupilles verticales (surnommé « l'andrak »). Robe de brocart rouge sombre, bagues, colliers de talismans, havresac. Intelligent et retors, impitoyable. S'il est tué, le sortilège qui scelle sa tour prend fin."
+    },
+    "robos": {
+      "kind": "pnj", "nom": "Robos", "rang": "rival", "region": "Lysor",
+      "vigueur": 0, "agilite": 1, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 2,
+      "vitalite": 10, "vilenie": 5, "pouvoir": 11,
+      "carrieres": [
+        { "nom": "Sorcier", "rang": 1 },
+        { "nom": "Médecin", "rang": 2 },
+        { "nom": "Scribe", "rang": 1 },
+        { "nom": "Marchand", "rang": 0 }
+      ],
+      "armes": ["Lance"],
+      "avantages": ["Attirant", "Récupération rapide"],
+      "desavantages": ["Lent à la détente"],
+      "commentaire": "Livre p. 98. Ses 5 points d'héroïsme sont portés en vilénie. Lance primitive d6, récupérée chez les Xaliir. Lent à la détente : dé de malus aux jets de réaction.\nDisciple d'Ajhaskar, une vingtaine d'années, blond aux yeux bleus, teint frais des Lysoriens, robes de toile écrue tachées d'encre. Bon cœur, pas encore perverti ; épris de Nyssa. Il sait que le portail se rouvre en lisant les runes (sort de 1er cercle, Moyenne 0) et peut le faire lui-même."
+    },
+    "nyssa": {
+      "kind": "pnj", "nom": "Nyssa", "rang": "rival",
+      "vigueur": 0, "agilite": 2, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 2, "defense": 1,
+      "vitalite": 10, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Chasseur", "rang": 2 },
+        { "nom": "Barbare", "rang": 1 },
+        { "nom": "Ménestrel", "rang": 0 },
+        { "nom": "Esclave", "rang": 1 }
+      ],
+      "armes": ["Arc", "Dague"],
+      "avantages": [{ "nom": "Roi de la jungle", "detail": "Reine de la jungle" }, "Vue perçante"],
+      "desavantages": ["Crédule"],
+      "commentaire": "Livre p. 100, rivale. Ses 5 points d'héroïsme sont portés en vilénie. Dague = son couteau en silex d6M. Reine de la jungle : dé de bonus pour pister, piéger ou chasser dans la jungle.\nChasseresse xaliir, belle et athlétique, cheveux bruns, yeux noirs. Éprise de Robos. Elle a guidé Ajhaskar et Robos jusqu'au relais de chasse de la cascade. Région : la Vallée de la Lune, hors catalogue."
+    },
+    "ilkhta": {
+      "kind": "pnj", "nom": "Ilkhta, doyenne des Xaliir", "rang": "pietaille",
+      "vitalite": 2,
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée. Doyenne de la tribu ; elle demande aux héros s'ils sont, eux aussi, des envoyés du Maître. Labashaah a ordonné à ses démons de la lui ramener."
+    },
+    "rirtu": {
+      "kind": "pnj", "nom": "Rirtu, frère de Nyssa", "rang": "pietaille",
+      "vigueur": 0, "agilite": 1, "esprit": -1, "aura": 0,
+      "initiative": -1, "melee": 0, "tir": 1, "defense": 0,
+      "vitalite": 2,
+      "armes": [
+        { "nom": "Armes primitives xaliir", "degats": "d3", "type": "M", "notes": "Épieux en bois durci au feu, casse-tête." }
+      ],
+      "commentaire": "Pas de stats dans le livre : profil des guerriers xaliir (p. 100) repris pour lui. Jeune frère de Nyssa : il sait où elle est allée et conduit les héros à la cascade (deux heures de marche)."
+    },
+    "guerrier-xaliir": {
+      "kind": "pnj", "nom": "Guerrier xaliir", "rang": "pietaille",
+      "vigueur": 0, "agilite": 1, "esprit": -1, "aura": 0,
+      "initiative": -1, "melee": 0, "tir": 1, "defense": 0,
+      "vitalite": 2,
+      "armes": [
+        { "nom": "Armes primitives xaliir", "degats": "d3", "type": "M", "notes": "Épieux en bois durci au feu, casse-tête." },
+        { "nom": "Arc xaliir", "degats": "d3", "type": "T", "notes": "Flèches à pointe d'os ou de silex." }
+      ],
+      "commentaire": "Livre p. 100 : piétaille, protection aucune, armes d3 (armes primitives), vitalité 2, règle de horde (BoL p. 132). Une trentaine, hommes et femmes, peuvent se joindre aux héros. Le livre donne une seule ligne « armes primitives d3 » : elle est ici scindée en une arme de mêlée et un arc, pour leur Tir 1.\nPeau et cheveux bruns, tunique ou pagne de cuir, bijoux de bois, d'os et d'ivoire, scarification sur l'épaule gauche (la marque de Shrinazor)."
+    },
+    "labashaah": {
+      "kind": "demon", "nom": "Labashaah", "categorie": "Majeur",
+      "vigueur": 2, "agilite": 3, "esprit": 3, "aura": 4,
+      "melee": 3, "tir": 3, "defense": 4,
+      "vitalite": 32, "degats": "d6B+1",
+      "pouvoirs": [
+        { "nom": "Faculté de parole", "detail": null },
+        { "nom": "Progéniture", "detail": "Spécial : de ses accouplements avec les hommes xaliir naissent ses « aînés », qui engendrent à leur tour les rejetons." },
+        { "nom": "Régénération", "detail": null },
+        { "nom": "Séducteur", "detail": null },
+        { "nom": "Armure", "detail": "Fourrure de chauve-souris : protection d6-2 (2), donnée par le livre comme protection et non comme pouvoir." }
+      ],
+      "commentaire": "Livre p. 100, démon majeur, rivale. Le livre lui donne protection d6-2 (2) : portée par le pouvoir Armure, la fiche de démon n'ayant pas de champ protection.\nSorte de succube : torse de femme à la peau laiteuse et aux seins flétris, bas du corps couvert d'une fourrure noire et rase de chauve-souris, ailes membraneuses, visage hideux de vieille femme aux traits de chauve-souris ; une aura de séduction et d'autorité troublante. Elle vole avec rapidité et aisance ; ses mains griffues déchiquettent un homme. Elle n'aime guère la lumière du soleil.\nAu combat : elle frappe d'abord les héros qui ressemblent le moins à un sorcier et ne veut surtout pas tuer le sorcier, seul capable d'ouvrir le portail. Elle cherche une position de force pour négocier son passage vers la Lémurie."
+    },
+    "aine": {
+      "kind": "demon", "nom": "Aîné de Labashaah", "categorie": "Inférieur",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "melee": 2, "tir": -1, "defense": 1,
+      "vitalite": 10, "degats": "d6M+1",
+      "commentaire": "Livre p. 100 : coriace, Initiative 0, protection aucune, mains griffues d6M+1, vitalité 10. Catégorie Inférieur choisie pour obtenir le rang coriace (le livre ne donne pas de catégorie ; sa vitalité 10 est celle du livre).\nPremiers-nés de Labashaah et des hommes xaliir : femmes et hommes primitifs aux ailes de chauve-souris. Ils volent."
+    },
+    "rejeton": {
+      "kind": "demon", "nom": "Rejeton de Labashaah", "categorie": "Mineur",
+      "vigueur": 0, "agilite": 1, "esprit": 0, "aura": -1,
+      "melee": 1, "tir": -1, "defense": 0,
+      "vitalite": 3, "degats": "1",
+      "commentaire": "Livre p. 101 : piétaille, Initiative 0, protection aucune, mains griffues 1, vitalité 3. Catégorie Mineur choisie pour obtenir le rang piétaille.\nPlus petits que leurs parents, ils tiennent de la chauve-souris géante avec quelques traits vaguement humains ; incapables de parler, ils poussent des cris aigus. Les « démons de la Lune » des Xaliir. Les effectifs du livre sont indicatifs."
+    },
+    "momie": {
+      "kind": "pnj", "nom": "Époux momifié de Labashaah", "rang": "pietaille",
+      "vigueur": 1, "agilite": 0, "esprit": -1, "aura": 0,
+      "melee": 0, "defense": 0,
+      "vitalite": 3,
+      "armes": [{ "nom": "Mains nues (momie)", "degats": "1", "type": "M" }],
+      "commentaire": "Livre p. 101 : harem de Labashaah, morts-vivants, piétaille. Attaque +0 (Mêlée ici), dégâts 1 (mains nues), protection 0, force vitale 3 ; Aura absente (0).\nAnciens « époux » de la démone, vidés de leur énergie vitale à l'accouplement, secs comme des momies du désert. Ils sont dix, accroupis dans les niches de la grotte, et ne quittent jamais l'antre ; ils se jettent sur l'ennemi au premier ordre de Labashaah."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "prison",
+      "titre": "En prison !",
+      "region": "Lysor",
+      "lieu": "Les geôles de Lysor, puis une salle du donjon",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une nuit pénible dans la grande geôle commune de Lysor, en compagnie de la lie de la cité : ivrognes, voleurs, vagabonds et autres malandrins. Couverts de horions, épuisés, dépouillés de votre équipement, vous faites grise mine. Hier soir, à la taverne, vous dépensiez les derniers reliquats de votre fortune sans vous soucier du lendemain. Samzara, un petit homme râblé au regard intelligent et aux fines moustaches, allait justement vous parler d'une juteuse affaire quand une dispute d'ivrognes a dégénéré en bagarre générale. Puis la milice est arrivée, avec force coups de gourdins.\n\nUne journée d'attente ; les gardes restent sourds à vos réclamations. Alors que le soleil se couche, un petit contingent se présente devant les grilles et vous fait sortir, ainsi que Samzara.\n\nOn vous conduit dans une salle où vous attendent une dizaine de gardes alignés le long des murs. Au fond, assis sur un simple tabouret, un homme dans la force de l'âge, aux cheveux châtains et aux yeux verts perçants, vêtu d'une cuirasse et portant l'épée. Tout dans son physique et sa posture indique le militaire. Il vous jauge du regard, se fait expliquer l'algarade par le sergent, hoche la tête, puis prend la parole.\n\n« Je suis le capitaine Dramik, de la garde royale. Les troubles à l'ordre public sont sévèrement punis à Lysor. La taverne a été dévastée, il va falloir dédommager le propriétaire, et vous avez échangé des coups avec les gardes de la ville. Six mois à trimer sur les bancs de nage des galères de Lysor : voilà ce qui vous attend… à moins que vous n'acceptiez de me rendre un service. »",
+      "jeu": "Aucun jet obligatoire : scène de dialogue.\n\nL'offre : un éminent conseiller du roi a disparu ; Dramik a besoin d'hommes pour aller chez lui découvrir ce qui lui est arrivé. S'ils acceptent, il passe l'éponge. Il balaie d'un geste toute tentative de se justifier.\n\nSamzara demande poliment le nom du conseiller. Dramik, gêné, se racle la gorge : maître Ajhaskar. Samzara pâlit, déglutit et déclare qu'il préfère les galères ; un soldat l'emmène. Un héros attentif surprend Dramik réprimander son sergent, à qui il avait bien dit de ne lui amener que des étrangers, pas des natifs de Lysor !\n\nDramik avoue alors, avec hésitation, qu'Ajhaskar est un… sorcier, conseiller apprécié du roi Colmus. Nul ne l'a vu quitter sa demeure ; les hommes envoyés le chercher ne sont jamais ressortis de sa tour. Mission : entrer, découvrir ce qu'il en est et, s'il est en vie, le convaincre de répondre sans attendre à la convocation du roi. Récompense : la liberté, et le roi, très courroucé, saura récompenser généreusement.\n\nAprès l'accord : repas, boisson, un médecin soigne plaies et bosses, paillasses pour quelques heures de repos. Départ pour la tour à l'aube. Dramik reste pour répondre aux questions :\n• Ajhaskar, sorcier renommé, déjà conseiller du père de Colmus. Surnommé « l'andrak » (le lion noir de l'Axos) pour sa peau foncée, son abondante chevelure noire et ses yeux de félin. Plus de soixante-dix hivers, solidement charpenté, pas un fil d'argent ; seules les rides trahissent son âge. Craint et respecté ; les rumeurs vont bon train.\n• Sa tour domine le quartier des temples, au sommet d'une petite éminence. Toujours de la lumière aux fenêtres la nuit, sauf quand il voyage. Or ces derniers jours, les lumières sont restées visibles chaque nuit.\n• Un disciple, Robos, jeune homme blond aux yeux bleus. Deux serviteurs, une vieille femme et un jeune garçon, qui vivent dans la tour sauf quand le maître s'absente. Personne n'a été vu en ville depuis cinq jours.\n• Il y a deux jours, un serviteur du roi est allé le mander et n'est jamais revenu. Le lendemain matin, un courtisan : pas reparu. Quelques heures plus tard, une patrouille de quatre miliciens : jamais ressortis.\n• Dramik n'est jamais entré dans la tour ; les serviteurs du palais venus le quérir sont toujours restés dans le vestibule.\n• Il réitère ses promesses et sait convaincre. Sa parole est bonne : libres, très bien récompensés, riches et célèbres… s'ils survivent.\n\nInterroger les gardes (ce soir ou demain en chemin) : d'inquiétantes rumeurs. Un ivrogne qui avait porté des toasts railleurs « au sorcier noir » de Lysor a été retrouvé mort au matin, le visage figé dans une terreur abjecte. Il y a fort longtemps, un célèbre voleur de Lysor s'était lancé le défi de pénétrer sa demeure réputée inviolable : nul ne l'a plus jamais revu.",
+      "notes": "Ce que personne ne sait à Lysor : il y a cinq jours, Ajhaskar et Robos ont réveillé un miroir d'étain rapporté des ruines du palais du Roi-Sorcier Shrinazor Shamaaraz (lisière orientale du marais de Festrel). Robos a été aspiré ; Ajhaskar l'a suivi après avoir activé les sortilèges de sa tour (on y entre, on n'en ressort plus) et ordonné à son démon gardien Krulak de veiller. Il a oublié ses domestiques, toujours enfermés à l'intérieur.\nDramik a choisi des étrangers parce qu'ils sont sacrifiables : ses propres hommes préféreraient la mutinerie à la tour du sorcier.\nLe voleur des rumeurs fait peut-être tourner la roue de la cave, réduit à l'état de squelette.",
+      "pistes": [{ "texte": "À l'aube, l'escorte vers la tour noire", "vers": "marche" }],
+      "distribution": [
+        { "perso": "dramik", "attitude": "neutre" },
+        { "perso": "jenko", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "marche",
+      "titre": "La marche des condamnés",
+      "region": "Lysor",
+      "lieu": "La colline boisée du quartier des temples, au pied de la tour d'Ajhaskar",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un peu avant l'aube, on vous réveille. Une petite troupe de gardes en armes, menée par le sergent Jenko, vous conduit hors du donjon. On vous a rendu vos possessions. Les rues de Lysor sont encore endormies et l'aube pointe à peine : l'affaire doit, si possible, rester secrète.\n\nVous arrivez bientôt au pied d'une petite colline, au cœur de la ville. À son sommet se dresse une tour en pierre noire, de forme hexagonale ; des lumières brillent à ses étroites fenêtres. Un petit bois couvre la colline jusqu'au pied de la tour. Dans cette ville si densément peuplée, pas une maison, pas une cahute alentour, et aucune enceinte : la réputation du maître des lieux suffit.\n\nUn sentier pavé serpente entre les arbres jusqu'au sommet. La tour noire s'élève sur deux étages, à un peu plus de dix mètres. Un large perron, précédé d'une volée de marches, mène aux portes de l'édifice, entrouvertes.\n\nAu pied des marches, cinq gardes en faction autour d'un petit brasero où fument encore quelques braises. Épuisés et nerveux après une nuit de veille, ils n'ont rien à signaler : les lumières ont brûlé toute la nuit, aucun bruit n'est sorti de la tour. Mais le murmure du vent dans les arbres leur a mis les nerfs à vif ; ils ont cru entendre d'étranges chuchotements dans la nuit…",
+      "jeu": "Équipement : si les joueurs ont demandé du matériel supplémentaire (dans la limite du raisonnable), les gardes le fournissent.\n\nExaminer l'extérieur :\n• Une seule porte d'entrée.\n• Fenêtres du rez-de-chaussée et des étages minces et hautes, presque des meurtrières : impossible de s'y faufiler.\n• Une grande verrière au premier étage, côté est. L'atteindre et la briser demande quelques jets (à ta discrétion) ; elle donne directement dans la serre (n° 11).\n• Avec le matériel adéquat, on peut grimper au sommet : une terrasse déserte, une solide trappe en fer vers la cage d'escalier du deuxième étage, fermée de l'intérieur par un lourd verrou et des barres de fer. Impossible à déverrouiller du dehors ; la briser demande des outils adaptés et plusieurs heures.\n• Un battant de la double porte est ouvert : vestibule rectangulaire en marbre, mosaïque géométrique noir et blanc, bas d'un escalier à droite, double porte entrouverte en face.\n\nLes gardes ont ordre d'escorter les héros et de s'assurer qu'ils entrent. Ils rechignent à toute solution alternative (la verrière, par exemple) : il faut se montrer particulièrement convaincant pour ne pas passer simplement par la porte.",
+      "notes": "Le sortilège de la tour (encadré « Entrez, à vos risques et périls… ») : il n'empêche pas d'entrer, il interdit de ressortir. Vu du dehors, l'intérieur n'est qu'une illusion : celui qui entre s'avance dans le vestibule et sort du champ de vision, puis ne réapparaît jamais. Le même sortilège couvre toute la tour : par les fenêtres, on voit les pièces telles qu'elles sont, mais vides et silencieuses. Entrer par la verrière, même brisée, enferme tout autant.\nSi Ajhaskar est tué, le sortilège prend fin immédiatement.",
+      "pistes": [
+        { "texte": "Passer la porte de la tour", "vers": "vestibule" },
+        { "texte": "Escalader jusqu'à la verrière du premier étage (serre)", "vers": "premier-etage" }
+      ],
+      "distribution": [{ "perso": "jenko", "attitude": "neutre" }]
+    },
+    {
+      "cle": "vestibule",
+      "titre": "Le vestibule : prisonniers de la tour",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, rez-de-chaussée (salles 1 à 3)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Au moment de franchir le seuil, un étrange frisson vous saisit, comme si vous plongiez dans un baquet d'eau glacée. La sensation disparaît aussitôt.\n\nLa porte ouvre sur un large hall en marbre, au sol décoré d'une mosaïque géométrique noir et blanc. Sur la droite, un grand escalier de marbre monte à l'étage. À gauche, une porte donne sur un petit salon. Face à l'entrée, une double porte en urld, ce bois noir précieux importé du Valgard, aux battants sculptés, est entrouverte sur une grande salle.\n\nDans l'entrebâillement de cette double porte, une main humaine gît au sol, les doigts crispés, sous une tache sombre qui macule le pavement. Étrange : depuis le dehors, vous auriez dû la voir… et vous ne l'avez pas vue.",
+      "jeu": "Prisonniers : quiconque tente de ressortir bute sur une barrière invisible au niveau du seuil. Il voit l'extérieur, mais n'en entend rien, et ceux du dehors ne le voient ni ne l'entendent. Même chose à toutes les ouvertures de la tour.\nUn héros sorcier comprend globalement le sortilège sur un jet d'Esprit. Magie difficile à briser : au mieux, un sort de deuxième cercle à Très difficile (-4) l'annule temporairement.\n\nSalle 2, petit salon : quelques chaises et fauteuils, une table basse, une grande tapisserie de paysage de montagnes ; destiné à faire patienter les visiteurs. Une porte vers le couloir (n° 3).\nSalle 3, couloir : long couloir courbe qui dessert les pièces du rez-de-chaussée, plongé dans la pénombre, à peine éclairé par deux fenestrons dans le mur de la cuisine.\n\nPlan de la tour : rez-de-chaussée 1 vestibule, 2 petit salon, 3 couloir, 4 salle d'audience, 5 quartiers des domestiques, 6 cuisines, 6 bis cave, 7 bains, 8 salon de réception ; premier étage 9 palier, 10 chambre, 11 serre, 12 chambre d'Ajhaskar, 13 bibliothèque, 14 chambre de Robos ; deuxième étage 15 salle de magie.",
+      "notes": "Ce qui attend les héros : deux andraks d'obsidienne dans la salle d'audience (4) ; Ilda, Kurik et Otos cachés dans le garde-manger des cuisines (6) ; un xolth juvénile dans la cave (6 bis) ; Krulak dans la bibliothèque (13). L'escalier principal ne mène jamais au deuxième étage : seul l'escalier dérobé de la bibliothèque y conduit.\nUne petite porte cachée derrière la tenture de la salle d'audience donne aussi sur le couloir.",
+      "pistes": [
+        { "texte": "Pousser la double porte en urld", "vers": "audience" },
+        { "texte": "Petit salon, couloir, vers les cuisines", "vers": "cuisines" },
+        { "texte": "Monter le grand escalier de marbre", "vers": "premier-etage" }
+      ]
+    },
+    {
+      "cle": "audience",
+      "titre": "La salle d'audience",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, salle d'audience (salle 4)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Une grande salle au sol de marbre, éclairée par un étrange luminaire en fer forgé dont les branches portent de petits globes luminescents. Encore de la sorcellerie. Une grande tenture pourpre damassée couvre en partie le mur du fond. Devant elle, sur une estrade, un haut siège de bois sculpté, encadré de deux statues d'andraks en obsidienne, assis, la tête fièrement dressée. Un peu plus petits que de vrais andraks, ils sont d'un réalisme saisissant.\n\nLe cadavre d'un garde de Lysor gît dans l'entrebâillement de la porte, couché sur le ventre, la main tendue vers la sortie, le dos labouré de larges griffures. La mare de sang où il baigne est sèche ; le corps est froid et rigide. Trois autres gardes sont étendus dans la salle, déchiquetés. Leur sang macule le marbre blanc en grandes flaques et en longues éclaboussures.\n\nVous avez à peine le temps de prendre la mesure de la scène : les deux andraks de pierre s'animent et, dans un silence terrifiant, s'avancent vers vous en montrant les crocs.",
+      "jeu": "Combat : 2 andraks d'obsidienne (créatures moyennes, coriaces). Attaque +2, dégâts d6B, Défense 1, vitalité 15, protection d6 (4).\n• Les armes contondantes en métal (marteau, masse) ont un dé de bonus aux dégâts contre eux.\n• Une fois activés, ils poursuivent les héros partout dans la tour, et ne regagnent leur place qu'une fois les intrus éliminés.\n• À 0 de vitalité, ils se brisent en mille morceaux. Dans les débris : quelques ossements d'andrak gravés de symboles occultes.\n\nLes gardes sont morts depuis un ou deux jours (la patrouille de quatre miliciens).\nLa tenture du fond dissimule une petite porte vers le couloir (n° 3).",
+      "notes": "Ajhaskar s'est assuré que ses gardiens de pierre ne s'en prennent pas à Ilda et Kurik ; ils ne réagissent pas à leur présence. Les domestiques l'ignorent : ils les ont vus s'animer pour la première fois quand la patrouille a ouvert les portes, et se terrent depuis dans la cuisine.",
+      "pistes": [
+        { "texte": "Fuir ou passer par la porte derrière la tenture, vers les cuisines", "vers": "cuisines" },
+        { "texte": "Monter à l'étage", "vers": "premier-etage" }
+      ],
+      "distribution": [{ "perso": "andrak-obsidienne", "qty": 2, "attitude": "hostile" }]
+    },
+    {
+      "cle": "cuisines",
+      "titre": "Cuisines et domestiques",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, rez-de-chaussée (salles 5 à 8)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une grande cuisine : une cheminée équipée d'une crémaillère, deux grandes tables, chaudrons et ustensiles. Des salaisons et des bouquets d'herbes séchées pendent à une poutre. Dans un coin, un petit bassin où coule une eau fraîche, depuis un tuyau sortant du mur.\n\nQuelque chose cloche. Un feu ronfle dans la cheminée. Un chaudron pend à la crémaillère, et une bonne odeur de soupe s'en dégage. Sur la table, une terrine récemment entamée, un morceau de pain à moitié mangé, un pichet de bière.\n\nDans l'angle opposé à la porte, un rideau. Une petite porte, dans le coin nord-est.",
+      "jeu": "Salle 5, quartiers des domestiques : quatre lits (trois récemment occupés), table, deux bancs, deux armoires et un coffre de vêtements simples, un tricot en cours sur un lit, un pichet d'eau fraîche, trois gobelets et un jeu d'osselets. Une porte vers la cuisine.\nSalle 6, cuisines : le rideau cache un petit escalier en colimaçon à demi encastré dans le mur ; il monte à l'étage (derrière un rideau pourpre de la chambre d'Ajhaskar, n° 12) et descend à la cave (6 bis). Qui le dévoile entend un léger grincement régulier, venant d'en bas.\nLe garde-manger (coin nord-est) : farine, barils, tonnelets. Ilda, Kurik et Otos s'y cachent derrière des tonneaux. Qui fait plus qu'y jeter un coup d'œil les découvre forcément ; sinon, ils peuvent se révéler d'eux-mêmes, selon la situation et ce que disent les héros dans la cuisine.\nSalle 7, bains : faïences, grand bassin creusé dans le sol, vasque de la fontaine, latrines, parfums et onguents, rigole, fourneau à charbon pour chauffer des pierres volcaniques.\nSalle 8, salon de réception : cheminée et sièges, table marquetée et deux longs bancs. Dans une alcôve, une grande poterie rouge et orangée aux éclats dorés, presque haute comme un homme : une précieuse faïence de Khansan, du lointain Khanat. Sur le manteau de la cheminée, de petites figurines de bronze très anciennes de dieux du panthéon lémurien, sans doute précieuses. Chandeliers de cire d'abeille.\n\nOtos, en pleine panique, n'apprend rien. Ilda et Kurik, une fois rassurés :\n• décrivent le rez-de-chaussée et le premier étage ; jamais montés au deuxième, interdits de cave. Krulak, aperçu rarement, ne les avait jamais attaqués : « une sorte de singe à la peau grisâtre, avec de petits yeux rouges mauvais et des cornes » ;\n• chronologie : il y a cinq jours, couchés alors que le maître et son disciple travaillaient encore ; au matin, disparus, la tour scellée. D'habitude, quand le maître s'absente, ils vont loger en ville jusqu'à son retour ;\n• le maître et Robos étaient très absorbés par leurs recherches. Kurik : des hommes ont livré une lourde et grande caisse en bois il y a trois ou quatre semaines ; les mêmes avaient apporté plusieurs caisses plus petites il y a deux mois. Ajhaskar, satisfait et impatient, les a fait monter à l'étage ;\n• le bruit de la cave, selon le maître : le mécanisme qui pompe l'eau du puits pour la fontaine et les bains.",
+      "notes": "Le récit des domestiques : le premier matin, Kurik ne pouvait plus sortir ; envoyé à l'étage, il a été chassé par Krulak. Trois jours d'angoisse, puis Otos est entré et s'est retrouvé piégé. Le lendemain, un courtisan vexé a grimpé l'escalier malgré leurs avertissements : ses hurlements d'agonie ont résonné, puis le silence. Le soir, la patrouille a ouvert les portes de la salle d'audience avant qu'ils puissent l'interpeller.\nLes andraks ne s'en prennent pas à Ilda et Kurik, mais ils ne le savent pas.",
+      "pistes": [
+        { "texte": "Descendre l'escalier en colimaçon vers la cave", "vers": "cave" },
+        { "texte": "Monter l'escalier en colimaçon (chambre d'Ajhaskar)", "vers": "premier-etage" }
+      ],
+      "distribution": [
+        { "perso": "ilda", "attitude": "mefiant" },
+        { "perso": "kurik", "attitude": "mefiant" },
+        { "perso": "otos", "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "cave",
+      "titre": "La cave du xolth",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, cave (salle 6 bis)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "L'escalier descend sur cinq mètres jusqu'à une cave aux parois grossièrement taillées, une cavité naturelle agrandie. Un puits artésien est relié à un mécanisme complexe de tuyaux et de pompes, associé à une roue à engrenages. Ce n'est pas un animal qui fait tourner la roue, mais le squelette d'un homme, enchaîné par de lourds fers gravés de symboles occultes. Il ne réagit pas à votre présence et continue inlassablement sa ronde. À un moment, il s'arrête, et passe le dos de sa main sur son front, comme pour en éponger la sueur.\n\nAu fond de la grotte, une fosse peu profonde. Quelques ossements y traînent, dont un crâne humain. Et quelque chose de gros, de mou et de luisant y sommeille.",
+      "jeu": "Le squelette ne se défend pas : un seul coup le réduit à un tas d'os inerte, ce qui arrête aussitôt l'alimentation en eau de la tour.\n\nXolth juvénile (créature grande, rival) : Attaque +1, dégâts spécial, Défense 0, vitalité 20, protection d6-2 (2). Une limace ignoble, déjà de la taille d'un homme adulte, et affamée. Elle attaque si l'on approche trop sans lui lancer quelque chose à manger, comme elle en a l'habitude.\n• Attaque spéciale : elle enveloppe sa proie dans sa masse gélatineuse. Le héros pris doit tuer le monstre pour sortir, et subit d6M de dégâts par round passé dedans. Trois proies au plus.\n• Peur du feu : elle évite autant que possible le feu.\n• Xolth adulte : BoL p. 126.",
+      "notes": "Qu'avait fait cet homme pour subir le courroux d'Ajhaskar par-delà la mort ? Serait-ce le célèbre voleur qui avait parié de cambrioler la tour ?\nComment Ajhaskar s'est-il procuré un bébé xolth, et que compte-t-il en faire, dans une cave qui sera bientôt trop petite ? Les héros seront bien en peine de répondre.",
+      "pistes": [{ "texte": "Remonter vers les cuisines", "vers": "cuisines" }],
+      "distribution": [{ "perso": "xolth-juvenile", "attitude": "hostile" }]
+    },
+    {
+      "cle": "premier-etage",
+      "titre": "Le premier étage",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, premier étage (salles 9 à 12 et 14)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "L'escalier du vestibule monte jusqu'à un petit palier. Une porte, et un couloir qui s'enfonce vers l'intérieur de la tour, plongé dans la pénombre ; seules la fenêtre du palier et celle de l'autre bout l'éclairent.\n\nSur le sol, le cadavre d'un homme assez richement vêtu, le crâne fracassé. Le plus perturbant : on dirait que quelqu'un lui a dévoré le cerveau…\n\nL'escalier, lui, continue à monter vers le deuxième étage.",
+      "jeu": "Salle 9, palier : le cadavre est celui du courtisan, tué par Krulak. L'escalier est enchanté : il grimpe sans fin sans jamais atteindre le deuxième étage ; il suffit de redescendre quelques marches pour retrouver le palier. Nul n'atteint la salle de magie par là sans l'autorisation d'Ajhaskar présent.\nSalle 10, chambre : plusieurs lits, meubles sous de grands draps ; inoccupée depuis longtemps.\nSalle 11, serre : verrière sur presque tout le mur nord-est, jardinières de plantes de la jungle, bassin à plantes aquatiques et petits poissons, cage d'osier d'oiseaux chanteurs, parfum capiteux des turales (roses de la jungle). Une carrière d'alchimiste, de sorcier ou de médecin reconnaît des herbes médicinales, du lotus des songes dans le bassin (BoL p. 107) et, sur une table de boutures et de matériel de distillation : onguent de soin (d6 de vitalité par utilisation, 2 doses, alchimie rare), poudre somnifère (ingestion, 2d6 heures de sommeil profond, 3 doses, courante), antidote aux poisons animaux et végétaux (soigne en 1 heure, 1 dose, courante), une petite boîte de pollen de lotus des songes. Briser la verrière : le verre retombe à l'intérieur et la barrière invisible retient.\nSalle 12, chambre d'Ajhaskar : lit à baldaquin, tapis précieux, tapisseries historiées, fauteuil près de la cheminée, commode, bassin à filet d'eau, bibelots de prix. Armoire : robes de brocart à motifs astrologiques et cabalistiques. Coffre au pied du lit : vêtements et bourses d'or et de gemmes, une petite fortune (mais qui voudrait voler un sorcier ?). Un lourd rideau pourpre cache la porte de l'escalier en colimaçon (cuisine). Un examen attentif : deux tiroirs de la commode ouverts, des vêtements jetés sur le lit, le coffre ouvert : départ précipité, ou fouille ? La porte de la bibliothèque est entrouverte.\nSalle 14, chambre de Robos : petit lit, armoire, coffre, bureau encombré. Des parchemins griffonnés de runes démoniques ; même sans connaître la langue, on y remarque plusieurs combinaisons des mêmes runes, comme pour résoudre une énigme.\n\nKrulak (bibliothèque) : par l'escalier principal, il ne remarque les héros qu'à leur entrée dans la bibliothèque, sauf s'ils sont particulièrement bruyants. Par l'escalier de la chambre d'Ajhaskar, il les entend arriver par la porte entrouverte, sauf s'ils progressent dans la plus grande discrétion.",
+      "notes": "Les parchemins de Robos sont ses recherches sur le bon ordre de lecture des runes qui encadrent le miroir magique.\nLe désordre de la chambre : Ajhaskar a rassemblé quelques affaires en hâte avant de passer dans le miroir.",
+      "pistes": [{ "texte": "Entrer dans la bibliothèque", "vers": "bibliotheque" }]
+    },
+    {
+      "cle": "bibliotheque",
+      "titre": "La bibliothèque de Krulak",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, bibliothèque (salle 13)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "De grandes bibliothèques couvrent presque tous les murs ; les étagères croulent sous les manuscrits et les rouleaux de parchemin soigneusement empilés. Dans une grande niche, une idole de pierre à l'allure simiesque, le crâne hérissé de petites cornes, quatre yeux de rubis. Un grand bureau sous une fenêtre, couvert de papiers, de plumes, de calames, de pots d'encre et de cire à cacheter. Au centre, une table et deux tabourets ; sur la table, un lutrin porte un manuscrit très ancien. Un lustre aux globes luminescents éclaire la pièce.\n\nDans un fauteuil, confortablement installée, une créature simiesque au pelage ras d'un gris malsain sirote un vin de raku. Trapue, des bras démesurés, des jambes courtaudes aux pattes griffues à trois doigts. Quatre yeux rouges sans paupières se tournent vers vous.\n\n« Interdiiiiit ! »",
+      "jeu": "Krulak (démon inférieur, coriace) : Mêlée 3, Tir 1, Défense 2, vitalité 21, dégâts d6.\n• Cri démoniaque, dès qu'il repère les intrus : chaque héros à portée de voix fait un jet d'Esprit, sinon il s'écroule en se couvrant les oreilles, incapable d'agir pendant un round, et perd tout bonus de défense et de bouclier. Au round suivant, nouveau jet d'Esprit ; en cas d'échec, encore un round sans agir, puis l'effet cesse.\n• Dédoublement : il se démultiplie aussitôt en autant d'avatars que de héros (6 au plus), qui se jettent sur les intrus. Avatar (démon mineur) : Mêlée 1, Défense 1, vitalité 10, dégâts d6M. Ajuste la carte des avatars au nombre de héros. Chaque avatar tué devient une fumée bitumineuse ; quand tous sont vaincus, les fumées reforment Krulak, qui continue le combat.\n• Détruit, Krulak redevient une fumée noirâtre. Un héros attentif voit qu'elle est aspirée par les narines de la statuette (ailleurs dans la tour, les volutes glissent lentement vers la bibliothèque). Si la statuette est intacte, Krulak réapparaît au bout de dix rounds, et tout recommence.\n• Briser la statuette : deux jets de Vigueur pour la projeter au sol ou contre un mur, ou deux attaques avec une arme appropriée (masse, lourde épée ; impossible avec une dague). 1 point d'héroïsme : d'un seul coup. Krulak et ses avatars disparaissent alors dans un dernier « interdiiiiit ! ».\n\nLe manuscrit du lutrin recopie des passages du fameux Codex d'Ygddar : grâce à lui, Ajhaskar a localisé le repaire de Shrinazor Shamaaraz. Une valeur inestimable pour un sorcier ou un alchimiste.\nAngle sud-ouest : un pan pivotant de la bibliothèque cache un petit escalier creusé dans le mur, vers la salle de magie. Plus une porte dérobée qu'un passage secret : un personnage attentif la repère aisément. C'est le seul accès au deuxième étage.\nUne porte entrouverte donne sur la chambre d'Ajhaskar (n° 12).",
+      "notes": "La statuette renferme l'essence de Krulak. Ajhaskar lui a ordonné de veiller sur la tour en son absence ; il boit à la santé de son maître.",
+      "pistes": [{ "texte": "Emprunter l'escalier dérobé vers la salle de magie", "vers": "salle-de-magie" }],
+      "distribution": [
+        { "perso": "krulak", "attitude": "hostile" },
+        { "perso": "avatar-krulak", "qty": 4, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "salle-de-magie",
+      "titre": "La salle de magie et le miroir",
+      "region": "Lysor",
+      "lieu": "Tour d'Ajhaskar, salle de magie (deuxième étage, salle 15)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La salle de magie occupe tout le deuxième étage, éclairée elle aussi par sorcellerie. Tables et étagères croulent sous les artefacts occultes, les instruments alchimiques, les manuscrits et les bibelots : crânes d'animaux exotiques, et d'humains, fétiches obscènes des tribus de Qush, bouquets d'herbes séchées et de racines, pots de poudres et de liquides d'aspect malsain, cartes astronomiques, petits lingots de métaux, cristaux et pierres rares…\n\nUn puissant parfum d'encens peine à masquer une odeur de putréfaction. Elle vient d'un panier posé au sol, où pourrissent deux pigeons au cou tranché. Leur sang coagulé remplit un bol, sur une table gravée de signes astrologiques, constellée de gouttes de sang. Dans une sorte d'aquarium à l'odeur âcre, des objets corrodés baignent dans un bain d'acide.\n\nContre un mur, une grande caisse de bois de deux mètres sur un, remplie de paille. À côté, un miroir haut comme un homme et large de soixante centimètres : un panneau d'étain dans un cadre de métal sombre gravé de runes mystérieuses. Des brins de paille sont restés coincés dessous.",
+      "jeu": "Un personnage compétent reconnaît un rituel de divination. Un personnage qui connaît le démonique reconnaît dans les runes l'écriture des Rois-Sorciers. Plonger les doigts dans l'acide : mauvaise idée.\nUn héros qui dépense 1 point d'héroïsme pour trouver quelque chose d'utile (au hasard, ou un objet précis) a une chance de le trouver, à ta discrétion.\nL'escalier principal permet de redescendre au premier étage, pas de remonter. Sur le palier, une échelle murale mène à une lourde trappe en fer verrouillée, vers le toit : une vue splendide sur Lysor, rien d'autre, et un mur invisible empêche d'y sortir.\n\nLe miroir : dès qu'un héros s'approche pour l'examiner, il voit son reflet dans l'étain trouble, puis entend comme des chants lointains d'oiseaux et distingue un halo de lumière pâle, les contours d'un édifice. S'il approche encore son visage, il est aspiré comme du fer par l'aimant et disparaît. Les runes du cadre brillent d'un bref éclat orangé, qui s'éteint. Après quelques hésitations et une ou deux prières, nul doute que ses compagnons le suivront.",
+      "notes": "Les pigeons sont les victimes du sacrifice divinatoire d'Ajhaskar avant de passer le portail (passage sans danger, péril possible de l'autre côté). Les objets dans l'acide sont des talismans et pièces anciennes tirés des ruines du palais de Shrinazor Shamaaraz.\nDe l'autre côté, le portail se referme derrière les héros : seule la lecture des runes du panneau d'étain le rouvrira.",
+      "pistes": [{ "texte": "Traverser le miroir", "vers": "palais" }]
+    },
+    {
+      "cle": "palais",
+      "titre": "Le palais du Maître",
+      "lieu": "Vallée de la Lune (hors du monde) : le palais de Shrinazor Shamaaraz",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un pas en avant, un bref éblouissement, la sensation de trébucher comme lorsqu'on rate une marche… Vous voici au fond d'une longue salle aux élégantes colonnades. Derrière vous, un panneau d'étain est encastré dans le mur, semblable au miroir que vous venez de traverser. Les runes de son pourtour luisent un instant d'un éclat orangé, puis s'éteignent.\n\nVous vous tenez sur une estrade de pierre, au fond de ce qui ressemble à une petite salle du trône, vide de tout mobilier. La pierre blanche des murs et du pavement est immaculée. Colonnes, parois et plafond sont entièrement sculptés de bas-reliefs, de moulures, de motifs végétaux et géométriques : une véritable dentelle de pierre, d'une beauté à couper le souffle. Un grand bas-relief montre un homme richement vêtu, assis dans une pose hiératique, aux longs membres, aux traits sévères et un peu décharnés ; des hommes en pagne sont agenouillés à ses pieds. Quelque chose en lui met mal à l'aise : des traits légèrement déformés, un corps trop allongé… Des fleurs de la jungle et des offrandes de nourriture ont été récemment déposées à ses pieds.\n\nTout est silencieux, à part des chants lointains d'oiseaux. Une lumière pâle filtre par les fenêtres ; la brise apporte un puissant parfum de jungle.\n\nAu bout d'un long vestibule, un homme en pagne balaie le perron. Il vous aperçoit, et s'enfuit à toutes jambes en poussant de grands cris.\n\nDehors, un paysage magnifique : des cimes de part et d'autre d'une longue vallée qui disparaît sous la canopée d'une jungle luxuriante. Le palais s'élève à flanc de montagne. Au bas du perron, sous des auvents de bois et de feuillages, des stocks de pierre de taille et des sculptures en cours. Un chemin de terre descend en serpentant ; à peu de distance, au bas de la pente, montent les fumées d'un village.",
+      "jeu": "Le portail s'est refermé : impossible de revenir en arrière. Les héros ont une raison de plus de retrouver le sorcier, qui doit pouvoir le rouvrir.\nExploration : un petit palais, modeste par la taille, somptueux par ses sculptures, digne des plus beaux de Lémurie. En partie creusé dans la montagne. Totalement désert ; des échafaudages là où des sculptures et des restaurations sont en cours. L'entrée n'a pas de porte.\nSi les héros ne descendent pas au village, une ambassade de Xaliir finit par monter les accueillir et les y inviter.\nJour 5 de la chronologie : les héros arrivent sans doute dans la matinée.",
+      "notes": "Le bas-relief est le portrait du Roi-Sorcier Shrinazor Shamaaraz, le « Maître » qu'attendent les Xaliir.\nRéciter les runes du panneau d'étain rouvre le passage (sort de premier cercle, Moyenne 0) : Ajhaskar et Robos le savent.\nLa vallée a été glissée dans une autre dimension : après une journée de marche, on revient immanquablement vers son centre. Le temps y rejoue sans fin la même année ; la Lune y est énorme et brillante (pleine, elle éclaire comme un soleil voilé).",
+      "pistes": [{ "texte": "Descendre vers le village", "vers": "village" }]
+    },
+    {
+      "cle": "village",
+      "titre": "Le village des Xaliir",
+      "lieu": "Vallée de la Lune : le village de huttes, au bas du palais",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une petite tribu d'environ deux cents âmes, plutôt bruns de peau et de cheveux, simplement vêtus d'une tunique ou d'un pagne de cuir, vit dans de grandes huttes de branchages. Ils portent des bijoux de perles de bois, d'os et d'ivoire, et tous arborent une scarification sur l'épaule gauche. Quelques-uns, hommes et femmes, sont armés d'épieux en bois durci au feu, de casse-tête, ou d'arcs aux flèches à pointe d'os ou de silex. Presque aucun métal : seulement de vieux outils, réparés encore et encore.\n\nOn vous mène devant Ilkhta, la doyenne de la tribu. Son lémurien est étrangement archaïque. Elle vous demande si vous êtes, vous aussi, des envoyés du Maître.",
+      "jeu": "Communication difficile au début (lémurien archaïque). Se faire passer pour des envoyés du Maître, comme Ajhaskar, est le meilleur moyen d'obtenir la coopération de la tribu. Ce que les héros apprennent dépend de leurs questions :\n• Les Xaliir vivent ici depuis longtemps, au service du Maître ; ce sont les seuls humains de la vallée.\n• Impossible de quitter la vallée ; ils ignorent tout de la Lémurie, mais leurs légendes parlent d'un monde au-delà, où le Maître les conduira un jour en récompense de leur dévotion.\n• Les démons de la Lune les punissent quand le travail avance mal et enlèvent parfois des hommes qui ne reviennent jamais. Ils obéissent à une reine, Labashaah, que personne n'a vue depuis une génération.\n• Il y a quelques jours sont arrivés d'autres envoyés du Maître, Ajhaskar et Robos, qui ont posé beaucoup de questions. La nuit dernière, les démons de la Lune ont voulu les emmener de force. Alors Ajhaskar (assurément un dieu !) les a foudroyés : ses mains crachaient des éclairs, comme quand le ciel est en colère. Il en a tué plusieurs, les autres ont fui. Les corps sont dans une fosse, non loin du village. Ajhaskar et Robos sont partis se cacher dans la jungle avec la chasseuse Nyssa ; son jeune frère Rirtu peut y conduire les héros (deux heures de marche).\n\nUn don de métal est un cadeau très apprécié : il en manque pour continuer d'embellir le palais. Ils ont une petite forge, mais pas de minerai.\nS'ils s'attardent au village, les démons de la Lune reviennent en fin d'après-midi.",
+      "notes": "La scarification reproduit la marque de Shrinazor sur ses esclaves, transmise de génération en génération ; elle ressemble aux runes du miroir. « Xaliir » déforme le mot « esclave » dans la langue des Rois-Sorciers.\nLabashaah, laissée là pour superviser la construction, s'est installée dans l'ancienne carrière. Elle enlève de jeunes hommes pour s'accoupler : ses aînés ailés en sont nés, puis les rejetons. Les amants meurent à l'accouplement et la servent, momifiés. Elle donnerait tout pour quitter cette prison.\nChronologie : J4 soir, premier raid ; Labashaah renvoie ses démons, sous les ordres de quelques aînés, avec ordre de lui ramener la doyenne. J5 après-midi, ils reviennent.",
+      "pistes": [
+        { "texte": "S'attarder au village jusqu'au soir", "vers": "raid" },
+        { "texte": "Suivre Rirtu dans la jungle jusqu'à Ajhaskar", "vers": "cascade" }
+      ],
+      "distribution": [
+        { "perso": "ilkhta", "attitude": "neutre" },
+        { "perso": "rirtu", "attitude": "neutre" },
+        { "perso": "guerrier-xaliir", "qty": 3, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "raid",
+      "titre": "Les démons de la Lune",
+      "lieu": "Vallée de la Lune : le village des Xaliir",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "En fin d'après-midi, des cris éclatent à travers le village. Des silhouettes ailées surgissent au-dessus de la canopée : des créatures qui tiennent de la chauve-souris géante, aux traits vaguement humains, qui poussent des cris aigus. À leur tête, d'autres, plus grandes, semblables à des hommes et des femmes primitifs aux ailes de chauve-souris. Les démons de la Lune fondent sur le village.",
+      "jeu": "Effectif du livre : 10 rejetons (6 cartes) menés par 3 aînés. Les nombres sont indicatifs : ajuste-les à la puissance du groupe.\n• Aîné (coriace) : Initiative 0, Mêlée 2, Tir -1, Défense 1, mains griffues d6M+1, vitalité 10.\n• Rejeton (piétaille) : Mêlée 1, Tir -1, Défense 0, mains griffues 1, vitalité 3.\nLeur but : ramener Ilkhta à Labashaah.\n• Sans intervention des héros, ils l'emportent ; Labashaah l'interroge alors sur les étrangers apparus dans la vallée.\n• Si les héros les en empêchent, l'un des aînés fuit dès le début du combat pour confirmer à la démone la présence d'intrus.\nDes guerriers xaliir peuvent se battre aux côtés des héros (piétaille, règle de horde, BoL p. 132).\nLes héros peuvent aussi se cacher, ou être déjà partis chercher Ajhaskar.",
+      "notes": "Après ce raid, Labashaah comprend, plus ou moins clairement, que des étrangers sont entrés dans la vallée et qu'il y a forcément un sorcier parmi eux : sa chance de quitter enfin cette prison. Elle envoie ses démons survoler la jungle à leur recherche, et un fort groupe surveiller le palais.",
+      "pistes": [{ "texte": "Partir avec Rirtu retrouver Ajhaskar", "vers": "cascade" }],
+      "distribution": [
+        { "perso": "aine", "qty": 3, "attitude": "hostile" },
+        { "perso": "rejeton", "qty": 6, "attitude": "hostile" },
+        { "perso": "ilkhta", "camp": "heros", "attitude": "amical" },
+        { "perso": "guerrier-xaliir", "qty": 3, "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "cascade",
+      "titre": "Retrouvailles avec Ajhaskar",
+      "lieu": "Vallée de la Lune : le relais de chasse de la cascade, dans la jungle",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Après deux heures de marche dans la jungle derrière le jeune Rirtu, vous débouchez dans une petite clairière. Un cours d'eau y tombe en une petite cascade, puis s'écoule paresseusement entre les arbres. Une grotte peu profonde s'ouvre dans la paroi, à côté de la cascade.\n\nSur une pierre est assis un homme grand, près de deux mètres, brun de peau, au port altier, à l'épaisse chevelure noire. Son visage ridé trahit son âge, malgré un physique encore vigoureux. Mais ce sont ses yeux qui captent l'attention : des yeux verts aux pupilles verticales, fascinants et inquiétants à la fois. Robe de brocart rouge sombre, solides bottes de voyage, bagues précieuses à ses longs doigts, colliers de talismans étranges. Un long poignard à la lame sinueuse pend à sa ceinture ; un havresac est posé contre la pierre.\n\nPrès de lui, un jeune homme d'une vingtaine d'années, blond aux yeux bleus, au visage avenant, en robes de toile écrue tachées d'encre. Près d'un petit feu se tient une belle jeune femme athlétique, cheveux bruns, yeux noirs, un arc à la main.",
+      "jeu": "Sur la défensive, Ajhaskar exige des explications. Il n'est pas ravi qu'on soit entré dans sa tour, mais il est impressionné qu'on l'ait rejoint sain et sauf. Envoyés par le roi pour le retrouver, les héros sont donc, à ses yeux, à son service. Autoritaire ou conciliant selon leurs réactions, il cherche à gagner leur confiance. Il explique la provenance du miroir et ses conclusions sur la vallée.\nSon mensonge : le portail serait scellé, sans doute par la démone ; seule sa mort permettrait de le rouvrir.\n\nSa proposition : attaquer la démone dans son antre cette nuit même, pendant que ses rejetons écument la jungle. Il offre sa protection à trois héros volontaires : un long rituel, le sacrifice d'un gros hérisson ramené par Nyssa, puis un sceau trempé dans le sang (de l'animal, le sien, celui des protégés) apposé sur son front et le leur, qui laisse un symbole cabalistique rouge sombre.\nSceau de protection mystique (2e cercle, Difficile -2, 9 points) : 24 heures. Labashaah a un dé de malus pour attaquer au corps à corps un protégé, qui a un dé de bonus pour résister à ses sorts et pouvoirs.\n\nRobos peut avertir discrètement les héros de se méfier d'Ajhaskar s'il les sent alliés possibles, s'ils se méfient du sorcier, ou si l'un d'eux montre de la bienveillance pour son idylle avec Nyssa. Il hésite d'abord à s'en prendre ouvertement à son maître.\n\nSi les héros refusent et insistent pour retourner au village ou au palais, Ajhaskar cède et compte revenir plus tard s'occuper de la démone.\nRallier les Xaliir : il faut leur expliquer de façon convaincante que Labashaah a trahi le Maître pour régner seule. Bien manipulés, une trentaine de guerriers se joignent aux héros.\n\nCombat contre Ajhaskar : il se défend farouchement par la magie et fuit si le combat tourne mal. Robos ne le défend pas, ne l'attaque pas non plus, et tente de protéger Nyssa. En fuite, Ajhaskar peut regagner le palais pour repasser le portail, s'allier à la démone (sa libération contre son aide), ou soulever les Xaliir, qui le croient envoyé du Maître et l'ont vu user de magie.",
+      "notes": "Ajhaskar a modifié son sceau sans rien dire : pendant 24 heures, il a un dé de bonus pour lancer un sort contre un héros marqué. On n'est jamais trop prudent avec des alliés de circonstance.\nAjhaskar ment : il suffirait de réciter les runes du panneau d'étain du palais. Il veut percer les secrets de la vallée, la prendre en main et dominer les Xaliir au nom du Roi-Sorcier disparu.\nRobos connaît la vérité et peut rouvrir le portail lui-même (sort de 1er cercle, Moyenne 0). Il a bon cœur, sait son maître impitoyable, et aime sincèrement Nyssa, qui le lui rend bien.\nSi les héros refusent l'expédition : 20 rejetons et 5 aînés s'installent au palais pendant la nuit, et Labashaah les rejoint avant l'aube.",
+      "pistes": [
+        { "texte": "Accepter : attaquer Labashaah dans son antre cette nuit", "vers": "antre" },
+        { "texte": "Refuser et revenir au palais (avec ou sans les Xaliir)", "vers": "assaut-palais" },
+        { "texte": "Rallier les Xaliir contre la démone", "vers": "village" },
+        { "texte": "Robos avoue : le portail s'ouvre par les runes", "vers": "portail" }
+      ],
+      "distribution": [
+        { "perso": "ajhaskar", "attitude": "mefiant" },
+        { "perso": "robos", "attitude": "neutre" },
+        { "perso": "nyssa", "attitude": "neutre" },
+        { "perso": "rirtu", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "antre",
+      "titre": "L'antre de Labashaah",
+      "lieu": "Vallée de la Lune : l'ancienne carrière, à flanc de montagne",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Le flanc de la montagne est excavé en un large demi-cercle, qui met à nu des parois de calcaire blanc. Des amoncellements de débris et de gros blocs encombrent le fond de la carrière. La jungle a commencé à reprendre ses droits : des arbustes s'agrippent aux anfractuosités, des lianes pendent du haut des falaises. Des entrées de galeries abandonnées trouent la paroi, certaines encore accessibles par des rampes ou de vieux échafaudages branlants. Au niveau du sol, une galerie plus grande que les autres.\n\nPassée l'entrée, un long boyau aux parois régulières s'enfonce sur une dizaine de mètres, jusqu'à une grande caverne naturelle d'une trentaine de mètres de diamètre et près de dix de haut. Des galeries percent les parois en hauteur. Le sol est maculé d'une couche blanchâtre, âcre et malodorante. La clarté lunaire tombe par des failles de la voûte en longs rais argentés : un demi-jour spectral.\n\nAu fond, un nid fait de branchages, de feuillages et d'herbes sèches. Dans des niches grossièrement taillées dans les parois, des hommes desséchés comme de vieilles momies sont accroupis en position fœtale.\n\nSur le nid, la démone est éveillée. Un torse de femme à la peau laiteuse, aux seins flétris ; le bas du corps couvert d'une fourrure noire et rase ; de grandes ailes membraneuses ; le visage hideux d'une vieille femme aux traits de chauve-souris. Et pourtant, une aura de séduction et d'autorité troublante.",
+      "jeu": "Trajet : trois heures de marche depuis le village, deux bonnes heures depuis la cascade. Les lieux ne sont pas gardés (la démone n'a jamais eu d'ennemis). Les blocs de la carrière offrent d'utiles abris pour approcher discrètement.\n\nDans la caverne, la démone rumine les récents événements. Avec elle : 2 aînés, 10 rejetons accrochés en hauteur, qui repèrent vite les intrus (6 cartes), et les 10 momies de son harem (6 cartes), qui se jettent sur l'ennemi à son ordre.\n• Labashaah (démon majeur, rivale) : Mêlée 3, Tir 3, Défense 4, protection d6-2 (2), vitalité 32, dégâts d6B+1. Faculté de parole, progéniture, régénération, séducteur (BoL p. 129). Elle vole.\n• Aîné : Mêlée 2, Défense 1, d6M+1, vitalité 10. Rejeton : Mêlée 1, dégâts 1, vitalité 3.\n• Époux momifié (piétaille) : Attaque +0, dégâts 1, Défense 0, force vitale 3.\n• Sceau d'Ajhaskar : dé de malus à la démone pour attaquer au corps à corps un héros marqué ; dé de bonus au héros pour résister à ses pouvoirs.\n\nTactique : elle frappe d'abord les héros qui ressemblent le moins à un sorcier (un guerrier en armure, par exemple). Elle ne veut surtout pas tuer le sorcier, seul capable de lui ouvrir le portail. Elle cherche une position de force pour négocier son passage hors de sa prison.",
+      "notes": "Ajhaskar sera plus qu'heureux de conclure un pacte avec elle : il aurait les mains libres dans la Vallée de la Lune. Lâcher une démone au milieu de Lysor ne lui pose aucun problème moral. Robos, lui, évoque le risque devant les héros s'ils n'y pensent pas d'eux-mêmes.",
+      "pistes": [{ "texte": "Retourner au palais et au portail", "vers": "portail" }],
+      "distribution": [
+        { "perso": "labashaah", "attitude": "hostile" },
+        { "perso": "aine", "qty": 2, "attitude": "hostile" },
+        { "perso": "rejeton", "qty": 6, "attitude": "hostile" },
+        { "perso": "momie", "qty": 6, "attitude": "hostile" },
+        { "perso": "ajhaskar", "camp": "heros", "attitude": "neutre" },
+        { "perso": "robos", "camp": "heros", "attitude": "amical" },
+        { "perso": "nyssa", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "assaut-palais",
+      "titre": "L'assaut du palais",
+      "lieu": "Vallée de la Lune : le palais du Maître, envahi par les démons",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Sous la clarté d'une lune énorme, le palais blanc a changé d'habitants. Sur la moindre corniche de la façade sculptée, des silhouettes ailées se sont posées, gargouilles malfaisantes qui guettent la nuit en poussant des cris aigus.",
+      "jeu": "Effectif du livre : 20 rejetons (6 cartes) et 5 aînés se sont installés au palais pendant la nuit. Labashaah les rejoint en fin de nuit, avant le lever du soleil : fais-la entrer en cours de combat. Les nombres sont indicatifs.\nAlliés possibles : une trentaine de guerriers xaliir (6 cartes), si les héros les ont convaincus que Labashaah a trahi le Maître. Combat de piétaille, règle de horde (BoL p. 132). Un assaut épique.\nLabashaah veut interdire aux étrangers de repasser par le portail sans elle. Mêmes tactiques qu'à l'antre : elle épargne le sorcier et cherche à négocier son passage.\nProfils : voir la scène « L'antre de Labashaah ».",
+      "notes": "Si Ajhaskar est avec les héros, il peut à tout moment préférer un pacte avec la démone.",
+      "pistes": [{ "texte": "Atteindre la salle du trône et le panneau d'étain", "vers": "portail" }],
+      "distribution": [
+        { "perso": "aine", "qty": 5, "attitude": "hostile" },
+        { "perso": "rejeton", "qty": 6, "attitude": "hostile" },
+        { "perso": "labashaah", "attitude": "hostile" },
+        { "perso": "guerrier-xaliir", "qty": 6, "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "portail",
+      "titre": "Rouvrir le portail",
+      "lieu": "Vallée de la Lune : la salle du trône du palais",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "La petite salle du trône, sa dentelle de pierre blanche, le bas-relief du Maître aux membres trop longs. Au fond, sur l'estrade, le panneau d'étain encastré dans le mur, et les runes muettes de son cadre.",
+      "jeu": "Rouvrir le passage : réciter les runes du panneau dans le bon ordre, l'équivalent d'un sort de premier cercle de difficulté Moyenne (0). Ajhaskar et Robos en sont capables ; Robos le fait si les héros s'en sont fait un allié.\nDe l'autre côté : la salle de magie de la tour (n° 15).\n\nLe pacte : si Ajhaskar et Labashaah s'entendent, aussitôt le portail ouvert, la démone s'y précipite, suivie de l'essaim de ses rejetons. La salle de magie se remplit vite de créatures ailées. Ajhaskar lève alors le sortilège de la tour pour les laisser sortir dans Lysor, à moins qu'un combat n'éclate avec les héros. Prions pour qu'il leur reste quelques points d'héroïsme…\n\nCombat contre Ajhaskar : il se bat par la magie et fuit si le vent tourne. Robos ne le défend pas et protège Nyssa.\nSi Ajhaskar est tué, le sortilège qui scelle la tour prend fin immédiatement.",
+      "notes": "Robos craint qu'Ajhaskar ne veuille dominer les Xaliir sans aucune considération pour eux. Libérer une démone majeure au cœur de Lysor ne pose aucun problème au sorcier. Robos, lui, en mesure tout le risque.",
+      "pistes": [{ "texte": "Traverser le portail vers la tour de Lysor", "vers": "epilogue" }],
+      "distribution": [
+        { "perso": "ajhaskar", "attitude": "mefiant" },
+        { "perso": "robos", "camp": "heros", "attitude": "amical" },
+        { "perso": "nyssa", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue : le retour à Lysor",
+      "region": "Lysor",
+      "lieu": "La tour d'Ajhaskar, puis le palais royal",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "jeu": "L'aventure peut se terminer de bien des façons.\n• Les héros se sont entendus avec Ajhaskar et reviennent avec lui après avoir tué Labashaah : en homme pragmatique, il achète leur silence et peut devenir un employeur régulier. Il a besoin d'hommes de confiance pour poursuivre la fouille des ruines du palais de Shrinazor, à la lisière orientale du marais de Festrel.\n• Ils l'ont tué et sont revenus grâce à Robos : il leur faut une histoire convaincante pour le capitaine Dramik et les autorités. Le sortilège de la tour a pris fin à sa mort.\n• Labashaah est passée dans Lysor : la démone et ses rejetons sont lâchés sur la cité.\nLa promesse de Dramik : la liberté et une généreuse récompense du roi Colmus.\nQuestions ouvertes : que faire des Xaliir, et du miroir magique qui mène à la Vallée de la Lune ? Aux joueurs et au MJ d'y répondre.",
+      "notes": "Le livre ne fixe ni récompense chiffrée ni points d'expérience.",
+      "pistes": [{ "texte": "Fin de l'aventure" }],
+      "distribution": [{ "perso": "dramik", "attitude": "neutre" }]
+    }
+  ]
+}

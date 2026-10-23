@@ -1,0 +1,361 @@
+{
+  "saga": "cl1-mariage-amer",
+  "scenario": {
+    "cle": "mariage-amer",
+    "titre": "Chroniques lémuriennes — Mariage amer",
+    "pitch": "« Mariage amer », d'Andrea Salvatores (Chroniques lémuriennes 1.2, livre p. 58-75).\n\nLes héros sont conviés au mariage de Tourmar Latia avec la belle Jil Sendak, héritière d'une des plus nobles familles de Satarla. Mais Jil nourrit en secret un amour brûlant pour Eormo, un jeune et fringant pilote de nef aux origines tribales bien modestes. N'écoutant que son cœur et ses traditions, il enlève Jil le jour de son mariage, sous les yeux incrédules des invités. Les héros partent à la poursuite des fugitifs : un orage, un naufrage dans les plaines de Klaar, une veillée funèbre céruléenne, puis la tribu d'Eormo, les Mitis. Ce peuple de la jungle possède de bien étranges traditions matrimoniales, qui lui ont été imposées par une créature plus étrange encore… et mortellement dangereuse : la slorth S'pirr."
+  },
+  "personnages": {
+    "tourmar": {
+      "kind": "pnj", "nom": "Tourmar Latia", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Marchand", "rang": 1 }],
+      "armes": ["Dague"],
+      "avantages": ["Fortuné"],
+      "commentaire": "Le livre ne donne pas ses statistiques : fiche de coriace inventée pour l'import (il ne se bat pas).\nJeune et fier, ambitieux. Sa famille doit sa fortune au commerce de bubalus ; il épouse Jil pour anoblir les siens et effacer son image d'éleveur de bestiaux, plus que par amour. Récompense promise : le poids de Jil en gemmes des plaines de Klaar."
+    },
+    "khalaman": {
+      "kind": "pnj", "nom": "Khalaman Sendak", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 0, "tir": 1, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Noble", "rang": 1 }, { "nom": "Pilote des airs", "rang": 1 }],
+      "armes": ["Épée", "Arbalète"],
+      "armures": ["Armure légère"],
+      "commentaire": "Le livre ne donne pas ses statistiques : profil repris du « Pilote de nef volante de Satarla » du catalogue.\nFrère de Jil, une vingtaine d'années, allure martiale, uniforme des pilotes des airs. C'est lui qui a présenté Jil à Eormo, lors d'un banquet des pilotes ; l'amitié des deux hommes a tourné en rivalité, et il ne sait pas masquer sa jalousie envers ce pilote plus doué que lui. Il pilote la nef de la poursuite avec deux hommes d'équipage, et meurt dans le naufrage."
+    },
+    "jil": {
+      "kind": "pnj", "nom": "Jil Sendak", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 1, "esprit": 1, "aura": 2,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Noble", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Le livre ne donne pas ses statistiques : fiche de coriace inventée pour l'import (elle ne se bat pas).\nHéritière de la très haute aristocratie de Satarla, amoureuse d'Eormo depuis des mois. Pendant le combat de la terrasse, elle s'abrite derrière le trône ; si l'affrontement tourne en défaveur de son bien-aimé, elle se tue avec sa dague, cadeau de leur première rencontre. Elle ne conçoit pas de vivre sans Eormo."
+    },
+    "garde-villa": {
+      "kind": "pnj", "nom": "Garde de la villa Sendak", "rang": "pietaille", "region": "Satarla",
+      "melee": 1,
+      "vitalite": 1,
+      "carrieres": [{ "nom": "Soldat", "rang": 1 }],
+      "armes": ["Gourdin"],
+      "commentaire": "Le livre ne donne pas de profil : piétaille inventée pour l'import (Mêlée 1, gourdin : dégâts non létaux possibles).\nLes six gardes du dernier étage, grassement payés par Jil pour ne laisser monter personne et repousser les importuns, au besoin sans ménagement."
+    },
+    "kalzo": {
+      "kind": "pnj", "nom": "Kalzo, nomade kavaar", "rang": "coriace", "region": "Plaines de Klaar",
+      "vigueur": 2, "agilite": -1, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": [
+        { "nom": "Lance céruléenne", "degats": "d6B", "type": "M", "notes": "Lance de géant bleu." },
+        { "nom": "Arc céruléen", "degats": "d6B", "type": "T", "notes": "Arc de géant bleu." }
+      ],
+      "armures": ["Armure légère"],
+      "commentaire": "Profil des nomades Karvoona (BoL p. 173), auquel l'aventure renvoie. Dégâts du livre : lance céruléenne d6B+2, arc céruléen d6B+1 (avec sa Vigueur 2).\nGéant bleu de la petite tribu des Kavaar, père du jeune Bork. Il veille un mort en silence au sommet du vestige."
+    },
+    "venik": {
+      "kind": "pnj", "nom": "Venik, nomade kavaar", "rang": "coriace", "region": "Plaines de Klaar",
+      "vigueur": 2, "agilite": -1, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": [
+        { "nom": "Lance céruléenne", "degats": "d6B", "type": "M", "notes": "Lance de géant bleu." },
+        { "nom": "Arc céruléen", "degats": "d6B", "type": "T", "notes": "Arc de géant bleu." }
+      ],
+      "armures": ["Armure légère"],
+      "commentaire": "Profil des nomades Karvoona (BoL p. 173), auquel l'aventure renvoie. Dégâts du livre : lance céruléenne d6B+2, arc céruléen d6B+1 (avec sa Vigueur 2).\nGéant bleu de la petite tribu des Kavaar. Il veille un mort en silence au sommet du vestige."
+    },
+    "toll": {
+      "kind": "pnj", "nom": "Toll, chaman des Kavaar", "rang": "coriace", "region": "Plaines de Klaar",
+      "vigueur": 1, "agilite": -1, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 7, "foi": 1,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Prêtre", "rang": 1 }, { "nom": "Médecin", "rang": 2 }],
+      "armes": [{ "nom": "Gourdin géant", "degats": "d6B", "type": "M", "notes": "Gourdin de géant bleu." }],
+      "armures": ["Armure légère"],
+      "commentaire": "Profil du chaman Karvoona (BoL p. 173), auquel l'aventure renvoie ; carrière chaman 1 = Prêtre ici (« chaman (prêtre) » dans le livre de base). Médecin 2 : donné par l'aventure. Gourdin géant d6B+1 dans le livre (avec sa Vigueur 1).\nLe plus vieux des trois géants bleus, chaman des Kavaar, commerçant par nature. Il vend des plantes médicinales (potion de sens accrus) et une gourde d'eau du gouffre d'Hyrdral (potion d'illusion de la jeunesse), BoL p. 141, et peut soigner les héros."
+    },
+    "guerrier": {
+      "kind": "pnj", "nom": "Guerrier miti", "rang": "coriace", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": ["Javelot / fléchette", "Lance"],
+      "commentaire": "Livre p. 73. Sagaie d6M+1 (portée 6 m) = Javelot ici, épieu d6+2 = Lance ici (dégâts du livre avec leur Vigueur 2). Les deux gardes du bâtiment B portent de lourdes hallebardes (même profil).\nIls sont 32 : 6 au village, 6 au sanctuaire, deux groupes de 10 dans les plaines de Klaar.\nFérocine : chacun en porte une ou deux doses. Une dose donne Intrépide et Cri de guerre pour la scène.\nTatouages de serpents entrelacés, bourse de cuir à la hanche pleine des dents de leurs ennemis morts. Ils se battent jusqu'à la mort."
+    },
+    "pretre": {
+      "kind": "pnj", "nom": "Prêtre miti", "rang": "coriace", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Prêtre", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Livre p. 73. Coutelas d6M = Dague ici. Pas de points de foi : S'pirr n'est pas une véritable divinité.\nIls sont 15, en longues toges violettes à motifs de serpents noirs, une gemme blanche au cou. Un seul est au village (il prépare la férocine) ; les autres servent S'pirr au sanctuaire et élèvent les enfants. Ils ne se marient pas et ne consomment pas de férocine. Ils ne révéleront jamais l'escalier dérobé."
+    },
+    "villageois": {
+      "kind": "pnj", "nom": "Villageois miti", "rang": "pietaille", "region": "Jungle de Qo et jungle de Qush",
+      "vitalite": 1,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }],
+      "armes": [{ "nom": "Armes de fortune (villageois)", "degats": "d3", "type": "M", "notes": "Ou mains nues : 1 point de dégât." }],
+      "commentaire": "Livre p. 73 : femmes, adolescents, enfants. Pas d'Attaque dans le livre. Règle de horde (BoL p. 132).\nSur la terrasse, les quatre enfants se jettent dans les jambes des héros : -2 au jet d'attaque d'un héros si un enfant est près de sa cible ; sur une attaque ratée, 1d6 : sur 1, il touche l'enfant."
+    },
+    "eormo": {
+      "kind": "pnj", "nom": "Eormo", "rang": "rival", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 3, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 15, "vilenie": 3,
+      "carrieres": [
+        { "nom": "Barbare", "rang": 1 },
+        { "nom": "Chasseur", "rang": 1 },
+        { "nom": "Soldat", "rang": 1 },
+        { "nom": "Pilote des airs", "rang": 2 }
+      ],
+      "armes": ["Épée"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "épée longue" }, "Dur à cuire"],
+      "desavantages": [{ "nom": "Addiction", "detail": "férocine" }, "Impétueux"],
+      "commentaire": "Livre p. 75. Épée longue d6+3 dans le livre (avec sa Vigueur 3). Carrière « pilote de nef » 2 = Pilote des airs ici. Dur à cuire déjà compté dans sa vitalité. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nUne vingtaine d'années, teint olivâtre, traits anguleux, beauté virile et martiale, corps tatoué de serpents entrelacés, yeux sombres teintés de violet par la férocine. Engagé dans l'armée de Satarla, distingué pour sa bravoure, pilote des airs depuis un an. Gavé de férocine (Intrépide, Cri de guerre), il se jette sur ceux qui interrompent son mariage."
+    },
+    "spirr": {
+      "kind": "pnj", "nom": "S'pirr, la slorth", "rang": "rival",
+      "vigueur": 0, "agilite": 1, "esprit": 3, "aura": 2,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 10, "vilenie": 4, "pouvoir": 13,
+      "carrieres": [
+        { "nom": "Esclave", "rang": 0 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Sorcier", "rang": 3 }
+      ],
+      "armes": [{ "nom": "Morsure de slorth", "degats": "d6M", "type": "M", "notes": "Venimeuse : si les dégâts passent l'armure, Vigueur Ardu (-1) ou sommeil comateux après d6M rounds, pendant 1 heure." }],
+      "avantages": ["Beau parleur", "Magie des Rois-Sorciers", "Peau dure"],
+      "desavantages": ["Inadapté au froid", "Lent à la détente", "Malédiction de Morgazzon", { "nom": "Obsession", "detail": "l'union et la procréation" }],
+      "commentaire": "Livre p. 74-75, rivale. Carrière érudite 2 absente du catalogue ; « sorcière » = Sorcier ici. Protection 1 (peau dure).\nMorsure venimeuse : réveillée (secouée ou blessée, nouveau jet de Vigueur Ardu), la victime peut agir au round suivant mais subit -2 à toutes ses actions et à sa défense pendant l'heure.\nEn combat : sorcellerie et charmes pour paralyser les héros, puis morsures. Convaincue de sa supériorité, elle combat aux côtés d'Eormo jusqu'au dernier sang.\nCorps de python blême aux reflets iridescents, long de près de quatre mètres, visage de femme chauve aux traits lisses, grands yeux verts, deux canines en crochets. Créée par le Roi-Sorcier S'pithan, elle se croit divine, ne peut se reproduire et voue un culte à l'union des humains."
+    },
+    "serpent-sacre": {
+      "kind": "creature", "nom": "Serpent sacré", "taille": "Grande",
+      "vigueur": 4, "agilite": 2, "esprit": -1, "attaque": 1, "defense": 1,
+      "vitalite": 20, "degats": "d6B", "protection": "d6-2 (2)",
+      "capacites": [
+        { "nom": "Attaque venimeuse", "detail": "Vigueur Moyen (0) ou engourdi : -2 à tous les jets d'action pour la scène ; à chaque nouvelle morsure, nouveau jet ou -2 de plus" },
+        { "nom": "Attaque spéciale", "detail": "La fosse aux serpents : chaque round, Agilité Moyen (0) ou 1 point de dégât sans armure et un dé de malus contre son venin" }
+      ],
+      "commentaire": "Livre p. 74, rival (édifice B du sanctuaire). Serpent femelle géant aux écailles noires comme l'onyx, peut-être né d'un œuf rapporté de l'île de Métunga (BoL p. 202). Il pond sans accouplement des serpents de petite taille.\nApprocher du bord de la fosse : Agilité + Défense (-2 si le héros a raté son jet de réaction), sinon il est précipité dans la fosse par une attaque surprise : combat à mort. Dans la fosse, les morsures suivantes des petits serpents infligent seulement 1 point de dégât automatique."
+    },
+    "jeune-elasmotherium": {
+      "kind": "creature", "nom": "Jeune elasmotherium", "taille": "Massive",
+      "vigueur": 10, "agilite": -3, "esprit": -2, "attaque": 1, "defense": 0,
+      "vitalite": 25, "degats": "d6Bx2", "protection": "d6-1 (3)",
+      "commentaire": "Rencontre 2 de la table des plaines de Klaar (livre p. 62) : profil de l'elasmotherium du catalogue (BoL p. 115), avec une vitalité de 25 comme le précise l'aventure. Abandonné par sa mère et apeuré, il se montre très agressif."
+    },
+    "venator": { "kind": "creature", "catalogue": "Venator" },
+    "crocator": { "kind": "creature", "catalogue": "Crocator" },
+    "necrophage": { "kind": "creature", "catalogue": "Nécrophage" }
+  },
+  "scenes": [
+    {
+      "cle": "mariage",
+      "titre": "Le mariage de Jil Sendak",
+      "region": "Satarla", "lieu": "La villa de la famille Sendak, sur les hauteurs",
+      "moment": "crepuscule", "meteo": "clair", "danger": 1,
+      "lecture": "La villa de la très riche famille Sendak s'élève sur les hauteurs de Satarla, en plusieurs niveaux agrémentés de grandes terrasses. Le marbre blanc et les colonnes élancées subliment son architecture baroque. L'air tiède d'un été qui touche à sa fin et les relents enivrants de jasmin des jardinières accentuent la douceur de cette fin de journée. Des tables immenses sont recouvertes de fleurs blanches et des meilleurs mets de la région ; le vin coule à flots. Par petits groupes, les invités prennent le frais à tous les étages du palais en attendant la cérémonie. Tout en haut, isolée sur la terrasse du dernier étage avec son père et un prêtre de Lilandra, la belle Jil attend nerveusement l'arrivée de son futur époux.\n\nLe cortège de Tourmar vient d'arriver dans la cour, au son joyeux de ses musiciens. La célébration va commencer… quand l'ombre d'une nef volante obscurcit soudain le ciel. Une corde est lancée vers la terrasse du dernier étage : Jil s'en saisit et disparaît aussitôt dans les cieux, emportée par cette invraisemblable apparition.\n\nAprès un moment de confusion, tandis que les pères des deux fiancés s'invectivent, Tourmar vous rejoint, fou de rage, en compagnie de Khalaman Sendak, le frère de Jil : un jeune aristocrate à l'allure martiale, qui arbore fièrement l'uniforme des pilotes des airs, le corps d'élite de l'armée de Satarla qui sert à bord des nefs volantes.",
+      "jeu": "Lier les héros à Tourmar : amis, famille (un cousin), ou mercenaires de son escorte (un homme aussi riche ne se déplace pas sans escorte). Il faut un lien assez fort pour qu'ils l'aident.\n\nL'enlèvement : pour se lancer à la poursuite des fuyards, jet de réaction à -4. Les six gardes du dernier étage les bloquent et font tout, contre toute attente, pour les ralentir vers les balcons et empêcher d'arrimer la nef. Sauter dans le vide pour rattraper Jil est une très mauvaise idée : même l'héroïsme ne peut rien contre la gravité.\n\nLa demande de Tourmar : ramener sa fiancée à n'importe quel prix. Récompense : le poids de Jil en gemmes des plaines de Klaar ; Khalaman ajoute que les Sendak sauront se montrer généreux. Les deux familles affrètent une nef volante, que Khalaman pilotera.\n\nCe que dit Khalaman en attendant la nef : il a reconnu le ravisseur, Eormo, une vingtaine d'années, originaire de la jungle de Qush. Engagé dans l'armée de Satarla, distingué pour sa bravoure, il est entré il y a un an chez les pilotes des airs malgré ses origines tribales : pilote très adroit, caractère intrépide. Sa tribu, les Mitis, vit au bord du fleuve Oom, à une quinzaine de jours de marche au nord d'Oomis : des chasseurs réputés pour leur bravoure et leur talent au corps à corps. Les Mitis sont viscéralement attachés à leur village, et leurs coutumes leur imposent d'y revenir pour se marier.\n\nInterrogatoires (la famille de Tourmar et le prêtre de Lilandra ne savent rien) :\n- Les gardes de l'étage : c'est Jil qui leur a demandé de ne laisser monter personne et de repousser les importuns, au besoin sans ménagement, contre une confortable gratification.\n- Enaelle, la vieille gouvernante à moitié sourde : jet d'Aura Très difficile, -2 selon le livre (Très difficile vaut -4 dans les règles).\n- Dalilouna, la fidèle servante : jet d'Aura Facile (+1), elle collabore volontiers.\nL'une ou l'autre révèle qu'Eormo et Jil se fréquentaient en secret depuis plusieurs mois, et qu'Eormo devait l'emmener dans son village pour l'épouser selon sa tradition. La décision de l'enlever est récente, précipitée par la demande en mariage de Tourmar. Dalilouna ajoute, d'une petite voix, que la tribu d'Eormo vénère les serpents et qu'un grand temple leur est consacré dans son village.\n\nAvant le départ : les héros peuvent récupérer leur équipement ou réclamer de quoi s'armer. Tourmar fournit une ample provision d'eau, trois gros sacs de victuailles et une carte de la région annotée par Khalaman. S'ils ne rattrapent pas Eormo en plein ciel, il se réfugiera sans doute dans sa tribu pour y épouser Jil.",
+      "notes": "Tourmar veut ce mariage pour anoblir sa famille, enrichie dans le commerce de bubalus, et effacer son image d'éleveur de bestiaux : ses sentiments pour Jil passent après. Jil, elle, aime Eormo sans limite.\nC'est Khalaman qui a présenté Jil à Eormo, lors d'un banquet des pilotes. D'abord amis, unis par la passion du combat aérien, les deux pilotes sont devenus rivaux ; ils ne se voyaient plus guère. Khalaman ne sait pas masquer sa jalousie envers ce pilote plus doué que lui, et juge Eormo indigne de sa famille.\nEormo ramène Jil chez les Mitis pour l'épouser dans le temple de S'pirr, la slorth qui règne sur la tribu.",
+      "pistes": [{ "texte": "Embarquer sur la nef volante de Khalaman", "vers": "poursuite" }],
+      "distribution": [
+        { "perso": "tourmar", "attitude": "amical" },
+        { "perso": "khalaman", "camp": "heros", "attitude": "amical" },
+        { "perso": "garde-villa", "qty": 6, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "poursuite",
+      "titre": "La poursuite dans les cieux",
+      "lieu": "En nef volante, vers le nord-est de Satarla",
+      "moment": "crepuscule", "meteo": "orage", "danger": 2,
+      "lecture": "Les coûteuses négociations ont permis d'affréter en urgence une seconde nef volante. Il n'y a plus de temps à perdre : il faut rattraper Jil avant la tombée de la nuit !\n\nLes premières heures à bord sont nerveusement éprouvantes : nulle trace d'Eormo, et le ciel s'assombrit peu à peu. De toute évidence, un orage d'été se prépare. Après quelques heures de poursuite vers le nord-est, la silhouette caractéristique d'une nef volante se profile enfin à l'horizon. Un duel de pilotes s'engage : Khalaman et ses deux hommes d'équipage redoublent d'efforts pour la rattraper.\n\nLa course se prolonge dans un ciel de plus en plus menaçant, alors que le soleil va bientôt se coucher. Les premières gouttes de pluie se changent en grêlons, le tonnerre gronde sans cesse dans un ciel noir déchiré d'éclairs. Vous avez pris de l'altitude, et Khalaman refuse d'atterrir ou de rebrousser chemin, à présent que sa cible est si proche !",
+      "jeu": "Nefs volantes de Satarla : BoL p. 81.\nLe livre ne prévoit aucun jet : la nef d'Eormo garde son avance, quoi que fassent les héros.\nFin de la scène : un éclair frappe l'avant de la nef et foudroie un des hommes d'équipage. L'appareil devient incontrôlable et perd très rapidement de l'altitude… Coupez là : les héros se réveillent au matin, dans les plaines de Klaar.",
+      "notes": "Khalaman meurt dans le naufrage : on le retrouvera empalé sur un arbuste. La nef d'Eormo, elle, a échappé à l'orage : elle attend, camouflée, près du village des Mitis.",
+      "pistes": [{ "texte": "Le naufrage : se réveiller au matin", "vers": "plaines" }],
+      "distribution": [
+        { "perso": "khalaman", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "plaines",
+      "titre": "Perdus dans les plaines de Klaar",
+      "region": "Plaines de Klaar", "lieu": "Marécage sablonneux, puis savane",
+      "moment": "aube", "meteo": "clair", "danger": 2,
+      "lecture": "Vous vous réveillez au matin dans une petite clairière. La nef a subi de très lourds dégâts : la foudre a éventré la coque en allanium, qui a perdu sa brillance naturelle. Les débris sont éparpillés çà et là, imprégnés d'une odeur d'ozone. Khalaman est mort, empalé sur un petit arbuste ; un matelot gît écrasé sous des débris. Le dernier homme d'équipage a disparu, sans doute tombé par-dessus bord.\n\nLa végétation s'étend à perte de vue : un immense marécage sablonneux, ponctué de petits groupes d'arbustes épineux.\n\nPlus tard, sortis des bancs de sables mouvants plus ou moins asséchés, vous voici face à une sorte de savane : de hautes herbes jaunes ondulent au gré d'un vent chaud chargé de poussière.",
+      "jeu": "Le naufrage : chaque héros subit d6M dégâts, sans protection d'armure.\nLa nef est hors d'usage : la décharge a fait perdre à la coque ses propriétés.\nS'orienter : jet d'Esprit avec une carrière appropriée, ou appel aux voyages passés ou aux origines des héros. L'orage les a fait dériver vers les plaines de Klaar. Il faut revenir vers l'ouest, traverser le fleuve Oom et chercher le village des Mitis.\n\nPremière journée de marche pour sortir des sables mouvants. La deuxième journée, dans la savane, une rencontre (d6, ou au choix) :\n1. Ruine d'une tour de guet. Une fouille minutieuse révèle une ancienne hache gravée de runes, à la lame restée tranchante : métal alchimique, une fois par round, relancer un 1 obtenu sur un jet de dégâts. Une main cavaleuse (catalogue, BoL p. 127), reste maudit de l'ancien propriétaire, se faufile dans les affaires du voleur pour récupérer son bien…\n2. Un jeune elasmotherium, abandonné par sa mère et apeuré, très agressif (fiche « Jeune elasmotherium » du scénario : profil BoL p. 115, vitalité 25).\n3. 2d6B parvalus (catalogue, BoL p. 120) s'abreuvent à un point d'eau. Très craintifs à l'état sauvage : les attraper se fait à -4.\n4. d6-3 azhdarkhos, au moins 1 (catalogue « Azhdarkho », BoL p. 111), survolent les héros avec insistance et fondent sur eux au moindre signe d'inattention.\n5. Un andrak (catalogue, BoL p. 110) se met en chasse du groupe.\n6. Le corps d'un géant bleu à moitié dévoré pourrit au soleil.\nLes bêtes de la table ne sont pas sur la scène : les ajouter depuis la bibliothèque si elles sortent.",
+      "notes": "La nef d'Eormo n'a pas subi le même sort : la fortune sourit aux audacieux.\nLe géant bleu de la rencontre 6 annonce les céruléens du vestige.",
+      "pistes": [{ "texte": "En fin d'après-midi, un grondement qui grandit…", "vers": "ruee" }],
+      "distribution": []
+    },
+    {
+      "cle": "ruee",
+      "titre": "La ruée des bubalus",
+      "region": "Plaines de Klaar", "lieu": "La brousse, vers un gros rocher noir",
+      "moment": "jour", "meteo": "vent", "danger": 3,
+      "lecture": "En fin d'après-midi, un bruit sourd grandit de minute en minute. Bientôt, vous apercevez un troupeau d'une centaine de bubalus qui fonce droit sur vous ! Pas le temps de réfléchir : la fuite semble la seule solution raisonnable. À moins d'un kilomètre, un gros rocher se dresse au milieu de la brousse.\n\nEn courant, vous comprenez que ce rocher est un bloc rectangulaire d'au moins huit mètres de haut, taillé dans une pierre noire et lisse, de l'obsidienne peut-être. Et derrière les bubalus, dans la poussière, apparaît la raison de leur fuite : une horde de venators est à leurs trousses ! Un coin du bloc a été taillé en escalier, mais ses marches mesurent plus de cinquante centimètres de haut…",
+      "jeu": "Bubalus : BoL p. 112 (catalogue). Une centaine : c'est une ruée, pas un combat.\nVenators : BoL p. 125. La horde chasse les bubalus ; quelques venators repèrent les héros et peuvent les rattraper avant qu'ils aient atteint le sommet du bloc (3 cartes sur la scène, à ajuster).\nL'ascension est pénible : marches de plus de 50 cm. Le livre ne donne pas de jet pour la course ni pour l'ascension.\nDu sommet, les héros suivent dans un nuage de poussière la poursuite acharnée des prédateurs.",
+      "notes": "Au sommet du bloc, un vestige céruléen, se déroule une veillée funèbre : trois géants bleus y veillent un mort en silence.",
+      "pistes": [{ "texte": "Atteindre le sommet du bloc de pierre", "vers": "vestige" }],
+      "distribution": [
+        { "perso": "venator", "qty": 3, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "vestige",
+      "titre": "Le vestige céruléen",
+      "region": "Plaines de Klaar", "lieu": "Sommet du vestige, puis campement des Kavaar",
+      "moment": "crepuscule", "meteo": "clair", "danger": 1,
+      "lecture": "L'escalier débouche sur une sorte de terrasse ouverte aux quatre vents. Sur le sol, un triangle a été gravé ; trois petites vasques sont disposées à ses angles, où se consument quelques braises rougeoyantes. Au centre du triangle gît un énorme corps recouvert d'un linceul de peaux de bêtes tannées. Trois nomades bleus sont assis en tailleur autour du corps, immobiles et muets.",
+      "jeu": "Kalzo, Venik et Toll veillent un des leurs, mort au combat. La cérémonie en est à sa dernière journée et s'achève au coucher du soleil.\nLes céruléens ne sont pas agressifs mais ne rompent pas leur silence : ils repoussent pacifiquement quiconque s'approche ou leur parle.\nToucher au linceul : réaction immédiate et très ferme des trois géants. Si les héros insistent, ils les chassent de la plateforme du bout de leur lance, toujours sans un mot.\nSi les héros sont respectueux, le plus vieux leur fait signe de se taire, de s'asseoir et de patienter. Au coucher du soleil, après un dernier salut au défunt, les géants descendent en faisant signe aux héros de les suivre. Toll, chaman des Kavaar, rompt enfin le silence, les remercie et les invite à partager leur feu dans un vallon voisin.\n\nCe que sait Toll (sur Eormo, ou plutôt sur les Mitis) :\n- Les Mitis sont une tribu belliqueuse, aux guerriers renommés pour leur sauvagerie et pour leur façon brutale de traiter les ennemis tombés.\n- Il sait exactement où est leur village et donne des repères précis : les berges du fleuve Oom dès le lendemain, puis une demi-journée de marche pour remonter le fleuve. Le village est sur la rive opposée, caché dans la jungle non loin du fleuve ; on aperçoit par-dessus les arbres le faîte du grand temple de pierre noire.\n- On dit le temple dédié à un dieu-serpent. Toll ignore tout de ce culte, mais il sait que les Mitis gardent jalousement leur sanctuaire, interdit aux étrangers.\nCommerce : des plantes médicinales (potion de sens accrus) et une gourde d'eau du gouffre d'Hyrdral (potion d'illusion de la jeunesse), BoL p. 141.\nSoins : si leur état le justifie, Toll soigne les héros (Médecin 2).\n\nSi les héros repartent sans avoir parlé aux géants (c'est important pour la suite), ils tombent sur le campement, dans une combe toute proche : Bork, adolescent céruléen, fils de Kalzo, s'y ennuie ferme. Il leur explique que la veillée va finir et les invite à attendre Toll avec lui.\nCombat : peu probable. Profils des nomades et du chaman Karvoona (BoL p. 173) sur les fiches.",
+      "notes": "Le rituel : trois jours sans boire ni manger, puis trois jours sans dormir, enfin trois jours sans parler, pour accompagner le défunt dans un monde où les sens n'ont plus de raison d'être. Le corps est ensuite abandonné sur le vestige aux charognards. Toll l'explique au feu du campement.",
+      "pistes": [{ "texte": "Rejoindre le fleuve Oom avec les repères de Toll", "vers": "oom" }],
+      "distribution": [
+        { "perso": "toll", "attitude": "neutre" },
+        { "perso": "kalzo", "attitude": "neutre" },
+        { "perso": "venik", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "oom",
+      "titre": "Sur la route du temple",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Les rives du fleuve Oom",
+      "moment": "jour", "meteo": "clair", "danger": 3,
+      "lecture": "La marche se déroule sans encombre. En fin de matinée, vous atteignez le fleuve Oom. Sur l'autre rive, à travers la canopée d'une jungle dense, se dessine bientôt la silhouette massive d'un temple. Deux petits radeaux, encordés de part et d'autre des berges, servent manifestement aux allers-retours des gens du pays. Une quinzaine de mètres d'eau lente vous séparent de l'autre bord.",
+      "jeu": "Crocators (BoL p. 113) : trois d'entre eux tentent de surprendre les héros quand ils sont près des berges (jet de réaction à -1).\nTraverser : les deux radeaux des Mitis ; ou, pour ne pas dévoiler sa présence, des troncs échoués ; ou à la nage pour les plus téméraires, éventuellement avec une corde ou une liane tendue entre les deux berges (une quinzaine de mètres).\nL'entrée du village est à une centaine de mètres de la rive. Deux des six gardes du village sont en faction aux abords du fleuve : ils interceptent les héros s'ils arrivent de jour et sans précaution.",
+      "notes": "Le livre fait arriver les héros sur la rive ouest et place le village près de la rive est ; venant des plaines de Klaar, à l'est, ils arrivent plutôt sur la rive est, et le village, dans la jungle de Qush, est près de la rive ouest.",
+      "pistes": [
+        { "texte": "Entrer au village des Mitis", "vers": "village" },
+        { "texte": "Contourner le village jusqu'au sanctuaire", "vers": "sanctuaire" }
+      ],
+      "distribution": [
+        { "perso": "crocator", "qty": 3, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "village",
+      "titre": "Le village des Mitis",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Le village, près du fleuve Oom",
+      "moment": "jour", "meteo": "clair", "danger": 3,
+      "lecture": "Le village est entouré d'une solide palissade de bambous affûtés, haute de deux mètres, percée d'une seule entrée. Autour de la place centrale se dressent vingt huttes de branches et de lianes tressées, toutes semblables. Une petite trentaine de villageois, surtout des femmes, quelques vieillards et de jeunes adultes, s'activent aux préparatifs de ce qui ressemble à une fête : sur la place, des femmes font cuire de petits porcelets sauvages, tandis que des adolescents tressent des guirlandes de fleurs d'un violet intense. Un peu à part, deux femmes préparent à petit feu, dans un chaudron, une liqueur violette, sous la direction d'un homme en longue toge violette ornée de serpents noirs. Tous portent des tatouages de serpents entrelacés. Par-dessus les arbres, à l'ouest, pointe le faîte d'une pyramide de pierre noire.",
+      "jeu": "La tribu : une centaine d'individus, dont une trentaine de guerriers et une quinzaine de prêtres ; pas de chef désigné (vie communautaire). Les prêtres vivent au sanctuaire.\nGardes : six guerriers (coriaces) à toute heure, dont deux près du fleuve. Une vingtaine de chasseurs écument les plaines et la jungle.\nAccueil : toute la tribu sait « l'enlèvement » de Jil et se méfie des étrangers. Sur Jil ou Eormo, les villageois éludent : ils sont occupés, ils préparent une fête pour leur divinité, pour attirer ses faveurs en ce début de saison de chasse. L'accès au temple est formellement interdit aux étrangers.\nSi les héros insistent, la discussion tourne court et laisse place aux armes ; la négociation ne donne pas grand-chose. Les guerriers gavés de férocine attaquent si les héros ne partent pas. Les six gardes, soutenus par une dizaine de femmes et d'adolescents (horde : 4 cartes de villageois sur la scène), se battent jusqu'à la mort. Une approche trop directe finit dans un bain de sang.\nDélai : une journée au plus avant le retour, pour le mariage, d'un premier groupe d'une dizaine de chasseurs.\n\nLe chaudron : l'équivalent de 4 doses de férocine, à récupérer. La férocine : une liqueur violette tirée d'une liane. Une dose donne les avantages Intrépide et Cri de guerre pour la scène ; après d6+2 utilisations, le désavantage Addiction. À forte dose, elle est mortelle. Chez les Mitis, seuls les hommes, guerriers et chasseurs surtout, en consomment. Les consommateurs réguliers ont la langue violacée et les yeux voilés de violet.\nObservation : des héros attentifs remarquent la grande diversité d'origines des femmes du village, et l'absence d'enfants en bas âge.",
+      "notes": "Les Mitis vivent à la lisière de la jungle de Qush depuis toujours. La tribu s'est constituée autour de S'pirr, une slorth qui a traversé les âges et règne en maître sur le village depuis le temple, où elle a imposé un culte du serpent. Les guerriers arrachent les dents de leurs ennemis morts, pour les faire taire à jamais, et les gardent dans une bourse de cuir à la hanche.\nTous les Mitis doivent se marier dans le temple et confier leurs enfants à S'pirr jusqu'à dix ans : d'où l'absence de jeunes enfants au village. S'pirr encourage l'expansion de la tribu : d'où les femmes venues de partout, et le geste d'Eormo.\nLa fête est le mariage d'Eormo et de Jil, qui se déroule en ce moment au sommet du temple.",
+      "pistes": [{ "texte": "Gagner le sanctuaire, à une centaine de mètres dans la jungle", "vers": "sanctuaire" }],
+      "distribution": [
+        { "perso": "guerrier", "qty": 6, "attitude": "mefiant" },
+        { "perso": "villageois", "qty": 4, "attitude": "mefiant" },
+        { "perso": "pretre", "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "sanctuaire",
+      "titre": "Le sanctuaire de S'pirr",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "L'enceinte du sanctuaire, à cent mètres du village",
+      "moment": "jour", "meteo": "clair", "danger": 3,
+      "lecture": "Au cœur de la jungle, une enceinte de pierre de plus de trois mètres de haut entoure le sanctuaire. Au centre d'une grande esplanade dallée trône une haute pyramide de pierre noire, d'une quinzaine de mètres. Une seule porte, au sud, précédée d'un perron ; d'étroites meurtrières ; au nord, une large terrasse fait saillie tout en haut. À la base, des bas-reliefs montrent des serpents dans des scènes de bataille ; une figure revient sans cesse : une créature serpentine à tête de femme, sculptée en marbre blanc. Au-dessus, les parois sont lisses, sans la moindre prise.\n\nAutour, trois bâtiments de plain-pied de la même pierre noire : une petite pyramide, réplique du grand temple ; un cloître ; une grande halle couverte. Des hommes en longues toges violettes ornées de serpents noirs, une gemme blanche au cou, vont et viennent en marmonnant des litanies. Et partout, une vingtaine de petits enfants jouent et courent, dans des éclats de rire qui contrastent avec l'ambiance monacale des lieux.",
+      "jeu": "Escalader l'enceinte : Agilité Ardu (-1).\nGardes (guerriers, coriaces) : jour et nuit, deux à l'entrée principale. De jour, quatre de plus : deux devant le bâtiment B (lourdes hallebardes), deux en patrouille. La nuit, ils se relaient par deux à l'entrée et en patrouille ; les quatre autres dorment au bâtiment C avec les prêtres et les enfants.\nPrêtres : 15, au service de S'pirr et des enfants. Enfants : une vingtaine, jusqu'à une dizaine d'années.\nAlerte : tous les habitants, enfants compris, réagissent avec hostilité aux étrangers. Les enfants courent prévenir ; prêtres et guerriers donnent l'alerte et attaquent avec férocité.\n\nLes lieux :\n- Temple (A) : porte de bronze au sud, non gardée. Escalader la pyramide jusqu'à la terrasse : deux jets d'escalade successifs Très difficile (-4), sans prise pour une corde ou un grappin.\n- Porte dérobée (c) à l'arrière du temple, cachée dans les bas-reliefs : impossible à repérer, sauf si un héros cherche un passage secret à cet endroit précis (Esprit Très difficile, -4). Elle ouvre sur l'escalier de service qui monte à la terrasse.\n- Petite pyramide (B) : réservée aux prêtres, la fosse du serpent sacré. Gardée de jour, pas la nuit.\n- Bâtiment des prêtres (C) : une dizaine de cellules autour d'une petite cour où les prêtres méditent de jour. La nuit, huit chambres servent de dortoir aux prêtres et aux gardes ; cinq cellules aux enfants (lecture de vieux livres, lits superposés). Au centre du cloître, une statue de marbre blanc de trois mètres du serpent à tête de femme, aux yeux de deux magnifiques émeraudes.\n- Halle couverte (D), coin nord-ouest : les prêtres y discutent de théologie, y mangent, y font la sieste aux heures chaudes. Vide à la nuit tombée.",
+      "notes": "L'escalier de service et la porte dérobée sont connus de la plupart des Mitis : les prêtres et les enfants l'empruntent pour visiter S'pirr, les époux pour quitter le temple après la cérémonie. Aucun Miti n'en révélera l'existence, même sous la torture : ce serait un blasphème.\nLa créature à tête de femme des sculptures, c'est S'pirr.",
+      "pistes": [
+        { "texte": "Entrer dans la petite pyramide (B)", "vers": "fosse" },
+        { "texte": "Franchir la porte de bronze du temple (A)", "vers": "temple" },
+        { "texte": "Porte dérobée (c) ou escalade : droit à la terrasse", "vers": "terrasse" }
+      ],
+      "distribution": [
+        { "perso": "guerrier", "qty": 4, "attitude": "hostile" },
+        { "perso": "pretre", "qty": 2, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "fosse",
+      "titre": "La fosse du serpent sacré",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "La petite pyramide (B) du sanctuaire",
+      "moment": "jour", "meteo": "clair", "danger": 3,
+      "lecture": "L'atmosphère est insoutenable : l'odeur suffocante de l'encens, qui brûle en permanence, se mêle aux relents des offrandes qui pourrissent, colliers de fleurs et restes de petits cochons de lait. Au centre s'ouvre une fosse. Au fond, un énorme serpent aux écailles noires comme l'onyx somnole, lové près de ses œufs, parmi des dizaines de petits serpents qui grouillent.",
+      "jeu": "S'approcher du bord : jet d'Agilité + Défense (-2 si le héros a raté un jet de réaction), sinon le serpent le précipite dans la fosse d'une attaque surprise, et c'est un combat à mort.\nDans la fosse, au début de chaque round : Agilité Moyen (0), sinon les petits serpents le mordent : 1 point de dégât automatique (sans armure) et un dé de malus aux jets de Vigueur contre le venin du serpent sacré. Les morsures suivantes des petits serpents infligent seulement 1 point de dégât automatique.\nMorsure venimeuse du serpent sacré : si les dégâts passent l'armure, Vigueur Moyen (0) ou engourdi, -2 à tous les jets d'action pour la scène ; à chaque nouvelle morsure, nouveau jet ou -2 de plus (-4, et ainsi de suite).\nMalgré sa torpeur, la femelle fera tout pour protéger ses œufs et sa progéniture.\nDe jour, deux guerriers aux lourdes hallebardes gardent l'entrée ; la nuit, le bâtiment n'est pas gardé. Le lieu est généralement désert : les prêtres n'y viennent que pour une offrande et une rapide prière.",
+      "notes": "C'est un lieu de ponte : une fois par mois, les prêtres récupèrent les serpents juvéniles à peine éclos et les redistribuent au village et au temple.\nLa légende veut que la femelle soit née d'un œuf rapporté par un marin lors d'un naufrage sur l'île de Métunga (BoL p. 202) ; elle est plus petite que celui de l'île. Elle pond sans accouplement, mais seulement des serpents de petite taille.",
+      "pistes": [{ "texte": "Ressortir dans l'enceinte", "vers": "sanctuaire" }],
+      "distribution": [
+        { "perso": "serpent-sacre", "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "temple",
+      "titre": "Le temple de S'pirr : rez-de-chaussée",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Pyramide (A) : vestibule, bassins, salle aux serpents",
+      "moment": "jour", "meteo": "clair", "danger": 2,
+      "lecture": "Une volée de marches mène à une lourde porte de bronze à double battant, qui donne sur un vestibule. De chaque côté, une porte ouvre sur une salle presque entièrement occupée par un bassin d'eau claire et légèrement parfumée ; au fond, une magnifique mosaïque de serpents couvre toute la vasque.\n\nAu bout de chaque bassin, trois marches mènent à une porte, puis à une large terrasse qui domine une fosse peu profonde où grouillent des centaines de petits serpents noirs. Sur le mur sud, une inscription en dialecte lémurien : « Seul, avant l'union ». Une volée de marches descend vers un sous-sol ; sur son linteau, une autre inscription proclame : « À la terre pour toujours ». La pénombre, le plafond bas, les sifflements rendent le lieu oppressant. Une chaussée large d'une dizaine de centimètres traverse la salle jusqu'à un second promontoire, au nord.",
+      "jeu": "Le temple n'est pas gardé : c'est un lieu saint.\nLes bassins (2) : futurs époux et cortèges funéraires s'y purifient avant toute cérémonie.\nLa chaussée et la fosse aux serpents (4) : le livre ne donne ni jet ni effet ; à votre discrétion.\nLe promontoire (5) : une volée de marches, côté ouest, monte au premier étage.\nL'escalier (b) descend au sous-sol funéraire.\n\nL'escalier de service (6) dessert la terrasse sans passer par le parcours rituel. On y entre par la porte dérobée (c), à l'arrière de la pyramide (Esprit Très difficile, -4, pour la trouver, et seulement si on la cherche à cet endroit précis).\nAu bas de la cage d'escalier, un petit gong de bronze sert aux prêtres à appeler S'pirr quand elle est dans sa tanière. Derrière une lourde tenture (d), un boyau d'une centaine de mètres creusé dans la terre argileuse mène, en rampant, à la grotte de S'pirr (7) : une cavité meublée d'une paillasse de branchages où la slorth somnole quand aucun office ne la réclame.",
+      "notes": "Le parcours rituel des fiancés symbolise la démarche qui conduit deux êtres au mariage : seul (rez-de-chaussée), égaux (premier étage), unis (deuxième étage), puis la bénédiction de S'pirr sur la terrasse.\nS'pirr emprunte l'escalier de service pour aller dormir dans sa tanière. Nul Miti n'a jamais visité la tanière : c'est un tabou, personne n'en parlera. Frapper le gong la fait venir.\nLes jeunes époux quittent le temple par l'escalier de service à l'issue de la cérémonie.",
+      "pistes": [
+        { "texte": "Monter au premier étage", "vers": "epreuves" },
+        { "texte": "Descendre l'escalier (b) au sous-sol", "vers": "sous-sol" },
+        { "texte": "Escalier de service (6) jusqu'à la terrasse", "vers": "terrasse" }
+      ],
+      "distribution": []
+    },
+    {
+      "cle": "epreuves",
+      "titre": "Les épreuves de l'union",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Pyramide (A) : premier et deuxième étages",
+      "moment": "jour", "meteo": "clair", "danger": 1,
+      "lecture": "Le premier étage est une salle en forme de croix, éclairée par quatre meurtrières. Au centre trône une gigantesque balance à plateaux, d'un alliage métallique aux sombres reflets bleutés ; un mécanisme complexe s'enfonce dans le sol. Dans le prolongement du fléau, de chaque côté, une petite fontaine laisse couler une eau claire, et près de chacune est posée une amphore d'albâtre finement sculptée. Sur le mur incliné, au sud, une inscription : « Égaux à jamais ». Une porte close fait face à la balance.",
+      "jeu": "Premier étage (8) : quand les deux plateaux de la balance (e) sont mis de niveau, en y versant de l'eau avec les amphores, la porte de l'escalier (h) vers le deuxième étage s'ouvre d'elle-même dans un cliquetis de crémaillère. Indices : les plateaux, de poids légèrement différents, ne sont pas à l'équilibre ; l'eau versée à chaque nouveau couple a laissé des traces d'évaporation et de corrosion. Il faut de l'observation et de la sagacité.\nForcer la porte, verrouillée par une solide barre : long et bruyant. Vigueur Impossible (-6), ou 20 points de dégâts avec une arme appropriée (hache, masse).\n\nDeuxième étage (9) : une autre salle en croix, avec deux blocs de marbre noir parfaitement lisses (i), d'un mètre de côté, séparés d'une cinquantaine de centimètres. Bas-relief au sud : « Unis à jamais » (j), face à une porte à double battant verrouillée (k) qui donne sur la terrasse. Pousser les deux blocs l'un contre l'autre : Vigueur Facile (+1). La porte s'ouvre dans un bruit sourd, reste ouverte quelques minutes, puis se referme lentement tandis que les blocs reprennent leur place.",
+      "notes": "Après le passage d'un couple venu chercher la bénédiction de S'pirr, un prêtre vide les plateaux, ce qui referme la porte : Eormo et Jil sont passés, et la balance a été vidée.",
+      "pistes": [{ "texte": "Franchir la porte (k) vers la terrasse", "vers": "terrasse" }],
+      "distribution": []
+    },
+    {
+      "cle": "terrasse",
+      "titre": "La terrasse de S'pirr",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Pyramide (A) : la terrasse, au sommet",
+      "moment": "jour", "meteo": "clair", "danger": 4,
+      "lecture": "La terrasse offre un spectacle à couper le souffle : à l'ouest, une jungle émeraude s'étale à perte de vue ; à l'est, le fleuve Oom marque le début des vastes plaines de Klaar ; au nord, les cimes enneigées des montagnes de l'Axos ferment un horizon brumeux.\n\nSur un long divan de bois précieux aux pieds sculptés en serpents dressés, garni de coussins, est lovée une créature au corps de python blême, aux reflets iridescents, long de près de quatre mètres. Elle a le visage d'une femme chauve aux traits lisses, d'un âge indéfinissable, d'une beauté froide et troublante ; ses grands yeux verts n'ont rien d'humain. Dans ses anneaux, elle protège affectueusement quatre jeunes enfants. Près du trône, sur une colonne de pierre noire, un crâne poli par le temps vous suit de ses yeux de chair, qui tournent horriblement dans leurs orbites.\n\nAgenouillés devant elle, Jil et Eormo reçoivent sa bénédiction.",
+      "jeu": "Les héros interrompent la cérémonie, qui dure plusieurs jours, de jour comme de nuit.\nEormo, gavé de férocine (Intrépide, Cri de guerre), entre dans une fureur noire et se jette sur eux.\nS'pirr recourt à la sorcellerie et à des charmes pour les paralyser, puis mord (rapidité, venin). Convaincue de sa supériorité, elle combat aux côtés d'Eormo jusqu'au dernier sang.\nJil s'abrite derrière le trône. Si l'affrontement tourne en défaveur d'Eormo, elle se tue avec sa dague.\nLes enfants se jettent dans les jambes des héros pour protéger leur « mère » et les amoureux : un héros dont la cible a un enfant à proximité subit -2 au jet d'attaque ; s'il rate son attaque, il lance 1d6 : sur 1, il touche l'enfant (piétaille).\nRenforts : le bruit peut attirer les deux gardes en patrouille et/ou quelques prêtres, par l'escalier de service (fiches Guerrier miti et Prêtre miti, à ajouter).\n\nLe crâne de S'pithan : relique rare, revendable à excellent prix à un acheteur assez fou. Tant qu'un héros le possède, il subit les désavantages Inquiétant et Maudit.\nAngle sud-ouest : la couche des fiancés et une petite table de victuailles.\nUne fois le calme revenu : un éclat de lumière persistant, vers le nord-ouest dans la jungle, reflet du soleil (ou de la lune) sur la carlingue en allanium de la nef d'Eormo.",
+      "notes": "Le crâne est celui de S'pithan, le Roi-Sorcier qui a créé S'pirr. Les slorth sont nées d'expériences démentes des Rois-Sorciers. S'pirr ne peut se reproduire, faute de mâle de son espèce ; rongée par la solitude et l'injustice de ses créateurs, elle s'est prise d'une fascination obsessionnelle pour l'amour humain, et assiste avec des yeux envieux aux premiers ébats des jeunes mariés, qui dorment sur la terrasse sans jamais la quitter. Recluse, elle a sombré dans la démence et se croit divine.\nJil ne conçoit pas de vivre sans Eormo : la ramener vivante est très improbable.",
+      "pistes": [
+        { "texte": "Suivre l'éclat de lumière jusqu'à la nef d'Eormo", "vers": "epilogue" },
+        { "texte": "Redescendre par l'escalier de service", "vers": "temple" }
+      ],
+      "distribution": [
+        { "perso": "eormo", "attitude": "hostile" },
+        { "perso": "spirr", "attitude": "hostile" },
+        { "perso": "jil", "attitude": "neutre" },
+        { "perso": "villageois", "qty": 4, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "sous-sol",
+      "titre": "Le sous-sol funéraire",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Pyramide (A) : la salle mortuaire",
+      "moment": "nuit", "meteo": "clair", "danger": 3,
+      "lecture": "L'escalier débouche dans une énorme salle souterraine creusée à même la roche. Au centre, un autel rudimentaire de marbre blanc attend le corps d'un défunt. Cinq braseros l'entourent, où se consume lentement un mélange de brindilles, de lianes et de mues de serpent, dans une fumée âcre. Au-delà, des galeries s'enfoncent dans les ténèbres.",
+      "jeu": "C'est ici que les prêtres célèbrent les rites funéraires. La salle se prolonge par un vaste réseau souterrain contrôlé par six nécrophages (BoL p. 128), qui viennent récupérer les corps pour les faire disparaître à jamais.\nLes héros qui descendent risquent d'alerter rapidement ces macabres gardiens, qui ne résisteront pas à l'envie de mordre, pour une fois, dans de la chair fraîche.\nLes lianes des braseros sont de la férocine.",
+      "notes": "S'pirr n'a pas accès à cette partie du temple : la mort ne l'a jamais intéressée. Les prêtres apportent les corps par l'entrée principale, après les bassins de purification.",
+      "pistes": [{ "texte": "Remonter au rez-de-chaussée", "vers": "temple" }],
+      "distribution": [
+        { "perso": "necrophage", "qty": 6, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue : la nef d'Eormo",
+      "region": "Jungle de Qo et jungle de Qush", "lieu": "Dans la jungle, à deux ou trois cents mètres du village",
+      "moment": "crepuscule", "meteo": "clair", "danger": 1,
+      "lecture": "À deux ou trois cents mètres à vol d'oiseau du village, sous des branchages qui laissent entrevoir de larges pans de carlingue métallique, la nef volante dérobée par Eormo a été grossièrement camouflée. Maintenue au sol par des cordages, elle est en parfait état : prête à reprendre les airs.",
+      "jeu": "Les héros peuvent rentrer seuls avec la nef, à condition de l'avoir trouvée.\nLe plus dur sera d'expliquer la situation à Tourmar : son rêve d'accéder à la noblesse de Satarla s'est envolé avec Jil, Khalaman, le frère de Jil, est mort, et la nef de la poursuite s'est abîmée dans les marécages.\nLe secret de la férocine peut aider à se racheter : Tourmar pourrait le faire valoir auprès des officiels de la ville comme un atout pour la suprématie militaire de Satarla.\nMais est-il bien raisonnable de rentrer à Satarla avec un engin volant aussi précieux, qui pourrait être revendu à prix d'or ?",
+      "notes": "Les chances de ramener Jil vivante sont très minces : elle ne conçoit son destin qu'avec Eormo. Comme le rappelle une vieille comptine de Satarla, « les histoires d'amour finissent mal, en général ».",
+      "pistes": [
+        { "texte": "Rentrer à Satarla et affronter Tourmar" },
+        { "texte": "Revendre la nef à prix d'or" }
+      ],
+      "distribution": []
+    }
+  ]
+}

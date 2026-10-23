@@ -1,0 +1,492 @@
+{
+  "saga": "cl1-le-plus-vieux-reve-de-lom",
+  "scenario": {
+    "cle": "le-plus-vieux-reve-de-lom",
+    "titre": "Chroniques lémuriennes — Le plus vieux rêve de Lôm",
+    "pitch": "Aventure d'Arnaud Prié (Chroniques Lémuriennes 1.2, livre p. 42-57).\n\nAlors que les héros s'apprêtent à hiverner dans un petit bourg du Valgard, au pied des montagnes de l'Axos, une jeune femme, Joanna Lôm, s'effondre sur le seuil de l'auberge. Elle a dû fuir le fortin du Col Gelé où elle vit avec son oncle Zacharias, attaqué par une tribu d'hommes-oiseaux, et cherche de l'aide pour retourner sur les lieux et découvrir ce qu'il est advenu de lui. Les héros vont découvrir les étranges obsessions du vieux Zacharias et de sa nièce, et devoir gérer l'hostilité (légitime) du Peuple des Cimes.\n\nAttention : le contexte et la personnalité de Joanna placent les héros devant un cas de conscience explosif, susceptible de diviser le groupe."
+  },
+  "personnages": {
+    "joanna": {
+      "kind": "pnj",
+      "nom": "Joanna Lôm",
+      "rang": "rival",
+      "region": "Montagnes de l’Axos",
+      "vigueur": 1,
+      "agilite": 2,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 1,
+      "melee": 0,
+      "tir": 2,
+      "defense": 1,
+      "vitalite": 11,
+      "vilenie": 3,
+      "carrieres": [
+        {
+          "nom": "Esclave",
+          "rang": 2
+        },
+        {
+          "nom": "Alchimiste",
+          "rang": 1
+        },
+        {
+          "nom": "Chasseur",
+          "rang": 1
+        },
+        {
+          "nom": "Marchand",
+          "rang": 0
+        }
+      ],
+      "armes": [
+        "Dague",
+        "Fronde de l’Axos"
+      ],
+      "armures": [
+        "Armure légère"
+      ],
+      "avantages": [
+        {
+          "nom": "Arme favorite",
+          "detail": "fronde de l'Axos"
+        },
+        "Montagnard"
+      ],
+      "desavantages": [
+        {
+          "nom": "Obsession",
+          "detail": "faire voler la Merveille de son oncle"
+        }
+      ],
+      "commentaire": "Stats : livre p. 56 (PDF p. 58). Carrière « Serviteur 2 » du livre portée en Esclave (serf/serviteur), absente du catalogue. Points de vilénie : le livre n'en donne pas, 3 inventés pour l'import.\nDégâts du livre : dague d6M+1 (avec sa Vigueur 1), fronde d6M. Protection : cuir léger et fourrure d6-3 (1).\nArme favorite (fronde de l'Axos) : un dé de bonus à ses jets d'attaque. Montagnarde. Obsession : un dé de malus à toute action qui la détourne de faire voler la Merveille.\nMontagnarde trapue, démarche féline, nattes rousses, peau opaline tachée de son, vêtue de cuir et de peaux. Porte sous ses vêtements l'un des deux colliers de contrôle de la Merveille. Possessions : petit matériel de survie, quelques pièges, une bourse d'or.\nPersonnage ambigu : attachante d'abord, puis obsédée, excessive et irrationnelle une fois au fortin. Alliée ou rivale selon les choix des héros."
+    },
+    "jaoor": {
+      "kind": "pnj",
+      "nom": "Jaoor, chaman du Peuple des Cimes",
+      "rang": "rival",
+      "region": "Montagnes de l’Axos",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 2,
+      "aura": 2,
+      "initiative": 2,
+      "melee": 0,
+      "tir": 0,
+      "defense": 2,
+      "vitalite": 10,
+      "vilenie": 3,
+      "foi": 2,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 0
+        },
+        {
+          "nom": "Chasseur",
+          "rang": 1
+        },
+        {
+          "nom": "Médecin",
+          "rang": 1
+        },
+        {
+          "nom": "Prêtre",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Dague",
+        {
+          "nom": "Bâton-sceptre de Jaoor",
+          "degats": "d6M",
+          "type": "M",
+          "notes": "Bâton noueux de 1,5 m serti d'un crâne humain aux orbites de gemmes luminescentes. Tenu par un chaman homme-oiseau : +1 en Aura et un dé de malus aux jets d'initiative de ses adversaires."
+        }
+      ],
+      "avantages": [
+        "Agilité de l’homme-oiseau",
+        "Inspirateur"
+      ],
+      "desavantages": [
+        "Arrogant"
+      ],
+      "commentaire": "Stats : livre p. 57 (PDF p. 59). Agilité 1 avec l'Agilité de l'homme-oiseau. Aura 2, ou 3 tant qu'il tient son sceptre. Carrière « Guérisseur 1 » portée en Médecin. Points de vilénie : le livre n'en donne pas, 3 inventés pour l'import.\nArmes : couteau sacrificiel en os d6M (Dague ici), bâton-sceptre de cérémonie d6M.\nProtection mystique (talismans de plumes, d'os et de perles) : d6-1 (3) contre le 1er coup reçu, d6-2 (2) contre le 2e, puis d6-3 (1) contre les suivants ; les talismans volent en éclats à chaque coup non paré.\nSceptre : +1 en Aura et un dé de malus aux jets d'initiative de ses adversaires (seulement entre les mains d'un chaman homme-oiseau).\nInspirateur : un dé de bonus à ses ouailles à tous leurs jets d'attaque pendant un round, une fois par jour. Arrogant : un dé de malus aux interactions sociales avec des étrangers.\nPorte à son cou le collier de Zacharias, en trophée. Rusé, méfiant, arrogant devant son peuple ; parle la langue des hommes de façon hachée et imagée."
+    },
+    "oiseau": {
+      "kind": "pnj",
+      "nom": "Homme-oiseau du Peuple des Cimes",
+      "rang": "pietaille",
+      "region": "Montagnes de l’Axos",
+      "vigueur": -1,
+      "agilite": 2,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": -1,
+      "tir": 1,
+      "defense": 0,
+      "vitalite": 2,
+      "carrieres": [
+        {
+          "nom": "Chasseur",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Javelines des hommes-oiseaux",
+          "degats": "d3",
+          "type": "T",
+          "notes": "Javelines et fléchettes de la piétaille du Peuple des Cimes."
+        },
+        {
+          "nom": "Couteau en os ou gourdin rudimentaire",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Armes de la piétaille du Peuple des Cimes."
+        }
+      ],
+      "avantages": [
+        "Agilité de l’homme-oiseau"
+      ],
+      "commentaire": "Stats : livre p. 56 (PDF p. 58). Agilité 2 avec l'Agilité de l'homme-oiseau. Carrière « chasseur-cueilleur 1 » portée en Chasseur. Protection : aucune. Hommes et femmes.\nIls préfèrent harceler à distance et fuient quand ils se sentent agressés ou quand plus d'un quart des leurs sont tombés."
+    },
+    "eclaireur": {
+      "kind": "pnj",
+      "nom": "Éclaireur du Peuple des Cimes",
+      "rang": "coriace",
+      "region": "Montagnes de l’Axos",
+      "vigueur": 0,
+      "agilite": 2,
+      "esprit": 0,
+      "aura": 1,
+      "initiative": 1,
+      "melee": -1,
+      "tir": 1,
+      "defense": 1,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Chasseur",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Javelot / fléchette",
+        "Gourdin"
+      ],
+      "armures": [
+        "Armure légère"
+      ],
+      "avantages": [
+        "Agilité de l’homme-oiseau"
+      ],
+      "commentaire": "Éclaireurs et protecteurs du Peuple des Cimes. Stats : livre p. 56 (PDF p. 58). Agilité 2 avec l'Agilité de l'homme-oiseau. Carrière « chasseur-cueilleur 2 » portée en Chasseur.\nArmes : javelines / fléchettes d6M, couteau en os ou gourdin rudimentaire d6M. Protection : brassards, harnais et jambières de cuir d6-3 (1)."
+    },
+    "mythunga": {
+      "kind": "creature",
+      "catalogue": "Mythunga"
+    },
+    "ours": {
+      "kind": "creature",
+      "catalogue": "Ours des cavernes / ours polaire"
+    }
+  },
+  "scenes": [
+    {
+      "cle": "auberge",
+      "titre": "Une arrivée inopinée",
+      "region": "Valgard",
+      "lieu": "Auberge d'un petit bourg, au pied des montagnes de l'Axos",
+      "moment": "nuit",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "Les premières neiges de l'année viennent de tomber sur ce petit bourg du Valgard, dans les contreforts de l'Axos. Bientôt l'hiver interdira aux hommes l'accès à la montagne. Vous êtes confortablement installés au coin de l'âtre, une chope de bière mousseuse à la main, quand la porte de l'auberge s'ouvre à toute volée : une jeune femme transie s'effondre sur le seuil.\n\nÉpuisée, affamée, les mains rongées d'engelures, elle est d'abord incapable de parler. De taille moyenne, elle a l'allure d'une vraie montagnarde : corps trapu, démarche féline, cheveux roux tressés en courtes nattes, peau opaline mouchetée de taches de rousseur. Elle est vêtue de cuir et de peaux de bêtes typiques de l'Axos.\n\nUne fois remise, près du feu, un bol de soupe chaude dans les mains, elle raconte : une bande d'hommes-oiseaux a attaqué le fortin où elle vit avec son oncle Zacharias. Elle était dans la cour quand ils ont fondu sur la tour ; elle a couru à l'écurie, sellé le kroark et fui chercher de l'aide. À la sortie de la passe, un grand prédateur ailé, le terrible mythunga, l'a attaquée. Son kroark s'est affolé, elle est tombée de selle et a fui à pied pendant que la bête se jetait sur sa monture. Deux jours de marche, presque sans manger ni dormir.\n\nAvec des sanglots dans la voix, elle ignore ce qu'il est advenu de son oncle : tué, ou enlevé ? Elle doit retourner au plus vite au fortin, mais elle a besoin d'aide. Elle n'a qu'une bourse d'or sur elle, mais son oncle n'est pas sans moyens : une récompense substantielle attend ceux qui la raccompagneront.",
+      "jeu": "L'aubergiste la reconnaît : c'est la petite Joanna, qui vit avec son oncle à quelques jours de marche dans les montagnes, dans un vieux fort abandonné. Ils viennent se ravitailler à la belle saison. Zacharias Lôm : un petit homme étrange, un érudit dit-on, pas désagréable mais peu causant, toujours absorbé dans ses pensées ; il paie rubis sur l'ongle. L'aubergiste ne se mêle pas des affaires des autres.\nSi on le lui demande, Joanna parle de la mort de ses parents, de sa vie avec son oncle l'érudit, passionné des oiseaux, et de leur installation au fortin pour étudier la colonie de corbasses.\nAprès une nuit de sommeil, elle veut partir sans attendre. Si les héros n'ont pas de montures, elle loue des parvalus à l'aubergiste. Le temps presse : l'hiver arrive et les cols risquent d'être bloqués par la neige. Trois jours de route jusqu'au fort si tout va bien.\nAucun jet : scène de dialogue. Les joueurs doivent avoir envie de l'aider.",
+      "notes": "Joanna porte sous ses vêtements l'un des deux colliers magiques qui animent l'oiseau-golem de son oncle, la Merveille ; Zacharias gardait le second.\nElle tait pour l'instant la création du golem et des colliers, l'emprisonnement de la femme-oiseau Oorea et l'attitude tyrannique de son oncle, à l'origine du drame.\nInterpréter Joanna : ni foncièrement mauvaise ni sans scrupules, elle a eu une enfance pitoyable auprès d'un oncle obnubilé, dont elle partage désormais l'obsession : chevaucher la Merveille et voler. Sa priorité, une fois le sort de Zacharias connu : récupérer son collier. Gagner d'abord l'amitié des héros, puis révéler au fortin l'ampleur de sa « folie ». Quand la passion l'emporte, elle commet des actes dangereux et irréfléchis.\nLe livre prévient : le contexte et la personnalité de Joanna placent les héros devant un cas de conscience explosif, qui peut diviser le groupe.",
+      "pistes": [
+        {
+          "texte": "Raccompagner Joanna jusqu'au fortin",
+          "vers": "ascension"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "ascension",
+      "titre": "L'ascension vers le Col Gelé",
+      "region": "Montagnes de l’Axos",
+      "lieu": "La passe du Col Gelé",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 1,
+      "lecture": "Après deux jours d'ascension dans les piémonts valgardiens et les contreforts de l'Axos, la piste s'est transformée en passe étroite. Les parois abruptes et profondes de la faille empêchent le soleil de filtrer. Éboulis, torrent tourmenté, bourrasques de vent glacial et névés omniprésents rendent la progression laborieuse pour les montures et les hommes.\n\nEn milieu de journée, vous apercevez sous la neige d'abord une queue, puis le cadavre entier d'un kroark, bien conservé par la froidure. Son flanc est éventré, en partie dévoré, de larges déchirures le zèbrent. Les os de ses pattes ont été violemment brisés : ses quatre membres forment des courbures improbables. Il porte encore son harnachement et ses fontes.",
+      "jeu": "Médecin : comprendre les conditions de la mort de l'animal (pas forcément ce qui l'a tué).\nFontes : un peu de nourriture gelée et un écrin de cuir renfermant un vieux carnet de notes, les études de Zacharias Lôm sur les oiseaux, puis sur les corbasses. Notes, commentaires, questions, croquis de volatiles, d'écorchés, dessins minutieux d'anatomie. Écriture et dessin homogènes, mais rien n'en identifie l'auteur.\nJoanna reconnaît son kroark et le carnet de son oncle, qui l'emportait lors de ses promenades d'étude.\nSi tout va bien, arrivée au fortin dès le lendemain.",
+      "notes": "C'est le mythunga qui a tué le kroark lors de la fuite de Joanna.",
+      "pistes": [
+        {
+          "texte": "Remonter la faille vers le fortin",
+          "vers": "corbasses"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "corbasses",
+      "titre": "Les nichées de corbasses",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Passage élargi de la faille, sous les falaises",
+      "moment": "crepuscule",
+      "meteo": "vent",
+      "danger": 3,
+      "lecture": "Un peu avant le fortin, en fin d'après-midi, la faille s'élargit sous des falaises mouchetées de taches blanchâtres de fientes. Au-dessus de vos têtes, sur les corniches et dans les anfractuosités, des milliers de grands oiseaux blancs se tiennent immobiles : des corbasses, comme de grands corbeaux croisés d'oiseaux de mer, jusqu'à deux mètres d'envergure.\n\nJoanna lève la main et chuchote : un vacarme attirerait les prédateurs volants qui pullulent dans la région, et surtout le redoutable mythunga. Elle démonte et marche au côté de son parvalus, en le tenant par les rênes. Devant, le passage présente des obstacles délicats à franchir.",
+      "jeu": "Discrétion : fais lancer quelques jets pour rendre les joueurs nerveux. Passages délicats, éboulis possibles. Dresseur : calmer les montures.\nFais parler Joanna à voix basse. Si les joueurs ne baissent pas la voix, leurs héros non plus : les corbasses s'envolent à l'unisson en croassant à tue-tête, et attirent fatalement le mythunga.\nPeu après, son hurlement strident se joint à la cacophonie ; il plane comme une ombre au-dessus de la passe, puis s'y engouffre pour chercher une proie.\nJoanna fonce à bride abattue vers le fortin, à moins d'une lieue en amont, et presse les autres. Si les héros l'affrontent, la bête tente un ou deux passages en rase-mottes malgré l'étroitesse de la passe, puis repart, en emportant un parvalus si elle peut.\nMythunga (BoL p. 119) : énorme, Vigueur 7, Agilité 1, Esprit 0, Attaque +4, dégâts d6B, Défense 2, Vitalité 35.",
+      "notes": "Corbasses : espèce de l'Axos baptisée par Zacharias Lôm. Paisibles mais très impressionnables : d'excellentes sentinelles. Joanna les chassait ici à la fronde pour la Merveille.\nSi les héros se montrent belliqueux, laisse le mythunga s'échapper sans trop de dégâts : il reviendra à l'initiative du Peuple des Cimes (L'ombre venue du ciel). S'il meurt dès son premier survol (à grand renfort de points d'héroïsme), prévois un second mythunga pour la scène finale.",
+      "pistes": [
+        {
+          "texte": "Gagner le fortin, tout proche",
+          "vers": "fortin"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "mythunga",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "fortin",
+      "titre": "Le fortin abandonné",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé",
+      "moment": "crepuscule",
+      "meteo": "vent",
+      "danger": 1,
+      "lecture": "Un vieux bastion verrouille le Col Gelé. Il gardait jadis la frontière entre deux royaumes disparus, sur l'une des rares routes carrossables entre les terres gelées du nord et les jungles du sud ; caravanes et péage s'en sont allés, le fort a sombré dans l'oubli.\n\nDes remparts de cinq mètres, en partie écroulés, ferment la place au nord et au sud ; leurs lourdes portes de bois pourrissent. Une cascade alimente un bassin qui s'écoule en petit torrent vers le nord. Sous un auvent délabré, adossé à la falaise, une vieille forge. Un long bâtiment de pierre au toit percé : l'écurie. Une petite guérite de pierre. Des baraquements creusés dans la falaise. Et, derrière un rempart intérieur et sa poterne, une tour de pierre de quinze mètres, lézardée mais fière, qui domine toujours le col.\n\nJoanna se précipite vers la tour en appelant son oncle.",
+      "jeu": "Joanna trouve Zacharias mort, enchaîné dans une des geôles (5). Sanglots sincères, malédictions contre les hommes-oiseaux, puis elle se reprend et cherche en vain le second collier autour du cou de son oncle.\nEsprit (œil averti) : des plumes d'oiseau, différentes de celles des corbasses, jonchent le sol de la prison.\nNe trouvant pas le collier, Joanna fouille frénétiquement tous les étages de la tour et demande l'aide des héros. Hormis la terrasse, les hommes-oiseaux ont tout laissé en l'état.\nForge (f) : soufflet percé, outils rouillés ; un Forgeron et de l'huile de coude les remettent en état. Lingots de fer sous un pierrier, charbon dans la remise de la tour.\nPartie troglodyte : réfectoire et cuisines (1), réserve pillée (2), dortoirs aux paillasses moisies (3), armurerie vide (4) où un Soldat ou un Forgeron peut retaper une pièce d'arme ou d'armure rouillée, geôles (5) : trois cellules aux grilles de fer qui grincent et ne ferment plus, clefs disparues, une chaîne de 1,5 m et un collier d'entrave dans chacune.\nÉcurie (e) : un chariot délabré rappelle que la passe était carrossable.",
+      "notes": "Les plumes sont celles d'Oorea, la jeune femme-oiseau que Zacharias retenait prisonnière. Le Peuple des Cimes a enchaîné l'alchimiste à sa place : il est mort de faim, de froid et de désespoir.\nLe collier a été pris par Jaoor, le chaman du Peuple des Cimes.\nUn ours des cavernes s'est installé dans l'écurie pour hiberner.",
+      "pistes": [
+        {
+          "texte": "Installer les montures dans l'écurie",
+          "vers": "ecurie"
+        },
+        {
+          "texte": "Fouiller la tour avec Joanna",
+          "vers": "tour"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "ecurie",
+      "titre": "L'ours de l'écurie",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé, l'écurie",
+      "moment": "crepuscule",
+      "meteo": "vent",
+      "danger": 3,
+      "lecture": "Ce long bâtiment de plain-pied en pierre est tout ce qu'il reste de l'ancienne écurie. Le toit laisse passer le jour en maints endroits, mais l'endroit peut encore protéger des montures du froid. Un chariot délabré pourrit dans un coin. Une odeur fauve flotte dans la pénombre… et quelque chose de massif remue au fond.",
+      "jeu": "Un ours des cavernes en maraude, à la recherche d'un lieu où hiberner, a élu domicile ici. Il n'est pas content d'être dérangé par un héros qui vient y installer sa monture.\nOurs des cavernes (BoL p. 120) : énorme, Vigueur 8, Agilité 0, Esprit -1, Attaque +2, dégâts d6×2, Défense 1, protection d6-2 (2), Vitalité 40.\nLe livre permet de baisser un peu ses caractéristiques : l'ours est déjà somnolent.",
+      "pistes": [
+        {
+          "texte": "Rejoindre Joanna dans la tour",
+          "vers": "tour"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ours",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "tour",
+      "titre": "La tour et la Merveille",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé, la tour de garde",
+      "moment": "nuit",
+      "meteo": "vent",
+      "danger": 1,
+      "lecture": "Les Lôm ont fait des salles glaciales de la tour un lieu de vie coquet. Au premier étage, la pièce à vivre : meurtrières obstruées de tentures épaisses, cuisine, table ; un reste de ragoût carbonisé au fond de la marmite pendue à la crémaillère, dernier repas oublié en hâte. Au deuxième, une chambre à deux lits séparés par un paravent, un coin salon cossu et une bibliothèque.\n\nLe troisième étage est un laboratoire. Tables encombrées de livres, de parchemins, d'outils de dissection, de loupes, d'alambics et de fioles. Des corbasses partout : dessinées sur des parchemins épinglés aux murs, naturalisées dans des poses incongrues, écorchées, ou mortes de faim dans des cages. Une odeur âcre de fiente et de formol.\n\nAu sommet, ouvert aux quatre vents derrière un parapet crénelé, repose sur une estrade de bois un oiseau gigantesque aux ailes repliées, tourné vers le sud. Des guirlandes de fleurs des montagnes le parent ; autour, des pots et des paniers d'offrandes : baies sauvages, fruits secs, pétales, ossements sculptés, perles de couleur. Certaines sont fraîches. De la bête montent des relents de viande faisandée et de formol.",
+      "jeu": "T0 : garde-manger et remise, un capharnaüm (huile, alcool… à ta discrétion), trappe et échelle meunière, treuil à palan. Porte barrée de l'intérieur.\nT2 : la bibliothèque (faune et flore, médecine, alchimie, géographie) et le grimoire « De l'art du lien invisible ». Sous une latte, une cassette d'or et de bijoux : toutes les économies des Lôm.\nGrimoire : il intéresse surtout qui lit la langue démonique. Un héros alchimiste qui l'étudie de longues heures fait un jet d'Esprit. En cas d'échec, il en maîtrise quand même le contenu, mais il gagne une tare temporaire (ou définitive selon l'échec) : pustules, démangeaisons, phobie, trouble du comportement.\nCopier le collier : un alchimiste le pourrait avec le grimoire, mais il lui faudrait des semaines d'étude et des matériaux rares. Les héros n'ont pas ce temps.\nT3 : petite forge de joaillier (moules à maillons et pendentifs, rognures de métaux précieux) : c'est là que sont nés les colliers. Une sellerie : deux selles et des harnais de bât pour la Merveille, qui soulève près de 300 kg.\nT4 : tonneau de baume de conservation (formol et essence de pin) à appliquer régulièrement sur le plumage. Les perles sont des gemmes brutes de valeur. Joanna est surprise de découvrir ce sanctuaire des hommes-oiseaux.\nLa Merveille : 2 m de haut, 4 m de long, 6 m d'envergure ; elle porte jusqu'à 4 humains. Collier au cou (ou à un ergot) de la bête, second collier au cavalier, en contact physique : ordres simples (s'élancer, piquer, planer, battre des ailes, atterrir). Personne n'a appris l'art du vol.",
+      "notes": "Les héros vont questionner Joanna. Si elle les sent réticents, elle pioche généreusement dans la cassette pour les convaincre. Si elle sent un soutien sincère, elle joue cartes sur table : le projet de la Merveille, golem cousu de centaines de corbasses, le rôle des colliers d'emprise, et la captivité d'Oorea, qui a provoqué l'attaque des hommes-oiseaux.\nLa Merveille est devenue un mémorial pour le Peuple des Cimes : elle symbolise le sacrifice des corbasses, faites à leur image.",
+      "pistes": [
+        {
+          "texte": "À l'aube, des voix étranges au sommet de la tour",
+          "vers": "offrandes"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "offrandes",
+      "titre": "Les offrandes",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé, sommet de la tour",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La nuit passe. Dès l'aube, des échos de voix étranges vous parviennent du sommet de la tour.\n\nAutour de la Merveille, une demi-douzaine d'hommes et de femmes-oiseaux déposent de nouvelles offrandes, dont une poignée de « ces pierres colorées qui pervertissent les humains ». Quatre éclaireurs aux javelines les gardent, harnachés de cuir.",
+      "jeu": "6 hommes et femmes-oiseaux (piétaille) et 4 éclaireurs (coriaces).\nL'un des éclaireurs maîtrise quelques rudiments de lémurien : il parle aux héros s'ils se montrent bienveillants.\nJoanna montre son collier et demande si celui de son oncle, identique, est entre leurs mains. Réponse : c'est le chaman Jaoor, guide du Peuple des Cimes, qui s'en pare désormais comme trophée. Joanna sollicite une entrevue.\nS'ils se sentent agressés, les visiteurs fuient pour sauver leur vie et avertir leur peuple de la présence de nouveaux intrus.",
+      "notes": "Le Peuple des Cimes : une centaine de membres dans des cavernes d'un sommet inaccessible, à quelques dizaines de lieues à vol d'oiseau. Une quarantaine de piétaille et une quinzaine de coriaces en état de combattre. Pacifique, longtemps neutre envers les humains ; la captivité d'Oorea a tout changé. Leur but : faire fuir les humains de la région, par l'intimidation, la menace, la force en dernier recours.",
+      "pistes": [
+        {
+          "texte": "Quelques heures plus tard, une nuée d'hommes-oiseaux et leur chaman",
+          "vers": "jaoor"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "oiseau",
+          "qty": 6,
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "eclaireur",
+          "qty": 4,
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "jaoor",
+      "titre": "Jaoor le chaman",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Quelques heures plus tard, une nuée anarchique d'une quarantaine d'hommes-oiseaux emplit le ciel au-dessus du col. L'un d'eux se pose et s'avance seul vers vous : un homme-oiseau couvert de talismans de plumes, d'os et de perles colorées, appuyé sur un bâton noueux serti d'un crâne humain poli dont les orbites luisent de deux gemmes incarnates. À son cou brille, ostensiblement, un collier en tout point identique à celui de Joanna.\n\nIl vous toise, non sans arrogance, et parle la langue des hommes d'une voix hachée, en images d'oiseau : que veulent les humains dans le vieux nid de pierre ?",
+      "jeu": "Horde : 30 hommes-oiseaux (piétaille) et 10 éclaireurs (coriaces) ; les cartes n'en montrent qu'une partie.\nJaoor veut montrer à son peuple qu'il n'a pas peur des humains et qu'il est sage et pacifique. Il fait comprendre aux héros qu'ils ne sont pas les bienvenus sur le territoire immémorial du Peuple des Cimes : bienveillance, puis intimidation, puis menace de mort, selon leur attitude. Arrogant : un dé de malus à ses interactions sociales avec des étrangers.\nÉchanger le collier : « il n'y a rien que les humains détiennent qu'il ne possède déjà ». L'or, les armes et les breloques ne l'intéressent pas. Proposer de le débarrasser du mythunga le fait s'esclaffer : ce seigneur des cieux garantit que les humains réfléchiront à deux fois avant de monter.\nSeules une magie plus puissante que la sienne ou un grand carnage dans son peuple peuvent le faire plier.\nJoanna met de l'huile sur le feu. Si la négociation échoue, elle peut tenter d'arracher le collier du cou du chaman : un acte irréparable qui déclenche le combat.\nCombat : Jaoor mène son peuple en harcelant les humains à distance plutôt qu'en mêlée. Il peut inspirer ses ouailles (Inspirateur, une fois par jour). Plus d'un quart de pertes (10 sur 40) : le peuple se replie.\nJaoor : protection mystique d6-1 (3) au 1er coup reçu, d6-2 (2) au 2e, puis d6-3 (1). Sceptre : Aura 3 et un dé de malus à l'initiative de ses adversaires.",
+      "notes": "Scène délicate. Laisse les joueurs proposer des solutions jusqu'à se retrouver à court d'idées, et avance tes contre-arguments un à un, de façon logique : ne rejette pas tout en bloc. Laisse-les prendre l'initiative avant de faire intervenir Joanna brutalement.\nJaoor considère le collier comme sien : il rappelle sa victoire (facile !) sur « l'homme mauvais » qui a tant fait souffrir Oorea et ses amis oiseaux. Rusé, méfiant depuis l'enlèvement d'Oorea, sûr de lui au milieu de son peuple, il ne se laisse ni intimider ni mystifier.\nSauf idée géniale ou attaque en règle, il ne cède pas le collier, par principe.",
+      "pistes": [
+        {
+          "texte": "Impasse : Jaoor propose de réfléchir et se retire, laissant des éclaireurs sur les falaises",
+          "vers": "ombre"
+        },
+        {
+          "texte": "Combat désastreux pour le Peuple des Cimes (plus d'un quart de pertes) : il se replie",
+          "vers": "ombre"
+        },
+        {
+          "texte": "Jaoor cède le collier (magie plus puissante, idée géniale, carnage)",
+          "vers": "envol"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "jaoor",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "oiseau",
+          "qty": 6,
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "eclaireur",
+          "qty": 4,
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "ombre",
+      "titre": "L'ombre venue du ciel",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 4,
+      "lecture": "De grands cris stridents descendent du ciel. Des cris que vous avez peut-être déjà entendus.\n\nAu-dessus des cimes, une poignée d'hommes-oiseaux volent droit vers le col, poursuivis par une ombre immense. L'un après l'autre, ils se laissent rattraper : les serres se referment, le bec frappe, et la bête repart à la poursuite du suivant. Le dernier est happé juste sous vos yeux, au-dessus du fortin. Le mythunga a le goût du sang, et il cherche d'autres proies.",
+      "jeu": "Jaoor a promis de revenir « réfléchir », car « le temps est source de clairvoyance ». C'était une ruse : des volontaires sont allés appâter le mythunga dans sa tanière et l'ont rabattu jusqu'au Col Gelé.\nMythunga (BoL p. 119) : énorme, Vigueur 7, Agilité 1, Esprit 0, Attaque +4, dégâts d6B, Défense 2, Vitalité 35. Un seul ou un couple, selon la tournure de l'aventure.\nSi les héros se terrent dans le fortin, la bête finit par s'en prendre à la Merveille : son odeur âcre lui déplaît, mais elle est faite de chair et de sang.\nSi les héros n'interviennent toujours pas, Joanna se rue vers la terrasse pour défendre son héritage, bec et ongles. Si les héros tentent fermement de l'en empêcher, elle retourne ses armes contre eux avec l'énergie du désespoir.",
+      "notes": "Jaoor (ou les anciens de la tribu s'il a été tué) peste contre ces humains qui lui tiennent tête devant son peuple : son prestige de guide est en jeu.\nUne scène à décrire avec gourmandise : ces pitoyables hommes-oiseaux s'offrent en pâture un à un pour rabattre la bête.",
+      "pistes": [
+        {
+          "texte": "Le mythunga est vaincu ou chassé",
+          "vers": "envol"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "mythunga",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "envol",
+      "titre": "Épilogue : le plus vieux rêve",
+      "region": "Montagnes de l’Axos",
+      "lieu": "Fortin du Col Gelé, sommet de la tour",
+      "moment": "jour",
+      "meteo": "vent",
+      "danger": 2,
+      "lecture": "Au sommet de la tour, la Merveille attend toujours, ailes repliées, son regard mort tourné vers l'horizon du sud. Au pied du col, une piste taillée à flanc de falaise plonge vers l'immensité verte des jungles méridionales.\n\nJoanna serre son collier dans son poing. Ses yeux brillent : elle n'a jamais été aussi près de voler.",
+      "jeu": "Tant que les héros et Joanna n'ont pas quitté les lieux, le Peuple des Cimes poursuit ses efforts. Si c'est au prix de trop grands sacrifices, il abdique et remet le collier contre leur départ.\nJoanna prend possession de la Merveille et s'envole, à moins que le golem n'ait fini en charpie sous les serres du mythunga : elle devient alors inconsolable et vindicative. Si les héros s'opposent à son départ ou veulent la Merveille, Joanna se lance dans une lutte suicidaire pour son héritage.\nPiloter la Merveille (un héros, deux colliers, contact physique) : un ou plusieurs jets d'Esprit, de Difficile (-2) à Très difficile (-4), pour garder le lien psychique et manœuvrer. Dresseur, Pilote des airs ou Alchimiste donnent des bonus. Les conséquences d'un échec dépendent des circonstances : plus dure sera la chute.\nEn vol : un parti d'hommes-oiseaux revanchards, le mythunga s'il vit encore, ou d'autres prédateurs ailés des cimes.\nLa piste du sud : corniche de 5 à 6 m à flanc de falaise, non entretenue, éboulements et affaissements, chute mortelle au moindre faux pas ; terrain de chasse du mythunga, des azhdarkhos, des drakks et des nuées de phongs.",
+      "notes": "Une fin très ouverte : Joanna peut devenir l'alliée des héros, les aider dans d'autres aventures, voire devenir une héroïne à part entière du groupe. Ou bien leurs choix feront d'elle une rivale qui croisera de nouveau leur route, surtout s'ils lui ont dérobé sa Merveille.",
+      "pistes": [
+        {
+          "texte": "Joanna s'envole sur la Merveille et devient l'alliée des héros"
+        },
+        {
+          "texte": "Joanna, privée de sa Merveille, devient une rivale qui reviendra"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "joanna",
+          "camp": "heros",
+          "attitude": "neutre"
+        }
+      ]
+    }
+  ]
+}
