@@ -1,0 +1,724 @@
+{
+  "saga": "cl1-un-ennui-mortel",
+  "scenario": {
+    "cle": "un-ennui-mortel",
+    "titre": "Chroniques lémuriennes — Un ennui mortel",
+    "pitch": "Un ennui mortel, aventure de Lionel Beaupère au Khanat (Chroniques lémuriennes, livre p. 28-41).\n\nEn route pour Liu à bord de la Dame d'Oosal, les héros se retrouvent bloqués sur l'île de Shelang par les premières tempêtes hivernales. Accueillis dans la forteresse qui domine cette petite île battue par les vents, ils se trouvent soudain confrontés à l'apparition d'horribles zombies au front percé. La maîtresse des lieux a décidé de tromper son ennui en s'adonnant à la nécromancie ! Avant que le carnage ne soit total, les héros découvriront-ils le sorcier mort-vivant, emmuré au plus profond de l'austère bâtisse, qui susurre à l'oreille de la châtelaine ?\n\nHuis clos en bac à sable : après les deux premières scènes, les événements se placent au gré des initiatives des joueurs."
+  },
+  "personnages": {
+    "lai-mai": {
+      "kind": "pnj",
+      "nom": "Laï Maï",
+      "rang": "rival",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 3,
+      "aura": 2,
+      "initiative": 1,
+      "melee": 0,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 10,
+      "vilenie": 5,
+      "pouvoir": 11,
+      "carrieres": [
+        {
+          "nom": "Noble",
+          "rang": 2
+        },
+        {
+          "nom": "Scribe",
+          "rang": 2
+        },
+        {
+          "nom": "Alchimiste",
+          "rang": 2
+        },
+        {
+          "nom": "Sorcier",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "avantages": [
+        "Beau parleur",
+        "Discret",
+        {
+          "nom": "Érudit",
+          "detail": "littérature et poésie xi lu"
+        }
+      ],
+      "desavantages": [
+        "Malédiction de Morgazzon",
+        "Non-combattant"
+      ],
+      "commentaire": "Un ennui mortel, livre p. 40 (PDF p. 42). Carrières du livre : Noble 2, Érudite 2 (Scribe ici), Alchimiste 2, Sorcière 1. Aucune armure.\nPoints de pouvoir 11 (5) : à la confrontation finale, il ne lui en reste que 5.\nSorcière débutante : charmes seulement ; son seul sortilège du premier cercle est le rituel nécromantique (percer le front d'un cadavre au vilebrequin, puis une courte incantation ; elle anime ensuite ses zombies à distance, et ils l'épargnent).\nBeau parleur : dé bonus pour mentir, escroquer, baratiner. Discrète : dé bonus en discrétion. Non-combattante : déjà inclus dans le profil. Malédiction de Morgazzon : les murmures de Qi Xian l'ont rendue folle.\nÉlixir de Qi Xian (poison) : Vigueur Ardu (-1) ou inconscience, puis mort dans la demi-heure sauf nouveau jet Ardu ; en cas de succès, perte de d6M vitalité.\nJeune épouse xi lu de Muntal, longs cheveux de jais, aimable mais distante. Folle à lier : dans le laboratoire, elle combat jusqu'à la mort."
+    },
+    "sharthal": {
+      "kind": "pnj",
+      "nom": "Sharthal",
+      "rang": "rival",
+      "vigueur": 3,
+      "agilite": 2,
+      "esprit": -1,
+      "aura": 0,
+      "initiative": 1,
+      "melee": 2,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 15,
+      "vilenie": 3,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 2
+        },
+        {
+          "nom": "Noble",
+          "rang": 0
+        },
+        {
+          "nom": "Chasseur",
+          "rang": 0
+        },
+        {
+          "nom": "Soldat",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Épée",
+        "Dague",
+        {
+          "nom": "Mains nues",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Poings d'acier : ajoute la Vigueur aux dégâts à mains nues."
+        }
+      ],
+      "armures": [
+        "Armure légère",
+        "Petit bouclier"
+      ],
+      "avantages": [
+        "Dur à cuire",
+        "Fils des plaines",
+        "Poings d'acier"
+      ],
+      "desavantages": [
+        "Illettré",
+        {
+          "nom": "Obsession",
+          "detail": "Laï Maï"
+        }
+      ],
+      "commentaire": "Un ennui mortel, livre p. 40 (PDF p. 42). Épée d6+3, poignard d6M+3 (Dague ici), mains nues d3+3 dans le livre (avec sa Vigueur 3). Armure légère d6-3 (1), petit bouclier (+1 en défense contre une attaque par round). Vitalité 15, Dur à cuire inclus. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nJeune guerrier ghataï, lointain cousin et garde du corps de Muntal. Fort comme un bubalus, d'une intelligence tout aussi limitée. Âme damnée de Laï Maï : il a tué les pêcheurs et étranglé Muntal pour elle."
+    },
+    "qi-xian": {
+      "kind": "pnj",
+      "nom": "Qi Xian le Fétide",
+      "rang": "rival",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 3,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 25,
+      "vilenie": 3,
+      "commentaire": "Un ennui mortel, livre p. 41 (PDF p. 43) : sorcier mort-vivant (rival). Profil de créature du livre converti en PNJ rival : Vigueur – et Agilité – (0 ici), Attaque et Dégâts selon ses capacités, Défense 0, Protection 0, force vitale 25. Pas de carrière dans le livre ; vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCadavre momifié emmuré, incapable de bouger et de parler, visible par le trou du mur du laboratoire.\nMurmures démentiels : chaque round, il peut chuchoter dans l'esprit d'un adversaire. Attaque avec son Esprit (+3), malus égal à l'Esprit de la victime, 9 pour toucher ; d6M+3 dégâts, sans armure.\nMaître de la vermine : une action pour appeler la nuée (fiche « Nuée de vermine »), qui arrive au round suivant.\nVulnérabilité au feu : dégâts de feu doublés."
+    },
+    "garde-zombie": {
+      "kind": "pnj",
+      "nom": "Soldat zombie (en armes)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Épée"
+      ],
+      "armures": [
+        "Armure légère",
+        "Casque"
+      ],
+      "commentaire": "Un ennui mortel, livre p. 39 (PDF p. 41) : soldats de la garnison zombies (coriaces). Attaque +1 (Mêlée ici), dégâts d6 (armes) : Épée. Protection « 0, ou armure légère + casque d6-2 (2) » : cette fiche prend l'armure (gardes tués en service, au fanal ou à la porte) ; voir « Soldat zombie (dortoir) » sans armure.\nTeint blafard, regard vide, rictus de haine, petit trou percé dans le front. Les vivants qu'ils tuent se relèvent quelques dizaines de minutes plus tard."
+    },
+    "soldat-zombie": {
+      "kind": "pnj",
+      "nom": "Soldat zombie (dortoir)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Épée"
+      ],
+      "commentaire": "Un ennui mortel, livre p. 39 (PDF p. 41) : soldats de la garnison zombies (coriaces). Attaque +1 (Mêlée ici), dégâts d6 (armes) : Épée. Protection 0 : soldats morts dans leur lit, sans armure.\nLes vivants qu'ils tuent se relèvent quelques dizaines de minutes plus tard."
+    },
+    "villageois-zombie": {
+      "kind": "pnj",
+      "nom": "Villageois zombie",
+      "rang": "pietaille",
+      "vitalite": 3,
+      "armes": [
+        {
+          "nom": "Coups et outils (zombie)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "1 point à mains nues, d3 avec une arme ou un outil."
+        }
+      ],
+      "commentaire": "Un ennui mortel, livre p. 39 (PDF p. 41) : domestiques et villageois zombies (piétaille). Vigueur 0, Agilité 0, Esprit 0, Attaque 0, dégâts 1 ou d3 (arme), Défense 0, Protection 0, force vitale 3. Règle de horde (BoL p. 132).\nPêcheurs de Shelang, femmes et enfants compris, le front percé."
+    },
+    "domestique-zombie": {
+      "kind": "pnj",
+      "nom": "Domestique zombie",
+      "rang": "pietaille",
+      "vitalite": 3,
+      "armes": [
+        {
+          "nom": "Coups et outils (zombie)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "1 point à mains nues, d3 avec une arme ou un outil."
+        }
+      ],
+      "commentaire": "Un ennui mortel, livre p. 39 (PDF p. 41) : domestiques et villageois zombies (piétaille). Vigueur 0, Agilité 0, Esprit 0, Attaque 0, dégâts 1 ou d3 (arme), Défense 0, Protection 0, force vitale 3. Règle de horde (BoL p. 132).\nServiteurs de la forteresse ; ceux que Kamaï a massacrés se relèvent sans tête."
+    },
+    "muntal-zombie": {
+      "kind": "pnj",
+      "nom": "Muntal le Sourd (zombie)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Épée"
+      ],
+      "commentaire": "Fiche adaptée : le livre (p. 39) conseille de prendre le profil des soldats zombies pour Muntal. Cimeterre (Épée). Nu comme un ver : aucune armure.\nVieux seigneur ghataï de plus de soixante-dix ans, étranglé par Sharthal (traces bleutées au cou), un trou dans le front. Frénésie meurtrière."
+    },
+    "kamai-zombie": {
+      "kind": "pnj",
+      "nom": "Kamaï le bourreau (zombie)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        {
+          "nom": "Grande hache de Kamaï",
+          "degats": "d6B",
+          "type": "M",
+          "notes": "Arme lourde. Arme alchimique courante : une fois par round, relancer un 1 sur un jet de dégâts."
+        }
+      ],
+      "commentaire": "Fiche adaptée : profil des soldats zombies (livre p. 39), avec la grande hache que le livre lui donne (arme lourde, d6B ; arme exceptionnelle, p. 36). Aucune armure.\nBourreau à la retraite : pantalon de cuir noir, cagoule pourpre percée d'un trou au front. Gestes mécaniques."
+    },
+    "arlouk-zombie": {
+      "kind": "pnj",
+      "nom": "Arlouk l'intendante (zombie)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Gourdin"
+      ],
+      "commentaire": "Fiche adaptée : le livre (p. 39) conseille de prendre le profil des soldats zombies pour Arlouk. Son solide battoir à linge est pris comme Gourdin (d6M, au lieu du d6 du profil). Aucune armure.\nPetite femme rigide ; elle tient encore à la main les chausses sales d'un héros."
+    },
+    "lo-han-zombie": {
+      "kind": "pnj",
+      "nom": "Lo Han le prêtre (zombie)",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Dague"
+      ],
+      "commentaire": "Fiche adaptée : le livre (p. 39) conseille de prendre le profil des soldats zombies pour Lo Han. Le livre ne lui donne pas d'arme : la dague (couteau sacrificiel) est un choix pour l'import. Aucune armure.\nVieux prêtre de la chapelle, un trou sanglant dans le front ; il s'apprête à sacrifier Vana."
+    },
+    "koubrog-zombie": {
+      "kind": "pnj",
+      "nom": "Koubrog de Stalheim (zombie)",
+      "rang": "coriace",
+      "region": "Valgard",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": -1,
+      "melee": 1,
+      "defense": 0,
+      "vitalite": 8,
+      "armes": [
+        "Gourdin"
+      ],
+      "commentaire": "Fiche adaptée : profil des soldats zombies (livre p. 39), que le livre conseille pour les personnages importants. Le livre ne lui donne pas d'arme : le gourdin (maillet de tonnelier) est un choix pour l'import. Aucune armure.\nMaître-brasseur valgardien, l'abdomen dilaté de façon impossible ; la bière s'écoule en écume noirâtre de sa bouche et du petit trou de son front."
+    },
+    "arctodus-empaille": {
+      "kind": "creature",
+      "nom": "Arctodus empaillé zombie",
+      "taille": "Moyenne",
+      "vigueur": 5,
+      "agilite": 1,
+      "esprit": -1,
+      "attaque": 1,
+      "defense": 0,
+      "vitalite": 20,
+      "degats": "d6B",
+      "protection": "d6-1 (1)",
+      "commentaire": "Un ennui mortel, livre p. 39 (PDF p. 41) : arctodus empaillé zombie (coriace). Taille Moyenne choisie pour obtenir le rang de coriace (juvénile de 2,50 m ; l'Arctodus du catalogue est Énorme).\nPlus ni muscles ni os sous sa peau rembourrée de paille, mais une robuste structure interne en métal : lourd et dangereux. Trophée de jeunesse de Muntal, sur le palier du premier étage.\nLe feu contre ce corps desséché rembourré de paille est une excellente idée (le livre ne chiffre pas de vulnérabilité)."
+    },
+    "nuee-vermine": {
+      "kind": "creature",
+      "nom": "Nuée de vermine",
+      "taille": "Moyenne",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "attaque": 0,
+      "defense": 0,
+      "vitalite": 10,
+      "degats": "1",
+      "protection": "0",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "Submerge la cible désignée par Qi Xian, sans jet : 1 point de vitalité par round (sans armure) et un dé de malus à toutes ses actions."
+        }
+      ],
+      "commentaire": "Fiche adaptée de la capacité « Maître de la vermine » de Qi Xian (livre p. 41, PDF p. 43) : le livre ne lui donne pas de profil. Taille Moyenne choisie pour le rang de coriace ; vitalité 10 = les 10 points de dégâts qui la dispersent.\nRats, purgats, souris, cafards et insectes, appelés par Qi Xian (une action ; la nuée arrive au round suivant). Elle ne change pas de cible ; si sa victime tombe, elle passe à la personne la plus proche, amie ou ennemie.\nOn la frappe contre Défense 0, pour d3 + Vigueur quelle que soit l'arme."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "reveil",
+      "titre": "Le réveil",
+      "lieu": "Khanat — forteresse de Shelang, salle à manger",
+      "moment": "aube",
+      "meteo": "brume",
+      "danger": 2,
+      "lecture": "La Dame d'Oosal est arrivée à Shelang voici une semaine. Il était prévu d'y faire relâche trois jours, mais une tempête hivernale précoce s'est abattue sur l'île. Le blizzard a soufflé trois jours durant ; le vent s'est enfin calmé, mais la neige continue à tomber en douce averse, et un épais brouillard givrant a envahi la mer, empêchant toute navigation. Maître Vornan et vous avez été accueillis dans la forteresse ; l'équipage a trouvé refuge chez les pêcheurs du village.\n\nVous avez eu le loisir de vous familiariser avec les lieux : la bière de Koubrog, le radotage du vieux seigneur Muntal, les dés avec les soldats, la beauté froide de dame Laï Maï, le charme solaire de la jeune Vana… sans oublier le regard presque langoureux de Kamaï, le bourreau, posé sur vos nuques. Mais l'ennui commence à vous gagner, et les journées interminables de brume et de neige s'écoulent avec une lenteur insupportable.\n\nHier soir, la bière noire de Koubrog a encore coulé à flots. Vous vous êtes endormis dans un état lamentable, affalés sur la grande table de la salle à manger. Au petit matin, Vana débarrasse les reliefs du repas, tandis que Koubrog ranime les braises dans l'imposante cheminée. Soudain, un étrange grattement se fait entendre à la porte donnant sur la cour.",
+      "jeu": "Si aucun héros ne va ouvrir, Vana ouvre. Deux soldats de la garnison se précipitent à l'intérieur dans un courant d'air glacial : teint blafard, regard vide de cadavres, visage déformé par un rictus de haine. Ils se jettent sur les présents, Vana et Koubrog compris.\nProfil : soldats zombies (coriaces), avec armure légère et casque.\nAu même moment, un troisième « mort qui marche » attaque les trois hommes de garde à la porte principale et tue deux soldats avant d'être abattu (hors champ).\nL'agitation gagne la forteresse, tout le monde se presse pour voir. Les trois morts-vivants sont vite identifiés : ce sont les trois gardes du fanal de cette nuit.\nRappel : toute personne tuée par un zombie se relève quelques dizaines de minutes plus tard.",
+      "notes": "Laï Maï a empoisonné le cruchon de bière des gardes du fanal, s'est faufilée jusqu'au fanal à la faveur de la nuit et a accompli son rituel (percer le front des cadavres au vilebrequin, puis une courte incantation). Elle est retournée se coucher et a animé les corps à l'aube pour assister à la panique : « follement amusant ».\nHuis clos en bac à sable : après la scène 2, les scènes sont des idées d'événements, à placer ou non selon les initiatives des joueurs.",
+      "pistes": [
+        {
+          "texte": "Examiner les cadavres et se rendre au fanal",
+          "vers": "fanal"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "garde-zombie",
+          "qty": 2,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "fanal",
+      "titre": "Le fanal et les cadavres",
+      "lieu": "Khanat — forteresse de Shelang, le fanal et la cour",
+      "moment": "jour",
+      "meteo": "brume",
+      "danger": 1,
+      "lecture": "Le fanal se dresse sur un roc abrupt au nord de l'île, au bout du pont de pierre de la forteresse : une tour ronde en solides moellons, haute de plus de quinze mètres au-dessus des flots déchaînés. La herse du pont est relevée.\n\nAu rez-de-chaussée, la salle de garde : la porte est restée grande ouverte. Aucune trace de combat. Sur la table, trois gobelets vides, du pain, du jambon sec, un couteau et des dés. Dans un coin, une dizaine de jarres de poix. Au sommet, le feu alchimique brûle toujours dans sa grande vasque de bronze.\n\nLes cadavres des morts-vivants, eux, ne présentent rien de particulier… sauf un étrange petit trou percé dans le front, sans rapport avec les blessures du combat.",
+      "jeu": "Indices au fanal :\n• pas de cruchon, alors que les gobelets vides sentent encore la bière (un héros perspicace ; le livre ne fixe pas de jet, un jet d'Esprit au besoin) ;\n• sur la table, quelques gouttes de sang séché et un peu de poussière blanchâtre (de la poudre d'os).\nMuntal le Sourd enquête vaguement, déclare que « ce genre de choses arrive parfois au Khanat » et fait déposer les cinq corps (3 gardes du fanal, 2 soldats de la porte) dans la chambre froide, en attendant que Lo Han prépare une cérémonie funéraire avec un sacrifice. Brûler les corps ? Refusé : le bois et le charbon sont trop précieux sur Shelang, et l'hiver ne fait que commencer.\nLes jarres du fanal (préparation alchimique courante) : le liquide visqueux s'embrase à la moindre flamme. Versé sur quelqu'un et enflammé, il inflige d6M dégâts par round pendant 10 rounds si rien n'est fait. Sans beaucoup d'eau ou de neige, il faut deux rounds consécutifs pour l'éteindre (ôter ses vêtements, se rouler par terre…).",
+      "notes": "Le cruchon empoisonné a été emporté par Laï Maï ; le sang et la poudre d'os viennent de son rituel. Laï Maï et Sharthal sont parmi les curieux.\nLe laboratoire de Qi Xian a deux entrées secrètes : dans les appartements de Laï Maï et de Muntal (qui communiquent), et dans la chambre froide, là même où l'on dépose les corps.",
+      "pistes": [
+        {
+          "texte": "Les jours suivants : la situation empire",
+          "vers": "situation"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "lai-mai",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "sharthal",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "situation",
+      "titre": "La situation empire",
+      "lieu": "Khanat — forteresse de Shelang",
+      "meteo": "brume",
+      "danger": 2,
+      "jeu": "Laï Maï sème désormais la non-vie, excitée par le chaos, mais prudente : elle ne veut pas être démasquée avant que la forteresse regorge de morts. Pas de déroulement fixe : place les scènes suivantes, dans l'ordre que tu veux ou pas du tout, en réponse aux initiatives des joueurs. Une diversion permet à Laï Maï d'agir ailleurs : les héros doivent toujours avoir un coup de retard.\nContagion : les vivants tués par les zombies se relèvent quelques dizaines de minutes après leur mort.\n\nMener l'enquête : peu de pistes. Interroger les habitants, surveiller des lieux ou des personnes. Rumeurs de fin de soirée chez les soldats ou les domestiques : la maîtresse des lieux accorde ses faveurs à certains hommes de la garnison ; Muntal ne voit rien. Distille les indices, laisse les soupçons viser d'abord un autre membre de la maisonnée. Exemple : un témoin affirme que la dame n'est pas sortie de ses appartements, alors qu'elle n'y est plus (→ passage secret).\nRepérer le pan de mur d'un passage secret : Esprit Difficile (-2).\nAu village : « Grand-père » Tapaï, aveugle, presque centenaire, n'a jamais quitté Shelang. Il divague en longs monologues ; des héros patients comprennent que ce n'est pas la première fois que les morts se lèvent à Shelang, et que le mal qui y avait été enterré a resurgi.\n\nCruel jusqu'au bout (si les héros s'approchent trop vite) :\n• Élixir de Qi Xian (poison alchimique, préparation rare) : Vigueur Ardu (-1) ou perte de connaissance quelques minutes après l'ingestion ; mort dans la demi-heure sauf nouveau jet de Vigueur Ardu. En cas de succès, il revient à lui, en sueur, et perd tout de même d6M points de vitalité.\n• Un héros isolé attaqué par Laï Maï et Sharthal, puis renvoyé, mort-vivant au front percé, contre ses camarades.\n• Personnages de remplacement : Koubrog, Vana, maître Vornan.\nUn point de vilénie bien placé permet à Laï Maï d'échapper à des héros qui la prennent sur le fait : le final doit avoir lieu dans le laboratoire.",
+      "notes": "La coupable : Laï Maï, jeune épouse xi lu de Muntal, rendue folle par l'ennui et par les murmures de Qi Xian le Fétide, érudit nécromancien emmuré vivant il y a des décennies dans son laboratoire secret, sous la forteresse. Son esprit habite encore son cadavre momifié. Laï Maï a découvert le laboratoire en explorant la forteresse ; Qi Xian lui a appris la nécromancie.\nSharthal, garde du corps de Muntal, lui obéit en tout.\nEntrées du laboratoire : les appartements de Laï Maï et de Muntal (qui communiquent), et la chambre froide de la cave.",
+      "pistes": [
+        {
+          "texte": "Laï Maï part en promenade : le village",
+          "vers": "villageois"
+        },
+        {
+          "texte": "Les corps de la chambre froide se relèvent",
+          "vers": "chambre-froide"
+        },
+        {
+          "texte": "La nuit : l'armée des morts",
+          "vers": "armee-des-morts"
+        },
+        {
+          "texte": "Un hurlement chez Muntal",
+          "vers": "muntal"
+        },
+        {
+          "texte": "Au deuxième étage, chez les domestiques",
+          "vers": "kamai"
+        },
+        {
+          "texte": "Vana a disparu",
+          "vers": "lo-han"
+        },
+        {
+          "texte": "Un tabouret devant l'arctodus empaillé",
+          "vers": "arctodus"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "lai-mai",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "sharthal",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "villageois",
+      "titre": "Les villageois",
+      "lieu": "Khanat — île de Shelang, village des pêcheurs et porte de la forteresse",
+      "moment": "jour",
+      "meteo": "brume",
+      "danger": 3,
+      "lecture": "Dans l'épais brouillard, une petite troupe monte la route du village : une dizaine de pêcheurs, des femmes, des enfants. Les gardes de la porte les laissent entrer sans méfiance. Ce n'est qu'une fois dans la cour qu'on voit leur teint blafard, leurs regards vides… et le petit trou percé dans leur front.",
+      "jeu": "Effectif : une dizaine de pêcheurs zombies (femmes et enfants compris) montent à la forteresse ; 5 cartes sur la rampe, à compléter au besoin. Piétaille : règle de horde (BoL p. 132), une seule attaque de groupe, +1 par piétaille engagée, d6M de dégâts si elle touche.\nVariante : les héros descendent enquêter au village et tombent dans les filets de pêcheurs plus très frais. Le hameau (une trentaine d'âmes) a été massacré ; l'équipage de la Dame d'Oosal s'est réfugié sur la galère et repousse tant bien que mal l'assaut des morts.\nLes victimes des zombies se relèvent quelques dizaines de minutes plus tard.",
+      "notes": "Laï Maï, en promenade quotidienne à parvalus avec Sharthal, est tombée sur un petit groupe de pêcheurs. Sharthal s'en est débarrassé sans mal ; elle leur a offert la malédiction de la non-vie et les a renvoyés au village, où ils ont massacré les villageois désarmés.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Les corps de la chambre froide se relèvent",
+          "vers": "chambre-froide"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "villageois-zombie",
+          "qty": 5,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "chambre-froide",
+      "titre": "Les cadavres des soldats",
+      "lieu": "Khanat — forteresse de Shelang, chambre froide (sous-sol)",
+      "danger": 3,
+      "lecture": "Dans la chambre froide, là où l'on avait déposé les cinq corps en attendant les funérailles, les morts ne sont plus allongés. Ils sont debout, le front percé, et se tournent vers vous.",
+      "jeu": "Cinq soldats zombies, avec leur armure : les trois gardes du fanal, ranimés une deuxième fois, et les deux soldats tués lors du premier assaut. Ils remontent dans la forteresse.\nVariante : Laï Maï les garde en réserve pour défendre son laboratoire s'il est découvert ; ils n'apparaissent alors qu'à la scène finale.\nLa chambre froide cache l'une des deux entrées secrètes du laboratoire : Esprit Difficile (-2) pour repérer le pan de mur.",
+      "notes": "Laï Maï est entrée par le passage secret du laboratoire pour ranimer les corps.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "La nuit suivante : l'armée des morts",
+          "vers": "armee-des-morts"
+        },
+        {
+          "texte": "Le passage secret de la chambre froide",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "garde-zombie",
+          "qty": 5,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "armee-des-morts",
+      "titre": "L'armée des morts",
+      "lieu": "Khanat — forteresse de Shelang, quartiers des soldats",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Au milieu de la nuit, des cris et un fracas d'armes éclatent dans les quartiers des soldats. Dans le dortoir, des hommes au teint blafard, le front percé, massacrent leurs compagnons endormis.",
+      "jeu": "Cinq soldats zombies (sans armure : ils étaient au lit) massacrent leurs cinq compagnons endormis, puis se répandent dans le château, à moins que les bruits du combat n'attirent des héros vigilants. Les cinq victimes se relèvent quelques dizaines de minutes plus tard : jusqu'à 10 zombies si on les laisse faire.\nLes cinq derniers soldats sont de garde au fanal et à la porte principale.\nGarnison au départ : 20 soldats et 4 sergents ; 5 soldats sont déjà morts (3 gardes du fanal, 2 soldats de la porte).",
+      "notes": "Laï Maï a empoisonné la boisson des soldats. Les couche-tard sont morts dans les affres du poison ; elle a accompli son rituel sur eux, a regagné discrètement sa chambre, puis les a animés au milieu de la nuit.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Un hurlement chez Muntal",
+          "vers": "muntal"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "soldat-zombie",
+          "qty": 5,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "muntal",
+      "titre": "Muntal le Sourd",
+      "lieu": "Khanat — forteresse de Shelang, appartements de Muntal (1er étage)",
+      "moment": "nuit",
+      "danger": 2,
+      "lecture": "Un hurlement strident et un bruit de lutte dans les appartements du seigneur mettent le donjon en émoi. La porte de la chambre ouverte, un spectacle horrible se révèle : nu comme un ver, le vieux Muntal le Sourd réduit en charpie, à grands coups de cimeterre, le corps sans vie d'une domestique tombée sur le grand lit. Ses coups ont éventré les édredons et déchiqueté les couvertures ; un nuage de plumes volette doucement dans l'air comme des flocons de neige, renforçant par contraste les éclaboussures écarlates qui maculent le lit, les murs et le corps blême du vieillard.\n\nLe Ghataï se jette sur vous avec une frénésie meurtrière. Il a un trou dans le front, et son cou porte les traces bleutées de mains puissantes qui l'ont étranglé.",
+      "jeu": "Muntal zombie : profil des soldats zombies (coriace), cimeterre, aucune armure.\nLa domestique tuée se relèvera quelques dizaines de minutes plus tard (domestique zombie).\nLa chambre de Muntal communique avec celle de Laï Maï : l'escalier secret du laboratoire part d'ici (Esprit Difficile (-2) pour repérer le pan de mur). Où est Laï Maï ? Si elle n'est pas dans sa chambre, par où est-elle sortie ?",
+      "notes": "Laï Maï a fait étrangler son époux par Sharthal, afin de le regarder mourir – douce vengeance pour ces années perdues d'un mariage misérable –, puis a accompli son rituel et quitté les lieux par le passage secret.\nSi Muntal meurt, l'épilogue change : un sergent survivant prend le commandement.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Au deuxième étage, chez les domestiques",
+          "vers": "kamai"
+        },
+        {
+          "texte": "Chercher le passage secret : le laboratoire",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "muntal-zombie",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "kamai",
+      "titre": "Kamaï le bourreau",
+      "lieu": "Khanat — forteresse de Shelang, quartier des domestiques (2e étage)",
+      "danger": 3,
+      "lecture": "Au deuxième étage, un spectacle terrifiant vous attend. Plusieurs corps décapités gisent sur le sol dans des mares de sang. Au milieu, Kamaï, sa cagoule pourpre sur la tête, percée d'un trou au front, se tourne vers vous avec des gestes mécaniques et lève sa grande hache. Autour de lui, les corps sans tête des serviteurs sont agités de soubresauts et se relèvent péniblement pour attaquer les vivants.",
+      "jeu": "Kamaï zombie : profil des soldats zombies (coriace), grande hache (arme lourde, d6B).\nLa grande hache de Kamaï est une arme exceptionnelle (arme alchimique courante) : une fois par round, relancer un 1 sur un jet de dégâts. Les héros peuvent la récupérer.\nLes domestiques sans tête : piétaille, règle de horde. 4 cartes ; la forteresse comptait huit domestiques, moins ceux déjà morts ailleurs.",
+      "notes": "Kamaï a été « zombifié » par Laï Maï, puis lâché sur les serviteurs. Si les héros soupçonnaient le lugubre bourreau, ils se sont trompés de coupable.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Arlouk dans la chambre des héros",
+          "vers": "arlouk"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "kamai-zombie",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "domestique-zombie",
+          "qty": 4,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "arlouk",
+      "titre": "Arlouk, l'intendante",
+      "lieu": "Khanat — forteresse de Shelang, la chambre des héros (1er étage)",
+      "danger": 2,
+      "lecture": "La porte de votre chambre s'ouvre à la volée. Arlouk, l'intendante, se tient sur le seuil, morte-vivante, un petit trou percé au front. Elle tient dans une main les chausses sales de l'un d'entre vous, et dans l'autre son solide battoir à linge.",
+      "jeu": "Arlouk zombie : profil des soldats zombies (coriace), battoir à linge (Gourdin, d6M), aucune armure.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Vana a disparu : la chapelle",
+          "vers": "lo-han"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "arlouk-zombie",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "lo-han",
+      "titre": "Lo Han, le vieux prêtre",
+      "lieu": "Khanat — forteresse de Shelang, la chapelle",
+      "danger": 2,
+      "lecture": "Dans la petite chapelle des vingt dieux, sous les fresques décrépites, le vieux Lo Han se dresse devant l'autel, un trou sanglant dans le front. Sur l'autel, Vana est ligotée, en proie à la terreur la plus abjecte. Le prêtre s'apprête à la sacrifier.",
+      "jeu": "Amorce : aux cent coups, Koubrog demande aux héros (ou à l'un d'eux) de l'aider à retrouver Vana, qui a disparu.\nLo Han zombie : profil des soldats zombies (coriace). Le livre ne lui donne pas d'arme : la fiche prend une dague (couteau sacrificiel).\nSi Vana et Koubrog survivent, ils voudront quitter l'île avec les héros (épilogue).",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Du bruit dans la cave",
+          "vers": "koubrog"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "lo-han-zombie",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "koubrog",
+      "titre": "Koubrog de Stalheim",
+      "lieu": "Khanat — forteresse de Shelang, la cave",
+      "danger": 2,
+      "lecture": "Du bruit dans la cave. Vous y découvrez votre ami Koubrog, au milieu de ses fûts de bière. Il a mis plusieurs tonneaux en perce, qui déversent leur liquide mousseux sur le sol, et a bu plus que de raison. Le maître brasseur est déformé par la dilatation impossible de son abdomen, et la bière s'écoule en écume noirâtre de sa bouche ainsi que du petit trou qui orne son front. Il tourne vers vous un regard haineux, peu désireux cette fois-ci de partager son précieux breuvage.",
+      "jeu": "Koubrog zombie : profil des soldats zombies (coriace). Le livre ne lui donne pas d'arme : la fiche prend un gourdin (maillet de tonnelier), ou mains nues.\nLa cave se prolonge par la chambre froide, où se cache une entrée du laboratoire (Esprit Difficile (-2)).",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Un tabouret devant l'arctodus empaillé",
+          "vers": "arctodus"
+        },
+        {
+          "texte": "Par la chambre froide : le laboratoire",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "koubrog-zombie",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "arctodus",
+      "titre": "L'arctodus empaillé",
+      "lieu": "Khanat — forteresse de Shelang, palier du 1er étage",
+      "danger": 3,
+      "lecture": "En montant à l'étage, vous remarquez un tabouret posé devant l'immense arctodus empaillé, le trophée de jeunesse de Muntal. Il ne se trouvait pas là auparavant. En vous approchant, vous distinguez un petit trou, à peine visible dans la fourrure, au milieu du front de la bête… dont la tête empaillée se penche soudain vers vous en ouvrant une gueule béante.",
+      "jeu": "Arctodus empaillé zombie (coriace) : Vigueur 5, Attaque +1, dégâts d6B, protection d6-1 (1), force vitale 20. Une robuste structure interne en métal le rend lourd et dangereux.\nLe feu contre ce corps desséché rembourré de paille est une excellente idée : les jarres de poix du fanal (d6M par round pendant 10 rounds), une torche, les braises d'une cheminée.\nSi Arlouk voit le tabouret, elle pique une de ses fameuses colères.",
+      "notes": "Laï Maï s'est essayée, avec succès, sur le cadavre empaillé de l'arctodus.",
+      "pistes": [
+        {
+          "texte": "Retour à l'enquête",
+          "vers": "situation"
+        },
+        {
+          "texte": "Le passage secret : le laboratoire de Qi Xian",
+          "vers": "laboratoire"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "arctodus-empaille",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "laboratoire",
+      "titre": "Le laboratoire de Qi Xian",
+      "lieu": "Khanat — forteresse de Shelang, laboratoire secret (sous-sol)",
+      "danger": 4,
+      "lecture": "Cette vaste pièce souterraine aux murs de pierre est aussi glaciale qu'un tombeau et sent le renfermé. Elle conserve une impression de décrépitude et exhale des relents de pourriture et de moisi. Un petit brasero posé sur un trépied de bronze réchauffe à peine l'atmosphère et éclaire de sa lumière rougeoyante ce qui ressemble manifestement à l'antre d'un sorcier. Deux grandes tables de bois vermoulu accueillent tout le fourbi d'un alchimiste : un alambic, des cornues, des pots et des fioles de verre, des pinces, des ciseaux. Des rouleaux de parchemin jaunis s'entassent dans des casiers contre le mur ; des manuscrits aux reliures de métal piquetées de vert-de-gris sont posés çà et là.\n\nLe mur du fond offre un spectacle plus étrange encore. Contre lui, une table, et sur la table deux bougies allumées qui encadrent un large trou inégal : plusieurs moellons ont été descellés. Par ce trou, on aperçoit le corps desséché d'un homme emmuré, dont la tête parcheminée retombe mollement sur sa poitrine. Et les mâchoires du mort ne cessent de claquer, comme si le cadavre était en train de parler !",
+      "jeu": "Accès : escalier secret depuis les appartements de Laï Maï et de Muntal, passage dérobé depuis la chambre froide (Esprit Difficile (-2) pour repérer chacun).\nLaï Maï (rivale) : si elle est là, elle fait tout pour empêcher les héros d'approcher son « maître » et le protéger. Folle à lier, elle combat jusqu'à la mort, sans se rendre ni fuir. Il ne lui reste que 5 points de pouvoir (sur 11). Sharthal (rival) à ses côtés s'il vit encore ; éventuellement les soldats zombies gardés en réserve (chambre froide).\nQi Xian (rival, Défense 0, force vitale 25), immobile et muet :\n• Murmures démentiels (chaque round, une cible) : attaque avec son Esprit (+3), malus égal à l'Esprit de la victime, 9 pour toucher ; d6M+3 dégâts, sans armure.\n• Maître de la vermine : appeler la nuée lui coûte une action, elle arrive au round suivant (fiche « Nuée de vermine », dans la bibliothèque) et se jette sur la cible désignée, sans pouvoir en changer ; si sa victime tombe, elle passe à la personne la plus proche, amie ou ennemie. Victime : 1 point de vitalité par round (sans armure) et un dé de malus à toutes ses actions. On frappe la nuée contre Défense 0 pour d3 + Vigueur, quelle que soit l'arme ; elle se disperse après 10 points de dégâts.\n• Vulnérabilité au feu : dégâts de feu doublés (le brasero, les bougies, la poix du fanal).",
+      "notes": "Le cadavre emmuré est celui de Qi Xian le Fétide, érudit xi lu brimé jadis pour son haleine pestilentielle, emmuré vivant en punition de ses recherches nécromantiques. Sa haine dévorante et ses pouvoirs l'ont préservé de la mort : son esprit occupe encore son cadavre momifié. C'est lui qui murmurait à l'oreille de Laï Maï.\nÀ l'origine, la salle était un refuge de dernier recours en cas d'attaque de la forteresse ; un petit conduit maçonné la ventile.",
+      "pistes": [
+        {
+          "texte": "Le mal est tranché : l'épilogue",
+          "vers": "epilogue"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "lai-mai",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "sharthal",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "qi-xian",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue",
+      "lieu": "Khanat — île de Shelang",
+      "danger": 1,
+      "jeu": "La fin dépend de ce qui s'est passé, et du nombre et de la qualité des survivants.\n• Muntal vivant : il n'est pas enclin à remercier chaleureusement ceux qui ont tué sa jeune et belle épouse, malgré ses crimes, mais il les récompense pour qu'ils gardent le silence et décampent au plus vite de son île.\n• Muntal mort : un sergent survivant (s'il en reste) prend le commandement et charge maître Vornan de prévenir les autorités de Liu en lui remettant une lettre.\n• Si Koubrog et Vana ont survécu, ils demandent à partir avec les héros, sur l'insistance de Vana qui ne veut pas rester un instant de plus sur cette île maudite. Le début d'une longue amitié, et de nouvelles aventures…",
+      "pistes": [
+        {
+          "texte": "Reprendre la mer vers Liu, à bord de la Dame d'Oosal"
+        }
+      ]
+    }
+  ]
+}

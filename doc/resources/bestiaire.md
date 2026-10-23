@@ -75,6 +75,20 @@ Ce fichier sert de catalogue de travail pour le projet, en priorité à partir d
 
 La slorth couronnée (Mélèshu, p. 35) est une rivale à carrières : elle relève des PNJ, pas de ce catalogue.
 
+### Bestiaire du Khanat (*Chroniques Lémuriennes 1.2*, p. 20-26)
+
+- Arctodus
+- Bubalus des neiges
+- Eucladocéros (esprit -1 à 3 selon l'individu : -1 retenu)
+- Morska (profil dans l'eau ; sur terre ferme : Agilité -2, Attaque +0, en commentaire)
+- Tigre bleu
+- Xalibu
+- Yi qi
+- Gardien du Royaume Putride (agilité et défense avec l'armure)
+- Leng shi (pas d'attaque : dégâts d3 = son hurlement)
+- Mogmaï (pas de profil dans le livre : attaque et dégâts de sa volée d'objets, vitalité 1 = le phylactère, taille « Moyenne » retenue)
+- Windoku
+
 ## Utilisation
 
 - Ce catalogue est une base rapide pour vérifier les noms disponibles côté projet.

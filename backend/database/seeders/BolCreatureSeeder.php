@@ -860,6 +860,162 @@ class BolCreatureSeeder extends Seeder
                 'id_taille' => '5',  // Grande
                 'commentaire' => "La Perle du Beshaar, p. 33. Marges occidentales du Beshaar (sable noir).\nVulnérable au feu (dégâts doublés) et à l'eau (plongée ou aspergée : dé de malus à tous ses jets, « meurt » en 3 rounds).",
             ],
+
+            // ── Bestiaire du Khanat (Chroniques Lémuriennes 1.2, p. 20-26) ──
+            [
+                'id' => '64',
+                'nom' => 'Arctodus',
+                'vigueur' => '9',
+                'agilite' => '1',
+                'esprit' => '0',
+                'vitalite' => '40',
+                'attaque' => '3',
+                'defense' => '1',
+                'degats' => 'd6x2',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '7',  // Enorme
+                'commentaire' => "Chroniques Lémuriennes, p. 20. Steppes, toundras, montagnes, taïgas, glaciers.\nOurs géant à face courte, d'intelligence semi-humaine : se tient debout (près de 4 m), manipule des objets. Certains vivent en petites tribus, avec un langage et un outillage rudimentaires.",
+            ],
+            [
+                'id' => '65',
+                'nom' => 'Bubalus des neiges',
+                'vigueur' => '5',
+                'agilite' => '-2',
+                'esprit' => '-2',
+                'vitalite' => '20',
+                'attaque' => '0',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => "Chroniques Lémuriennes, p. 20. Toundras, montagnes.\nFaire front : Attaque +1 et Défense +1 quand le troupeau se serre en ligne ou en cercle.",
+            ],
+            [
+                'id' => '66',
+                'nom' => 'Eucladocéros',
+                'vigueur' => '6',
+                'agilite' => '1',
+                'esprit' => '-1',
+                'vitalite' => '30',
+                'attaque' => '2',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '6',  // Très grande
+                'commentaire' => "Chroniques Lémuriennes, p. 21. Taïgas, montagnes, toundras. Le « Gardien » (maïkalha) des Wei.\nEsprit de -1 à 3 selon l'individu (-1 ici).\nMagie : certains ont quelques rangs de prêtre ou de sorcier, avec des points de foi ou de pouvoir.\nRégénération (mineure) : regagne 1 point de vitalité par minute ; fuit s'il se sent battu, pour revenir à la charge plus tard.",
+            ],
+            [
+                'id' => '67',
+                'nom' => 'Morska',
+                'vigueur' => '14',
+                'agilite' => '0',
+                'esprit' => '-1',
+                'vitalite' => '70',
+                'attaque' => '1',
+                'defense' => '0',
+                'degats' => 'd6x3',
+                'protection' => 'd6-1 (3)',
+                'id_taille' => '10',  // Gigantesque
+                'commentaire' => "Chroniques Lémuriennes, p. 22. Mers froides, banquise. Morse gigantesque (15 à 20 m).\nProfil dans l'eau. Sur la terre ferme : Agilité -2 et Attaque +0.",
+            ],
+            [
+                'id' => '68',
+                'nom' => 'Tigre bleu',
+                'vigueur' => '5',
+                'agilite' => '2',
+                'esprit' => '0',
+                'vitalite' => '25',
+                'attaque' => '3',
+                'defense' => '2',
+                'degats' => 'd6B',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => 'Chroniques Lémuriennes, p. 22. Taïgas, toundras. Grand félin aux yeux de saphir et à l\'odeur enivrante.',
+            ],
+            [
+                'id' => '69',
+                'nom' => 'Xalibu',
+                'vigueur' => '4',
+                'agilite' => '1',
+                'esprit' => '-2',
+                'vitalite' => '15',
+                'attaque' => '0',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6-2 (2)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => 'Chroniques Lémuriennes, p. 23. Toundras. Gros renne sauvage, domestiqué par certaines tribus wei.',
+            ],
+            [
+                'id' => '70',
+                'nom' => 'Yi qi',
+                'vigueur' => '-1',
+                'agilite' => '4',
+                'esprit' => '-2',
+                'vitalite' => '5',
+                'attaque' => '2',
+                'defense' => '4',
+                'degats' => 'd6M',
+                'protection' => '0',
+                'id_taille' => '3',  // Petite
+                'commentaire' => "Chroniques Lémuriennes, p. 23. Steppes, taïgas, montagnes. Rapace aux ailes membraneuses, dressé pour la fauconnerie et le combat.\nLe yi qi flamboyant, aux longues plumes rouge et or, est une sous-espèce très rare.",
+            ],
+            [
+                'id' => '71',
+                'nom' => 'Gardien du Royaume Putride',
+                'vigueur' => '1',
+                'agilite' => '0',
+                'esprit' => '1',
+                'vitalite' => '15',
+                'attaque' => '2',
+                'defense' => '2',
+                'degats' => 'd6B+1',
+                'protection' => 'd6 (4)',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "Chroniques Lémuriennes, p. 24. Forêts froides, toundras. Guerrier mort-vivant momifié par le froid, à la tête d'une troupe de squelettes.\nAgilité et Défense avec l'armure (sans : Agilité 2, Défense 1). Armure lourde, casque, petit bouclier (+1 en défense contre une attaque par round). Dégâts : arme moyenne, dé de bonus de l'aura de givre compris.\nCapitaine des morts : avec des squelettes piétaille (BoL p. 128), sacrifie d6B points de force vitale pour relever deux fois ce nombre de ces morts-vivants, qui agissent dès le round suivant.",
+            ],
+            [
+                'id' => '72',
+                'nom' => 'Leng shi',
+                'vigueur' => '0',
+                'agilite' => '2',
+                'esprit' => '2',
+                'vitalite' => '10',
+                'attaque' => '0',
+                'defense' => '0',
+                'degats' => 'd3',
+                'protection' => '0',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "Chroniques Lémuriennes, p. 25. Tous milieux. Fantôme d'une créature morte de froid, attaché au lieu de sa dépouille. Taille : moyenne, ou celle de la créature d'origine.\nN'attaque pas : dégâts d3 = son hurlement (cf. capacité). Apaisé par des funérailles convenables ou en obtenant justice.\nIntangible : traverse les objets solides ; seules la sorcellerie et l'alchimie le blessent. À 0, il est détruit.\nPossession : près de sa dépouille, jet d'esprit Moyen (0) ou la victime devient sa marionnette. Libérée si elle tombe à 0 ou est assommée (puis esprit Très facile +2).",
+            ],
+            [
+                'id' => '73',
+                'nom' => 'Mogmaï',
+                'vigueur' => '0',
+                'agilite' => '0',
+                'esprit' => '0',
+                'vitalite' => '1',
+                'attaque' => '3',
+                'defense' => '0',
+                'degats' => 'd3',
+                'protection' => '0',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "Chroniques Lémuriennes, p. 26. Lieux d'habitation, lieux clos. Revenant né du meurtre rituel d'un enfant, lié à un lieu et au sorcier qui l'a créé (la mèche de cheveux de l'enfant protège de ses attaques et lui donne des ordres).\nLe livre ne donne pas de profil (taille : aucune) : attaque et dégâts de la volée de petits objets, vitalité 1 = le phylactère, taille « Moyenne » retenue pour en faire un coriace.\nEsprit frappeur : sans forme matérielle, il ne peut être combattu.\nPhylactère : son âme est enfermée dans un objet (souvent un jouet) déposé dans le lieu ; le briser détruit le mogmaï.",
+            ],
+            [
+                'id' => '74',
+                'nom' => 'Windoku',
+                'vigueur' => '6',
+                'agilite' => '1',
+                'esprit' => '3',
+                'vitalite' => '36',
+                'attaque' => '3',
+                'defense' => '0',
+                'degats' => 'd6B',
+                'protection' => 'd6-3 (1)',
+                'id_taille' => '5',  // Grande
+                'commentaire' => "Chroniques Lémuriennes, p. 26. Forêts froides, toundras. Revenant né de l'âme maudite d'un cannibale ; nécrophage émacié ou géant mêlant arctodus et xalibu. Ennemi de l'eucladocéros.",
+            ],
         ];
 
         // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)
@@ -1137,6 +1293,53 @@ class BolCreatureSeeder extends Seeder
                 'creature_id' => '63',
                 'capacite_id' => '3',
                 'detail' => 'Spores noires : au corps à corps, jet de vigueur ardu (-1) ou -1 aux attaques (nausées). Blessé par elle : vigueur difficile (-2) ou nécrose, 1 point de dégâts par heure jusqu\'à la mort. Soins : panacée, eau au sable safran, ou cautérisation (Soins difficile -2 : 1 dégât si réussi, d6M sinon). La victime se relève en momie noire en d3 heures.'
+            ],
+
+            // Bestiaire du Khanat. Ids à partir de 2001 : l'auto-incrément a déjà dépassé 1013 (capacités
+            // de créatures d'utilisateur créées depuis), qu'un updateOrCreate sur 1014, 1015… écraserait.
+            ['id' => '2001', 'creature_id' => '64', 'capacite_id' => '1', 'detail' => null],
+            [
+                'id' => '2002',
+                'creature_id' => '65',
+                'capacite_id' => '3',
+                'detail' => 'Faire front : les bubalus se serrent en ligne ou en cercle de défense compact et gagnent +1 en défense et +1 à leurs jets d\'attaque.'
+            ],
+            ['id' => '2003', 'creature_id' => '66', 'capacite_id' => '5', 'detail' => 'Discret malgré sa taille quand il ne veut pas être vu.'],
+            [
+                'id' => '2004',
+                'creature_id' => '68',
+                'capacite_id' => '3',
+                'detail' => 'Envoûtement : qui croise son regard fait un jet d\'esprit Moyen (0), Difficile (-2) au cœur de son territoire. En cas d\'échec, fasciné, il avance vers le tigre sans se défendre (-4 en défense) jusqu\'à ce que le tigre attaque.'
+            ],
+            ['id' => '2005', 'creature_id' => '68', 'capacite_id' => '5', 'detail' => 'Se fond dans son environnement naturel.'],
+            ['id' => '2006', 'creature_id' => '68', 'capacite_id' => '6', 'detail' => null],
+            ['id' => '2007', 'creature_id' => '69', 'capacite_id' => '7', 'detail' => null],
+            ['id' => '2008', 'creature_id' => '70', 'capacite_id' => '1', 'detail' => null],
+            [
+                'id' => '2009',
+                'creature_id' => '71',
+                'capacite_id' => '3',
+                'detail' => 'Aura de givre : un froid mortel émane de lui ; ses attaques ont un dé de bonus aux dégâts (déjà compté dans son profil).'
+            ],
+            [
+                'id' => '2010',
+                'creature_id' => '72',
+                'capacite_id' => '3',
+                'detail' => 'Gémissement : au premier round, qui l\'entend fait un jet d\'esprit Moyen (0), sinon terreur (-2 à ses jets d\'action ; fuite s\'il est poltron ou se méfie de la sorcellerie), nouveau jet chaque round. Hurlement : chaque round, d3 dégâts sans protection à tous ceux à 10 m.'
+            ],
+            [
+                'id' => '2011',
+                'creature_id' => '73',
+                'capacite_id' => '2',
+                'detail' => 'Une attaque par round, au choix : volée de petits objets contre tous les héros de la pièce (Attaque +3, dégâts d3, jets individuels) ou gros objet, meuble, contre un seul héros (Attaque +2, dégâts d6M).'
+            ],
+            ['id' => '2012', 'creature_id' => '74', 'capacite_id' => '1', 'detail' => null],
+            ['id' => '2013', 'creature_id' => '74', 'capacite_id' => '5', 'detail' => 'Se cache aux yeux de ses futures victimes.'],
+            [
+                'id' => '2014',
+                'creature_id' => '74',
+                'capacite_id' => '3',
+                'detail' => 'Cannibalisme : qui entre dans la région qu\'il hante fait chaque jour un jet d\'esprit, de Facile le premier jour à Très difficile dès le cinquième. En cas d\'échec, une envie de chair de ses semblables naît, puis devient insatiable.'
             ],
         ];
         // `id` n'est pas fillable : sans unguarded, la création l'ignorerait (auto-incrément) et chaque re-seed dupliquerait.

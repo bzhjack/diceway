@@ -26,7 +26,7 @@
       "kind": "pnj", "nom": "Isimba", "rang": "rival", "region": "Désert de Beshaar",
       "vigueur": 2, "agilite": 1, "esprit": 1, "aura": 0,
       "initiative": 0, "melee": 2, "tir": 0, "defense": 2,
-      "vitalite": 12,
+      "vitalite": 12, "vilenie": 3,
       "carrieres": [
         { "nom": "Soldat", "rang": 2 },
         { "nom": "Chasseur", "rang": 1 },
@@ -36,7 +36,7 @@
       "armes": ["Lance", "Dague"],
       "avantages": ["Ami des bêtes", "Baudrier de guerre"],
       "desavantages": ["Bouseux"],
-      "commentaire": "Livre p. 96. Lance d6+2, poignard d6M+2 dans le livre (avec sa Vigueur 2). Protection : baudrier de guerre d6-2 (2).\nCheffe des guerriers issa. Peau sombre, cheveux ras, longue balafre, bras scarifiés d'écailles. Une vipère rouge du désert (un cathgan apprivoisé) lovée autour du cou attaque qui menace sa maîtresse."
+      "commentaire": "Livre p. 96. Lance d6+2, poignard d6M+2 dans le livre (avec sa Vigueur 2). Protection : baudrier de guerre d6-2 (2). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCheffe des guerriers issa. Peau sombre, cheveux ras, longue balafre, bras scarifiés d'écailles. Une vipère rouge du désert (un cathgan apprivoisé) lovée autour du cou attaque qui menace sa maîtresse."
     },
     "guerrier-issa": {
       "kind": "pnj", "nom": "Guerrier issa", "rang": "coriace", "region": "Désert de Beshaar",

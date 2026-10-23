@@ -1,6 +1,6 @@
 # Prompts — portraits des créatures et des démons du catalogue global
 
-Prompts pour regénérer (via ChatGPT) les portraits des **63 créatures** du
+Prompts pour regénérer (via ChatGPT) les portraits des **74 créatures** du
 bestiaire (`BolCreatureSeeder.php`) et des **3 démons** (`BolDemonSeeder.php`),
 dans le même style que les bannières des bibliothèques
 (`doc/header-image-prompts.md`, en particulier `header-creatures.png` et
@@ -8,14 +8,15 @@ dans le même style que les bannières des bibliothèques
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/pnj-image-prompts.md` (planches de 6 portraits, découpées ensuite).
 
-Les créatures 51 à 63 (bestiaire du Beshaar) n'ont encore aucun portrait ; les
-autres ont aujourd'hui un rendu réaliste qui ne colle plus au style.
+Les créatures 51 à 63 (bestiaire du Beshaar) et 64 à 74 (bestiaire du Khanat,
+*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les autres ont
+aujourd'hui un rendu réaliste qui ne colle plus au style.
 
 ## Fichiers attendus
 
 | Type | Dossier | Nom du fichier | Lu par |
 | --- | --- | --- | --- |
-| Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 63) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
+| Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 74) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
 | Démon | `front/src/assets/bol/demon/` | `<id>.jpg` (id 1 à 3) | `tapis.util.ts`, `combat-play.util.ts` |
 
 Format actuel : carrés de 400×400 (JPEG). Les portraits sont affichés en
@@ -35,15 +36,17 @@ renommage.
 | C2 | 7 à 12 | C8 | 43 à 48 |
 | C3 | 13 à 18 | C9 | 49 à 54 |
 | C4 | 19 à 24 | C10 | 55 à 60 |
-| C5 | 25 à 30 | C11 | 61 à 63 |
-| C6 | 31 à 36 | D | démons 1 à 3 |
+| C5 | 25 à 30 | C11 | 61 à 66 |
+| C6 | 31 à 36 | C12 | 67 à 72 |
+| | | C13 | 73 et 74 |
+| | | D | démons 1 à 3 |
 
 Ordre des cases : ligne du haut de gauche à droite, puis ligne du bas de gauche
 à droite.
 
 ## Consignes de planche — créatures
 
-À coller en tête de chaque planche C1 à C11, suivie de la liste de ses six
+À coller en tête de chaque planche C1 à C13, suivie de la liste de ses six
 créatures :
 
 > Planche de portraits illustrés de créatures : une image paysage 3:2 (1536×1024) découpée en une grille de 3 colonnes × 2 lignes de portraits carrés de taille identique, accolés sans marge, sans bordure, sans cadre ni séparateur visible (chaque portrait remplit sa case jusqu'au bord, et rien ne déborde sur la case voisine). Même style pour tous : pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Chaque portrait montre une seule créature, la tête et le haut du corps en gros plan (ou la bête entière quand elle est petite), centrée dans sa case, entière dans le cadre, contre-plongée dramatique pour les grandes bêtes : la créature domine le cadre et fixe le spectateur. Scène diurne, sans lune, lumière dorée d'un soleil bas. Dominante chromatique ambre / ocre, ciel embrasé façon tempête de sable, avec en fond un décor flou de son habitat (jungle, désert, marais, montagne, mer…) dans les mêmes tons chauds. Aucun personnage humain, aucun texte, légende, numéro, logo ni watermark.
@@ -143,12 +146,29 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 59. Spicomallos : bête placide mais lourdement cuirassée, immenses pointes qui hérissent sa cuirasse, domestiquée par les tribus beshaaries pour briser la roche, la guerre et la charge.
 > 60. Ver des sables : scolopendre gigantesque à des dizaines de paires de pattes, jaillissant du sable, énorme gueule ouverte et deux langues gluantes déployées, désert.
 
-### C11 — créatures 61 à 63 (trois cases du haut, le reste en fond noir uni)
+### C11 — créatures 61 à 66
 
 > 61. Gardien de bronze : statue de bronze sans socle d'un guerrier géant, masses à la place des mains et cloche en guise de tête, patine verdâtre, éveillée par la lumière du soleil, ruines à demi englouties par le sable.
 > 62. Momie noire d'humain : mort-vivant desséché hanté par la magie impie des sables noirs, bandelettes sombres et suintantes, maladie visible sur la peau, sable noir autour.
 > 63. Momie noire de coursier des sables : le grand oiseau coureur des sables en version momie noire, plumage pourri, bandelettes noires, yeux éteints, sable noir autour.
-> 4. à 6. : laisser vides (fond noir uni).
+> 64. Arctodus : ours géant à face courte, dressé sur ses pattes arrière (près de quatre mètres), pouces opposables griffus, regard d'une intelligence presque humaine, quelques os et une lance grossière à ses pieds ; steppe et taïga enneigées sous un soleil bas.
+> 65. Bubalus des neiges : bovin trapu au long manteau de poils noirs, quatre redoutables cornes recourbées, haleine fumante dans l'air glacé, le troupeau serré en arrière-plan ; toundra et montagne enneigées.
+> 66. Eucladocéros : cervidé géant du Grand Nord, immense ramure de longs bois acérés en forme de buisson, regard grave et sage de gardien de la forêt, une lueur magique ténue entre les bois ; taïga de conifères enneigée.
+
+### C12 — créatures 67 à 72
+
+> 67. Morska : morse gigantesque (quinze à vingt mètres), peau noire et grise couturée de cicatrices, défenses d'ivoire démesurées, émergeant d'une mer froide entre des blocs de banquise, vagues glacées.
+> 68. Tigre bleu : grand félin à la fourrure rayée blanche teintée de bleu, deux canines en sabre, yeux saphir étincelants et hypnotiques qui fixent le spectateur ; taïga enneigée.
+> 69. Xalibu : gros renne sauvage de l'Arctique, bois majestueux et acérés, épaisse fourrure blanche, grise et brune, immense troupeau flou derrière lui ; toundra.
+> 70. Yi qi : rapace de la taille d'un petit aigle, serres et bec crochu, ailes membraneuses de chauve-souris, plumage doré irisé de bleu et de vert, en vol, gueule ouverte ; steppe et montagnes.
+> 71. Gardien du Royaume Putride : guerrier mort-vivant momifié par le froid, au port noble et arrogant, antique armure lourde dont la cuirasse porte un croissant de lune encadré de trois étoiles en triangle, givre sur l'armure, squelettes en armes derrière lui ; forêt froide (palette froide bleutée, exception à l'ambre).
+> 72. Leng shi : fantôme translucide d'une créature morte de froid, silhouette spectrale pâle qui gémit, cristaux de givre en suspension, dépouille gelée à demi ensevelie sous la neige au premier plan ; grande taïga au crépuscule glacé (palette froide bleutée, exception à l'ambre).
+
+### C13 — créatures 73 et 74 (deux cases du haut à gauche, le reste en fond noir uni)
+
+> 73. Mogmaï : esprit frappeur invisible d'un ancien palais xi lu, montré par ses effets : vaisselle, bibelots et un tabouret en lévitation autour d'un vieux jouet de bois (une toupie qui tourne sans fin), porte qui claque, une ombre vague et tourmentée dans la poussière ; intérieur sombre (palette froide, exception à l'ambre).
+> 74. Windoku : revenant géant et terrifiant mêlant l'arctodus et le xalibu, corps sombre, émacié et racorni, bois de renne sur un crâne d'ours, regard glaçant ; forêt froide et toundra (palette froide, exception à l'ambre).
+> 3. à 6. : laisser vides (fond noir uni).
 
 ## Démons
 
@@ -173,7 +193,7 @@ Si les cases sont bien alignées, un découpage en 512×512 puis une réduction 
 ```bash
 magick planche-c1.png -crop 512x512 +repage -resize 400x400 -quality 88 case-%d.jpg
 # case-0 … case-5 (lignes de gauche à droite, du haut vers le bas)
-# à renommer en <id>.jpg : C1 → 1…6, C2 → 7…12, …, C11 → 61…63 ; D → 1…3 (demon/)
+# à renommer en <id>.jpg : C1 → 1…6, C2 → 7…12, …, C11 → 61…66, C12 → 67…72, C13 → 73…74 ; D → 1…3 (demon/)
 ```
 
 Si ChatGPT ne respecte pas exactement la grille (cases décalées, léger
@@ -198,7 +218,9 @@ la carte affiche l'avatar vide.
 | C8 | 43 à 48 | à faire (ancien) | | |
 | C9 | 49 à 54 | à faire (49-50 ancien, **51-54 aucune**) | | Priorité : bestiaire du Beshaar sans image. |
 | C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
-| C11 | 61 à 63 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
+| C11 | 61 à 66 | à faire (**aucune**) | | Priorité : bestiaires du Beshaar et du Khanat sans image. |
+| C12 | 67 à 72 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
+| C13 | 73 et 74 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
 | D | démons 1 à 3 | à faire (ancien) | | |
 
-Ordre conseillé pour la suite : C9, C10 et C11 d'abord (13 créatures sans aucune image), puis D, puis C3 à C8.
+Ordre conseillé pour la suite : C9 à C13 d'abord (24 créatures sans aucune image), puis D, puis C3 à C8.

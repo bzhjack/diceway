@@ -251,7 +251,7 @@ Dégâts tels que dans le livre (Vigueur comprise).
 | Stat block | Type | Vig / Agi / Esp / Aura | Init / Mêlée / Tir / Déf | Vitalité | Carrières · protection · armes | Spécial |
 |---|---|---|---|---|---|---|
 | Guerriers issa (p. 96) | coriaces | 2 / 1 / 0 / -1 | 0 / 1 / 0 / 1 | 8 | barbare 1, chasseur 1 · petit bouclier · lance ou épée d6+2, javelot d6M+1 | — |
-| Isimba (p. 96) | rivale | 2 / 1 / 1 / 0 | 0 / 2 / 0 / 2 | 12 | soldate 2, chasseuse 1, barbare 1, dresseuse 1 · baudrier de guerre d6-2 (2) · lance d6+2, poignard d6M+2 | Ami des bêtes, baudrier de guerre ; bouseux. Une vipère rouge (cathgan, BoL p. 113) au cou |
+| Isimba (p. 96) | rivale | 2 / 1 / 1 / 0 | 0 / 2 / 0 / 2 | 12 | soldate 2, chasseuse 1, barbare 1, dresseuse 1 · baudrier de guerre d6-2 (2) · lance d6+2, poignard d6M+2 | Vilénie 3 (défaut : le livre n'en donne pas) ; Ami des bêtes, baudrier de guerre ; bouseux. Une vipère rouge (cathgan, BoL p. 113) au cou |
 | Salishmè, slorth couronnée (p. 97) | rivale | 2 / 1 / 3 / 1 | 1 / 1 / 0 / 2 | 12 | scribe 3, sorcière 3, médecin 1, dresseuse 1 · peau épaisse d6-3 (1) · morsure d6M+2 (+ poison) | Vilenie 4, pouvoir 13 ; voir ci-dessous |
 | Villageois d'Aljanir (p. 88) | piétaille | — | Attaque +0 | 2 | d3 | Règle de horde |
 

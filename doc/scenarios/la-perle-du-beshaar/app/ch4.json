@@ -44,7 +44,7 @@
       "kind": "pnj", "nom": "Oglar", "rang": "rival", "region": "Malakut",
       "vigueur": 2, "agilite": 0, "esprit": 2, "aura": 1,
       "initiative": 1, "melee": 0, "tir": 0, "defense": 3,
-      "vitalite": 12, "foi": 2, "pouvoir": 11,
+      "vitalite": 12, "vilenie": 3, "foi": 2, "pouvoir": 11,
       "carrieres": [
         { "nom": "Fermier", "rang": 0 },
         { "nom": "Médecin", "rang": 1 },
@@ -53,7 +53,7 @@
       "armes": ["Dague"],
       "avantages": ["Montagnard", "Vigueur céruléenne"],
       "desavantages": ["Fanatique", "Pataud", "Repoussant"],
-      "commentaire": "Livre p. 110. Carrière druide 2 absente du catalogue. Dague d6M+2 dans le livre (avec sa Vigueur 2). Foi 2, dont 1 dépensé pour sonner la corne. Sorts du premier cercle seulement ; fuit avec Esprits voilés (BoL p. 154).\nLourde carrure, embonpoint, presque chauve, petits yeux ternes, la lèvre rongée par une plaie purulente (malédiction de la corne). Robe de bure crasseuse, la corne de Bazaal Dûl en bandoulière."
+      "commentaire": "Livre p. 110. Carrière druide 2 absente du catalogue. Dague d6M+2 dans le livre (avec sa Vigueur 2). Foi 2, dont 1 dépensé pour sonner la corne. Sorts du premier cercle seulement ; fuit avec Esprits voilés (BoL p. 154). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nLourde carrure, embonpoint, presque chauve, petits yeux ternes, la lèvre rongée par une plaie purulente (malédiction de la corne). Robe de bure crasseuse, la corne de Bazaal Dûl en bandoulière."
     },
     "druide-noir": {
       "kind": "pnj", "nom": "Druide noir", "rang": "pietaille", "region": "Malakut",
@@ -107,7 +107,7 @@
       "kind": "pnj", "nom": "Jarvik Barbe-de-feu", "rang": "rival", "region": "Îles du Crâne",
       "vigueur": 3, "agilite": 1, "esprit": 0, "aura": 0,
       "initiative": 1, "melee": 2, "tir": 1, "defense": 1,
-      "vitalite": 13,
+      "vitalite": 13, "vilenie": 3,
       "carrieres": [
         { "nom": "Marin", "rang": 3 },
         { "nom": "Mercenaire", "rang": 1 },
@@ -117,7 +117,7 @@
       "armures": ["Armure légère"],
       "avantages": [{ "nom": "Arme favorite", "detail": "hache de Parsool" }, "Colosse", "Fêtard"],
       "desavantages": ["Bouseux", "Malédiction de Morgazzon", { "nom": "Signe distinctif", "detail": "cicatrice sur le visage" }],
-      "commentaire": "Livre p. 122. Carrières pirate 3 (Marin ici), mercenaire 1, pêcheur 0, docker 1 (Ouvrier ici). Hache d'abordage d6B+3, grand coutelas d6M+3 dans le livre (avec sa Vigueur 3).\nCapitaine du Kalathorn améthyste, sous l'emprise de Zutesh depuis des années ; le rituel l'a fait basculer dans la folie. Colosse roux à la barbe tressée, balafre de l'oreille (mutilée) au nez, corset de cuir crasseux."
+      "commentaire": "Livre p. 122. Carrières pirate 3 (Marin ici), mercenaire 1, pêcheur 0, docker 1 (Ouvrier ici). Hache d'abordage d6B+3, grand coutelas d6M+3 dans le livre (avec sa Vigueur 3). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCapitaine du Kalathorn améthyste, sous l'emprise de Zutesh depuis des années ; le rituel l'a fait basculer dans la folie. Colosse roux à la barbe tressée, balafre de l'oreille (mutilée) au nez, corset de cuir crasseux."
     },
     "kutas": {
       "kind": "pnj", "nom": "Kutas, maître de la troupe", "rang": "rival",
@@ -139,7 +139,7 @@
       "kind": "pnj", "nom": "Pranma, dresseur fantasque", "rang": "rival",
       "vigueur": 0, "agilite": 1, "esprit": 2, "aura": 1,
       "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
-      "vitalite": 10,
+      "vitalite": 10, "vilenie": 3,
       "carrieres": [
         { "nom": "Dresseur", "rang": 2 },
         { "nom": "Assassin", "rang": 2 },
@@ -149,7 +149,7 @@
       "armes": ["Dague"],
       "avantages": ["Ami des bêtes", "Fêtard"],
       "desavantages": [{ "nom": "Addiction", "detail": "alcool" }],
-      "commentaire": "Annexe, livre p. 143. Long poignard d6M.\nCelba et Buzix, ses petits singes : sur son ordre, ils sautent au visage d'une victime, qui a un dé de malus à toutes ses actions tant qu'un singe est agrippé. S'en défaire : un round et une attaque réussie avec un dé de malus (vitalité 3 chacun).\nCheveux blancs clairsemés, strabisme, démarche d'ivrogne, tenue débraillée ; le plus vieux compagnon de Kutas."
+      "commentaire": "Annexe, livre p. 143. Long poignard d6M. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCelba et Buzix, ses petits singes : sur son ordre, ils sautent au visage d'une victime, qui a un dé de malus à toutes ses actions tant qu'un singe est agrippé. S'en défaire : un round et une attaque réussie avec un dé de malus (vitalité 3 chacun).\nCheveux blancs clairsemés, strabisme, démarche d'ivrogne, tenue débraillée ; le plus vieux compagnon de Kutas."
     },
     "gerro": {
       "kind": "pnj", "nom": "Gerro, flûtiste mortel", "rang": "coriace",
