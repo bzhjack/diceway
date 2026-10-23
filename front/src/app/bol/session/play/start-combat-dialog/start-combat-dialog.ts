@@ -80,11 +80,16 @@ interface HeroCard {
   readonly faces: readonly DiceRowDie[] | null;
   readonly verdict: ReactionVerdict | null;
   readonly sum: readonly RollSumTerm[];
-  /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1). */
-  readonly option: 'critique' | 'legendaire' | null;
+  /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1),
+   * le succès héroïque sur une réussite (−1). */
+  readonly option: 'critique' | 'legendaire' | 'heroique' | null;
   /** La carrière accordée pour ce jet, `null` sinon. */
   readonly career: ActionRollCarriere | null;
   readonly optionChosen: boolean;
+  /** Faveur divine possible : un échec (double 1 compris, tant que l'échec critique n'est pas choisi) et au moins 1 point d'héroïsme. */
+  readonly favor: boolean;
+  /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à taper. */
+  readonly favorPending: boolean;
 }
 
 /** Embuscade (02-actions-combat.md, « Modificateurs au jet de réaction ») : la tendre ou surprendre l'ennemi donne +2 (Très facile),
@@ -144,6 +149,10 @@ export class StartCombatDialogComponent {
   private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
   /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent sous la case du total. */
   private readonly facesByPivot = signal<ReadonlyMap<number, readonly [number, number]>>(new Map());
+  /** Héros (clé pivotId) qui ont converti leur réussite en succès héroïque pour 1 point d'héroïsme. */
+  private readonly heroicUpgrades = signal<ReadonlySet<number>>(new Set());
+  /** Héros (clé pivotId) dont la faveur divine attend le total des dés relancés à table. */
+  private readonly favorPendingPivots = signal<ReadonlySet<number>>(new Set());
   /** La carrière utile que le MJ accorde à chaque héros pour ce jet (clé pivotId → nom de la carrière). */
   private readonly careerByPivot = signal<ReadonlyMap<number, string>>(new Map());
 
@@ -184,10 +193,14 @@ export class StartCombatDialogComponent {
       const modifier = reactionModifier(parts);
       const dice = this.diceTotalFor(hero.pivotId);
       const chance = Math.round(actionSuccessChance(0, modifier, REACTION_ROLL_THRESHOLD) * 100);
-      const optionChosen = hero.resultat === 'echec_critique' || hero.resultat === 'legendaire';
-      // Sans point d'héroïsme, le succès légendaire n'est pas proposé ; une fois choisi il reste affiché, pour pouvoir y renoncer.
-      // Un double 6 qui était le seul moyen de réussir n'est qu'une réussite : pas de succès légendaire à acheter.
-      const legendary = dice === 12 && reactionResult(12, modifier) === 'heroique' && (optionChosen || this.heroismeSignal(hero.pivotId)() > 0);
+      const upgraded = this.heroicUpgrades().has(hero.pivotId);
+      const optionChosen = hero.resultat === 'echec_critique' || hero.resultat === 'legendaire' || upgraded;
+      const heroisme = this.heroismeSignal(hero.pivotId)();
+      // Sans point d'héroïsme, ni le succès légendaire ni le succès héroïque ne sont proposés ; une fois choisis ils restent affichés,
+      // pour pouvoir y renoncer. Un double 6 qui était le seul moyen de réussir n'est qu'une réussite : il peut, lui, devenir héroïque.
+      const base = dice === null ? null : reactionResult(dice, modifier);
+      const legendary = dice === 12 && base === 'heroique' && (optionChosen || heroisme > 0);
+      const heroic = base === 'reussite' && (upgraded || heroisme > 0);
       return {
         hero,
         avatar: this.usableAvatar(hero.avatar),
@@ -199,15 +212,17 @@ export class StartCombatDialogComponent {
         faces: (this.facesByPivot().get(hero.pivotId) ?? (dice === 2 ? [1, 1] : dice === 12 ? [6, 6] : null))?.map((value) => ({value})) ?? null,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts),
-        option: dice === 2 ? 'critique' : legendary ? 'legendaire' : null,
+        option: dice === 2 ? 'critique' : legendary ? 'legendaire' : heroic ? 'heroique' : null,
         optionChosen,
         career: parts.carriere ?? null,
+        favor: hero.resultat === 'echec' && this.heroismeSignal(hero.pivotId)() > 0,
+        favorPending: this.favorPendingPivots().has(hero.pivotId),
       };
     }),
   );
 
-  /** Un héros en jeu a obtenu un double 1 ou un double 6 : chaque carte garde alors une place pour l'option d'héroïsme. */
-  protected readonly anyOption = computed(() => this.heroCards().some((card) => !card.excluded && card.option !== null));
+  /** Un héros en jeu a une option d'héroïsme (double 1, double 6, faveur divine après un échec) : chaque carte lui garde alors une place. */
+  protected readonly anyOption = computed(() => this.heroCards().some((card) => !card.excluded && (card.option !== null || card.favor)));
 
   /** L'ordre d'action tel qu'il se dessine : les héros d'après leur jet, les autres d'après leur rang. */
   protected readonly lanes = computed(() =>
@@ -266,14 +281,21 @@ export class StartCombatDialogComponent {
   }
 
   /** Recalcule le résultat des héros qui ont déjà lancé. Un double 1 ou un double 6 prime sur les modificateurs : leur résultat ne
-   * bouge pas. */
+   * bouge pas. Une réussite convertie en succès héroïque le reste tant qu'elle réussit ; devenue un échec, la conversion tombe et le
+   * point d'héroïsme est rendu. */
   private rescoreRolledHeroes(): void {
     for (const hero of this.heroes()) {
       const dice = this.diceTotalFor(hero.pivotId);
       if (dice === null || dice === 2 || dice === 12 || hero.resultat === null) {
         continue;
       }
-      const resultat = reactionResult(dice, reactionModifier(this.partsFor(hero)));
+      const base = reactionResult(dice, reactionModifier(this.partsFor(hero)));
+      const upgraded = this.heroicUpgrades().has(hero.pivotId);
+      if (upgraded && base !== 'reussite') {
+        this.setHeroicUpgrade(hero.pivotId, false);
+        applyHeroismeDelta(this.herosService, this.snackBar, hero.herosId, this.heroismeSignal(hero.pivotId), 1);
+      }
+      const resultat = upgraded && base === 'reussite' ? 'heroique' : base;
       if (resultat !== hero.resultat) {
         this.saveResult(hero.pivotId, resultat);
       }
@@ -521,7 +543,8 @@ export class StartCombatDialogComponent {
     });
   }
 
-  /** Coche ou décoche l'option d'héroïsme d'un double 1 (échec critique : +1 point) ou d'un double 6 (succès légendaire : −1). */
+  /** Coche ou décoche l'option d'héroïsme d'un double 1 (échec critique : +1 point), d'un double 6 (succès légendaire : −1) ou d'une
+   * réussite (succès héroïque : −1). */
   protected toggleOption(card: HeroCard): void {
     const {hero, dice, option} = card;
     if (dice === null || option === null) {
@@ -529,7 +552,18 @@ export class StartCombatDialogComponent {
     }
     const chosen = !card.optionChosen;
     const heroisme = this.heroismeSignal(hero.pivotId);
-    if (option === 'legendaire' && chosen && heroisme() <= 0) {
+    if (option !== 'critique' && chosen && heroisme() <= 0) {
+      return;
+    }
+    if (option === 'heroique') {
+      const before = hero.resultat;
+      this.setHeroicUpgrade(hero.pivotId, chosen);
+      // L'héroïsme n'a pas pu être mis à jour : le choix est défait.
+      applyHeroismeDelta(this.herosService, this.snackBar, hero.herosId, heroisme, chosen ? -1 : 1, () => {
+        this.setHeroicUpgrade(hero.pivotId, !chosen);
+        this.saveResult(hero.pivotId, before);
+      });
+      this.saveResult(hero.pivotId, chosen ? 'heroique' : 'reussite');
       return;
     }
     const gain = option === 'critique' ? 1 : -1;
@@ -537,6 +571,21 @@ export class StartCombatDialogComponent {
     // L'héroïsme n'a pas pu être mis à jour : le choix est défait.
     applyHeroismeDelta(this.herosService, this.snackBar, hero.herosId, heroisme, chosen ? gain : -gain, () => this.saveResult(hero.pivotId, before));
     this.saveResult(hero.pivotId, reactionResult(dice, reactionModifier(this.partsFor(hero)), chosen));
+  }
+
+  /** Faveur divine (02-actions-combat.md) : 1 point d'héroïsme pour relancer les deux dés d'un jet raté, même un double 1 ; le second
+   * jet est gardé. Le jet s'efface et la case attend le second : le joueur relance à table et tape le total, ou lance à l'écran — même
+   * si le premier jet avait été lancé à l'écran, c'est à lui de choisir. */
+  protected divineFavor(card: HeroCard): void {
+    const {hero} = card;
+    const heroisme = this.heroismeSignal(hero.pivotId);
+    if (!card.favor || this.rolling() || heroisme() <= 0) {
+      return;
+    }
+    applyHeroismeDelta(this.herosService, this.snackBar, hero.herosId, heroisme, -1);
+    this.setRoll(hero.pivotId, null);
+    this.favorPendingPivots.update((pivots) => new Set(pivots).add(hero.pivotId));
+    this.focusTotalOf(hero);
   }
 
   /** Retient le jet d'un héros — le total de ses deux dés, ou `null` pour l'effacer — et le résultat qui en découle. Le choix
@@ -567,15 +616,37 @@ export class StartCombatDialogComponent {
       }
       return next;
     });
+    // Le second jet d'une faveur divine est arrivé.
+    if (dice !== null && this.favorPendingPivots().has(pivotId)) {
+      this.favorPendingPivots.update((pivots) => {
+        const next = new Set(pivots);
+        next.delete(pivotId);
+        return next;
+      });
+    }
   }
 
   /** Reprend ou rend le point d'héroïsme du choix porté par le résultat d'un héros : l'échec critique lui en avait rapporté 1, le
-   * succès légendaire lui en avait coûté 1. */
+   * succès légendaire ou la réussite convertie en succès héroïque lui en avaient coûté 1. */
   private undoHeroismeChoice(hero: HeroRow): void {
-    const delta = hero.resultat === 'echec_critique' ? -1 : hero.resultat === 'legendaire' ? 1 : 0;
+    const upgraded = this.heroicUpgrades().has(hero.pivotId);
+    this.setHeroicUpgrade(hero.pivotId, false);
+    const delta = hero.resultat === 'echec_critique' ? -1 : hero.resultat === 'legendaire' || upgraded ? 1 : 0;
     if (delta !== 0) {
       applyHeroismeDelta(this.herosService, this.snackBar, hero.herosId, this.heroismeSignal(hero.pivotId), delta);
     }
+  }
+
+  private setHeroicUpgrade(pivotId: number, upgraded: boolean): void {
+    this.heroicUpgrades.update((pivots) => {
+      const next = new Set(pivots);
+      if (upgraded) {
+        next.add(pivotId);
+      } else {
+        next.delete(pivotId);
+      }
+      return next;
+    });
   }
 
   /** Affiche tout de suite le résultat d'un héros, puis l'envoie au serveur. Si l'envoi échoue, le jet est à refaire : la carte

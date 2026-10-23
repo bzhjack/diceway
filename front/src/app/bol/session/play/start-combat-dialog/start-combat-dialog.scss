@@ -591,9 +591,12 @@
   opacity: 0.7;
 }
 
-// L'option d'héroïsme d'un double 1 ou d'un double 6 : une case à cocher, son prix en points d'héroïsme à droite.
+// L'option d'héroïsme d'un double 1, d'un double 6 ou d'une réussite : une case à cocher, son prix en points d'héroïsme à droite. Après un échec, la
+// faveur divine s'y ajoute (un double 1 offre les deux).
 .scd-opt {
   align-self: stretch;
+  display: grid;
+  gap: 0.35rem;
   min-height: 2.2rem;
 }
 
@@ -633,6 +636,17 @@
     .scd-gem {
       background: currentColor;
     }
+  }
+}
+
+// La faveur divine est une action (elle relance les dés), pas une bascule : une pilule.
+.scd-act--action {
+  border-style: solid;
+  border-radius: var(--dw-radius-pill);
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: progress;
   }
 }
 

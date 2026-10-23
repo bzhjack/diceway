@@ -32,16 +32,18 @@ export function reactionResult(dice: number, modifier: number, heroisme = false)
 const VERDICTS: Record<InitiativeResultat, readonly [title: string, detail: string]> = {
   reussite: ['Réussite', 'Agit avant tous les adversaires.'],
   echec: ['Échec', 'Agit après les coriaces, avant la piétaille.'],
-  heroique: ['Succès héroïque', 'Double 6. Au round 1, coriaces et piétaille ne jouent pas.'],
+  heroique: ['Succès héroïque', 'Au round 1, coriaces et piétaille ne jouent pas.'],
   legendaire: ['Succès légendaire', 'Héroïque, et +1 à ses jets d’attaque pendant tout le combat.'],
   echec_critique: ['Échec critique', 'Agit en dernier. Au round 1, reste interdit et sans bouclier.'],
 };
 
 /** Le verdict d'un jet de réaction. `dice` est le total des deux dés : un double 1 dont l'échec critique n'a pas été retenu reste
- * un échec, mais on rappelle d'où il vient. */
+ * un échec, mais on rappelle d'où il vient ; un succès héroïque vient d'un double 6, ou d'une réussite convertie pour 1 point
+ * d'héroïsme. */
 export function reactionVerdict(result: InitiativeResultat, dice: number | null): ReactionVerdict {
   const [title, detail] = VERDICTS[result];
-  return {title, detail: result === 'echec' && dice === 2 ? `Double 1. ${detail}` : detail, tone: actionResultTone(result)};
+  const origine = result === 'echec' && dice === 2 ? 'Double 1. ' : result === 'heroique' ? (dice === 12 ? 'Double 6. ' : 'Pour 1 point d’héroïsme. ') : '';
+  return {title, detail: origine + detail, tone: actionResultTone(result)};
 }
 
 /** L'addition du jet de réaction, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet, elle

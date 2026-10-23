@@ -152,6 +152,8 @@
                   @if (card.verdict; as v) {
                     <b [class]="'scd-verdict-title scd-verdict-title--' + v.tone">{{ v.title }}</b>
                     <span>{{ v.detail }}</span>
+                  } @else if (card.favorPending) {
+                    <span class="scd-verdict-wait">Faveur divine : relance les deux dés, à table (tape le total) ou à l’écran.</span>
                   } @else {
                     <span class="scd-verdict-wait">En attente de son jet.</span>
                   }
@@ -166,7 +168,7 @@
                   }
                 </div>
 
-                <!-- L'option d'héroïsme d'un double 1 ou d'un double 6. Dès qu'un héros en a une, toutes les cartes lui gardent la place :
+                <!-- L'option d'héroïsme d'un double 1, d'un double 6 ou d'une réussite, et la faveur divine après un échec. Dès qu'un héros en a une, toutes les cartes lui gardent la place :
                      elles restent alignées. Sinon la place est rendue, pour que tout tienne sans défiler. -->
                 @if (anyOption()) {
                   <div class="scd-opt">
@@ -178,6 +180,24 @@
                     } @else if (card.option === 'legendaire') {
                       <button type="button" class="scd-act" [attr.aria-pressed]="card.optionChosen" aria-label="Succès légendaire, pour 1 point d’héroïsme" (click)="toggleOption(card)">
                         <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire
+                        <span class="scd-cost">−1 <span class="scd-gem" aria-hidden="true"></span></span>
+                      </button>
+                    } @else if (card.option === 'heroique') {
+                      <button type="button" class="scd-act" [attr.aria-pressed]="card.optionChosen" aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme" (click)="toggleOption(card)">
+                        <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque
+                        <span class="scd-cost">−1 <span class="scd-gem" aria-hidden="true"></span></span>
+                      </button>
+                    }
+                    @if (card.favor && !card.optionChosen) {
+                      <button
+                        type="button"
+                        class="scd-act scd-act--action"
+                        [disabled]="rolling()"
+                        matTooltip="Efface le jet : relance les deux dés, à table ou à l’écran, et garde le second résultat"
+                        [attr.aria-label]="'Faveur divine : relancer les dés de ' + card.hero.nom + ' pour 1 point d’héroïsme'"
+                        (click)="divineFavor(card)"
+                      >
+                        <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine : relancer
                         <span class="scd-cost">−1 <span class="scd-gem" aria-hidden="true"></span></span>
                       </button>
                     }
