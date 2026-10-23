@@ -1,0 +1,405 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "intro",
+    "titre": "Le Dieu voilé — Introduction : La colère de Nemmereth",
+    "pitch": "Introduction de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 52-60, PDF p. 54-62).\n\nLa cité de Satarla est la proie de phénomènes étranges ayant trait à la mort : des décès aussi soudains qu'inexpliqués, des défunts qui retrouvent la vie, des apparitions de fantômes. Un vent de panique menace la population et les prêtres de Nemmereth échouent à comprendre les raisons de ces prodiges. Les héros vont devoir découvrir la raison du courroux de Nemmereth, qui semble punir Satarla d'un sacrilège dont nul n'a connaissance. Leur enquête les mènera à Halakh, la cité des assassins, puis à Satarla et à Urceb, avant une périlleuse expédition au cœur des jungles de Qush.\n\nIntroduction : alors qu'ils assistent aux funérailles de leur ami Min Tan à Satarla, les héros sont les témoins d'un macabre prodige qui révèle que le dieu de la mort est courroucé. Leur courageuse intervention convainc Nirmus, un éminent prêtre du temple de Nemmereth, de leur confier une mission : se rendre à Halakh afin d'interroger un oracle sur les motifs de la colère du dieu. Deux autres groupes de mercenaires sont chargés par le temple d'aller interroger de grands sages sur le même sujet.\n\nCe fichier définit aussi tous les personnages récurrents de la saga (registre : doc/scenarios/le-dieu-voile/personnages-recurrents.md). Ceux qui n'entrent pas en scène dans l'introduction attendent dans les coulisses."
+  },
+  "personnages": {
+    "jia": {
+      "kind": "pnj", "nom": "Jia", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [{ "nom": "Marchand", "rang": 2 }, { "nom": "Scribe", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Pas de stats dans le livre : fiche de rivale minimale inventée (profil, carrières, dague). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nFille de Min Tan (Xi Lu du Khanat), qui tenait le comptoir satarlan de la Main de Jade, rue de la Conque. Longs cheveux noirs luisants en chignon, traits d'une exquise finesse. Intelligente, un peu perdue et esseulée après la mort brutale de son père ; bien disposée envers les héros, amis de son père. Point d'ancrage à Satarla : elle connaît la ville, a des informateurs, trouve un navire, un marchand, se renseigne sur un personnage (livre p. 53). PJ de remplacement possible (livre p. 65). Qirmar en tombe amoureux au chapitre 2."
+    },
+    "nirmus": {
+      "kind": "pnj", "nom": "Nirmus, prêtre de Nemmereth", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [{ "nom": "Prêtre", "rang": 3 }, { "nom": "Scribe", "rang": 2 }],
+      "armes": ["Dague"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nHaut dignitaire du grand temple de Nemmereth à Satarla, commanditaire des héros pendant toute la saga. La cinquantaine, robes noires aux manches galonnées, cordelette rouge des citoyens de Satarla, front rasé jusqu'à la moitié du crâne, traits austères, yeux bleu-gris pénétrants (livre p. 56). Paie une livre d'argent d'avance, la même au retour. PJ de remplacement possible (livre p. 65)."
+    },
+    "lok-kozaar": {
+      "kind": "pnj", "nom": "Lok Kozaar", "rang": "rival",
+      "vigueur": 4, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 3, "tir": 0, "defense": 1,
+      "vitalite": 16, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Barbare", "rang": 1 },
+        { "nom": "Dresseur", "rang": 1 },
+        { "nom": "Soldat", "rang": 1 },
+        { "nom": "Gladiateur", "rang": 2 }
+      ],
+      "armes": ["Épée / hache à 2 mains", "Masse d’armes"],
+      "avantages": ["Baudrier de guerre", "Dur à cuire", "Peau dure"],
+      "desavantages": ["Illettré", "Marin d’eau douce"],
+      "commentaire": "Livre p. 194 (PDF p. 196) : 5 points de vilénie (3 au combat final). Hache de bataille d6B+4 et masse d'armes d6+4 dans le livre (avec sa Vigueur 4) ; protection d6-1 (3) = baudrier de guerre + peau dure, sans armure.\nMercenaire céruléen, crâne rasé à l'exception d'une mèche nattée et teinte en rouge ; au temple, il porte au côté un couteau de la taille d'une petite épée (livre p. 58). Gredin sans foi ni loi, dévoré d'ambition. Escorte de Jorkus à Urceb, il sert en secret les druides jaunes (la Compagnie des Masques) et Jorkus, qui lui a promis d'être le général de ses armées. Engagé par le temple pour aller voir Jesharek Jool, il n'en fait rien : il élimine le groupe d'Amrita et envoie Kurta tuer les héros à Halakh, puis ses hommes chez Almar de Chebeg. Commande l'armée du dieu voilé à Fort Junia (ch. 4 et 5). Après la mort de Jorkus, il tente de négocier sa fuite, se bat à mort s'il est acculé."
+    },
+    "coren": {
+      "kind": "pnj", "nom": "Coren", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 3, "esprit": 1, "aura": 0,
+      "initiative": 1, "melee": 1, "tir": 1, "defense": 2,
+      "vitalite": 10, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Mendiant", "rang": 1 },
+        { "nom": "Esclave", "rang": 1 },
+        { "nom": "Voleur", "rang": 2 },
+        { "nom": "Marchand", "rang": 0 }
+      ],
+      "armes": ["Dague", "Arbalète"],
+      "avantages": ["Amis dans la pègre", "Doigts de fée"],
+      "desavantages": ["Gars de la ville"],
+      "commentaire": "Livre p. 110 (PDF p. 112) : 5 points de vilénie (3 au début de l'embuscade chez Almar). Carrières serviteur 1 → Esclave, colporteur 0 → Marchand (absentes du catalogue). Doigts de fée : dé de bonus aux tâches de grande dextérité.\nPas très grand, cheveux châtains, sourire en coin, allure canaille : jeune homme du Cloaque qui a lutté dès l'enfance pour survivre. C'est lui qui accompagne Lok Kozaar au temple de Nemmereth dans l'introduction (identifié au ch. 2, livre p. 108). Rusé et très habile ; abandonne ses camarades pour sauver sa peau, se rend et négocie sa vie contre des informations."
+    },
+    "kurta": {
+      "kind": "pnj", "nom": "Kurta", "rang": "rival", "region": "Halakh",
+      "vigueur": 1, "agilite": 2, "esprit": 1, "aura": 0,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 2,
+      "vitalite": 11, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Assassin", "rang": 3 },
+        { "nom": "Mercenaire", "rang": 1 },
+        { "nom": "Marchand", "rang": 0 },
+        { "nom": "Médecin", "rang": 1 }
+      ],
+      "armes": ["Kriss"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "paire de kriss halakhis" }, "Discret"],
+      "desavantages": ["Inadapté au froid"],
+      "commentaire": "Livre p. 109 (PDF p. 111) : 5 points de vilénie (4 au début de l'embuscade chez Almar). Deux kriss halakhis d6M+1 dans le livre (avec sa Vigueur 1) : arme « Kriss » du catalogue (une seule ligne pour la paire). Combat à deux armes (BoL p. 65). Discret : dé de bonus pour ne pas se faire remarquer.\nHalakhi courtaud, fine barbiche et cheveux noirs, teint brun, yeux sombres ; se déplace avec l'aisance d'un cobra cornu du Beshaar. Âme damnée de Lok Kozaar, ancien de la confrérie d'assassins de l'Ombre sanglante. Au ch. 1, il paie l'Ombre sanglante pour empoisonner les héros (Qirmar ne fait que l'apercevoir), puis rentre avertir Lok. Au ch. 2, il joue Taruk, le serviteur d'Almar de Chebeg ; cherche à fuir si tout tourne mal mais préfère mourir que se rendre. S'il s'échappe, il rejoint Lok et l'armée du dieu voilé (ch. 4)."
+    },
+    "jorkus": {
+      "kind": "pnj", "nom": "Jorkus, le dieu voilé", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 1, "esprit": 4, "aura": 1,
+      "initiative": 1, "melee": 0, "tir": 0, "defense": 1,
+      "vitalite": 10, "vilenie": 4, "foi": 0, "pouvoir": 11,
+      "carrieres": [
+        { "nom": "Scribe", "rang": 3 },
+        { "nom": "Prêtre", "rang": 2 },
+        { "nom": "Sorcier", "rang": 1 },
+        { "nom": "Alchimiste", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Beau parleur", "Résistant à la magie", "Bibliothèque savante", "Érudit", "Savant"],
+      "desavantages": ["Âgé", "Gars de la ville", "Non-combattant", "Malédiction de Morgazzon", "Maudit"],
+      "commentaire": "Livre p. 193 (PDF p. 195) : 4 points de vilénie, 11 de pouvoir, aucun point de foi (il a trahi Nemmereth). Carrières érudit 3 → Scribe, druide 0 (absentes du catalogue). Beau parleur : dé de bonus pour mentir ou convaincre. Résistant à la magie : visé par un sortilège, sur un 6 au d6 le sortilège est sans effet.\nLE VOILE (livre p. 190-191) : tant que le voile n'est pas détruit, Jorkus est invulnérable (armes, feu, poison, sortilèges qui blessent, contrôle mental : sans effet) ; seul lui peut l'ôter. Avec les ciseaux d'Afyra ou une mandibule du ver à soie : attaque à -4, ou attaque sans malus + 1 point d'héroïsme (coup précis) ; trois coups au but déchirent le voile, le premier touche d'office car il s'offre aux coups. Voile détruit : Nemmereth réclame son dû, Jorkus meurt.\nAncien prêtre de Nemmereth de plus de soixante-dix ans, surnommé « le Corbeau » (nez proéminent, petits yeux enfoncés). A mis en scène son suicide rituel un mois avant la saga. En dieu voilé : corps flasque et ridé couvert de poudre d'or, pagne rouge, voile collé au visage. Absent de l'introduction (en route pour l'île de Kryphondus) ; il apparaît à l'assaut de Fort Junia (ch. 4) et dans la confrontation finale (ch. 5)."
+    },
+    "hilario": {
+      "kind": "pnj", "nom": "Hilario", "rang": "rival", "region": "Satarla",
+      "vigueur": 1, "agilite": 2, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 2, "tir": 1, "defense": 2,
+      "vitalite": 11, "vilenie": 6,
+      "carrieres": [
+        { "nom": "Fermier", "rang": 0 },
+        { "nom": "Voleur", "rang": 1 },
+        { "nom": "Marin", "rang": 1 },
+        { "nom": "Soldat", "rang": 2 }
+      ],
+      "armes": ["Épée", "Dague"],
+      "armures": ["Armure légère", "Petit bouclier"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "épée longue" }, "Marqué par les dieux"],
+      "desavantages": [{ "nom": "Addiction", "detail": "jeux d'argent" }],
+      "commentaire": "Livre p. 194 (PDF p. 196) : 6 points d'héroïsme (4 au combat final), portés en vilénie, la réserve d'un rival dans l'app. Épée longue d6+1 et poignard d6M+1 dans le livre (avec sa Vigueur 1).\nMercenaire satarlan, ancien soldat, blond à courte barbe, yeux bleus. Mandaté par Jorkus pour retrouver l'île de Kryphondus : seul rescapé avec son frère Matius. A aidé Jorkus à sortir de son tombeau, puis l'a guidé jusqu'à l'île. Compagnon d'Albel (enceinte de lui), qui lui a donné un bracelet tressé noir et bleu. Absent jusqu'au ch. 5 (on suit sa piste au ch. 2) : à Fort Junia, rongé par le doute, il peut se retourner contre Jorkus si on lui parle d'Albel ou de Matius."
+    },
+    "matius": {
+      "kind": "pnj", "nom": "Matius, frère d'Hilario", "rang": "coriace", "region": "Satarla",
+      "vigueur": 1, "agilite": 1, "esprit": -1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Mercenaire", "rang": 1 }],
+      "desavantages": ["Malédiction de Morgazzon"],
+      "commentaire": "Pas de stats dans le livre : fiche de coriace minimale inventée ; il ne se bat pas.\nJeune homme brun émacié, joues creuses, barbe clairsemée, regard fuyant et halluciné. Rescapé de l'expédition d'Hilario sur l'île de Kryphondus, il a perdu la raison (horreurs de l'île, maléfices de Morgazzon) ; soigné à l'hospice d'Afyra de l'île d'Ajamba (dame Cassa). Ch. 2 : délires sans suite. Ch. 4 : si Qirmar l'a soigné, un élixir lui rend un instant sa lucidité et il raconte l'expédition (indices sur l'île)."
+    },
+    "qirmar": {
+      "kind": "pnj", "nom": "Qirmar l'alchimiste", "rang": "rival", "region": "Malakut",
+      "vigueur": 0, "agilite": 0, "esprit": 3, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [{ "nom": "Alchimiste", "rang": 2 }, { "nom": "Médecin", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Le livre ne donne que Esprit 3 et alchimiste 2 (livre p. 87) ; le reste de la fiche est inventé (médecin 1 pour son savoir d'herboriste). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nJeune alchimiste malakuti, disciple de Cheptaki Mendaï (mort lors de son enlèvement), prisonnier de l'Ombre sanglante à Halakh qui le force à préparer des poisons (ch. 1). Libéré, il offre une poudre de pa-lo et une potion de perspicacité, et rentre à Satarla avec les héros, chez son oncle Gilkos d'Azmur. Brillant, érudit, reconnaissant. Ch. 2 : peut fournir potions et onguents (BoL p. 138), analyser le poison de la coupe de Jorkus, soigner Matius ; il reste sans voix devant Jia. Ch. 4 : sait exploiter les drogues des druides jaunes. PJ de remplacement possible (livre p. 65)."
+    },
+    "almar-de-chebeg": {
+      "kind": "pnj", "nom": "Almar de Chebeg", "rang": "rival", "region": "Urceb",
+      "vigueur": -1, "agilite": 0, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 9, "vilenie": 3,
+      "carrieres": [{ "nom": "Scribe", "rang": 3 }],
+      "desavantages": ["Âgé"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée. Astrologue 3 (carrière du livre, absente du catalogue) → Scribe 3. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nVieil astrologue rabougri et grisonnant, au front large et au regard pénétrant ; petit manoir à une heure de chariot d'Urceb, près du village de Chebeg, sur la route de Lysor. Correspondant de Jorkus : il a dressé son thème astral (l'astre Kryphondus) et lui a trouvé Samazar le Magnifique pour guide. Ch. 2 : prisonnier dans sa cave pendant que les hommes de Lok se font passer pour lui (Solmus joue l'astrologue). Ch. 3 : il conduit les héros à Urceb et les présente à Samazar. PJ de remplacement possible (livre p. 65)."
+    },
+    "malcar": {
+      "kind": "pnj", "nom": "Malcar", "rang": "rival", "region": "Satarla",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 1, "defense": 1,
+      "vitalite": 11, "vilenie": 3,
+      "carrieres": [{ "nom": "Soldat", "rang": 3 }],
+      "armes": [{ "nom": "Épée de Malcar", "degats": "d6", "type": "M", "notes": "Épée de famille, arme alchimique : une fois par round, relance un 1 obtenu sur un jet de dégâts." }],
+      "armures": ["Armure légère"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée (soldat 3, épée, armure légère). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCh. 2 : capitaine de la patrouille de la nécropole royale, la joue ravagée par les griffes d'une momie ; s'il survit grâce aux héros, il leur doit la vie. Ch. 4 : promu commandant de Fort Junia, il accueille les héros en amis (fiole d'antidote), tient le fort face à l'armée du dieu voilé, ordonne la fuite en nef volante et confie son épée de famille pour son jeune fils Elbius. Il reste à son poste."
+    },
+    "maben": {
+      "kind": "pnj", "nom": "Maben, pilote de la nef volante", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 1, "tir": 1, "defense": 1,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [{ "nom": "Pilote des airs", "rang": 2 }, { "nom": "Noble", "rang": 1 }, { "nom": "Soldat", "rang": 1 }],
+      "armes": ["Épée"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nCapitaine Maben : jeune et fringant officier de la noblesse satarlane, intarissable sur sa nef volante. Équipage : deux autres marins des airs et cinq soldats (ch. 4), six soldats rescapés après Fort Junia (ch. 5). Il met sa nef au service des héros jusqu'à l'île de Kryphondus et la garde pendant l'exploration. PJ de remplacement possible (livre p. 65)."
+    },
+    "soldat-nef-volante": {
+      "kind": "pnj", "nom": "Soldat de la nef volante", "rang": "coriace", "region": "Satarla",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée", "Arbalète"],
+      "armures": ["Armure légère"],
+      "commentaire": "Aide de jeu VII, livre p. 197 (PDF p. 199). Lance ou épée d6+1 dans le livre (avec sa Vigueur 1) : épée retenue, la lance est l'alternative.\nCinq soldats à bord au ch. 4 (défense de la nef sur le toit du donjon de Fort Junia), six rescapés au ch. 5. Sur l'île de Kryphondus, deux ou trois accompagnent les héros comme suivants (BoL p. 165) : profils à remettre aux joueurs."
+    },
+    "embran-tarv": {
+      "kind": "pnj", "nom": "Embran Tarv", "rang": "rival", "region": "Satarla",
+      "vigueur": 1, "agilite": 0, "esprit": 2, "aura": 2,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 11, "vilenie": 3,
+      "carrieres": [{ "nom": "Noble", "rang": 3 }, { "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée"],
+      "avantages": ["Bien né"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée. Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nOncle et ministre du roi Davym Tarv de Satarla. La soixantaine, allure martiale malgré ses cheveux gris et un léger embonpoint, pourpoint brodé, lourde chaîne d'or. Pragmatique (« quelques pouces de bon acier plantés là où il faut »). Ch. 4 : remercie les héros, leur donne un laissez-passer pour Fort Junia et une place sur la nef volante. Ch. 5 : les reçoit s'ils repassent par Satarla (matériel, diversion, seconde nef pour la retraite), puis à l'épilogue."
+    },
+    "megere": {
+      "kind": "pnj", "nom": "Jessinda, dite la Mégère", "rang": "rival",
+      "vigueur": 0, "agilite": 2, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 2,
+      "vitalite": 10, "vilenie": 5, "foi": 2, "pouvoir": 13,
+      "carrieres": [
+        { "nom": "Noble", "rang": 0 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Prêtre", "rang": 2 },
+        { "nom": "Sorcier", "rang": 3 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Attirant", "Bien né", "Perspicace"],
+      "desavantages": ["Arrogant", "Fanatique", "Lubrique"],
+      "commentaire": "Livre p. 193 (PDF p. 195) : 5 points de vilénie (4 au combat final), 2 de foi, 13 de pouvoir (7 si les héros attaquent Fort Junia dès leur retour de l'île, 11 s'ils repassent d'abord par Satarla). Carrières guérisseuse 1 → Médecin, druidesse 2 → Prêtre, sorcière 3 → Sorcier (féminins et druide absents du catalogue). Une paille de souffle de Morgazzon.\nDruidesse jaune, adepte de Morgazzon, jeune et belle (teint clair, cheveux bruns, yeux verts) sous un masque de vieille harpie ridée. Elle ne se croit capable de vraie magie que masquée ; sans masque, charmes seulement (un charme à 2 points pour faire voler son masque jusqu'à elle). Accompagne Jorkus depuis Satarla. Ch. 4 : sortilège de 2e cercle qui donne à Jorkus la force de briser les portes de Fort Junia. Ch. 5 : peut évoquer un azhdarkho contre la nef (BoL p. 111) ; trop folle pour négocier."
+    },
+    "mishart": {
+      "kind": "pnj", "nom": "Mishart, druide jaune", "rang": "coriace", "region": "Marais de Festrel",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 6, "foi": 2,
+      "carrieres": [{ "nom": "Prêtre", "rang": 2 }],
+      "armes": [{ "nom": "Bâton cérémoniel empoisonné", "degats": "d6M", "type": "M", "notes": "Pointe enduite d'un poison des marais : la première attaque réussie impose un test de Vigueur Difficile (-2) ; échec = hémorragie, perte de d3 vitalité au début des trois rounds suivants." }],
+      "commentaire": "Livre p. 194 (PDF p. 196) : coriace, 2 points de foi. Carrière druide 2 → Prêtre (druide absent du catalogue).\nVieillard petit et trapu, robe jaune crasseuse cousue de talismans et de colifichets, bâton cérémoniel orné de breloques ; vieux druide des marais de Festrel. Ch. 4 : héraut de l'armée qui somme Fort Junia de se rendre et d'adorer Kryphondus. Ch. 5 : assis face à Lok Kozaar dans la salle du trône ; au premier coup, il tente de fuir pour appeler à l'aide."
+    },
+    "barbare-de-qush": {
+      "kind": "pnj", "nom": "Barbare de Qush", "rang": "coriace", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": ["Javelot / fléchette", "Lance"],
+      "armures": ["Petit bouclier"],
+      "commentaire": "Livre p. 163 (PDF p. 165) et p. 185 (PDF p. 187), même profil. Casse-tête ou lance d6+1 dans le livre (avec sa Vigueur 1) : lance retenue. Petit bouclier : +1 en défense contre une attaque par round.\nGuerriers d'élite des tribus de la jungle, ralliés au dieu voilé. Ch. 4 : quinze tiennent les quais au pied de Fort Junia ; ils se battent furieusement mais fuient en infériorité numérique. Ch. 5 : six gardent le quai de pierre du fort (l'un court donner l'alerte)."
+    },
+    "intro-bubalus-zombie": {
+      "kind": "creature", "nom": "Bubalus zombie", "taille": "Grande",
+      "vigueur": 5, "agilite": -2, "esprit": -2, "attaque": 0, "defense": 0,
+      "vitalite": 20, "degats": "d6B", "protection": "d6-3 (1)",
+      "commentaire": "Livre p. 55 (PDF p. 57). Mêmes valeurs que le bubalus du catalogue, mais c'est un mort-vivant : fiche propre.\nLe bubalus sacrifié aux funérailles de Min Tan, à la robe beige, cornes couronnées de fleurs, flancs peints de symboles mystiques, gorge tranchée béante. Il se relève, renverse un acolyte et charge le sacrificateur, juste devant Jia. Abattu, il entraîne Min Tan, brièvement revenu à la vie, dans la mort."
+    },
+    "intro-sacrificateur": {
+      "kind": "pnj", "nom": "Prêtre sacrificateur de Nemmereth", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Toge blanche, front rasé ; il se couvre la tête d'un pan de sa toge pour sacrifier, au long couteau. Cible de la charge du bubalus zombie."
+    },
+    "intro-almandus": {
+      "kind": "pnj", "nom": "Maître Almandus, médecin", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Médecin", "rang": 2 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Médecin qui a examiné Min Tan ; maison cossue rue des Voileries, non loin du comptoir de la Main de Jade."
+    },
+    "intro-amrita": {
+      "kind": "pnj", "nom": "Capitaine Amrita", "rang": "rival", "region": "Satarla",
+      "vigueur": 1, "agilite": 2, "esprit": 0, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 1, "defense": 1,
+      "vitalite": 11, "vilenie": 3,
+      "carrieres": [{ "nom": "Marin", "rang": 2 }, { "nom": "Marchand", "rang": 1 }, { "nom": "Voleur", "rang": 1 }],
+      "armes": [{ "nom": "Sabre à l’hippocampe", "degats": "d6", "type": "M", "notes": "Arme alchimique : une fois par round, relance un 1 obtenu sur un jet de dégâts ; un 12 naturel à l'attaque devient un succès légendaire sans dépenser de point d'héroïsme. Son porteur subit le désavantage traqué (pirates des îles du Crâne, Vornor « Beau Brun »)." }],
+      "commentaire": "Pas de stats dans le livre : fiche de rivale minimale inventée. Vilénie 3 : valeur par défaut, le livre n'en donne pas. Le sabre à l'hippocampe est décrit au ch. 2 (livre p. 109).\nJeune femme blonde aux cheveux courts, pantalon de cuir et pourpoint clouté, moue revêche et air de défi. Capitaine de La reine d'écume, petit voilier marchand, contrebandière ; aurait flibusté avec les pirates des îles du Crâne et tué un de leurs capitaines. Envoyée à Lysor par le temple ; vieux contentieux avec Lok Kozaar. Elle meurt hors champ avec son groupe sous les coups des hommes de Lok (ch. 1) : au ch. 2, Solmus porte son sabre."
+    },
+    "intro-doros": {
+      "kind": "pnj", "nom": "Doros", "rang": "coriace",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 1 }, { "nom": "Médecin", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée.\nCompagnon d'Amrita : homme rondouillard en robes, médaillon d'Afyra (une feuille de palmier), large sourire avenant ; c'est lui qui fait les présentations. Il meurt avec le groupe d'Amrita (ch. 1, hors champ)."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "comptoir",
+      "titre": "Le comptoir de la Main de Jade",
+      "region": "Satarla",
+      "lieu": "Le port, rue de la Conque",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Les quais de marbre jaune de Satarla, le Joyau de la Lémurie, resplendissent sous le soleil printanier de ce mois de Vana. Le quartier du port grouille de monde ; les langues et les couleurs de peau s'y mêlent en une joyeuse cohue de chariots, de bêtes de bât, de files d'esclaves et de portefaix.\n\nVous êtes venus à l'invitation de Min Tan, un vieil ami, négociant xi lu qui tient le comptoir satarlan de la Main de Jade. Sa lettre parlait d'une affaire à vous proposer. Rue de la Conque, non loin du front de mer, son enseigne à la main verte se repère aisément : un grand entrepôt flambant neuf accolé à une belle demeure de pierre.\n\nQuand vous demandez Min Tan, le jeune Xi Lu qui vous reçoit ouvre de grands yeux et vous bafouille d'attendre. Il revient avec Jia, la fille de Min Tan : de longs cheveux noirs remontés en chignon, des traits d'une exquise finesse, mais le teint pâle et les yeux bouffis. Un sanglot dans la voix, elle vous apprend que son père est mort hier. Il vérifiait un chargement dans l'entrepôt quand il s'est effondré d'un coup. Le médecin a dit que son cœur s'était arrêté de battre.",
+      "jeu": "Aucun jet. Scène de dialogue : personnalisez le lien de Min Tan avec un ou plusieurs héros (vieux compagnon d'aventures, dette, ami qui a fait sauter Jia sur ses genoux…), pour que leur présence aux funérailles aille de soi.\nCe que Jia peut dire :\n• Le médecin, maître Almandus, n'a rien vu d'étrange : mort naturelle, brutale, rien de suspect. Il a laissé entendre que plusieurs morts aussi brusques ont frappé la ville dernièrement.\n• Min Tan était égal à lui-même ces derniers jours ; ni problème ni visite étrange au comptoir.\n• Elle ignore tout de l'affaire que son père voulait leur proposer (il traitait seul les affaires « sensibles ») et n'a pas de mission à confier. Elle leur offre le gîte (« la maison est grande »).\n• Veuf, Min Tan laisse Jia seule avec les employés jusqu'à ce que la Main de Jade envoie un remplaçant. Liu Liong, l'assistant de son père, est parti ouvrir un comptoir à Halakh (on le retrouvera au chapitre 1).\nLes funérailles ont lieu en fin d'après-midi au grand temple de Nemmereth ; Jia y invite les héros.\nJia, alliée à Satarla pendant toute la saga : informateurs, navire, marchands, renseignements sur un personnage. PJ de remplacement possible.",
+      "notes": "Min Tan a eu la malchance de croiser un Passeur de Nemmereth qui cherche en vain l'âme manquante de Jorkus depuis que celui-ci a posé le voile sur sa tête. Sa mort est fortuite, mais elle fait entrer les héros dans la saga.",
+      "pistes": [
+        { "texte": "Enquêter sur la mort de Min Tan pendant l'après-midi", "vers": "enquete" },
+        { "texte": "Se rendre aux funérailles, au grand temple de Nemmereth", "vers": "funerailles" }
+      ],
+      "distribution": [
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "enquete",
+      "titre": "Une enquête sans indices",
+      "region": "Satarla",
+      "lieu": "La maison de Min Tan, l'entrepôt, la rue des Voileries",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Min Tan repose dans sa chambre, vêtu de ses plus beaux habits, veillé par une vieille domestique xi lu qui marmonne des prières. C'est un homme solidement charpenté, dans la force de l'âge ; quelques fils gris marquent à peine sa barbe et ses cheveux noirs, soigneusement peignés. Il porte en pendentif une petite main de jade, l'insigne de sa charge.\n\nDans l'entrepôt, les caisses qu'il vérifiait au moment de sa mort contiennent des brocarts de Khansan. Les employés n'ont rien vu, rien entendu : leur maître s'est effondré d'un coup.\n\nNon loin du comptoir, rue des Voileries, maître Almandus, le médecin qui l'a examiné, accepte de vous recevoir dans sa maison cossue.",
+      "jeu": "Scène facultative : ne la prolongez pas, la fin de journée arrive vite.\n• Examen du corps : Jia s'en étonne mais accepte. Rien : ni poison, ni maladie, ni maléfice.\n• Fouille de l'entrepôt et interrogatoire des employés : rien d'étrange.\n• Maître Almandus (un peu réticent) : plusieurs décès brusques et inexpliqués ces derniers temps. Cela arrive, mais pas à cette fréquence. Les médecins en parlent entre eux et craignent une nouvelle maladie, peu probable puisque les défunts n'avaient aucun symptôme. Sans doute un malheureux hasard.",
+      "notes": "La cause est un Passeur de Nemmereth en quête de l'âme manquante de Jorkus. Rien ne permet de le découvrir pour l'instant.",
+      "pistes": [
+        { "texte": "Rejoindre Jia au temple pour les funérailles", "vers": "funerailles" }
+      ],
+      "distribution": [
+        { "perso": "intro-almandus", "attitude": "neutre" },
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "funerailles",
+      "titre": "Les funérailles de Min Tan",
+      "region": "Satarla",
+      "lieu": "Cour du grand temple de Nemmereth",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "En fin d'après-midi, vous retrouvez Jia dans la cour du temple de Nemmereth. L'édifice dessine un grand quadrilatère aux angles couronnés de quatre tours massives en forme de pyramides tronquées. Trois autels sacrificiels se dressent devant le sanctuaire, dont les portes ouvertes laissent entrevoir la statue du dieu.\n\nLe corps de Min Tan, sous un linceul, repose sur un brancard devant l'autel de gauche. À l'autel central, une autre famille modeste enterre l'un des siens. Un prêtre en toge blanche, au front rasé, préside, entouré d'acolytes. Après une longue litanie en lémurien archaïque, il rabat un pan de sa toge sur son crâne et prend un long couteau. Attaché à une colonnette, un beau bubalus à la robe beige, les cornes couronnées de fleurs, les flancs peints de symboles, s'ébroue nerveusement. Un acolyte passe sous son mufle une cassolette d'herbes fumantes ; le prêtre lui caresse le crâne, puis d'un geste sec lui tranche la gorge. Le sang est recueilli dans une vasque d'argent et aspergé sur le défunt.\n\nLes funérailles touchent à leur fin. Les équarrisseurs attendent la dépouille de la bête, deux fossoyeurs s'avancent vers le défunt… quand le bubalus exsangue se relève dans un soubresaut, renverse un acolyte et vous toise de ses yeux vides, la gorge béante. Il baisse la tête, frappe du sabot… et s'élance vers la foule, droit sur le prêtre qui se tient juste devant Jia.",
+      "jeu": "Bubalus zombie (Grande taille) : Vigueur 5, Agilité -2, Esprit -2, Attaque +0, Dégâts d6B, Défense 0, Protection d6-3 (1), vitalité 20. Il charge le sacrificateur, juste devant Jia : sans intervention des héros, elle risque d'être piétinée. Personne d'autre ne s'interpose ; la foule fuit.\nPendant le combat :\n• À l'autel central, les deux pigeons sacrifiés se relèvent et s'envolent, tête ballante au bout de leur cou brisé.\n• Un héros remarque que Min Tan s'agite sous son linceul, s'assoit et se débat comme un homme paniqué. Il est revenu à la vie… jusqu'à ce que le bubalus soit abattu : il retombe alors mort, pour de bon. Si un héros l'aide à se dégager, il a juste le temps de bafouiller, confus, en demandant ce qui lui est arrivé.\nAprès le combat : grande agitation, les prêtres font emporter la bête et le corps. Le sacrificateur (ou un autre prêtre s'il est mort) rassure Jia, promet d'autres cérémonies, et désigne les héros à un haut dignitaire, qui les remercie et les invite à le suivre dans le temple.\nNotez qui a agi contre le bubalus (frappé, interposé) : ces héros subiront la malédiction de Nemmereth la nuit suivante.",
+      "notes": "Le dieu, courroucé, refuse les sacrifices offerts pour le repos des défunts : c'est la première fois que cela se produit. Le désordre vient de l'âme de Jorkus, soustraite à Nemmereth par le voile de Kryphondus.",
+      "pistes": [
+        { "texte": "Suivre le haut dignitaire dans le temple", "vers": "signes-funestes" }
+      ],
+      "distribution": [
+        { "perso": "intro-bubalus-zombie", "attitude": "hostile" },
+        { "perso": "intro-sacrificateur", "camp": "heros", "attitude": "neutre" },
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "signes-funestes",
+      "titre": "Signes funestes à Satarla",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth, devant la statue du dieu",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le dignitaire se présente : Nirmus. Robes noires aux manches ornées de galons brodés, la taille ceinte de la cordelette rouge des citoyens de Satarla, c'est un homme d'une cinquantaine d'années, au front rasé jusqu'à la moitié du crâne comme le veut la coutume des prêtres de Nemmereth, aux traits austères et aux yeux bleu-gris pénétrants.\n\nIl vous remercie encore de votre intervention, puis vous raconte que depuis un mois environ la ville est la proie de phénomènes inquiétants. Les morts brutales et inexpliquées se multiplient, jusque chez des enfants en pleine santé. Des défunts sont revenus à la vie, comme au sortir d'une longue nuit, avant de retomber aussitôt dans la mort. Un cadavre a pourri en une seule journée, jusqu'aux os. On parle de fantômes, et les morts hantent les rêves de leurs proches.\n\nEnfin, la statue du dieu, taillée dans un bois rare et imputrescible aussi vieux que Satarla, est souillée depuis peu par une étrange moisissure orangée.",
+      "jeu": "Si les héros le demandent, Nirmus leur montre la statue : un homme en robes, front rasé, bras grands ouverts dans un geste accueillant qui adoucit la sévérité de ses traits. À sa base, une mince fissure dans le bois, bordée d'un lichen orangé d'aspect malsain (utile pour la malédiction de la nuit).\nPour Nirmus, l'épisode du bubalus et des pigeons montre que le dieu, courroucé, refuse les sacrifices : c'est une première, et la rumeur se répand. Les prêtres sont impuissants à en comprendre la cause.\nJugeant que la présence des héros n'est pas une coïncidence, et impressionné par leur vaillance, il leur demande de venir en aide au temple, contre bonne rémunération. Qu'ils reviennent le voir demain matin : il leur expliquera tout.",
+      "notes": "Nirmus ignore tout de Jorkus, qu'il croit mort et enterré dans la nécropole royale depuis son suicide rituel, un mois plus tôt.",
+      "pistes": [
+        { "texte": "Rentrer chez Jia pour la nuit", "vers": "malediction" }
+      ],
+      "distribution": [
+        { "perso": "nirmus", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "malediction",
+      "titre": "La malédiction de Nemmereth",
+      "region": "Satarla",
+      "lieu": "La maison de Jia, au comptoir de la Main de Jade",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le soir, il n'y a pas grand-chose à faire, sinon réconforter Jia, bouleversée, et vous remettre de vos émotions.\n\nCette nuit-là, vous rêvez de la bête au garrot tranché qui vous encorne brutalement. Vous vous réveillez en sursaut, avec un malaise diffus. Au matin, votre main, votre épaule ou votre cou vous démange désagréablement : vous y découvrez une petite croûte sèche et orangée.",
+      "jeu": "Lisez le rêve aux seuls héros qui ont agi contre le bubalus zombie (frappé, interposé ; pas ceux qui ont fui).\nLa croûte ressemble exactement à la moisissure de la statue de Nemmereth (si les héros l'ont vue). Montrée à Nirmus, il fait aussitôt le rapprochement.\nEffet : ces héros prennent temporairement le désavantage maudit (−1 à leur total de points d'héroïsme), jusqu'à ce que la colère de Nemmereth soit apaisée (le voile de Kryphondus détruit et l'âme de Jorkus rendue au dieu).\nSerment : si un héros s'engage solennellement auprès du dieu à résoudre la crise (par exemple en prêtant serment au temple), la malédiction cesse, la croûte disparaît en quelques jours et il gagne 1 point de foi (BoL p. 146). Au début de chaque épisode suivant de la saga, il gagne 1 nouveau point de foi ; non dépensés, ces points se conservent d'une aventure à l'autre.\nSi les joueurs n'y pensent pas, Nirmus peut leur en suggérer l'idée, ou levez la malédiction après un épisode ou deux, une fois leur engagement prouvé.",
+      "notes": "Nemmereth « désigne » les héros pour mettre fin au sacrilège : il les juge capables d'apaiser son courroux.",
+      "pistes": [
+        { "texte": "Retourner au temple de Nemmereth le lendemain matin", "vers": "antichambre" }
+      ],
+      "distribution": [
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "antichambre",
+      "titre": "Une réunion de mercenaires",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth, antichambre du bureau de Nirmus",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "En chemin, au hasard des rues, des gens racontent qu'hier il s'est passé quelque chose d'horrible au temple de Nemmereth, un signe de très mauvais augure.\n\nLa grande cour a retrouvé son calme ; de jeunes acolytes lavent les autels à grande eau, quelques curieux s'attardent. Un serviteur vous conduit à l'antichambre du bureau de Nirmus. En face de vous attend une jeune femme blonde aux cheveux courts, en pantalon de cuir et pourpoint clouté, la moue revêche. Au côté, elle porte un sabre à la garde sculptée en coquillage, dont la poignée figure un hippocampe à la tête recourbée en pommeau. Près d'elle, un homme rondouillard en robes, au médaillon frappé de la feuille de palmier d'Afyra, vous adresse un large sourire.\n\nLa porte du bureau s'ouvre. En sort un céruléen solidement bâti, le crâne rasé hormis une mèche nattée teinte en rouge qui lui retombe sur l'épaule, un couteau de la taille d'une petite épée au côté, suivi d'un jeune homme aux cheveux châtains à l'allure canaille. Le céruléen fait sauter dans sa grosse main une bourse de feutre noir scellée de plomb, qui tinte. Il vous jauge du regard, puis lance à la femme, qui s'est crispée : « Amrita ! Que Shazzadion te mène sur des mers favorables, il serait dommage que ton navire coule encore une fois ! »",
+      "jeu": "Amrita répond à peine aux héros, d'un hochement de tête bourru, l'œil sur la porte. Son compagnon se présente : Doros (« et voici Amrita »).\nRéplique d'Amrita : « Lok Kozaar, rends-nous service, et va donc te perdre dans les Terres Désolées. » Le céruléen sort en riant et jette la bourse à son compagnon : « Tu vois bien qu'elle est folle de moi. »\nAmrita et Doros passent dix minutes chez Nirmus et repartent ; Doros range maladroitement un étui à parchemin et une bourse de feutre noir identique à celle du céruléen, et salue les héros d'un signe de tête.\nDécrivez bien le sabre à l'hippocampe, sans insister : les héros le recroiseront à la fin du chapitre 2.",
+      "notes": "Le jeune homme qui accompagne Lok Kozaar est Coren, un de ses hommes ; il se cachera des héros au chapitre 2 pour ne pas être reconnu.\nLok Kozaar sert en secret les druides jaunes de Satarla (la Compagnie des Masques) et Jorkus. Il ne rencontrera jamais Jesharek Jool : il va tendre une embuscade à Amrita sur la route de Lysor (vieux contentieux entre eux) et charger Kurta de faire tuer les héros à Halakh. Amrita et Doros mourront hors champ ; le sabre réapparaîtra entre les mains de Solmus, chez Almar de Chebeg.",
+      "pistes": [
+        { "texte": "Entrer à leur tour dans le bureau de Nirmus", "vers": "mission" }
+      ],
+      "distribution": [
+        { "perso": "intro-amrita", "attitude": "mefiant" },
+        { "perso": "intro-doros", "attitude": "amical" },
+        { "perso": "lok-kozaar", "attitude": "neutre" },
+        { "perso": "coren", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "mission",
+      "titre": "Un long voyage pour une mystérieuse rencontre",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth, bureau de Nirmus",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Debout derrière un grand bureau de bois sombre, Nirmus vous invite à vous asseoir sur un long banc garni de coussins.\n\nLe temple, explique-t-il, a fait appel à plusieurs groupes d'aventuriers pour chercher des réponses aux présages qui affligent la ville : ni les consultations des prêtres ni la Grande Bibliothèque n'ont rien donné. Le céruléen Lok Kozaar, un mercenaire bien connu que le temple a déjà employé, remontera le Tyr pour interroger Jesharek Jool, un sage reclus dans les montagnes de l'Axos. La capitaine Amrita ira prendre conseil auprès des sages médecins de Lysor et du grand temple d'Afyra.\n\nÀ vous, il confie une mission de la plus haute importance : vous rendre à Halakh pour consulter l'oracle de Nemmereth au Sanctuaire Noir, peut-être le premier temple jamais élevé au dieu de la mort, gardé par les druides gris. Vous y irez en votre nom propre, sans dire que vous venez de la part des prêtres de Satarla. La question est simple : quelle est la raison du courroux de Nemmereth, qui se manifeste à Satarla par des prodiges macabres ?",
+      "jeu": "L'offrande : un petit coffret de bois laqué contenant deux phalanges d'un doigt humain gravées de lignes et de symboles, relique de Chamla Kirdat, le fondateur des druides gris (livre p. 34, la prophétie des os). Le temple les recherche lui aussi pour empêcher les druides gris d'accomplir la prophétie : c'est un grand sacrifice, mais il devrait garantir l'accès à l'oracle.\nLe paiement : une bourse de feutre noir scellée de plomb (Grondil d'un côté, Nemmereth de l'autre) contenant une livre d'argent, convertible chez un changeur. Elle couvre largement le voyage ; la même somme attend les héros au retour avec l'oracle.\nNirmus insiste : qu'ils fassent diligence.\nLes héros maudits peuvent prêter serment ici (voir « La malédiction de Nemmereth »).",
+      "notes": "Lok Kozaar s'est présenté au temple en se recommandant de ses missions passées pour Jorkus, que personne ne soupçonne. Les prêtres ont loué leur bonne fortune. Le temple compte aussi un espion de la secte : un jeune acolyte (Direl, démasqué au chapitre 4).",
+      "pistes": [
+        { "texte": "Se renseigner sur les deux autres groupes", "vers": "concurrence" },
+        { "texte": "Partir pour Halakh (chapitre 1 : L'oracle de Nemmereth)" }
+      ],
+      "distribution": [
+        { "perso": "nirmus", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "concurrence",
+      "titre": "Se renseigner sur la concurrence",
+      "region": "Satarla",
+      "lieu": "Les tavernes du Cloaque et le port",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Dans une ville aussi grande que Satarla, trouver qui sont ces autres mercenaires n'a rien d'aisé. Dans les tavernes et les tripots du Cloaque, on connaît le céruléen Lok Kozaar. Sur le port, on connaît la capitaine Amrita.",
+      "jeu": "Scène facultative : les joueurs n'ont a priori aucune raison de s'intéresser aux deux autres groupes. Plus facile s'ils demandent à Jia de se renseigner.\n• Cloaque : Lok Kozaar est un mercenaire sans foi ni loi, à la solide réputation. Il a réuni quelques gredins aussi peu recommandables que lui et mène des missions plus ou moins légales pour de riches personnages de la cité.\n• Port : Amrita est capitaine d'un petit voilier marchand, La reine d'écume, et contrebandière à ses heures. On dit qu'elle a flibusté avec les pirates des îles du Crâne, puis pris le large après avoir tué un de leurs capitaines.",
+      "notes": "Un ennemi inattendu (livre p. 60). La Compagnie des Masques, secte des druides jaunes de Satarla, a un jeune acolyte espion au temple de Nemmereth. Son chef, le Prince Jaune, se réjouit de la colère du dieu mais craint l'enquête du temple : il charge Lok Kozaar de la saboter. Lok attaquera Amrita sur la route de Lysor et envoie son âme damnée Kurta, un Halakhi ancien de l'Ombre sanglante, faire tuer les héros à Halakh. Kurta part juste avant eux.\nChronologie : un mois avant la saga, Jorkus a mis en scène sa mort, revêtu le voile et gagné l'île de Kryphondus avec Hilario ; début des signes. Une semaine avant, la secte apprend que le temple enquête et engage Lok Kozaar.",
+      "pistes": [
+        { "texte": "Partir pour Halakh (chapitre 1 : L'oracle de Nemmereth)" }
+      ],
+      "distribution": [
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    }
+  ]
+}

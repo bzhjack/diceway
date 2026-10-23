@@ -1,0 +1,944 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "ch4",
+    "titre": "Le Dieu voilé — 4. Quand tombent les masques",
+    "pitch": "Chapitre 4 de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 140-165, PDF p. 142-167).\n\nDe retour d'Urceb, les héros retrouvent Satarla qui bout sous un soleil écrasant, au bord de l'émeute : carnage au temple de Lilandra, incendie des arsenaux, gladiateur assassiné, et partout des graffitis « Kryphondus revient ». Leur seule piste : maître Casmar, rue des Chandeliers, chez qui Lok Kozaar attendait ses hommes. Sous sa demeure se cache le temple de la Compagnie des Masques, une secte de druides jaunes de Morgazzon qui prépare le retour du dieu voilé. Sa destruction leur apprend où chercher l'île de Kryphondus et leur vaut le soutien du roi : une nef volante les dépose à Fort Junia, aux portes de la jungle… où l'armée de Jorkus vient les rattraper. Ils voient de leurs yeux le dieu voilé, invulnérable, briser les portes du fort, et doivent fuir.\n\nPersonnages récurrents repris de l'introduction (intro.json) ; personnages propres préfixés ch4-."
+  },
+  "personnages": {
+    "ch4-casmar": {
+      "kind": "pnj",
+      "nom": "Maître Casmar, le Bambin",
+      "rang": "rival",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 2,
+      "aura": 1,
+      "initiative": 1,
+      "melee": 1,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 10,
+      "vilenie": 3,
+      "foi": 2,
+      "carrieres": [
+        {
+          "nom": "Noble",
+          "rang": 1
+        },
+        {
+          "nom": "Marchand",
+          "rang": 2
+        },
+        {
+          "nom": "Prêtre",
+          "rang": 2
+        },
+        {
+          "nom": "Scribe",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "avantages": [
+        "Amis haut placés",
+        "Bien né",
+        "Fortuné"
+      ],
+      "desavantages": [
+        "Gars de la ville",
+        "Non-combattant"
+      ],
+      "commentaire": "Livre p. 155 (PDF p. 157) : 2 points de foi. Vilénie 3 : valeur par défaut, le livre n'en donne pas. Carrière druide 2 → Prêtre 2 (druide absent du catalogue). Dague d6M. Une dose de souffle de Morgazzon (poudre hallucinogène soufflée avec une paille, voir la scène du temple). Non-combattant déjà inclus dans son profil.\nRespectable fabricant de chandelles et de cierges de la rue des Chandeliers (guilde des chandeliers et des ciriers), notable au commerce prospère : temples et grandes familles parmi ses clients. Principal financier de la Compagnie des Masques, la secte de druides jaunes de Morgazzon fondée chez lui par son défunt père ; il paie Lok Kozaar pour le compte de Jorkus. Masque du Bambin : en haut les traits poupins d'un nourrisson, en bas le visage ridé et édenté d'un vieillard. Les soirs de cérémonie, il obéit à son majordome Toursa, le Prince Jaune. Épouse et fille à la campagne pour l'été."
+    },
+    "ch4-toursa": {
+      "kind": "pnj",
+      "nom": "Toursa, le Prince Jaune",
+      "rang": "rival",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 2,
+      "initiative": 0,
+      "melee": 2,
+      "tir": 0,
+      "defense": 2,
+      "vitalite": 12,
+      "vilenie": 5,
+      "foi": 3,
+      "carrieres": [
+        {
+          "nom": "Esclave",
+          "rang": 1
+        },
+        {
+          "nom": "Fermier",
+          "rang": 0
+        },
+        {
+          "nom": "Prêtre",
+          "rang": 3
+        },
+        {
+          "nom": "Assassin",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "avantages": [
+        "Dur à cuire",
+        {
+          "nom": "Inspirateur",
+          "detail": "quelques paroles bien senties : ses compagnons ont un dé de bonus à l'attaque au round suivant ; 1 fois/jour, à nouveau pour 1 point de vilénie"
+        }
+      ],
+      "desavantages": [
+        {
+          "nom": "Fanatique",
+          "detail": "ne reculera devant rien, prêt à mourir pour son dieu"
+        },
+        {
+          "nom": "Manchot/unijambiste",
+          "detail": "boiteux, pied bot : dé de malus quand la situation l'exige"
+        }
+      ],
+      "commentaire": "Livre p. 155 (PDF p. 157) : 5 points de vilénie, 3 de foi. Carrières serviteur 1 → Esclave 1, druide 3 → Prêtre 3 (absentes du catalogue). Dague d6M. Une dose de souffle de Morgazzon. Dur à cuire déjà inclus dans son profil.\nVieux majordome boiteux de la famille de Casmar. Le jour, il fait docilement ses corvées ; les soirs de cérémonie, il revêt le masque doré du Prince Jaune (visage déformé penché de côté, yeux ronds, langue pendante dans un sourire dément) et dirige la Compagnie des Masques, Casmar compris. Plus perspicace que son maître : au moindre doute sur les héros, il s'éclipse et leur tend le piège de la herse. Fanatique absolu : capturé, il ne révélera rien."
+    },
+    "ch4-ilsda": {
+      "kind": "pnj",
+      "nom": "Ilsda, cuisinière de Casmar",
+      "rang": "coriace",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Esclave",
+          "rang": 1
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante). Cuisinière → Esclave (serf/serviteur).\nMembre de la Compagnie des Masques, comme toute la maisonnée. Les soirs de réunion, elle et Atti se relaient pour garder la maison : Ilsda somnole sur la table de la cuisine, à la lueur d'une bougie. Capturée, elle joue l'innocence, mais peut craquer si l'on se montre très convaincant (ou menaçant)."
+    },
+    "ch4-atti": {
+      "kind": "pnj",
+      "nom": "Atti, servante de Casmar",
+      "rang": "coriace",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Esclave",
+          "rang": 1
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante). Servante → Esclave (serf/serviteur).\nMembre de la Compagnie des Masques. Pendant la comédie au salon, elle laisse traîner une oreille et court prévenir le temple si elle craint pour Casmar ; c'est elle qui vient annoncer que « le maître » demande à voir les hôtes. Capturée, elle joue l'innocence, mais peut craquer."
+    },
+    "ch4-acolyte": {
+      "kind": "pnj",
+      "nom": "Acolyte de la Compagnie des Masques",
+      "rang": "pietaille",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 2,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Armes diverses (piétaille)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Épées, javelots, lances, coutelas de la piétaille."
+        }
+      ],
+      "commentaire": "Livre p. 155 (PDF p. 157) : Attaque +0 → Mêlée 0, attributs à 0. Dégâts d3 (poignard) : arme « Armes diverses (piétaille) », définition reprise à l'identique. Carrière druide 1 → Prêtre 1. Règle de horde (BoL p. 132).\nFidèles en longues robes jaunes, masques de cuir peints de faciès d'animaux contrefaits : singe à la bouche démesurée, bubalus aux yeux exorbités, serpent à crinière d'andrak, kroark cornu peint en bleu. Quatre gardent la salle d'entrée du temple jour et nuit ; cinq de plus les soirs de réunion."
+    },
+    "ch4-druide-jaune": {
+      "kind": "pnj",
+      "nom": "Druide jaune de la Compagnie des Masques",
+      "rang": "coriace",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 2,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 6,
+      "foi": 1,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 1
+        },
+        {
+          "nom": "Marchand",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "commentaire": "Livre p. 153 (PDF p. 155) : 1 point de foi. Carrières druide 1 → Prêtre 1, marchand (ou autre) 1. Coutelas d6M → Dague (d6M). Une dose de souffle de Morgazzon, soufflée au début du combat.\nBons citoyens le jour (artisans, marchands, prêtres d'autres dieux, nobles), masqués de visages grotesques et difformes la nuit. Deux dans le temple le jour, quatre de plus les soirs de réunion. Efficaces malgré leur folie : posture défensive ou retraite le temps que le poison agisse ; ils usent de leur foi (dé de malus aux tests d'esprit contre le souffle, reflet sur un masque, geste erratique…)."
+    },
+    "ch4-druide-voile": {
+      "kind": "pnj",
+      "nom": "Le druide voilé",
+      "rang": "rival",
+      "region": "Satarla",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 2,
+      "tir": 0,
+      "defense": 2,
+      "vitalite": 11,
+      "vilenie": 3,
+      "foi": 2,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 2
+        },
+        {
+          "nom": "Noble",
+          "rang": 0
+        },
+        {
+          "nom": "Médecin",
+          "rang": 1
+        },
+        {
+          "nom": "Scribe",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "avantages": [
+        "Érudit",
+        {
+          "nom": "Intrépide",
+          "detail": "la peur, naturelle ou magique, n'a aucune prise sur lui"
+        },
+        {
+          "nom": "Résistant aux poisons",
+          "detail": "dé de bonus pour résister aux drogues et poisons"
+        }
+      ],
+      "desavantages": [
+        "Malédiction de Morgazzon",
+        "Fanatique"
+      ],
+      "commentaire": "Livre p. 156 (PDF p. 158) : 2 points de foi. Vilénie 3 : valeur par défaut, le livre n'en donne pas. Carrières druide 2 → Prêtre 2, érudit 1 → Scribe 1 (absentes du catalogue). Dague d6M+1 dans le livre (avec sa Vigueur 1). Une dose de souffle de Morgazzon, comme tous les druides de la secte.\nFanatique qui s'est cousu un voile de gaze sur le front et tout autour du crâne rasé après avoir vu les « miracles » de Jorkus ; peau gonflée et suppurante sous le fil, voile taché de sanie, yeux fiévreux, bave au menton, robe crasseuse. Il prie au pied de l'autel de Morgazzon en attendant le retour du dieu voilé ; fou à lier. Les héros pourraient le prendre pour Jorkus."
+    },
+    "ch4-bon-docteur": {
+      "kind": "pnj",
+      "nom": "Le Bon Docteur",
+      "rang": "rival",
+      "region": "Satarla",
+      "vigueur": 0,
+      "agilite": 2,
+      "esprit": 3,
+      "aura": -1,
+      "initiative": 1,
+      "melee": 0,
+      "tir": 1,
+      "defense": 2,
+      "vitalite": 8,
+      "vilenie": 3,
+      "foi": 1,
+      "carrieres": [
+        {
+          "nom": "Alchimiste",
+          "rang": 2
+        },
+        {
+          "nom": "Médecin",
+          "rang": 1
+        },
+        {
+          "nom": "Prêtre",
+          "rang": 1
+        },
+        {
+          "nom": "Scribe",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Dague"
+      ],
+      "avantages": [
+        {
+          "nom": "Discret",
+          "detail": "dé de bonus pour se faire discret"
+        },
+        "Laboratoire fourni",
+        {
+          "nom": "Ouïe fine",
+          "detail": "dé de bonus aux tests de perception basés sur l'ouïe"
+        }
+      ],
+      "desavantages": [
+        "Chétif",
+        "Souffreteux"
+      ],
+      "commentaire": "Livre p. 156 (PDF p. 158) : 1 point de foi. Vilénie 3 : valeur par défaut, le livre n'en donne pas. Carrière druide 1 → Prêtre 1. Dague d6M. Chétif déjà inclus dans son profil. Une dose de souffle de Morgazzon.\nSpécial : 3 petits pots en grès lancés (Tir) qui libèrent en se brisant des spores étouffantes et urticantes. La cible fait un test de vigueur ; échec : elle étouffe, prise de démangeaisons, dé de malus à tous les tests pendant d6M rounds. Jet d'attaque raté de 1 ou 2 : le pot se brise près d'elle, test de vigueur avec un dé de bonus. Un adversaire au corps à corps avec la cible fait aussi le test (dé de bonus si le pot a bien touché la cible).\nAlchimiste dément de la secte, au masque couvert de pustules, aux yeux suintants, la joue droite déformée par une énorme tumeur ; dessous, un vieil homme frêle et menu aux traits débonnaires. Il travaille jour et nuit dans le laboratoire du temple (cierges hallucinogènes)."
+    },
+    "ch4-sergent-du-guet": {
+      "kind": "pnj",
+      "catalogue": "Sergent du guet"
+    },
+    "ch4-marin-des-airs": {
+      "kind": "pnj",
+      "catalogue": "Pilote de nef volante de Satarla"
+    },
+    "ch4-chasseur-grooth": {
+      "kind": "pnj",
+      "nom": "Chasseur grooth du clan des falaises",
+      "rang": "coriace",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2,
+      "agilite": 1,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 8,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Gourdin"
+      ],
+      "commentaire": "Livre p. 163 (PDF p. 165). Gourdin d6M+2 dans le livre (avec sa Vigueur 2).\nGrooth agiles du clan des falaises, habiles grimpeurs et terribles anthropophages. Huit escaladent le donjon de Fort Junia et attaquent la nef volante amarrée au toit, menés par Graak Deux-Crânes. Les grooth du chapitre 5 ont d'autres profils."
+    },
+    "ch4-graak": {
+      "kind": "pnj",
+      "nom": "Graak Deux-Crânes",
+      "rang": "rival",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2,
+      "agilite": 2,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 1,
+      "melee": 2,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 12,
+      "vilenie": 5,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        },
+        {
+          "nom": "Chasseur",
+          "rang": 2
+        },
+        {
+          "nom": "Dresseur",
+          "rang": 1
+        },
+        {
+          "nom": "Bourreau",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Hache"
+      ],
+      "avantages": [
+        {
+          "nom": "Athlète",
+          "detail": "dé de bonus pour grimper, courir, sauter…"
+        },
+        "Peau dure",
+        "Roi de la jungle"
+      ],
+      "desavantages": [
+        "Bouseux",
+        "Repoussant"
+      ],
+      "commentaire": "Livre p. 163 (PDF p. 165) : 5 points de vilénie. Hache en pierre d6+2 dans le livre (avec sa Vigueur 2) : « Hache » du catalogue (d6) ; elle ressemble à une massue, de mêmes dégâts. Protection 1 = peau dure, sans armure.\nChef des chasseurs grooth du clan des falaises : grooth massif à l'allure absolument bestiale, collier de cuir où pendent des bouts d'os et un crâne humain. Il mène l'assaut sur le toit du donjon de Fort Junia contre la nef volante."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "retour",
+      "titre": "Une ville sens dessus dessous",
+      "region": "Satarla",
+      "lieu": "Le port, puis le grand temple de Nemmereth",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "De retour d'Urceb après deux longs mois d'absence, vous retrouvez Satarla qui bout sous un soleil écrasant. Sur les quais, il règne la même activité débordante qu'à l'ordinaire, et pourtant quelque chose a changé : les visages sont maussades, les rires plus discrets, et les conversations prennent l'air de conciliabules. Les patrouilles du guet, inhabituellement nombreuses, arpentent les rues sur le qui-vive. La tension est palpable, semblable à un orage sur le point d'éclater.\n\nSur les murs, ici et là, des graffitis représentent un visage indistinct, recouvert d'une sorte de voile ou de linceul, avec ces mots : « Kryphondus revient ».\n\nAu grand temple de Nemmereth, Nirmus vous attendait avec anxiété. Il vous reçoit aussitôt, la récompense promise toute prête, vous écoute avec gravité, puis vous apprend ce qui s'est passé en votre absence.",
+      "jeu": "Nirmus remet la récompense promise et rapporte les nouvelles :\n• Les phénomènes funestes persistent (repos des morts, sommeil des vivants). Toute la ville s'inquiète ; des prêtres de Nemmereth ont été pris à partie. La gangrène ronge toujours la statue du dieu malgré les purifications.\n• Carnage au temple de Lilandra : une folie meurtrière a saisi des dévots et des prostituées sacrées ; plusieurs notables et nombre de courtisanes sacrées sont morts. Avec le temple de Nemmereth et la tour effondrée du temple de Grondil, on dit que les vingt dieux se détournent de Satarla ; certains quittent la ville.\n• Incendie aux arsenaux royaux, parti du petit autel de Shazzadion des charpentiers : deux galères de guerre en construction en partie détruites.\n• Astanius l'Invincible, gladiateur aux plus de quinze victoires, assassiné aux thermes il y a deux semaines : émeutes, assaut des geôles où étaient deux suspects (innocents), plusieurs morts ; un maître des arènes rival lynché à la sortie d'une taverne.\n• Depuis quelques semaines, les graffitis « Kryphondus revient ».\n\nNirmus les presse de poursuivre l'enquête au nom du temple. Leur seule piste concrète : maître Casmar, rue des Chandeliers, chez qui Lok Kozaar attendait ses hommes (et le mot de passe, s'ils l'ont obtenu au ch. 2).\n\nSi, avant Urceb, ils ont confié Matius à Qirmar, l'alchimiste a de bonnes nouvelles : un élixir qui devrait rendre au frère d'Hilario sa lucidité le temps d'une conversation.\n\nPoint sur l'enquête (ce que les joueurs devraient avoir compris au ch. 3) : Jorkus est la cause du courroux de Nemmereth ; il a pris à Urceb un voile divin tissé par Kryphondus, prêtre d'Afyra, qui le rendrait immortel ; les dernières strophes de l'oracle invitent à chercher « à l'origine » le moyen de défaire ce voile, mais l'île n'est connue que par un plan sommaire sur un bas-relief ; Lok Kozaar sabote l'enquête depuis le début. S'ils n'en sont pas là, les indices de ce chapitre les y mèneront.",
+      "notes": "Hormis les phénomènes de mort (les Passeurs de Nemmereth cherchent l'âme de Jorkus), tous ces troubles sont l'œuvre de la Compagnie des Masques, la secte des druides jaunes de Satarla réunie sous la demeure de maître Casmar : sabotage de la tour de Grondil, incendie des arsenaux, meurtre d'Astanius, cierges hallucinogènes de Casmar au temple de Lilandra. Les graffitis aussi.\nLa secte a un espion au temple de Nemmereth : Direl, jeune acolyte, qui l'informe des progrès des héros (il sera parmi les morts du temple souterrain).\nLok Kozaar a quitté Satarla quelques jours avant le retour des héros : Jorkus l'appelle pour commander son armée. Si Kurta (ou un autre homme de Lok) a fui l'embuscade chez Almar, il est arrivé juste à temps pour partir avec lui, et Casmar sait que les héros risquent de venir : la secte est méfiante, pas d'effet de surprise.\nMot de passe (ch. 2, livre p. 111) : « Sous le voile, le dieu revient ».",
+      "pistes": [
+        {
+          "texte": "Rue des Chandeliers, chez maître Casmar : la seule piste concrète",
+          "vers": "chandeliers"
+        },
+        {
+          "texte": "Qirmar a mis au point un élixir pour Matius",
+          "vers": "matius"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "nirmus",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "qirmar",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "matius",
+      "titre": "Conversation avec Matius",
+      "region": "Satarla",
+      "lieu": "Au chevet de Matius, avec Qirmar",
+      "moment": "jour",
+      "danger": 1,
+      "lecture": "Qirmar fait boire à Matius sa décoction. Au bout de quelques dizaines de minutes, le jeune homme semble retrouver un peu de lucidité. Il garde l'air hagard d'un homme qui s'éveille d'un cauchemar, mais il peut enfin raconter. D'une voix tremblante, en roulant follement des yeux, il parle :\n\n« Oui, l'expédition dans la jungle… Nous étions dix, plus l'équipage du navire. Nous avons remonté le cours de l'Oom, avant de nous engager dans son affluent principal, qui sort de la jungle. Hilario dirigeait l'expédition. Nous devions retrouver une grande île et les ruines d'un temple très ancien, pour le compte d'un prêtre de Nemmereth. Jorkus, oui, c'est ça… Pourquoi ? Je ne sais pas… C'est Hilario qui savait, mais il ne savait pas où il allait nous mener, oh, non, ça, il ne le savait pas…\n\nDes mois ! Nous avons navigué des mois sur ces eaux maudites, à remonter des bras secondaires qui partaient vers l'ouest ou le sud, à la recherche de cette île. On savait que c'était quelque part au sud-ouest du grand affluent de l'Oom qui sort de la jungle, dans la région du Pic d'Urghuul…\n\nPuis, enfin, en interrogeant les tribus de la région, on a trouvé l'île, au milieu d'un grand lac marécageux, coupé de l'affluent de l'Oom. Sans doute le cours de la rivière s'était modifié avec le temps… Nous avons dû marcher longtemps, et puis construire des radeaux pour explorer l'île…\n\nIl ne faut pas aller là-bas, les dieux ont maudit cet endroit ! La végétation est folle, et ces fleurs jaunes ! Je sens encore leur parfum qui me faisait tant tourner la tête. Et le grondement de l'essaim qui bourdonne dans le ventre de Drokko !\n\nNon, il y a des choses là-bas… Non, je ne veux pas en parler… Morts, ils sont tous morts… Hilario m'a sauvé, et nous avons fui, fui la mort blanche qui rôde là-dedans et qui dévore le monde comme un asticot dévore un cadavre… Et la chose dans l'eau ! Ses gémissements, jamais je ne les oublierai… Kryphonduuus, Kryphonduuus…\n\nEt tout ça pour quoi ? Il n'y avait rien là-bas, rien que la mort et la folie… Non, laissez-moi, je ne veux plus en parler, laissez-moi, je vous en prie… »",
+      "jeu": "Scène facultative (encadré du livre p. 152), seulement si les héros ont demandé à Qirmar, avant de partir pour Urceb, de soigner Matius. Elle n'est pas indispensable à la saga, mais donne des indices sur l'île de Kryphondus.\n• Le traitement agit au bout de quelques dizaines de minutes, le temps de ce seul monologue (texte à lire, propos hachés, balbutiements).\n• Ensuite, toute autre tentative de le questionner est vaine : il retombe dans son état catatonique et incohérent.\n• Si les héros ont récupéré le médaillon d'Afyra rapporté par Hilario (ch. 2, Albel et Nobur) et le lui montrent, il dit qu'Hilario l'a trouvé « près du bassin aux nénuphars », sans plus de précision.",
+      "notes": "Indices pour le chapitre 5 : l'île est au milieu d'un grand lac marécageux coupé de l'affluent de l'Oom, au sud-ouest du grand affluent, dans la région du Pic d'Urghuul (les parchemins du Prince Jaune la placent à l'ouest du Pic d'Urghuul, lui-même à l'ouest d'Oomis). Fleurs jaunes enivrantes, essaim dans « le ventre de Drokko », « mort blanche » qui dévore tout, « chose dans l'eau » qui gémit « Kryphondus » : autant d'horreurs de l'île maudite par Morgazzon. Le médaillon et le bassin aux nénuphars serviront aussi au chapitre 5.",
+      "pistes": [
+        {
+          "texte": "Rue des Chandeliers, chez maître Casmar",
+          "vers": "chandeliers"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "matius",
+          "camp": "heros",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "qirmar",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "chandeliers",
+      "titre": "Rue des Chandeliers",
+      "region": "Satarla",
+      "lieu": "Rue des Chandeliers, près des arènes",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La rue des Chandeliers, non loin des arènes, regroupe ateliers et boutiques de fabricants de bougies. Il flotte dans l'air un parfum épais de graisse brûlée mêlé des relents doucereux de la cire chaude.\n\nPrès de la fontaine publique se dresse la maison de maître Casmar : une belle bâtisse en pierre à un étage, fermée par une lourde porte de bois, dont la façade est ornée d'une frise sculptée de turales, les roses de la jungle. À l'arrière, une petite cour ceinte d'un mur de deux mètres. Dans une rue adjacente, ses ateliers : un hangar de pierre précédé d'une échoppe où s'entassent en faisceaux de modestes chandelles de suif et de belles bougies de cire.",
+      "jeu": "Se renseigner dans le quartier (marchands de la rue, domestiques d'autres maisons) : quelques tests d'aura, une piécette ou deux au besoin.\n• Casmar : marchand de la guilde des chandeliers et des ciriers, notable respecté, commerce prospère ; bougies et cierges en cire d'abeille ; plusieurs temples et grandes familles parmi ses clients.\n• Son épouse et sa fille sont à la campagne, comme chaque été. Restent trois domestiques : Toursa, un vieux boiteux au pied bot ; Ilsda, la cuisinière ; Atti, la servante.\n• Les suivre ne révèle rien. Casmar mène une vie réglée : ateliers le matin, déjeuner en taverne avec d'autres chandeliers, retour en fin d'après-midi, il ne ressort pas le soir ; il reçoit souvent des amis à dîner, des marchands, semble-t-il.\n• Un céruléen ? Un nomade bleu a été vu plusieurs fois sortir de chez lui ces dernières semaines. La surveillance ne permet pas de voir Lok : il est parti.\n• Surveiller ou fouiller les ateliers la nuit : chance de repérer le passage secret, par exemple en voyant plusieurs personnes entrer par l'arrière-cour (venelle peu fréquentée) sans en ressortir. Les soirs de réunion (tous les trois jours), la porte de la cour reste déverrouillée.\n\nOptions :\n• avec le mot de passe, se faire passer pour les hommes de Lok (le maître est à ses affaires le jour : revenir en fin d'après-midi) ;\n• sans, s'introduire discrètement ou brutalement, de jour ou de nuit ;\n• s'en remettre aux autorités par Nirmus, à condition d'avoir des preuves.\nImprovisez selon la manière dont les joueurs s'y prennent.",
+      "notes": "La Compagnie des Masques : secte de druides jaunes de Morgazzon implantée chez Casmar depuis une décennie, à l'instigation de son défunt père. Casmar en est un financier éminent, pas le chef : c'est son majordome Toursa, le Prince Jaune, qui la dirige les soirs de cérémonie. Une vingtaine de membres de toutes conditions (Casmar et ses trois domestiques, artisans, marchands, prêtres et prêtresses de divers dieux dont Direl, jeune disciple de Nemmereth, quelques membres de la haute noblesse). Réunion tous les trois jours à la nuit tombée, dans le temple au sous-sol de la demeure ; on y arrive par un passage souterrain depuis l'arrière-cour des ateliers. Masques grotesques : rang ou fonction.\nProjets en cours : réutiliser bientôt les cierges hallucinogènes de Lilandra.\nSi Kurta ou un autre homme de Lok a fui Urceb et parlé, la secte sait que les héros vivent et connaissent peut-être le rendez-vous : elle est méfiante et prête à réagir à toute intrusion.",
+      "pistes": [
+        {
+          "texte": "Donner le mot de passe à la porte : « Sous le voile, le dieu revient »",
+          "vers": "comedie"
+        },
+        {
+          "texte": "S'introduire dans la maison, de jour ou de nuit",
+          "vers": "demeure"
+        },
+        {
+          "texte": "Suivre les fidèles par l'arrière-cour des ateliers et le passage secret",
+          "vers": "temple"
+        },
+        {
+          "texte": "S'en remettre au guet par l'entremise de Nirmus (il faut des preuves)",
+          "vers": "guet"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-casmar",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "ch4-toursa",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "comedie",
+      "titre": "Jouer la comédie",
+      "region": "Satarla",
+      "lieu": "Demeure de maître Casmar, le salon",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Le mot de passe donné, la porte s'ouvre. On vous conduit au salon, où l'on vous prie de patienter. La pièce est confortablement meublée, de beaux tapis couvrent le plancher, et partout s'alignent des bougeoirs et des chandeliers de toutes formes et de toutes tailles.\n\nUne dizaine de minutes plus tard, maître Casmar vous rejoint, suivi de son vieux domestique boiteux. Il vous dévisage et demande : « Lequel d'entre vous est Kurta ? » Il remet à celui qui se désigne une petite bourse d'or, « le solde pour la mission à Urceb », et s'enquiert de savoir si tout est réglé. Lok Kozaar a dû partir, explique-t-il, mais il reviendra bientôt, ajoute-t-il avec un sourire entendu. Lok lui a assuré que ses camarades seraient certainement prêts à continuer à travailler pour lui, contre rétribution, bien sûr, en attendant son retour.",
+      "jeu": "De jour, une fois le mot de passe donné, on leur demande de revenir en fin d'après-midi : le maître est à ses affaires. Les trois domestiques, et Toursa mieux que les autres, attendent la venue des sbires du céruléen.\n\nS'ils acceptent de travailler pour lui : son « groupe » a connu de beaux succès, se vante Casmar, et des opérations d'envergure se préparent. Test d'esprit : un héros remarque un spasme de contrariété sur les traits du vieux domestique debout derrière lui.\nCasmar fait signe ; le serviteur revient en claudiquant avec un gros sac de douze grosses bougies de cire blanche. La mission : s'introduire dans les ateliers de dame Farla, à deux rues d'ici, où trois faisceaux de douze bougies semblables attendent sur une table à gauche de l'entrée ; en remplacer douze et tout remettre en place. D'autres tâches suivront. Pourquoi ? « C'est une surprise… »\nGarder ces bougies, c'est une preuve irréfutable pour Nirmus et le guet.\n\nPasser à l'action : maîtriser Casmar (et son vieux serviteur) n'est guère difficile ; l'amener à trahir ses frères en révélant l'entrée du temple l'est bien plus. Atti écoute près du salon et court prévenir le temple si elle craint pour Casmar.\n\nSi Toursa a le moindre doute, il s'excuse et sort. Quelques minutes plus tard, Atti annonce que « le maître » demande à voir les hôtes. Casmar, perplexe, les mène à la cuisine, à la cave, et ouvre le passage secret : c'est le piège de la herse (scène suivante).",
+      "notes": "Les bougies sont imprégnées du même poison hallucinogène qu'au temple de Lilandra : celles de dame Farla doivent être livrées demain pour le banquet de mariage de la fille de Rufin d'Aquilius, grand capitaine des chevaliers de Satarla. Un carnage chez le plus haut chef militaire de la cité.\nLe vrai chef est Toursa, le Prince Jaune ; Casmar n'en sait pas plus que les ordres qu'on lui donne. Le spasme de Toursa : Casmar parle trop et engage la secte sans son accord.",
+      "pistes": [
+        {
+          "texte": "Rapporter les bougies empoisonnées à Nirmus et au guet",
+          "vers": "guet"
+        },
+        {
+          "texte": "« Le maître » vous demande : suivre Casmar à la cave",
+          "vers": "salle-de-garde"
+        },
+        {
+          "texte": "Passer à l'action : maîtriser Casmar et les domestiques",
+          "vers": "demeure"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-casmar",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch4-toursa",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch4-atti",
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "guet",
+      "titre": "Et si… le guet s'en mêle",
+      "region": "Satarla",
+      "lieu": "Rue des Chandeliers, avec le guet des arènes",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Grâce aux relations de Nirmus, le maître du guet des arènes a accepté d'intervenir. Une escouade de gardes en armes vous attend à l'angle de la rue des Chandeliers, à quelques pas de la fontaine publique et de la façade ornée de turales. Le sergent vous salue d'un signe de tête : on compte sur vous comme témoins, et peut-être un peu plus que cela. À vous de dire comment vous comptez vous y prendre.",
+      "jeu": "Encadré « Et si… » (livre p. 146). Nirmus, prêtre de haut rang, peut solliciter le palais à condition d'avoir assez de preuves ou de suspicions (par exemple les bougies empoisonnées rapportées de la comédie).\n• Le maître du guet des arènes exige la présence des héros comme témoins : ils ne manqueront ni le temple secret ni ses indices.\n• Laissez les joueurs monter l'opération avec le guet (entrée par la maison, par les ateliers, les deux).\n• Les druides jaunes ne se rendent pas sans combattre (souffle de Morgazzon) ; de simples gardes ont fort à faire si les héros ne leur prêtent pas main-forte.\n• Certains druides fuient par le passage secret : course-poursuite possible dans les rues de Satarla.\nCartes : 3 sergents du guet du catalogue, effectif de l'escouade à votre gré.",
+      "notes": "Le passage secret part de l'office du Prince Jaune (salle 5, porte à loquet derrière une tapisserie) et remonte dans une cave de l'arrière-cour des ateliers de Casmar : c'est par là que fuient les druides. Postez-y des gardes et la secte est prise au piège.",
+      "pistes": [
+        {
+          "texte": "Investir la demeure par la porte",
+          "vers": "demeure"
+        },
+        {
+          "texte": "Entrer par les ateliers et le passage secret",
+          "vers": "temple"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-sergent-du-guet",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "demeure",
+      "titre": "La demeure de maître Casmar",
+      "region": "Satarla",
+      "lieu": "Rue des Chandeliers, demeure de Casmar",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La maison est étrangement vide. Dans les chambres, les lits sont inoccupés. Dans le salon et le bureau, de beaux tapis étouffent vos pas ; partout, des bougeoirs et des chandeliers de toutes formes, éteints. La seule lumière provient d'une bougie qui brûle dans la cuisine, où une femme somnole, la tête sur la table. Près d'elle, la trappe qui mène à la cave est ouverte ; en bas, une autre bougie éclaire les tonneaux de vin et les étagères chargées de bocaux.",
+      "jeu": "Lecture : version de nuit, un soir de réunion (considérez que c'en est un). De jour, la maison n'abrite que les trois domestiques, dans un quartier commerçant très fréquenté.\n• Porte d'entrée : Difficile (-2) à enfoncer ou à crocheter. Cour arrière ceinte d'un mur de 2 m.\n• Bureau : livres de comptes, correspondance d'affaires, relevés de stock ; une bourse pansue dans le tiroir du secrétaire ; poésie et chansons de geste sur les étagères.\n• Étage : chambres de Casmar, de son épouse, de leur fille, chambre d'amis vide ; combles par une trappe au plafond du palier : rien.\n• Cuisine et quartiers des domestiques : banals. Trappe de la cuisine vers la cave.\n• Cave : un héros qui fouille attentivement remarque devant une étagère de bocaux une marque en arc de cercle sur le sol de pierre ; l'étagère pivote sur des charnières et révèle l'entrée du temple.\n\nDomestiques capturés : ils jouent l'incompréhension et l'innocence. Toursa ne révélera rien ; Ilsda et Atti peuvent craquer devant un héros particulièrement convaincant (ou menaçant). S'ils repèrent des intrus, ils descendent chercher l'aide du temple, puis envoient un acolyte par le passage secret prévenir Casmar.\nDe nuit : seule la cuisinière garde la maison (Atti et elle se relaient) ; Toursa et Casmar sont au temple. Retirez les cartes en trop. Ajoutez 4 druides jaunes et 5 acolytes dans le complexe souterrain.",
+      "notes": "Toute la maisonnée appartient à la Compagnie des Masques. Le vieux boiteux, Toursa, en est le chef : le Prince Jaune.",
+      "pistes": [
+        {
+          "texte": "Descendre à la cave et passer l'étagère pivotante",
+          "vers": "salle-de-garde"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-ilsda",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch4-atti",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch4-toursa",
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "salle-de-garde",
+      "titre": "La salle de garde et la herse",
+      "region": "Satarla",
+      "lieu": "Temple secret de Morgazzon, sous la demeure de Casmar",
+      "moment": "nuit",
+      "danger": 2,
+      "lecture": "Le trou dans le mur de la cave donne sur une pièce souterraine de cinq mètres sur trois, éclairée par des bougies dans des appliques. Deux paillasses, une table, quelques tabourets ; un broc de vin et des verres sur la table. Une odeur étrange et capiteuse, un mélange d'effluves végétaux, monte du couloir qui s'enfonce plus loin.\n\nQuatre silhouettes en longues robes jaunes se lèvent d'un bond. Elles portent des masques de cuir peints de faciès d'animaux contrefaits : un singe à la bouche démesurée qui lui mange la moitié du visage, un bubalus aux yeux énormes et exorbités, un serpent à crinière d'andrak, un kroark cornu peint en bleu.",
+      "jeu": "4 acolytes (piétaille, Attaque +0, dégâts d3, vitalité 2, règle de horde BoL p. 132) jour et nuit ; de nuit, 5 autres répartis dans le complexe.\n\nIntrusion (héros non conduits par Casmar ou un domestique) : un acolyte court dans le couloir déclencher la herse. Le mécanisme est près des portes du temple, dans un renfoncement : une roue crantée où s'enroule la chaîne, un petit levier qui la libère. La herse tombée, les héros sont enfermés dans la salle d'entrée. La soulever assez pour qu'un compagnon se faufile dessous ou la bloque (avec un tabouret) : Vigueur Très difficile (-4).\n\nVariante comédie (« le maître » les attend) : la salle est vide. Un homme en robe jaune, sans masque, leur fait signe depuis le couloir. Dès qu'ils s'y engagent, il abaisse le levier : la herse tombe derrière eux. Des portes latérales et du fond surgissent les druides masqués (2 de jour, 6 la nuit, voir le temple) qui les balaient du souffle de Morgazzon.\n\nSouffle de Morgazzon (livre p. 154) : poudre soufflée au visage avec une paille. Le poison agit au bout de deux rounds : test d'esprit. Réussite : légère euphorie, lumières plus vives, sons étranges, rien de gênant. Échec : d6 sur la table, effet pendant d6 rounds, puis nouveau test d'esprit ; s'il échoue, second jet sur la table pour d6 rounds, puis le poison cesse.\n• 1 Cauchemar éveillé : recroquevillé en hurlant, il ne peut que se défendre ; dé de bonus pour l'attaquer.\n• 2-4 Fascination : aucune action ; dé de bonus pour l'attaquer. Dès qu'il subit des dégâts, test d'esprit : réussi, l'effet cesse et il agit au round suivant.\n• 5-6 Rage destructrice : attaque intrépide (+2 attaque, -2 défense) contre la personne la plus proche, ami ou ennemi, ou contre le mobilier, et s'acharne tant que dure l'effet.\nRetenir sa respiration : jet de réaction (initiative + esprit) ; réussi, dé de bonus au test. Les druides, accoutumés, ont un dé de bonus s'ils inhalent leur propre poudre.",
+      "notes": "Si les héros ont maîtrisé Casmar et les domestiques sans alerte, ils peuvent surprendre les occupants du temple, ce qui facilite grandement le combat.",
+      "pistes": [
+        {
+          "texte": "Forcer le couloir : vestiaire, laboratoire, temple de Morgazzon",
+          "vers": "temple"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-acolyte",
+          "qty": 4,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "temple",
+      "titre": "Le temple de Morgazzon",
+      "region": "Satarla",
+      "lieu": "Temple secret : vestiaire, laboratoire et sanctuaire",
+      "moment": "nuit",
+      "danger": 4,
+      "lecture": "Le couloir dessert un vestiaire tout en longueur : deux bancs, des vêtements de ville et des robes jaunes pendus aux patères, et au fond un meuble garni de pommeaux où sont accrochés des masques hideux et difformes, animaux ou humains.\n\nPlus loin, un laboratoire d'alchimie : athanor, cornues, soufflet, un grand chaudron de cuivre où bouillonne de la cire, des mèches qui y trempent, une brassée de cierges dans un panier d'osier, des herbes sèches pendues au plafond et des bocaux de feuilles, de fleurs, de racines et de poudres. Une silhouette frêle s'y affaire, sous un masque couvert de pustules aux yeux suintants, la joue droite déformée par une énorme tumeur.\n\nLe temple lui-même est une longue salle au sol de mosaïque rouge, où se répètent les mêmes visages grotesques que ceux des masques. Des banquettes de pierre courent le long des murs. Au fond, un autel et la statue d'un vieil ermite au regard fou et à la longue barbe ; à ses pieds, une petite idole d'argile toute récente, un homme bedonnant au visage couvert d'un petit voile blanc pris dans la glaise. Derrière, une mosaïque murale montre un œil jaune au centre d'une masse de tentacules. Les bougies brillent, un brasero fume, l'encens sature l'air.\n\nSur la banquette de gauche, deux druides masqués discutent à voix basse. Au pied de l'autel, un homme en robe jaune crasseuse marmonne des prières : son visage est couvert d'un voile de gaze cousu à son front et tout autour de son crâne rasé. La peau gonfle et suppure là où le fil la traverse, le voile est taché de sanie, ses yeux sont fiévreux et un filet de bave lui coule du menton.",
+      "jeu": "Effectifs : de jour, 2 druides jaunes (coriaces), le druide voilé et le Bon Docteur (au laboratoire). De nuit, ajoutez 4 druides jaunes, 5 acolytes répartis dans les pièces, Toursa en Prince Jaune et Casmar en Bambin. Retirez Toursa et Casmar s'ils ne sont pas là.\n\nTactique : tous les druides (rivaux et coriaces) soufflent leur dose de souffle de Morgazzon au début du combat, puis se mettent en posture défensive ou battent en retraite le temps que le poison agisse. Utilisez leur foi : dé de malus aux tests d'esprit des héros contre le souffle, reflet sur un masque qui gêne une attaque, geste erratique qui donne un dé de bonus au druide…\n• Toursa, Inspirateur : dé de bonus à l'attaque de ses frères au round suivant (1 fois/jour, puis 1 point de vilénie).\n• Bon Docteur : 3 pots de spores (voir sa fiche) ; Discret, Ouïe fine.\n• Druide voilé : Intrépide, Résistant aux poisons.\n\nSouffle de Morgazzon (livre p. 154) : poudre soufflée au visage avec une paille. Le poison agit au bout de deux rounds : test d'esprit. Réussite : légère euphorie, lumières plus vives, sons étranges, rien de gênant. Échec : d6 sur la table, effet pendant d6 rounds, puis nouveau test d'esprit ; s'il échoue, second jet sur la table pour d6 rounds, puis le poison cesse.\n• 1 Cauchemar éveillé : recroquevillé en hurlant, il ne peut que se défendre ; dé de bonus pour l'attaquer.\n• 2-4 Fascination : aucune action ; dé de bonus pour l'attaquer. Dès qu'il subit des dégâts, test d'esprit : réussi, l'effet cesse et il agit au round suivant.\n• 5-6 Rage destructrice : attaque intrépide (+2 attaque, -2 défense) contre la personne la plus proche, ami ou ennemi, ou contre le mobilier, et s'acharne tant que dure l'effet.\nRetenir sa respiration : jet de réaction (initiative + esprit) ; réussi, dé de bonus au test. Les druides, accoutumés, ont un dé de bonus s'ils inhalent leur propre poudre.\n\nAprès la défaite : fidèles et acharnés, les druides cessent de protéger leurs secrets une fois tout perdu ; un survivant se glorifie de ses actes en gloussant (scène suivante).",
+      "notes": "Le druide voilé n'est pas Jorkus : c'est un fanatique qui s'est cousu un voile après avoir vu ses « miracles » et attend son retour ici. Laissez les joueurs s'y tromper un instant.\nL'idole voilée représente Jorkus/Kryphondus. Les portraits de la mosaïque, sur des carrés amovibles, indiquent les grades de la secte ; on en change l'ordre de temps à autre, et la hiérarchie avec (Morgazzon aime le changement).\nParmi les morts : Direl, jeune acolyte du temple de Nemmereth, l'espion de la secte.",
+      "pistes": [
+        {
+          "texte": "Fouiller l'office du Prince Jaune et interroger un survivant",
+          "vers": "office"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-druide-jaune",
+          "qty": 2,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch4-druide-voile",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch4-bon-docteur",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch4-toursa",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch4-casmar",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "office",
+      "titre": "Le puzzle se complète… presque",
+      "region": "Satarla",
+      "lieu": "Office du Prince Jaune",
+      "moment": "nuit",
+      "danger": 1,
+      "lecture": "Une porte, au bout du temple, ouvre sur un petit scriptorium : deux pupitres d'écriture, un grand bureau au fond, des tapisseries aux murs et de beaux tapis sur les dalles. Une étagère chargée de livres et de rouleaux de parchemin occupe le mur du fond, derrière un petit bureau en bois noir.\n\nLe survivant que vous tenez ne cherche même plus à se taire. Il glousse, ravi : « Oui, oui, demandez ! Quelle gloire pour Morgazzon ! »",
+      "jeu": "Ce que dit un survivant, en gloussant :\n• Jorkus était des leurs, mais il est mort et son nom ne se prononce plus : il est revenu sous le nom de Kryphondus, le dieu voilé, invulnérable et invincible, les traits à peine reconnaissables sous son voile. Toute une nuit, à son invitation, les druides ont tenté de le tuer : poignardé, empoisonné, brûlé, en vain. « Quelle nuit glorieuse ce fut ! »\n• Kryphondus est parti pour la jungle, vers l'île bénie de Morgazzon où son histoire a commencé ; il reviendra bientôt régner sur la Lémurie. « Oh, comme Hurm et les vingt dieux vont être en colère ! » Si on le demande : il est parti avec Hilario, « le Guide ».\n• La Compagnie a préparé son retour en semant le trouble dans la cité. Le céruléen a vu les prodiges, il le sert fidèlement et l'a rejoint pour les batailles à venir.\n• Parmi les morts : Direl, jeune acolyte du temple de Nemmereth, leur espion.\n\nFouille :\n• Laboratoire : poudres et plantes hallucinogènes (beaucoup des marais de Festrel), 3 doses de souffle de Morgazzon dans de petites pailles, préparations étranges : Qirmar saura en faire bon usage.\n• Office : une bonne quantité d'or ; des parchemins anciens sur Morgazzon : une île sur un affluent de l'Oom, au cœur des jungles de Qush, lieu sacré de Morgazzon arraché à des adorateurs d'Afyra, à l'ouest du Pic d'Urghuul (sommet isolé qui perce la jungle, à l'ouest d'Oomis).\n• Tiroir fermé à clef du bureau : une sacoche de cuir avec une copie récente de la correspondance de Varana, grande prêtresse d'Afyra à Lysor aux premiers temps de la cité. Qui la parcourt trouve la lettre de Chirzmar d'Urceb : remettez l'aide de jeu IV (texte dans 11-chapitre4-quand-tombent-les-masques.md).\n• Derrière une tapisserie, une porte à loquet : passage secret étayé de poutres qui remonte dans une cave de l'arrière-cour des ateliers.",
+      "notes": "La lettre de Chirzmar (Urceb-la-neuve, près de la Porte aux Banths) : culte familial de Kryphondus, l'Aimé d'Afyra, prêtre-roi d'une île bienheureuse d'un grand fleuve de la jungle de Qush ; Afyra, éprise de lui, lui fit tisser un voile qui le préserverait de la mort ; l'île fut attaquée, Chaktar, son vieux serviteur, emporta le voile jusqu'à Urceb ; le voile coiffait la statue du sanctuaire. C'est en lisant ce recueil que Jorkus a découvert l'histoire du voile.\nAvec les parchemins, les fresques d'Urceb et l'oracle, les héros ont de quoi localiser l'île. Personne ne sait encore que Jorkus revient avec une armée.",
+      "pistes": [
+        {
+          "texte": "Prévenir Nirmus (ou le guet) de la destruction de la secte",
+          "vers": "rencontre-royale"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-druide-jaune",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "rencontre-royale",
+      "titre": "Rencontre royale",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le lendemain matin, Nirmus vous fait mander toute affaire cessante. Dans la cour du temple de Nemmereth attend une forte escorte de cavaliers en armure ; un jeune domestique tient timidement la bride d'un magnifique parvalus au harnachement luxueux.\n\nOn vous conduit dans une salle meublée d'une grande table rectangulaire encadrée de bancs. Nirmus vous y attend en compagnie d'un homme d'une soixantaine d'années, à l'allure martiale malgré ses cheveux gris et son léger embonpoint, richement vêtu d'un pourpoint brodé, une lourde chaîne d'or au cou. Nirmus s'empresse de vous présenter Embran Tarv, oncle et ministre du roi Davym. Le dos droit, le menton fièrement dressé, Embran vous jauge un instant, puis vous invite à vous asseoir. Il vous remercie pour l'élimination de la secte, et pour votre discrétion sur les malheureux événements de la nécropole royale, puis il vous parle :\n\n« Même si cette affaire concerne au premier chef les prêtres de Nemmereth, elle a provoqué beaucoup de désordre dans la ville, et notre roi Davym est un homme pieux, soucieux d'honorer les dieux. Nirmus et ses confrères pensent que le dieu vous a choisis pour mettre fin au sacrilège qui provoque sa colère. J'ai tendance à y voir plutôt le résultat de vos talents et de votre courage – sans vouloir vous offenser, vénérable Nirmus –, mais même le plus valeureux des guerriers ne dédaigne pas la Fortune quand elle a l'heur de lui sourire.\n\nJe vous avoue que je ne crois guère à cette histoire d'invulnérabilité ; je n'ai pas encore rencontré de problème qui ne puisse être résolu par quelques pouces de bon acier plantés là où il faut. Et si ce Jorkus a offensé son dieu, le mieux est de l'expédier promptement s'expliquer avec lui. Enfin, ce que j'en dis…\n\nSa Majesté porte un grand intérêt à cette affaire et vous pouvez compter sur son soutien ainsi que sa reconnaissance. Je vous ai préparé un laissez-passer à destination du commandant de la garnison de Fort Junia, une petite forteresse frontalière en limite des marais de Festrel. Il a ordre de vous fournir une gabarre avec son équipage, et tout ce qu'il vous faudra pour remonter le fleuve Oom et chercher cette fameuse île. Je vais faire plus : demain matin, une nef volante doit partir pour Fort Junia et vous prendrez place à son bord. Cela vous épargnera une bonne dizaine de jours de voyage. Présentez-vous demain à l'aube aux portes du palais pour embarquer. »",
+      "jeu": "Que les héros aient prévenu le guet ou Nirmus, la nouvelle remonte au palais : le roi s'inquiète des signes de colère divine.\nC'est le moment de faire le point si les joueurs en ont besoin : avec l'oracle et les fresques du sanctuaire de Kryphondus, ils doivent avoir compris que Jorkus a retrouvé un voile divin qui semble le rendre immortel, ce qui déplaît à Nemmereth ; les dernières strophes de l'oracle invitent à chercher l'île où tout a commencé, pour y trouver le moyen de détruire le voile ; et Jorkus serait lui-même parti pour l'île.\nÉquipement : les demandes raisonnables sont accordées.",
+      "notes": "Embran se trompe : l'invulnérabilité est bien réelle, les héros le verront de leurs yeux à Fort Junia. Personne à Satarla ne sait encore que l'armée de Jorkus, menée par Lok Kozaar, attaque déjà les hameaux en lisière de la jungle, ni que Lok compte faire prévenir Tyrus pour prendre Satarla en tenaille.",
+      "pistes": [
+        {
+          "texte": "Se présenter à l'aube aux portes du palais pour embarquer",
+          "vers": "envol"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "embran-tarv",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "nirmus",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "envol",
+      "titre": "La nef volante",
+      "region": "Satarla",
+      "lieu": "Palais Splendide, puis le ciel du golfe de Satarla",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "À l'aube, on vous introduit dans l'enceinte du Palais Splendide et l'on vous conduit au sommet d'une des hautes tours qui servent de quais aériens à la petite flottille de nefs volantes. Le capitaine Maben, un jeune et fringant officier de la noblesse satarlane, vous invite sans attendre à monter à bord. Son équipage compte deux autres marins des airs et cinq soldats.\n\nLa nef s'élève. La lumière dorée du soleil levant caresse les toits et les frontons des temples, et vous embrassez d'un seul regard la ville entière : la gigantesque agglomération, ses édifices somptueux et ses temples méritent bien le titre de Joyau de la Lémurie.\n\nPuis la nef longe la côte du golfe de Satarla. À tribord, la mer infinie scintille sous le soleil ; à bâbord s'étend à perte de vue la canopée vert sombre de la jungle, océan végétal plus intimidant encore que l'immensité bleue des flots.",
+      "jeu": "À peine une journée de vol jusqu'à Fort Junia (nefs volantes : BoL p. 81).\nMaben est facile d'abord et intarissable sur sa nef. Son équipage et lui vont patrouiller aux abords de la jungle et des marais : la zone est agitée, on signale plusieurs attaques de hameaux par les tribus de la jungle. Rien de vraiment inédit, mais il faut protéger les communautés frontalières qui exploitent le bois de la jungle et approvisionnent la capitale.\nArrivée en fin d'après-midi.",
+      "notes": "Les attaques de hameaux sont l'œuvre de l'armée de Jorkus, qui enrôle de force les hommes en état de se battre et récompense ses guerriers en butin.",
+      "pistes": [
+        {
+          "texte": "Arrivée à Fort Junia en fin d'après-midi",
+          "vers": "fort-junia"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch4-marin-des-airs",
+          "qty": 2,
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 5,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "fort-junia",
+      "titre": "Fort Junia",
+      "region": "Satarla",
+      "lieu": "Fort Junia, aux confins des marais de Festrel",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "En fin d'après-midi, Fort Junia apparaît, perché sur une falaise qui surplombe la mer : une forteresse de taille modeste, avec un petit port où sont amarrés plusieurs navires. À quelques lieues au nord s'étendent les marécages mornes, puis la ligne continue et impénétrable des arbres de la jungle.\n\nLa nef vient s'arrimer à un ponton de bois qui fait saillie au niveau du toit du donjon, au-dessus de la mer. Le commandant du fort est venu l'accueillir avec quelques hommes.\n\nLe soir, il vous reçoit à sa table, dans le grand réfectoire du donjon, avec le capitaine Maben. Il vous explique qu'une certaine agitation règne parmi les tribus de la jungle, qui ont récemment attaqué quelques fermes et hameaux… quand un soldat entre pour le prévenir : des paysans se présentent aux portes et demandent refuge, leur village vient d'être détruit. Le commandant fronce les sourcils, s'excuse et se lève.",
+      "jeu": "Le commandant :\n• si les héros ont secouru la patrouille de la nécropole au ch. 2 (livre p. 94), c'est Malcar, promu pour ses actions là-bas, aussi surpris qu'eux : il les accueille en amis et leur offre une fiole d'antidote (une dose, soigne en une heure l'empoisonnement par venin animal ou poison végétal) ;\n• sinon, un commandant anonyme qui obéit à la lettre d'Embran.\nIl fait préparer une gabarre avec son meilleur pilote, des provisions et quelques soldats d'escorte : départ en fin de matinée. Maben repart demain pour ses patrouilles.\n\nLes réfugiés (si un héros accompagne Malcar) : une dizaine de personnes, crasse et suie, quelques blessés. Leur village, à deux heures de marche, a été attaqué par une armée de grooth (BoL p. 91) et de guerriers des tribus. Malcar croit à une exagération de pillards, même si grooth et hommes de la jungle ensemble le laissent perplexe ; il enverra une patrouille demain.\n\nQuelques dizaines de minutes plus tard, une sonnerie de cor sur les remparts ; silence au réfectoire ; une deuxième sonnerie ; les soldats courent dehors en jurant. Malcar est monté au sommet de la porte fortifiée.\nPlan de Fort Junia : livre p. 184-185 (au ch. 5) ; une description sommaire suffit ce soir.",
+      "notes": "C'est l'armée de Jorkus. Fort Junia n'est pas une simple étape : les héros y affrontent Jorkus pour la première fois, et l'y retrouveront pour la confrontation finale du chapitre 5. Lisez la description du fort (livre p. 184-185) avant de jouer.",
+      "pistes": [
+        {
+          "texte": "Rejoindre Malcar au sommet de la porte fortifiée",
+          "vers": "dieu-voile"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "malcar",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "dieu-voile",
+      "titre": "Le dieu voilé",
+      "region": "Satarla",
+      "lieu": "Fort Junia, la porte fortifiée et les remparts",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Dans les dernières lueurs du couchant, une troupe gravit l'éminence : des grooth à l'allure simiesque et des guerriers des tribus de la jungle, armés d'arcs, de sagaies, de boucliers et de massues. Le front s'élargit jusqu'à occuper tout le promontoire et se déploie hors de portée d'arbalète. Les rangs ne cessent de grossir : deux milliers de combattants, peut-être, face à moins de deux cents soldats.\n\nLa nuit tombe. De grands feux éclairent les visages farouches et les faciès simiesques. Les étendards sont des têtes fichées sur des piques, recouvertes d'un voile. Un silence lourd, comme avant l'orage.\n\nLa troupe s'écarte. Huit grooth portent un palanquin de bois mal équarri peint en rouge, dont le dais cache une silhouette assise. À côté se tient une femme en robe jaune, masquée d'une face de vieille femme ridée et grimaçante, et un colosse céruléen en cuirasse, crâne chauve et tresse rouge : Lok Kozaar.\n\nUn vieillard petit et trapu, en robe jaune crasseuse cousue de talismans, s'avance sur son bâton jusqu'au pied des remparts : « Bienheureux êtes-vous, hommes de Satarla ! Ainsi que les signes célestes l'ont annoncé, Kryphondus, le dieu perdu, est revenu parmi nous ! Il abattra les trônes des nations pour établir son juste règne sur la Lémurie ! Ouvrez les portes de votre maison de pierre, adorez le dieu et rejoignez son ost, et il fera pleuvoir sur vous ses bienfaits ! »\n\n« Nous servons le roi Davym Tarv, légitime souverain de Satarla », tonne le commandant, « et vous êtes ici sur ses terres. Fuyez tant que vous le pouvez ! »\n\nLe vieillard repart, presque satisfait. Huit soldats prisonniers sont agenouillés en haie devant le palanquin. La femme en jaune incante, bras levés. La silhouette se lève : un vieillard flasque et ridé, nu sous un pagne rouge, la démarche hautaine, le torse scintillant de poudre d'or, un voile collé au visage qui rend ses traits flous. Il passe entre les prisonniers, que les grooth égorgent un à un. Rouge de sang, il marche vers le fort ; la femme pousse un cri aigu et s'effondre. Son armée le suit en scandant « Kryphondus ! Kryphondus ! »\n\nLes flèches ricochent sur lui. Une pierre à fracasser le crâne d'un kroark le déstabilise à peine. Il pousse du plat de la main les portes de chêne cloutées : le bois éclate, et le vantail se brise en mille morceaux !",
+      "jeu": "Avant l'assaut, Malcar (sans engins de siège, le fort est imprenable, assure-t-il sans y croire) ordonne à Maben de préparer la nef pour aller donner l'alerte : faites qu'un héros en soit témoin, pour rappeler la nef arrimée au toit du donjon.\nLes héros peuvent agir : défendre, observer, tirer sur l'homme voilé. Laissez-les faire : rien ne le blesse (voile : voir la fiche de Jorkus), mais il n'a ni la force ni les pouvoirs d'un dieu.\nLa femme masquée est la Mégère : son sortilège de deuxième cercle donne à Jorkus la puissance de briser les portes ; elle s'effondre ensuite, épuisée.\nLe héraut est Mishart, druide jaune des marais de Festrel. Lok Kozaar donne des ordres à des hommes qui se dispersent dans les rangs. Parmi l'armée, des hommes en armure ou en vêtements civilisés, au visage hagard : villageois et soldats enrôlés de force.\nSi Kurta a survécu au ch. 2, il est aux côtés de Lok (non distribué).",
+      "notes": "L'homme voilé est Jorkus, devenu « Kryphondus ». Tant que le voile tient, il est invulnérable : seuls les ciseaux d'Afyra, sur l'île (ch. 5), peuvent le déchirer. Ne laissez aucun espoir de le vaincre ce soir.\nLa Mégère (Jessinda) est jeune sous son masque de vieille ; elle a accompagné Jorkus depuis Satarla.\nLok, fin stratège, sait que Satarla écraserait cette armée : il compte sur la surprise et fera prévenir Tyrus pour que Satarla doive diviser ses forces.",
+      "pistes": [
+        {
+          "texte": "Les portes cèdent : l'armée déferle dans la cour",
+          "vers": "assaut"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "jorkus",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "megere",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "mishart",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "lok-kozaar",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "malcar",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "assaut",
+      "titre": "Jouer l'assaut",
+      "region": "Satarla",
+      "lieu": "Fort Junia, la cour et le chemin de ronde",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "L'armée s'engouffre par la porte fracassée, menée par la silhouette dorée et ensanglantée de l'homme voilé. Dans la cour, des soldats l'assaillent : il s'offre à leurs lames, qui ne mordent pas sa chair, et ils sont aussitôt submergés par d'horribles grooth et des guerriers de la jungle fanatisés. Les hommes pris dans la cour se font massacrer sans pitié.\n\nSur le chemin de ronde, le commandant ordonne le repli vers le donjon. Il se tourne vers vous : « Fuyez pendant qu'il est encore temps ! »",
+      "jeu": "Laissez les héros agir, mais tout doit s'emballer vite : il ne leur reste qu'un choix, fuir. Une fois la cour investie, rester est une mauvaise idée : Fort Junia est perdu.\nMalcar leur rappelle leur mission (ils lui ont remis la lettre d'Embran) et les presse de partir.\nSi les héros l'ont sauvé à la nécropole (livre p. 94), Malcar confie à l'un d'eux son épée de famille, transmise depuis trois générations, à rapporter à son jeune fils Elbius, à Satarla : l'Épée de Malcar, arme alchimique (une fois par round, relance un 1 sur un jet de dégâts). Lui reste à son poste, en fier soldat.\nDeux voies :\n• le port, par l'escalier de la tour sud-ouest, pour prendre la gabarre prévue ;\n• le toit du donjon, où la nef volante est arrimée. Si les joueurs n'y pensent pas, Malcar leur enjoint de partir à bord, ou ils voient Maben rameuter ses hommes vers le toit.",
+      "notes": "Le port est déjà tombé (scène suivante) : la seule issue réelle est la nef.",
+      "pistes": [
+        {
+          "texte": "Descendre au port prendre la gabarre",
+          "vers": "port"
+        },
+        {
+          "texte": "Monter sur le toit du donjon rejoindre la nef volante",
+          "vers": "toit"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "jorkus",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "malcar",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "port",
+      "titre": "Le port pris",
+      "region": "Satarla",
+      "lieu": "Fort Junia, l'escalier de la falaise et le quai",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "L'escalier s'enfonce dans la roche, puis se poursuit en marches creusées à flanc de falaise, derrière un parapet. En bas, sur le quai de pierre et ses pontons de bois, gisent les corps des marins et des soldats massacrés. Une bande de guerriers de la jungle, venus sur de petites barques en contournant le promontoire, tient le port. La gabarre qui vous attendait donne de la gîte : elle prend l'eau.",
+      "jeu": "Barbares de Qush (coriaces) : 15 dans le livre, 5 cartes ; effectif réel 15. Guerriers d'élite de la jungle, ils se battent furieusement mais fuient dès qu'ils sont en infériorité numérique.\nS'emparer de la gabarre demanderait un âpre combat, et elle est sabordée, sans pilote ni marins pour la manœuvrer. La meilleure solution reste la nef volante, sur le toit du donjon.",
+      "notes": "Au chapitre 5, six barbares de Qush gardent ce même quai, autour d'un brasero.",
+      "pistes": [
+        {
+          "texte": "Remonter en hâte vers le toit du donjon et la nef",
+          "vers": "toit"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "barbare-de-qush",
+          "qty": 5,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "toit",
+      "titre": "Le toit du donjon",
+      "region": "Satarla",
+      "lieu": "Fort Junia, toit du donjon et ponton de la nef",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Vous débouchez sur le toit plat et crénelé du donjon. Des grooth l'ont investi en escaladant les murs : des créatures simiesques, agiles et voraces, menées par un chef massif à l'allure absolument bestiale, une grande hache de pierre au poing, un collier de cuir chargé d'os et d'un crâne humain au cou.\n\nAu bout du ponton de bois qui surplombe la mer, le capitaine Maben et ses hommes se sont retranchés sur la nef volante et repoussent les assaillants. Il vous faut vous frayer un chemin jusqu'à l'embarcadère et larguer les amarres.",
+      "jeu": "Chasseurs grooth du clan des falaises (coriaces) : 8 dans le livre, 6 cartes ; Maben et ses soldats en tuent un ou deux et subissent aussi des pertes (mettez en scène la défense de la nef). Graak Deux-Crânes (rival, vilénie 5, protection 1, Athlète).\nLes héros doivent rompre l'assaut, atteindre l'embarcadère et larguer les amarres pour que la nef s'éloigne.\nSi les héros ne sont pas partis avec la nef : ils la voient s'envoler dans la nuit et peuvent lui signaler leur présence, ou Maben les repère pendant leur fuite et vient les prendre à son bord. Le chapitre 5 part du principe qu'ils ont quitté Fort Junia à bord de la nef.\nFin de l'épisode : les héros récupèrent leurs points d'héroïsme dépensés et reçoivent chacun 1 point d'expérience.",
+      "notes": "Au chapitre 5, l'armée de Jorkus campe à Fort Junia et défait les forces du gouverneur local. Les héros, en nef volante, partent chercher l'île de Kryphondus à l'ouest du Pic d'Urghuul.",
+      "pistes": [
+        {
+          "texte": "Chapitre 5 : L'île de Kryphondus (fuite à bord de la nef volante)"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch4-graak",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch4-chasseur-grooth",
+          "qty": 6,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch4-marin-des-airs",
+          "qty": 2,
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 5,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    }
+  ]
+}

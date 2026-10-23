@@ -1,0 +1,1202 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "ch1",
+    "titre": "Le Dieu voilé — 1. L'oracle de Nemmereth",
+    "pitch": "Chapitre 1 de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 61-85, PDF p. 63-87).\n\nMandatés par Nirmus, les héros gagnent Halakh, la cité des assassins, pour consulter l'oracle de Nemmereth au Sanctuaire Noir. Le rituel des druides gris est sanglant : le dieu choisit son « messager » parmi les combattants, et l'oracle recueille son dernier souffle. Mais au matin, les héros se réveillent empoisonnés : Kurta, l'âme damnée de Lok Kozaar, a payé la confrérie de l'Ombre sanglante pour les éliminer. Ils ont une journée pour remonter jusqu'à l'alchimiste qui a préparé le poison, en évitant les poignards des assassins. Au bout de la piste, la demeure de Bekti, maître de la confrérie, et un jeune alchimiste enchaîné, Qirmar, qui rentrera avec eux à Satarla."
+  },
+  "personnages": {
+    "ch1-messager": {
+      "kind": "pnj",
+      "nom": "Messager de Nemmereth",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 1,
+      "agilite": 2,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 8,
+      "carrieres": [
+        {
+          "nom": "Assassin",
+          "rang": 1
+        },
+        {
+          "nom": "Prêtre",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Kriss"
+      ],
+      "commentaire": "Livre p. 63 (PDF p. 65). Druide 1 (carrière du livre, absente du catalogue) → Prêtre 1. Kriss halakhi d6M+1 dans le livre (avec sa Vigueur 1) : arme « Kriss » du catalogue (Mythic+, d6M+1), soit +1 aux dégâts par rapport au livre.\nTueur sacré : dans le cadre du rituel oraculaire du Sanctuaire Noir, dé de bonus à ses jets d'attaque.\nAcolyte de l'oracle, pieds nus, tunique et pantalon de laine écrue, kriss à la ceinture, foulard noué au cou dont il se bâillonne. Ils sont aussi nombreux que les héros et chacun affronte celui qui lui fait face ; au premier combattant qui tombe, l'oracle arrête le duel."
+    },
+    "ch1-rajka": {
+      "kind": "pnj",
+      "nom": "Rajka, lieutenant de l'Ombre sanglante",
+      "rang": "rival",
+      "region": "Halakh",
+      "vigueur": 1,
+      "agilite": 2,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 1,
+      "melee": 2,
+      "tir": 1,
+      "defense": 1,
+      "vitalite": 11,
+      "vilenie": 5,
+      "carrieres": [
+        {
+          "nom": "Ouvrier",
+          "rang": 1
+        },
+        {
+          "nom": "Mercenaire",
+          "rang": 0
+        },
+        {
+          "nom": "Voleur",
+          "rang": 1
+        },
+        {
+          "nom": "Assassin",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Cimeterre",
+          "degats": "d6",
+          "type": "M"
+        },
+        "Kriss"
+      ],
+      "avantages": [
+        "Baudrier de guerre",
+        "Gamin des rues"
+      ],
+      "desavantages": [
+        "Borgne/oreille coupée"
+      ],
+      "commentaire": "Livre p. 85 (PDF p. 87) : 5 points de vilénie, 4 après le matin (il en dépense 1 pour s'éclipser de l'auberge sans qu'on puisse le rattraper). Cimeterre d6+1 et kriss d6M+1 dans le livre (avec sa Vigueur 1) : Cimeterre d6 (arme du compte, comme la Perle du Beshaar) et « Kriss » du catalogue (d6M+1, +1 par rapport au livre). Baudrier de guerre : son pourpoint de cuir le protège comme une armure moyenne, d6-2 (2). Gamin des rues : dé de bonus avec les gens des bas-fonds et pour filer ou semer quelqu'un en ville. Borgne (œil gauche) : dé de malus selon les circonstances.\nHalakhi assez grand, nez busqué, yeux enfoncés, l'œil gauche d'une blancheur laiteuse ; robes halakhies banales, turban d'où s'échappent des mèches noires. Second de Bekti."
+    },
+    "ch1-bekti": {
+      "kind": "pnj",
+      "nom": "Bekti, maître de l'Ombre sanglante",
+      "rang": "rival",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 3,
+      "esprit": 2,
+      "aura": 1,
+      "initiative": 2,
+      "melee": 2,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 10,
+      "vilenie": 5,
+      "carrieres": [
+        {
+          "nom": "Marchand",
+          "rang": 1
+        },
+        {
+          "nom": "Mercenaire",
+          "rang": 1
+        },
+        {
+          "nom": "Gladiateur",
+          "rang": 0
+        },
+        {
+          "nom": "Assassin",
+          "rang": 3
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Kriss de Badhasar",
+          "degats": "d6M+1",
+          "type": "M",
+          "notes": "Kriss halakhi de grande qualité, forgé à Badhasar (monts Besharoon), insigne du maître de l'Ombre sanglante : une fois par round, relance un 1 obtenu sur un jet de dégâts."
+        }
+      ],
+      "armures": [
+        "Armure légère"
+      ],
+      "avantages": [
+        {
+          "nom": "Arme favorite",
+          "detail": "kriss de Badhasar"
+        },
+        "Inspirateur"
+      ],
+      "desavantages": [
+        "Arrogant",
+        "Gars de la ville"
+      ],
+      "commentaire": "Livre p. 85 (PDF p. 87) : 5 points de vilénie. Kriss halakhi d6M dans le livre (Vigueur 0) : arme propre « Kriss de Badhasar » alignée sur le Kriss du catalogue (d6M+1, +1 par rapport au livre). Armure de cuir d6-3 (1) → Armure légère. Arme favorite : dé de bonus à l'attaque avec son kriss. Inspirateur : pour le round suivant, ses hommes ont un dé de bonus à tous leurs jets d'attaque (BoL p. 41).\nGaillard qui ne paie pas de mine, plus tout jeune, sec comme un coup de trique, dangereux comme une vipère rouge du Beshaar. N'a jamais quitté Halakh. Se bat jusqu'à la mort et protège sa famille (son épouse Ajisha et leurs trois enfants)."
+    },
+    "ch1-daruk": {
+      "kind": "pnj",
+      "nom": "Daruk, tavernier du Puits sec",
+      "rang": "rival",
+      "region": "Halakh",
+      "vigueur": 2,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 1,
+      "melee": 2,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 14,
+      "vilenie": 3,
+      "carrieres": [
+        {
+          "nom": "Fermier",
+          "rang": 0
+        },
+        {
+          "nom": "Mercenaire",
+          "rang": 1
+        },
+        {
+          "nom": "Assassin",
+          "rang": 1
+        },
+        {
+          "nom": "Marchand",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Massue"
+      ],
+      "avantages": [
+        "Amis dans la pègre",
+        "Dur à cuire",
+        "Fêtard"
+      ],
+      "desavantages": [
+        "Illettré",
+        "Manchot/unijambiste"
+      ],
+      "commentaire": "Livre p. 84 (PDF p. 86). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Gourdin clouté d6+2 dans le livre (avec sa Vigueur 2) : « Massue » du catalogue (d6), l'arme la plus proche. Dur à cuire déjà compté dans sa vitalité. Fêtard : dé de bonus pour résister à la boisson. Manchot : a perdu le bras gauche, dé de malus quand la situation l'impose.\nAncien de l'Ombre sanglante « retiré des affaires » après une blessure infectée ; d'une loyauté à toute épreuve. Joue les naïfs et oriente les soupçons vers une autre tablée ; son fils sert en salle et file prévenir Bekti par le passage de la cave."
+    },
+    "ch1-assassin": {
+      "kind": "pnj",
+      "nom": "Assassin de l'Ombre sanglante",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Assassin",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Kriss",
+        "Dague"
+      ],
+      "commentaire": "Livre p. 84 (PDF p. 86). Kriss d6M dans le livre (Vigueur 0) : « Kriss » du catalogue (d6M+1, +1 par rapport au livre). Couteaux de lancer d6M → « Dague » (d6M, peut être lancée).\nPar surprise, un assassin peut ajouter son rang d'assassin (2) à un jet d'attaque ou de dégâts. Dé de bonus aux tests de discrétion pour filer les héros ou leur échapper en ville. Ni surhommes ni fanatiques : un captif peut craquer sous la menace et livrer la taverne du Puits sec."
+    },
+    "ch1-assassin-arbaletrier": {
+      "kind": "pnj",
+      "nom": "Assassin de l'Ombre sanglante (arbalète)",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Assassin",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Arbalète",
+        "Kriss",
+        "Dague"
+      ],
+      "commentaire": "Livre p. 84 (PDF p. 86) : le profil des assassins, avec l'arbalète que « certains pourront » porter (d6, portée 30 m, rechargement 1 round). Fiche distincte pour les reconnaître sur la rampe. Le livre donne Tir 0. Kriss → « Kriss » du catalogue (d6M+1) ; couteaux de lancer → « Dague ».\nPar surprise, +2 (rang d'assassin) à un jet d'attaque ou de dégâts. Dans le piège en pleine rue, deux d'entre eux tirent depuis les toits."
+    },
+    "ch1-soldat-guet": {
+      "kind": "pnj",
+      "nom": "Soldat du guet d'Halakh",
+      "rang": "coriace",
+      "region": "Désert de Beshaar",
+      "vigueur": 1,
+      "agilite": 2,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 1,
+      "defense": 0,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        },
+        {
+          "nom": "Mercenaire",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Cimeterre",
+          "degats": "d6",
+          "type": "M"
+        },
+        "Javelot / fléchette"
+      ],
+      "armures": [
+        "Armure légère"
+      ],
+      "commentaire": "Livre p. 84 (PDF p. 86). Cimeterre d6+1 dans le livre (avec sa Vigueur 1) : Cimeterre d6 (arme du compte). 2 javelots d6M → « Javelot / fléchette ».\nMercenaire beshaari du guet d'Halakh, au service du prince : brutal, corrompu, détesté de la population. Une patrouille compte 5 hommes."
+    },
+    "ch1-milicien-kalindhit": {
+      "kind": "pnj",
+      "nom": "Milicien de la tribu des Kalindhit",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 1,
+      "agilite": 2,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 1,
+      "defense": 0,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        },
+        {
+          "nom": "Mercenaire",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Cimeterre",
+          "degats": "d6",
+          "type": "M"
+        },
+        "Javelot / fléchette"
+      ],
+      "armures": [
+        "Armure légère"
+      ],
+      "commentaire": "Pas de profil propre : le livre (p. 75) dit de compter les miliciens comme un mélange de piétaille et de coriaces au profil des soldats du guet (p. 84). Fiche coriace copiée sur le guet, équipement compris (choix d'adaptation).\nMilice du quartier des Kalindhit, au pied du plateau : huit hommes attendent les héros devant la maison de Cheptaki, d'autres sont postés sur les toits. Ils connaissent parfaitement leur quartier."
+    },
+    "ch1-chemdi": {
+      "kind": "pnj",
+      "nom": "Chemdi, champion de Parchak",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 2,
+      "agilite": 1,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 2,
+      "tir": -1,
+      "defense": 1,
+      "vitalite": 8,
+      "carrieres": [
+        {
+          "nom": "Ouvrier",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Poings de Chemdi",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Mains nues : d3 + Vigueur/2. Avec l'avantage bagarreur, dé de bonus aux attaques à mains nues."
+        }
+      ],
+      "avantages": [
+        "Bagarreur"
+      ],
+      "commentaire": "Livre p. 73 (PDF p. 75). Mains nues d3+1 dans le livre (d3 + Vigueur/2) : arme propre « Poings de Chemdi » d3 (pas de mains nues au catalogue). Bagarreur : dé de bonus à ses jets d'attaque à mains nues (Mêlée 2* du livre).\nColosse torse nu, lèvre fendue, hématome sur la joue, lutteur vedette de l'estrade du bouge de Jembal. Combat à mains nues : le vaincu perd connaissance."
+    },
+    "ch1-vagabond": {
+      "kind": "pnj",
+      "nom": "Vagabond soudoyé de la Ville nomade",
+      "rang": "pietaille",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 1,
+      "armes": [
+        {
+          "nom": "Bâtons et gourdins (vagabonds)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Bâtons et gourdins des miséreux soudoyés par l'Ombre sanglante."
+        }
+      ],
+      "commentaire": "Livre p. 79 : piétaille à 1 point de vitalité, bâtons et gourdins, d3 dégâts. Le livre ne donne pas de bonus d'attaque : Mêlée 0, attributs à 0. Arme propre d3 (le gourdin du catalogue fait d6M).\nMendiants et vagabonds payés par la confrérie (deux par héros) ; les assassins frappent cachés au milieu d'eux."
+    },
+    "ch1-drajit": {
+      "kind": "pnj",
+      "nom": "Drajit, aubergiste du Coursier bleu",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Marchand",
+          "rang": 2
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nHalakhi replet aux cheveux poivre et sel, sympathique et affable. Tient l'auberge du Coursier bleu (rue attenante à la Chaussée des Princes) avec son épouse Ardana, ses fils Drajiti et Kichal, ses filles Micha et Yanti. Menacé par l'Ombre sanglante, il a répandu le poison dans les lits des héros. S'il reste libre, il met sa famille à l'abri puis se pend dans sa cuisine."
+    },
+    "ch1-druide-gris": {
+      "kind": "pnj",
+      "nom": "Druide gris du Sanctuaire Noir",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Kriss"
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée. Druide (carrière du livre, absente du catalogue) → Prêtre.\nLongue robe grise, visage couvert de cendre, mains dissimulées dans les manches. Trois druides conduisent les héros à l'oracle, leur bandent les yeux puis les bâillonnent ; l'un note le message du dieu sur une tablette de cire. Ils ne répondent à aucune question."
+    },
+    "ch1-oracle": {
+      "kind": "pnj",
+      "nom": "L'oracle de Nemmereth",
+      "rang": "rival",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 2,
+      "aura": 2,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 10,
+      "vilenie": 3,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 3
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée (il ne combat pas). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Druide (carrière du livre, absente du catalogue) → Prêtre.\nLe devin du Sanctuaire Noir : crâne rasé, robe de brocart gris aux motifs argentés, visage maquillé de noir sur les saillies et de blanc dans les creux, voix atone. Il recueille le dernier souffle du « messager » choisi par le dieu."
+    },
+    "ch1-amchak": {
+      "kind": "pnj",
+      "nom": "Amchak l'herboriste",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Médecin",
+          "rang": 2
+        }
+      ],
+      "desavantages": [
+        "Âgé"
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Herboriste → Médecin.\nVieil homme au visage plus parcheminé qu'une momie, traits farouches d'origine nomade ; bourru mais diligent. Échoppe aux pots de terre à trois rues de l'auberge de Drajit."
+    },
+    "ch1-amaston": {
+      "kind": "pnj",
+      "nom": "Amaston de Lysor",
+      "rang": "coriace",
+      "region": "Lysor",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 2,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Médecin",
+          "rang": 3
+        }
+      ],
+      "desavantages": [
+        "Âgé"
+      ],
+      "commentaire": "Le livre ne donne que médecin 3 (livre p. 72) ; le reste de la fiche est inventé (non-combattant).\nLe « bon docteur » : petit homme d'une soixantaine d'années au teint clair et aux cheveux blonds cendrés, regard bienveillant. Étrange petite maison contre le mur d'enceinte de la Ville nomade ; soigne les miséreux sans rien exiger."
+    },
+    "ch1-madri": {
+      "kind": "pnj",
+      "nom": "Madri la potière",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Ouvrier",
+          "rang": 2
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante). Potière (artisane) → Ouvrier.\nFemme d'âge mûr au visage sévère buriné par le soleil, sèche et menue (1,50 m), main gauche atrophiée à trois doigts. Maison au patio fleuri sur le plateau, à gauche du Sanctuaire Noir, après la fontaine aux cathgans. Signe ses poteries d'une fleur de jasmin et grave les initiales des clients."
+    },
+    "ch1-jembal": {
+      "kind": "pnj",
+      "nom": "Jembal le Roseau",
+      "rang": "coriace",
+      "vigueur": 1,
+      "agilite": 1,
+      "esprit": 1,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 6,
+      "carrieres": [
+        {
+          "nom": "Marchand",
+          "rang": 2
+        },
+        {
+          "nom": "Voleur",
+          "rang": 1
+        }
+      ],
+      "avantages": [
+        "Amis dans la pègre"
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée. Pas de région : il n'est sans doute pas originaire d'Halakh.\nTrès petit et trapu, visage rond et glabre, peau pâle ; quelque chose de dangereux émane de lui. Patron d'un bouge-lupanar dans un vieil entrepôt au nord des remparts de la Ville nomade, avec une estrade de lutte. Très informé des affaires louches. N'aide que ses amis ; ses hommes de main veillent."
+    },
+    "ch1-parchak": {
+      "kind": "pnj",
+      "nom": "Parchak",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Marchand",
+          "rang": 1
+        }
+      ],
+      "desavantages": [
+        "Soiffard"
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nGros homme passablement éméché, propriétaire du lutteur Chemdi ; empoche les paris perdus de Jembal, qui le déteste."
+    },
+    "ch1-sebki": {
+      "kind": "pnj",
+      "nom": "Sebki, prêtre d'Afyra",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 1,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Prêtre",
+          "rang": 2
+        },
+        {
+          "nom": "Médecin",
+          "rang": 1
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nPrêtre d'Afyra au temple des vingt dieux ; peut intercéder auprès de la déesse et conduire les héros à la Guilde du Lendemain."
+    },
+    "ch1-rimshak": {
+      "kind": "pnj",
+      "nom": "Rimshak, maître de la Guilde du Lendemain",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 2,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Alchimiste",
+          "rang": 3
+        },
+        {
+          "nom": "Assassin",
+          "rang": 1
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (assassin 1 : son passé d'empoisonneur).\nHalakhi entre deux âges, longue barbiche noire, sourire édenté, expert en poisons. Laboratoire dans une maison banale près du temple des vingt dieux, heurtoir en forme de ganuc. Vend ses antidotes à prix scandaleux."
+    },
+    "ch1-rassa": {
+      "kind": "pnj",
+      "nom": "Rassa, matriarche des Kalindhit",
+      "rang": "coriace",
+      "region": "Halakh",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 1,
+      "aura": 2,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Noble",
+          "rang": 3
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante).\nJeune Halakhie d'une trentaine d'années, visage potelé, grands yeux noirs, pli amer à la bouche ; reçoit en allaitant un nourrisson, entre deux vieillards, un géant blond armé d'un lourd gourdin adossé derrière elle. Fille d'un ami de Cheptaki ; chef de la tribu qui tient l'ouest de la ville."
+    },
+    "ch1-liu-liong": {
+      "kind": "pnj",
+      "nom": "Liu Liong, de la Main de Jade",
+      "rang": "coriace",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 1,
+      "aura": 1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "carrieres": [
+        {
+          "nom": "Marchand",
+          "rang": 2
+        }
+      ],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant). Pas de région : Xi Lu du Khanat, absent du catalogue.\nAncien assistant de Min Tan, la trentaine, visage grêlé de petites cicatrices, sérieux mais affable ; rougit en parlant de Jia. A ouvert le premier comptoir de la Main de Jade à Halakh, près de la Porte de Malakut. Peut faire sortir les héros de la ville en secret."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "arrivee-halakh",
+      "titre": "Cap au sud : arrivée à Halakh",
+      "region": "Halakh",
+      "lieu": "Chaussée des Princes, auberge du Coursier bleu, Sanctuaire Noir",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Quinze à vingt jours de galère marchande le long de la côte sud du golfe de Satarla, puis sur le Malak jusqu'à Malakut ; encore deux semaines de route le long du fleuve, puis à travers les plateaux arides au pied des monts Besharoon. Enfin, Halakh.\n\nVous franchissez la Porte de Malakut au milieu d'une longue file de chariots et remontez la Chaussée des Princes, noire de monde, qui grimpe en lacets entre des maisons basses blanchies à la chaux. Tout en haut du plateau se dresse la citadelle ; à son pied, la silhouette lugubre du Sanctuaire Noir. L'air sent le jasmin et la fumée fade des feux de tourbe.\n\nDans une rue attenante, plus calme que la grande artère, l'auberge du Coursier bleu est un petit établissement cossu sans être luxueux. Son patron, Drajit, un Halakhi replet aux cheveux poivre et sel, vous accueille avec un large sourire et vous renseigne volontiers sur la ville. Mais sur le Sanctuaire Noir, il se contente de répondre que « l'on ne parle pas de ces choses-là ».\n\nDans la cour du Sanctuaire Noir, un druide se tient près du puits, immobile dans sa longue robe grise, le visage couvert de cendre, les mains dissimulées dans ses larges manches. L'oracle, dit-il poliment, ne reçoit pas les simples dévots.",
+      "jeu": "Voyage sans encombre, sauf si vous en décidez autrement : un mois et demi environ. Décor d'Halakh : 03-halakh.md (livre p. 24-32) ; le Sanctuaire Noir, livre p. 31.\nAuberge du Coursier bleu : Drajit, son épouse Ardana (revêche, toujours en cuisine), ses fils Drajiti et Kichal, ses filles Micha et Yanti.\nAu Sanctuaire Noir : quand les héros présentent le coffret laqué de Nirmus (les deux phalanges de Chamla Kirdat), le druide trahit sa surprise, examine l'ossement avec révérence et disparaît avec le coffret. Il revient les mains vides : l'offrande est agréée, l'oracle les recevra le soir même, à la tombée de la nuit.\nAucun jet.",
+      "notes": "Kurta, ancien de la confrérie d'assassins de l'Ombre sanglante, est arrivé un jour ou deux avant les héros. Avec l'or que Lok Kozaar a reçu du temple, il a chargé ses anciens frères de les tuer. La confrérie guette leur arrivée et attend qu'ils choisissent une auberge.\nPendant leur visite nocturne au Sanctuaire Noir, des assassins menaceront Drajit et sa famille. Ils lui feront répandre dans les lits des héros la poudre d'une fiole en grès : de l'alam-kali préparé par Qirmar, l'alchimiste prisonnier de la confrérie. En secret, Qirmar y a ajouté un retardateur qui repousse la mort d'une douzaine d'heures, dans l'espoir que les victimes remontent jusqu'à lui et le libèrent.",
+      "pistes": [
+        {
+          "texte": "Revenir au Sanctuaire Noir à la tombée de la nuit pour consulter l'oracle",
+          "vers": "messager"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-drajit",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch1-druide-gris",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "messager",
+      "titre": "Le messager de Nemmereth",
+      "region": "Halakh",
+      "lieu": "Sanctuaire Noir, la caverne du grand crâne",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Après le coucher du soleil, la cour du Sanctuaire Noir est déserte. Trois druides en robes grises vous attendent. Les falots de tourbe qui encadrent l'autel font onduler les ombres sur la statue de Nemmereth : on croirait voir remuer les asticots qui emplissent sa bouche et ses orbites.\n\nPour approcher l'oracle, vous devez laisser armes et équipement, revêtir une simple tunique de laine écrue et aller pieds nus, les yeux bandés. Vous ne poserez aucune question, ne répondrez que si l'on vous interroge, obéirez sur-le-champ et n'interférerez en rien dans la cérémonie, quoi qu'il arrive. Le sacrilège qui profanerait le rituel le paierait de sa vie.\n\nCouloirs, puis un interminable escalier en colimaçon aux marches glaciales. L'air fraîchit, l'odeur de terre humide grandit. On vous ôte enfin vos bandeaux : une vaste caverne suintante. Au fond, un crâne immense, haut de plus de trois mètres, fait de centaines de calottes crâniennes assemblées, saille de la paroi ; des flammes vacillent dans ses orbites et sa bouche béante est un puits d'obscurité. Dans des dizaines de niches, des crânes-lanternes vous fixent de leurs orbites flamboyantes.\n\nUn homme émerge sans un bruit de la bouche du crâne. Robe de brocart gris aux motifs argentés, crâne rasé, visage peint de noir sur les saillies et de blanc dans les creux. Derrière lui, des hommes et des femmes pieds nus, autant que vous, en laine écrue, un kriss à la ceinture, un foulard noué au cou. D'une voix atone :\n« Qui vient consulter le dieu ? »\n« D'où venez-vous ? »\n« Quelle question vous amène ? »",
+      "jeu": "Après les trois questions rituelles, les druides remettent les bandeaux aux héros, cette fois pour leur bâillonner le nez et la bouche ; en face, les acolytes se bâillonnent de leur foulard. Puis les druides glissent un kriss dans la main de chaque héros (Kriss du catalogue) et se retirent.\n« À présent, le dieu va choisir son messager. » Les messagers attaquent aussitôt : un par héros, chacun contre celui qui lui fait face. Tueur sacré : dé de bonus à leurs jets d'attaque pendant le rituel. Héros sans armure ni équipement.\nEffectif réel : autant de messagers que de héros (4 cartes ici : ajustez).\nDès qu'un combattant s'effondre, héros ou messager, l'oracle arrête le combat. Les acolytes reculent.\nSi un héros tombe : la cérémonie continue avec lui comme messager. Il peut « défier la mort » (BoL p. 58) : les acolytes le découvrent vivant, l'oracle déclare que le dieu l'a rendu, et le héros ne se souvient de rien.\nFaveur secrète : si le héros qui a porté le coup fatal (il garde son kriss) va le planter dans le mur des ex-voto de la cour, offrez-lui plus tard un dé de bonus, une fois, dans une situation de vie ou de mort, sans explication. En cas de réussite, il se revoit fichant la dague ensanglantée dans le mur.\nParoles de l'oracle : le message sera porté au maître de l'ordre, à reprendre demain matin. Les héros sont désormais en dette envers « Celui du Long Sommeil ». Retour à l'auberge dans un état second : Drajiti leur ouvre.",
+      "notes": "Le mourant exhale son dernier souffle à l'oreille de l'oracle, qui répète le message du dieu à un druide, et celui-ci le note sur une tablette de cire. Le texte est l'aide de jeu I, remise le lendemain (scène « Le texte de l'oracle »).\nLa dette de Nemmereth : Nirmus savait que l'oracle endetterait les héros auprès des druides gris. Un jour, hors de cette saga, quelqu'un viendra réclamer un service (mission dangereuse, assassinat, relique). S'ils refusent, la Main grise s'occupera d'eux : désavantage traqué (druides gris) pour tous.\nPendant ce temps, à l'auberge, Drajit répand le poison dans les lits des héros.",
+      "pistes": [
+        {
+          "texte": "Le lendemain matin : un réveil pénible",
+          "vers": "reveil"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-oracle",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "ch1-druide-gris",
+          "qty": 3,
+          "attitude": "neutre"
+        },
+        {
+          "perso": "ch1-messager",
+          "qty": 4,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "reveil",
+      "titre": "Un réveil pénible",
+      "region": "Halakh",
+      "lieu": "Auberge du Coursier bleu",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Vous vous réveillez après une nuit agitée, fatigués, les membres lourds, le corps endolori. Bientôt, des crampes musculaires pénibles vous saisissent. Et vous présentez tous les mêmes symptômes.\n\nEn bas, quelques clients sont attablés, servis par les deux filles de l'aubergiste. Sur le seuil, Drajit discute avec un Halakhi assez grand, au nez busqué, aux yeux enfoncés dans leurs orbites ; le gauche a la blancheur laiteuse de la cécité. Robes halakhies banales, turban d'où s'échappent quelques mèches noires. Drajit a l'air agité et s'éponge sans cesse le front. Quand il vous aperçoit dans l'escalier, les couleurs désertent son visage. Il se tourne vers l'homme en bredouillant d'un air implorant. L'autre le foudroie du regard, passe un pouce sur sa gorge, et s'éclipse.",
+      "jeu": "L'homme (Rajka) disparaît dans une allée latérale, impossible à rattraper : il dépense 1 point de vilénie.\nDrajit avoue sans qu'on le malmène : des hommes de l'Ombre sanglante, confrérie d'assassins qu'il ne connaît que de nom, ont menacé de tuer sa famille ; il a saupoudré leurs couches d'une poudre blanchâtre, rien à récupérer dans les draps. Sa famille ne sait rien.\n• La fiole : jetée dans le vieux puits-dépotoir de l'arrière-cour, peu profond. Brisée, un peu de poudre aux parois, fond gravé d'une fleur de jasmin et du monogramme « CM ». Elle facilite beaucoup l'enquête ; sinon, suggérez-la plus tard (Amchak, Amaston).\n• Il envoie chez le vieil Amchak, herboriste du quartier.\n• Son cousin parle d'un bouge dans un entrepôt au nord des remparts de la Ville nomade : Jembal le Roseau y sait tout des affaires louches.\n• Clients et voisins n'ont rien vu.\nEMPOISONNEMENT (alam-kali ralenti) : au réveil, test de Vigueur Difficile (-2) ; échec = premiers effets. Ensuite, à la fin de chaque scène, test de Vigueur Moyen (+0) pour tous ; chaque échec = une croix sur la fiche, effets cumulatifs :\n1 : -1 vitalité (impossible à soigner tant que dure le poison)\n2 : -1 aux tests de Vigueur et aux dégâts\n3 : -1 aux tests d'Agilité (donc à l'attaque)\n4 : -1 en Défense\n5 : dé de malus à tous les tests\n6 : paralysie, asphyxie, coma et mort en d6M minutes ; 1 point d'héroïsme maintient à l'étape 5 jusqu'au test suivant.\nSuccès héroïque : une croix effacée. Échec critique : deux croix. Environ dix heures avant l'issue fatale. Ajustez le rythme : de la tension, mais des joueurs habiles doivent arriver le moins diminués possible au combat final.\nEmbuscades : voir la scène « Les poignards de l'Ombre sanglante ». Si les héros reviennent ici plus tard, cinq ou six assassins les y attendent.",
+      "notes": "Rajka, second de Bekti, court l'avertir que l'empoisonnement a échoué. Les assassins croient que Drajit a désobéi. Bekti rassemble la confrérie : un groupe de cinq ou six assassins arrive à l'auberge après le départ des héros, deux autres groupes les traquent dans la ville.\nSi on le laisse libre, Drajit met sa famille à l'abri chez des parents et se pend dans sa cuisine, pour apaiser la vengeance de la confrérie.\nL'alam-kali (« l'étreinte du serpent » en kashtien) : poison alchimique légendaire des marais de Kasht, mortel en quelques heures. Il ne se soigne qu'avec un contrepoison préparé à partir d'une dose du poison lui-même. La seule issue : retrouver l'alchimiste (Qirmar, chez Bekti), qui a d'ailleurs déjà préparé le contrepoison.",
+      "pistes": [
+        {
+          "texte": "Chercher la fiole, puis consulter Amchak l'herboriste",
+          "vers": "amchak"
+        },
+        {
+          "texte": "Chercher Jembal le Roseau près de la Ville nomade",
+          "vers": "jembal"
+        },
+        {
+          "texte": "Retourner au Sanctuaire Noir chercher l'oracle",
+          "vers": "texte-oracle"
+        },
+        {
+          "texte": "Demander l'aide de Liu Liong au comptoir de la Main de Jade",
+          "vers": "main-de-jade"
+        },
+        {
+          "texte": "Chercher le secours des dieux au temple des vingt dieux",
+          "vers": "temple-guilde"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe (embuscade, à placer quand vous voulez)",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-drajit",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch1-rajka",
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "texte-oracle",
+      "titre": "Le texte de l'oracle",
+      "region": "Halakh",
+      "lieu": "Sanctuaire Noir, la cour",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Dans la cour du Sanctuaire Noir, le druide qui vous a reçus la veille vous attend. Il vous remet un étui à parchemin : l'esprit sublime d'un dieu, prévient-il, ne se révèle pas d'emblée à l'entendement limité des hommes ; il vous faudra du temps pour dénouer l'écheveau des paroles divines.\n\nL'oracle de Nemmereth :\nLes funérailles sont célébrées,\nMais le sépulcre est déserté.\nEnvolé le Corbeau,\nIl avait pourtant choisi son lot.\nIl n'est plus parmi les vivants,\nEt les défunts cherchent l'absent.\nQue son courroux ne soit pas vain :\nQui rendra au dieu ce qui lui appartient ?\nLa trame sacrée des dieux\nN'est pas faite pour ces cieux.\nPour dénouer le fil de la divine,\nÀ contre-courant, cherchez à l'origine.\nCe qui le tissa pourra le défaire,\nDon ignoré d'une habile filandière.",
+      "jeu": "Aide de jeu I (livre p. 83, PDF p. 85) : à remettre aux joueurs. Le décryptage se fera au chapitre 2 avec Nirmus.\nSi les héros parlent de leur empoisonnement, le druide les scrute : l'ombre du dieu plane bien sur leur visage. Mais il ne lui appartient pas de décider s'ils vivront : Nemmereth en est seul juge.\nScène possible à tout moment de la journée, ou à l'épilogue.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "notes": "Clés de l'oracle, d'après l'intrigue de la saga (06-la-saga.md) : les funérailles et le sépulcre déserté sont le suicide rituel de Jorkus, dont le tombeau est vide. Le Corbeau, c'est son surnom. « Les défunts cherchent l'absent » : les Passeurs de Nemmereth sont en quête de son âme. La trame sacrée des dieux est le voile de Kryphondus, tissé dans la soie divine. « À contre-courant, cherchez à l'origine » : remonter le fleuve jusqu'à l'île de Kryphondus. L'habile filandière est Afyra, et son don ignoré, ce sont les ciseaux divins, seuls capables de déchirer le voile (chapitre 5).",
+      "pistes": [
+        {
+          "texte": "Consulter Amchak l'herboriste",
+          "vers": "amchak"
+        },
+        {
+          "texte": "Chercher Jembal le Roseau",
+          "vers": "jembal"
+        },
+        {
+          "texte": "Aller au comptoir de la Main de Jade",
+          "vers": "main-de-jade"
+        },
+        {
+          "texte": "Prier au temple des vingt dieux",
+          "vers": "temple-guilde"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-druide-gris",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "amchak",
+      "titre": "Amchak l'herboriste",
+      "region": "Halakh",
+      "lieu": "L'échoppe d'Amchak, à trois rues du Coursier bleu",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Dès la porte franchie, la petite boutique exhale une fragrance fraîche et complexe d'herbes et de fleurs. Derrière le comptoir, des rangées de pots en terre s'alignent sur des étagères poussiéreuses. Le vieil Amchak, au visage plus parcheminé que celui d'une momie, a des traits farouches de nomade. Bourru au premier abord, il s'empresse pourtant de vous examiner.",
+      "jeu": "• Il confirme l'empoisonnement sans pouvoir identifier le poison, ni dire ses effets ou sa durée. Il vend une fiole d'antidote (deux doses), sans effet : c'est un antidote aux poisons naturels.\n• Avec le débris de la fiole : poison alchimique, sa science est impuissante. Il sent de l'alnath, une liane des marais rare et terriblement dangereuse. Le monogramme ne lui dit rien, mais il reconnaît le travail de Madri la potière : la fleur de jasmin est sa signature, et elle grave les initiales de l'acheteur sur les commandes. Il peut montrer ses propres jarres. Madri habite sur le plateau, dans une rue à gauche du Sanctuaire Noir, après la fontaine aux cathgans (porphyre rouge, deux vipères du désert entrelacées).\n• Un médecin ? Amaston de Lysor, brave savant de la Ville nomade.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Montrer la fiole à Madri la potière",
+          "vers": "madri"
+        },
+        {
+          "texte": "Consulter Amaston de Lysor dans la Ville nomade",
+          "vers": "amaston"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-amchak",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "amaston",
+      "titre": "Amaston de Lysor",
+      "region": "Halakh",
+      "lieu": "La Ville nomade, maison d'Amaston contre le mur d'enceinte",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une étrange petite demeure, qui tranche avec les maisons halakhies, se dresse contre le mur d'enceinte de la Ville nomade. Au pied du perron, des miséreux patientent sur des bancs de pierre, qui se tenant le bras, qui crachant ses poumons. Un serviteur halakhi ouvre justement la porte pour laisser sortir une femme et sa fillette.\n\nAmaston de Lysor est un petit homme d'une soixantaine d'années au teint clair et aux cheveux blonds cendrés. Il pose sur vous un regard bienveillant et vous invite à exposer le motif de votre venue.",
+      "jeu": "Être reçu tout de suite : un peu de persuasion (test d'Aura), sinon une bonne heure d'attente.\n• Un poison court dans leurs veines ; ils sont en grave danger.\n• Avec la fiole : un puissant poison alchimique, pas à la portée du premier alchimiste venu. Il s'étonne de la lenteur de son action.\n• La « Guilde du Lendemain » : des alchimistes qui soignent les empoisonnés, pratique hélas courante à Halakh. Il ignore comment les contacter, mais les prêtres d'Afyra du temple des vingt dieux auraient des accointances avec eux.\nLe « bon docteur » ne fait pas payer et laisse chacun donner ce qu'il veut. Il soigne les blessures (médecin 3). Il offre une potion fortifiante : dé de bonus au prochain test de Vigueur contre le poison pour le héros qui la boit.\nLa Ville nomade est un terrain vague mal famé, propice à l'embuscade des vagabonds soudoyés (voir « Les poignards de l'Ombre sanglante »).\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Chercher la Guilde du Lendemain au temple des vingt dieux",
+          "vers": "temple-guilde"
+        },
+        {
+          "texte": "En ressortant : des vagabonds encerclent les héros",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-amaston",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "madri",
+      "titre": "Madri la potière",
+      "region": "Halakh",
+      "lieu": "Sur le plateau, après la fontaine aux cathgans",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une servante vous fait traverser un ravissant petit patio aux belles faïences, débordant de fleurs. Un chèvrefeuille odorant se déverse du toit en une cascade de minuscules fleurs jaune pâle. Elle vous mène à l'atelier de poterie, à l'arrière de la maison.\n\nMadri est une femme d'âge mûr au visage sévère, buriné par le soleil du désert, sèche et menue : elle mesure à peine un mètre cinquante. Sa main gauche, atrophiée, n'a que trois doigts, ce qui ne l'empêche pas de travailler l'argile avec un talent consommé.",
+      "jeu": "Les héros ne viennent ici qu'avec le tesson de la fiole.\n• Elle reconnaît son travail et le monogramme : CM, Cheptaki Mendaï, alchimiste de renom mort chez lui il y a quelques mois, d'un malaise dû à son grand âge, dit-on. Son laboratoire avait été pillé et son disciple, « un jeune homme brillant, originaire de Malakut, dont je ne me rappelle plus le nom », a disparu. Tout le monde pense qu'il a volé le matériel pour faire carrière ailleurs.\n• Cheptaki vivait dans le quartier des Kalindhit, au pied du plateau : porte au heurtoir en forme de cornue, sur une placette face à la fontaine publique. Elle ignore si quelqu'un y vit encore.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Se rendre à la maison de Cheptaki, quartier des Kalindhit",
+          "vers": "maison-cheptaki"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-madri",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "jembal",
+      "titre": "Jembal le Roseau",
+      "region": "Halakh",
+      "lieu": "Le bouge de Jembal, vieil entrepôt au nord de la Ville nomade",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Les portes de l'entrepôt décrépit sont grandes ouvertes sur un brouhaha. Des hommes à la mine patibulaire traînent devant l'entrée, des femmes fardées hèlent les passants. À l'intérieur, un bouge sombre saturé de fumée, de sueur et de mauvaise bière ; une mezzanine découpée en chambres à rideau s'étend sur la moitié de la salle. La foule se presse autour d'une estrade carrée où un colosse torse nu, lèvre fendue, lève les poings sous les vivats, tandis que deux esclaves évacuent son adversaire inconscient.\n\nAu bout du comptoir, on vous désigne Jembal le Roseau. D'un roseau, il n'a que le nom : très petit, trapu, visage rond et glabre, peau pâle. Il relève la tête d'un air renfrogné et vous examine en plissant les yeux. Quelque chose de dangereux émane de lui.\n\nOui, il connaît l'Ombre sanglante. Mais Jembal n'aide que ses amis : que seriez-vous prêts à faire pour devenir ses amis ?",
+      "jeu": "Un gros homme éméché, Parchak, vient narguer Jembal (« Personne ne peut battre mon champion ! ») et empoche sa bourse. Jembal, ravi de l'idée, propose : « Je vous donnerai ce que vous cherchez si l'un de vous monte sur l'estrade et fait cracher ses dents au lutteur de ce sac à vin de Parchak. »\nIl reste sourd à toute autre offre ; la menace ne fait rien. D'un geste, il appelle ses hommes de main ; une patrouille du guet beshaari a ses habitudes au bar et intervient en cas de rixe. Les héros seraient chassés pour de bon.\nCombat à mains nues contre Chemdi : Mêlée 2 avec un dé de bonus (bagarreur), d3 + Vigueur/2. Le vaincu perd connaissance (bagarre). Les malus du poison s'appliquent.\nVictoire : tournée générale, Jembal raille Parchak, récupère sa bourse, puis livre l'information. Défaite : il chasse les héros, écœuré.\nCe qu'il sait : l'Ombre sanglante a une assez bonne réputation (« Bon, ce n'est pas non plus la Main grise, hein ! »). Son chef, Bekti, ne paie pas de mine, plus tout jeune, sec comme un coup de trique, dangereux comme une vipère rouge du Beshaar. Il ignore où il loge, mais on contacte la confrérie à la taverne du Puits sec, quartier des Banouram, près de la Porte de la Tourbe.\nPatrouille du guet : 5 hommes au bar (2 cartes ici).\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Gagner le combat et se rendre à la taverne du Puits sec",
+          "vers": "puits-sec"
+        },
+        {
+          "texte": "Chassés du bouge : chercher une autre piste",
+          "vers": "reveil"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-jembal",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch1-parchak",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "ch1-chemdi",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch1-soldat-guet",
+          "qty": 2,
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "temple-guilde",
+      "titre": "Le temple des vingt dieux et la Guilde du Lendemain",
+      "region": "Halakh",
+      "lieu": "Temple des vingt dieux ; maison au heurtoir en forme de ganuc",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Près du cœur de la cité, le temple des vingt dieux est un grand édifice rectangulaire à l'entrée à colonnade, plutôt sobre : rien à voir avec les temples de Satarla. Chacun des vingt dieux y a son alcôve, son autel et sa statue ; il y a même une chapelle de Nemmereth, pour les marchands étrangers. Les prêtres d'Afyra, déesse de la vie et patronne des médecins, se font un devoir d'aider les malades ; l'un d'eux, Sebki, vient à vous.\n\nNon loin du temple, une petite maison banale à la porte ornée d'un heurtoir en forme de ganuc. Une servante vous introduit dans le laboratoire de Rimshak, maître de la Guilde du Lendemain : un Halakhi entre deux âges, à la longue barbiche noire et au sourire édenté.",
+      "jeu": "Sebki ne peut guère contre le poison. Selon l'attitude des héros, il intercède auprès d'Afyra : au prochain test de Vigueur contre le poison, deux héros (au hasard ou selon leur attitude) ont un dé de bonus. Interrogé sur la Guilde du Lendemain, il confirme et les y conduit.\nRimshak, expert en poisons :\n• Sans la fiole : il confirme l'empoisonnement, de nature sans doute alchimique, et vend à un prix scandaleux deux doses d'antidote aux poisons alchimiques. Chaque dose donne une réussite automatique au prochain test de Vigueur contre le poison, mais ne guérit pas.\n• Avec la fiole (une bonne heure d'analyse) : c'est l'alam-kali, à base de racines des marais de Kasht ; il en donne le nom et les propriétés. On y a ajouté un inhibiteur temporaire, ce qui laisse une dizaine d'heures au plus. L'ajout semble délibéré : pourquoi ralentir un poison mortel ? Seul un contrepoison préparé avec une dose du poison lui-même peut les sauver, et les résidus ne suffisent pas. Il faut retrouver l'empoisonneur. Rimshak commence la préparation, mais il lui faut une petite quantité d'alam-kali.\n• S'ils ne sont pas passés chez Madri, il identifie le monogramme : Cheptaki Mendaï (mêmes informations qu'elle).\nCe passage à la Guilde est nécessaire pour comprendre que l'empoisonnement cache un mystère.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Suivre la piste du monogramme jusqu'à la maison de Cheptaki",
+          "vers": "maison-cheptaki"
+        },
+        {
+          "texte": "Retrouver l'empoisonneur : la taverne du Puits sec",
+          "vers": "puits-sec"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-sebki",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch1-rimshak",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "main-de-jade",
+      "titre": "Le comptoir de la Main de Jade",
+      "region": "Halakh",
+      "lieu": "Près de la Porte de Malakut, après le premier lacet de la Chaussée des Princes",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Non loin de la Porte de Malakut, après le premier lacet de la Chaussée des Princes, le premier comptoir halakhi de la Main de Jade n'est encore qu'une modeste échoppe de produits rares venus du lointain Khanat.\n\nLiu Liong, l'ancien assistant de Min Tan, est un jeune homme d'une trentaine d'années au visage ingrat, grêlé de petites cicatrices. Il a l'air éternellement sérieux et concentré, mais il se montre affable et courtois. La mort de Min Tan l'attriste profondément, et il s'enquiert, en rougissant légèrement, de la belle Jia.",
+      "jeu": "Selon le moment de l'enquête, il peut n'avoir rien d'utile à apprendre si les joueurs ont déjà ces noms.\n• L'Ombre sanglante : une confrérie d'assassins halakhis parmi d'autres, il n'en sait pas plus.\n• L'empoisonnement : il évoque Amaston de Lysor, médecin réputé de la Ville nomade, et Cheptaki Mendaï, un alchimiste du quartier des Kalindhit à qui il a vendu il y a des mois de la poudre de pa-lo, très rare et très chère. Il ignore que Cheptaki est mort.\n• Il peut organiser une sortie rapide et discrète de la ville par ses filières de contrebande, gratuitement (voir l'épilogue).\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Consulter Amaston de Lysor",
+          "vers": "amaston"
+        },
+        {
+          "texte": "Chercher Cheptaki Mendaï chez les Kalindhit",
+          "vers": "maison-cheptaki"
+        },
+        {
+          "texte": "L'Ombre sanglante frappe",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-liu-liong",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "maison-cheptaki",
+      "titre": "La maison de Cheptaki",
+      "region": "Halakh",
+      "lieu": "Quartier des Kalindhit, placette à la fontaine de marbre",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Le quartier des Kalindhit s'étend à l'ouest de la ville, au pied du plateau. Sur une petite place, face à une fontaine au bassin de marbre sculpté de rinceaux, une maison à un étage, blanchie à la chaux comme toutes les autres, porte un heurtoir en forme de cornue. Les fenêtres sont trop étroites pour s'y faufiler, la porte est fermée à clef, et personne ne répond. Sur le toit-terrasse, un jardin d'herbes médicinales un peu à l'abandon ; quelqu'un a pourtant continué à l'arroser.",
+      "jeu": "Entrer : la serrure se crochète ou la porte s'enfonce facilement ; on peut aussi passer par la trappe du toit-terrasse. Il est difficile de ne pas être vu en plein jour.\nDedans, une maison autour d'une cour, sentant le renfermé : personne n'y vit depuis des mois. L'étage est un laboratoire à l'abandon : bocaux d'herbes et de poudres, quelques instruments, pots et fioles, un brasero, deux livres (un herbier des montagnes, un traité sur les vertus des roches). Des débris de verre craquent près de la table. Il n'y a rien à trouver : seulement du temps perdu.\nEn ressortant (ou après avoir toqué et questionné les voisins) : huit miliciens kalindhit attendent les héros, d'autres sont postés sur les toits. Leur chef les prie, poliment mais fermement, de le suivre : la matriarche veut savoir pourquoi des étrangers s'intéressent à la maison d'un mort.\nSe battre ou fuir est une mauvaise idée. Les miliciens ont le profil du guet, un mélange de coriaces et de piétaille ; effectif réel : 8, plus ceux des toits (4 cartes ici). En cas de combat, l'appui de Rassa est perdu, le quartier interdit, et les héros sont recherchés par le guet dans toute la ville.\nEmbuscade possible : les assassins, qui connaissent les lieux, attaquent dans la maison. Les héros doivent s'en débarrasser, puis faire face à la milice qui arrive.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Suivre les miliciens chez Rassa, la matriarche",
+          "vers": "rassa"
+        },
+        {
+          "texte": "Embuscade des assassins dans la maison déserte",
+          "vers": "embuscades"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-milicien-kalindhit",
+          "qty": 4,
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "rassa",
+      "titre": "Rassa, la matriarche des Kalindhit",
+      "region": "Halakh",
+      "lieu": "Demeure de Rassa, quartier des Kalindhit",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Quelconque de l'extérieur, la demeure de la noble Rassa cache un intérieur cossu, orné de faïences et de mosaïques délicates. Après une attente parmi d'autres solliciteurs dans le patio, vous êtes introduits dans une grande pièce à demi troglodyte, fraîche, où deux hauts fenestrons de vitraux laissent filtrer une lumière ambrée.\n\nLa matriarche est une jeune Halakhie d'une trentaine d'années au visage potelé, aux grands yeux noirs, un pli amer à la bouche. Deux vieillards sont assis de part et d'autre de son divan ; derrière elle, un géant blond armé d'un lourd gourdin s'ennuie ferme contre le mur. Elle donne le sein à un nourrisson et vous fait signe de vous asseoir sur le long banc qui lui fait face.",
+      "jeu": "Être reçu tout de suite : il faut se montrer convaincant. Elle écoute d'un air faussement distrait, confie l'enfant à une servante, pose une ou deux questions, échange un regard avec les vieillards, puis parle.\n• Cheptaki était un Kalindhit, ami de son père : érudit, alchimiste renommé, expert des plantes des marais de Kasht. Il est mort il y a deux mois dans son laboratoire, sans traces de lutte. Ses instruments ont été volés et son disciple Qirmar, jeune Malakuti à son service depuis deux ans, a disparu. Elle ne croit pas Qirmar capable d'un acte aussi vil.\n• Cheptaki lui avait parlé d'une altercation avec une confrérie d'assassins qui voulait lui faire fabriquer des poisons. Une fiole de son laboratoire aux mains de l'Ombre sanglante l'intéresse donc beaucoup.\nElle n'engage pas sa tribu, mais elle aide les héros : qu'ils se reposent chez elle une à deux heures. Elle apprend alors que la taverne du Puits sec, quartier des Banouram, près de la Porte de la Tourbe, sert de rendez-vous à l'Ombre sanglante. Un jeune garçon peut les y conduire.\nSi les héros ne sont pas encore passés par la Guilde du Lendemain, elle les y envoie pendant qu'elle se renseigne.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Suivre le jeune garçon jusqu'à la taverne du Puits sec",
+          "vers": "puits-sec"
+        },
+        {
+          "texte": "Consulter la Guilde du Lendemain en attendant",
+          "vers": "temple-guilde"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-rassa",
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "embuscades",
+      "titre": "Les poignards de l'Ombre sanglante",
+      "region": "Halakh",
+      "lieu": "Une venelle, l'auberge, la maison de Cheptaki ou la Ville nomade",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Au détour d'une venelle, deux portefaix s'insultent copieusement au bout de la ruelle : une petite charrette à bras bloque le passage, un panier est renversé au sol. Seule une allée latérale permet d'éviter l'esclandre.\n\nDerrière vous, des ombres se détachent des murs.",
+      "jeu": "Une ou deux attaques surprises dans la journée, au moment le plus opportun, par exemple si l'enquête piétine. Assassins : dé de bonus pour filer les héros ou leur échapper. Héros méfiants : ils peuvent remarquer qu'on les suit et tenter de retourner la chasse. Héros isolés : deux assassins par héros.\n• Piège en pleine rue : la lecture ci-dessus. L'allée latérale est un cul-de-sac. Quatre assassins surgissent derrière les héros, deux arbalétriers apparaissent sur les toits.\n• L'auberge : cinq ou six assassins y attendent les héros s'ils reviennent.\n• La maison de Cheptaki : embuscade dans la maison déserte, puis arrivée de la milice kalindhit.\n• La Ville nomade : des vagabonds et mendiants payés (deux par héros, piétaille à 1 de vitalité, d3) servent de diversion ; les assassins frappent cachés parmi eux (cartes de vagabonds à ajouter : 6 ici).\nPar surprise, un assassin ajoute son rang d'assassin (+2) à un jet d'attaque ou de dégâts.\nCaptif : il ne veut rien dire, mais il peut craquer sous la menace. Il livre la taverne du Puits sec, confirme qu'un alchimiste travaille pour eux et identifie Rajka comme lieutenant du « maître », dont il tait le nom. Il ignore qui les a engagés.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "notes": "Bekti a lancé trois groupes : un à l'auberge, deux sur les traces des héros. À force d'interroger les personnes qu'ils ont vues, les assassins comprennent que leurs cibles sont bien empoisonnées. Furieux, Bekti rosse Qirmar pour sa « négligence ». Le jeune alchimiste joue le désarroi et jubile en secret : il a déjà préparé le contrepoison.",
+      "pistes": [
+        {
+          "texte": "Faire parler un assassin capturé : la taverne du Puits sec",
+          "vers": "puits-sec"
+        },
+        {
+          "texte": "Reprendre l'enquête",
+          "vers": "reveil"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-assassin",
+          "qty": 4,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch1-assassin-arbaletrier",
+          "qty": 2,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch1-vagabond",
+          "qty": 6,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "puits-sec",
+      "titre": "La taverne du Puits sec",
+      "region": "Halakh",
+      "lieu": "Quartier des Banouram, près de la Porte de la Tourbe",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Dans une petite rue latérale, près des remparts et de la Porte de la Tourbe, la taverne occupe une maison rectangulaire à un étage. Deux étroites fenêtres encadrent une porte rouge sombre précédée de trois marches. L'enseigne, un squelette allongé près de la margelle d'un puits, se balance dans la brise chaude : un choix bien curieux pour inviter à se désaltérer.\n\nAu moment où vous arrivez en vue de la taverne, la porte s'ouvre. Il en sort l'homme au turban et à l'œil blanc qui parlait ce matin avec Drajit, accompagné de trois hommes. Ils s'attardent un instant pour répondre à quelqu'un à l'intérieur, puis s'éloignent dans la rue.",
+      "jeu": "Dilemme : suivre Rajka ou entrer ?\n• Le suivre est facile, il ne se méfie pas. Trois rues plus loin, il entre dans une grande maison au mur couvert de petites fleurs carmin : la demeure de Bekti.\n• Entrer : une salle commune basse et sombre (cheminée, comptoir, quelques tables, escalier vers l'étage), prolongée par une arrière-salle troglodyte en contrebas de trois marches. Trois ou quatre membres de la confrérie y sont toujours attablés, sans signe distinctif ; un regard acéré reconnaît des combattants. Sous un tapis, une trappe mène à la cave ; derrière deux vieux tapis roulés, une faille et des marches grossières mènent à un soupirail sur la ruelle.\nLes héros sont aussitôt identifiés. Sur un signe, le fils de Daruk descend « remplir des cruchons » et file par le passage prévenir Bekti. Daruk joue les naïfs, oriente les soupçons vers une autre tablée et intervient par surprise. En cas de combat, les clients fuient et préviennent le guet : ne pas s'attarder.\nFaire parler quelqu'un : un assassin peut craquer ; Daruk, jamais ; son fils, surtout si l'on menace son père. La demeure de Bekti est à trois rues en remontant vers le plateau. Il faut être très précis pour apprendre que l'alchimiste y est prisonnier. Personne ne connaît le commanditaire.\nApproche discrète : intercepter un client, ou le fils qui sort les ordures, ou surveiller les lieux jusqu'au retour de Rajka avec un de ses hommes.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "pistes": [
+        {
+          "texte": "Suivre Rajka, ou forcer la demeure de Bekti",
+          "vers": "demeure-bekti"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-daruk",
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch1-assassin",
+          "qty": 4,
+          "attitude": "mefiant"
+        },
+        {
+          "perso": "ch1-rajka",
+          "attitude": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "demeure-bekti",
+      "titre": "La demeure de Bekti",
+      "region": "Halakh",
+      "lieu": "Trois rues au-dessus du Puits sec, vers le plateau",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "La façade est aveugle au rez-de-chaussée, partiellement couverte par les vrilles d'une plante grimpante aux petites fleurs rouges. Depuis la rue, on aperçoit les branches d'arbustes fleuris sur le toit plat. La porte de bois, munie d'un judas, ne paraît pas bien solide ; son heurtoir de bronze représente une branche recourbée aux fleurs en boutons.",
+      "jeu": "La porte se crochète sans peine. Rez-de-chaussée : un long couloir ; à gauche, un salon luxueux ; à droite, la chambre des domestiques et une salle d'armes (cible, mannequin). Au bout, derrière un rideau, le patio : plate-bande fleurie, portique avec coussins et table basse, escalier vers l'étage. À l'étage : un dortoir et les chambres de Bekti, d'Ajisha et des enfants ; un escalier mène au toit. Au fond du patio, le laboratoire.\nLe laboratoire : Qirmar, enchaîné le jour au pied de la lourde table (il peut aller jusqu'au milieu du patio), la nuit à un anneau sur la mezzanine. Volets cloués.\nLa maisonnée : Bekti, trois assassins à demeure (et Rajka selon le moment), trois serviteurs, Ajisha et leurs trois enfants (9, 7 et 3 ans).\nCombat : à l'alerte, les hommes se regroupent autour de Bekti dans le patio et peuvent se retrancher dans le laboratoire en attendant des renforts. Tous se battent jusqu'à la mort. Bekti utilise Inspirateur (dé de bonus à l'attaque de ses hommes pour un round). Un serviteur qui s'enfuit prévient la taverne : quatre assassins arrivent 10 rounds plus tard. Ajisha tente de fuir par le toit avec les enfants. Bekti protège sa famille.\nSi Bekti comprend que les héros veulent l'alchimiste, il menace de le tuer pour négocier ; Qirmar crie qu'il peut les soigner s'ils le libèrent.\nSur la table basse du patio : une bourse de feutre noir au sceau de plomb (Grondil d'un côté, Nemmereth de l'autre), cordon défait, pleine de petits lingots d'argent. Elle est en tous points semblable à celle que Nirmus leur a remise.\nFin de scène : test de Vigueur Moyen (+0) contre le poison pour chaque héros (tableau dans « Un réveil pénible »).",
+      "notes": "La bourse est l'or du temple versé à Lok Kozaar, transmis par Kurta pour payer le meurtre des héros. C'est un premier indice que le traître vient de Satarla. Rien ne nomme encore Lok.",
+      "pistes": [
+        {
+          "texte": "Libérer Qirmar et boire le contrepoison",
+          "vers": "epilogue"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch1-bekti",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch1-rajka",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch1-assassin",
+          "qty": 3,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "qirmar",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Qirmar et le départ d'Halakh",
+      "region": "Halakh",
+      "lieu": "Demeure de Bekti, puis les portes de la ville",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Enchaîné à sa table, le visage tuméfié, le jeune alchimiste se confond en excuses. Il fouille derrière un rang de bocaux d'herbes séchées et en tire un petit sac de fioles au liquide ambré, une par personne : le contrepoison, préparé dans l'espoir que vous le trouveriez. « Buvez, vite ! Et partons d'ici avant que les autres ne reviennent. » Il fourre en hâte fioles, pots et instruments dans une sacoche.\n\nUne fois dehors, il vous raconte tout. Il s'appelle Qirmar ; il est le disciple de Cheptaki Mendaï, mort lorsque les assassins sont venus l'enlever, et depuis il est prisonnier de la confrérie. C'est lui qui a ralenti le poison, en priant pour que vous remontiez jusqu'à lui.",
+      "jeu": "Contrepoison bu : plus de test de Vigueur, les malus disparaissent au fil des heures.\nLe commanditaire : Qirmar ne l'a qu'aperçu. Un Halakhi d'âge moyen, pas très grand, cheveux et barbiche noirs, pourpoint de cuir, nommé Kurta. Bekti et lui se connaissaient de longue date, c'étaient des retrouvailles.\nSes cadeaux :\n• un minuscule flacon d'argent à cabochons, une dose de poudre de pa-lo (baies du Khanat, préparation légendaire). Sur la langue d'un mourant, elle annule tout malus au test pour le stabiliser (« Secourir un mourant », BoL p. 66) ;\n• une potion de perspicacité (rare) : +1 en Esprit pendant une scène.\nQirmar veut quitter Halakh au plus vite et partir pour Satarla avec eux, où un oncle enrichi dans le négoce l'accueillera. Il peut devenir un PJ de remplacement.\nRécupérer l'oracle au Sanctuaire Noir si ce n'est pas fait, puis partir avant les questions des autorités ou la vengeance des rescapés. Si les héros sont recherchés, deux moyens de sortir en secret : Kitcha, marchand de tourbe et contrebandier connu de Cheptaki (contre paiement), ou Liu Liong (gratuitement).\nFin du chapitre : les héros récupèrent leurs points d'héroïsme dépensés et gagnent 1 point d'expérience. Au début du chapitre suivant, ceux qui ont prêté serment à Nemmereth gagnent 1 point de foi.",
+      "notes": "Kurta, confiant, rendait visite à sa famille. Il découvre trop tard le fiasco et repart aussitôt pour Satarla pour devancer les héros et avertir Lok Kozaar. Il réapparaîtra au chapitre 2 sous le nom de Taruk, chez Almar de Chebeg.\nRetour à Satarla au bout de deux mois et demi environ. Pendant ce temps, Lok Kozaar a éliminé le groupe d'Amrita sur la route de Lysor et il est rentré en secret ; Jorkus traverse la jungle en ralliant les tribus.\nLa dette envers les druides gris reste ouverte, hors de la saga.",
+      "pistes": [
+        {
+          "texte": "Rentrer à Satarla avec l'oracle et Qirmar (chapitre 2 : Envolé le Corbeau !)"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "qirmar",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "ch1-liu-liong",
+          "attitude": "amical"
+        }
+      ]
+    }
+  ]
+}

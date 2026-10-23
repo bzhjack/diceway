@@ -1,0 +1,502 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "ch2",
+    "titre": "Le Dieu voilé — 2. Envolé le Corbeau !",
+    "pitch": "Chapitre 2 de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 86-113, PDF p. 88-115).\n\nDe retour d'Halakh avec le texte de l'oracle, les héros le décryptent avec Nirmus : la colère de Nemmereth semble liée au suicide rituel de Jorkus, un vieux prêtre surnommé le Corbeau. Son tombeau, dans la nécropole royale, est vide, et la rage d'un Passeur du dieu y fait se lever les morts. L'enquête à Satarla les mène des appartements de Jorkus à la piste d'Hilario, un mercenaire revenu brisé d'une expédition dans la jungle de Qush, puis aux bas-fonds du Cloaque. Les indices les conduisent enfin à Urceb, chez l'astrologue Almar de Chebeg, où les hommes de Lok Kozaar leur ont tendu un piège."
+  },
+  "personnages": {
+    "ch2-efradus": {
+      "kind": "pnj", "nom": "Maître Efradus, prieur de la nécropole", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 2 }, { "nom": "Scribe", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nPrieur de la petite communauté de prêtres de Nemmereth attachée à la nécropole royale (livre p. 90). Petit homme courtaud au front rasé ; reçoit les héros dans le scriptorium des archives. Attribue les phénomènes étranges à des pilleurs de tombes. Horrifié par le tombeau vide et les morts relevés, il supplie les héros de n'en parler qu'à Nirmus."
+    },
+    "ch2-jarnius": {
+      "kind": "pnj", "nom": "Jarnius, jeune prêtre de la nécropole", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nJeune prêtre chargé de conduire les héros au tertre de Jorkus, avec lanterne et pied-de-biche (livre p. 90). Traversé par le Passeur de Nemmereth, il meurt sur le coup."
+    },
+    "ch2-squelette": {
+      "kind": "pnj", "nom": "Squelette de la nécropole", "rang": "pietaille",
+      "vigueur": 0, "agilite": 0, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 2,
+      "armes": [{ "nom": "Mains nues (squelette)", "degats": "1", "type": "M" }],
+      "commentaire": "Livre p. 94 (PDF p. 96) : piétaille, Attaque +0 (Mêlée ici, attributs à 0), dégâts 1 (mains nues), force vitale 2, règle de horde (BoL p. 132).\nCadavres squelettiques vêtus de lambeaux, relevés par la rage du Passeur de Nemmereth. Six attaquent les héros à la sortie du tertre de Jorkus ; dix assaillent la patrouille aux mausolées royaux. Ils s'effondrent d'eux-mêmes quand l'effet se dissipe."
+    },
+    "ch2-momie-royale": {
+      "kind": "creature", "nom": "Momie royale", "taille": "Moyenne",
+      "vigueur": 2, "agilite": 2, "esprit": 0, "attaque": 3, "defense": 0,
+      "vitalite": 10, "degats": "d6", "protection": "d6-2 (2)",
+      "commentaire": "Livre p. 94 (PDF p. 96) : coriaces, x4. Taille Moyenne choisie pour le rang de coriace (le livre ne donne pas de taille). Capacité spéciale : vulnérable au feu (dégâts doublés).\nMembres minces et desséchés, bandelettes de lin aux traces de teinture pourpre et de peintures ornementales, bracelets d'or et d'argent, bijoux et talismans glissés entre les bandelettes. L'une porte un cercle d'or rehaussé de pierreries, une autre (une femme) une tiare aux pendeloques de perles. Corps dur comme du vieux bois, force surhumaine. Elles mènent l'assaut des squelettes contre la patrouille de Malcar."
+    },
+    "ch2-momie-enfant": {
+      "kind": "creature", "nom": "Momie d'enfant", "taille": "Petite",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "attaque": 2, "defense": 0,
+      "vitalite": 5, "degats": "d6M", "protection": "d6-2 (2)",
+      "commentaire": "Livre p. 95 (PDF p. 97) : coriaces, x2. Taille Petite choisie pour le rang de coriace (le livre ne donne pas de taille). Capacité spéciale : vulnérable au feu (dégâts doublés).\nCadavres d'enfants de quatre ou cinq ans, couverts de bandelettes et parés de bijoux. Ils se jettent dans les jambes d'un héros pour le mordre ; s'il rate son test d'Esprit, dé de bonus de surprise à leur première attaque."
+    },
+    "ch2-soldat": { "kind": "pnj", "catalogue": "Sergent du guet" },
+    "ch2-sartol": {
+      "kind": "pnj", "nom": "Sartol, disciple de Jorkus", "rang": "coriace", "region": "Satarla",
+      "vigueur": -1, "agilite": 0, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 4,
+      "carrieres": [{ "nom": "Prêtre", "rang": 0 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (enfant, non-combattant).\nJeune garçon roux d'environ treize ans, disciple du temple attaché au service de Jorkus pendant les six ou sept mois précédant sa « mort » (livre p. 96). Intimidé mais coopératif. A vu Hilario, amaigri et fiévreux, venir deux fois, la seconde la veille du suicide rituel, repartant avec une grosse sacoche. Jorkus lui a promis « une vie palpitante » et « un événement grandiose qui allait bouleverser la vie de tous les gens de Lémurie »."
+    },
+    "ch2-hirk": {
+      "kind": "pnj", "nom": "Maître Hirk, aubergiste du Poisson d'or", "rang": "coriace", "region": "Satarla",
+      "vigueur": 1, "agilite": 0, "esprit": 0, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Marchand", "rang": 2 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattant).\nAubergiste du Poisson d'or, quartier du Port (livre p. 97) : grand homme chauve, léger embonpoint, sympathique bonhomie. Bavard tant qu'on reste courtois. Hilario logeait chez lui ; il oriente les héros vers la taverne de L'Échange et la « bonne amie » d'Hilario."
+    },
+    "ch2-angus": {
+      "kind": "pnj", "nom": "Angus le Bubalus", "rang": "rival", "region": "Valgard",
+      "vigueur": 5, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 3, "tir": 1, "defense": 1,
+      "vitalite": 17, "vilenie": 6,
+      "carrieres": [
+        { "nom": "Barbare", "rang": 2 },
+        { "nom": "Gladiateur", "rang": 1 },
+        { "nom": "Mercenaire", "rang": 1 },
+        { "nom": "Voleur", "rang": 1 }
+      ],
+      "armes": ["Épée / hache à 2 mains", { "nom": "Poings d'Angus", "degats": "d3", "type": "M", "notes": "Combat à mains nues d'Angus le Bubalus : bagarreur, dé de bonus quand il se bat à mains nues." }],
+      "avantages": ["Bagarreur", "Dur à cuire", "Marqué par les dieux", "Vigueur céruléenne"],
+      "desavantages": ["Impétueux", "Incapable de mentir"],
+      "commentaire": "Livre p. 100 (PDF p. 102) : 6 points d'héroïsme, portés en vilénie, la réserve d'un rival dans l'app. Épée à deux mains d6B+5 et poings d3+2 dans le livre (sa Vigueur incluse) : « Épée / hache à 2 mains » du catalogue et arme propre « Poings d'Angus » (d3). Aucune armure. Bagarreur : dé de bonus à mains nues.\nGéant valgardien à la longue tignasse blonde, chemise d'un blanc douteux tendue sur ses épaules, chope énorme à la main. Son capucin Jiko porte un collier de diamants qui vaut une fortune : quiconque le réclame doit se battre contre lui. Truculent, bon vivant, prompt à la colère mais pas rancunier ; après une bonne rossée, il relève son adversaire et l'invite à boire. Connaît Hilario de vue, Lok Kozaar (« cette crevure ») et Kurta (« une petite fouine d'Halakhi »). S'il est devenu l'ami des héros et qu'on lui raconte les malheurs d'Albel, il les accompagne chez Nobur et déclenche la bagarre au milieu des négociations."
+    },
+    "ch2-albel": {
+      "kind": "pnj", "nom": "Albel, serveuse de L'Échange", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Tentatrice", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante).\nJeune serveuse brune d'une vingtaine d'années, grands yeux noirs, joli sourire (livre p. 99-102). Ancienne fille d'un lupanar de Nobur, compagne d'Hilario et enceinte de lui. Hilario lui a racheté sa liberté, laissé une bourse du temple de Nemmereth (une livre d'argent) et le médaillon de Kryphondus ; elle lui a offert un bracelet de voyage tressé par les prêtres de Quathoomar (ses cheveux et une cordelette bleue). Nobur lui a tout repris. Elle visite Matius à l'hospice d'Afyra. Jia ou Gilkos d'Azmur peuvent l'accueillir."
+    },
+    "ch2-nobur": {
+      "kind": "pnj", "nom": "Nobur, chef de bande du Cloaque", "rang": "rival", "region": "Satarla",
+      "vigueur": 2, "agilite": 2, "esprit": 1, "aura": 1,
+      "initiative": 2, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 12, "vilenie": 3,
+      "carrieres": [
+        { "nom": "Voleur", "rang": 2 },
+        { "nom": "Ouvrier", "rang": 1 },
+        { "nom": "Mercenaire", "rang": 0 },
+        { "nom": "Marchand", "rang": 1 }
+      ],
+      "armes": ["Gourdin", "Dague"],
+      "armures": ["Armure légère"],
+      "avantages": ["Agilité de l’homme-oiseau", "Amis dans la pègre", "Intimidant"],
+      "desavantages": ["Gars de la ville", { "nom": "Phobie", "detail": "feu" }],
+      "commentaire": "Livre p. 104 (PDF p. 106). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Gourdin d6M+2 et dague d6M+2 dans le livre (sa Vigueur incluse) ; armure légère d6-3 (1).\nHomme corpulent en pourpoint noir, lourde chaîne dorée, cheveux bruns coupés au bol, petits yeux chafouins. Patron de l'auberge du Crocator et de plusieurs maisons de plaisir, il tient le quartier ; le guet corrompu du Cloaque (les Calots rouges) le protège. A repris à Albel son argent et le médaillon. Refuse de rendre l'argent ; accepte de revendre le médaillon pour une coquette somme. Se bat jusqu'à la mort sauf si tout semble vite perdu ; s'il s'échappe, il cherchera à se venger."
+    },
+    "ch2-bambam": {
+      "kind": "pnj", "nom": "Bambam, lieutenant de Nobur", "rang": "rival", "region": "Satarla",
+      "vigueur": 3, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": -1, "melee": 3, "tir": 1, "defense": 1,
+      "vitalite": 13, "vilenie": 3,
+      "carrieres": [
+        { "nom": "Mendiant", "rang": 0 },
+        { "nom": "Gladiateur", "rang": 1 },
+        { "nom": "Ouvrier", "rang": 1 },
+        { "nom": "Voleur", "rang": 1 }
+      ],
+      "armes": ["Massue", "Dague"],
+      "armures": ["Armure légère"],
+      "avantages": ["Colosse", "Peau dure"],
+      "desavantages": ["Pataud"],
+      "commentaire": "Livre p. 104 (PDF p. 106). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Gourdin clouté d6+3 dans le livre (sa Vigueur incluse) : Massue du catalogue (d6), l'arme la plus proche ; dague d6M+3. Protection armure légère + peau dure d6-2 (2).\nColosse d'au moins cent vingt kilos, front défiguré par une vilaine cicatrice, sourire édenté. Surgit par une porte derrière le bar quand Nobur l'appelle, son lourd gourdin clouté sur l'épaule. Se bat jusqu'à la mort sauf si tout semble vite perdu."
+    },
+    "ch2-zaira": {
+      "kind": "pnj", "nom": "Zaïra", "rang": "rival", "region": "Satarla",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 2,
+      "initiative": 1, "melee": 1, "tir": 1, "defense": 1,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [
+        { "nom": "Tentatrice", "rang": 2 },
+        { "nom": "Voleur", "rang": 1 },
+        { "nom": "Marchand", "rang": 0 },
+        { "nom": "Danseur", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Athlète", "Attirant"],
+      "desavantages": ["Indigne de confiance"],
+      "commentaire": "Livre p. 104 (PDF p. 106). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Carrières courtisane 2 → Tentatrice, voleuse → Voleur, marchande → Marchand, danseuse → Danseur. Deux poignards d6M : Dague du catalogue (une ligne pour la paire), aucune armure.\nJeune femme rousse en robe rouge sombre, penchée à l'oreille de Nobur ; elle porte au cou le médaillon de Kryphondus volé à Albel, qu'elle touche souvent (éclat bleuté). C'est elle qui a dénoncé Albel à Nobur. Se récrie si Nobur accepte de vendre le médaillon. Se bat, puis tente de fuir ou de négocier sa vie si elle est acculée."
+    },
+    "ch2-homme-de-main": {
+      "kind": "pnj", "nom": "Homme de main de Nobur", "rang": "pietaille", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 0,
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Voleur", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 104 (PDF p. 106) : piétaille, x10. Voleur 1, Attaque +1 (Mêlée ici, attributs à 0), dégâts d3 (dagues, gourdins), vitalité 2, règle de horde (BoL p. 132).\nTruands vêtus de cuir. Quatre devant la porte de l'auberge du Crocator, deux en armure de cuir près de la table de Nobur, deux sur la galerie prêts à jeter tabourets et cruchons. Ils fuient dès que la situation tourne au vinaigre."
+    },
+    "ch2-cassa": {
+      "kind": "pnj", "nom": "Dame Cassa, prêtresse d'Afyra", "rang": "coriace", "region": "Satarla",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Prêtre", "rang": 2 }, { "nom": "Médecin", "rang": 1 }],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (non-combattante).\nPrêtresse d'Afyra de l'hospice de l'île d'Ajamba, derrière le temple de Shazzadion (livre p. 105). Elle soigne Matius sans grand succès : il faudrait des remèdes coûteux, un herboriste ou un alchimiste expérimenté."
+    },
+    "ch2-solmus": {
+      "kind": "pnj", "nom": "Solmus", "rang": "rival", "region": "Satarla",
+      "vigueur": 2, "agilite": 2, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 2, "defense": 1,
+      "vitalite": 12, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Soldat", "rang": 2 },
+        { "nom": "Fermier", "rang": 0 },
+        { "nom": "Ouvrier", "rang": 1 },
+        { "nom": "Mercenaire", "rang": 1 }
+      ],
+      "armes": ["Arc", "Dague", { "nom": "Sabre à l’hippocampe", "degats": "d6", "type": "M", "notes": "Arme alchimique : une fois par round, relance un 1 obtenu sur un jet de dégâts ; un 12 naturel à l'attaque devient un succès légendaire sans dépenser de point d'héroïsme. Son porteur subit le désavantage traqué (pirates des îles du Crâne, Vornor « Beau Brun »)." }],
+      "armures": ["Armure légère"],
+      "avantages": ["Tireur puissant", "Vigilant"],
+      "desavantages": [{ "nom": "Addiction", "detail": "alcool" }],
+      "commentaire": "Livre p. 109 (PDF p. 111) : 5 points de vilénie (3 au début de l'embuscade). Arc d6+2 et sabre d6+2 dans le livre (sa Vigueur incluse) ; armure légère d6-3 (1). Tireur puissant : ajoute sa Vigueur aux dégâts à l'arc. Vigilant : dé de bonus aux jets de réaction.\nSatarlan, ancien soldat de l'armée de la cité (compagnie d'archers), homme de Lok Kozaar. Chez Almar de Chebeg, il joue l'astrologue : quarante ans passés, courte barbe blonde, teint hâlé, solide carrure, lourdes robes de brocart. Armé d'une dague ; il a caché dans la salle d'astrologie le sabre à l'hippocampe pris sur le cadavre d'Amrita. Fidèle à ses compagnons, il accepte la défaite en soldat et se rend si tout est perdu ; prisonnier, il négocie sa vie contre des informations."
+    },
+    "ch2-roumal": {
+      "kind": "pnj", "nom": "Roumal Jânn", "rang": "rival", "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 3, "agilite": 1, "esprit": 0, "aura": 1,
+      "initiative": 0, "melee": 2, "tir": 1, "defense": 1,
+      "vitalite": 13, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Noble", "rang": 1 },
+        { "nom": "Barbare", "rang": 1 },
+        { "nom": "Chasseur", "rang": 2 },
+        { "nom": "Mercenaire", "rang": 0 }
+      ],
+      "armes": ["Massue", "Javelot / fléchette"],
+      "armures": ["Petit bouclier"],
+      "avantages": ["Baudrier de guerre", "Roi de la jungle", "Vigueur céruléenne"],
+      "desavantages": ["Lent à la détente", { "nom": "Traqué", "detail": "noble en fuite, recherché par sa tribu de Qush" }],
+      "commentaire": "Livre p. 110 (PDF p. 112) : 5 points de vilénie (3 au début de l'embuscade). Casse-tête d6+3 dans le livre (sa Vigueur incluse ; le texte parle de sa « lourde massue ») : Massue du catalogue ; javeline d6M+1 : Javelot / fléchette. Protection baudrier de guerre d6-2 (2) et petit bouclier en peau de crocator. Vigueur céruléenne déjà incluse dans son profil. Lent à la détente : dé de malus aux jets de réaction.\nColosse de plus d'un mètre quatre-vingt-dix, peau d'ébène, bras couverts de scarifications rituelles ; a fui sa tribu des jungles de Qush après avoir tué le prince lors d'une querelle. Homme de Lok Kozaar ; chez Almar, il joue Damba, le serviteur qui porte la huche à bûches (où il cache massue et bouclier) et n'aime pas recevoir d'ordres. Combat jusqu'à la mort."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "retour",
+      "titre": "Retour à Satarla",
+      "region": "Satarla",
+      "lieu": "Le comptoir de la Main de Jade, rue de la Conque",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un mois et demi de route depuis Halakh. Quand vous retrouvez enfin Satarla, le printemps touche à sa fin : ce sont les derniers jours du mois de Sadha, et l'on sent déjà venir les grandes chaleurs de la saison sèche.\n\nDans vos bagages, le texte de l'oracle de Nemmereth. Dans vos têtes, une bonne dose de soupçons : qui a payé les assassins de l'Ombre sanglante pour vous faire tuer à Halakh, et avec l'argent du temple, qui plus est ? Vous n'avez qu'un nom, Kurta, et la vague description que Qirmar en a donnée.\n\nAu comptoir de la Main de Jade, Jia vous accueille avec une joie sincère. La maison paraît bien vide sans son père. Elle vous offre le gîte aussi longtemps qu'il le faudra, et vous raconte ce que vous avez manqué : la ville ne va pas mieux, bien au contraire.",
+      "jeu": "Les joueurs peuvent rentrer en secret et se renseigner avant de revoir Nirmus : improvisez. Leurs soupçons peuvent viser un traître au temple, Nirmus lui-même ou les deux autres groupes de mercenaires.\n\nKURTA : dans une ville aussi immense, une aiguille dans une botte de foin. En posant les bonnes questions dans les tavernes louches du Cloaque, on apprend qu'un Halakhi nommé Kurta est un associé de Lok Kozaar. Rien de plus : il est discret, et il a déjà quitté Satarla.\n\nCE QUE SAIT JIA (ou Nirmus, s'ils vont droit au temple) :\n• Les signes néfastes continuent et toute la ville en parle. Les morts revenus un instant à la vie affolent les gens, qui veillent leurs défunts plusieurs jours au lieu d'inhumer au bout d'un ou deux.\n• Rumeurs de « spectres » dans les rues, rêves troublants où apparaissent les chers disparus. Certains accusent les prêtres de Nemmereth d'un sacrilège ; depuis les funérailles de Min Tan, le temple n'a plus fait aucun sacrifice pour les défunts.\n• Le moindre malheur passe pour un mauvais présage. Il y a un peu plus d'un mois, le jour de la fête de la fondation de Satarla (qui célèbre aussi Grondil), une tourelle du temple de Grondil, en réparation, s'est effondrée.\n\nQIRMAR (s'il a survécu et rentre avec eux) : bon compagnon, brillant et très érudit. Il raccompagne les héros au comptoir puis va chez son oncle, en promettant de revenir. Laissez-le dans le paysage : il passe saluer… surtout Jia, devant qui il reste sans voix.\n• Équipement alchimique : alchimiste 2 et Esprit 3, règles de création habituelles (BoL p. 138). Potions et onguents seulement, ni arme ni armure alchimique. Entre deux aventures, une potion rare ou deux courantes, à votre appréciation.\n• Son oncle Gilkos d'Azmur, Malakuti devenu citoyen de Satarla, négociant fortuné (maison au quartier du port, villa à la campagne), siège au conseil royal des guildes. Simple et facile d'abord, il invite les héros à dîner pour avoir sauvé son neveu : un contact utile.",
+      "notes": "Kurta a précédé les héros de quelques jours pour avouer son échec à Lok Kozaar, caché en secret chez maître Casmar (maison de la secte des druides jaunes). Lok est censé remonter le Tyr vers Jesharek Jool ; il a en fait massacré le groupe d'Amrita près de Lysor et volé La reine d'écume. Kurta est déjà reparti rejoindre ses compagnons dans un petit port de pêcheurs, d'où ils font voile vers Urceb pour piéger les héros chez Almar de Chebeg.",
+      "pistes": [
+        { "texte": "Porter l'oracle à Nirmus, au temple de Nemmereth", "vers": "oracle" }
+      ],
+      "distribution": [
+        { "perso": "jia", "camp": "heros", "attitude": "amical" },
+        { "perso": "qirmar", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "oracle",
+      "titre": "L'oracle décrypté",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth, bureau de Nirmus",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Nirmus se réjouit de votre retour et vous accueille chaleureusement, impatient de découvrir enfin le message du dieu. La situation ne s'est pas arrangée en votre absence : la statue de Nemmereth, dans le sanctuaire, continue de pourrir. L'étrange moisissure orangée gagne lentement le bois, malgré tous les efforts des prêtres pour l'éliminer. Le palais lui-même commence à s'inquiéter.\n\nLe prêtre déplie le texte de l'oracle et le lit, une fois, deux fois, les sourcils froncés.",
+      "jeu": "L'ORACLE (aide de jeu du ch. 1, livre p. 83) :\nLes funérailles sont célébrées, / Mais le sépulcre est déserté. / Envolé le Corbeau, / Il avait pourtant choisi son lot. / Il n'est plus parmi les vivants, / Et les défunts cherchent l'absent. / Que son courroux ne soit pas vain : / Qui rendra au dieu ce qui lui appartient ? / La trame sacrée des dieux / N'est pas faite pour ces cieux. / Pour dénouer le fil de la divine, / À contre-courant, cherchez à l'origine. / Ce qui le tissa pourra le défaire, / Don ignoré d'une habile filandière.\n\nMENER LA DISCUSSION : Nirmus est d'abord perdu. Poussez les joueurs à émettre des hypothèses ; Nirmus apporte ce qui leur manque, sans conclure à leur place. S'ils pataugent trop longtemps, il avance des pistes.\n• Seules les quatre premières strophes sont décryptables maintenant (la mort volontaire à laquelle Jorkus s'est soustrait, l'âme qui manque à Nemmereth). Le reste ne s'éclairera qu'à la fin du ch. 3.\n• Dès qu'un joueur relève que « Corbeau » (avec une majuscule) peut être un nom : Nirmus évoque en souriant un vieux sage du temple que les disciples surnommaient le Corbeau (physique disgracieux, longs cheveux noirs, toujours « perché » au sommet de sa tour). Jorkus, grand érudit très respecté, est mort il y a quelques mois : âgé, il est entré dans le « Long Sommeil », le suicide rituel des prêtres de Nemmereth. Nirmus y a assisté (cérémonie : livre p. 49).\n• Si personne ne fait le lien, Nirmus pâlit et relit les strophes en bredouillant.\n• Hypothèses possibles des joueurs : corps enlevé, Jorkus soustrait au trépas, devenu mort-vivant…\n\nAUTRES QUESTIONS : aucune nouvelle des deux autres groupes. Normal pour Lok Kozaar (« Vous savez, le céruléen ? »), la retraite de Jesharek Jool est loin ; plus étrange pour Amrita, Lysor n'est pas si loin par bateau.\n\nMALÉDICTION : les héros encore maudits peuvent rapprocher leur croûte orangée de la moisissure de la statue ; un serment à Nemmereth la lève (voir l'introduction).\n\nSUITE : Nirmus veut vérifier avant de conclure. Il propose d'abord le tombeau, discrètement, et rédige une lettre d'introduction pour Efradus, prieur de la nécropole royale (les prêtres éminents y sont inhumés près des rois). Il continue de payer les héros. Si les joueurs préfèrent commencer par les appartements de Jorkus, il ne s'y oppose pas : les deux pistes sont indépendantes.",
+      "notes": "Jorkus a bu la coupe du Long Sommeil, mais il avait revêtu le voile de Kryphondus, qui le cache aux yeux de Nemmereth : il n'est pas mort. Hilario l'a aidé à sortir du tombeau ; il s'est caché chez les druides jaunes, puis est parti pour l'île de Kryphondus.\nLa secte a un espion au temple (un jeune acolyte, démasqué au ch. 4) : c'est ainsi que Lok Kozaar sait tout de l'enquête.",
+      "pistes": [
+        { "texte": "Vérifier le tombeau de Jorkus à la nécropole royale", "vers": "necropole" },
+        { "texte": "Fouiller d'abord les appartements de Jorkus", "vers": "appartements" }
+      ],
+      "distribution": [
+        { "perso": "nirmus", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "necropole",
+      "titre": "La nécropole royale",
+      "region": "Satarla",
+      "lieu": "Nécropole royale, hors les murs : le fortin des prêtres et son scriptorium",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "À quelques minutes de marche des remparts, un long mur d'enceinte ceint l'antique nécropole royale. Derrière la grille d'entrée, deux gardes en faction. Dès que vous demandez maître Efradus, ils vous ouvrent, et l'un d'eux vous escorte.\n\nSous un hangar ouvert près de l'entrée, un grand chariot de bois sculpté et doré attend les processions funèbres. Une large allée pavée mène au centre, où un temple de Nemmereth se dresse sur une petite éminence, entourée de tertres herbeux. Partout ailleurs, les tombeaux s'alignent en rangées : même les plus modestes foisonnent de décors de pierre, de statues, de bas-reliefs. Au nord-ouest, derrière une clôture basse, s'élèvent les mausolées des rois de Satarla.\n\nDans la cour du fortin, une patrouille se prépare au départ ; les soldats lèvent un œil maussade vers les nuages noirs qui s'amoncellent dans le ciel d'après-midi.\n\nÀ l'étage, dans un grand scriptorium aux archives reliées, maître Efradus vous reçoit : un petit homme courtaud au front rasé. Il lit la lettre de Nirmus avec une perplexité croissante.",
+      "jeu": "EFRADUS accepte, malgré son trouble. Tout s'est fait dans les règles : procession jusqu'au tertre ouvert et purifié, coupe du Long Sommeil préparée par l'apothicaire du temple, adieux à ses frères, dalle remise en place. Plus tard, les restes iront dans un enfeu (niche murale). « Tout a été soigneusement consigné dans les archives. »\n\nPHÉNOMÈNES ÉTRANGES (il en parle avec réticence) : une forme sombre errant la nuit entre les tombeaux ; un cri rageur entendu par un soldat. La garnison précédente, craintive et sujette aux cauchemars, vient d'être remplacée (« des peurs superstitieuses ! »). Pour lui : des pilleurs de tombes. Les patrouilles ont été doublées.\n\nARCHIVES : consultables. L'inhumation de Jorkus date d'un peu plus de quatre mois. Tout y est noté, jusqu'aux formes aperçues la nuit et aux lumières étranges : un examen rapide montre que ces phénomènes ont commencé dans les jours suivant les funérailles de Jorkus.\n\nGarnison : une quinzaine de soldats ; une petite communauté de prêtres. Efradus confie les héros à Jarnius, un jeune prêtre.",
+      "notes": "La forme sombre est le Passeur de Nemmereth venu chercher l'âme de Jorkus au moment de sa mort. Il ne l'a pas trouvée et revient sans cesse au tombeau : c'est lui qui provoque les phénomènes rapportés par Efradus.",
+      "pistes": [
+        { "texte": "Suivre Jarnius jusqu'au tertre de Jorkus", "vers": "tombeau" }
+      ],
+      "distribution": [
+        { "perso": "ch2-efradus", "camp": "heros", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "tombeau",
+      "titre": "Le tombeau de Jorkus",
+      "region": "Satarla",
+      "lieu": "Nécropole royale : un tertre au pied du temple central",
+      "moment": "jour",
+      "meteo": "orage",
+      "danger": 2,
+      "lecture": "Jarnius, un jeune prêtre muni d'une lanterne et d'un pied-de-biche, vous guide au cœur de la nécropole. L'après-midi est bien entamé ; le lourd plafond de nuages plonge les tombes dans un demi-jour lugubre. Quelques gouttes commencent à tomber, le tonnerre gronde au loin.\n\nLe tertre est l'un des petits monticules herbeux qui entourent le temple. Dans sa paroi inclinée, entre deux montants sculptés, une lourde dalle. Jarnius glisse le pied-de-biche dans l'encoche et vous demande un coup de main pour la faire basculer sans la laisser tomber.\n\nCinq marches descendent dans la chambre mortuaire. Une odeur de renfermé et de poussière, mais aucun relent de putréfaction. À la lueur de la lanterne : une salle ronde de cinq mètres de diamètre, un catafalque de pierre couvert d'un drap noir et d'un petit coussin de velours noir. Au pied de la table, une coupe d'argent renvoie un éclat métallique. Les parois sont creusées de niches rectangulaires, presque toutes fermées par une dalle gravée ; trois sont ouvertes et vides.\n\nLe corps de Jorkus n'est pas là.\n\nÀ peine avez-vous embrassé la salle du regard qu'une silhouette surgit des ombres : une sorte de spectre noir qui vole dans les airs en ouvrant des bras immenses. Dans un silence… sépulcral, l'apparition fonce sur vous.",
+      "jeu": "LA DALLE : pas impossible pour un homme seul s'il est costaud. Aucun signe d'effraction ni d'ouverture récente.\n\nLE PASSEUR :\n• Jet de réaction à -2 pour chaque héros. Réussi : test d'Agilité pour esquiver, ou un coup… qui passe au travers du corps éthéré. Raté : pas le temps de réagir.\n• Héros surpris ou qui ratent l'esquive : traversés par l'ectoplasme. Test de Vigueur. Échec : il s'effondre comme foudroyé, reprend connaissance dans une brusque inspiration et perd 1 point d'héroïsme (comme « Défier la mort », BoL p. 58) ; annoncez-le sans l'expliquer. Il garde le souvenir d'une vision.\n• Jarnius, qui n'est pas un héros, reste étendu, mort.\n• Accordez la vision à au moins un héros, même si tous ont résisté. Si plusieurs risquent de perdre un point (surtout s'ils sont encore maudits), vous pouvez n'en frapper qu'un ; les autres sont seulement choqués.\n\nLA VISION (à raconter au héros) : défilent dans les ombres de la capuche les visages de tous ceux dont il a vu mourir. Puis une immense caverne ocre, éclairée de torches, au sol de terre rougeâtre, où s'alignent à perte de vue des figurines d'argile rouge, portraits miniatures d'hommes, de femmes, d'enfants ; certaines brisées en petits tas de poussière. Des êtres semblables au spectre circulent entre les rangées et font tomber en poussière une statuette d'un geste solennel. En un point éclairé d'en haut, plusieurs s'agitent frénétiquement autour d'un espace vide dans une rangée : une absence atrocement anormale, sacrilège. Au fond, une forme humaine immense en longues robes grises, puissance écrasante et colère glaciale ; elle va se retourner… et le héros se réveille en hoquetant sur les dalles froides.\n\nMAIGRES INDICES (après le choc) :\n• le drap noir penche d'un côté, comme s'il avait glissé ;\n• la coupe contient un résidu séché au léger parfum végétal (Qirmar peut l'analyser : un poison mortel à base de plantes ; mais Jorkus aurait pu prendre un antidote) ;\n• les niches portent des noms, parfois un titre et une année de règne ; certaines très anciennes. Rien d'autre.",
+      "notes": "Le spectre est le Passeur de Nemmereth venu chercher l'âme de Jorkus quand le poison aurait dû le tuer. Le voile de Kryphondus cache Jorkus aux yeux du dieu et de ses serviteurs : le Passeur erre depuis dans la nécropole. Il se précipite au tombeau dès qu'il y sent une présence vivante, n'y trouve toujours pas l'âme manquante et ressort furieux : sa rage va relever les morts.\nLa vision montre le domaine de Nemmereth et les âmes des vivants ; l'espace vide est la figurine de Jorkus, disparue des comptes du dieu (« Il n'est plus parmi les vivants, et les défunts cherchent l'absent »).",
+      "pistes": [
+        { "texte": "Ressortir du tertre sous l'orage", "vers": "debout-les-morts" }
+      ],
+      "distribution": [
+        { "perso": "ch2-jarnius", "camp": "heros", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "debout-les-morts",
+      "titre": "Debout les morts !",
+      "region": "Satarla",
+      "lieu": "Nécropole royale : entre les tombes, autour du tertre de Jorkus",
+      "moment": "jour",
+      "meteo": "orage",
+      "danger": 2,
+      "lecture": "Dehors, la nécropole baigne dans un demi-jour glauque. Les nuages noirs crèvent : une pluie drue s'abat sur les tombes. Le ciel tonne, et un éclair révèle une silhouette qui s'approche du tertre : un cadavre squelettique, vêtu de lambeaux qui collent encore à ses os, s'avance en silence vers vous. D'autres apparaissent entre les tombes et convergent.",
+      "jeu": "SIX SQUELETTES (piétaille) : Attaque +0, dégâts 1 (mains nues), force vitale 2, règle de horde (BoL p. 132). Les héros devraient en venir à bout sans peine.\nPluie battante : -2 aux armes de jet et de tir.\n\nENSUITE : dès qu'ils s'éloignent du tombeau, malgré le tonnerre, des éclats de voix et des bruits de combat, du côté des tombes royales. Les joueurs peuvent aller aider la patrouille, ou regagner le fortin : dans ce cas, ils ne croisent plus aucun mort-vivant. Efradus apprend la nouvelle avec horreur (voir l'épilogue de la scène suivante).",
+      "notes": "Le Passeur a disparu sans laisser de traces. Sa colère n'a touché qu'une partie de la nécropole et ne durera pas : au bout d'un moment, les morts retombent au sol, privés de l'énergie qui les anime.",
+      "pistes": [
+        { "texte": "Courir vers les tombes royales, au secours de la patrouille", "vers": "morts-inapaises" },
+        { "texte": "Regagner le fortin, puis rendre compte à Nirmus", "vers": "appartements" }
+      ],
+      "distribution": [
+        { "perso": "ch2-squelette", "qty": 6, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "morts-inapaises",
+      "titre": "Les morts inapaisés",
+      "region": "Satarla",
+      "lieu": "Nécropole royale : le carré des mausolées royaux",
+      "moment": "jour",
+      "meteo": "orage",
+      "danger": 3,
+      "lecture": "Sous la pluie battante, à la lumière des éclairs qui zèbrent le ciel, une scène de cauchemar. La patrouille s'est retranchée sous le portique d'un mausolée royal, en haut d'une volée de marches. Une foule de morts-vivants monte à l'assaut ; les soldats luttent pour les repousser. Derrière eux, un prêtre de Nemmereth lève d'une main tremblante une lanterne qui éclaire son visage livide. Au premier rang des squelettes agglutinés sur les marches, plusieurs êtres momifiés semblent mener l'attaque…",
+      "jeu": "EN PRÉSENCE : la patrouille, 5 soldats menés par le capitaine Malcar, avec un prêtre, contre 10 squelettes (6 cartes) menés par 4 momies royales.\n• Squelettes (piétaille) : Attaque +0, dégâts 1, force vitale 2, règle de horde.\n• Momies royales (coriaces) : Vigueur 2, Agilité 2, Esprit 0, Attaque +3, dégâts d6, Défense 0, protection d6-2 (2), force vitale 10. Vulnérables au feu (dégâts doublés).\n• Pluie : -2 aux armes de jet et de tir.\n\nDEUX MOMIES D'ENFANTS (coriaces) rejoignent le combat une fois les héros dans la mêlée : Vigueur 1, Agilité 1, Attaque +2, dégâts d6M, Défense 0, protection d6-2 (2), force vitale 5, vulnérables au feu. Un héros fait un test d'Esprit pour voir les deux petites formes se jeter dans ses jambes pour le mordre ; échec = dé de bonus de surprise à leur première attaque.\n\nMISE EN SCÈNE : décrivez la défense désespérée des soldats et la mort de plusieurs d'entre eux ; les coups des morts broient une gorge, fracassent un crâne. Malcar, la joue ravagée par des griffes, se bat vaillamment : faites-le survivre, sauf si les héros laissent la patrouille se faire massacrer.\n\nFIN BRUTALE (si la situation s'y prête) : « Soudain, autour de vous, les morts-vivants s'effondrent au sol l'un après l'autre, fauchés comme les blés, sans rien pour l'expliquer. »\n\nÉPILOGUE : Malcar remercie vivement les héros et déclare qu'il saura se souvenir qu'il leur doit la vie. Efradus, horrifié et dévasté par le tombeau vide, les supplie de n'en parler qu'à Nirmus : la nouvelle affolerait la ville.",
+      "notes": "Malcar reviendra au ch. 4 : promu commandant de Fort Junia, il accueillera les héros en amis.\nLes soldats de la patrouille n'ont pas de stats dans le livre : la fiche « Sergent du guet » du catalogue les représente.",
+      "pistes": [
+        { "texte": "Rendre compte à Nirmus et fouiller les appartements de Jorkus", "vers": "appartements" }
+      ],
+      "distribution": [
+        { "perso": "ch2-squelette", "qty": 6, "attitude": "hostile" },
+        { "perso": "ch2-momie-royale", "qty": 4, "attitude": "hostile" },
+        { "perso": "ch2-momie-enfant", "qty": 2, "attitude": "hostile" },
+        { "perso": "malcar", "camp": "heros", "attitude": "amical" },
+        { "perso": "ch2-soldat", "qty": 5, "camp": "heros", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "appartements",
+      "titre": "Les appartements de Jorkus",
+      "region": "Satarla",
+      "lieu": "Grand temple de Nemmereth : la chambre de Jorkus, au sommet d'une tour d'angle",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Nirmus vous conduit au sommet d'une des tours d'angle du temple, où logeait Jorkus. Personne n'a encore eu besoin de la chambre : ses affaires sont restées là. Le prêtre ouvre la porte, fermée à clef.\n\nUne grande chambre modestement meublée : un lit, un coffre, un bureau bien rangé couvert de piles de parchemins, une bibliothèque.",
+      "jeu": "FOUILLE :\n• Coffre : des habits. Lit : rien.\n• Bibliothèque : une dizaine d'ouvrages de théologie et d'histoire ancienne. Des traces dans la poussière : il manque plusieurs livres et des bibelots. Test d'Esprit : une petite niche secrète, vide, avec une vague odeur d'encens et des restes de bougie fondue.\n• Bureau : notes et missives (voir plus bas).\n\nSARTOL (Nirmus suggère de le faire venir si personne n'y pense) :\n• Son maître : vieil homme absorbé par ses recherches, infatigable, renfermé, pas méchant, peu exigeant. Sartol l'a servi six ou sept mois ; le serviteur précédent est mort d'une fièvre (rien de suspect).\n• Objets manquants : une dague sacrificielle du Khanat, une petite boîte d'argent très ancienne au couvercle cassé, un œuf fossilisé rouge sombre ; deux ou trois livres.\n• Jorkus allait souvent à la Grande Bibliothèque ou chez des « amis savants » ; il rentrait parfois tard.\n• Peu avant sa mort, visite d'Hilario : grand blond à l'allure militaire, courte barbe, yeux bleus, mais amaigri, fiévreux. Jorkus s'est exclamé avec enthousiasme. Hilario est revenu la veille de la mort, ressorti avec une grosse sacoche. Puis Jorkus a fait ses adieux à Sartol : « une vie palpitante », « un événement grandiose qui allait bouleverser la vie de tous les gens de Lémurie ».\n\nNIRMUS : Jorkus, sommité du culte, correspondait avec des sages de partout ; il cherchait reliques et manuscrits perdus et employait parfois des mercenaires payés par le trésorier du temple. Il a fait un voyage à Urceb et décidé de son suicide rituel quelques jours après son retour.\n\nLIVRES DE COMPTES DU TRÉSOR : paiement conséquent, quelques jours avant la mort, à Hilario de Chertu, auberge du Poisson d'or, quartier du Port, « solde de tout compte » ; un autre cinq mois avant la mort, « mission d'enquête pour le compte de maître Jorkus ». Deux paiements à Lok Kozaar ces trois dernières années, le dernier il y a cinq mois environ : « escorte de maître Jorkus pour son voyage à Urceb ».\n\nCORRESPONDANCE (longue à étudier) : sur les deux dernières années, mythes anciens, hiérarchies divines, cultes perdus. Un nom revient : Kryphondus.\n• Un héros astrologue sait que c'est un astre de la constellation d'Afyra. Érudit, prêtre ou sorcier : test d'Esprit Très difficile (-4) pour se souvenir d'un dieu ancien et oublié des listes archaïques, sans plus. La Grande Bibliothèque n'apprendra rien de mieux.\n• Copie d'une portion de carte : « plan de l'Urceb-du-dessous, partie sud-est » (le réseau souterrain, ville sous la ville, d'Urceb).\n• Lettre d'un astrologue d'Urceb, vieille de huit mois : remettez aux joueurs la lettre d'Almar de Chebeg (aide de jeu II, livre p. 113).\n\nCE QUE LES JOUEURS DEVRAIENT SAVOIR : Jorkus a disparu de son tombeau et cela joue dans la colère du dieu ; il cherchait Kryphondus ; il est allé à Urceb avec Lok Kozaar, où Almar lui avait trouvé un guide pour l'Urceb-du-dessous ; il avait mandaté Hilario pour une mission de plusieurs mois, dont celui-ci est revenu très diminué. Prochaine étape : Urceb, mais d'abord retrouver Hilario.",
+      "notes": "La sacoche d'Hilario contenait des affaires et des documents que Jorkus récupérerait après son faux suicide. Jorkus a emporté son thème astral. Les objets disparus sont partis avec lui.",
+      "pistes": [
+        { "texte": "Retrouver Hilario : l'auberge du Poisson d'or", "vers": "poisson-d-or" },
+        { "texte": "Vérifier le tombeau, si ce n'est pas fait", "vers": "necropole" },
+        { "texte": "Partir tout de suite pour Urceb", "vers": "depart" }
+      ],
+      "distribution": [
+        { "perso": "nirmus", "camp": "heros", "attitude": "amical" },
+        { "perso": "ch2-sartol", "camp": "heros", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "poisson-d-or",
+      "titre": "L'auberge du Poisson d'or",
+      "region": "Satarla",
+      "lieu": "Quartier du Port, non loin des quais",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Non loin des quais, l'auberge du Poisson d'or est un établissement de qualité, sans le luxe des meilleures maisons. L'aubergiste, maître Hirk, est un grand homme chauve au léger embonpoint, d'une sympathique bonhomie.\n\n« Hilario ? Oui, c'est un bon client de mon auberge ! Un ancien soldat à ce qu'il m'en a dit, pas mauvais bougre pour un sou, et qui paie toujours rubis sur l'ongle. Il loge ici quand il est en ville, mais il voyage souvent, pour escorter des marchands, ce genre de choses. »",
+      "jeu": "Hirk parle volontiers tant qu'on reste courtois.\n• Hilario est revenu il y a quatre ou cinq mois, méconnaissable, maigre, malade. Un soir, ivre, il a parlé d'une expédition dans la jungle tournée au cauchemar, où tous étaient morts sauf son frère et lui : « Encore que Matius aurait mieux fait d'y rester. »\n• Il n'est resté que quelques jours, a payé sa note et est reparti « pour un bon bout de temps », sans entrain.\n• Matius : vu une fois il y a longtemps, la vingtaine, aussi brun qu'Hilario est blond.\n• Hilario avait ses habitudes à la taverne de L'Échange, dans le Cloaque, près du Pont aux Navires, où l'on trouve les meilleurs mercenaires de Satarla ; un endroit spécial, mal famé et dangereux. Et, sur le ton de la confidence : « J'ai cru comprendre qu'il avait une bonne amie par là-bas. »",
+      "notes": "Hilario est reparti guider Jorkus jusqu'à l'île de Kryphondus, dans la jungle de Qush.",
+      "pistes": [
+        { "texte": "À la nuit tombée, la taverne de L'Échange", "vers": "echange" }
+      ],
+      "distribution": [
+        { "perso": "ch2-hirk", "camp": "heros", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "echange",
+      "titre": "La taverne de L'Échange",
+      "region": "Satarla",
+      "lieu": "Le Cloaque, près du Pont aux Navires",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La taverne de L'Échange n'ouvre qu'à la nuit tombée. Elle se dresse en haut d'une rue en pente qui donne sur la berge du fleuve : un rez-de-chaussée de pierre, plus bas que la rue, sous un étage de bois et de torchis. Trois marches descendent à la porte. Deux solides gaillards, gourdin au côté, gardent l'escalier ; devant, des mines patibulaires hésitent à entrer sous les quolibets de leurs compagnons. Un homme en guenilles mais au port altier, barbe et cheveux soigneusement taillés, entre avec un garde du corps musculeux ; les deux gros bras le saluent.\n\n« J'connais pas vos trognes. Première visite à L'Échange ? Une fois à l'intérieur, si quelqu'un veut quelque chose que vous avez sur vous, vous devrez vous battre pour le garder, ou accepter de le lui donner. En général, ça se règle à coups de poing, ou des fois à un défi d'adresse ; mais on évite les coups de surin, et quand quelqu'un a sa dose, on arrête les frais. Si vous ne respectez pas la règle, c'est à nous que vous aurez affaire. C'est clair ? Si vous cherchez un engagement, c'est l'endroit où venir. Allez, bonne soirée ! »\n\nUne vague de chaleur et de bruit. Une quinzaine de tables robustes, un comptoir, une salle haute de plafond aux murs peints de fresques rouges et sombres : des combats d'arène d'un réalisme cru, d'une qualité qui détonne. Trois réduits fermés de lourds rideaux. La salle est bondée de coupe-jarrets et de soudards qui vous jaugent comme des proies. Un ménestrel joue du luth.\n\nPresque au centre, un colosse à la longue tignasse blonde boit seul, une énorme chope à la main, l'allure farouche d'un barbare du Valgard. Sur sa table, un capucin lape un bol de bière. Au cou du petit singe, une rivière de diamants scintille. Curieusement, personne ne s'approche de cette table.",
+      "jeu": "AMBIANCE : un combat entre deux mercenaires (« Elle est belle ta bague, ce s'rait pitié qu'elle reste sur tes doigts crasseux ! »), un fier-à-bras qui cherche des noises à un héros… Des gardes à gourdin surveillent la salle.\n\nANGUS LE BUBALUS (rival) : Vigueur 5, Agilité 2, Mêlée 3, Défense 1, vitalité 17, 6 points (en vilénie). Bagarreur (dé de bonus à mains nues), dur à cuire. Quiconque réclame le collier de Jiko doit se battre. Rossez le héros, en usant de ses points ; dès qu'il est inconscient ou s'avoue vaincu, Angus le relève joyeusement et l'invite à boire. On gagne aussi son amitié en complimentant son singe ou en le faisant rire. Il connaît Hilario de vue, Lok Kozaar (pas vu depuis longtemps) et Kurta (« une petite fouine d'Halakhi qui traîne avec cette crevure de Lok »). Il ne connaît pas Amrita, vient de rentrer et repart bientôt.\n\nHILARIO : une serveuse ou un garde répond volontiers si les héros ne lui veulent pas de mal (le plus simple : prétendre vouloir l'engager). Pas vu depuis des mois : « il faut demander à Albel », une jeune serveuse brune aux grands yeux noirs qui esquive les mains baladeuses.\nAlbel est méfiante : diplomatie, ou faire croire qu'on connaît Hilario. Elle hésite, parle au patron, puis fait signe de la suivre dans l'arrière-cour.",
+      "notes": "Si les héros se sont liés à Angus et lui racontent les malheurs d'Albel, il les accompagne chez Nobur : il déteste l'injustice et aime les histoires d'amour qui finissent bien. Mais il s'ennuie très vite et risque de déclencher la bagarre au milieu des négociations.",
+      "pistes": [
+        { "texte": "Suivre Albel dans l'arrière-cour", "vers": "albel" },
+        { "texte": "Réclamer le collier de Jiko à Angus (bagarre à mains nues)" }
+      ],
+      "distribution": [
+        { "perso": "ch2-angus", "attitude": "neutre" },
+        { "perso": "ch2-albel", "camp": "heros", "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "albel",
+      "titre": "Albel et Hilario",
+      "region": "Satarla",
+      "lieu": "Le Cloaque : l'arrière-cour de la taverne de L'Échange",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "L'arrière-cour de la taverne empeste l'urine. Albel ne va pas par quatre chemins : vous avez besoin de ce qu'elle sait, et elle a besoin d'aide. Hilario lui avait laissé de quoi quitter le Cloaque, mais on l'a dépouillée de tout. Elle ne peut plus rester ici. Ce sera donnant-donnant.",
+      "jeu": "Une fois rassurée sur leur aide, elle parle. Test d'Esprit : pendant la conversation, elle pose une main protectrice sur son ventre légèrement arrondi (elle est enceinte d'Hilario).\n\nSON RÉCIT :\n• Elle a connu Hilario il y a un peu plus d'un an, quand elle travaillait dans un lupanar voisin ; ils se sont attachés.\n• Il y a huit ou neuf mois, le temple de Nemmereth l'a engagé pour une expédition dans la jungle de Qush, dangereuse mais très bien payée : à son retour, ils s'installeraient loin du Cloaque.\n• Il est revenu il y a environ cinq mois, malade, épuisé, marqué. Tous ses compagnons étaient morts, sauf son frère Matius, devenu fou, confié à un hospice des prêtres d'Afyra. « Et tout ça pour remuer les rêves poussiéreux d'un vieux rat de bibliothèque. »\n• Il a rapporté un médaillon d'argent ancien, un cristal bleu dans une feuille de palmier ajourée, le symbole d'Afyra : « porte-le, la déesse te protégera ».\n• Avec sa paie, il a racheté sa liberté à Nobur, qui tient le quartier.\n• Quelques jours après, il est reparti dans la jungle « juste comme guide », pour deux ou trois mois. Il lui a laissé une bourse d'une livre d'argent (quelques questions : c'est une bourse du temple de Nemmereth, comme celle des héros), à utiliser aussi pour payer l'hospice de Matius. Elle lui a offert un bracelet de voyage tressé par les prêtres de Quathoomar, ses cheveux mêlés d'une cordelette bleue.\n• Elle a eu le tort de montrer l'argent à Zaïra, qui l'a dit à Nobur. Il est venu avec ses hommes, a décrété que la liberté coûtait plus cher, lui a tout pris, médaillon compris, et l'a jetée dehors. Une amie lui a trouvé cette place de serveuse.\n\nCE QU'ELLE PEUT ENCORE DIRE : Matius est enfermé, terrifié, délirant ; elle n'a plus de quoi payer l'hospice et peut y conduire les héros. Nobur traîne à l'auberge du Crocator, tout près, qui lui appartient ; une dizaine d'hommes au bas mot.\n\nDEUX OPTIONS : donner de l'or à Albel pour quitter le Cloaque, ou aller trouver Nobur. Récupérer le médaillon n'est pas indispensable, mais aidera beaucoup au ch. 5 ; Albel le cède sans trop se faire prier. Jia peut prendre Albel sous son toit et lui donner du travail, ou Gilkos d'Azmur la caser.",
+      "notes": "LE MÉDAILLON DE KRYPHONDUS : Hilario l'a trouvé sur l'île, près du bassin où Kryphondus fut empoisonné par son épouse, juste avant que le fangeux tapi sous les nénuphars n'emporte un de ses compagnons. Porté au cou, il donne l'avantage Mains guérisseuses, même sans carrière de médecin, et protégera de certains maléfices de l'île maudite (expliqué au ch. 5).\nLe bracelet tressé noir et bleu, Hilario le porte encore au ch. 5 : parler d'Albel peut le retourner contre Jorkus.",
+      "pistes": [
+        { "texte": "Aller réclamer son dû à Nobur, à l'auberge du Crocator", "vers": "nobur" },
+        { "texte": "Donner de l'or à Albel et aller voir Matius", "vers": "hospice" }
+      ],
+      "distribution": [
+        { "perso": "ch2-albel", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "nobur",
+      "titre": "L'auberge du Crocator",
+      "region": "Satarla",
+      "lieu": "Le Cloaque : une ruelle voisine de la taverne de L'Échange",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "À une centaine de mètres de L'Échange, dans une ruelle, un grand bâtiment de bois miteux. Un ivrogne est jeté dans la rue au moment où vous arrivez. Quatre hommes à la mine patibulaire, vêtus de cuir, adossés à la façade, vous jaugent du regard.\n\nL'entrée donne sur une grande salle, un comptoir au fond. À l'étage, une galerie sur poteaux fait le tour de trois côtés ; des filles de joie, accoudées à la balustrade, vous invitent à monter. On joue aux dés et aux dominos. Un énorme crocator empaillé, quatre mètres de long, pend du plafond par des chaînes, la gueule ouverte sur des brins de paille.\n\nÀ droite, sous la galerie, une grande table. Deux hommes en armure de cuir, gourdin au côté, adossés aux poteaux qui l'encadrent. Devant son repas, un homme corpulent en pourpoint noir, une lourde chaîne dorée au cou, les cheveux bruns coupés au bol ; ses petits yeux chafouins vous suivent tandis qu'il continue de manger. Penchée à son oreille, une jeune femme rousse en robe rouge sombre. À son cou, un médaillon d'argent qu'elle touche souvent, et qui luit d'un éclat bleuté à la lueur des bougies de mauvais suif.",
+      "jeu": "NÉGOCIATION : les deux gardes n'approchent pas les héros trop près de la table. Nobur est chez lui et ne se laisse pas impressionner, même devant Angus. Il ne rendra pas l'argent et conseille de décamper. Pour le seul médaillon, on peut discuter : il faut le « racheter », une coquette somme sans trop exagérer. Zaïra se récrie, Nobur la rappelle sèchement à l'ordre.\n\nLA BANDE : dix hommes de main (6 cartes) : les quatre de la porte, deux sur la galerie prêts à jeter tabourets et lourds cruchons, les autres dans la salle. Au signal, Bambam sort par une porte derrière le bar, gourdin clouté sur l'épaule (colosse de cent vingt kilos, front balafré, sourire édenté).\n• Nobur (rival) : Mêlée 2, Défense 1, Initiative 2, vitalité 12, armure légère ; phobie du feu.\n• Bambam (rival) : Mêlée 3, Défense 1, vitalité 13, protection d6-2 (2) ; pataud.\n• Zaïra (rivale) : Mêlée 1, Défense 1, vitalité 10, deux poignards.\n• Hommes de main (piétaille) : Attaque +1, dégâts d3, vitalité 2, règle de horde.\n\nCOMBAT : Nobur et Bambam se battent jusqu'à la mort, sauf si tout semble vite perdu. Les hommes de main fuient dès que ça tourne au vinaigre. Zaïra se bat, puis fuit ou négocie sa vie. Ne pas s'attarder : une patrouille des Calots rouges, le guet corrompu du Cloaque, prendrait le parti de Nobur.\nSi Angus est venu : il n'est pas là pour discuter et risque de lancer les hostilités de façon fracassante en pleine négociation.",
+      "notes": "Zaïra porte le médaillon de Kryphondus (voir la scène Albel et Hilario). Si Nobur s'échappe, il cherchera à se venger de ceux qui ont osé l'attaquer chez lui : de futurs ennuis à Satarla.",
+      "pistes": [
+        { "texte": "Rapporter le médaillon à Albel et aller voir Matius", "vers": "hospice" },
+        { "texte": "Filer avant l'arrivée des Calots rouges" }
+      ],
+      "distribution": [
+        { "perso": "ch2-nobur", "attitude": "mefiant" },
+        { "perso": "ch2-bambam", "attitude": "mefiant" },
+        { "perso": "ch2-zaira", "attitude": "mefiant" },
+        { "perso": "ch2-homme-de-main", "qty": 6, "attitude": "mefiant" },
+        { "perso": "ch2-angus", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "hospice",
+      "titre": "Visite à l'hospice",
+      "region": "Satarla",
+      "lieu": "Hospice d'Afyra, à l'extrémité ouest de l'île d'Ajamba, derrière le temple de Shazzadion",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Albel vous conduit à l'hospice du culte d'Afyra et vous présente à dame Cassa, prêtresse de la déesse. Matius, explique-t-elle, est en proie à des délires et des terreurs qui ne lui laissent aucun répit. Un traumatisme grave l'a plongé dans la démence. Les médecins ont tout essayé, sans grand succès : « Nos moyens sont malheureusement limités ; certains remèdes coûteux et délicats à préparer permettent parfois d'améliorer l'état de gens atteints de ce genre de mal, mais rarement de les guérir, et il faudrait faire appel aux services d'un herboriste ou d'un alchimiste expérimenté… »\n\nAssis par terre, prostré dans un coin de sa petite chambre, un jeune homme brun émacié, aux joues creuses mangées d'une barbe clairsemée, au regard fuyant et halluciné. Il bredouille à mi-voix :\n\n« Les lianes, éviter les lianes… il faut partir d'ici… Il y a quelque chose dans l'eau… Reculez ! Non, pas par là, pas par là, il y en a partout, elle accouche, elle n'arrête pas d'accoucher ! Non ! Hilario, ne me laisse pas là, Hilario, je t'en prie… La mort blanche, elle va venir, non… Elle ronge la pierre, elle mange les murs… »",
+      "jeu": "Impossible d'en tirer autre chose : il se balance d'avant en arrière en se cognant doucement la tête au mur. Il s'apaise un peu quand Albel le serre dans ses bras et lui murmure qu'Hilario va bientôt revenir et tout arranger.\n\nQIRMAR : si les joueurs pensent à lui, il a étudié auprès d'un maître herboriste renommé et s'occupe volontiers de Matius. Cela prendra du temps ; d'ici le retour d'Urceb, il aura peut-être un remède pour l'apaiser un peu. Une conversation lucide (ch. 4) n'est pas indispensable, mais elle préparera les héros à l'île de Kryphondus.\n\nL'hospice coûte : Albel n'a plus de quoi payer.",
+      "notes": "Matius a été traumatisé par les horreurs de l'île de Kryphondus et empoisonné par les maléfices de Morgazzon. Ses délires prendront sens au ch. 5 (« quelque chose dans l'eau » : le fangeux du bassin, entre autres).",
+      "pistes": [
+        { "texte": "Trouver un navire pour Urceb", "vers": "depart" }
+      ],
+      "distribution": [
+        { "perso": "matius", "camp": "heros", "attitude": "neutre" },
+        { "perso": "ch2-cassa", "camp": "heros", "attitude": "neutre" },
+        { "perso": "ch2-albel", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "depart",
+      "titre": "Départ pour Urceb",
+      "lieu": "À bord de La sirène de Satarla, de Satarla au port de Chebeg",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Pour rencontrer Almar de Chebeg et comprendre ce que Jorkus cherchait dans les catacombes de l'Urceb-du-dessous, il faut aller à Urceb, ou du moins au village de Chebeg, tout près. Le plus rapide est la mer. La sirène de Satarla lève l'ancre dans trois jours ; son capitaine accepte de vous déposer au petit port de Chebeg, à trois lieues au sud d'Urceb, sur la route côtière de Lysor.\n\nQuinze à vingt jours de navigation, au gré de la mer et des escales. Le voyage se déroule sans anicroche.",
+      "jeu": "Jia ou l'oncle de Qirmar trouvent le navire.\n\nVos joueurs s'attendent sans doute à ce que vous annonciez la fin de l'épisode et les points d'expérience. Pas encore… Ne vous attardez pas sur la traversée : avec un peu de chance, ils baisseront la garde en croyant n'avoir plus qu'à glaner quelques informations.",
+      "notes": "LA MENACE DE LOK KOZAAR : pendant que les héros étaient à Halakh, Lok et sa bande ont éliminé Amrita près de Lysor et pris son navire, La reine d'écume. Censés remonter le Tyr vers Jesharek Jool, ils ont relâché dans un petit port de pêcheurs à quelques heures de Satarla ; Lok est rentré seul et en secret chez maître Casmar, dont la maison abrite la secte des druides jaunes. Kurta lui a avoué son échec. Casmar, qui paie Lok pour le compte de Jorkus, exige qu'il arrête l'enquête des héros. Lok, qui a escorté Jorkus à Urceb, sait où mène la piste. Il reste à Satarla pour les affaires des druides jaunes et envoie Kurta et les autres à Urceb : tuer les héros et l'astrologue, pour que personne ne soupçonne Jorkus ni ne sache qu'il reviendra « sous le voile » en nouveau Kryphondus.\nIls se sont introduits sans peine chez Almar, l'ont enfermé dans sa cave avec ses trois domestiques (une mère et ses deux adolescents), qu'ils comptent vendre comme esclaves (un lettré pourra tenir les comptes d'une mine des plaines de Klaar). Ils n'ont que quelques jours d'avance ; l'un d'eux jouera l'astrologue, les autres ses serviteurs.",
+      "pistes": [
+        { "texte": "Débarquer à Chebeg et monter au manoir d'Almar", "vers": "manoir" }
+      ],
+      "distribution": [
+        { "perso": "jia", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "manoir",
+      "titre": "Maître Almar va vous recevoir…",
+      "region": "Urceb",
+      "lieu": "Village de Chebeg, puis le manoir d'Almar de Chebeg sur un plateau boisé",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La sirène de Satarla vous dépose au port de Chebeg, un petit village côtier. N'importe quel villageois vous indique le chemin : une heure de marche, la route d'Urceb, à gauche au premier carrefour, puis un chemin de terre qui monte au sommet d'un plateau boisé.\n\nLa demeure d'Almar de Chebeg est un petit manoir propret, entouré d'un mur peu élevé que dépassent les frondaisons d'arbres fruitiers : une bâtisse rectangulaire à un étage, flanquée d'une tour ronde un peu plus haute. Une cloche pend près de la grille. Vous sonnez. Un petit homme courtaud au teint bistre et à la barbiche noire, simplement vêtu, trottine jusqu'à la grille, s'enquiert de ce que vous voulez et vous prie de patienter. Quelques minutes plus tard, il revient vous ouvrir : son maître consent à vous recevoir.\n\nLa demeure d'un homme fortuné, confortable et bien meublée. Le serviteur vous installe dans de confortables fauteuils de la grande salle, puis s'éclipse vers la cuisine. Des pas dans l'escalier : un homme arrive du vestibule, vêtu de lourdes robes de brocart un peu chaudes pour la saison. La quarantaine passée, une courte barbe blonde, le teint hâlé, une solide carrure : un érudit qui ne passe manifestement pas tout son temps dans sa bibliothèque ! Il se présente et vous demande l'objet de votre visite.\n\nUne odeur de soupe flotte dans l'air. Un grand homme noir, une huche pleine de bûches dans les bras, franchit la porte d'entrée et file vers la cuisine.",
+      "jeu": "NE MONTREZ PAS LE PLAN : décrivez la maison sommairement, comme sans importance.\n\nLE FAUX ALMAR (Solmus) se désole du décès de Jorkus et des événements, confirme avoir dressé son thème astral et l'avoir reçu il y a quelques mois. Si un héros se distingue comme érudit ou astrologue, il propose de lui montrer le thème (« N'ennuyons pas vos amis avec nos discussions scientifiques ») et fait préparer des chambres.\n\nLE PIÈGE : séparer les héros pour les neutraliser un par un.\n• Salle d'astrologie, à l'étage (livres, cartes du ciel, sphère armillaire de cuivre) : Solmus fait examiner une carte céleste, colle sa dague contre les reins du héros et lui intime le silence ; Coren sort de la tourelle et le met en joue à l'arbalète. S'il ne tente rien, ils le ligotent sur une chaise.\n• Kurta (« Taruk ») laisse les autres au salon, s'active à l'étage, appelle Roumal (« Damba ») pour monter du bois pour la cheminée, puis propose à un héros de lui montrer sa chambre.\n• Improvisez selon les réactions. C'est un groupe rodé qui se comprend d'un regard.\n\nINDICES À GLISSER : le serviteur sert à boire sans beaucoup de distinction ; le grand domestique aux bras scarifiés lance un regard furieux quand son comparse le houspille, il n'aime pas recevoir d'ordres. Test d'Esprit devant le sabre caché : on reconnaît celui d'Amrita, vu au temple au début de la saga.",
+      "notes": "Le vrai Almar et ses trois domestiques sont ligotés à la cave. Kurta joue Taruk, le serviteur : la vague description que Qirmar a donnée de lui au ch. 1 (un Halakhi) peut mettre la puce à l'oreille. Roumal Jânn joue Damba ; massue et petit bouclier sont cachés dans la huche. Solmus joue Almar ; le sabre à l'hippocampe est caché dans la salle d'astrologie. Coren se cache dans la tourelle de la salle d'astrologie : les héros l'ont vu au temple avec Lok Kozaar dans l'introduction.",
+      "pistes": [
+        { "texte": "La mascarade éclate", "vers": "embuscade" }
+      ],
+      "distribution": [
+        { "perso": "ch2-solmus", "attitude": "neutre" },
+        { "perso": "kurta", "attitude": "neutre" },
+        { "perso": "ch2-roumal", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "embuscade",
+      "titre": "L'embuscade",
+      "region": "Urceb",
+      "lieu": "Le manoir d'Almar de Chebeg : grande salle, chambres et salle d'astrologie",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Les masques tombent. Le serviteur courtaud tire deux kriss à lame sinueuse et se coule vers vous avec l'aisance d'un cobra. Le grand domestique renverse sa huche : une lourde massue et un petit bouclier en peau de crocator roulent parmi les bûches. À l'étage, des bruits de lutte.",
+      "jeu": "PLAN (livre p. 108) : rez-de-chaussée (grande salle, salon, cuisine et puits, chambres, logement des domestiques, terrasse) ; 1er étage (salle d'astrologie dans la tour, bibliothèque, chambres, domestiques).\n\nVILÉNIE ACTUELLE (ils en ont dépensé contre Amrita) : Solmus 3, Kurta 4, Roumal 3, Coren 3 (5 chacun au maximum). Adaptez selon les points d'héroïsme qui restent aux joueurs. Combat très difficile : des adversaires aussi forts qu'eux, avec la surprise.\n• Solmus (faux Almar) : Mêlée 1, Tir 2, Défense 1, vitalité 12, armure légère. Dague, arc, et le sabre à l'hippocampe caché dans la salle d'astrologie. Vigilant : dé de bonus aux jets de réaction.\n• Kurta (Taruk) : Mêlée 2, Défense 2, vitalité 11. Deux kriss : combat à deux armes (BoL p. 65), arme favorite (dé de bonus).\n• Roumal Jânn (Damba) : Mêlée 2, Défense 1, vitalité 13, baudrier de guerre et petit bouclier (-1 à une attaque, 1/round). Massue, javeline. Lent à la détente : dé de malus aux jets de réaction.\n• Coren (dans la tourelle) : Mêlée 1, Tir 1, Défense 2, vitalité 10. Dague, arbalète.\n\nCOMPORTEMENT : ils se battent farouchement. Roumal combat jusqu'à la mort. Kurta fuit si tout tourne mal, mais préfère mourir que se rendre. Coren et Solmus, si c'est désespéré, négocient leur vie contre des informations.\n\nLE SABRE À L'HIPPOCAMPE (garde en coquillage, poignée en hippocampe dont la tête forme le pommeau) : arme alchimique. Une fois par round, relancer un 1 aux dégâts ; un 12 naturel à l'attaque devient un succès légendaire sans dépenser de point d'héroïsme. Son porteur subit le désavantage traqué : Vornor « Beau Brun », capitaine pirate des îles du Crâne à qui Amrita l'avait volé en le quittant, le cherche activement.",
+      "notes": "Si tous meurent, Almar pourra quand même rapporter ce qu'il a entendu de ses ravisseurs. Si Kurta s'échappe, il rejoint Lok Kozaar et l'armée du dieu voilé (ch. 4).",
+      "pistes": [
+        { "texte": "Fouiller la maison et interroger un prisonnier", "vers": "epilogue" }
+      ],
+      "distribution": [
+        { "perso": "ch2-solmus", "attitude": "hostile" },
+        { "perso": "kurta", "attitude": "hostile" },
+        { "perso": "ch2-roumal", "attitude": "hostile" },
+        { "perso": "coren", "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue : le véritable Almar",
+      "region": "Urceb",
+      "lieu": "Le manoir d'Almar de Chebeg : la cave, puis la grande salle",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une fouille rapide de la maison vous mène à la cave. Ligotés là, un vieil homme et ses trois domestiques, une mère et ses deux adolescents. Rabougri et grisonnant, le front large, le regard pénétrant, il correspond mieux à l'idée qu'on se fait d'un éminent astrologue ! Almar de Chebeg se confond en remerciements, prêt à vous dire tout ce qu'il sait.",
+      "jeu": "UN PRISONNIER (sans doute Coren ou Solmus) négocie sa vie et raconte :\n• Ils ont éliminé Amrita et son groupe pendant que Kurta partait pour Halakh faire tuer les héros par son ancienne confrérie d'assassins ; ils ont attendu dans un village près de Satarla pendant que Lok rentrait en ville ; puis Kurta les a rejoints et ils ont fait voile vers Urceb pour piéger les héros et tuer l'astrologue. Payés pour saboter l'enquête du temple de Nemmereth ; il ignore le commanditaire, Lok négocie seul.\n• Mission accomplie, ils devaient retrouver Lok à Satarla, le soir, chez maître Casmar, rue des Chandeliers, la maison à la frise de turales (des roses de la jungle). Mot de passe : « Sous le voile, le dieu revient ». Il n'en sait pas le sens.\n• Il y a plusieurs mois, Lok a reçu un message un soir : « Je vais voir un revenant ». Rentré chamboulé, il a bu en silence jusqu'à l'aube, « la tête de quelqu'un qui a vu un fantôme ». Le lendemain soir : « On va jouer un sacré coup de dés, garçons ». Plus calme et réfléchi depuis. (Questions précises : un mois environ avant le départ des héros pour Halakh, au moment du suicide de Jorkus.)\n• Plus tard, Lok a dit aller au temple de Nemmereth pour un contrat ; à Kurta qui demandait si c'était encore pour Jorkus, il a pâli : Jorkus était mort et enterré, il fallait oublier ce nom. Le temple l'envoyait voir un vieux sage ; ils n'en feraient rien, et s'occuperaient d'Amrita et des héros.\n• Le voyage à Urceb : quelques mois plus tôt, Lok a escorté Jorkus, crapahuté dans des souterrains avec un gars d'Urceb fort en gueule, pour des ruines de temple miteux. « Ces prêtres, ils sont prêts à traverser la moitié du monde pour un bout d'os ou un vieux drap sans valeur. »\n• Lok ou son commanditaire a sûrement un informateur au temple de Nemmereth.\n\nSANS PRISONNIER, ALMAR rapporte ce qu'il a entendu : un certain Lok, à retrouver chez maître Casmar (« ou était-ce Cassar ? »), rue des Chandeliers. Le nom le trouble : un céruléen, Lok Kozaar, accompagnait Jorkus chez lui.\n\nALMAR ET JORKUS : correspondants depuis dix ans. Il y a un an, un horoscope centré sur Kryphondus, petite étoile de la constellation d'Afyra (« Vous êtes astrologue vous-même ? ») : un accomplissement exceptionnel et proche, mais la réaction hostile de forces souveraines (un roi, une divinité ?) ; un voyage, un pèlerinage, une mort et une renaissance symboliques, un retour à l'origine ; de grands bouleversements, cataclysme ou guerre. Jorkus voulait aussi un guide pour la « porte aux banths » de l'Urceb-du-dessous (antique porte ornée de banths des plaines de Klaar) : Almar a trouvé Samazar le Magnifique, fieffé gredin, grand explorateur et voleur notoire. Jorkus est venu deux mois plus tard avec son garde du corps Lok Kozaar, n'a passé qu'une nuit, est resté peu disert ; Almar l'a présenté à Samazar à Urceb et ne l'a jamais revu.\n\nFIN DE L'ÉPISODE : les héros récupèrent (enfin !) leurs points d'héroïsme dépensés et gagnent chacun 1 point d'expérience.",
+      "notes": "Le « revenant », c'est Jorkus sorti de son tombeau sous le voile ; le « vieux drap sans valeur », c'est le voile de Kryphondus, pris dans le sanctuaire de l'Urceb-du-dessous. La maison de maître Casmar abrite la Compagnie des Masques, la secte des druides jaunes (ch. 4). L'informateur est un jeune acolyte du temple, démasqué au ch. 4.",
+      "pistes": [
+        { "texte": "Partir pour Urceb avec Almar, à la rencontre de Samazar le Magnifique (chapitre 3 : Le dieu dévoilé)" }
+      ],
+      "distribution": [
+        { "perso": "almar-de-chebeg", "camp": "heros", "attitude": "amical" }
+      ]
+    }
+  ]
+}

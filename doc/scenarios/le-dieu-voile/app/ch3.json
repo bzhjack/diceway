@@ -1,0 +1,498 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "ch3",
+    "titre": "Le Dieu voilé — 3. Le dieu dévoilé",
+    "pitch": "Chapitre 3 de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 114-139, PDF p. 116-141), par Frédéric Mouysset. Décor : Urceb (05-urceb.md).\n\nAidés par l'astrologue Almar de Chebeg qu'ils viennent de sauver, les héros se rendent à Urceb afin d'y rencontrer Samazar le Magnifique, le guide que Jorkus a payé pour le mener dans la ville souterraine. Mais ce Samazar est prisonnier d'Oda Unjab, le Prêtre Rouge, seigneur de l'île de la Dent Noire, qui accepte de le céder en échange d'un service : dérober l'onyx de feu du Filonier. Une vision prémonitoire, un démon de Zaggath, un enfant à sauver et un ennemi qui n'en est pas un plus tard, les héros découvrent dans l'Urceb-du-dessous le sanctuaire de Kryphondus et ses bas-reliefs, qui éclairent l'histoire du voile dont Jorkus s'est emparé.\n\nAttention : tout ce qui suit le moment où un héros touche l'onyx de feu (scène « La cave du Filonier ») est une vision prémonitoire, jusqu'à la mort de ce héros face au forgeur de Zaggath. Les scènes concernées le disent dans leurs notes."
+  },
+  "personnages": {
+    "ch3-oda-unjab": {
+      "kind": "pnj", "nom": "Oda Unjab, le Prêtre Rouge", "rang": "rival", "region": "Urceb",
+      "vigueur": 1, "agilite": 2, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 11, "vilenie": 5, "pouvoir": 13,
+      "carrieres": [
+        { "nom": "Soldat", "rang": 1 },
+        { "nom": "Forgeron", "rang": 2 },
+        { "nom": "Alchimiste", "rang": 2 },
+        { "nom": "Sorcier", "rang": 1 }
+      ],
+      "armes": ["Épée"],
+      "armures": ["Armure lourde"],
+      "avantages": ["Amis haut placés", "Intimidant", "Pouvoir du Néant"],
+      "desavantages": ["Arrogant", "Mauvaise réputation", { "nom": "Signe distinctif", "detail": "tatouages cabalistiques" }],
+      "commentaire": "Livre p. 138 (PDF p. 140) : 5 points de vilénie, 13 de pouvoir (2 seulement pendant le rituel d'évocation : il en a dépensé 11 pour ce sortilège de troisième cercle). Épée longue d6+1 dans le livre (avec sa Vigueur 1) → Épée.\nCuirasse alchimique forgée de ses mains, portée ici comme « Armure lourde » : même protection d6-1 (3). Écarts : le livre lui donne Agilité 2 (1 en cuirasse), l'app applique le malus de -2 de l'armure lourde ; la cuirasse divise par deux les dégâts supplémentaires d'un succès héroïque ou légendaire et n'augmente pas le coût de ses sortilèges.\nCrâne rasé, sourcils épilés, visage rond et empâté démenti par des yeux noirs perçants ; tatouages géométriques sur les avant-bras et la poitrine (sceaux de protection) ; bague à tête de salamandre tenant un rubis. Prêtre d'Yrzlak de nom seulement : aventurier, soldat, alchimiste et sorcier, seigneur de la Dent Noire depuis vingt ans. Veut évoquer un forgeur de Zaggath pour lui faire forger une arme mythique ; il lui manque une victime (Menni) et voudrait la protection de l'onyx de feu.\nFuite : en dépensant 1 point de vilénie, son corps se dissipe dans une explosion de flammes en un nuage charbonneux qui file vers la Dent Noire.\nPentacle de protection (pendant le rituel) : annule la première attaque qui le touche."
+    },
+    "ch3-kamatt": {
+      "kind": "pnj", "nom": "Kamatt, sentinelle kalukan", "rang": "coriace",
+      "vigueur": 3, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 3, "tir": 0, "defense": 1,
+      "vitalite": 13,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }, { "nom": "Forgeron", "rang": 1 }],
+      "armes": [{ "nom": "Maillet de forge", "degats": "d6B", "type": "M", "notes": "Énorme marteau de forge manié à deux mains (Kamatt, le Dieu voilé ch. 3)." }],
+      "avantages": ["Baudrier de guerre", "Peau dure"],
+      "commentaire": "Livre p. 138 (PDF p. 140). Maillet de forge d6B+3 dans le livre (avec sa Vigueur 3) : arme propre « Maillet de forge » d6B. Protection d6-1 (3) sans armure : son corps de kalukan est aussi solide que du minerai ; portée ici par Baudrier de guerre + Peau dure (2 + 1), comme pour Lok Kozaar.\nKalukan (BoL p. 93) à la peau noire de jais ornée de tatouages argentés, un seul œil, la force d'un bubalus ; insensible au feu, même le plus ardent. Garde du corps d'Oda, toujours vigilant : il s'interpose pour protéger son maître. Sur le chebek, il se cache dans l'ombre de la cabine ; dans la grotte, sa pose figée le fait passer pour une statue sans tête aux incrustations d'argent."
+    },
+    "ch3-lothar": {
+      "kind": "pnj", "nom": "Lothar, intendant du Prêtre Rouge", "rang": "coriace", "region": "Urceb",
+      "vigueur": 0, "agilite": 2, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }, { "nom": "Scribe", "rang": 1 }],
+      "armes": ["Dague"],
+      "commentaire": "Livre p. 139 (PDF p. 141). Carrière serviteur 1 → Esclave (absente du catalogue).\nHomme élancé aux cheveux noirs, teint pâle, robe brune aux manches galonnées d'or. Jauge ses interlocuteurs les yeux plissés ; ne répond à aucune question sur Samazar. Il transmet aux héros les informations sur la villa du Filonier. Dans la grotte, il assiste au rituel assis sur un tabouret et prend part au combat."
+    },
+    "ch3-apprenti-oda": {
+      "kind": "pnj", "nom": "Apprenti d'Oda", "rang": "coriace", "region": "Urceb",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Forgeron", "rang": 2 }],
+      "armes": [{ "nom": "Marteau de forge", "degats": "d6M", "type": "M", "notes": "Marteau de forgeron (apprentis d'Oda, le Dieu voilé ch. 3)." }],
+      "commentaire": "Livre p. 138 (PDF p. 140) : coriaces, dix dans la grotte. Marteau de forge d6M+1 dans le livre (avec leur Vigueur 1) : arme propre « Marteau de forge » d6M. Aucune armure.\nTorse nu, pantalon rouge, ruisselants de sueur, en transe depuis trois jours : ils frappent à l'unisson des enclumes gravées chacune d'une syllabe du nom démonique du forgeur. Dé de malus pour remarquer quoi que ce soit ; lents à réagir, Oda leur ayant interdit de s'arrêter sans son ordre."
+    },
+    "ch3-soldat-pretre-rouge": {
+      "kind": "pnj", "nom": "Soldat du Prêtre Rouge", "rang": "coriace", "region": "Urceb",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée", "Arbalète"],
+      "armures": ["Armure légère", "Petit bouclier"],
+      "commentaire": "Livre p. 139 (PDF p. 141) : coriaces, douze sur le chebek. Épée ou lance d6+1 (avec leur Vigueur 1) → Épée ; arbalète d6. La moitié seulement porte une arbalète : une seule fiche, l'arbalète figure sur chaque carte.\nPourpoints de cuir bouilli rouge sombre cloutés de cuivre ; uniformes et armes de qualité, soigneusement entretenus. Dévoués et vigilants, mais pas fanatiques : leur seigneur enfui ou vaincu, ils cherchent à cesser le combat. Oda dispose de cinquante à soixante soldats sur son île."
+    },
+    "ch3-galor": {
+      "kind": "pnj", "nom": "Galor, capitaine du chebek", "rang": "coriace", "region": "Urceb",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée"],
+      "armures": ["Armure légère", "Petit bouclier"],
+      "commentaire": "Livre p. 139 (PDF p. 141) : « Galor, leur capitaine, possède le même profil qu'un soldat » : profil du soldat du Prêtre Rouge repris tel quel. Il surveille la manœuvre depuis le gaillard d'arrière du chebek."
+    },
+    "ch3-marin-pretre-rouge": {
+      "kind": "pnj", "nom": "Marin du Prêtre Rouge", "rang": "pietaille", "region": "Urceb",
+      "melee": 0, "vitalite": 2,
+      "armes": [{ "nom": "Armes de marin", "degats": "d3", "type": "M", "notes": "Armes diverses des équipages (coutelas, gourdins…)." }],
+      "commentaire": "Livre p. 139 (PDF p. 141) : piétaille, Attaque +0, dégâts d3, vitalité 2, règle de horde (BoL p. 132). Huit marins à la manœuvre sur le chebek. Arme « Armes de marin » reprise de la Perle du Beshaar."
+    },
+    "ch3-demon-fuligineux": {
+      "kind": "demon", "nom": "Démon fuligineux", "categorie": "Inférieur",
+      "vigueur": 2, "agilite": 4, "esprit": 0, "aura": 0, "melee": 2, "tir": 0, "defense": 0,
+      "vitalite": 22, "degats": "d6",
+      "pouvoirs": [
+        { "nom": "Intangible", "detail": "Pas de corps physique : ne peut être blessé que par la sorcellerie ou l'alchimie." }
+      ],
+      "commentaire": "Livre p. 123 (PDF p. 125), démon inférieur : Initiative 4, protection 0, dégâts d6+2 dans le livre (avec sa Vigueur 2 ; d6 de base ici).\nSuffocation (pouvoir du livre) : sur une attaque réussie, il s'insinue dans le corps de sa cible par la bouche, les narines, les yeux et les oreilles, et inflige ses dégâts. Les rounds suivants, il n'attaque plus : la victime fait un test de Vigueur Difficile (-2) pour l'expulser ; en cas d'échec, elle subit de nouveau les dégâts, jusqu'à réussite ou mort. Il passe alors à une nouvelle cible. Une victime qui entre dans la lumière d'une bougie enchantée l'expulse aussitôt.\nNuage bouillonnant de suie opaque qui jaillit de la faille de la cave du Filonier et étouffe toute lumière, sauf celle des bougies enchantées. Évoqué par un sorcier pour garder les trésors du Filonier. La lumière des deux cierges de l'entrée (et du bougeoir en forme de crâne du bureau) le repousse : il ne peut quitter la pièce ni pénétrer dans leur cercle de lumière (environ 3 m de diamètre). Poser un chandelier ou le bougeoir devant la faille l'y enferme."
+    },
+    "ch3-forgeur-de-zaggath": {
+      "kind": "demon", "nom": "Forgeur de Zaggath", "categorie": "Majeur",
+      "vigueur": 5, "agilite": 4, "esprit": 1, "aura": 2, "melee": 6, "tir": 1, "defense": 3,
+      "vitalite": 35, "degats": "d6B",
+      "pouvoirs": [
+        { "nom": "Cuirassé", "detail": "Protection d6 (4)." },
+        { "nom": "Savoir spécial", "detail": "Forgeron au rang 6." },
+        { "nom": "Vulnérabilité", "detail": "L'eau le blesse : dégâts normaux, de d6M à d6 selon la quantité." }
+      ],
+      "commentaire": "Livre p. 139 (PDF p. 141), démon majeur : Initiative 2, dégâts d6B+5 dans le livre (avec sa Vigueur 5 ; d6B de base ici), protection d6 (4).\nAura ardente (pouvoir du livre) : toute personne à portée de corps à corps perd 1 point de vitalité au début de chaque round, sans protection d'armure.\nSouffle de feu (pouvoir du livre) : au lieu d'une attaque normale, jet de flammes à 6 m ; la cible réussit un test d'Agilité Ardu (-1) ou subit d6B dégâts de feu, sans protection d'armure.\nCorps râblé de minerai en fusion, trois fois la taille d'un homme ; visage odieusement humain à la bouche immense aux crocs diamantins, petits yeux d'obsidienne, crinière de flammes. Esprit démoniaque au service de Zaggath, seigneur du feu. Il se gorge d'abord du sang de Menni, puis frappe indifféremment ; il rechigne à frapper le porteur de l'onyx de feu (la pierre arrête sa première attaque contre lui en explosant en une gerbe de lumière)."
+    },
+    "ch3-samazar": {
+      "kind": "pnj", "nom": "Samazar le Magnifique", "rang": "rival", "region": "Urceb",
+      "vigueur": 0, "agilite": 2, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 1, "tir": 1, "defense": 1,
+      "vitalite": 10, "vilenie": 3,
+      "carrieres": [
+        { "nom": "Voleur", "rang": 3 },
+        { "nom": "Scribe", "rang": 1 },
+        { "nom": "Mercenaire", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Amis dans la pègre"],
+      "desavantages": [{ "nom": "Manchot/unijambiste", "detail": "main droite tranchée par Oda" }],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée (profil, carrières, dague, avantage). Vilénie 3 : valeur par défaut, le livre n'en donne pas. Manchot : Oda lui fait trancher la main droite le matin de l'échange.\nLa quarantaine, physique maigre et musclé de chat de gouttière, vêtements de cuir noir ; visage aux joues creusées qui n'est pas sans beauté ni noblesse. Gredin célèbre d'Urceb, voleur et pilleur de tombes notoire, honnête à sa manière et assez érudit : le meilleur connaisseur des parties les plus anciennes de l'Urceb-du-dessous. Il a conduit Jorkus et Lok Kozaar à la « Porte aux Banths » et au sanctuaire de Kryphondus, il y a plusieurs mois. Père secret de Menni, confié à son vieil ami Narubio. Capturé en s'introduisant sur la Dent Noire pour sauver son fils. PJ de remplacement possible (livre p. 65)."
+    },
+    "ch3-narubio": {
+      "kind": "pnj", "nom": "Narubio, Protecteur de la ville", "rang": "rival", "region": "Urceb",
+      "vigueur": 2, "agilite": 1, "esprit": 1, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 12, "vilenie": 3,
+      "carrieres": [{ "nom": "Soldat", "rang": 3 }, { "nom": "Noble", "rang": 1 }],
+      "armes": ["Épée"],
+      "armures": ["Armure moyenne"],
+      "avantages": ["Amis haut placés", "Inspirateur"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée (profil, carrières, chemise de mailles en armure moyenne, avantages). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nProtecteur de la ville et chef du guet d'Urceb, seigneur. La cinquantaine, solidement charpenté et imposant, visage sévère rasé de frais, tunique noire sur une chemise de mailles, épée au côté. Inspire à ses hommes respect et loyauté sans faille ; a des yeux et des oreilles dans toute la ville. Vieil ami de Samazar, il élève Menni, qu'il fait passer pour le fils d'un lointain cousin. N'a aucune autorité sur la Dent Noire et aucune preuve pour aller voir le roi Negedzar Frome."
+    },
+    "ch3-amrazh": {
+      "kind": "pnj", "nom": "Amrazh, mage de Narubio", "rang": "rival", "region": "Urceb",
+      "vigueur": -1, "agilite": 0, "esprit": 3, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 9, "vilenie": 3, "pouvoir": 12,
+      "carrieres": [
+        { "nom": "Sorcier", "rang": 2 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Scribe", "rang": 1 }
+      ],
+      "armes": ["Bâton"],
+      "avantages": ["Sentir la magie"],
+      "desavantages": [{ "nom": "Signe distinctif", "detail": "tatouage d'œil bleuté au front" }, "Inquiétant"],
+      "commentaire": "Pas de stats dans le livre : fiche de rival minimale inventée (profil, carrières, pouvoir 10 + rang de sorcier, avantage et désavantages). Vilénie 3 : valeur par défaut, le livre n'en donne pas.\nMagicien attaché au service de Narubio. Maigre et très grand (près de deux mètres), visage émacié et glabre, longues robes bleu pastel, tatouage bleuté en forme d'œil empli d'arabesques au milieu du front, regard pâle, presque laiteux. Soigne Samazar (instruments, bandages, fiole) sans lever les yeux de sa tâche, et glisse : « ils cherchaient une pierre, une pierre spéciale ». Il sent qu'un maléfice est à l'œuvre sur la Dent Noire et connaît les vertus de l'onyx de feu."
+    },
+    "ch3-marek": {
+      "kind": "pnj", "nom": "Marek, sergent du guet", "rang": "coriace", "region": "Urceb",
+      "vigueur": 2, "agilite": 0, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Soldat", "rang": 2 }],
+      "armes": ["Épée", "Arbalète"],
+      "commentaire": "Pas de stats dans le livre : profil du « Sergent du guet » du catalogue, sans armure (il troque sa tenue de garde contre des vêtements sombres pour l'expédition sur la Dent Noire), avec une arbalète.\nSergent de Narubio. Connaît bien la baie d'Urceb : il guide le canot entre les récifs jusqu'aux orgues basaltiques, puis attend les héros en haut de la falaise avec Michka pour couvrir leur retraite."
+    },
+    "ch3-michka": {
+      "kind": "pnj", "nom": "Michka, garde grimpeur", "rang": "coriace", "region": "Urceb",
+      "vigueur": 0, "agilite": 2, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 1, "tir": 1, "defense": 1,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Soldat", "rang": 1 }],
+      "armes": ["Dague", "Arbalète"],
+      "avantages": ["Athlète"],
+      "commentaire": "Pas de stats dans le livre : fiche de coriace minimale inventée.\nJeune garde du guet au physique sec et nerveux, agile comme un lémurien : il escalade les orgues basaltiques de la Dent Noire en un quart d'heure et fixe une corde à un arbre. Marek lui apporte une arbalète."
+    },
+    "ch3-garde-du-guet": {
+      "kind": "pnj", "nom": "Garde du guet d'Urceb", "rang": "pietaille", "region": "Urceb",
+      "melee": 1, "vitalite": 3,
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "armures": ["Armure légère"],
+      "commentaire": "Pas de stats dans le livre : piétaille inventée (Attaque +1, dégâts d3, vitalité 3, règle de horde BoL p. 132). Arme « Armes diverses (piétaille) » reprise de la Perle du Beshaar.\nHommes de Narubio en pourpoint de cuir noir. Un fort parti investit l'auberge des héros ; une dizaine reste ensuite avec Narubio. Une escorte accompagne les héros dans l'Urceb-du-dessous."
+    },
+    "ch3-garde-filonier": {
+      "kind": "pnj", "nom": "Garde du Filonier", "rang": "pietaille", "region": "Urceb",
+      "melee": 1, "vitalite": 3,
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "armures": ["Armure légère"],
+      "commentaire": "Pas de stats dans le livre : piétaille inventée (Attaque +1, dégâts d3, vitalité 3, armure de cuir, règle de horde BoL p. 132).\nDix gardes à la villa d'Elistar le Filonier : deux en faction derrière la grille, deux en ronde dans le jardin (environ une fois par heure), les autres à la cuisine ou au dortoir des combles. Ils s'ennuient, détestent leur maître et l'intendant Julak qui leur aboient dessus : on peut les soudoyer."
+    },
+    "ch3-julak": {
+      "kind": "pnj", "nom": "Julak, intendant du Filonier", "rang": "coriace", "region": "Urceb",
+      "vigueur": 0, "agilite": 0, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 4,
+      "carrieres": [{ "nom": "Scribe", "rang": 1 }, { "nom": "Marchand", "rang": 1 }],
+      "desavantages": [{ "nom": "Addiction", "detail": "le jeu" }, "Non-combattant"],
+      "commentaire": "Pas de stats dans le livre : fiche de coriace minimale inventée.\nGros homme glabre et ventripotent, cheveux blonds coupés au bol. Joueur invétéré : il profite des absences de son maître pour s'encanailler au Sourire de Piandra, tripot et maison de passe à quelques rues. Ne quitte jamais son trousseau de clefs, qui ouvre toutes les portes de la maison (mais pas la porte de la cave secrète)."
+    },
+    "ch3-menni": {
+      "kind": "pnj", "nom": "Menni", "rang": "coriace", "region": "Urceb",
+      "vigueur": -1, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 0, "melee": 0, "tir": 0, "defense": 0,
+      "vitalite": 4,
+      "carrieres": [{ "nom": "Esclave", "rang": 1 }],
+      "desavantages": ["Non-combattant"],
+      "commentaire": "Pas de stats dans le livre : fiche minimale inventée (enfant de onze ans). Carrière Esclave pour son service de jeune serviteur dans la maison de Narubio.\nGarçon roux aux yeux noirs comme l'obsidienne, né dans les flammes de l'incendie du quartier des Puits, onze ans plus tôt : la victime rêvée du rituel d'Oda. Fils secret de Samazar, élevé par Narubio, il se croit le fils d'un lointain cousin de ce dernier. Enlevé par Oda ; enfermé, terrifié et déshydraté, dans une cage de fer suspendue au-dessus de la faille de lave de la grotte."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "anguille-d-argent",
+      "titre": "Rendez-vous à Urceb",
+      "region": "Urceb",
+      "lieu": "Quartier du Port, auberge L'anguille d'argent",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Remis de vos émotions et de vos blessures, vous quittez avec Almar de Chebeg le manoir de l'astrologue. Une bonne heure de marche plus tard, vous franchissez les portes de la petite ville d'Urceb, traversez ses rues animées et son marché aux tissus, et gagnez directement le port.\n\nAlmar vous conduit dans une auberge non loin des quais, L'anguille d'argent. L'établissement, simple mais soigné, n'a rien d'un bouge pour marins en goguette : on y croise des habitués du quartier, des capitaines de navire et des voyageurs aisés. Un fumet de friture d'anguilles au miel flotte dans la salle aux tables cirées. Almar va saluer l'aubergiste et revient quelques minutes plus tard, la mine déconfite.\n\n« Mes amis, j'ai de mauvaises nouvelles. Ektar, l'aubergiste, est un ami de Samazar ; il vient de m'apprendre qu'il y a trois jours, Samazar aurait essayé de s'introduire sur la Dent Noire, l'île dans la baie d'Urceb, sur laquelle nul n'a le droit de poser le pied. C'est le fief d'Oda Unjab, un puissant seigneur qui se fait appeler le Prêtre Rouge. La rumeur dit qu'il croupirait depuis dans ses geôles. Suivez-moi dehors, je vais vous montrer l'île. »\n\nFace au port, à quelques encablures, se dresse un bloc sombre de roche basaltique frangé d'écume, aux hautes falaises ceinturées de récifs, coiffé d'un bois de résineux noueux. Un chebek aux voiles rouges est ancré face au port : « C'est justement le navire du seigneur Oda ! »",
+      "jeu": "Horoscope d'Almar (proposé la veille, si les héros acceptent) : les signes sont favorables, mais annoncent des embûches, un chemin qui prendra des détours, la nécessité de revenir sur ses pas pour surmonter un obstacle infranchissable, la rencontre d'un ennemi qui n'en est pas un, et le feu (ou la lumière) tour à tour protecteur et destructeur. Concrètement : le groupe reçoit 3 dés de bonus à utiliser au cours de l'aventure (horoscope de groupe, livre p. 9).\nCe qu'Almar sait de l'île et d'Oda :\n• L'île serait le vestige d'un ancien volcan en partie effondré dans la mer. La forteresse d'Oda est de l'autre côté, face au large.\n• Interdit d'y aborder sans sa permission ; importante garnison, plusieurs navires. Oda a traqué les pirates qui menaçaient le commerce de la baie.\n• Homme énigmatique, rarement en ville ; vu à la cour du roi Negedzar Frome, à qui il fournit une bonne partie des armes et armures de ses soldats. On le dit très riche. Ses forges sont réputées, d'où sortent les meilleures armes d'Urceb ; il se dit adorateur d'Yrzlak, le dieu forgeron.\n• Il traite souvent ses affaires sur son chebek : il n'aime ni accueillir de gens sur son île, ni venir en ville.\nAlmar ne connaît pas Oda personnellement. Il conseille d'entrer en contact avec lui, et vite : les jours de Samazar sont sans doute comptés. Puis il remercie les héros, leur souhaite bonne chance et rentre chez lui. Aucun jet.",
+      "notes": "Samazar le Magnifique est le guide que Jorkus a payé pour le mener dans l'Urceb-du-dessous (lettre d'Almar, aide de jeu II). Il ne s'est pas introduit sur la Dent Noire pour voler : il cherchait son fils Menni, enlevé par Oda (les héros l'apprendront plus tard, de Narubio).\nLe « feu protecteur et destructeur » de l'horoscope annonce l'onyx de feu et le forgeur de Zaggath ; « revenir sur ses pas » annonce la vision prémonitoire ; « l'ennemi qui n'en est pas un », c'est Narubio.",
+      "pistes": [
+        { "texte": "Aborder l'homme qui débarque du canot du chebek", "vers": "promenade-en-mer" }
+      ],
+      "distribution": [
+        { "perso": "almar-de-chebeg", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "promenade-en-mer",
+      "titre": "Promenade en mer",
+      "region": "Urceb",
+      "lieu": "Quais du port, puis la baie d'Urceb en barque de pêcheur",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un grand canot s'éloigne du chebek aux voiles rouges. Propulsé par six rameurs, il accoste bientôt et débarque trois passagers. Un homme élancé, aux cheveux noirs et au teint pâle, vêtu d'une robe brune aux manches ornées de galons dorés, donne quelques ordres à ses deux domestiques, un jeune garçon et une femme, qui partent vers le marché, un panier à la main. Suivi de trois rameurs en tenue de soldats, il s'avance vers l'échoppe d'un marchand qui l'accueille avec obséquiosité. Bientôt, sacs et tonnelets sont portés jusqu'au canot, sous l'œil attentif de l'homme, qui remet une bourse au marchand.\n\nQuand vous l'abordez, il vous jauge du regard, les yeux légèrement plissés. Après une hésitation : son maître est à bord et a terminé ses audiences du matin. Trouvez un pêcheur qui veuille bien vous mener au navire, et suivez son canot quand il repartira. Il portera votre demande ; si son maître accepte, vous pourrez monter à bord. Sinon, vous rentrerez au port.",
+      "jeu": "Qui est cet homme : un héros qui interroge les gens du port apprend que c'est Lothar, l'intendant du Prêtre Rouge. Lothar demande le motif de la visite ; il ne répond à aucune question sur Samazar.\nTrouver un pêcheur : facile, contre quelques piécettes. Une demi-heure plus tard, les domestiques reviennent les paniers pleins, et le canot repart. Dix minutes de traversée.\nCe que sait le pêcheur, s'il est interrogé en route :\n• Oda est craint et respecté, mais mal connu ; il vient rarement à terre et règne en maître sur son île, où nul n'a le droit d'aller. La Dent Noire est d'ailleurs difficile d'approche (récifs, falaises abruptes).\n• Ses forges crachent souvent des panaches de fumée noire ; le vent porte parfois le tintement des marteaux.\n• Sa forteresse, côté large, a un grand ponton de bois. Outre son chebek, il a deux petites galères de guerre. Très riche, très influent ; cinquante ou soixante soldats, sans compter les marins.\nAucun jet.",
+      "notes": "Les deux domestiques et les provisions n'ont rien de suspect. Lothar sert Oda en toute confiance : c'est lui qui donnera aux héros les renseignements sur la villa du Filonier.",
+      "pistes": [
+        { "texte": "Monter à bord du chebek", "vers": "chebek-pretre-rouge" }
+      ],
+      "distribution": [
+        { "perso": "ch3-lothar", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "chebek-pretre-rouge",
+      "titre": "Rencontre avec le Prêtre Rouge",
+      "region": "Urceb",
+      "lieu": "Le chebek aux voiles rouges, ancré dans la baie d'Urceb",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Le chebek est un magnifique voilier fin et élancé, à trois mâts aux voiles triangulaires d'un rouge éclatant, sa coque acajou percée de sabords de nage. Des soldats s'alignent au bastingage et vous surveillent d'un air impassible : pourpoints de cuir bouilli rouge sombre cloutés de cuivre, uniformes et armes de qualité, soigneusement entretenus. Après quelques minutes, l'intendant reparaît : son maître consent à vous recevoir. Le pêcheur vous attendra dans sa barque.\n\nLe pont est étincelant, lavé de frais. Des marins roulent des cordages et descendent la cargaison dans la cale ; une douzaine de soldats vous observent d'un œil vigilant ; sur le gaillard d'arrière, le capitaine surveille ses hommes. Entre les deux grands mâts, un dais abrite un divan garni de coussins, posé sur un tapis soyeux. Sur une table basse, une coupe de fruits, une carafe de vin, et un brasero où se consument des herbes à l'odeur fraîche et citronnée.\n\n« Sa Seigneurie Oda Unjab. » L'homme confortablement installé porte un pantalon bouffant de soie rouge et une large chemise de lin blanc. Dans la force de l'âge, solidement charpenté, il a le crâne rasé et les sourcils épilés ; des tatouages abstraits et géométriques couvrent ses avant-bras et sa poitrine. Bracelet d'argent serti de rubis au poignet gauche ; à la main droite, une bague en tête de salamandre tenant un rubis dans sa gueule. Son visage hâlé est rond et un peu empâté, mais ses yeux noirs sont d'une acuité redoutable. Un léger sourire aux lèvres, il vous salue d'un signe de tête.",
+      "jeu": "Observer : un héros sorcier, érudit ou alchimiste reconnaît dans ses tatouages, sur un test d'Esprit, des signes cabalistiques qui ressemblent à des sceaux de protection. Un héros qui observe les lieux (test d'Esprit) aperçoit dans l'ombre de la porte de la cabine la silhouette d'un homme corpulent, aux reflets argentés (cotte de mailles ?), dont le visage est caché par le linteau : il doit être très grand. C'est Kamatt, le garde kalukan.\nNégocier : Oda écoute en les étudiant d'un air faussement nonchalant ; il se satisfait même d'un mensonge crédible. Il confirme que Samazar est vivant, capturé il y a trois jours sur son île avec quelques filous ; il songe à l'attacher à la proue de son navire jusqu'à ce qu'il se noie. Mais il le céderait contre un juste dédommagement.\nLe marché : après s'être fait confirmer que les héros sont étrangers et repartiront vite, il leur demande de dérober cette nuit l'onyx de feu d'Elistar le Filonier, riche négociant en gemmes (mines dans les plaines de Klaar), absent jusqu'à demain. Conditions : que nul ne s'aperçoive du vol (substituer la réplique qu'il fournit) ou, au pire, que cela passe pour un cambriolage banal. Samazar contre la pierre.\nL'onyx de feu (encadré) : un sorcier ou un alchimiste se souvient, sur un test d'Esprit Difficile (-2) (Très difficile -4 pour un érudit), que c'est une pierre bénéfique et protectrice, notamment contre les puissances du Néant, réputée pour ses propriétés divinatoires ; un alchimiste pourrait en faire une arme de grande qualité.\nLe pacte : Oda revient avec une petite bourse, la réplique (onyx noir ovale, cerclé de lignes orangées autour d'un rond rouge translucide), un parchemin, une plume et un encrier. Chacun signe ; « Yrzlak, le dieu forgeron, sera témoin de notre pacte ». Il pose le parchemin roulé sur le brasero : il noircit… mais ne brûle pas.\nDe nouvelles informations (Lothar, à mi-voix, au bastingage) :\n• Villa rue de l'Abondance, quartier des Loges : jardin, mur d'enceinte, portail de fer forgé. Deux gardes au portail, deux en ronde dans le jardin ; dix gardes en tout et six domestiques. Le Filonier est veuf, ses deux fils ne vivent plus chez lui.\n• L'intendant Julak, gros homme glabre aux cheveux blonds au bol, joueur invétéré, file au Sourire de Piandra (tripot et maison de passe) dès que son maître s'absente ; il ne quitte jamais son trousseau de clefs.\n• Les pierres sont dans une chambre secrète souterraine, par un passage dissimulé dans le bureau du rez-de-chaussée, « la deuxième porte dans le couloir après l'escalier ». Oda ignore ce qui la protège : « restez sur vos gardes ».\n• Le chebek revient demain matin ; le canot attendra les héros au port.",
+      "notes": "Oda n'a de prêtre que le nom. Il prépare depuis des années l'évocation d'un forgeur de Zaggath, esprit démoniaque du seigneur du feu, pour le contraindre à lui forger une arme mythique (la Dent Noire est un ancien volcan dont une faille donne sur un conduit de lave ; son prédécesseur adorait Zaggath). Il lui fallait une victime aux cheveux de feu, aux yeux d'obsidienne, née dans les flammes : Menni, jeune parent de Narubio, qu'il a fait enlever. Il a déjà entamé le rituel ; l'onyx de feu lui offrirait une protection contre le démon, mais il continuera sans. Samazar, venu sauver Menni, n'est pour lui qu'un voleur de plus.\nLe parchemin qui ne brûle pas est un simple charme destiné à impressionner : rompre le pacte n'aura aucune conséquence. La réplique est une pierre banale enchantée. Il existe un moyen simple de reconnaître un vrai onyx de feu (posé sur des braises, son rond rouge s'illumine) : Oda le garde pour lui.\nSur le pont : Oda, Lothar, Galor, douze soldats, huit marins, et Kamatt caché dans la cabine. Inutile d'attaquer ici.",
+      "pistes": [
+        { "texte": "Accepter le marché et préparer le cambriolage", "vers": "villa-filonier" }
+      ],
+      "distribution": [
+        { "perso": "ch3-oda-unjab", "attitude": "neutre" },
+        { "perso": "ch3-lothar", "attitude": "neutre" },
+        { "perso": "ch3-kamatt", "attitude": "mefiant" },
+        { "perso": "ch3-galor", "attitude": "neutre" },
+        { "perso": "ch3-soldat-pretre-rouge", "qty": 4, "attitude": "mefiant" },
+        { "perso": "ch3-marin-pretre-rouge", "qty": 3, "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "villa-filonier",
+      "titre": "Casse chez le Filonier",
+      "region": "Urceb",
+      "lieu": "Villa d'Elistar le Filonier, rue de l'Abondance, quartier des Loges",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "La demeure du Filonier est aisée à trouver. Un mur d'enceinte de deux mètres cinquante, dominé par les arbres du jardin, entoure une villa à un étage surmontée de combles, aux grandes fenêtres et aux deux larges balcons : rien d'un bastion imprenable. Derrière la grille de fer forgé, deux gardes en armure de cuir montent la faction avec l'air de s'ennuyer ferme.\n\nAu fil de la journée, vous voyez vivre la maisonnée : un homme blond ventripotent donne ses instructions au jardinier, deux servantes sortent faire des achats, trois gardes bavardent au soleil sur les marches du perron. Dans l'après-midi, le gros homme blond sort faire une course, s'arrête dans une taverne pour se désaltérer, puis rentre. Après le dîner, il ressort en se frottant les mains d'impatience, un grand sourire aux lèvres, non sans avoir aboyé aux gardes de la grille d'ouvrir l'œil.\n\nLa nuit tombe. Vous n'avez que quelques heures.",
+      "jeu": "Le livre ne détaille pas la villa : à condition que les joueurs trouvent une bonne solution, l'affaire doit se dérouler sans trop d'accrocs. Réagissez à leurs plans sans trop leur compliquer la tâche.\nLa garde de nuit : deux gardes à la grille ; deux autres font le tour de la propriété à peu près une fois par heure, s'arrêtent à la grille, puis rentrent à la cuisine en attendant la ronde suivante. Les autres gardes et les domestiques dorment au dortoir des combles. Effectif réel : 10 gardes (4 cartes : ceux de la grille et de la ronde).\nLes options :\n• Se faufiler dans le jardin entre deux rondes, sans être vu de la grille.\n• Neutraliser les gardes et simuler un cambriolage ordinaire pour masquer la substitution.\n• Entrer : deux portes secondaires sur le jardin, verrouillées la nuit (test d'Agilité pour crocheter) ; fenêtres simples à forcer.\n• Julak : lui voler ses clefs (elles ouvrent toutes les portes de la maison), ou le faire chanter (tricher au Sourire de Piandra pour lui faire perdre une forte somme, puis effacer la dette contre un « service »).\n• Soudoyer les gardes : ils détestent leur maître et Julak. Il faut les convaincre que l'intrusion passera inaperçue et leur offrir un pot-de-vin conséquent.\nÀ l'intérieur : riche mobilier, tapisseries, bibelots rares. Après le vestibule et l'escalier, la deuxième porte du couloir est fermée à clef (test d'Agilité Ardu, -1 pour la crocheter ; le trousseau de Julak l'ouvre). Cabinet d'étude : bureau, bibliothèque, commode garnie de roches et minéraux. Sous un tapis portant un guéridon, une trappe non verrouillée ouvre sur un escalier dans les ténèbres. Sur le bureau, une chandelle sur un bougeoir en forme de crâne humain (si un joueur cherche de la lumière).",
+      "notes": "Le bougeoir en forme de crâne est la clé de la cave : sa bougie enchantée repousse le démon qui garde les trésors, comme les deux cierges de la cave. Le Filonier s'en munit chaque fois qu'il descend.\nLe vol n'est qu'un avant-propos, mais il aura des conséquences majeures : c'est en touchant l'onyx que le héros recevra la vision prémonitoire.\nNarubio fait surveiller les héros depuis leur rencontre avec Oda : ses hommes les voient entrer chez le Filonier.",
+      "pistes": [
+        { "texte": "Descendre par la trappe du bureau", "vers": "cave-filonier" }
+      ],
+      "distribution": [
+        { "perso": "ch3-julak", "attitude": "neutre" },
+        { "perso": "ch3-garde-filonier", "qty": 4, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "cave-filonier",
+      "titre": "La cave du Filonier",
+      "region": "Urceb",
+      "lieu": "Chambre secrète sous la villa du Filonier",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Une dizaine de marches taillées dans la roche débouchent sur une petite pièce rectangulaire aux murs maçonnés et au sol pavé. Face à l'escalier, une lourde porte de bois verrouillée. Un rai ténu de lumière filtre dessous ; aucun bruit de l'autre côté.\n\nLa porte ouvre sur une pièce semblable, percée d'un passage voûté dans le mur de gauche. L'arche est encadrée de deux chandeliers d'un mètre de haut en métal ouvragé, portant chacun un gros cierge allumé. Les flammes vacillent dans le courant d'air et font danser d'inquiétantes ombres sur les murs.\n\nAu-delà du passage s'étend une longue salle de cinq mètres sur deux, au sol pavé, qui s'enfonce sur la gauche. Le mur de droite n'est pas maçonné : c'est une paroi de roche irrégulière, légèrement inclinée, fendue en son milieu d'une étroite faille verticale d'une vingtaine de centimètres de large, qui court presque sur toute sa hauteur. Au fond, une table de pierre, et derrière elle une grosse commode aux rangées de petits casiers à poignée de cuivre.",
+      "jeu": "La porte : aucune clef du trousseau de Julak ne va. Serrure de bonne facture : test d'Agilité ou de Vigueur Difficile (-2) pour la crocheter ou l'enfoncer.\nLes cierges : un héros qui les examine remarque des impuretés dans la cire (filaments, grains sombres) et aucune coulure : ces bougies brûlent sans se consumer.\nLe démon fuligineux (démon inférieur) : dès qu'un héros dépasse la faille, un nuage bouillonnant de suie en jaillit, étouffe toute lumière sauf celle des bougies enchantées, et attaque toute personne dans la pièce. Initiative 4, Mêlée +2, Défense 0, protection 0, dégâts d6+2, vitalité 22.\n• Intangible : seules la sorcellerie et l'alchimie le blessent.\n• Suffocation : sur une attaque réussie, il entre dans la victime et inflige ses dégâts ; ensuite il n'attaque plus, et la victime fait chaque round un test de Vigueur Difficile (-2) pour l'expulser, sinon elle subit de nouveau les dégâts, jusqu'à réussite ou mort. La victime qui entre dans la lumière d'une bougie enchantée l'expulse aussitôt.\n• La lumière des deux cierges l'empêche de quitter la pièce. Le bougeoir en crâne du bureau a le même pouvoir : son porteur est protégé dans un cercle d'environ 3 m de diamètre (le démon sort de la faille et y reflue), mais le démon s'en prend à quiconque se tient au-delà. Approcher un chandelier le fait fuir de même ; poser un chandelier ou le bougeoir devant la faille l'y enferme.\nL'onyx de feu : une fois le démon réglé, la table de pierre est vide ; les casiers contiennent une impressionnante collection de cristaux, minéraux, géodes et pierres précieuses… dont l'onyx de feu. Le héros qui opère la substitution ressent une vive chaleur dans la main en saisissant la pierre, un instant seulement.",
+      "notes": "SECRET CAPITAL — Quand tout bascule : dès que ce héros touche l'onyx, les pouvoirs de prescience de la pierre s'activent. Tout ce qui suit est une vision prémonitoire qu'il reçoit, jusqu'à sa mort face au forgeur de Zaggath. Les joueurs ne doivent rien soupçonner : poursuivez normalement.\nAvant de continuer, notez discrètement :\n• qui a touché la pierre en premier ;\n• la situation exacte à cet instant : où se trouve chacun, où en est le démon, ce qui se passe ;\n• à partir de maintenant, les points d'héroïsme, de foi et de pouvoir et les ressources dépensés : ils ne le seront pas réellement.\nVous décrirez de nouveau fidèlement cette scène quand les héros y seront ramenés (scène « Et maintenant ? »).",
+      "pistes": [
+        { "texte": "Quitter la villa avec l'onyx et attendre le chebek au matin (la vision commence, sans le dire)", "vers": "pierre-contre-samazar" }
+      ],
+      "distribution": [
+        { "perso": "ch3-demon-fuligineux", "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "pierre-contre-samazar",
+      "titre": "La pierre contre Samazar",
+      "region": "Urceb",
+      "lieu": "Le chebek du Prêtre Rouge, face au port",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une heure après le lever du soleil, les voiles rouges du chebek apparaissent sur la mer, et le navire vient jeter l'ancre face au port. Le canot rejoint les quais et Lothar vous invite à monter à bord.\n\nSur le pont, la scène ressemble à la première fois. Oda porte aujourd'hui une longue tunique de brocart noir à large ceinture de soie écarlate. Debout au bastingage, il contemple son île d'un air concentré, puis se tourne vers vous. Sur la table basse, le brasero est toujours là, et sur son lit de braises le parchemin racorni rougeoie et fume. À côté repose une épée dans un fourreau ouvragé.\n\nIl s'enquiert du succès de la mission et demande à voir l'onyx. Il l'examine avec un sourire avide, puis le dépose sur les braises. Au bout d'un instant, le rond rouge de la pierre se met à luire d'un éclat rouge-orangé, comme illuminé de l'intérieur. Oda hoche la tête, satisfait.\n\n« C'est parfait. À mon tour de remplir ma part du marché. » Il claque des doigts. Deux soldats sortent de la cabine en portant une forme enroulée dans un drap blanc, qu'ils déposent devant vous. Un homme d'une quarantaine d'années, maigre et musclé comme un chat de gouttière, vêtements de cuir noir déchirés et tachés de sang. Il ouvre des yeux fiévreux et hantés, serrant contre sa poitrine le moignon de son poignet droit, enveloppé d'un linge poisseux. Son visage creusé, livide et crasseux, n'est pourtant pas sans beauté ni noblesse.\n\n« Comme convenu, voici Samazar, dit le Magnifique », ajoute Oda avec un petit rire cruel. « Je ne pouvais tout de même pas le libérer sans lui laisser un souvenir de son incursion sur mon île. Il pourra encore répondre à vos questions. Ceci conclut notre affaire ; nous n'avons plus besoin de cette garantie. » Il broie le parchemin noirci dans son poing, répandant une pluie de cendres sur le pont ciré, et se détourne.",
+      "jeu": "Aucun jet. Lothar fait installer Samazar dans le canot et y invite les héros. Samazar est à peine conscient : vitalité très basse (2 ou 3 sur 10, à votre choix), incapable de parler avant les soins d'Amrazh.\nRevenus au port, les héros l'amènent sans doute à leur auberge, ou cherchent un médecin. Quel que soit l'endroit, la scène suivante se déroule de la même façon.",
+      "notes": "VISION (la première fois) : cette scène appartient à la vision prémonitoire du héros qui a touché l'onyx. Jouez-la normalement.\nRÉALITÉ (après « Et maintenant ? », option 1) : l'échange se déroule de la même manière, si les héros choisissent de refaire tout pareil. Pour l'option 3 (attaquer Oda sur son chebek pendant l'échange), passez à la scène « L'assaut du chebek ».\nPoser l'onyx sur des braises est le moyen simple de reconnaître un véritable onyx de feu.",
+      "pistes": [
+        { "texte": "Ramener Samazar à l'auberge", "vers": "narubio" }
+      ],
+      "distribution": [
+        { "perso": "ch3-oda-unjab", "attitude": "neutre" },
+        { "perso": "ch3-lothar", "attitude": "neutre" },
+        { "perso": "ch3-soldat-pretre-rouge", "qty": 2, "attitude": "neutre" },
+        { "perso": "ch3-samazar", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "narubio",
+      "titre": "Un ennemi qui n'en est pas un…",
+      "region": "Urceb",
+      "lieu": "Auberge L'anguille d'argent, quartier du Port",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Quelques dizaines de minutes après votre arrivée à l'auberge, les lieux sont investis par un fort parti de gardes de la ville en pourpoint de cuir noir. Ils se déploient, menaçants, sans se jeter sur vous. À leur tête, un homme d'une cinquantaine d'années, solidement charpenté et imposant, au visage sévère rasé de frais, tunique noire sur une chemise de mailles, épée au côté. Il lève une main apaisante.\n\n« Du calme, étrangers. Je suis Narubio, Protecteur de la ville et chef du guet. Mes hommes encerclent le bâtiment, inutile d'en venir à un bain de sang. Je sais que vous vous êtes introduits hier soir chez le seigneur Elistar le Filonier. Je devrais vous faire jeter en cellule pour ça, mais nous allons d'abord parler. »\n\nSur un signe, son sergent fait sortir les soldats. Narubio s'approche de Samazar, évanoui, serre sa main valide dans la sienne en murmurant « Mon ami », fronce les sourcils devant le moignon : « Marek, fais venir Amrazh. »\n\nQuelques minutes plus tard entre un homme maigre et très grand, près de deux mètres, au visage émacié et glabre, en longues robes bleu pastel. Au milieu de son front, un tatouage bleuté en forme d'œil empli d'arabesques. Il vous dévisage d'un regard pâle, presque laiteux, puis se penche sur Samazar, sort de sa sacoche des instruments et des bandages propres, et lui fait boire le contenu d'une fiole.",
+      "jeu": "Narubio veut savoir ce que les héros trafiquent pour le Prêtre Rouge et pourquoi ils sont entrés chez le Filonier. Mieux vaut jouer franc jeu : s'ils noient le poisson, il leur montre qu'il sait tout (le chebek hier matin, leurs actions de la nuit). Il a parlé à Ektar, l'aubergiste, et à Almar de Chebeg, qu'il a rattrapé à la sortie de la ville. Amrazh glisse une remarque sans lever les yeux, par exemple : « ils cherchaient une pierre, une pierre spéciale ».\nCe que dit Narubio, en s'asseyant avec un soupir :\n• Il soupçonne Oda d'avoir enlevé Menni, un jeune garçon de sa maisonnée : Oda a voulu le prendre à son service avec trop d'insistance, et l'enfant a disparu quelques jours après.\n• Oda a la confiance du roi et règne sur son île, hors de l'autorité de Narubio. C'est un praticien des arts magiques et un alchimiste. Amrazh sent qu'un projet funeste se trame sur la Dent Noire.\n• Le secret : Menni est le fils de Samazar, vieil ami de Narubio, qui le lui a confié à la mort de la mère. Le garçon l'ignore. Samazar s'est introduit sur l'île pour le retrouver.\n• Ses hommes surveillent l'île et Oda depuis des jours, et les héros depuis hier matin.\nSamazar reprend connaissance (remède d'Amrazh). D'une voix hachée : on ne l'a pas laissé chercher son fils, mais ce matin, avant qu'on lui tranche la main, il a entendu un garde dire qu'il avait emmené l'enfant à la grotte et l'avait remis aux apprentis. Les enclumes y résonnent sans cesse, Oda y passe son temps, les soldats ne doivent pas s'en approcher. En arrivant, il a vu une lueur rouge entre les arbres au sommet des falaises : c'est là.\nLe marché : Samazar confirme qu'il a mené Jorkus et Lok Kozaar dans l'Urceb-du-dessous il y a plusieurs mois, et peut y conduire les héros… contre la vie de son fils. Narubio oubliera le cambriolage s'ils l'aident. Il n'a ni preuve pour le roi, ni autorité sur l'île, ni le temps. Il fournit un canot et quelques hommes fidèles, dont un habile grimpeur ; Samazar connaît l'endroit où escalader les falaises, loin de la forteresse.\nSi les joueurs ignorent tout de l'onyx et posent la question, Amrazh leur donne les informations de l'encadré (pierre protectrice contre le Néant, divinatoire).",
+      "notes": "Narubio est « l'ennemi qui n'en est pas un » de l'horoscope d'Almar.\nVISION (la première fois) : cette scène fait partie de la vision prémonitoire.\nRÉALITÉ, option 2 (après « Et maintenant ? ») : les héros vont trouver Narubio dès leur sortie de chez le Filonier. Il les écoute et croit leur histoire, grâce à Amrazh qui a entendu parler des vertus de l'onyx : cette pierre bénéfique, liée à Yrzlak, a dû « décider » de leur offrir cette vision pour empêcher l'évocation d'un démon de Zaggath. Mais une vision n'est pas une preuve, et il n'a rien de mieux à proposer. Les héros ont toujours besoin de Samazar, qui exigera qu'ils sauvent son fils. S'ils attaquent la Dent Noire dès cette nuit pour libérer le père et le fils : Samazar croupit dans une geôle du donjon (forteresse pleine de soldats), et rien ne garantit que Menni soit déjà dans la cage au-dessus de la faille (il pourrait être enfermé dans une chambre de la forteresse).\nRÉALITÉ, option 1 : la scène se rejoue comme la première fois ; les héros peuvent raconter ou non ce qu'ils savent.",
+      "pistes": [
+        { "texte": "Partir de nuit vers la Dent Noire avec les hommes de Narubio", "vers": "dent-noire" }
+      ],
+      "distribution": [
+        { "perso": "ch3-narubio", "attitude": "mefiant" },
+        { "perso": "ch3-amrazh", "attitude": "neutre" },
+        { "perso": "ch3-marek", "attitude": "mefiant" },
+        { "perso": "ch3-garde-du-guet", "qty": 4, "attitude": "mefiant" },
+        { "perso": "ch3-samazar", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "dent-noire",
+      "titre": "La Dent Noire",
+      "region": "Urceb",
+      "lieu": "Île de la Dent Noire, face nord : les orgues basaltiques",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "En fin d'après-midi, quatre gardes, dont le sergent Marek, troquent leur tenue contre des vêtements sombres et anonymes ; Narubio serre chaleureusement la main de chacun. Aussitôt la nuit tombée, on vous conduit à une discrète petite crique où attend un grand canot. Les quatre hommes prennent les avirons.\n\nLa nuit est noire, c'est la nouvelle lune. Les falaises basaltiques de l'île se dressent comme un bloc d'obscurité contre le ciel poudré d'étoiles. Marek, à la proue, guide le canot entre les récifs jusqu'à la face nord, où la falaise se compose de hautes colonnes hexagonales de roche noire serrées les unes contre les autres comme des gradins. Michka, un jeune gaillard sec et nerveux, une corde enroulée autour de la poitrine, grimpe avec l'aisance d'un lémurien ; en un quart d'heure, il atteint le sommet, une vingtaine de mètres plus haut, et vous lance la corde, attachée à un arbre.\n\nEn haut, vous voici à mi-pente du sommet de l'île, dans un bois clairsemé de résineux aux racines noueuses. À l'est, en contrebas, les tours de la forteresse du Prêtre Rouge : quelques flambeaux sur les remparts, quelques fenêtres éclairées. À l'ouest, le sol monte en pente douce ; une lueur rougeâtre et diffuse filtre entre les arbres, à quelques dizaines de mètres. La brise du large n'empêche pas d'entendre un tintement ténu de métal contre le métal, comme un forgeron au travail.",
+      "jeu": "Escalade : test d'Agilité si le cœur vous en dit, pour monter à la corde. Marek monte avec les héros ; les deux autres gardes restent au canot pour l'empêcher de se fracasser sur les récifs.\nEn haut, Marek et Michka, arbalète en main, attendent près de la corde pour couvrir la retraite.\nAucun soldat ne patrouille le bois. Le sentier serpente vers le sommet des falaises : il suffit de le suivre jusqu'à la lumière.",
+      "notes": "VISION (la première fois) : la scène fait partie de la vision. Elle se rejoue à l'identique dans la réalité (options 1 et 2), ou les héros abordent l'île avec le canot du chebek (option 3), sans se soucier de la forteresse.\nPlan de l'île (livre p. 127) : forteresse et port à l'est, côté large ; bois de pins au centre ; entrée de la grotte et fissure à l'ouest, sur le sentier ; orgues basaltiques au nord ; récifs tout autour.",
+      "pistes": [
+        { "texte": "Suivre le sentier vers la lueur (la première fois : la vision)", "vers": "forge-pretre-rouge" },
+        { "texte": "Après la vision : le vrai sauvetage de Menni", "vers": "sauvetage-menni" }
+      ],
+      "distribution": [
+        { "perso": "ch3-marek", "camp": "heros", "attitude": "amical" },
+        { "perso": "ch3-michka", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "forge-pretre-rouge",
+      "titre": "Dans la forge du Prêtre Rouge",
+      "region": "Urceb",
+      "lieu": "Île de la Dent Noire, la grotte de la faille",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "À mesure que vous avancez, le tintement enfle : plusieurs marteaux, au moins quatre ou cinq, frappent à l'unisson. Le sentier longe une trouée dans le roc, large de cinq mètres, d'où monte une légère clarté ; quelques mètres plus haut, une lumière plus vive s'échappe d'une fissure. Odeur de fumée et de métal chaud.\n\nUn escalier de lourds madriers descend le long de la paroi noire et lisse du trou ; trois ou quatre mètres plus bas, un passage voûté s'enfonce sur trois mètres et débouche dans une vaste caverne, d'une vingtaine de mètres sur dix, dont la seconde moitié est en contrebas.\n\nNeuf hommes en cercle frappent à l'unisson sur des enclumes vides, au rythme d'un dixième, au centre. Torse nu, pantalon rouge, ruisselants de sueur, le visage hagard comme en transe : cela doit faire des heures. Le vacarme est aussi entêtant qu'un roulement de tambours. Une voix puissante s'y mêle, en paroles incompréhensibles. Au fond, en contrebas, vous apercevez le haut du torse du Prêtre Rouge, bras levés, paupières closes, crâne luisant de sueur, dans une cuirasse rutilante où scintille l'onyx de feu, en pendentif au bout d'une chaîne d'or.\n\nUn dévers abrupt de moins de deux mètres coupe la salle ; à gauche, quelques marches. Au pied des marches, contre la paroi, une statue d'homme en pierre noire, sans tête, aux reflets d'argent, les mains posées sur un long manche. Une lumière jaune et rougeoyante monte d'une large faille au pied de la dénivellation et palpite au rythme des marteaux. Au-dessus, une cage de fer pend à une chaîne fixée à la paroi. Deux petits pieds blancs dépassent des barreaux ; dans le flux et le reflux de la lumière, vous devinez un enfant aux cheveux roux.",
+      "jeu": "Par la fissure : on voit trois hommes torse nu abattre en cadence leur marteau sur une enclume vide, et d'autres à côté. Un héros qui maîtrise le démonique reconnaît certains mots de l'incantation.\nLes apprentis (dix, coriaces ; 6 cartes) : en transe, épuisés, à moitié sourds ; dé de malus pour remarquer quoi que ce soit, lents à réagir (Oda leur a interdit de s'arrêter sans son ordre).\nOda (2 points de pouvoir seulement : il en a dépensé 11 pour l'évocation) : entièrement concentré, pris au dépourvu par un assaut. Il est au centre d'un pentacle de poudre charbonneuse : la première attaque qui le touche (mêlée ou distance) est annulée par un rideau de flammes violacées. Averti de l'intrusion, il cesse son incantation et dégaine son épée.\nKamatt (la « statue ») : parfaitement vigilant, il tourne son œil unique vers les intrus et s'interpose pour protéger son maître.\nLothar : assis sur un tabouret dans un recoin invisible depuis l'entrée (foyer de forge, enclume, atelier, vieille statue de Zaggath dans une niche) ; il se bat.\nLa cage : suspendue à 3 m, au-dessus de la faille où la lave bouillonne à quelques mètres sous la surface. Un système d'engrenages sur la paroi la fait descendre ; un héros audacieux peut sauter depuis le niveau supérieur pour s'y agripper. Cadenas : test d'Agilité Ardu (-1) pour le crocheter, une arme adéquate pour le briser, ou test de Vigueur Très difficile (-4) à mains nues. Menni est terrifié et déshydraté.\nLa panique d'Oda, à bien jouer : si les héros frappent les « joueurs d'enclume », il remarque la rupture du rythme et leur crie de continuer (« N'arrêtez surtout pas, ou le rituel va être brisé ! ») ; s'ils les laissent jouer, il leur hurle de cesser (« Arrêtez de l'appeler, l'incantation n'est pas terminée ! »), mais ses cris se perdent dans le vacarme.\nTrois ou quatre rounds après le début de l'assaut, ou au moment le plus opportun : grondement tonitruant, la lave jaillit de la faille… scène suivante.",
+      "notes": "VISION : les héros doivent échouer cette « première fois ». Quoi qu'ils fassent avec les apprentis (les interrompre ou les laisser frapper), le démon arrive, hors de contrôle. Les cris paniqués d'Oda doivent leur faire deviner que là est la clef de l'arrivée prématurée du démon.\nLe rituel : chaque enclume est gravée d'une rune démonique, une des dix syllabes du nom imprononçable du démon ; les apprentis se relaient depuis trois jours. Oda vient d'entamer l'ultime formule. Le pentacle devait le protéger du démon.\nMenni est la victime offerte au forgeur.",
+      "pistes": [
+        { "texte": "Le forgeur de Zaggath surgit de la faille", "vers": "forgeur-de-zaggath" }
+      ],
+      "distribution": [
+        { "perso": "ch3-oda-unjab", "attitude": "hostile" },
+        { "perso": "ch3-kamatt", "attitude": "hostile" },
+        { "perso": "ch3-lothar", "attitude": "hostile" },
+        { "perso": "ch3-apprenti-oda", "qty": 6, "attitude": "hostile" },
+        { "perso": "ch3-menni", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "forgeur-de-zaggath",
+      "titre": "Le forgeur de Zaggath",
+      "region": "Urceb",
+      "lieu": "Île de la Dent Noire, la grotte de la faille",
+      "moment": "nuit",
+      "meteo": "cendres",
+      "danger": 4,
+      "lecture": "Un grondement tonitruant monte de la faille. La lave se met à sourdre des entrailles de la terre et éclabousse le sol de la caverne. Dans la fumée et l'éclat aveuglant de la roche en fusion, une silhouette se dresse, tel un plongeur émergeant de l'eau.\n\nL'être qui s'extirpe de la faille a un corps râblé, une large poitrine et des bras puissants, qui semblent faits de minerai en fusion. Son visage aux traits odieusement humains s'ouvre sur une bouche immense et béante, aux crocs diamantins. Ses petits yeux, enfoncés dans leurs orbites, sont deux perles d'obsidienne luisante, et une crinière de flammes nimbe son crâne bosselé et difforme. Il fait au bas mot trois fois la taille d'un homme, et l'air ondule autour de lui, troublé par la chaleur qui se dégage de son corps brûlant.\n\nLe sol vibre. Des morceaux de roche se détachent de la voûte.",
+      "jeu": "Forgeur de Zaggath (démon majeur) : Vigueur 5, Agilité 4, Esprit 1, Aura 2 ; Initiative 2, Mêlée +6, Tir +1, Défense 3 ; protection d6 (4) ; dégâts d6B+5 ; vitalité 35.\n• Aura ardente : toute personne au contact perd 1 point de vitalité au début de chaque round (l'armure ne protège pas).\n• Souffle de feu : au lieu d'une attaque, jet de flammes à 6 m ; test d'Agilité Ardu (-1) ou d6B dégâts de feu, sans armure.\n• Vulnérabilité : l'eau le blesse (d6M à d6 selon la quantité).\n• Forgeron au rang 6.\nIl prend d'abord la victime offerte : si nul ne s'interpose, il broie la cage et se gorge du sang de Menni, qui siffle dans sa gueule brûlante en un panache de vapeur blanche. Puis il frappe indifféremment ceux qui passent à sa portée. Il rechigne à frapper Oda à cause de l'onyx (sauf s'il est la seule cible) : la pierre arrête sa première attaque contre son porteur en explosant en une gerbe de lumière (vaut aussi pour un héros qui s'en serait emparé).\nApocalypse : la faille vomit de la lave, le passage vers l'escalier s'effondre et piège tout ou partie des héros avec le démon. Si par miracle ils semblent pouvoir gagner : séisme qui jette les humains à terre (le démon reste campé) ; vapeurs toxiques et chaleur, dé de malus à toutes les actions ; rochers qui assomment un héros et rebondissent sans effet sur le démon.\nFin de la scène : à la mort du héros qui a touché l'onyx le premier. Inutile d'attendre qu'il ait épuisé ses points d'héroïsme : quand la panique a assez duré, décrivez le coup qui le terrasse, puis…",
+      "notes": "UN PLAISIR COUPABLE POUR LE MJ : c'est un combat impossible à gagner, et il doit l'être. Massacrez les personnages sans pitié : les joueurs doivent goûter au désespoir pour connaître le soulagement de découvrir que ce n'était qu'une vision, et avoir l'occasion d'éviter cet affrontement.\n… puis passez à « Et maintenant ? » : retour à l'instant où le héros a posé la main sur l'onyx de feu dans la cave du Filonier.",
+      "pistes": [
+        { "texte": "Le héros qui a touché l'onyx meurt… et se réveille dans la cave du Filonier", "vers": "et-maintenant" }
+      ],
+      "distribution": [
+        { "perso": "ch3-forgeur-de-zaggath", "attitude": "hostile" },
+        { "perso": "ch3-oda-unjab", "attitude": "hostile" },
+        { "perso": "ch3-kamatt", "attitude": "hostile" },
+        { "perso": "ch3-menni", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "et-maintenant",
+      "titre": "Et maintenant ?",
+      "region": "Urceb",
+      "lieu": "Chambre secrète sous la villa du Filonier",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Une brûlure dans ta paume, qui reflue doucement. La pierre est dans ta main, encore tiède. Autour de toi, la cave du Filonier, les casiers à poignée de cuivre, la lueur des cierges enchantés… exactement comme à l'instant où tu as saisi l'onyx de feu.\n\nLa tête te tourne. Dans un éclair, comme un rêve qui semble s'étirer sur des heures mais n'a duré que quelques secondes, tu viens de voir tout ce qui vous attend, tes camarades et toi : le chebek, Samazar mutilé, la Dent Noire, la grotte, la cage… et le démon jailli de la lave.",
+      "jeu": "Décrivez de nouveau fidèlement la scène notée au moment où le héros a saisi l'onyx : où se trouve chacun, où en est le démon fuligineux, la brûlure dans sa paume. Lui seul a eu la vision : il la raconte au reste du groupe.\nRestituez tout ce qui a été dépensé pendant la vision (points d'héroïsme, de foi, de pouvoir, ressources) : rien ne l'a été réellement. Le héros « mort » est bien vivant.\nLes options (les héros savent ce qui les attend et quelles erreurs éviter) :\n1. Refaire tout pareil ou presque : porter l'onyx à Oda, récupérer Samazar, attendre Narubio (et lui dire, ou non, ce qu'ils savent), attaquer Oda pendant son incantation pour sauver Menni sans refaire « l'erreur » (interrompre les apprentis, ou les laisser jouer : l'inverse de la première fois). Le combat se déroule alors sans le démon.\n2. Aller trouver Narubio dès la sortie de chez le Filonier (voir les notes de la scène « Un ennemi qui n'en est pas un »).\n3. Se rendre sur le chebek au matin, pendant l'échange, pour éliminer le Prêtre Rouge (scène « L'assaut du chebek »).\nInutile de tout rejouer en détail : allez à l'essentiel (la sortie de la villa, par exemple).",
+      "notes": "L'onyx de feu, pierre bénéfique liée à Yrzlak, a « décidé » d'offrir cette vision aux héros pour empêcher l'évocation d'un démon de Zaggath (explication d'Amrazh, option 2).\nQuelle que soit l'option, les héros ont toujours besoin de Samazar, et Samazar exigera qu'ils sauvent son fils.",
+      "pistes": [
+        { "texte": "1. Refaire tout pareil : porter l'onyx à Oda, récupérer Samazar, sauver Menni sans refaire l'erreur", "vers": "pierre-contre-samazar" },
+        { "texte": "2. Aller trouver Narubio dès la sortie de chez le Filonier", "vers": "narubio" },
+        { "texte": "3. Attaquer le Prêtre Rouge sur son chebek pendant l'échange du matin", "vers": "assaut-chebek" }
+      ],
+      "distribution": []
+    },
+    {
+      "cle": "assaut-chebek",
+      "titre": "L'assaut du chebek",
+      "region": "Urceb",
+      "lieu": "Le chebek du Prêtre Rouge, face au port",
+      "moment": "aube",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Une heure après le lever du soleil, les voiles rouges du chebek apparaissent sur la mer. Le navire jette l'ancre face au port, le canot vient vous chercher, et vous montez à bord comme la veille. Le pont étincelant, le dais, le divan, le brasero où rougeoie le parchemin qui ne brûle pas, l'épée dans son fourreau ouvragé, les soldats en cuir rouge sombre alignés au bastingage, le capitaine sur le gaillard d'arrière.\n\nOda, en tunique de brocart noir à ceinture écarlate, se tourne vers vous, un sourire avide aux lèvres : « Alors ? Montrez-la-moi. »",
+      "jeu": "Option 3 : l'idée n'est pas mauvaise, surtout si les héros n'ont pas compris comment interrompre le rituel sans provoquer le démon. Mais il y a à bord 12 soldats, 8 marins, le capitaine Galor, Lothar et Kamatt caché dans la cabine. Combat des plus rudes : la surprise peut jouer, mais Oda reste sur ses gardes et ses soldats sont dévoués et vigilants. (Cartes : 6 soldats sur 12, 3 marins sur 8, règle de horde pour les marins.)\nSamazar est sur le navire pour l'échange (amputé le matin même).\nOda dispose ici de tous ses points de pouvoir (13) : c'est un puissant sorcier. Il se bat, puis s'enfuit s'il en a l'occasion en dépensant 1 point de vilénie : dans une explosion de flammes, son corps se dissipe en un nuage charbonneux qui file au-dessus des eaux vers la Dent Noire.\nSeigneur enfui ou vaincu, marins et soldats cherchent à cesser le combat (ce ne sont pas des fanatiques).\nS'il s'enfuit : ignorant que les héros veulent sauver Menni, il rameute ses troupes et revient à bord d'une galère de guerre. Sans équipage, les héros manœuvreront mal le chebek, mais le canot leur permet de gagner l'île bien avant son retour, de se glisser dans la grotte et de libérer Menni en n'affrontant que les dix apprentis. Qu'ils fassent diligence : ne pas croiser la galère en mer, ni voir Oda revenir sur l'île une fois son chebek récupéré.\nS'ils tuent Oda : libérer Menni est simple ; Narubio peut justifier une intervention à la forteresse, dont la garnison ne fait pas de difficulté.",
+      "notes": "Option propre à la réalité (après la vision). Si les héros préfèrent procéder à l'échange comme la première fois, revenez à « La pierre contre Samazar ».",
+      "pistes": [
+        { "texte": "Gagner l'île en canot pour libérer Menni", "vers": "sauvetage-menni" }
+      ],
+      "distribution": [
+        { "perso": "ch3-oda-unjab", "attitude": "neutre" },
+        { "perso": "ch3-kamatt", "attitude": "mefiant" },
+        { "perso": "ch3-lothar", "attitude": "neutre" },
+        { "perso": "ch3-galor", "attitude": "neutre" },
+        { "perso": "ch3-soldat-pretre-rouge", "qty": 6, "attitude": "mefiant" },
+        { "perso": "ch3-marin-pretre-rouge", "qty": 3, "attitude": "neutre" },
+        { "perso": "ch3-samazar", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "sauvetage-menni",
+      "titre": "Le sauvetage de Menni",
+      "region": "Urceb",
+      "lieu": "Île de la Dent Noire, la grotte de la faille",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Le tintement des marteaux, la lueur rougeâtre entre les pins, l'odeur de fumée et de métal chaud : tout est exactement comme dans la vision. L'escalier de madriers, le passage voûté, les dix hommes torse nu frappant en cadence leurs enclumes vides, la voix qui psalmodie au fond de la caverne, la statue sans tête aux reflets d'argent au pied des marches, la faille qui palpite de lumière… et, au-dessus d'elle, la cage de fer où pendent deux petits pieds blancs.",
+      "jeu": "La réalité, sans le démon : les héros savent ce qu'il ne faut pas faire. S'ils évitent « l'erreur » de la première fois (interrompre les apprentis, ou les laisser jouer), le forgeur n'apparaît pas et le combat devient bien plus facile.\nQui est là selon l'option :\n• Options 1 et 2 : comme dans la vision. Oda (2 points de pouvoir, pentacle qui annule la première attaque), Kamatt, Lothar, les dix apprentis en transe (dé de malus pour remarquer quoi que ce soit). Retirez des cartes ceux qui ne sont pas là.\n• Option 3 : Oda est en fuite ou mort ; seuls les dix apprentis gardent la grotte. Faites vite, avant le retour de la galère.\n• Option 2, attaque la nuit même : Menni n'est peut-être pas encore dans la cage (il pourrait être enfermé dans une chambre de la forteresse), et Samazar est dans une geôle du donjon.\nLa cage : engrenages sur la paroi pour la descendre, ou saut depuis le niveau supérieur ; cadenas : Agilité Ardu (-1), arme adéquate, ou Vigueur Très difficile (-4) à mains nues.\nMarek et Michka couvrent la retraite en haut de la falaise ; le canot attend au pied des orgues basaltiques.",
+      "notes": "Menni ramené, Narubio a un témoin et peut dénoncer Oda au roi Negedzar Frome. L'affaire risque de traîner (Oda a des appuis), mais le Prêtre Rouge, occupé à se défendre, ne s'en prendra pas aux héros tant qu'ils restent à Urceb. Une chose est sûre : ils viennent de se faire un ennemi mortel.",
+      "pistes": [
+        { "texte": "Ramener Menni à Narubio et à Samazar", "vers": "sanctuaire-kryphondus" }
+      ],
+      "distribution": [
+        { "perso": "ch3-oda-unjab", "attitude": "hostile" },
+        { "perso": "ch3-kamatt", "attitude": "hostile" },
+        { "perso": "ch3-lothar", "attitude": "hostile" },
+        { "perso": "ch3-apprenti-oda", "qty": 6, "attitude": "hostile" },
+        { "perso": "ch3-menni", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "sanctuaire-kryphondus",
+      "titre": "Le sanctuaire de Kryphondus",
+      "region": "Urceb",
+      "lieu": "Urceb-du-dessous : la Cautèle, puis les ruines de la Cité oubliée",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "Samazar vous exprime toute sa reconnaissance quand vous lui ramenez son fils sain et sauf, tout comme Narubio. Vous êtes accueillis, soignés et choyés chez le maître du guet. Trois jours plus tard, Samazar se sent assez solide pour vous guider dans l'Urceb-du-dessous ; Narubio vous donne une escorte de soldats du guet.\n\nVous découvrez un monde étonnant de galeries et de catacombes, de bâtiments anciens à moitié effondrés, rénovés et réhabilités par toute une population qui a fait de ce lieu un prolongement de la ville. Puis un dédale de tunnels et de grottes où, explique Samazar, se terrent gredins et miséreux, et dont certains boyaux mènent aux parties désertées de la Cité oubliée.\n\nSamazar vous conduit dans une zone de ruines souterraines, jusqu'à une maison croulante. Dans sa cave, une longue pièce rectangulaire se révèle à la lueur des torches. La poussière et les gravats du sol portent les traces d'un passage assez récent. Sur un piédestal se dresse la statue d'un homme barbu en pagne, les bras ouverts en un geste d'orant, au beau visage empreint de noblesse ; un médaillon pend à son cou. Le piédestal porte un nom gravé : Kryphondus. Aucun voile ne couvre la tête de la statue.\n\nLes murs du temple sont ornés de longs bas-reliefs découpés en panneaux, qui semblent raconter une histoire.",
+      "jeu": "Ce que raconte Samazar en chemin : Jorkus cherchait les vestiges d'une porte monumentale de l'ancienne ville, ornée de sculptures de banths (la « Porte aux Banths »). Samazar connaissait l'endroit, dans une des parties les plus vieilles de la Cité oubliée. Jorkus était accompagné de Lok Kozaar, « un céruléen revêche et patibulaire ». Deux jours entiers à fouiller les ruines autour de la porte ; enfin, dans le sous-sol d'une bâtisse en ruine, un petit temple aux murs ornés de bas-reliefs. Jorkus a interdit à Samazar d'y entrer, mais il a vu au fond une statue dont la tête était couverte d'une sorte de linge. Lok et lui sont restés dehors. Jorkus est ressorti le regard halluciné et triomphant, marmonnant avec un sourire extatique ; il n'a répondu à aucune question, a payé grassement et est reparti sans rien dire.\nLe trajet se déroule sans incident, grâce à la présence intimidante des hommes du guet.\nLa statue : son médaillon est l'exacte réplique de celui qu'Hilario a offert à Albel (seulement si les héros l'ont vu, voire récupéré, à Satarla). Un héros perspicace remarque que la tête est bien moins couverte de poussière que le reste de la statue.\nMontrez aux joueurs les bas-reliefs (aide de jeu III, livre p. 134-135, PDF p. 136-137) : scène suivante.",
+      "notes": "Le voile qui couvrait la tête de la statue est celui de Kryphondus : Jorkus s'en est emparé ici, et c'est lui qui le rend invulnérable. Le médaillon de la statue est celui de Kryphondus, qui permet de le reconnaître sur les bas-reliefs.\nL'Urceb-du-dessous : quartier de la Rabouillère (taudis réhabilités), puis tunnels de la Cautèle, antichambre de la Cité oubliée (05-urceb.md). Les habitués des souterrains sont couverts de « pollen », poudre jaune pâle des sédiments de coquillages.",
+      "pistes": [
+        { "texte": "Étudier les bas-reliefs", "vers": "bas-reliefs" }
+      ],
+      "distribution": [
+        { "perso": "ch3-samazar", "camp": "heros", "attitude": "amical" },
+        { "perso": "ch3-garde-du-guet", "qty": 3, "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "bas-reliefs",
+      "titre": "Décrypter les bas-reliefs",
+      "region": "Urceb",
+      "lieu": "Urceb-du-dessous, le sanctuaire de Kryphondus",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "Huit panneaux sculptés courent le long des murs, à la lueur des torches.\n\n1. Une île au milieu d'un grand fleuve, dans les jungles. Un homme portant un médaillon harangue une foule, devant des habitations ; derrière lui, une statue de déesse couronnée d'une palme.\n2. Des étoiles. Au sommet d'un grand escalier, un dieu à tête de bubalus monte la garde devant des palais. Une servante s'est assoupie sur son métier à tisser, tandis qu'une femme s'éloigne avec un panier et une paire de forces.\n3. La déesse apparaît à l'homme au médaillon et lui remet ses présents. Puis l'homme tisse une étoffe, sous le regard d'un vieux serviteur à la longue barbe.\n4. L'homme, la tête couverte d'un voile, défait monstres et ennemis.\n5. L'île est détruite, la proie des flammes, sa population massacrée. La déesse emporte l'homme dans les cieux.\n6. Des rescapés quittent les jungles et traversent une plaine vers une ville ; à leur tête, le vieux serviteur porte solennellement le voile dans ses bras.\n7. Un sanctuaire souterrain : des fidèles se prosternent devant une statue dont la tête est couverte du voile.\n8. L'homme revient, descendant des cieux pour reprendre son voile ; devant lui, des rois s'agenouillent.",
+      "jeu": "Explication panneau par panneau (pour orienter les joueurs) : l'histoire est racontée du point de vue de Chaktar, le fidèle serviteur de Kryphondus, qui ignorait sa fin tragique (saga, livre p. 45-46).\n1. Kryphondus (reconnaissable à son médaillon) harangue ses sujets ; l'île est au milieu d'un grand fleuve, dans les jungles. La statue à la palme : Afyra.\n2. Mezzechesh, le royaume des dieux, et son grand escalier gardé par Fyrzon, le dieu à tête de bubalus (tout héros un tant soit peu érudit le reconnaît) ; les étoiles indiquent le ciel. La servante dort ; Afyra subtilise un panier de cocons de ver à soie et une paire de forces (ciseaux d'un seul tenant).\n3. Afyra remet ses présents ; Kryphondus extrait le fil de soie et tisse le voile, sous le regard de Chaktar.\n4. Kryphondus voilé défait monstres et ennemis (représentation fantasmée de l'invulnérabilité que lui promettait le voile).\n5. L'île détruite ; Afyra sauve Kryphondus (interprétation de Chaktar, qui ignorait qu'il était mort, trahi par son épouse).\n6. Les rescapés, menés par Chaktar et le voile, traversent les plaines de Klaar vers Urceb : l'île est donc quelque part dans les jungles de Qush, à l'ouest de l'Oom, mais le bas-relief n'a rien d'une carte.\n7. Le sanctuaire d'Urceb et les fidèles de Kryphondus adorant la statue voilée.\n8. L'annonce prophétique du retour de Kryphondus, qui reprendra son voile pour régner sur toute la Lémurie (les rois à genoux).\nConclusions à atteindre (aidez subtilement les joueurs) : Kryphondus était un prêtre d'Afyra ; sa déesse lui a donné de quoi tisser un voile qui le rendait immortel ? invulnérable ? dieu ? Son île a été détruite, il a été sauvé (ou il est mort ?) ; des survivants ont porté le voile à Urceb et l'ont vénéré en attendant son retour. Jorkus s'est emparé de ce voile ; il l'a transformé au point de provoquer la colère de Nemmereth. Les dernières strophes de l'oracle prennent sens :\n« La trame sacrée des dieux / N'est pas faite pour ces cieux. / Pour dénouer le fil de la divine, / À contre-courant, cherchez à l'origine. / Ce qui le tissa pourra le défaire, / Don ignoré d'une habile filandière. »\nLe voile doit être détruit ; il faut remonter à l'origine (comme on remonte un fleuve), aller sur l'île, retrouver ce qui a permis de le tisser (encore sujet à interprétation à ce stade).\nS'ils veulent partir aussitôt pour Qush : rappelez l'immensité de la forêt, l'imprécision de la carte schématique gravée il y a des siècles, et le coût d'une expédition. La raison les pousse à rentrer à Satarla : solliciter Nirmus et le temple de Nemmereth, chercher l'emplacement de l'île (la Grande Bibliothèque ?), et régler son compte à Lok Kozaar, qui a par deux fois tenté de les faire tuer.\nFin de l'épisode : les héros récupèrent leurs points d'héroïsme dépensés et reçoivent chacun 1 point d'expérience. Retour à Satarla au bout de deux mois (chronologie).",
+      "notes": "Ce que les joueurs ne peuvent pas encore savoir (saga, livre p. 45-46) : Kryphondus n'a pas été sauvé par Afyra, il est mort trahi par son épouse. Le panier contenait des cocons de ver à soie : « l'habile filandière » est le ver à soie, et c'est sur l'île que se trouve le moyen de défaire le voile (chapitre 5).\nPendant ce temps, Lok Kozaar aide la Compagnie des Masques à déstabiliser Satarla ; juste avant le retour des héros, il rejoint Jorkus pour prendre la tête de son armée, qui redescend vers le territoire de Satarla.",
+      "pistes": [
+        { "texte": "Rentrer à Satarla : chapitre 4, Quand tombent les masques" }
+      ],
+      "distribution": [
+        { "perso": "ch3-samazar", "camp": "heros", "attitude": "amical" }
+      ]
+    }
+  ]
+}

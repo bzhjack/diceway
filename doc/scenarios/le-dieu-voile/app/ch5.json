@@ -1,0 +1,913 @@
+{
+  "saga": "dieu-voile",
+  "scenario": {
+    "cle": "ch5",
+    "titre": "Le Dieu voilé — 5. L'île de Kryphondus",
+    "pitch": "Chapitre 5, final de la saga Le Dieu voilé (Chroniques Lémuriennes 2, livre p. 166-197, PDF p. 168-199).\n\nAprès avoir fui Fort Junia en nef volante, les héros cherchent l'île perdue de Kryphondus, au cœur des jungles de Qush. Ils doivent y affronter les horreurs et la démence d'un lieu maudit par Morgazzon pour y trouver de quoi déchirer « la trame sacrée des dieux » : les ciseaux qu'Afyra remit jadis à Kryphondus, ou les mandibules du ver à soie divin devenu monstre. Puis il faut revenir à Fort Junia, où campe l'armée de Jorkus, et approcher le dieu voilé au cœur de son donjon en une mission qui a toutes les apparences d'un suicide. Il faut faire vite : l'armée de Jorkus grossit de jour en jour et, à l'est, Tyrus mobilise ses forces pour attaquer Satarla."
+  },
+  "personnages": {
+    "ch5-druide-fou": {
+      "kind": "pnj",
+      "nom": "Le druide fou",
+      "rang": "coriace",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 0,
+      "agilite": 1,
+      "esprit": 2,
+      "aura": 1,
+      "initiative": 1,
+      "melee": 0,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 6,
+      "commentaire": "Pas de stats dans le livre (livre p. 171-172, PDF p. 173-174) : fiche minimale de figurant inventée. Il ne se combat pas : son monologue achevé, il se désagrège en une nuée de papillons jaunes.\nVieil homme au visage ridé et tanné, barbe blanche hirsute, tignasse crasseuse pleine de feuilles et de brindilles, robe jaune fanée réduite à une guenille maculée de taches brunâtres, pieds nus à la corne épaisse qu'il balance comme un enfant. Perché dans un arbre, il lâche un fruit pourri sur la tête d'un héros et rit à gorge déployée. Vieux druide dément ou manifestation de Morgazzon ? Le mystère reste entier."
+    },
+    "ch5-chef-grooth": {
+      "kind": "pnj",
+      "nom": "Chef grooth du clan des falaises",
+      "rang": "coriace",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2,
+      "agilite": 1,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 0,
+      "defense": 1,
+      "vitalite": 8,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 2
+        }
+      ],
+      "armes": [
+        "Lance"
+      ],
+      "commentaire": "Livre p. 188 (PDF p. 190) : chef grooth, coriace. Lance d6+2 dans le livre (avec sa Vigueur 2). Aucune armure.\nCommande les cinq guerriers grooth du clan des falaises qui gardent le toit du donjon de Fort Junia, ceux-là mêmes qui l'ont investi pendant l'assaut. Ils jettent de temps à autre un œil au ciel (ils connaissent les nefs volantes) sans être vraiment attentifs. Sitôt attaqués, l'un d'eux file par l'escalier donner l'alerte."
+    },
+    "ch5-guerrier-grooth": {
+      "kind": "pnj",
+      "nom": "Guerrier grooth du clan des falaises",
+      "rang": "pietaille",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 1,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 3,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Armes diverses (piétaille)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Épées, javelots, lances, coutelas de la piétaille."
+        }
+      ],
+      "commentaire": "Livre p. 188 (PDF p. 190) : guerriers grooth, piétaille ×5. Armes d3 (lances et gourdins) : arme propre « Armes diverses (piétaille) », d3, déjà définie sur le compte. Aucune armure. Règle de horde (BoL p. 132).\nGardes du toit du donjon de Fort Junia, sous les ordres d'un chef grooth."
+    },
+    "ch5-garde-grooth": {
+      "kind": "pnj",
+      "nom": "Garde grooth du dieu voilé",
+      "rang": "coriace",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 2,
+      "agilite": 1,
+      "esprit": 0,
+      "aura": -1,
+      "initiative": 0,
+      "melee": 2,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 8,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        "Massue"
+      ],
+      "commentaire": "Livre p. 194 (PDF p. 196) : gardes grooth, coriaces ×8. Gourdin clouté d6+2 dans le livre (avec sa Vigueur 2) : « Massue » (d6) du catalogue, le « Gourdin » n'étant qu'à d6M. Aucune armure.\nRobustes grooth aux petits ossements tressés dans la tignasse, le visage couvert d'une croûte d'argile blanchâtre pour imiter le voile de leur dieu. Porteurs du palanquin et gardes de sa porte : quatre dans le vestibule du premier étage du donjon (le chef baragouine le lémurien), quatre dans la salle de garde (n° 13). Deux autres (même profil) se sont installés dans la cave (n° 14)."
+    },
+    "ch5-guerrier-des-jungles": {
+      "kind": "pnj",
+      "nom": "Guerrier des jungles",
+      "rang": "pietaille",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 1,
+      "tir": 1,
+      "defense": 0,
+      "vitalite": 3,
+      "carrieres": [
+        {
+          "nom": "Barbare",
+          "rang": 1
+        }
+      ],
+      "armes": [
+        {
+          "nom": "Armes diverses (piétaille)",
+          "degats": "d3",
+          "type": "M",
+          "notes": "Épées, javelots, lances, coutelas de la piétaille."
+        }
+      ],
+      "commentaire": "Pas de profil dans le livre (livre p. 185 : « une quarantaine (piétaille) ») : fiche de piétaille inventée (Mêlée 1, Tir 1, d3, vitalité 3). Règle de horde (BoL p. 132).\nQushites de l'armée du dieu voilé qui festoient dans la salle commune du donjon de Fort Junia, gardent mollement les remparts ou campent dans la cour. Les six guerriers d'élite de la salle de réunion (n° 5) ont le profil des barbares de Qush."
+    },
+    "ch5-fanatique-du-harem": {
+      "kind": "pnj",
+      "nom": "Fanatique du harem",
+      "rang": "pietaille",
+      "region": "Jungle de Qo et jungle de Qush",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "aura": 0,
+      "initiative": 0,
+      "melee": 0,
+      "tir": 0,
+      "defense": 0,
+      "vitalite": 1,
+      "commentaire": "Livre p. 190 (PDF p. 192) : piétaille, attaque +0, vitalité 1 ; attributs non donnés (0), sans arme (mains nues).\nQuatre jeunes gens du « harem » du dieu voilé, assez fanatisés pour entourer Jorkus et se sacrifier : ils lui permettent l'option « bouclier humain » (BoL p. 135). Les autres membres du harem, terrorisés, se terrent dans un coin de la salle."
+    },
+    "ch5-macaque-hurleur": {
+      "kind": "creature",
+      "nom": "Macaque hurleur",
+      "taille": "Petite",
+      "vigueur": 0,
+      "agilite": -1,
+      "esprit": -1,
+      "attaque": 0,
+      "defense": 0,
+      "vitalite": 5,
+      "degats": "d6M",
+      "protection": "0",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "Hurlements : au début du combat, chaque héros réussit un test d'Esprit ou ne peut pas agir au premier round, dérouté par les cris aigus de la troupe qui semblent se réverbérer sans fin."
+        }
+      ],
+      "commentaire": "Livre p. 172 (PDF p. 174) : macaques hurleurs ×10, taille petite (rang coriace dans l'app).\nPelage beige rongé de gale, yeux jaunes et luisants, longues canines. La bande bondit des arbres en hurlant et fuit dès que la moitié de ses membres a été tuée. Les hurlements sont une capacité de la troupe : un seul test par héros."
+    },
+    "ch5-blob-attrapeur": {
+      "kind": "creature",
+      "nom": "Blob attrapeur",
+      "taille": "Grande",
+      "vigueur": 4,
+      "agilite": -1,
+      "esprit": -4,
+      "attaque": 2,
+      "defense": 0,
+      "vitalite": 20,
+      "degats": "d6M",
+      "protection": "0",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "Odeur envoûtante et enveloppement : Esprit Ardu (-1) ou la proie, fascinée, vient à l'arbre et n'agit plus (une gifle la réveille). Enveloppée en 1 round, elle meurt étouffée en 5 rounds, dé de malus à tous ses jets."
+        },
+        {
+          "nom": "Attaques multiples",
+          "detail": "Lianes cinglantes : 5 attaques à +2, d6M, contre qui approche, seulement une fois une proie enveloppée. Trancher les lianes ne sert à rien : seule la mort du blob libère la victime."
+        }
+      ],
+      "commentaire": "Livre p. 173 (PDF p. 175) : taille grande. Attaque et Dégâts « spécial » dans le livre : ceux des lianes cinglantes (Attaque ×5 +2, Dégâts d6M) sont retenus.\nÉnorme moisissure jaune et verruqueuse qui parasite un grand banian par les canaux de sa sève et en prend le contrôle : crânes humains traversés de racines suspendus aux branches, parfum musqué étonnamment plaisant. Elle n'attaque qu'une cible qui a cédé à son odeur, puis défend son repas avec agressivité."
+    },
+    "ch5-fangeux": {
+      "kind": "creature",
+      "catalogue": "Fangeux"
+    },
+    "ch5-parturiente-maudite": {
+      "kind": "creature",
+      "nom": "Parturiente maudite",
+      "taille": "Très grande",
+      "vigueur": 8,
+      "agilite": -2,
+      "esprit": 0,
+      "attaque": 1,
+      "defense": 0,
+      "vitalite": 30,
+      "degats": "d6M",
+      "protection": "d6 (4)",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "L'œil de Morgazzon : son œil phosphorescent et ses tentacules qui déforment l'espace déroutent ses adversaires directs : -2 aux jets d'attaque et -2 en défense pour qui la combat au corps à corps."
+        }
+      ],
+      "commentaire": "Livre p. 178 (PDF p. 180) : rivale. Taille non donnée : « Très grande » retenue pour le rang de rivale (vitalité 30). Esprit « - » dans le livre (statue animée) : saisi 0.\nStatue d'Afyra enceinte couchée sur son piédestal, au fond du temple : visage de tentacules autour d'un œil unique, corps marbré de veines jaunâtres, sang jaune fluorescent.\nElle enfante un rejeton par round tant qu'on ne l'attaque pas au corps à corps (elle subit les attaques à distance sans broncher).\nGrossesse à terme : engagée en mêlée, son ventre enfle (test d'Esprit pour le remarquer). Au début du 5e round consécutif de combat, il explose : rayon de 6 m, test d'Esprit comme pour l'ichor malsain (dé de bonus pour qui l'a déjà réussi), et la parturiente meurt, quelle que soit sa vitalité restante."
+    },
+    "ch5-rejeton-parturiente": {
+      "kind": "creature",
+      "nom": "Rejeton de la parturiente",
+      "taille": "Très petite",
+      "vigueur": 0,
+      "agilite": 0,
+      "esprit": 0,
+      "attaque": 0,
+      "defense": 0,
+      "vitalite": 3,
+      "degats": "1",
+      "protection": "0",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "Ichor malsain : dès qu'un héros a tué plus de rejetons que son Esprit, test d'Esprit ; échec = phobie ou désordre mental tant qu'il reste sur l'île (un suivant tombe en catatonie). Une réussite l'immunise."
+        }
+      ],
+      "commentaire": "Livre p. 178 (PDF p. 180) : piétaille ×10, Attaque +0, Dégâts 1 (mains nues), vitalité 3 ; attributs non donnés (0). Taille « Très petite » retenue pour le rang de piétaille (moins d'un mètre). Règle de horde (BoL p. 132). Vulnérable au feu : dégâts doublés.\nPetits êtres vaguement humanoïdes au corps suintant et grumeleux, au visage mou et lisse sans yeux ni bouche, nés du mucus de la parturiente ; leur vie est brève. Ils ne prennent jamais le passage de gauche du temple (territoire du ver à soie)."
+    },
+    "ch5-ver-a-soie": {
+      "kind": "creature",
+      "nom": "Ver à soie corrompu",
+      "taille": "Enorme",
+      "vigueur": 8,
+      "agilite": -2,
+      "esprit": -2,
+      "attaque": 1,
+      "defense": 0,
+      "vitalite": 40,
+      "degats": "d6x2",
+      "protection": "d6-2 (2)",
+      "capacites": [
+        {
+          "nom": "Attaque spéciale",
+          "detail": "Crachat filandreux (au lieu d'attaquer) : attaque à +3, test d'Agilité pour l'éviter, sinon engluée au sol. Se dégager : Vigueur Impossible (-6), un cran de moins par aidant (3 au plus) ; 2 rounds avec les ciseaux."
+        }
+      ],
+      "commentaire": "Livre p. 181 (PDF p. 183) : taille énorme. Dégâts d6×2 : ses mandibules ignorent les armures ordinaires (une armure alchimique protège normalement).\nLe petit ver à soie divin glissé dans le panier de cocons d'Afyra, perverti par Morgazzon : chenille blême de six mètres sur un mètre cinquante, segments marqués d'un point jaune, six ocelles, mandibules tranchantes. Bloquée dans sa croissance, elle se nourrit de roche (ses boyaux percent le palais) ; lente, elle fuit la lumière. Ses mandibules tranchent la soie divine : prélevées sur son cadavre, elles peuvent déchirer le voile de Jorkus (arme improvisée d3 + Vigueur, -1 à l'attaque)."
+    },
+    "ch5-azhdarkho": {
+      "kind": "creature",
+      "catalogue": "Azhdarkho"
+    }
+  },
+  "scenes": [
+    {
+      "cle": "fuite-dans-la-nuit",
+      "titre": "Fuite dans la nuit et recherche de l'île",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "À bord de la nef volante, au-dessus de la jungle de Qush",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La nef volante glisse dans le ciel nocturne au vrombissement de ses rotors. Derrière vous, les lueurs d'incendie et le fracas des combats s'éloignent : Fort Junia est tombé aux mains de l'armée du « dieu voilé ». Vous avez vu de vos yeux ce vieux prêtre de Nemmereth au visage couvert d'un voile, sur qui les armes ne mordent pas. Il ne s'agit plus seulement d'apaiser la colère d'un dieu : les tribus de la jungle se sont soulevées, et la guerre menace Satarla.\n\nL'ambiance à bord est morose. Les soldats, la mine grave, pensent aux camarades abandonnés aux grooth et aux guerriers de la jungle. Trois hommes d'équipage, dont le capitaine Maben, et six soldats rescapés : voilà toute votre troupe. Les vivres tiendront quatre ou cinq jours.\n\nAprès une heure de vol, la canopée se dessine, étendue sombre sous la clarté pâle des étoiles. Maben fait jeter deux grappins dans la cime des arbres et impose une halte jusqu'au lever du jour.\n\nÀ l'aube, la recherche commence. L'île de Kryphondus se trouverait dans un lac marécageux, séparé d'un affluent de l'Oom par un bras mort envahi de végétation, quelque part au nord-ouest du Pic d'Urghuul, ce mont qui perce l'océan végétal de Qush à l'ouest d'Oomis. Depuis le ciel, la cime de la montagne se repère aisément. Le lac, c'est une autre affaire…",
+      "jeu": "Maben met sa nef et son équipage au service des héros : ils sont en mission pour le roi (la lettre d'Embran Tarv l'atteste) et il a vu de ses yeux la menace que représente Jorkus.\nEffectifs : Maben, 2 marins des airs, 6 soldats rescapés (profil de l'aide de jeu VII). Vivres : 4 à 5 jours.\n\nRessources de la nef, si un héros pose la question :\n• équipement de base, à l'appréciation du MJ : corde, grappin, pied-de-biche, bouclier de rechange, carquois de flèches, javelines ;\n• arbalète lourde à la proue, 20 carreaux (moins si elle a servi pendant la fuite de Fort Junia) ;\n• tonnelet de poudre rougeâtre (préparation alchimique courante) : jetée sur un feu, fumée rouge épaisse et persistante (signal de nef en péril) ; en lieu clos, fumée opaque et étouffante, impénétrable comme un épais brouillard ;\n• tonnelet de poix alchimique (rare), que le capitaine doit utiliser pour détruire la nef plutôt que la laisser à l'ennemi : s'embrase au contact d'une flamme, brûle 10 rounds, d6 dégâts de feu par round. Une victime couverte de poix enflammée met 3 rounds à s'éteindre seule, 2 avec de l'aide (aussitôt si elle plonge dans l'eau ou est recouverte d'une cape ou d'une couverture).\n\nTrouver le lac : quelques tests de perception (Esprit), ou laisser les joueurs faire preuve d'inventivité. Le temps presse (que fait l'armée de Jorkus ?) : une première journée de recherches infructueuses met les nerfs à rude épreuve.\nLe village dépeuplé (facultatif) : la nef survole une clairière défrichée et ses huttes. Il n'y reste que quelques femmes, enfants et vieillards ; le reste de la tribu a suivi le « dieu voilé ». Ils connaissent le « lac tabou », hanté par les mauvais esprits, où ils ne vont jamais : c'est là que le dieu voilé a rassemblé les tribus. Ils indiquent la direction et la distance.\nEnfin, un héros repère une zone plus clairsemée : un miroitement d'eau, l'éclat blanc d'un massif rocheux au milieu de la végétation impénétrable.",
+      "notes": "Ce qu'il y a à trouver sur l'île : deux moyens de déchirer la soie divine du voile.\n1) Les ciseaux (une paire de petites forces de couturière) qu'Afyra déroba à une tisserande dans le jardin des dieux et remit à Kryphondus avec les cocons : ils sont restés dans ses appartements, au palais.\n2) Les mandibules du ver à soie : un petit ver s'était glissé dans le panier de cocons. Kryphondus ne l'a pas tué ; abandonné sur l'île maudite, il est devenu une chenille monstrueuse.\nLa dernière strophe de l'oracle (« ce qui le tissa pourra le défaire / Don ignoré d'une habile filandière ») vaut pour les deux : les ciseaux, ou la chenille (« l'habile filandière »).\nSi les joueurs ont bien regardé les bas-reliefs du sanctuaire (ch. 3), ils ont pu remarquer qu'Afyra remet à Kryphondus une paire de forces en plus des cocons. Sinon, ils partent à l'aveuglette : ils ne comprendront la solution qu'une fois sur l'île, et cette incertitude ajoute du piment.",
+      "pistes": [
+        {
+          "texte": "Le lac est en vue : approcher de l'île",
+          "vers": "l-ile-perdue"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 6,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "l-ile-perdue",
+      "titre": "L'île perdue et le promontoire",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Le lac tabou, l'île de Kryphondus et son promontoire",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un lac fangeux, envahi de plantes aquatiques et d'arbres noueux qui jaillissent des eaux sombres et boueuses, abrite en son centre une grande île, aussi couverte de végétation que la jungle alentour. Sur la berge sud, des arbres ont été coupés sur une large zone et les plantes piétinées ; des traces de campement s'aperçoivent çà et là, comme si une foule avait bivouaqué ici.\n\nL'île mesure environ six cents pas sur quatre cents. Un épaulement rocheux triangulaire, aux parois abruptes, en occupe le centre sous un couvert d'arbres et de fougères géantes. À l'est, les vestiges d'un large édifice de pierre saillent de la falaise ; ailleurs, des ouvertures trop régulières pour être naturelles trahissent des habitations troglodytes. Au sud, dans une petite crique, d'anciens murs dessinent un bassin. À la pointe ouest, un promontoire au sommet plat et dénudé surplombe le lac comme une tour de guet ; un escalier taillé dans la pierre en descend et se perd dans la végétation.\n\nDe près, la végétation n'a rien de naturel. Les arbres sont exagérément noueux et tortueux, ou s'élancent vers le ciel avec une rectitude trop parfaite. Les lianes pendent en chevelures denses qui semblent frémir et onduler dans l'air pourtant immobile. Des fougères arborescentes éploient des frondes d'un vert anis lumineux, d'autres un feuillage sombre aux reflets pourpres. Il se dégage de cette jungle quelque chose de profondément malsain. Et ce silence… à peine rompu par l'appel d'un oiseau ou le cri d'un singe : le silence d'un prédateur à l'affût, comme si l'île elle-même guettait sa prochaine proie.\n\nLe promontoire est un éperon de calcaire blanc, à une vingtaine de mètres au-dessus du marécage, couvert de mousses et de lichens. Des marches taillées dans la paroi permettent d'en descendre : un ancien poste de garde.",
+      "jeu": "Remettez aux joueurs la carte de l'île vue du ciel (aide de jeu VI).\n\nAborder l'île : Maben propose le promontoire ouest, le point le plus dégagé. La nef s'y stabilise sans se prendre dans les arbres, assez bas pour l'échelle de corde ; les soldats accrochent les grappins aux rochers. Autre option : poser la nef sur une berge et gagner l'île sur un radeau de fortune.\n\nLes suivants : sur l'ordre de Maben, 2 ou 3 soldats débarquent avec les héros. Remettez leur profil aux joueurs (aide de jeu VII) : ils valent des suivants recrutés en dépensant des points d'expérience (BoL p. 165). Avec peu de joueurs, un soldat par héros. Les joueurs peuvent aussi préférer qu'ils gardent la nef. Maben, ses 2 marins et les autres soldats restent à bord, prêts à repartir.\n\nMalédiction de Morgazzon : dès que les héros s'enfoncent dans la jungle de l'île, distorsion sensorielle (sons qui se propagent mal, profondeur et distances faussées). Tant qu'ils sont sur l'île : dé de malus à tous les tests de perception et à tous les jets de réaction. Le porteur du médaillon de Kryphondus y échappe.\n\nLe médaillon de Kryphondus (récupéré au ch. 2) : sur l'île, son porteur reçoit un dé de bonus à tous les tests d'Esprit ou de Vigueur pour résister aux horreurs, aux poisons et aux charmes mortels des créatures de Morgazzon. Il garde l'avantage mains guérisseuses (livre p. 103).\n\nLa suite dépend des lieux explorés. Rencontres « aléatoires », n'importe où : le druide fou (au début), les singes hurleurs, l'arbre aux crânes, le cadavre de Drokko. Lieux fixes : le campement (près de l'entrée du temple), le bassin (crique sud), le temple-palais (est). Ne les épuisez pas : la suite leur imposera de rudes épreuves.",
+      "notes": "Le bivouac de la berge sud est celui de Jorkus et de ses premiers « fidèles », avant leur départ vers Fort Junia.\nAprès le massacre de la communauté de Kryphondus et le saccage du temple d'Afyra, les druides jaunes ont consacré l'île à Morgazzon : faune, flore et bâtiments sont corrompus, le temple d'Afyra profané.\nLes suivants sont des victimes toutes désignées : leur horrible trépas doit faire sentir aux joueurs la dangerosité extrême de l'île.",
+      "pistes": [
+        {
+          "texte": "S'enfoncer dans la jungle de l'île",
+          "vers": "le-druide-fou"
+        },
+        {
+          "texte": "Rencontre : les singes hurleurs",
+          "vers": "les-singes-hurleurs"
+        },
+        {
+          "texte": "Rencontre : l'arbre aux crânes",
+          "vers": "l-arbre-aux-cranes"
+        },
+        {
+          "texte": "Rencontre : le cadavre de Drokko, le campement",
+          "vers": "vestiges-de-l-expedition"
+        },
+        {
+          "texte": "Gagner la crique et son bassin, au sud",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Gagner le temple-palais, à l'est",
+          "vers": "le-temple-d-afyra"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-druide-fou",
+      "titre": "La jungle maudite et le druide fou",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, le sous-bois",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "La progression est difficile dans le sous-bois touffu, envahi de lianes. La jungle a une densité presque surnaturelle qui occulte le soleil et vous plonge dans un demi-jour verdâtre aux relents de pourriture. Certains troncs suintent une humeur huileuse ; mousses et champignons rongent le bois mort sur un humus noir et élastique. Des fleurs jaune vif, presque luminescentes, s'ouvrent dans l'ombre ; de lourdes calebasses orange tachetées de noir font ployer les arbustes et répandent un parfum doucereux, écœurant. Toutes les fleurs, tous les fruits de l'île sont jaunes, du paille le plus pâle à l'orangé le plus sombre.\n\nLe silence de tout à l'heure a fait place à mille petits bruits : bourdonnements, crissements, tintements de carillon, chuchotements inaudibles, craquements qui roulent comme un tonnerre lointain. Parfois un seul d'entre vous les entend, parfois tous. Dans la pénombre, arbres et lianes prennent des formes grotesques qui se dérobent dès qu'on les regarde ; le ballet des insectes dans les puits de lumière a quelque chose d'hypnotique. Les soldats serrent leurs armes. Çà et là affleurent des vestiges : un tas de pierres moussues, un chaudron de bronze percé, un crâne jauni, le fût brisé d'une colonnette.\n\nSoudain, un fruit trop mûr s'écrase sur la tête de l'un d'entre vous et lui souille les cheveux d'un jus putride. Un rire aigu éclate au-dessus de vous. Perché dans les branches, un vieil homme au visage ridé et tanné vous dévisage en riant à gorge déployée : barbe blanche hirsute, tignasse crasseuse pleine de feuilles, robe jaune fanée réduite à une guenille tachée de brun. Assis sur sa branche, il balance ses pieds nus comme un enfant.\n\n« Eh bien, eh bien, encore des visiteurs ! Décidément, ça n'arrête pas en ce moment ! »",
+      "jeu": "Aucun jet. Il ne se combat pas : le MJ joue son monologue (texte intégral dans le Markdown du chapitre, livre p. 172), d'une voix aigrelette, en gloussant. En substance :\n• d'abord les « explorateurs inquiets, menés par le blondinet » : ils n'ont pas aimé son île, plusieurs y sont restés « pour toujours » ;\n• puis « le vieil homme au visage caché » : il a vu sous son voile et lu la peur de la mort dans son âme. Il s'est dressé devant l'entrée du temple et a crié « Je suis Kryphondus et voici que je reviens parmi vous ! Je suis le dieu voilé qui régnera sur la terre des hommes ! » ; les grooth s'agenouillaient au pied des marches, le nez dans la boue. Puis il est reparti sans même visiter le temple. « Il y a pourtant plein de choses intéressantes, là-bas, vous devriez aller y faire un tour » ;\n• « Kryphondus est mort, et depuis longtemps ! Elle m'a tout raconté » : elle se languit au bassin, le remords d'Asharaa est plus profond que ce lac. Jalouse d'Afyra, qui voulait rendre son époux immortel, elle l'a empoisonné et elle est morte avec lui. « Il n'aura même pas eu le temps de le mettre, ce voile de soie divine qui devait le cacher aux yeux de Nemmereth ! Enfin, c'est du passé, tout ça… Mais l'est-ce vraiment ? »\nPuis il se désagrège en une nuée de papillons jaunes qui disparaissent dans la sylve.\n\nIl désigne aux héros le temple (est) et le bassin (crique sud).",
+      "notes": "Le « blondinet » est Hilario, et ses explorateurs : son expédition, dont il n'est revenu qu'avec son frère Matius. Le « vieil homme au visage caché » est Jorkus, venu commencer ici symboliquement sa vie de dieu, avant de lever les tribus.\n« Elle » est Asharaa : sa rémanence hante le bassin, sous la forme d'un fangeux.\nQui est le druide fou ? Un vieux druide dément, une manifestation de Morgazzon ? Le livre laisse le mystère entier.",
+      "pistes": [
+        {
+          "texte": "Rencontre : les singes hurleurs",
+          "vers": "les-singes-hurleurs"
+        },
+        {
+          "texte": "Rencontre : l'arbre aux crânes",
+          "vers": "l-arbre-aux-cranes"
+        },
+        {
+          "texte": "Rencontre : le cadavre de Drokko, le campement",
+          "vers": "vestiges-de-l-expedition"
+        },
+        {
+          "texte": "Aller au bassin, où « elle se languit »",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Aller voir le temple",
+          "vers": "le-temple-d-afyra"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-druide-fou",
+          "attitude": "neutre"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "les-singes-hurleurs",
+      "titre": "Les singes hurleurs",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, la jungle (ou le promontoire, au retour)",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 2,
+      "lecture": "Des cris assourdissants éclatent tout autour de vous. Une bande de macaques bondit des arbres et se jette sur vous : pelage beige rongé de gale, yeux jaunes et luisants, bouches armées de longues canines. Leurs hurlements suraigus semblent se réverbérer sans fin sous la voûte des arbres.",
+      "jeu": "Macaques hurleurs : 10 dans le livre (5 cartes ici, chacune vaut deux singes ; montez à 10 si vous voulez l'effectif complet). Taille petite (coriaces) : Attaque +0, Dégâts d6M, Défense 0, vitalité 5.\nHurlements : au début du combat, chaque héros doit réussir un test d'Esprit ou être incapable d'agir pendant le premier round (dé de bonus du médaillon de Kryphondus applicable : c'est une horreur de Morgazzon).\nRappel : dé de malus aux jets de réaction sur l'île (malédiction de Morgazzon), sauf pour le porteur du médaillon.\nLa bande fuit dès que la moitié de ses membres a été tuée.\nVariante : faites-les attaquer la nef arrimée au promontoire, juste au moment où les héros y reviennent.",
+      "pistes": [
+        {
+          "texte": "Poursuivre l'exploration de la jungle",
+          "vers": "le-druide-fou"
+        },
+        {
+          "texte": "Gagner la crique et son bassin",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Gagner le temple-palais",
+          "vers": "le-temple-d-afyra"
+        },
+        {
+          "texte": "Regagner la nef et quitter l'île",
+          "vers": "vu-du-ciel"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-macaque-hurleur",
+          "qty": 5,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "l-arbre-aux-cranes",
+      "titre": "L'arbre aux crânes",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, une clairière de la jungle",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 3,
+      "lecture": "Un cliquètement léger vous attire vers une petite clairière, dominée par un grand banian dont les racines aériennes retombent en un épais rideau. Plusieurs crânes humains y sont suspendus, traversés par une racine qui s'est frayé un chemin par la bouche et les orbites. Ils s'entrechoquent doucement avec un tintement sourd… alors qu'aucune brise n'agite la touffeur de la jungle.\n\nTout autour du pied de l'arbre, une large moisissure, ou un lichen jaune et verruqueux, couvre le sol et monte jusqu'à un mètre sur le tronc. Un parfum musqué, étonnamment plaisant, flotte dans l'air.",
+      "jeu": "Odeur envoûtante : tout personnage qui reste plus de quelques dizaines de secondes à l'orée de la clairière ou près de l'arbre fait un test d'Esprit Ardu (-1) (dé de bonus du médaillon de Kryphondus applicable). Échec : il est attiré irrésistiblement vers l'arbre, comme hypnotisé, incapable d'agir. Il reprend ses esprits s'il est frappé (une gifle suffit) ou quand le blob l'engloutit. Pensez aux soldats suivants.\nDès qu'il touche les racines, elles s'enroulent autour de ses bras, de ses jambes et de son cou ; la moisissure se dresse comme une vague visqueuse et déferle sur lui.\nEnveloppement : en un round, la proie est prise dans la masse gélatineuse ; elle meurt étouffée et écrasée au bout de 5 rounds. Elle peut se débattre, avec un dé de malus à tous ses jets. Seule la destruction du blob la sauve.\nLianes cinglantes : le blob n'attaque qu'une cible qui a succombé à son odeur. Une fois sa proie enveloppée, il fouette tous ceux qui s'approchent : 5 attaques à +2, dégâts d6M. Trancher les lianes ne sert à rien, il faut tuer le blob.\nBlob attrapeur : taille grande, Vigueur 4, Agilité -1, Esprit -4, Défense 0, Protection 0, vitalité 20.",
+      "notes": "Les crânes sont ceux de ses anciennes proies. Le lichen jaune au pied du banian, c'est le blob lui-même.",
+      "pistes": [
+        {
+          "texte": "Poursuivre l'exploration de la jungle",
+          "vers": "le-druide-fou"
+        },
+        {
+          "texte": "Gagner la crique et son bassin",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Gagner le temple-palais",
+          "vers": "le-temple-d-afyra"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-blob-attrapeur",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "vestiges-de-l-expedition",
+      "titre": "Le cadavre de Drokko et le campement",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, la jungle, puis un bosquet près du temple",
+      "moment": "jour",
+      "meteo": "couvert",
+      "danger": 1,
+      "lecture": "Un des soldats marche sur quelque chose qui cède avec un craquement sec. Un nuage jaunâtre de spores s'élève du sol ; l'homme s'écarte en toussant, la gorge et les yeux irrités, tandis que le petit nuage se dissipe.\n\nIl a marché sur un squelette envahi de végétation, et lui a brisé les côtes. Dans la cage thoracique, une masse grisâtre et alvéolée, semblable à une grosse morille, a été écrasée. Autour du corps : des lambeaux de vêtements, une boucle de ceinture ornée d'une pierre semi-précieuse, un arc et son carquois, une dague, une besace à moitié rongée.\n\nPlus loin, près de l'entrée du temple, une toile écrue et salie pend au bout d'une corde à une branche, au milieu d'un bosquet. La végétation porte des coups de machette ; un cercle de cailloux noircis délimite les restes d'un feu de camp, parmi des ossements de petits animaux et des bandages pourrissants, souillés de sang délavé. Sur un tronc, un morceau d'écorce a été découpé et des noms sont grossièrement gravés dans l'aubier : Hilario, Matius, Drokko, Jalus, Herpo, Aletius, Diallo, Zaratos, Doamna, Sertu.",
+      "jeu": "Le cadavre (rencontre aléatoire, n'importe où) : en regardant de près, des centaines de minuscules carapaces chitineuses et translucides, comme des mues d'insectes, tapissent le sol entre les os ; la chair a été dévorée par des insectes nécrophages (milliers de petites marques de mandibules sur les os).\nLa besace contient des restes de provisions, un rouleau de corde et une petite fiole de grès cachetée : une dose d'antidote contre les venins animaux et les poisons végétaux (potion alchimique courante, soigne l'empoisonnement en une heure).\n\nLe campement : placez-le non loin de l'entrée du temple. Rien d'autre à y trouver.",
+      "notes": "Le cadavre est celui de Drokko, et le campement celui de l'expédition d'Hilario (l'un d'eux a gravé les noms de ses compagnons). Seuls Hilario et Matius en sont revenus.\n\nLe soldat qui a marché sur le cadavre a inhalé les larves d'une espèce de coccinelles, qui vont éclore en lui. Aucun symptôme jusqu'au moment que vous choisirez (au beau milieu d'un combat, ou pendant une approche discrète) : il hurle, pris de convulsions, dévoré de l'intérieur ; son agonie est brève, et un essaim de coccinelles jaunes à points noirs jaillit de tous les orifices de son corps, s'envole puis fond sur son cadavre pour le dévorer. Rien ne peut le sauver. Les insectes ne s'en prennent pas aux vivants (ce sont des charognards).",
+      "pistes": [
+        {
+          "texte": "Entrer dans le temple-palais",
+          "vers": "le-temple-d-afyra"
+        },
+        {
+          "texte": "Gagner la crique et son bassin",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Poursuivre l'exploration de la jungle",
+          "vers": "le-druide-fou"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-bassin",
+      "titre": "Le bassin d'Asharaa",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, la crique sud et son bassin",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Une petite crique naturelle a été fermée par une digue de pierre et entourée de murets pour former une piscine. Mousses et lierres couvrent les murets et la volée de trois marches qui descend dans l'eau calme, envahie de grands nénuphars et de roseaux. Le cadavre d'un homme gît près du bassin. Les bêtes et les insectes ont rongé la chair de ses os, mais les lambeaux d'armure et de vêtements qui s'y accrochent disent que la mort est récente : quelques mois, une année tout au plus.\n\nÀ flanc de falaise, une large ouverture s'ouvre dans la paroi, à demi masquée par les lianes. Des marches taillées dans la pierre en descendent, mais s'interrompent à une bonne dizaine de mètres du sol ; des trous carrés creusés dans la roche laissent penser qu'une structure de bois les prolongeait jadis.\n\nSoudain, l'eau se met à bouillonner. Dans une gerbe d'écume, une masse luisante et caoutchouteuse crève la surface et lance ses tentacules. Pris dans son corps, un visage de femme incrusté d'algues et de petits coquillages roule des yeux aveugles ; ses lèvres exsangues s'ouvrent sur une langue noire et un gémissement gargouillant : « Kryphondus… Kryphondus… »",
+      "jeu": "Le fangeux surgit dès qu'un héros ou un soldat s'approche du bassin (pour examiner le cadavre, par exemple). Fiche du catalogue (BoL p. 116), profil identique au livre :\n• taille grande, Vigueur 2, Agilité 1, Esprit -1, Attaque ×2 +2, Défense 1, Protection 0, vitalité 20 ; sur la terre ferme : Agilité -1, Attaque +0, Défense 0 ;\n• attaques multiples : deux jets d'attaque, en général contre la même cible. Il doit toucher avec ses deux tentacules pour attraper la proie ; elle se libère par un test de Vigueur Difficile (-2), sinon elle subit une morsure automatique au round suivant ;\n• morsure venimeuse : tue sur-le-champ une proie de taille petite ou moins. Un héros mordu doit réussir un test de Vigueur Très difficile (-4) à chaque round ; en cas d'échec, la mort survient en 3 rounds (dé de bonus du médaillon de Kryphondus applicable).\nSi un héros porte le médaillon de Kryphondus de manière visible, le fangeux concentre ses attaques sur lui et cherche à l'emporter sous l'eau dans une étreinte mortelle.\n\nL'escalier interrompu mène à l'escalier extérieur du palais (n° 3). L'escalade jusqu'aux marches est des plus périlleuses : test d'Agilité Très difficile (-4).",
+      "notes": "Le fangeux est une rémanence d'Asharaa, l'épouse meurtrière de Kryphondus : l'ampleur de son crime lui a interdit le repos, et la vase du bassin s'est agrégée autour de son cadavre. C'est ici qu'elle a empoisonné Kryphondus, qui s'est noyé dans le bassin.\nLe cadavre est celui d'un compagnon d'Hilario : c'est près du bassin qu'Hilario a ramassé le médaillon de Kryphondus, juste avant que le fangeux tapi sous les nénuphars ne surgisse (livre p. 103).",
+      "pistes": [
+        {
+          "texte": "Escalader jusqu'à l'escalier interrompu (Agilité -4)",
+          "vers": "le-palais-de-kryphondus"
+        },
+        {
+          "texte": "Gagner le temple-palais par la jungle",
+          "vers": "le-temple-d-afyra"
+        },
+        {
+          "texte": "Poursuivre l'exploration de la jungle",
+          "vers": "le-druide-fou"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-fangeux",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-temple-d-afyra",
+      "titre": "Le temple d'Afyra et la parturiente maudite",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, le temple-palais (1. temple d'Afyra)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Un large parvis à degrés, à plus de cinq mètres du sol, précède l'entrée monumentale d'un temple qui fait saillie dans la falaise. Herbes et lichens ont disjoint les dalles ; l'érosion a rongé les reliefs de la façade. Les portes de bois sont tombées en poussière depuis longtemps ; l'entrée bée à l'ombre d'un rideau de lianes. À gauche, un couloir obscur s'enfonce dans la roche, sous une petite fenêtre haut placée. Un silence sépulcral : on dirait un mausolée.\n\nAu-delà des lianes s'ouvre une vaste salle creusée dans la falaise. Deux rangées de colonnes sculptées comme des troncs de palmiers, aux chapiteaux en grandes palmes de pierre, guident le regard vers le fond enténébré, où se devine une estrade surmontée d'une statue couchée. Les restes démembrés de trois cadavres pourrissent sur les dalles de calcaire blanc, qui luisent de traces baveuses entrecroisées. L'air est frais, mais une odeur fade de putréfaction agresse les sens. Au fond, un bruit de succion, de gargouillis…\n\nSur l'estrade, une statue de femme en longue toge, le ventre arrondi par la grossesse, est couchée sur un piédestal, appuyée sur ses coudes, jambes écartées comme une parturiente. La palme qui couronne son front évoque Afyra. Mais son visage n'est qu'une masse de tentacules enchevêtrés autour d'un œil unique. Son corps marbré de veines jaunâtres s'anime : elle se penche, extirpe d'entre ses cuisses un paquet gluant et le laisse tomber. L'estrade est couverte de caillots sanguinolents… qui se dressent : de petits êtres de moins d'un mètre, suintants et grumeleux, au visage mou et lisse, sans yeux ni bouche.",
+      "jeu": "Horreur : test d'Esprit pour les héros et leurs compagnons (dé de bonus du médaillon de Kryphondus). Échec : désavantage foie jaune pour ce combat (incapable de faire autre chose que se défendre pendant d3 rounds). Échec critique : ce désavantage dure tant que les héros restent sur l'île.\n\nRejetons : 10 dans le livre (6 cartes ici), piétaille, règle de horde (BoL p. 132). Attaque +0, Dégâts 1 (mains nues), Protection 0, vitalité 3. Vulnérables au feu (dégâts doublés).\nIchor malsain : dès qu'un même héros a tué plus de rejetons que sa valeur d'Esprit, test d'Esprit. Échec : phobie ou désordre mental handicapant tant qu'il reste sur l'île (chuchotements obsédants, peur du noir, démangeaisons, charabia, cris intempestifs…). Une réussite l'immunise, sauf contre l'explosion de la parturiente. Un suivant qui rate s'effondre en catatonie (comme Matius) : inutile jusqu'au bout, on peut le ramener à la nef.\n\nLa parturiente (rivale) enfante un rejeton par round tant qu'on ne l'attaque pas au corps à corps (elle subit les attaques à distance sans broncher). Engagée en mêlée, elle cesse et se défend.\n• Vigueur 8, Agilité -2, Attaque +1, Dégâts d6M, Défense 0, Protection d6 (4), vitalité 30.\n• L'œil de Morgazzon : qui la combat au corps à corps subit -2 à ses jets d'attaque et -2 en défense.\n• Grossesse à terme : empêchée d'accoucher, son ventre enfle (test d'Esprit pour le remarquer). Au début du 5e round consécutif de combat, il explose : caillots et pus dans un rayon de 6 m, test d'Esprit comme l'ichor malsain (dé de bonus pour qui l'a déjà réussi) ; la parturiente meurt, quelle que soit sa vitalité.\nEstrade couverte de mucus : chaque round, un héros qui s'y trouve réussit un test d'Agilité Facile (+1) ou glisse et perd son action pour se relever.\n\nSorties : deux ouvertures latérales aux linteaux sculptés de motifs végétaux. Celle de droite luit de traces baveuses ; celle de gauche n'est pas souillée. Les rejetons ne prennent jamais le passage de gauche : en fuyant par là, on leur échappe.",
+      "notes": "Le temple d'Afyra, déesse de la vie souvent représentée enceinte, a été profané par Morgazzon : sa statue est devenue cette parturiente maudite.\nLes rejetons évitent le côté gauche, territoire du ver à soie. À droite, ils ne s'aventurent que dans quelques salles du palais.",
+      "pistes": [
+        {
+          "texte": "Prendre le passage de gauche, non souillé",
+          "vers": "le-palais-de-kryphondus"
+        },
+        {
+          "texte": "Prendre le passage de droite, baveux",
+          "vers": "le-palais-de-kryphondus"
+        },
+        {
+          "texte": "Ressortir sur le parvis",
+          "vers": "vestiges-de-l-expedition"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-parturiente-maudite",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch5-rejeton-parturiente",
+          "qty": 6,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-palais-de-kryphondus",
+      "titre": "Le palais troglodyte : le puits et les appartements de Kryphondus",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, le temple-palais (2. salle du puits, 3. escalier, 4. appartements)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Derrière le temple s'ouvrent les salles troglodytes du palais, taillées à même la roche et profondément enfoncées dans la falaise. Les portes, sans battants, sont ornées de linteaux sculptés ; quelques puits de lumière envahis de végétation adoucissent la pénombre. Les salles se ressemblent toutes : murs rongés de salpêtre, plus aucun mobilier, quelques restes rouillés d'objets métalliques… et des ossements humains en quantité. Plus loin, des souterrains crèvent les murs maçonnés pour s'enfoncer dans les ténèbres : des boyaux grossiers, jonchés de gravats, comme creusés par un énorme animal fouisseur capable d'entamer la roche.\n\nUne grande salle rectangulaire, au plafond à caissons soutenu par quatre colonnes cannelées, abrite en son centre un puits à margelle. Au-dessus, un conduit naturel perce la roche jusqu'au sommet et laisse filtrer une pâle lumière.\n\nUne petite salle donne sur une galerie ouverte d'où part un escalier creusé à flanc de falaise. Il descend sur cinq mètres, puis s'interrompt dans le vide. On voit le bassin de la crique, en contrebas.\n\nEnfin, deux grandes pièces reliées par un petit couloir ont chacune une loggia, où le jour filtre à travers le rideau de lianes. Des fresques fanées montrent encore des paysages de jungle, une procession en pagnes, des animaux, des oiseaux ; les plafonds sont sculptés de caissons et de rosaces. Deux boyaux percent la grande pièce de part en part. Parmi les gravats et les vestiges de mobilier gisent de vieux squelettes : l'un a le crâne défoncé, un autre une pointe de lance en bronze fichée dans la colonne vertébrale.",
+      "jeu": "Salle du puits : un héros qui regarde dans le puits voit de petites lumières danser comme des lucioles ; fasciné, il se penche sans s'en rendre compte. Test d'Esprit Difficile (-2) ou il bascule. Un héros proche peut le retenir en réussissant un jet de réaction (dé de malus sur l'île). Chute : 5 m dans une eau boueuse, d6M dégâts sans protection d'armure (il reprend ses esprits). La boue aspire comme des sables mouvants : à partir du 2e round, test de Vigueur chaque round pour rester à la surface. Une corde lancée le sauve.\n\nEscalier extérieur : il mène, en descendant, aux marches interrompues au-dessus du bassin (une corde permet de descendre, ou de remonter depuis la crique).\n\nAppartements de Kryphondus : au milieu des décombres, un héros remarque un éclat métallique : une paire de petites forces en acier, épargnées par la rouille, en parfait état, comme oubliées là depuis quelques heures. Parmi les débris de bois où elles gisaient : un cadre brisé, en bois rare fossilisé, où s'accrochent quelques brins d'un fil blanc et moiré, doux, soyeux, légèrement chaud. Si les joueurs l'essaient, ce fil est incassable et impossible à couper… sauf avec les forces, qui le tranchent sans difficulté.\n\nLes armes de la victoire, les ciseaux : arme improvisée (d3 + Vigueur), mais aux caractéristiques d'une arme alchimique légendaire : ignore les armures, dé de bonus aux dégâts. Lames incassables, toujours coupantes, capables d'entamer n'importe quelle matière (des heures pour tailler la pierre). Ils ne fondent pas, même au feu de forge le plus ardent.\nLes quelques centimètres de fil divin récupérables valent une fortune pour un alchimiste ou un prêtre.\n\nLes boyaux mènent à la caverne du ver à soie.",
+      "notes": "Les forces sont les ciseaux qu'Afyra avait remis à Kryphondus avec les cocons de soie ; le cadre brisé est le métier à tisser sur lequel il tissa le voile. Les brutes de la jungle l'ont fracassé et ont délaissé les ciseaux, simple outil sans valeur à leurs yeux.\nLes boyaux ont été creusés par le ver à soie, qui se nourrit de roche.\nLes ossements témoignent du massacre de la communauté de Kryphondus par les tribus des druides jaunes.",
+      "pistes": [
+        {
+          "texte": "Suivre les boyaux jusqu'à la caverne",
+          "vers": "la-caverne-du-ver-a-soie"
+        },
+        {
+          "texte": "Descendre par l'escalier extérieur vers le bassin",
+          "vers": "le-bassin"
+        },
+        {
+          "texte": "Ressortir par le temple",
+          "vers": "le-temple-d-afyra"
+        },
+        {
+          "texte": "Les ciseaux en main, regagner la nef et quitter l'île",
+          "vers": "vu-du-ciel"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "la-caverne-du-ver-a-soie",
+      "titre": "La caverne du ver à soie",
+      "region": "Jungle de Qo et jungle de Qush",
+      "lieu": "Île de Kryphondus, le temple-palais (5. caverne du ver à soie)",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Les passages sont bouchés par de gros fils de soie entrelacés, grossiers, grumeleux, légèrement jaunâtres. Au travers, dans la pénombre d'une large grotte où des fils pendus au plafond scintillent à la lumière diffuse, une forme : une énorme masse blême enroulée sur elle-même, faite de segments marqués d'un point jaune et munis de courtes pattes membraneuses.\n\nLa créature redresse sa tête grisâtre : six ocelles au-dessus d'une bouche aux mandibules tranchantes. Elle vous a repérés. Elle déroule ses segments boursouflés et se dresse à demi sur des pattes qui peinent à porter son poids : une immonde chenille de six mètres de long, haute d'un mètre cinquante ! Elle ondule vers vous en tranchant d'un coup sec de mandibules les fils de soie qui la gênent. Visiblement, varier son menu de roche par un peu de chair fraîche ne lui déplairait pas.",
+      "jeu": "Les fils grossiers ont la même solidité surnaturelle que la soie divine : ni le feu ni l'épée ne les entament. Les ciseaux les coupent aisément.\n\nVer à soie corrompu : taille énorme, Vigueur 8, Agilité -2, Esprit -2, Attaque +1, Dégâts d6×2, Défense 0, Protection d6-2 (2), vitalité 40. Ses mandibules ignorent les armures ordinaires (une armure alchimique protège normalement).\nCrachat filandreux, au lieu d'une attaque : attaque à +3, la cible a droit à un test d'Agilité pour l'éviter. Échec : au sol, engluée, incapable de bouger. Se dégager : Vigueur Impossible (-6) ; chaque compagnon (3 au plus) qui passe un round à l'aider baisse la difficulté d'un cran. Avec les ciseaux : libérée après deux rounds d'effort.\nOn peut l'éviter : elle n'est pas rapide et rechigne à s'exposer à la lumière. Ce combat n'est pas indispensable si les héros ont les ciseaux.\n\nSi les héros le tuent, ils peuvent prélever ses deux mandibules. Une mandibule : arme improvisée (d3 + Vigueur), lourde et peu maniable (-1 aux jets d'attaque), capable de couper la soie divine. Elles s'effriteront avec le temps, loin de l'île.\nRécolte de soie : les gros fils jaunâtres, noués bout à bout, font une corde d'une solidité à toute épreuve. Loin de l'île, elle perd peu à peu ses qualités : utilisable jusqu'à la fin de la saga, puis elle se délite.\n\nQuitter l'île : en vue du combat final, chaque héros lance d6M et récupère autant de points d'héroïsme (sans dépasser son maximum).",
+      "notes": "Le ver à soie divin s'était glissé dans le panier de cocons d'Afyra. Perverti par Morgazzon, bloqué dans son évolution (il ne deviendra jamais papillon), il a survécu des siècles : le temps n'a pas sur lui la même emprise. Des joueurs attentifs remarqueront que ses mandibules coupent les fils de sa soie comme rien, à l'instar des ciseaux : c'est l'autre moyen de détruire le voile (« l'habile filandière » de l'oracle).",
+      "pistes": [
+        {
+          "texte": "Retourner aux appartements de Kryphondus",
+          "vers": "le-palais-de-kryphondus"
+        },
+        {
+          "texte": "Regagner la nef et quitter l'île",
+          "vers": "vu-du-ciel"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-ver-a-soie",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "soldat-nef-volante",
+          "qty": 3,
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "vu-du-ciel",
+      "titre": "Confrontation finale : Fort Junia vu du ciel",
+      "region": "Satarla",
+      "lieu": "Dans le ciel, au-dessus de Fort Junia et du camp de l'armée du dieu voilé",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Vous avez quitté l'île de cauchemar, avec de quoi déchirer le voile. Reste le plus dur : approcher le dieu voilé. Le trouver n'est pas difficile : il suffit de mettre le cap sur les colonnes de fumée noire qui s'élèvent au sud, depuis le littoral.\n\nDe haut et d'assez loin, vous observez l'armée ennemie. Le gros des forces est massé au pied des remparts de Fort Junia, dont les murailles portent le sinistre emblème du dieu voilé : des têtes coupées, couvertes d'un morceau de tissu, fichées au bout de piques. Des groupes de maraudeurs convergent vers le fort avec provisions, butin et prisonniers. Les rochers au pied du promontoire sont rougis du sang des cadavres jetés dans le vide ; des dizaines gisent sur les récifs ou flottent mollement dans les vagues, au milieu des nuées d'oiseaux marins venus à la curée.\n\nÀ la porte de l'enceinte, une grande silhouette à la peau bleue se détache : Lok Kozaar.",
+      "jeu": "L'exploration de l'île a pris un jour ou deux.\n\nÉtat des lieux : l'armée de Jorkus campe autour de Fort Junia et lance des raids alentour (butin, prisonniers, dont certains enrôlés de force). Elle a écrasé la petite armée du gouverneur régional (sa tête voilée est sur une pique). Lok Kozaar commande et consolide ses positions avant de marcher sur Satarla ; chaque jour, de petits groupes de guerriers des jungles rejoignent l'armée.\nSi les joueurs hésitent : ils voient Lok Kozaar à la porte, ou une apparition du dieu voilé dans la cour.\n\nImprudence (trop près, vol stationnaire au-dessus du fort…) : sollicitée par Lok, la Mégère lance un sortilège de premier cercle et évoque un azhdarkho (BoL p. 111), envoyé à l'assaut de la nef.\n\nDeux options :\n• frapper aussitôt : le raid sur Fort Junia (la Mégère n'a plus que 7 points de pouvoir) ;\n• repasser par Satarla (facultatif) : aide et matériel, mais la Mégère remonte à 11 points de pouvoir.\nLes soldats de la nef qui ont survécu connaissent parfaitement Fort Junia et en font une description précise. Une approche de nuit en nef volante est l'option la plus logique.",
+      "notes": "Jorkus est dans le donjon de Fort Junia, au premier étage (le dortoir des soldats, devenu salle du trône).\nÀ Satarla, une forte armée se mobilise, mais Tyrus complique tout : le roi Syton veut venger son père, tombé lors de la dernière guerre entre les deux cités, et ses émissaires brandissent la flèche rouge qui convoque les archers. Il faut régler vite la menace de la jungle, sous peine d'être pris entre deux feux.",
+      "pistes": [
+        {
+          "texte": "Frapper sans attendre : raid de nuit sur le toit du donjon",
+          "vers": "le-toit-du-donjon"
+        },
+        {
+          "texte": "Approcher par la mer, le port ou le camp",
+          "vers": "le-port-et-la-cour"
+        },
+        {
+          "texte": "Repasser d'abord par Satarla (facultatif)",
+          "vers": "detour-par-satarla"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-azhdarkho",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "detour-par-satarla",
+      "titre": "Et si… le détour par Satarla (facultatif)",
+      "region": "Satarla",
+      "lieu": "Satarla, à la descente de la nef volante",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "La nef volante se pose à Satarla. Embran Tarv, l'oncle du roi, vous accueille en personne et fait quérir Nirmus. Il écoute votre récit avec la plus grande attention, le front soucieux, puis vous apprend à son tour ce qu'il sait : la situation militaire est grave. Une armée se mobilise, mais Tyrus profite des troubles et Satarla risque d'être prise en tenaille entre l'armée de Syton et celle de ce « dieu voilé ».",
+      "jeu": "Embran Tarv promet une récompense à la hauteur des risques et demande aux héros de finir la tâche : se débarrasser de Jorkus avant que son armée, qui grossit chaque jour, se remette en marche (il sera plus difficile de l'atteindre au milieu d'une armée en mouvement).\nAux joueurs de proposer une stratégie, au MJ de décider ce qui est possible. Exemples :\n• toute demande raisonnable de matériel (armes, armures, produits rares comme l'acide ou la poix alchimique) est accordée ;\n• une description détaillée de Fort Junia, qui complète leur bref passage ;\n• plusieurs nefs pour un assaut groupé : refusé. Les nefs sont trop précieuses et servent à espionner les mouvements de Tyrus. En revanche, une seconde nef peut couvrir leur retraite une fois la mission accomplie ;\n• une diversion : pas d'assaut d'envergure (il faudrait plusieurs jours), mais un raid nocturne d'une troupe réduite peut semer le trouble dans le camp ennemi en faisant croire à une attaque, et réduire le nombre de soldats dans le fortin.\n\nRevers : ce délai rend à la Mégère 4 points de pouvoir (11 au lieu de 7 lors de l'attaque finale).",
+      "pistes": [
+        {
+          "texte": "Repartir pour un raid de nuit sur le toit du donjon",
+          "vers": "le-toit-du-donjon"
+        },
+        {
+          "texte": "Approcher par la mer, le port ou le camp",
+          "vers": "le-port-et-la-cour"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "embran-tarv",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "nirmus",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-toit-du-donjon",
+      "titre": "Raid sur Fort Junia : le toit du donjon",
+      "region": "Satarla",
+      "lieu": "Fort Junia, le toit du donjon et sa passerelle d'arrimage",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "La nuit est tombée. Sous la nef, le promontoire de Fort Junia est envahi de tentes, de chariots et de feux de camp. Dans la cour, des feux de joie, des tambours, des chants avinés. Les remparts sont hérissés de têtes voilées sur des piques.\n\nLe donjon carré dépasse de plusieurs mètres le haut des remparts. Son toit plat et crénelé se prolonge, côté falaise, d'une passerelle de bois destinée à l'arrimage d'une nef volante. Des silhouettes trapues et velues y montent la garde : des grooth, qui lèvent de temps à autre les yeux vers le ciel étoilé. Les rotors de la nef battent l'air, bien trop bruyants à votre goût…",
+      "jeu": "Gardes du toit : le chef grooth (coriace) et 5 guerriers grooth (piétaille, règle de horde), grooth du clan des falaises. Ils regardent parfois le ciel sans être vraiment attentifs.\nIl faut les éliminer avant qu'ils donnent l'alerte : sitôt attaqués, l'un d'eux court à l'escalier pour descendre prévenir.\n\nLa nef : peu visible dans la nuit, mais ses rotors battent bruyamment l'air. Une fois arrimée à la passerelle (côté mer), elle est peu visible. Le danger vient des 6 gardes du quai, au pied de la falaise : l'un d'eux peut apercevoir sa silhouette sur le ciel étoilé.\n\nDepuis le toit :\n• l'escalier en colimaçon descend au vestibule du premier étage (4 gardes grooth) ;\n• le grand vitrail de l'oratoire (n° 12), donnant sur la mer, est la seule fenêtre de l'étage par laquelle on peut entrer : une corde pendue du toit jusqu'à lui évite l'escalier et ménage une issue. Mais les gardes du toit (et, dans une moindre mesure, ceux du port) risquent de repérer la nef.\nL'oratoire : profané, les statuettes des vingt dieux descendues de leurs niches et alignées au sol ; sur l'autel, un crâne humain au visage modelé dans l'argile, couvert d'un voile.",
+      "notes": "Le combat final est une mission suicide : les héros n'ont une chance qu'avec l'effet de surprise. Réagissez selon le plan des joueurs.",
+      "pistes": [
+        {
+          "texte": "Descendre l'escalier jusqu'au premier étage",
+          "vers": "l-etage-du-donjon"
+        },
+        {
+          "texte": "Entrer par le vitrail de l'oratoire",
+          "vers": "l-etage-du-donjon"
+        },
+        {
+          "texte": "L'alerte est donnée : le fort s'éveille",
+          "vers": "le-port-et-la-cour"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-chef-grooth",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch5-guerrier-grooth",
+          "qty": 5,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "maben",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    },
+    {
+      "cle": "le-port-et-la-cour",
+      "titre": "Raid sur Fort Junia : par le port, le camp ou la cour",
+      "region": "Satarla",
+      "lieu": "Fort Junia : le quai, la tour sud-ouest, la cour et le rez-de-chaussée du donjon",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Au pied de la falaise, un quai de pierre et ses deux pontons de bois abritent une gabarre et une petite galère de guerre. Autour d'un brasero, six guerriers boivent un tonnelet de rhum ; l'un d'eux joue d'une flûte aigrelette. Un escalier protégé d'un parapet grimpe à flanc de paroi vers la tour sud-ouest du rempart.\n\nDans la cour du fort, la soldatesque fête sa victoire en vidant les réserves de bière. Des grooth campent à l'est autour d'un palanquin, les tribus de la jungle à l'ouest ; on danse au son hypnotique des tambours. Un petit groupe lance des sagaies sur un soldat de Satarla suspendu à une corde qu'un homme fait osciller du haut des remparts ; chaque coup au but arrache un cri au malheureux et fait changer de main les paris. Une odeur de viande brûlée flotte dans l'air ; le morceau qu'un grand grooth dévore ressemble affreusement à une cuisse d'homme. L'écurie et le corps de garde de la porte ont brûlé. La tension entre grooth et Qushites est palpable.",
+      "jeu": "L'extérieur : la porte fortifiée, vantaux fracassés, est bloquée par une barricade de fortune qui ne laisse qu'un étroit passage, sous bonne garde. Remparts : petits groupes dispersés de guerriers des jungles qui jouent aux osselets, bavardent ou boivent, et surveillent d'un œil distrait.\n\nInfiltration : l'armée est hétéroclite (grooth, tribus, paysans enrôlés). Se faire passer pour des soldats n'est pas très difficile, sauf physique très reconnaissable ; une armure trop « civilisée » attire l'œil, même si des soldats satarlans ont rejoint l'armée.\n\nLe port (f) : 6 barbares de Qush (coriaces) au quai. Si un combat éclate, l'un d'eux se précipite dans l'escalier pour donner l'alerte. La tour sud-ouest : 3 guerriers (même profil) adossés aux remparts, face à la mer ; son toit a une trappe, une corde à poulie et un palan qui descend au ponton, 15 m plus bas.\n\nLe rez-de-chaussée du donjon : porte fracassée, vestibule maculé de sang, escalier en colimaçon (premier étage en haut, cave et geôles en bas). Armurerie (n° 2) pillée. Cuisine et cellier (n° 3-4) : des serviteurs forcés. Salle commune (n° 1) : une quarantaine de guerriers des jungles (piétaille ; 6 cartes ici) qui festoient, un cadavre décapité contre une colonne. Salle de réunion (n° 5) : six guerriers d'élite (coriaces, profil des barbares de Qush). Quartiers des domestiques (n° 6) : un lupanar de captives.\n\nCave (n° 14) et geôles (n° 15) : 2 gardes grooth (coriaces) au calme ; cellules vides (le dieu voilé ne fait pas de prisonniers). Une fenêtre à barreaux s'ouvre à flanc de falaise : un plan audacieux pour entrer.\n\nApproche brutale : gérer le risque d'alerte prématurée et d'être submergé. Mission suicide.",
+      "pistes": [
+        {
+          "texte": "Monter au premier étage du donjon",
+          "vers": "l-etage-du-donjon"
+        },
+        {
+          "texte": "Repli : regagner la nef",
+          "vers": "le-toit-du-donjon"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "barbare-de-qush",
+          "qty": 6,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch5-guerrier-des-jungles",
+          "qty": 6,
+          "attitude": "hostile"
+        }
+      ]
+    },
+    {
+      "cle": "l-etage-du-donjon",
+      "titre": "Le premier étage : le vestibule et la chambre d'Hilario",
+      "region": "Satarla",
+      "lieu": "Fort Junia, premier étage du donjon (vestibule, chambres n° 7 à 10)",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Le vestibule de l'étage est gardé par quatre solides grooth. De petits ossements sont tressés dans leur tignasse crasseuse et leur visage est couvert d'une croûte d'argile blanchâtre, comme pour imiter un voile. Un lourd rideau doublé ferme une grande salle d'où filtrent les échos ténus d'un luth, mêlés de relents d'encens et de plantes odorantes.\n\nLe long d'un couloir sombre s'alignent des chambres. De l'une monte un ronflement aviné. Sous la porte d'une autre filtre un rai de lumière. Derrière, un homme est assis sur un lit, les coudes sur les genoux et la tête entre les mains, près d'une lampe à huile qui fait briller ses cheveux blonds. Pourpoint de cuir, avant-bras nus ; à son poignet gauche, un bracelet tressé de fils noirs et bleus. Il relève la tête : courte barbe blonde, yeux bleus cernés et rougis, visage creusé, teint cireux.",
+      "jeu": "Gardes du vestibule (4 gardes grooth, coriaces) : ils interdisent l'étage, réservé au dieu voilé et à ses lieutenants, sauf bonne raison ; leur chef parle un lémurien approximatif. Si les héros descendent du toit, les grooth hésitent un instant devant ces « hommes sans poil » (le toit est censé être gardé par des grooth) : dé de bonus au jet de réaction, à l'appréciation du MJ. Si les héros les évitent pour entrer dans la grande salle (n° 11), ils s'y précipitent au premier bruit de combat. Le rideau étouffe en partie le bruit des combats.\n\nChambres n° 7 à 10 : pillées, réoccupées par des chefs de clan.\n• N° 8 : un colosse à la peau sombre couverte de scarifications cuve son vin ; facile à maîtriser ou à éliminer. Prostrée dans un coin, Filna, jeune paysanne au visage tuméfié dont la famille a été massacrée par les Qushites. Avec délicatesse, elle apprend aux héros que le « dieu » occupe la grande salle et que la sorcière et le géant bleu sont avec lui.\n• N° 9 : Hilario (porte non verrouillée). Reconnaissable à sa description et au bracelet d'Albel (ch. 2). S'il n'est pas reconnu, il demande ce qu'on lui veut ; attaqué, il se défend.\n• N° 10 : la chambre de Lok Kozaar, qui donne aussi accès à la grande salle.\n\nParler à Hilario, surtout d'Albel et de Matius dont il brûle d'avoir des nouvelles : hagard, rongé par le doute, il raconte son histoire (l'île, le tombeau, maître Casmar, l'armée, les ambitions de « Kryphondus »). Les héros le convainquent sans peine, surtout s'ils ont le moyen d'en finir avec le prétendu dieu. Il décrit alors la grande salle, propose de passer par la chambre de Lok (n° 10), combat avec eux (un peu en retrait au début) et, si on l'interroge, parle de la Mégère : Jessinda, sorcière de Morgazzon venue de Satarla, belle jeune femme au teint clair, cheveux bruns et yeux verts sous son masque de vieille harpie. Passez-le alors dans le camp des héros.",
+      "notes": "Hilario n'est pas un mauvais bougre : recruté par Jorkus pour retrouver l'île, il a vu son expédition tourner au cauchemar ; il a aidé Jorkus à sortir de son tombeau et à se cacher chez maître Casmar, parmi les druides jaunes, puis l'a guidé jusqu'à l'île, grassement payé et menacé de mort. Il a vu Jorkus défier si souvent la mort qu'il ne sait plus s'il sert un homme ou un dieu, et n'ose pas s'opposer à sa volonté.",
+      "pistes": [
+        {
+          "texte": "Entrer dans la grande salle par le rideau",
+          "vers": "affronter-le-dieu-voile"
+        },
+        {
+          "texte": "Passer par la chambre de Lok Kozaar (n° 10)",
+          "vers": "affronter-le-dieu-voile"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "ch5-garde-grooth",
+          "qty": 4,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "hilario",
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "affronter-le-dieu-voile",
+      "titre": "La salle du trône : affronter le dieu voilé",
+      "region": "Satarla",
+      "lieu": "Fort Junia, le dortoir des soldats (n° 11) devenu salle du trône",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Le dortoir a été changé en salle du trône : plus de lits, mais un fatras criard de tapis, de tentures et de peaux de bête. Dans le coin nord-ouest, sur un amoncellement de coussins et de draps précieux, une dizaine de jeunes hommes et femmes s'alanguissent dans les vapeurs épaisses d'un brasero ; un garçon aveugle joue du luth près d'eux.\n\nEntre les deux colonnes du fond, sur un siège drapé, est assis un vieil homme au corps ridé et flasque, vêtu d'un seul pagne rouge et de sandales. Sa peau scintille comme de l'or : agenouillée près de lui, une femme lui étale sur les jambes une mixture dorée puisée dans un bol de bois. Son visage se devine à peine sous le voile qui colle à sa peau comme un linge humide et brouille ses traits.\n\nÀ une table, côté nord, Lok Kozaar sirote un cruchon de bière en étudiant une carte, sa grande hache posée à portée de main. Face à lui, Mishart, le vieillard à la robe jaune cousue de talismans qui jouait les hérauts lors de l'attaque du fort, son bâton cérémoniel appuyé contre la table. Au sud-ouest, des caisses de bois et une petite table chargée d'instruments et de bocaux. Une porte entrouverte donne sur une salle de garde.",
+      "jeu": "Au premier bruit de combat :\n• les 4 gardes grooth de la salle de garde (n° 13) et, s'ils vivent encore, les 4 du vestibule viennent défendre leur maître, sans donner l'alerte ;\n• Lok Kozaar beugle aussitôt pour ameuter des renforts. Au combat final, il n'a plus que 3 points de vilénie (sa fiche en porte 5) ;\n• Mishart tente de fuir pour appeler à l'aide (poison de son bâton : Vigueur Difficile -2 ou d3 vitalité par round pendant 3 rounds) ;\n• la Mégère, sans son masque, joue la demoiselle apeurée et cherche à rejoindre le coin où il est posé : masquée seulement, elle se croit capable de vraie magie. Attaquée, elle dépense 2 points de pouvoir en un charme pour faire voler son masque jusqu'à elle. Pouvoir : 7 si l'assaut suit le retour de l'île, 11 après un détour par Satarla (sa fiche en porte 13). Vilénie 4 au combat final (5 sur la fiche). Elle a une paille de souffle de Morgazzon. Les héros qui ont parlé à Hilario la reconnaissent parmi les femmes, surtout des filles de la jungle au teint plus mat ;\n• 4 fanatiques du harem (piétaille, attaque +0, vitalité 1) entourent Jorkus et se sacrifient : option « bouclier humain » (BoL p. 135). Les autres se terrent dans un coin ;\n• Hilario, s'il n'a pas été rencontré dans sa chambre, est ici : il n'intervient pas d'abord (il rechigne à protéger Jorkus mais craint de l'attaquer). Laissez aux héros une chance de le reconnaître ; interpellé (Albel, Matius) ou voyant que les héros peuvent gagner, il les aide (poignarde la Mégère dans le dos, ceinture Jorkus). Héroïsme 4 au combat final (6 sur la fiche, en vilénie).\n\nLe dieu voilé, passé la surprise, s'avance en raillant et s'offre aux coups, bras ouverts. Le voile le rend invulnérable : armes, feu, sortilèges qui blessent et contrôle mental sans effet (un sortilège d'entravement l'affecte) ; nul ne peut le lui arracher.\nDéchirer le voile, avec les ciseaux ou une mandibule (-1 à l'attaque) : attaque à -4, ou attaque sans malus + 1 point d'héroïsme (« coup précis » à la tête). Trois coups au but ; le premier touche d'office (il ne se défend pas). Les deux premiers déchirent le voile sans le blesser et dévoilent un visage ridé aux yeux déments ; dès le premier, il panique, fuit en appelant à l'aide d'une voix aiguë et pathétique. Le troisième fait tomber le voile en lambeaux.\n\nNemmereth réclame son dû : pénombre surnaturelle, présence immense et glaciale. Jorkus, soulevé du sol, subit à rebours tous les trépas évités pendant une minute d'éternité ; tous cessent le combat, hypnotisés. Puis il retombe, indemne mais mort. Les grooth fuient. La Mégère fuit (trop folle pour négocier). Lok Kozaar tente de négocier sa fuite et, acculé, se bat jusqu'à la mort.",
+      "notes": "Le masque de la Mégère est posé sur la petite table du coin sud-ouest, invisible depuis l'entrée ; une robe jaune traîne sur les caisses. Elle se prélasse parmi les suivantes du dieu.\nCorps retombé « tel qu'il aurait été après avoir bu le poison du Long Sommeil ». L'ombre : un Passeur, ou Nemmereth lui-même ?",
+      "pistes": [
+        {
+          "texte": "Jorkus est mort : fuir le fort dans la panique générale",
+          "vers": "epilogue"
+        }
+      ],
+      "distribution": [
+        {
+          "perso": "jorkus",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "lok-kozaar",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "megere",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "mishart",
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch5-fanatique-du-harem",
+          "qty": 4,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "ch5-garde-grooth",
+          "qty": 4,
+          "attitude": "hostile"
+        },
+        {
+          "perso": "hilario",
+          "attitude": "mefiant"
+        }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue : la faveur de Nemmereth",
+      "region": "Satarla",
+      "lieu": "Satarla, la descente de la nef puis le Palais Splendide",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Le terrible prodige a été ressenti jusque dans le camp. Tous ont tourné les yeux vers le donjon, écrasés par la présence de Nemmereth et terrifiés par les hurlements inhumains de Jorkus. La nouvelle de la mort du dieu voilé se répand comme un feu de brousse ; dans la panique générale, personne ne songe à vous arrêter.\n\nÀ Satarla, Embran Tarv et Nirmus vous accueillent à la descente de la nef et vous félicitent chaudement. Quelques jours de repos bien mérité plus tard, Embran vous reçoit pour un petit banquet au Palais Splendide, en présence de Nirmus. Le roi Davym a quitté la ville à la tête d'une armée pour décourager Tyrus ; l'armée de Jorkus s'est débandée, les tribus de Qush, de nouveau divisées, refluent dans leurs jungles. Tyrus n'osera plus déclencher la guerre, Embran en est certain.\n\nNirmus, soulagé, vous apprend que la pourriture qui rongeait la statue de Nemmereth a séché en une nuit, et que le dieu agrée de nouveau les sacrifices de ses prêtres. Plus aucun signe funeste n'a été signalé.\n\nAu nom du roi, Embran Tarv vous octroie la citoyenneté de Satarla : un diplôme officiel et la petite cordelette rouge des citoyens. Le souverain vous fait aussi don de la maison de maître Casmar, saisie par les autorités, avec une généreuse récompense sonnante et trébuchante.\n\nAinsi s'achève la saga du Dieu voilé !",
+      "jeu": "Récompenses de fin de saga :\n• citoyenneté de Satarla (pour qui ne l'avait pas déjà), diplôme et cordelette rouge (encadré « Les Satarlans », livre p. 17) ;\n• la maison de maître Casmar et une généreuse récompense en argent ;\n• tous les héros gagnent l'avantage amis haut placés (Satarla) ;\n• 2 points d'expérience chacun ;\n• la faveur de Nemmereth : un point d'héroïsme supplémentaire, utilisable une seule fois, et seulement pour l'option « Défier la mort » (un astérisque dans la case des points d'héroïsme).\nLes héros encore maudits depuis l'introduction (malédiction de Nemmereth) en sont délivrés : le voile est détruit.",
+      "notes": "En remerciement de l'âme qui lui avait injustement échappé, Nemmereth acceptera de détourner une fois, et une seule, le regard…",
+      "distribution": [
+        {
+          "perso": "embran-tarv",
+          "camp": "heros",
+          "attitude": "amical"
+        },
+        {
+          "perso": "nirmus",
+          "camp": "heros",
+          "attitude": "amical"
+        }
+      ]
+    }
+  ]
+}
