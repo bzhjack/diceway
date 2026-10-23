@@ -1473,7 +1473,7 @@ export class SessionPlayPageComponent {
         this.askEndCombat();
         break;
       case 'saveScene':
-        // Rangée dans le scénario de la scène courante, sinon dans « Sans scénario ».
+        // Rangée dans le scénario de la scène courante, sinon dans « On improvise ».
         this.sceneActions.saveTable(sessionId, this.session()?.scene?.scenario?.id ?? null).subscribe({
           next: (scene) => {
             if (scene) {

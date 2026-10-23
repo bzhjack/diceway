@@ -45,7 +45,7 @@ export class SceneActionsService {
   }
 
   /** « Enregistrer la table comme scène » : demande un titre, puis crée la scène dans le scénario
-   * donné (`null` = « Sans scénario »). Elle devient la scène courante de la session. */
+   * donné (`null` = « On improvise »). Elle devient la scène courante de la session. */
   saveTable(sessionId: string, scenarioId: string | null): Observable<BolSceneModel | null> {
     return promptDialog(this.dialog, {
       title: 'Enregistrer la table comme scène',

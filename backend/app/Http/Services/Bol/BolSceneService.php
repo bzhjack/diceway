@@ -89,7 +89,7 @@ class BolSceneService
     }
 
     /**
-     * Réécrit l'ordre des scènes d'un scénario (ou de « Sans scénario » si `$scenarioId` est null)
+     * Réécrit l'ordre des scènes d'un scénario (ou de « On improvise » si `$scenarioId` est null)
      * selon la liste d'ids ; les ids étrangers à ce scénario ou à cet utilisateur sont ignorés.
      *
      * @param array<int, mixed> $sceneIds
@@ -229,7 +229,7 @@ class BolSceneService
         return $max === null ? 0 : ((int) $max) + 1;
     }
 
-    /** Un scénario null (« Sans scénario ») est toujours permis ; sinon il doit appartenir à l'utilisateur. */
+    /** Un scénario null (« On improvise ») est toujours permis ; sinon il doit appartenir à l'utilisateur. */
     private function scenarioAllowed(?string $scenarioId, string $userId): bool
     {
         return $scenarioId === null

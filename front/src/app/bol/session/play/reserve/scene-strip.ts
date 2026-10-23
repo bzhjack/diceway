@@ -25,7 +25,7 @@ import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
     <mat-form-field subscriptSizing="dynamic" class="scs-scenario">
       <mat-label>Scénario</mat-label>
       <mat-select id="scs-scenario-select" [value]="selectedScenario() ?? noScenario" (selectionChange)="selectScenario($event)">
-        <mat-option [value]="noScenario">Sans scénario</mat-option>
+        <mat-option [value]="noScenario">On improvise</mat-option>
         @for (scenario of sortedScenarios(); track scenario.id) {
           <mat-option [value]="scenario.id">{{ scenario.titre }}</mat-option>
         }
@@ -155,7 +155,7 @@ export class SceneStripComponent {
   protected readonly busy = signal(false);
   private readonly scenes = signal<readonly BolSceneModel[]>([]);
   private readonly scenarios = signal<readonly BolSceneScenarioRef[]>([]);
-  /** Scénario affiché — `null` = « Sans scénario ». */
+  /** Scénario affiché — `null` = « On improvise ». */
   protected readonly selectedScenario = signal<string | null>(null);
 
   protected readonly sortedScenarios = computed(() =>

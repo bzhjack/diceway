@@ -146,7 +146,7 @@ export function buildResults(input: PaletteInput): PaletteGroup[] {
           id: domId('s', scene.id),
           kind: 'scene',
           label: scene.titre,
-          hint: scene.scenario?.titre ?? 'Sans scénario',
+          hint: scene.scenario?.titre ?? 'On improvise',
           command: {type: 'loadScene', scene},
         })),
     });

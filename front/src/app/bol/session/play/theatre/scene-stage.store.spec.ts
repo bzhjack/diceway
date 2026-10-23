@@ -137,7 +137,7 @@ describe('SceneStageStore', () => {
     expect(store.displayedScene()?.id).toBe('s2');
   });
 
-  it('montre une scène sans scénario dans la frise « Sans scénario »', () => {
+  it('montre une scène sans scénario dans la frise « On improvise »', () => {
     store.sync('sess', 'libre', []);
     expect(store.scenarioId()).toBeNull();
     expect(store.displayedScene()?.id).toBe('libre');

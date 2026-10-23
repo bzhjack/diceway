@@ -132,7 +132,7 @@
           <b [class]="'ard-verdict-title ard-verdict-title--' + tone()">{{ v.title }}</b>
           <span>{{ v.detail }}</span>
         } @else if (favorPending()) {
-          <span class="ard-verdict-wait">Faveur divine : relance tous les dés à table et saisis le nouveau total.</span>
+          <span class="ard-verdict-wait">Faveur divine : relance tous les dés, à table (saisis le total) ou à l’écran.</span>
         } @else {
           <span class="ard-verdict-wait">Les dés attendent.</span>
         }
@@ -154,7 +154,7 @@
             type="button"
             class="ard-act"
             [disabled]="rolling()"
-            [matTooltip]="manualEntry() ? 'Relance tous les dés à table, puis saisis le second résultat' : 'Relance tous les dés et garde le second résultat'"
+            matTooltip="Efface le jet : relance tous les dés, à table ou à l’écran, et garde le second résultat"
             aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme"
             (click)="rollWithDivineFavor()"
           >

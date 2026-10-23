@@ -32,7 +32,7 @@ export const ATTITUDES: readonly AmbianceOption<CombatantAttitude>[] = [
   {value: 'amical', label: 'Amical', icon: 'handshake'},
 ];
 
-/** Les actes de la frise : les scènes du scénario (`null` = « Sans scénario »), dans leur ordre, numérotées
+/** Les actes de la frise : les scènes du scénario (`null` = « On improvise »), dans leur ordre, numérotées
  * à partir de 1. La scène courante est « en cours » ; une scène déjà passée sur la table est « jouée ». */
 export function sceneActs(
   scenes: readonly BolSceneModel[],

@@ -26,7 +26,7 @@ import {acteLabel} from './theatre.util';
       </h1>
     </div>
     <mat-menu #scenarios="matMenu" class="thr-scenarios-menu">
-      <button mat-menu-item type="button" (click)="store.selectScenario(null)">Sans scénario</button>
+      <button mat-menu-item type="button" (click)="store.selectScenario(null)">On improvise</button>
       @for (scenario of sortedScenarios(); track scenario.id) {
         <button mat-menu-item type="button" (click)="store.selectScenario(scenario.id)">{{ scenario.titre }}</button>
       }
@@ -294,7 +294,7 @@ export class SceneActsComponent {
     [...this.store.scenarios()].sort((left, right) => left.titre.localeCompare(right.titre, 'fr')),
   );
   protected readonly scenarioTitre = computed(
-    () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'Sans scénario',
+    () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'On improvise',
   );
   private readonly nav = viewChild.required<ElementRef<HTMLElement>>('nav');
   /** L'id seul : une copie de la même scène (préparation, rechargement) ne refait pas défiler la frise. */

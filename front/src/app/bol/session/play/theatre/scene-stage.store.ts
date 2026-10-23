@@ -48,7 +48,7 @@ export class SceneStageStore {
   readonly scenes = this.scenesState.asReadonly();
   private readonly scenariosState = signal<readonly BolSceneScenarioRef[]>([]);
   readonly scenarios = this.scenariosState.asReadonly();
-  /** Scénario affiché dans la frise — `null` = « Sans scénario ». */
+  /** Scénario affiché dans la frise — `null` = « On improvise ». */
   private readonly scenarioIdState = signal<string | null>(null);
   readonly scenarioId = this.scenarioIdState.asReadonly();
   private readonly regionNomsState = signal<ReadonlyMap<number, string>>(new Map());
@@ -149,7 +149,7 @@ export class SceneStageStore {
     this.scenarioIdState.set(id);
   }
 
-  /** Les autres scènes du scénario d'une scène (« Sans scénario » compris) — celles vers lesquelles ses pistes
+  /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes
    * peuvent mener —, quel que soit le scénario affiché dans la frise. */
   siblingsOf(scene: BolSceneModel): BolSceneModel[] {
     const known = this.knownScenarioIds();
