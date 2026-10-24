@@ -221,8 +221,7 @@
   display: flex;
   flex: 1 1 12rem;
   flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   min-width: 0;
   max-width: 21rem;
   // Une carte étroite resserre son contenu (voir la fin du fichier).
@@ -265,13 +264,30 @@
   opacity: 0.6;
 }
 
-// L'en-tête, sur deux rangées : le nom entre le médaillon et le bouton, puis l'esprit, l'initiative et l'agilité sur toute la largeur.
+// L'en-tête : le médaillon, le nom et dessous l'esprit, l'initiative et l'agilité, ses points d'héroïsme, puis le bouton qui l'exclut.
 .scd-who {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  align-self: stretch;
-  gap: 0.15rem 0.6rem;
+  gap: 0 0.5rem;
+
+  .scd-med,
+  .scd-heroisme,
+  .scd-icon-btn {
+    grid-row: 1 / 3;
+  }
+}
+
+// Les points d'héroïsme du héros : le nombre et une gemme.
+.scd-heroisme {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  b {
+    font: 400 1.25rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-color-legendary);
+  }
 }
 
 .scd-med,
@@ -300,7 +316,7 @@
 
   b {
     overflow: hidden;
-    font: 400 1.8rem/1.8 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.4rem/1.15 'Muse Display Harmony', 'Muse Sans', serif;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--dw-color-reussite);
@@ -308,9 +324,11 @@
 
   span {
     grid-row: 2;
-    grid-column: 1 / -1;
-    font-size: 0.76rem;
-    text-align: center;
+    grid-column: 2;
+    overflow: hidden;
+    font-size: 0.74rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--dw-surface-600);
   }
 }
@@ -351,88 +369,48 @@
   }
 }
 
-.scd-goal {
+// La carrière accordée (un petit bouton, en or quand une carrière est retenue), puis ce qu'il faut aux dés et les chances, à droite.
+.scd-line {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 1.9rem;
 }
 
 .scd-need {
-  display: grid;
-  justify-items: center;
-  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin: 0 0 0 auto;
+  white-space: nowrap;
 
-  span {
-    font-size: 0.64rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--dw-surface-500);
-  }
-
-  b {
-    font: 400 2.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
-  }
-
+  span,
   i {
+    font-size: 0.72rem;
     font-style: normal;
-    font-size: 0.76rem;
     color: var(--dw-surface-600);
   }
-}
-
-.scd-ring {
-  position: relative;
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 4.1rem;
-  height: 4.1rem;
-
-  svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-  }
 
   b {
-    position: relative;
-    font: 400 1.2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
+  }
+
+  .scd-chance {
+    margin-left: 0.2rem;
+    font-weight: 800;
+    color: var(--dw-color-legendary);
   }
 }
 
-.scd-ring-bg,
-.scd-ring-fg {
-  fill: none;
-  stroke-width: 6;
-}
-
-.scd-ring-bg {
-  stroke: var(--dw-surface-300);
-}
-
-.scd-ring-fg {
-  stroke: var(--dw-color-legendary);
-  stroke-linecap: round;
-  transition: stroke-dasharray 0.25s;
-}
-
-// La case du total des deux dés lancés à table, et le bouton qui les lance à l'écran.
-.scd-entry {
+// La case du total, le bouton qui lance les dés à l'écran, et le verdict qui tombe à côté. Hauteur réservée pour le plus haut des
+// verdicts (deux lignes, « Succès héroïque », et ses dés dessous) : les cartes restent alignées.
+.scd-roll {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-// La carrière accordée : un petit bouton sous le nom, en or quand une carrière est retenue.
-.scd-career {
-  display: flex;
-  justify-content: center;
-  min-height: 1.7rem;
+  min-height: 4.7rem;
 }
 
 .scd-career-btn {
@@ -459,7 +437,8 @@
 }
 
 .scd-total {
-  width: 5.8rem;
+  flex: none;
+  width: 4.4rem;
   height: 2.9rem;
   padding: 0;
   border: 2px solid color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
@@ -498,24 +477,36 @@
   }
 }
 
-// Le verdict et ce qu'il change au combat. Hauteur réservée : la carte ne bouge pas quand le jet tombe.
-.scd-verdict {
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: 0.1rem;
-  min-height: 3.7rem;
-  text-align: center;
+// Les faces des deux dés, en petit sous le verdict, quand on les connaît (lancés à l'écran, ou un double tapé).
+.scd-verdict .scd-faces {
+  justify-content: flex-start;
+  gap: 0.2rem;
+}
 
-  span {
-    font-size: 0.8rem;
-    line-height: 1.3;
-    color: var(--dw-surface-600);
-  }
+// Le verdict, à côté de la case, et dessous les faces des dés.
+.scd-verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  min-width: 0;
+  margin-left: 0.2rem;
 
   .scd-verdict-wait {
+    font-size: 0.78rem;
+    line-height: 1.3;
     color: var(--dw-surface-500);
   }
+}
+
+// Ce que le verdict change au combat, sur deux lignes au plus : la place est gardée avant le jet, la carte ne bouge pas quand il tombe.
+.scd-effect {
+  min-height: 2.1rem;
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--dw-surface-600);
 }
 
 .scd-verdict-title {
@@ -554,8 +545,10 @@
   justify-items: center;
   min-width: 1.5rem;
 
+  // Une hauteur de ligne commune à tous les termes : le total, plus gros, garde sa légende sur la même ligne que les autres.
   b {
-    font: 400 1.25rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    height: 1.7rem;
+    font: 400 1.25rem/1.7rem 'Muse Display Harmony', 'Muse Sans', serif;
     white-space: nowrap;
     color: var(--dw-surface-900);
   }
@@ -594,10 +587,12 @@
 // L'option d'héroïsme d'un double 1, d'un double 6 ou d'une réussite : une case à cocher, son prix en points d'héroïsme à droite. Après un échec, la
 // faveur divine s'y ajoute (un double 1 offre les deux).
 .scd-opt {
-  align-self: stretch;
   display: grid;
+  align-content: end;
   gap: 0.35rem;
-  min-height: 2.2rem;
+  // La place de deux boutons, toujours : la carte garde sa hauteur avec ou sans option.
+  min-height: calc(2 * 2.2rem + 0.35rem);
+  margin-top: auto;
 }
 
 .scd-act {
@@ -687,30 +682,35 @@
 }
 
 // ── L'ordre d'action ─────────────────────────────────────────────────────────────────────────────
+// Sur une ligne, comme l'ordre du tour de la table : le libellé, puis un bloc par rang (titre, nombre, médaillons), qui passent à la ligne
+// s'il le faut.
 .scd-order {
   display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.55rem 0.75rem 0.7rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.45rem 0.75rem;
   border: 1px solid var(--dw-border);
   border-radius: 12px;
   background: var(--dw-surface-100);
 }
 
-// Les blocs se partagent la largeur d'après ce qu'ils contiennent : un bloc chargé prend plus de place.
 .scd-lanes {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
 .scd-lane {
   display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0;
-  padding: 0.35rem 0.55rem 0.45rem;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.25rem 0.5rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: var(--dw-surface-0);
@@ -731,6 +731,10 @@
 }
 
 .scd-lane-title {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: 0.3rem;
   font-size: 0.64rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -739,7 +743,6 @@
   color: var(--dw-surface-500);
 
   em {
-    margin-left: 0.3rem;
     font-style: normal;
     letter-spacing: 0;
     text-transform: none;
@@ -747,20 +750,21 @@
   }
 }
 
-// Un médaillon par combattant, sans son nom (il est dans l'infobulle). Au-delà de deux rangées, le bloc défile.
+.scd-lane-count {
+  color: var(--dw-color-legendary);
+}
+
+// Un médaillon par combattant, sans son nom (il est dans l'infobulle) ; un bloc très chargé passe à la ligne.
 .scd-tokens {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
-  max-height: 4.9rem;
-  overflow: hidden auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
 .scd-token {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   border-width: 2px;
   font: inherit;
@@ -832,25 +836,16 @@
     height: 2.3rem;
   }
 
-  .scd-goal {
-    gap: 0.6rem;
-  }
-
   .scd-need b {
-    font-size: 2.2rem;
+    font-size: 1.35rem;
   }
 
-  .scd-ring {
-    width: 3.5rem;
-    height: 3.5rem;
-
-    b {
-      font-size: 1.05rem;
-    }
+  .scd-need i {
+    display: none;
   }
 
   .scd-total {
-    width: 4.8rem;
+    width: 3.6rem;
   }
 
   .scd-sum {
@@ -886,10 +881,4 @@
 .scd-token:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scd-ring-fg {
-    transition: none;
-  }
 }

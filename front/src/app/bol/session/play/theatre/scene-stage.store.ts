@@ -1,8 +1,11 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
+import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, switchMap, tap, timer} from 'rxjs';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
+import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
@@ -39,6 +42,9 @@ export class SceneStageStore {
   private readonly catalog = inject(BolCatalogService);
   private readonly sceneActions = inject(SceneActionsService);
   private readonly dialog = inject(MatDialog);
+  private readonly fightSessions = inject(BolFightSessionService);
+  /** Le nombre de PNJ, créatures et démons sur la table, d'après le dernier `sync` de la page. */
+  private adversaires = 0;
 
   private readonly sessionId = signal<string | null>(null);
   private readonly currentSceneId = signal<string | null>(null);
@@ -97,8 +103,9 @@ export class SceneStageStore {
 
   /** Session chargée par la page : sa scène courante et ses scènes jouées. Les scènes sont rechargées au
    * premier appel, ou si la scène courante n'est pas connue (créée depuis la réserve ou la barre de commande). */
-  sync(sessionId: string, currentSceneId: string | null, played: readonly string[]): void {
+  sync(sessionId: string, currentSceneId: string | null, played: readonly string[], adversaires = 0): void {
     this.sessionId.set(sessionId);
+    this.adversaires = adversaires;
     this.currentSceneId.set(currentSceneId);
     this.played.set(played);
     if (this.attente) {
@@ -147,6 +154,29 @@ export class SceneStageStore {
 
   selectScenario(id: string | null): void {
     this.scenarioIdState.set(id);
+  }
+
+  /** Change le scénario de la frise. S'il reste des PNJ, créatures ou démons sur la table, le MJ confirme, puis la table est vidée
+   * (les héros restent) et la session n'a plus de scène en cours : émet alors la session à jour, que la page pose. Émet `null` sans
+   * rien vider : même scénario, table sans adversaire (la frise change seule), ou confirmation refusée (rien ne change). */
+  changeScenario(id: string | null): Observable<BolFightSessionModel | null> {
+    const sessionId = this.sessionId();
+    if (id === this.scenarioId()) {
+      return of(null);
+    }
+    if (!sessionId || this.adversaires === 0) {
+      this.selectScenario(id);
+      return of(null);
+    }
+    return confirmDialog(this.dialog, {
+      title: 'Changer de scénario ?',
+      message: 'Les PNJ, créatures et démons quittent la table ; les héros restent.',
+      confirmLabel: 'Vider la table',
+    }).pipe(
+      switchMap((confirmed) =>
+        confirmed ? this.fightSessions.clearTable(sessionId).pipe(tap(() => this.selectScenario(id))) : of(null),
+      ),
+    );
   }
 
   /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes

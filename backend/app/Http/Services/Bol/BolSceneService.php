@@ -209,6 +209,39 @@ class BolSceneService
         });
     }
 
+    /**
+     * Vide la table d'une session : ses PNJ, créatures et démons sont retirés (et leurs jetons sur la carte), elle n'a plus de scène
+     * en cours. Les héros ne sont jamais touchés. Sert quand le MJ change de scénario dans la frise.
+     *
+     * @return BolFightSession|null null si la session est introuvable
+     * @throws SceneLoadNotAllowedException si la session n'est pas en mode libre
+     */
+    public function clearTable(string $userId, string $sessionId): ?BolFightSession
+    {
+        $session = $this->ownedSession($sessionId, $userId);
+        if (!$session) {
+            return null;
+        }
+        if ($session->statut !== 'libre') {
+            throw new SceneLoadNotAllowedException();
+        }
+
+        return DB::transaction(function () use ($session) {
+            $sessionId = $session->id;
+            BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
+            BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
+            BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
+            $positions = BolSceneDistribution::heroPositionsOnly($session->positions_jetons ?? []);
+
+            $session->update([
+                'positions_jetons' => $positions === [] ? null : $positions,
+                'scene_id'         => null,
+            ]);
+
+            return $this->fightSessionService->getSessionWithRelations($sessionId);
+        });
+    }
+
     /** @return array<int, array<string, mixed>> */
     private function distributionOf(BolFightSession $session): array
     {

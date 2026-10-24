@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
+import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from '../../scene-actions.service';
@@ -37,11 +38,14 @@ describe('SceneStageStore', () => {
   const loadAs = vi.fn();
   const announceLoad = vi.fn();
   const open = vi.fn();
+  const clearTable = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
     loadAs.mockReset();
     announceLoad.mockReset();
+    open.mockReset();
+    clearTable.mockReset();
     TestBed.configureTestingModule({
       providers: [
         SceneStageStore,
@@ -50,6 +54,7 @@ describe('SceneStageStore', () => {
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
         {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
         {provide: MatDialog, useValue: {open}},
+        {provide: BolFightSessionService, useValue: {clearTable}},
       ],
     });
     store = TestBed.inject(SceneStageStore);
@@ -174,5 +179,34 @@ describe('SceneStageStore', () => {
     expect(store.rideau()).toBe('ouvert');
     expect(announceLoad).not.toHaveBeenCalled();
     expect(store.busy()).toBe(false);
+  });
+
+  it('change de scénario sans rien demander quand la table n’a pas d’adversaire', async () => {
+    store.sync('sess', 's2', [], 0);
+    const result = await firstValueFrom(store.changeScenario(null));
+    expect(result).toBeNull();
+    expect(store.scenarioId()).toBeNull();
+    expect(open).not.toHaveBeenCalled();
+    expect(clearTable).not.toHaveBeenCalled();
+  });
+
+  it('vide la table après confirmation quand on change de scénario avec des adversaires', async () => {
+    const videe = {id: 'sess', titre: null, statut: 'libre'};
+    open.mockReturnValue({afterClosed: () => of(true)});
+    clearTable.mockReturnValue(of(videe));
+    store.sync('sess', 's2', [], 2);
+    const result = await firstValueFrom(store.changeScenario(null));
+    expect(clearTable).toHaveBeenCalledWith('sess');
+    expect(result).toBe(videe);
+    expect(store.scenarioId()).toBeNull();
+  });
+
+  it('ne change rien quand le MJ refuse de vider la table', async () => {
+    open.mockReturnValue({afterClosed: () => of(false)});
+    store.sync('sess', 's2', [], 2);
+    const result = await firstValueFrom(store.changeScenario(null));
+    expect(result).toBeNull();
+    expect(clearTable).not.toHaveBeenCalled();
+    expect(store.scenarioId()).toBe('sc1');
   });
 });

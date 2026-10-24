@@ -23,13 +23,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
-import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
-import {DiceRowDie} from '../../../../shared/models/dice-row.model';
 import {BolFightSessionModel, InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AmbushState} from '../../../models/combat-selection.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
+import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
+import {DiceRowDie} from '../../../../shared/models/dice-row.model';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, parseDiceTotal} from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../../models/action-roll.model';
 import {heroDetails} from '../tapis/tapis.util';
@@ -73,7 +73,6 @@ interface HeroCard {
   readonly excluded: boolean;
   readonly target: ActionDiceTargetLabel;
   readonly chance: number;
-  readonly ringDash: string;
   /** Total de ses deux dés, `null` avant son jet. */
   readonly dice: number | null;
   /** Les faces de ses deux dés, quand on les connaît : lancés à l'écran, ou un double 1 ou double 6 tapé ; `null` sinon. */
@@ -88,6 +87,8 @@ interface HeroCard {
   readonly optionChosen: boolean;
   /** Faveur divine possible : un échec (double 1 compris, tant que l'échec critique n'est pas choisi) et au moins 1 point d'héroïsme. */
   readonly favor: boolean;
+  /** Ses points d'héroïsme. */
+  readonly heroisme: number;
   /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à taper. */
   readonly favorPending: boolean;
 }
@@ -146,9 +147,9 @@ export class StartCombatDialogComponent {
   private readonly heroismeByPivot = new Map<number, WritableSignal<number>>();
   /** Total des deux dés de chaque héros (clé pivotId), saisi ou lancé dans ce dialogue. Non persisté : le back ne stocke que le
    * résultat. */
-  private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
-  /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent sous la case du total. */
+  /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent, en petit, à côté de la case du total. */
   private readonly facesByPivot = signal<ReadonlyMap<number, readonly [number, number]>>(new Map());
+  private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
   /** Héros (clé pivotId) qui ont converti leur réussite en succès héroïque pour 1 point d'héroïsme. */
   private readonly heroicUpgrades = signal<ReadonlySet<number>>(new Set());
   /** Héros (clé pivotId) dont la faveur divine attend le total des dés relancés à table. */
@@ -207,22 +208,19 @@ export class StartCombatDialogComponent {
         excluded: this.isExcluded('hero', hero.pivotId),
         target: actionDiceTargetLabel(actionDiceTarget(modifier, REACTION_ROLL_THRESHOLD)),
         chance,
-        ringDash: chanceRingDash(chance),
-        dice,
         faces: (this.facesByPivot().get(hero.pivotId) ?? (dice === 2 ? [1, 1] : dice === 12 ? [6, 6] : null))?.map((value) => ({value})) ?? null,
+        dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts),
         option: dice === 2 ? 'critique' : legendary ? 'legendaire' : heroic ? 'heroique' : null,
         optionChosen,
         career: parts.carriere ?? null,
-        favor: hero.resultat === 'echec' && this.heroismeSignal(hero.pivotId)() > 0,
+        favor: hero.resultat === 'echec' && heroisme > 0,
+        heroisme,
         favorPending: this.favorPendingPivots().has(hero.pivotId),
       };
     }),
   );
-
-  /** Un héros en jeu a une option d'héroïsme (double 1, double 6, faveur divine après un échec) : chaque carte lui garde alors une place. */
-  protected readonly anyOption = computed(() => this.heroCards().some((card) => !card.excluded && (card.option !== null || card.favor)));
 
   /** L'ordre d'action tel qu'il se dessine : les héros d'après leur jet, les autres d'après leur rang. */
   protected readonly lanes = computed(() =>

@@ -1,6 +1,8 @@
 import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {SceneActe} from '../../models/theatre.model';
@@ -11,7 +13,7 @@ import {acteLabel} from './theatre.util';
 
 /** Le titre et la frise des actes, dans l'en-tête de la table : la session en sur-titre, le scénario affiché (son
  * titre ouvre le menu pour en changer) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre
- * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée. */
+ * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée, et la session vidée de ses adversaires quand on change de scénario. */
 @Component({
   selector: 'bol-scene-acts',
   imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],
@@ -26,9 +28,9 @@ import {acteLabel} from './theatre.util';
       </h1>
     </div>
     <mat-menu #scenarios="matMenu" class="thr-scenarios-menu">
-      <button mat-menu-item type="button" (click)="store.selectScenario(null)">On improvise</button>
+      <button mat-menu-item type="button" (click)="choisirScenario(null)">On improvise</button>
       @for (scenario of sortedScenarios(); track scenario.id) {
-        <button mat-menu-item type="button" (click)="store.selectScenario(scenario.id)">{{ scenario.titre }}</button>
+        <button mat-menu-item type="button" (click)="choisirScenario(scenario.id)">{{ scenario.titre }}</button>
       }
     </mat-menu>
 
@@ -284,6 +286,7 @@ import {acteLabel} from './theatre.util';
 })
 export class SceneActsComponent {
   protected readonly store = inject(SceneStageStore);
+  private readonly snackBar = inject(MatSnackBar);
 
   /** Titre de la session, en sur-titre au-dessus du scénario. */
   readonly sessionTitre = input<string | null>(null);
@@ -323,5 +326,17 @@ export class SceneActsComponent {
 
   protected label(acte: SceneActe): string {
     return acteLabel(acte);
+  }
+
+  /** Change le scénario de la frise ; s'il fallait vider la table (après confirmation), la page pose la session à jour. */
+  protected choisirScenario(id: string | null): void {
+    this.store.changeScenario(id).subscribe({
+      next: (session) => {
+        if (session) {
+          this.sceneChanged.emit({session, ignored: 0});
+        }
+      },
+      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de vider la table.'), 'Fermer', {duration: 5000}),
+    });
   }
 }

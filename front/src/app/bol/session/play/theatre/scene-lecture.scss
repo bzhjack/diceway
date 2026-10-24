@@ -43,11 +43,16 @@
 }
 
 // En grand : une fenêtre de lecture, le texte une fois et demie plus gros, qui défile seule si la scène est longue.
+// Le fond y est opaque (le pupitre du plateau laisse voir le décor, la fenêtre ne doit rien laisser voir de la page dessous), du même
+// ton que l'en-tête et les titres collés.
 :host(.lec--grand) {
   --lec-k: 1.5;
   width: min(80rem, 96vw);
   max-height: 88dvh;
   padding: 0 1.8rem 0.8rem;
+  border-color: rgba(140, 106, 47, 0.8);
+  background: #0f0a06;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
 }
 
 // Les sections n'ont pas de boîte : leurs titres sont des enfants directs du pupitre, donc collés à lui. Chaque titre se range sous ceux

@@ -331,7 +331,14 @@ export class SessionPlayPageComponent {
     effect(() => {
       const session = this.session();
       if (session?.id) {
-        untracked(() => this.stage.sync(session.id!, session.scene_id ?? null, session.scenes_jouees ?? []));
+        untracked(() =>
+          this.stage.sync(
+            session.id!,
+            session.scene_id ?? null,
+            session.scenes_jouees ?? [],
+            (session.pnjs?.length ?? 0) + (session.creatures?.length ?? 0) + (session.demons?.length ?? 0),
+          ),
+        );
       }
     });
 

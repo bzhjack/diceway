@@ -114,6 +114,18 @@ class BolSceneController extends Controller
         return $result ? response()->json($result) : $this->notFound();
     }
 
+    /** Vide la table de la session (PNJ, créatures, démons) et oublie sa scène en cours ; les héros restent. */
+    public function clearTable(string $id)
+    {
+        try {
+            $session = $this->sceneService->clearTable(Auth::id(), $id);
+        } catch (SceneLoadNotAllowedException) {
+            return response()->json(['error' => 'Terminez le combat avant de vider la table.'], 409);
+        }
+
+        return $session ? response()->json($session) : $this->notFound();
+    }
+
     private function notFound()
     {
         return response()->json(['error' => 'Not found'], 404);

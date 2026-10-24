@@ -37,6 +37,21 @@ npm run docker:exec            # Shell into container
 
 > `backend/package.json` is only for Vite asset bundling on the Laravel side, not a Node app.
 
+### Scenario import
+
+Scenarios live in each machine's database, not in git: after a pull that brings new JSON files under `doc/scenarios/<saga>/app/`, import them on this machine (the container only mounts `app/`, so copy the file first). Full format and behaviour: `doc/scenarios/format-import.md`.
+
+```bash
+# from the repo root
+docker cp doc/scenarios/le-dieu-voile/app/ch1.json diceway:/tmp/ch1.json
+docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email> --dry-run   # validate only
+docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>             # import
+```
+
+- Import a saga's chapters **in order** (e.g. `intro`, then `ch1`…`ch5`): a chapter reuses characters created by earlier ones, so a dry-run of a later chapter fails until the earlier ones are really imported.
+- Re-importing updates what the file created (`bol_import_ref`), without duplicates, but **overwrites** sheets edited in the app since.
+- Check what is already imported: `docker exec diceway php artisan tinker --execute='echo json_encode(DB::table("bol_import_ref")->select("saga", DB::raw("count(*) n"))->groupBy("saga")->get());'`
+
 ## Business rules & reference data
 
 When a task touches game rules, character creation, equipment, careers, languages, traits, or activation:
