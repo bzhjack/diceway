@@ -28,8 +28,12 @@ import {AmbushState} from '../../../models/combat-selection.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
+import {openStatblockDialog} from '../../../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {BolHerosModel} from '../../../models/bol-heros.model';
+import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
+import {heroStatblockData} from '../../../shared/statblock/bol-statblock.builders';
 import {DiceRowDie} from '../../../../shared/models/dice-row.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, parseDiceTotal} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keptDiceIndexes, parseDiceTotal} from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../../models/action-roll.model';
 import {heroDetails} from '../tapis/tapis.util';
@@ -37,7 +41,7 @@ import {CombatEffect} from '../../models/combat-effect.model';
 import {InitiativeKind} from '../../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../tapis/combat-effects.util';
 import {ReactionAdversary, ReactionParts, ReactionToken, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
-import {REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
+import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../../combat-play.util';
 
@@ -63,6 +67,11 @@ interface HeroRow {
   readonly agilite: number;
   /** Ses carrières de rang 1 ou plus : le MJ peut en accorder une, utile à la réaction. */
   readonly carrieres: readonly ActionRollCarriere[];
+  /** Sa fiche complète : le portrait de la carte ouvre son statbloc. */
+  readonly fiche: BolHerosModel;
+  /** Dés de bonus (positif, « Vigilant ») ou de malus (négatif, « Lent à la détente ») à son jet de réaction : il lance 2 + |n| dés et
+   * garde les deux meilleurs ou les deux moins bons. */
+  readonly diceNet: number;
 }
 
 /** La carte d'un héros, prête à afficher : ce qu'il lui faut aux dés, ses chances, son jet et son verdict. */
@@ -75,8 +84,13 @@ interface HeroCard {
   readonly chance: number;
   /** Total de ses deux dés, `null` avant son jet. */
   readonly dice: number | null;
-  /** Les faces de ses deux dés, quand on les connaît : lancés à l'écran, ou un double 1 ou double 6 tapé ; `null` sinon. */
+  /** Les faces de ses dés, quand on les connaît : lancés à l'écran (le dé écarté par un bonus ou un malus est marqué), ou un double 1
+   * ou double 6 tapé ; `null` sinon. */
   readonly faces: readonly DiceRowDie[] | null;
+  /** Combien de dés il lance : 2, ou 3 et plus avec un dé de bonus ou de malus. Avant le jet, autant de places vides. */
+  readonly diceCount: number;
+  /** Son dé de bonus ou de malus, en clair (« Dé de bonus », avec le trait qui le donne en infobulle) ; `null` sans. */
+  readonly diceMod: {readonly label: string; readonly tone: 'plus' | 'minus'; readonly trait: string} | null;
   readonly verdict: ReactionVerdict | null;
   readonly sum: readonly RollSumTerm[];
   /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1),
@@ -89,6 +103,8 @@ interface HeroCard {
   readonly favor: boolean;
   /** Ses points d'héroïsme. */
   readonly heroisme: number;
+  /** Ses points d'héroïsme en gemmes : cinq au moins (la limite habituelle), allumées jusqu'à son nombre de points. */
+  readonly gems: readonly boolean[];
   /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à taper. */
   readonly favorPending: boolean;
 }
@@ -103,8 +119,8 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
 
 /** Largeur du dialogue jusqu'à quatre héros, et ce qu'ajoute chaque héros au-delà : cinq ou six cartes tiennent ainsi sur une rangée,
  * sans défilement. L'écran borne le tout (`maxWidth` du dialogue). */
-const BASE_WIDTH_PX = 1240;
-const CARD_WIDTH_PX = 262;
+const BASE_WIDTH_PX = 1480;
+const CARD_WIDTH_PX = 340;
 const MAX_CARDS_PER_ROW = 6;
 
 /**
@@ -147,8 +163,9 @@ export class StartCombatDialogComponent {
   private readonly heroismeByPivot = new Map<number, WritableSignal<number>>();
   /** Total des deux dés de chaque héros (clé pivotId), saisi ou lancé dans ce dialogue. Non persisté : le back ne stocke que le
    * résultat. */
-  /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent, en petit, à côté de la case du total. */
-  private readonly facesByPivot = signal<ReadonlyMap<number, readonly [number, number]>>(new Map());
+  /** Les faces des dés de chaque héros lancés à l'écran (clé pivotId), dé de bonus ou de malus compris : elles s'affichent à côté de
+   * la case du total. */
+  private readonly facesByPivot = signal<ReadonlyMap<number, readonly number[]>>(new Map());
   private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
   /** Héros (clé pivotId) qui ont converti leur réussite en succès héroïque pour 1 point d'héroïsme. */
   private readonly heroicUpgrades = signal<ReadonlySet<number>>(new Set());
@@ -193,7 +210,7 @@ export class StartCombatDialogComponent {
       const parts = this.partsFor(hero);
       const modifier = reactionModifier(parts);
       const dice = this.diceTotalFor(hero.pivotId);
-      const chance = Math.round(actionSuccessChance(0, modifier, REACTION_ROLL_THRESHOLD) * 100);
+      const chance = Math.round(actionSuccessChance(hero.diceNet, modifier, REACTION_ROLL_THRESHOLD) * 100);
       const upgraded = this.heroicUpgrades().has(hero.pivotId);
       const optionChosen = hero.resultat === 'echec_critique' || hero.resultat === 'legendaire' || upgraded;
       const heroisme = this.heroismeSignal(hero.pivotId)();
@@ -208,15 +225,23 @@ export class StartCombatDialogComponent {
         excluded: this.isExcluded('hero', hero.pivotId),
         target: actionDiceTargetLabel(actionDiceTarget(modifier, REACTION_ROLL_THRESHOLD)),
         chance,
-        faces: (this.facesByPivot().get(hero.pivotId) ?? (dice === 2 ? [1, 1] : dice === 12 ? [6, 6] : null))?.map((value) => ({value})) ?? null,
+        faces: this.facesFor(hero, dice),
+        diceCount: 2 + Math.abs(hero.diceNet),
+        diceMod:
+          hero.diceNet === 0
+            ? null
+            : hero.diceNet > 0
+              ? {label: 'Dé de bonus', tone: 'plus', trait: 'Vigilant : un dé de bonus au jet de réaction'}
+              : {label: 'Dé de malus', tone: 'minus', trait: 'Lent à la détente : un dé de malus au jet de réaction'},
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
-        sum: reactionSumTerms(dice, parts),
+        sum: reactionSumTerms(dice, parts, hero.diceNet),
         option: dice === 2 ? 'critique' : legendary ? 'legendaire' : heroic ? 'heroique' : null,
         optionChosen,
         career: parts.carriere ?? null,
         favor: hero.resultat === 'echec' && heroisme > 0,
         heroisme,
+        gems: Array.from({length: Math.max(5, heroisme)}, (_, index) => index < heroisme),
         favorPending: this.favorPendingPivots().has(hero.pivotId),
       };
     }),
@@ -331,6 +356,7 @@ export class StartCombatDialogComponent {
               const rolledHere = new Map(this.heroes().map((h) => [h.pivotId, h.resultat]));
               const rows = heroEntries.map((h, i): HeroRow => {
                 const hero = fullHeroes[i];
+                const details = heroDetails(hero);
                 this.heroismeSignal(h.id).set(hero.ressources.heroisme);
                 return {
                   pivotId: h.id,
@@ -341,8 +367,10 @@ export class StartCombatDialogComponent {
                   esprit: hero.attributs.esprit,
                   initiative: hero.combat.initiative_effective,
                   initiativeEquipement: hero.combat.initiative_effective - hero.combat.initiative,
-                  carrieres: heroDetails(hero).carrieres.filter((c) => c.value > 0),
+                  carrieres: details.carrieres.filter((c) => c.value > 0),
+                  diceNet: reactionDiceNet(details.traits),
                   agilite: hero.attributs.agilite,
+                  fiche: hero,
                 };
               });
               // Par agilité décroissante : entre héros de même résultat, c'est l'ordre dans lequel ils agiront par défaut
@@ -378,6 +406,22 @@ export class StartCombatDialogComponent {
   private fitWidth(heroCount: number): void {
     const width = Math.max(BASE_WIDTH_PX, 40 + Math.min(heroCount, MAX_CARDS_PER_ROW) * CARD_WIDTH_PX);
     this.ref.updateSize(`min(${width}px, 96vw)`);
+  }
+
+  /** Les faces à montrer d'un héros : celles lancées à l'écran, le dé écarté marqué ; sinon celles qu'un total tapé suffit à connaître
+   * (2 : double 1, 12 : double 6) ; sinon aucune. */
+  private facesFor(hero: HeroRow, dice: number | null): readonly DiceRowDie[] | null {
+    const rolled = this.facesByPivot().get(hero.pivotId);
+    if (rolled) {
+      const kept = keptDiceIndexes(rolled, hero.diceNet);
+      return rolled.map((value, index) => ({value, dropped: !kept.includes(index)}));
+    }
+    return dice === 2 ? [{value: 1}, {value: 1}] : dice === 12 ? [{value: 6}, {value: 6}] : null;
+  }
+
+  /** Ouvre le statbloc d'un héros par-dessus le dialogue. */
+  protected openSheet(hero: HeroRow): void {
+    openStatblockDialog(this.dialog, BolStatblockComponent, {data: heroStatblockData(hero.fiche), imageSrc: hero.avatar ?? '', kind: 'hero'});
   }
 
   /** Héroïsme courant d'un héros — signal dédié (créé à la demande) car `applyHeroismeDelta` le mute en place. */
@@ -507,9 +551,12 @@ export class StartCombatDialogComponent {
     this.rolling.set(true);
     try {
       await box.clear();
-      const results = await box.rollNotation('2d6');
-      this.setRoll(hero.pivotId, results[0].value + results[1].value);
-      this.facesByPivot.update((map) => new Map(map).set(hero.pivotId, [results[0].value, results[1].value]));
+      // Avec un dé de bonus ou de malus, il lance un dé de plus et garde les deux meilleurs ou les deux moins bons.
+      const results = await box.rollNotation(`${2 + Math.abs(hero.diceNet)}d6`);
+      const values = results.map((result) => result.value);
+      const [first, second] = keptDiceIndexes(values, hero.diceNet);
+      this.setRoll(hero.pivotId, values[first] + values[second]);
+      this.facesByPivot.update((map) => new Map(map).set(hero.pivotId, values));
     } finally {
       this.rolling.set(false);
     }

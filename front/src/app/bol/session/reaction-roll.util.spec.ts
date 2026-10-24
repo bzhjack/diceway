@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat-dialog.model';
-import {reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
+import {reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
 
 const parts = (overrides: Partial<ReactionParts> = {}): ReactionParts => ({esprit: 0, initiative: 0, embuscade: 0, initiativeEnnemie: 0, ...overrides});
 
@@ -150,5 +150,28 @@ describe('reactionLanes', () => {
       {kind: 'pnj', pivotId: 1, nom: 'Adversaire 1', avatar: null, detail: '', excluded: true},
       {kind: 'creature', pivotId: 2, nom: 'Adversaire 2', avatar: null, detail: 'allié', excluded: false},
     ]);
+  });
+});
+
+describe('reactionDiceNet', () => {
+  const trait = (label: string, kind: 'avantage' | 'desavantage') => ({label, kind, detail: null});
+
+  it('donne un dé de bonus à un héros Vigilant, un dé de malus à un héros Lent à la détente', () => {
+    expect(reactionDiceNet([trait('Vigilant', 'avantage')])).toBe(1);
+    expect(reactionDiceNet([trait('Lent à la détente', 'desavantage')])).toBe(-1);
+  });
+
+  it('annule le bonus par le malus, et ignore les autres traits', () => {
+    expect(reactionDiceNet([trait('Vigilant', 'avantage'), trait('Lent à la détente', 'desavantage')])).toBe(0);
+    expect(reactionDiceNet([trait('Attirant', 'avantage'), trait('Arrogant', 'desavantage')])).toBe(0);
+  });
+});
+
+describe('reactionSumTerms avec un dé de bonus ou de malus', () => {
+  it('annonce 3d6 avant le jet et rappelle le bonus ou le malus sous les dés', () => {
+    const reaction = parts({esprit: 1, initiative: 1});
+    expect(reactionSumTerms(null, reaction, 1)[0]).toEqual({value: '3d6', caption: 'dés · bonus', tone: 'dice'});
+    expect(reactionSumTerms(8, reaction, -1)[0]).toEqual({value: '8', caption: 'dés · malus', tone: 'dice'});
+    expect(reactionSumTerms(null, reaction)[0]).toEqual({value: '2d6', caption: 'dés', tone: 'dice'});
   });
 });

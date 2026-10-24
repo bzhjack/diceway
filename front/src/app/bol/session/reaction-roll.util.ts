@@ -1,10 +1,24 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {actionDiceTarget, actionResultTone} from './action-roll.util';
+import {actionDiceTarget, actionResultTone, netDiceModifier} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
+import {HeroDetailTrait} from './models/tapis.model';
 import {ReactionAdversary, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat-dialog.model';
 
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
+
+/** Les traits qui changent le nombre de dés du jet de réaction (livre, « Avantages » et « Désavantages ») : « Vigilant » donne un dé de
+ * bonus, « Lent à la détente » un dé de malus. */
+const REACTION_BONUS_TRAIT = 'vigilant';
+const REACTION_MALUS_TRAIT = 'lent à la détente';
+
+/** Dés de bonus (positif) ou de malus (négatif) d'un héros à son jet de réaction, d'après ses avantages et désavantages : on lance
+ * 2 + |n| dés et on garde les deux meilleurs (bonus) ou les deux moins bons (malus). Un dé de bonus et un dé de malus s'annulent. */
+export function reactionDiceNet(traits: readonly HeroDetailTrait[]): number {
+  const named = (kind: 'avantage' | 'desavantage', label: string): number =>
+    traits.filter((trait) => trait.kind === kind && trait.label.trim().toLowerCase() === label).length;
+  return netDiceModifier(named('avantage', REACTION_BONUS_TRAIT), named('desavantage', REACTION_MALUS_TRAIT));
+}
 
 /** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − initiative ennemie + carrière utile. */
 export function reactionModifier(parts: ReactionParts): number {
@@ -47,8 +61,9 @@ export function reactionVerdict(result: InitiativeResultat, dice: number | null)
 }
 
 /** L'addition du jet de réaction, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet, elle
- * s'ouvre sur « 2d6 » et se ferme sur le seuil ; après, sur le total des dés et le total du jet. */
-export function reactionSumTerms(dice: number | null, parts: ReactionParts): readonly RollSumTerm[] {
+ * s'ouvre sur « 2d6 » (« 3d6 » avec un dé de bonus ou de malus) et se ferme sur le seuil ; après, sur le total des deux dés gardés et le
+ * total du jet. `diceNet` : dés de bonus (positif) ou de malus (négatif), rappelés sous le terme des dés. */
+export function reactionSumTerms(dice: number | null, parts: ReactionParts, diceNet = 0): readonly RollSumTerm[] {
   const named: readonly (readonly [value: number, caption: string])[] = [
     [parts.esprit, 'esprit'],
     [parts.initiative - (parts.equipement ?? 0), 'init.'],
@@ -58,7 +73,11 @@ export function reactionSumTerms(dice: number | null, parts: ReactionParts): rea
     [-parts.initiativeEnnemie, 'ennemi'],
   ];
   return [
-    {value: dice === null ? '2d6' : `${dice}`, caption: 'dés', tone: 'dice'},
+    {
+      value: dice === null ? `${2 + Math.abs(diceNet)}d6` : `${dice}`,
+      caption: diceNet > 0 ? 'dés · bonus' : diceNet < 0 ? 'dés · malus' : 'dés',
+      tone: 'dice',
+    },
     ...named
       .filter(([value]) => value !== 0)
       .map(([value, caption]): RollSumTerm => ({value: `${value > 0 ? '+' : '−'}${Math.abs(value)}`, caption, tone: value > 0 ? 'plus' : 'minus'})),

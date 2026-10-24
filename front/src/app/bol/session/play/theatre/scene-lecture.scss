@@ -21,7 +21,7 @@
 .lec-tete {
   position: var(--lec-sticky, sticky);
   top: 0;
-  z-index: 2;
+  z-index: 4;
   box-sizing: border-box;
   display: flex;
   flex: none;
@@ -82,7 +82,9 @@
   // Sur un écran étroit la page défile, pas le pupitre : les titres restent en place (`--lec-sticky` posée par le plateau).
   position: var(--lec-sticky, sticky);
   top: var(--lec-tete-h);
-  z-index: 1;
+  // Au-dessus du contenu qui défile dessous : le libellé des boutons Material (« Scène 3 ») porte son propre z-index 1, et
+  // passerait sinon par-dessus les titres collés.
+  z-index: 3;
   box-sizing: border-box;
   // Le pupitre est une colonne flex : sans `flex: none`, les titres se comprimeraient et les décalages d'empilement ne tomberaient plus juste.
   flex: none;

@@ -522,7 +522,7 @@ export class SessionPlayPageComponent {
     this.dialog
       .open(StartCombatDialogComponent, {
         // Largeur de départ : le dialogue s'élargit lui-même au-delà de quatre héros.
-        width: 'min(1240px, 96vw)',
+        width: 'min(1480px, 96vw)',
         maxWidth: '96vw',
         maxHeight: '90vh',
         panelClass: 'scd-panel',
