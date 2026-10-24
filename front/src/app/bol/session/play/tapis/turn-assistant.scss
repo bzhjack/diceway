@@ -82,13 +82,6 @@
   }
 }
 
-.tas-effects {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.5rem;
-}
-
 .tas-pc-actions {
   display: flex;
   gap: 0.4rem;
@@ -318,37 +311,137 @@
   border-left: 4px solid var(--tas-side, var(--dw-border));
 }
 
-.tas-row--target {
-  .tas-select {
-    flex: 0 1 24rem;
-    width: auto;
+
+// Les cases du coup (l'attaque, les dégâts) en grille : sur la ligne du titre, les boutons du moment en haut à droite (héroïsme,
+// « Appliquer », parade…) ; dessous, la ligne du jet ; puis, sur toute la largeur, ce qui suit (options héroïques, attentes).
+.tas-play .tas-station {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+
+  > * {
+    grid-column: 1 / -1;
+  }
+
+  > .tas-station-head,
+  > h3 {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  > .tas-acts {
+    grid-row: 1;
+    grid-column: 2;
+    justify-content: flex-end;
+    min-height: 0;
   }
 }
 
-// La ligne d'un jet : la case et son bouton, les dés, le verdict, puis l'addition au bout.
+// Pas encore de cible : un portrait par cible possible, ses chances et sa vie dessous ; un clic la choisit.
+.tas-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tas-pick {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  width: 4.2rem;
+  padding: 0.35rem 0.25rem 0.4rem;
+  border: 0;
+  background: none;
+  color: var(--dw-surface-800);
+  font: inherit;
+  cursor: pointer;
+
+  em {
+    font-size: 0.72rem;
+    font-style: normal;
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
+  }
+
+  .tas-bar {
+    width: 100%;
+  }
+}
+
+// Au survol comme au focus clavier, c'est le cercle du portrait qui s'allume (un halo doré), pas un cadre autour du bouton. Plus fort
+// que le contour de focus commun à l'assistant (`.tas button:focus-visible`), que le halo remplace.
+.tas .tas-picks button.tas-pick:focus-visible {
+  outline: none;
+}
+
+.tas-pick:hover .tas-med--pick,
+.tas-pick:focus-visible .tas-med--pick {
+  box-shadow:
+    0 0 0 3px var(--dw-color-legendary),
+    0 0 14px color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+}
+
+// Le cercle du portrait dit son camp : rouge en face, vert dans le camp des héros.
+.tas-med--pick {
+  width: 3rem;
+  height: 3rem;
+  border-color: var(--dw-color-reussite);
+  font-size: 1.3rem;
+}
+
+.tas-pick--foe .tas-med--pick {
+  border-color: var(--dw-color-echec-forte);
+}
+
+// La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.
 .tas-row {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-areas:
+    'entry dice verdict'
+    'sum sum verdict';
+  align-items: center;
+  gap: 0.45rem 0.9rem;
+
+  // Les enfants directs seulement : la protection, dans l'addition, a sa propre case (`.tas-entry`) qui ne doit pas être placée ici.
+  > .tas-entry {
+    grid-area: entry;
+    justify-content: flex-start;
+  }
+
+  > .tas-row-dice {
+    grid-area: dice;
+  }
+
+  > .tas-verdict,
+  > .tas-die-note {
+    grid-area: verdict;
+    justify-items: start;
+    text-align: left;
+  }
+
+  > .tas-sum {
+    grid-area: sum;
+    justify-content: flex-start;
+  }
+}
+
+// La ligne de la cible n'est pas une ligne de jet : sa liste, puis ses chiffres, qui passent à la ligne s'il le faut. Après `.tas-row`,
+// qu'elle remplace.
+.tas-row--target {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.6rem 0.9rem;
 
-  .tas-row-dice {
-    order: 1;
-  }
-
-  .tas-verdict {
-    order: 2;
-    justify-items: start;
-    text-align: left;
-  }
-
-  .tas-die-note {
-    order: 2;
-  }
-
-  .tas-sum {
-    order: 3;
-    margin-left: auto;
+  .tas-select {
+    flex: 0 1 24rem;
+    width: auto;
   }
 }
 
@@ -713,6 +806,14 @@
   }
 }
 
+// Un bouton posé seul dans une case (« Fin du tour », « Juste une égratignure », « Annuler l'égratignure ») garde sa taille, centré :
+// la case s'étire, pas lui.
+.tas-station > button {
+  align-self: center;
+  justify-self: center;
+  min-width: 12rem;
+}
+
 // La case où il faut agir : dorée, sur le tapis.
 .tas-station--cur {
   border-color: var(--dw-color-legendary);
@@ -735,12 +836,12 @@
   opacity: 0.6;
 }
 
+// Le titre de la case, et juste derrière ce qui le précise (les chances de l'attaque) ; un bouton de fiche, lui, va au bout.
 .tas-station-head {
   align-self: stretch;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 // Ce qu'il faut aux dés et les chances, en pastille sur la ligne du titre de l'attaque.

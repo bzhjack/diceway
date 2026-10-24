@@ -5,6 +5,8 @@
 
 // Dans la barre du haut, sur une ligne : le round (et la pastille d'un succès héroïque), l'ordre d'action, puis les commandes du tour.
 .tor {
+  // Le round et les blocs de l'ordre d'action ont la même hauteur : une seule bande, alignée.
+  --tor-bar-h: 2.7rem;
   display: flex;
   align-items: center;
   gap: 0.6rem 0.8rem;
@@ -37,10 +39,13 @@
 }
 
 .tor-round {
+  box-sizing: border-box;
   display: flex;
+  flex: none;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.2rem 0.6rem 0.2rem 0.4rem;
+  height: var(--tor-bar-h);
+  padding: 0 0.6rem 0 0.4rem;
   border: 2px solid var(--bar-bronze, var(--dw-border));
   border-radius: 6px;
   background: repeating-linear-gradient(135deg, #2c2118 0 6px, #251b13 6px 12px);
@@ -108,11 +113,13 @@
 }
 
 .tor-group {
+  box-sizing: border-box;
   display: flex;
   flex: none;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  height: var(--tor-bar-h);
+  padding: 0 0.6rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: var(--dw-surface-0);

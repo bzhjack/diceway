@@ -63,6 +63,49 @@
   background: linear-gradient(var(--dw-surface-200), var(--dw-surface-50));
 }
 
+// Le titre, et à côté le « i » qui donne la règle du jet en infobulle.
+.scd-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.scd-info {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--dw-surface-600);
+  cursor: help;
+
+  .mat-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 1.2rem;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// L'infobulle de la règle : plus large qu'une infobulle ordinaire (la largeur est portée par sa surface), une règle par ligne.
+.scd-tooltip {
+  --mat-tooltip-supporting-text-size: 0.82rem;
+  white-space: pre-line;
+
+  .mdc-tooltip__surface {
+    max-width: 30rem;
+  }
+}
+
 .scd-title {
   margin: 0;
   padding: 0;
@@ -83,13 +126,6 @@
   grid-column: 1 / -1;
   align-items: baseline;
   gap: 0.1rem 1.2rem;
-}
-
-.scd-lead {
-  margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--dw-surface-600);
 }
 
 .scd-content.mat-mdc-dialog-content {

@@ -270,17 +270,13 @@ export class StartCombatDialogComponent {
       return 'Aucun adversaire : ajoutes-en un pour pouvoir démarrer.';
     }
     const missing = this.pendingHeroes().length;
-    if (missing > 0) {
-      return missing === 1 ? 'Il manque 1 jet.' : `Il manque ${missing} jets.`;
-    }
-    const heroes = this.activeHeroes();
-    const tied = heroes.filter((h) => heroes.some((other) => other !== h && other.resultat === h.resultat));
-    if (tied.length === 0) {
-      return '';
-    }
-    const sameAgility = tied.some((h) => tied.some((other) => other !== h && other.resultat === h.resultat && other.agilite === h.agilite));
-    return `Égalité entre héros : l'agilité la plus haute agit d'abord, sauf s'ils en décident autrement${sameAgility ? ' ; à agilité égale, ils agissent en même temps' : ''}.`;
+    return missing === 0 ? '' : missing === 1 ? 'Il manque 1 jet.' : `Il manque ${missing} jets.`;
   });
+
+  /** La règle du jet et de l'ordre, dans l'infobulle du « i » à côté du titre (02-actions-combat.md, « Jet de réaction »). */
+  protected readonly rules =
+    'Jet de réaction : 2d6 + esprit + initiative, réussite à 9. Les PNJ, créatures et démons n’ont pas de jet : leur rang les place.\n' +
+    'Égalité entre héros : l’agilité la plus haute agit d’abord, sauf s’ils en décident autrement ; à agilité égale, ils agissent en même temps.';
 
   constructor() {
     this.reload();

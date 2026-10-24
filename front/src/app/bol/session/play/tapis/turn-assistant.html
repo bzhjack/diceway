@@ -48,10 +48,20 @@
           </div>
         }
       </div>
-      <div class="tas-effects">
-        <span class="tas-label">Effets</span>
-  <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
-      </div>
+      <!-- Les effets en cours sur l'attaquant et sa cible, repliés comme les options : leur nombre se voit, la liste s'ouvre d'un clic -->
+      <button type="button" class="tas-options-btn" aria-controls="tas-effects-panel" [attr.aria-expanded]="effectsOpen()" (click)="effectsOpen.set(!effectsOpen())">
+        <mat-icon aria-hidden="true">auto_awesome</mat-icon>
+        Effets
+        @if (effetsCount() > 0) {
+          <b class="tas-count">{{ effetsCount() }}</b>
+        }
+        <mat-icon class="tas-chevron" [class.tas-chevron--open]="effectsOpen()" aria-hidden="true">expand_more</mat-icon>
+      </button>
+      @if (effectsOpen()) {
+        <div class="tas-options" id="tas-effects-panel">
+          <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+        </div>
+      }
       <div class="tas-pc-actions">
         <button type="button" class="tas-ghost" matTooltip="Passe son tour en fin de round" (click)="delayRequested.emit()">Retarder</button>
         <button type="button" class="tas-ghost" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
@@ -311,7 +321,36 @@
         }
       </div>
       <div class="tas-row tas-row--target">
-        @if (targets().length > 0 || target()) {
+        @if (!target() && targets().length > 0) {
+          <!-- Pas encore de cible : un portrait par cible possible, un clic la choisit ; son nom au survol, ses chances et sa vie dessous -->
+          <ul class="tas-picks" aria-label="Choisir la cible">
+            @for (t of targets(); track t.key) {
+              @let life = lifeOf(t);
+              <li>
+                <button
+                  type="button"
+                  class="tas-pick"
+                  [class.tas-pick--foe]="t.camp !== 'heros'"
+                  [attr.aria-label]="t.nom + (targetDetails()[t.key] ? ', ' + targetDetails()[t.key] : '') + (odds()[t.key] ? ', ' + odds()[t.key] : '')"
+                  [matTooltip]="t.nom + (targetDetails()[t.key] ? ' · ' + targetDetails()[t.key] : '')"
+                  (click)="selectTarget(t)"
+                >
+                  <span class="tas-med tas-med--pick" aria-hidden="true">
+                    @if (t.avatar) {
+                      <img dwAvatarFallback [src]="t.avatar" alt="" />
+                    } @else {
+                      {{ t.nom.charAt(0).toUpperCase() }}
+                    }
+                  </span>
+                  @if (odds()[t.key]; as chance) {
+                    <em aria-hidden="true">{{ chance }}</em>
+                  }
+                  <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
+                </button>
+              </li>
+            }
+          </ul>
+        } @else if (targets().length > 0 || target()) {
           <mat-form-field class="tas-select" subscriptSizing="dynamic">
             <mat-label>Cible</mat-label>
             <mat-select [value]="target()?.key ?? null" placeholder="Qui vise-t-il ?" (selectionChange)="pickTarget($event.value)">
@@ -396,9 +435,6 @@
               / {{ targetLife().max ?? '—' }}
             </b>
           </div>
-          @if (targetLife().after !== null) {
-            <span>{{ targetLife().out ? 'Ce coup met ' + t.nom + ' hors de combat.' : 'Ce coup retire ' + targetLife().loss + ' à ' + t.nom + '.' }}</span>
-          }
         </div>
       }
     </section>

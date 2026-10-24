@@ -8,9 +8,15 @@
   }
 
   <div class="scd-fg">
-    <!-- L'en-tête : le titre et, sur sa ligne, les actions du dialogue à droite ; dessous, la règle du jet et ce qui manque. -->
+    <!-- L'en-tête : le titre (la règle du jet en infobulle sur son « i ») et, sur sa ligne, les actions du dialogue à droite ; dessous, ce
+         qui manque encore. -->
     <header class="scd-bar">
-      <h2 mat-dialog-title class="scd-title">{{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}</h2>
+      <div class="scd-title-row">
+        <h2 mat-dialog-title class="scd-title">{{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}</h2>
+        <button type="button" class="scd-info" aria-label="Règles du jet de réaction" [matTooltip]="rules" matTooltipClass="scd-tooltip">
+          <mat-icon>info_outline</mat-icon>
+        </button>
+      </div>
       <div class="scd-actions">
         <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, et l'avertissement se voit. -->
         @if (noAdversary()) {
@@ -39,7 +45,6 @@
         </button>
       </div>
       <div class="scd-bar-info">
-        <p class="scd-lead">Jet de réaction : 2d6 + esprit + initiative, réussite à 9. Les PNJ, créatures et démons n'ont pas de jet : leur rang les place.</p>
         <span class="scd-note" [class.scd-note--alert]="noAdversary()" aria-live="polite">
           @if (noAdversary()) {
             <mat-icon aria-hidden="true">warning</mat-icon>

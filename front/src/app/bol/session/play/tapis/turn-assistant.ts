@@ -255,8 +255,13 @@ export class TurnAssistantComponent {
   protected readonly heroicAllowed = computed(() => this.card().camp === 'heros');
 
   // ── Étape 1 : arme, posture, arme secondaire — repartent de zéro à chaque nouvelle carte active ──
-  /** Un héros attaque avec ses armes équipées, les mains nues ou une arme improvisée ; un PNJ avec n'importe laquelle de ses armes. */
-  protected readonly displayArmes = computed(() => (this.isHero() ? [...this.armes(), MAINS_NUES, ARME_IMPROVISEE] : this.armes()));
+  /** Les mains nues et l'arme improvisée sont à tous ceux qui se battent comme les héros : héros, rivaux et coriaces (02-actions-combat.md,
+   * « Dégâts ») — un PNJ désarmé n'a plus que ça. La piétaille a des dégâts fixes (1, ou d3 armée ; 1 à mains nues, 04-pnj-creatures-demons.md),
+   * créatures et démons n'ont pas d'arme. */
+  private readonly hasMakeshiftWeapons = computed(() => this.isHero() || (this.card().kind === 'pnj' && this.card().rang !== 'Piétaille'));
+  /** Un héros attaque avec ses armes équipées, un PNJ avec n'importe laquelle de ses armes ; plus, pour eux, les mains nues et l'arme
+   * improvisée. */
+  protected readonly displayArmes = computed(() => (this.hasMakeshiftWeapons() ? [...this.armes(), MAINS_NUES, ARME_IMPROVISEE] : this.armes()));
   // La source est la clé de la carte (`cardKey`), pas la carte : la table rechargée repasse une carte identique mais neuve, qui remettrait
   // ces choix à zéro — et, avec eux, le jet en cours.
   private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
@@ -786,6 +791,15 @@ export class TurnAssistantComponent {
   private readonly noms = computed<Readonly<Record<string, string>>>(() => {
     const target = this.target();
     return {[this.card().key]: this.card().nom, ...(target ? {[target.key]: target.nom} : {})};
+  });
+
+  /** « Effets » replié ou déplié ; il se replie à chaque nouveau tour. */
+  protected readonly effectsOpen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+
+  /** Le nombre d'effets en cours sur l'attaquant et sa cible : le compteur du bouton « Effets ». */
+  protected readonly effetsCount = computed(() => {
+    const keys = new Set(this.duelistes().map((d) => d.key));
+    return this.effets().filter((effet) => keys.has(effet.porteur)).length;
   });
 
   /** Les deux duellistes, pour nommer à qui appartient un effet et à qui l'ajouter. */
