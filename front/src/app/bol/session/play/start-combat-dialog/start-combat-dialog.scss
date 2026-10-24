@@ -479,10 +479,10 @@
   align-items: center;
   gap: 0.45rem;
 
-  // Les dés côte à côte, à droite de la ligne, de la hauteur de la case du total (la taille passe par la variable du composant, pour
-  // qu'une carte étroite puisse la réduire).
+  // Les dés côte à côte, à droite de la ligne, un peu moins hauts que la case du total (la taille passe par la variable du composant,
+  // pour qu'une carte étroite puisse la réduire).
   .scd-faces {
-    --dw-die-size: 2.9rem;
+    --dw-die-size: 2.4rem;
     margin-left: auto;
     gap: 0.3rem;
   }
@@ -941,7 +941,7 @@
   }
 
   .scd-roll .scd-faces {
-    --dw-die-size: 2.2rem;
+    --dw-die-size: 2rem;
     gap: 0.2rem;
   }
 
