@@ -2,12 +2,11 @@
   @if (mode() === 'combat') {
     <div class="cp-header-title">
       <span class="cp-eyebrow">Combat</span>
-      <h1>{{ titre() || 'Combat en cours' }}</h1>
+      <h1 [attr.title]="titre() || null">{{ titre() || 'Combat en cours' }}</h1>
     </div>
-  } @else {
-    <!-- Mode libre : le titre du scénario et la frise des actes, projetés par la page. -->
-    <div class="cp-header-center"><ng-content /></div>
   }
+  <!-- Projeté par la page : en mode libre, le titre du scénario et la frise des actes ; en combat, l'ordre d'action. -->
+  <div class="cp-header-center"><ng-content /></div>
 
   <div class="cp-header-actions">
     <button
@@ -27,7 +26,7 @@
       <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
     } @else {
       <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
-      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer le combat</button>
+      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer</button>
     }
     <bol-account-menu />
   </div>

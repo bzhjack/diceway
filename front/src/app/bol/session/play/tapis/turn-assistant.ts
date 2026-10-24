@@ -3,7 +3,9 @@ import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
@@ -60,6 +62,12 @@ const DICE_TIMEOUT_MS = 12000;
 
 /** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
+
+/** Un réglage rare actif (option spéciale, dé ou modificateur du MJ, carrière), montré en pastille quand « Options » est replié. */
+interface ActiveOption {
+  readonly id: 'special' | 'gm' | 'mod' | 'career';
+  readonly label: string;
+}
 
 /** Ce que rapporte chaque dé de dégâts, en clair, à côté de la case où on le saisit. */
 const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
@@ -153,7 +161,19 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [AvatarFallbackDirective, DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
+  imports: [
+    AvatarFallbackDirective,
+    DwDiceRowComponent,
+    DwValueStepperComponent,
+    EffectsListComponent,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule,
+    MatTooltipModule,
+    PointsStepperComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -377,6 +397,53 @@ export class TurnAssistantComponent {
   /** « att +1 · déf −1 » : le bonus d'attaque du référentiel et l'effet connu sur la défense. */
   protected scaleEffect(option: BolCombatOptionModel): string {
     return `att ${this.signed(option.modificateur)} · déf ${this.signed(POSTURE_DEFENSE[option.slug] ?? 0)}`;
+  }
+
+  /** La posture de l'échelle retenue, pour sa liste ; `null` quand c'est une option spéciale (le défaut de l'armure…) qui est cochée. */
+  protected readonly postureSlug = computed(() => {
+    const slug = this.effectiveOption()?.slug ?? null;
+    return slug !== null && SCALE_SLUGS.includes(slug) ? slug : null;
+  });
+
+  /** « Options » replié ou déplié ; il se replie à chaque nouveau tour. */
+  protected readonly optionsOpen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+
+  /** Les réglages rares actifs, en pastilles sous « Options » replié : ils se voient sans ouvrir le menu, et se retirent d'un clic. */
+  protected readonly activeOptions = computed<readonly ActiveOption[]>(() => {
+    const active: ActiveOption[] = [];
+    const option = this.effectiveOption();
+    if (option && !SCALE_SLUGS.includes(option.slug)) {
+      active.push({id: 'special', label: option.label});
+    }
+    const gm = this.gmDie();
+    if (gm) {
+      active.push({id: 'gm', label: gm === 'bonus' ? 'Dé bonus MJ' : 'Dé malus MJ'});
+    }
+    if (this.freeModifier() !== 0) {
+      active.push({id: 'mod', label: `Modificateur MJ ${this.signed(this.freeModifier())}`});
+    }
+    const career = this.career();
+    if (career) {
+      active.push({id: 'career', label: `${career.label} +${career.value} aux ${this.careerOn() === 'attaque' ? 'attaques' : 'dégâts'}`});
+    }
+    return active;
+  });
+
+  protected clearOption(id: ActiveOption['id']): void {
+    switch (id) {
+      case 'special':
+        this.selectOption('none');
+        break;
+      case 'gm':
+        this.gmDie.set(null);
+        break;
+      case 'mod':
+        this.modifierControl.setValue(0);
+        break;
+      case 'career':
+        this.careerLabel.set(null);
+        break;
+    }
   }
 
   /** Une option spéciale se coche et se décoche ; décochée, on revient à « Aucune ». */
@@ -1172,6 +1239,14 @@ export class TurnAssistantComponent {
         this.vitaliteAdjusted.emit({card: current, delta});
       }
     });
+  }
+
+  /** La cible choisie dans la liste : la même ne change rien. */
+  protected pickTarget(key: string | null): void {
+    const card = this.targets().find((t) => t.key === key);
+    if (card && card.key !== this.target()?.key) {
+      this.selectTarget(card);
+    }
   }
 
   /** Vise une carte — ou, si c'est déjà la cible, y renonce. */

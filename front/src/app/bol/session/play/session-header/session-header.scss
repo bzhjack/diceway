@@ -27,9 +27,15 @@
     url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
 }
 
+// Une seule ligne en combat : le titre, l'ordre d'action, les actions.
+.cp-header--combat {
+  padding-block: 0.5rem;
+}
+
 .cp-header-title {
-  flex: 1;
-  min-width: 0;
+  // En combat, le titre laisse la place à l'ordre d'action : il se coupe, et se lit en entier au survol.
+  flex: 0 1 15rem;
+  min-width: 7rem;
 
   h1 {
     margin: 0;

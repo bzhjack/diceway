@@ -4,19 +4,6 @@
 </div>
 
 <div class="cb-main" (click)="assistant()?.dismissDice()">
-  <bol-turn-order
-    [entries]="entries()"
-    [round]="round()"
-    [targetKey]="target()?.key ?? null"
-    [legendaryActive]="legendaryActive()"
-    [announcement]="announcement()"
-    (gaveBack)="gaveBack.emit($event)"
-    [interrupters]="interrupters()"
-    (interruptRequested)="interruptRequested.emit($event)"
-    (addRequested)="addRequested.emit()"
-    (rerollRequested)="rerollRequested.emit()"
-  />
-
   <div class="cb-play">
     <section class="cb-assistant" aria-label="Assistant de tour">
       @if (activeCard(); as active) {

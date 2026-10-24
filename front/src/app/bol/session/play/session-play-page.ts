@@ -55,6 +55,7 @@ import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {CombatOutcome, EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
+import {TurnOrderComponent} from './tapis/turn-order';
 import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
 import {CombatOutcomeDialogComponent} from './combat-outcome-dialog/combat-outcome-dialog';
 import {CombatOutcomeDialogData} from '../models/combat-outcome-dialog.model';
@@ -86,7 +87,7 @@ function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, SceneActsComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
+  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, TurnOrderComponent, SceneActsComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
   // Une instance par table : la frise de l'en-tête et le plateau partagent les scènes et le rideau.
   providers: [SceneStageStore],
   templateUrl: './session-play-page.html',

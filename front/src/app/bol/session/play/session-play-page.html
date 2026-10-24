@@ -19,6 +19,20 @@
     >
       @if (mode() === 'libre') {
         <bol-scene-acts [sessionTitre]="session()?.titre ?? null" (sceneChanged)="onSceneLoaded($event)" />
+      } @else {
+        <!-- En combat, l'ordre d'action tient dans la barre du haut : le round, les blocs de réaction, ajouter, relancer la réaction -->
+        <bol-turn-order
+          [entries]="turnEntries()"
+          [round]="etat().round"
+          [targetKey]="selectedTarget()?.key ?? null"
+          [legendaryActive]="b.legendaryActive"
+          [announcement]="turnAnnouncement()"
+          [interrupters]="interrupters()"
+          (gaveBack)="onGiveBackTurn($event)"
+          (interruptRequested)="onInterrupt($event)"
+          (addRequested)="openAddCombatantDialog()"
+          (rerollRequested)="openStartCombatDialog(true)"
+        />
       }
     </bol-session-header>
 
@@ -71,11 +85,7 @@
       } @else {
         <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
         <bol-combat-board
-          [entries]="turnEntries()"
-          [round]="etat().round"
-          [legendaryActive]="b.legendaryActive"
           [effets]="effetsAffiches()"
-          [announcement]="turnAnnouncement()"
           [activeCard]="activeCard()"
           [armes]="assistantArmes()"
           [ownedArmes]="activeOwnedArmes()"
@@ -90,12 +100,7 @@
           [hordeMates]="hordeMates()"
           (hordeChanged)="hordeKeys.set($event)"
           [carrieres]="activeCarrieres()"
-          (gaveBack)="onGiveBackTurn($event)"
-          [interrupters]="interrupters()"
-          (interruptRequested)="onInterrupt($event)"
-          (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"
-          (rerollRequested)="openStartCombatDialog(true)"
           (endTurnRequested)="onEndTurn($event)"
           (choiceChanged)="attackChoice.set($event)"
           (targetSelected)="onAttackCard($event)"

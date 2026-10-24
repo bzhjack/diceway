@@ -6,16 +6,14 @@ import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
-import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {TurnAssistantComponent} from '../tapis/turn-assistant';
-import {TurnOrderComponent} from '../tapis/turn-order';
 
-/** L'écran du mode combat : la barre et la frise d'initiative en haut, puis l'assistant de tour à gauche et les
- * héros avec le journal à droite. Il ne porte aucun état : la page lui donne tout et reçoit chaque action. */
+/** L'écran du mode combat : l'assistant de tour, sous les dés 3D (l'ordre d'action est dans l'en-tête de la page). Il ne porte aucun
+ * état : la page lui donne tout et reçoit chaque action. */
 @Component({
   selector: 'bol-combat-board',
-  imports: [TurnOrderComponent, TurnAssistantComponent, DiceBoxHostComponent],
+  imports: [TurnAssistantComponent, DiceBoxHostComponent],
   templateUrl: './combat-board.html',
   styleUrl: './combat-board.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,12 +23,6 @@ export class CombatBoardComponent {
   protected readonly diceBox = viewChild(DiceBoxHostComponent);
   protected readonly assistant = viewChild(TurnAssistantComponent);
 
-  // Frise
-  readonly entries = input.required<readonly TurnOrderEntry[]>();
-  readonly round = input.required<number>();
-  readonly legendaryActive = input(false);
-  readonly announcement = input('');
-  readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
   // Assistant de tour : `null` quand plus personne ne peut jouer
   readonly activeCard = input<TapisCard | null>(null);
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
@@ -49,11 +41,7 @@ export class CombatBoardComponent {
   /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, en horde. */
   readonly hordeMates = input<readonly TapisCard[]>([]);
 
-  readonly gaveBack = output<string>();
-  readonly interruptRequested = output<string>();
-  readonly addRequested = output<void>();
   readonly delayRequested = output<void>();
-  readonly rerollRequested = output<void>();
   /** `true` quand la fin du tour suit un coup qu'on vient de conclure (voir l'assistant). */
   readonly endTurnRequested = output<boolean>();
   readonly choiceChanged = output<AttackChoice | null>();

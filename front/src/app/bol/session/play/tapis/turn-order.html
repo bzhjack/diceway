@@ -3,7 +3,13 @@
   <div class="tor-head">
     <span class="tor-round" aria-label="Round {{ round() }}"><b>{{ round() }}</b><span>Round</span></span>
     @if (roundOneLock()) {
-      <span class="tor-pill" [class.tor-pill--lock]="legendaryActive()">Succès {{ legendaryActive() ? 'légendaire' : 'héroïque' }} : coriaces et piétaille bloqués au round 1</span>
+      <span
+        class="tor-pill"
+        [class.tor-pill--lock]="legendaryActive()"
+        [matTooltip]="'Succès ' + (legendaryActive() ? 'légendaire' : 'héroïque') + ' : coriaces et piétaille bloqués au round 1'"
+      >
+        {{ legendaryActive() ? 'Légendaire' : 'Héroïque' }} · bloqués
+      </span>
     }
     <div class="tor-actions">
       @for (i of interrupters(); track i.key) {
@@ -17,11 +23,11 @@
           Interrompre : {{ i.nom }} (−1 PH)
         </button>
       }
-      <button mat-stroked-button size="small" type="button" (click)="addRequested.emit()">
-        <mat-icon>add</mat-icon> Ajouter
+      <button mat-icon-button type="button" class="tor-icon" aria-label="Ajouter un combattant" matTooltip="Ajouter un combattant" (click)="addRequested.emit()">
+        <mat-icon>add</mat-icon>
       </button>
-      <button mat-stroked-button size="small" type="button" matTooltip="Relancer la réaction des héros" (click)="rerollRequested.emit()">
-        Nouveau jet de réaction
+      <button mat-icon-button type="button" class="tor-icon" aria-label="Nouveau jet de réaction" matTooltip="Nouveau jet de réaction des héros" (click)="rerollRequested.emit()">
+        <mat-icon>replay</mat-icon>
       </button>
     </div>
   </div>
