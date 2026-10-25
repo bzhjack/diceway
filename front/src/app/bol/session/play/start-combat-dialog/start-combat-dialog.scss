@@ -389,7 +389,8 @@
   gap: 0.15rem;
 }
 
-.scd-gem--off {
+// Une gemme éteinte : écrite avant `.scd-gem` (dorée), elle doit l'emporter, d'où les deux classes.
+.scd-gem.scd-gem--off {
   background: rgba(241, 230, 208, 0.18);
 }
 

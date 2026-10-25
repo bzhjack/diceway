@@ -5,12 +5,12 @@
   min-height: 0;
 }
 
-// Un tour, en deux colonnes : à gauche ce qui se prépare (qui attaque, contre qui, avec quoi et comment, Fin du tour), à droite ce qui se
-// joue (l'attaque, puis les dégâts, puis ce qu'il reste à faire). Tout tient sur un écran : seule la colonne de gauche défile si un
-// combattant très équipé la remplit.
+// Un tour, en deux colonnes : à gauche qui attaque (et Fin du tour), à droite le coup en trois étapes (1 · contre qui, avec quoi et
+// comment ; 2 · l'attaque ; 3 · les dégâts), puis ce qu'il reste à faire. Tout tient sur un écran : seule la colonne de gauche défile
+// si elle déborde.
 .tas {
   display: grid;
-  grid-template-columns: minmax(19rem, 23rem) minmax(0, 1fr);
+  grid-template-columns: minmax(17rem, 21rem) minmax(0, 1fr);
   gap: 0.75rem;
   flex: 1;
   min-height: 0;
@@ -57,36 +57,15 @@
 
 // La fiche : un bouton rond, au bout de la ligne.
 .tas-round-btn {
-  display: grid;
-  place-items: center;
   flex: none;
-  width: 2rem;
-  height: 2rem;
   margin-left: auto;
-  padding: 0;
-  border: 1px solid var(--dw-border);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--dw-surface-700);
-  cursor: pointer;
-
-  .mat-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    font-size: 1.1rem;
-  }
-
-  &:hover {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
-  }
 }
 
 .tas-pc-actions {
   display: flex;
   gap: 0.4rem;
 
-  .tas-ghost {
+  > button {
     flex: 1;
   }
 }
@@ -202,15 +181,19 @@
 }
 
 .tas-count {
-  display: grid;
+  // Un rond, le chiffre centré : la hauteur de ligne héritée du bouton le décalait vers le bas.
+  display: inline-grid;
   place-items: center;
-  min-width: 1.15rem;
-  height: 1.15rem;
-  padding: 0 0.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  box-sizing: border-box;
   border-radius: 999px;
   background: var(--dw-color-legendary);
   color: #1c1200;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .tas-chevron {
@@ -263,6 +246,17 @@
   }
 }
 
+// Les popovers (options du coup, effets de l'attaquant) : une carte flottante et opaque, sous leur bouton. Écrite avant `.tas-options`
+// (un panneau translucide), elle doit l'emporter : d'où les deux classes.
+.tas-options.tas-options--pop {
+  width: min(26rem, 92vw);
+  max-height: 70vh;
+  overflow-y: auto;
+  border-color: var(--dw-surface-500);
+  background: var(--dw-surface-100);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
 .tas-options {
   display: flex;
   flex-direction: column;
@@ -276,21 +270,8 @@
 
 // « Fin du tour » : l'action principale de la colonne, en or plein, toujours en bas.
 .tas-end {
-  display: flex;
   flex: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
   margin-top: auto;
-  min-height: 2.75rem;
-  border: 0;
-  border-radius: var(--dw-radius-pill);
-  background: var(--dw-color-legendary);
-  color: #1c1200;
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
 }
 
 // ── À droite : jouer ─────────────────────────────────────────────────────────────────────────────
@@ -439,10 +420,35 @@
   align-items: center;
   gap: 0.6rem 0.9rem;
 
+  // La vie de la cible prend la place qui reste, à côté de ses chiffres.
+  .tas-life {
+    flex: 1 1 14rem;
+  }
+}
+
+// 1 · La phrase du coup : « contre [la cible] avec [l'arme] en [la posture] [Options] ». Les mots de liaison sont décoratifs (chaque liste
+// a son libellé) ; la phrase passe à la ligne quand la case est étroite.
+.tas-phrase {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
+
   .tas-select {
-    flex: 0 1 24rem;
+    flex: 0 1 14rem;
     width: auto;
   }
+
+  .tas-select--target {
+    flex-basis: 19rem;
+  }
+}
+
+.tas-w {
+  font: 400 1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dw-surface-600);
 }
 
 .tas-side {
@@ -548,28 +554,11 @@
 }
 
 // Les boutons maison de l'assistant prennent la police de la page.
-.tas-ghost,
 .tas-seg,
 .tas-chip,
 .tas-act {
   font: inherit;
   cursor: pointer;
-}
-
-// Les actions de la carte active (Fiche, Retarder, Fin du tour…) : des pilules.
-.tas-ghost {
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--dw-border);
-  border-radius: var(--dw-radius-pill);
-  background: var(--dw-surface-50);
-  color: var(--dw-surface-700);
-  font-size: 0.8rem;
-  font-weight: 700;
-
-  &:hover {
-    border-color: var(--dw-surface-500);
-    color: var(--dw-surface-900);
-  }
 }
 
 .tas-tiles {
@@ -588,6 +577,13 @@
   margin-left: 0.4rem;
 }
 
+// Le libellé sous la vitalité et sous les points (« Vitalité /10 », « Héroïsme ») : le même que celui des tuiles, lisible.
+.tas-vit .tas-tag {
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: var(--dw-surface-700);
+}
+
 // Dans la carte de l'attaquant, les tuiles s'alignent à gauche comme le reste.
 .tas-tiles--start {
   justify-content: flex-start;
@@ -596,26 +592,37 @@
 .tas-tile {
   display: grid;
   justify-items: center;
-  min-width: 3.3rem;
-  padding: 0.1rem 0.45rem 0.15rem;
+  align-content: center;
+  gap: 0.15rem;
+  min-width: 4.2rem;
+  padding: 0.35rem 0.6rem 0.4rem;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   background: var(--dw-surface-0);
 
+  // Le chiffre, en grand : c'est lui qu'on lit de loin.
   b {
-    font: 400 1.1rem/1.15 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     white-space: nowrap;
     color: var(--dw-surface-900);
+  }
 
+  // Le dé qui peut remplacer le chiffre (protection « d6−2 »).
+  small {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
   }
 
   span {
-    font-size: 0.56rem;
+    font-size: 0.64rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-700);
   }
 }
 
@@ -629,11 +636,6 @@
 }
 
 // Protection écrite en toutes lettres (« d6-1 (3)+1 ») : plus petite pour tenir.
-.tas-tile--long b {
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
 .tas-chips,
 .tas-pills {
   display: flex;
@@ -1290,7 +1292,7 @@
 }
 
 // Focus visible commun aux boutons et aux champs de l'assistant (les boutons Material ont le leur).
-.tas button:not(.tas-apply):focus-visible,
+.tas button:not(.mat-mdc-button-base):focus-visible,
 .tas input:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;

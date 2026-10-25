@@ -1,5 +1,7 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, input, linkedSignal, output, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
+import {A11yModule} from '@angular/cdk/a11y';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
@@ -94,6 +96,14 @@ interface StatTile {
   readonly tone?: 'up' | 'down';
   /** D'où vient le chiffre, en infobulle. */
   readonly hint?: string;
+  /** Le dé qui peut remplacer le chiffre (protection « d6−2 »), en petit sous lui. */
+  readonly sub?: string;
+}
+
+/** Une protection au dé (« d6-2 (2) ») en tuile : sa valeur fixe en grand, son dé en petit ; une protection fixe reste telle quelle. */
+function protectionTile(text: string | null, fixed: number): StatTile {
+  const die = text?.replace(/\s*\(\d+\)\s*$/, '').trim() ?? '';
+  return /d\d/i.test(die) ? {label: 'Protection', value: String(fixed), sub: die.replace('-', '−')} : {label: 'Protection', value: text ?? String(fixed)};
 }
 
 /** Un terme de l'addition d'un jet sur le plateau. */
@@ -162,7 +172,10 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
 @Component({
   selector: 'bol-turn-assistant',
   imports: [
+    A11yModule,
     AvatarFallbackDirective,
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
     DwDiceRowComponent,
     DwValueStepperComponent,
     EffectsListComponent,
@@ -413,6 +426,44 @@ export class TurnAssistantComponent {
   /** « Options » replié ou déplié ; il se replie à chaque nouveau tour. */
   protected readonly optionsOpen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
 
+  /** Les popovers (options, effets) s'ouvrent sous leur bouton, calées sur son bord gauche ; près du bord droit de l'écran, sur son bord
+   * droit ; au-dessus s'il n'y a pas la place en bas. En dernier recours, elles sont poussées dans l'écran (`cdkConnectedOverlayPush`). */
+  protected readonly popoverPositions: ConnectedPosition[] = [
+    {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6},
+    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
+    {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6},
+    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
+  ];
+  private readonly optionsButton = viewChild<ElementRef<HTMLButtonElement>>('optionsButton');
+
+  /** Ferme la popover des options et rend le focus à son bouton. */
+  protected closeOptions(): void {
+    this.optionsOpen.set(false);
+    this.optionsButton()?.nativeElement.focus();
+  }
+
+  protected onOptionsKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeOptions();
+    }
+  }
+
+  private readonly effectsButton = viewChild<ElementRef<HTMLButtonElement>>('effectsButton');
+
+  /** Ferme la popover des effets et rend le focus à son bouton. */
+  protected closeEffects(): void {
+    this.effectsOpen.set(false);
+    this.effectsButton()?.nativeElement.focus();
+  }
+
+  protected onEffectsKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeEffects();
+    }
+  }
+
   /** Les réglages rares actifs, en pastilles sous « Options » replié : ils se voient sans ouvrir le menu, et se retirent d'un clic. */
   protected readonly activeOptions = computed<readonly ActiveOption[]>(() => {
     const active: ActiveOption[] = [];
@@ -614,7 +665,7 @@ export class TurnAssistantComponent {
     const armorIgnored = this.choice()?.posture?.slug === 'armor-chink';
     return [
       {label: 'Défense', value: String(stats.defense)},
-      armorIgnored ? {label: 'Armure ignorée', value: '0', tone: 'up'} : {label: 'Protection', value: stats.protectionText ?? String(stats.protection)},
+      armorIgnored ? {label: 'Armure ignorée', value: '0', tone: 'up'} : protectionTile(stats.protectionText, stats.protection),
     ];
   });
 
