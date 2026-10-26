@@ -41,7 +41,6 @@ import {shouldPromptDefierLaMort} from '../combat-resolution.util';
 import {headerTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
-import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
 import {ExpandedHeroData} from '../models/expanded-card.model';
 import {ExpandedCardDialogData} from '../models/expanded-card-dialog.model';
@@ -514,29 +513,13 @@ export class SessionPlayPageComponent {
       });
   }
 
-  protected openStartCombatDialog(reroll = false): void {
+  /** « Démarrer un combat », ou un nouveau jet de réaction en plein combat : sa page, sur tout l'écran, qui revient ici ensuite. */
+  protected openStartCombat(reroll = false): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
     }
-
-    this.dialog
-      .open(StartCombatDialogComponent, {
-        // Largeur de départ : le dialogue s'élargit lui-même au-delà de quatre héros.
-        width: 'min(1480px, 96vw)',
-        maxWidth: '96vw',
-        maxHeight: '90vh',
-        panelClass: 'scd-panel',
-        // Le dialogue donne lui-même la main à la case du premier héros une fois chargé : le focus initial reste sur le panneau.
-        autoFocus: 'dialog',
-        data: {sessionId, reroll},
-      })
-      .afterClosed()
-      .subscribe((started: boolean | undefined) => {
-        if (started) {
-          this.loadSession(sessionId);
-        }
-      });
+    void this.router.navigate(['/session', sessionId, 'combat'], reroll ? {queryParams: {reroll: 1}} : {});
   }
 
   /** « Terminer le combat » : la boîte « Après combat » montre ce que chaque blessé récupère (repos, dégâts à mains nues, soins
@@ -1498,7 +1481,7 @@ export class SessionPlayPageComponent {
   private runPaletteAction(id: PaletteActionId, sessionId: string): void {
     switch (id) {
       case 'startCombat':
-        this.openStartCombatDialog();
+        this.openStartCombat();
         break;
       case 'endCombat':
         this.askEndCombat();

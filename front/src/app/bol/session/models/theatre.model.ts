@@ -30,17 +30,16 @@ export interface SceneCarton {
 /** Taille d'une carte sur le plateau : selon le rang dans la troupe, plus petite pour un allié. */
 export type TroupeTaille = 'rival' | 'coriace' | 'pietaille' | 'allie';
 
+/** Le compte d'un camp dans l'aperçu d'une scène : « 5 alliés », « 12 adversaires ». */
+export interface CampCompte {
+  readonly allie: boolean;
+  readonly texte: string;
+}
+
 /** Une carte de la troupe et sa taille. */
 export interface TroupeCard {
   readonly card: TapisCard;
   readonly taille: TroupeTaille;
-}
-
-/** Un portrait de la distribution d'une scène, pour son aperçu : nom, avatar et nombre d'exemplaires. */
-export interface ScenePortrait {
-  readonly nom: string;
-  readonly avatar: string | null;
-  readonly qty: number;
 }
 
 /** La brûlure du rideau : le champ de bruit qui décide dans quel ordre la scène brûle, et les deux calques où on la peint

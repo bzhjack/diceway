@@ -1,8 +1,7 @@
 import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneMeteo, SceneMoment} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {ActeStatut, AmbianceOption, SceneActe, ScenePortrait, TroupeCard, TroupeTaille} from '../../models/theatre.model';
+import {ActeStatut, AmbianceOption, CampCompte, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
 import {scenesOf} from '../scene-list/scene.util';
 
 /** Les moments de la journée, dans l'ordre, avec leur libellé et leur icône. */
@@ -58,12 +57,15 @@ export function sceneDecor(scene: BolSceneModel | null): string {
   return scene?.image?.trim() || DECOR_PAR_DEFAUT;
 }
 
-/** Les portraits de la distribution d'une scène, retrouvés dans le catalogue ; une entrée dont la fiche
- * n'y est plus est ignorée. */
-export function distributionPortraits(distribution: readonly BolSceneEntry[], catalog: readonly CombatCatalogEntry[]): ScenePortrait[] {
-  return distribution.flatMap((entry) => {
-    const fiche = catalog.find((c) => c.kind === entry.kind && c.sourceId === entry.source_id);
-    return fiche ? [{nom: fiche.nom, avatar: fiche.avatar || null, qty: Math.max(1, entry.qty)}] : [];
+/** Combien d'alliés et d'adversaires une scène fait entrer, en clair : « 5 alliés », puis « 12 adversaires » ; un camp vide est
+ * tu (liste vide sans distribution). Une entrée ×3 compte trois ; une entrée sans camp (scènes anciennes) est un adversaire. */
+export function campsComptes(distribution: readonly BolSceneEntry[]): CampCompte[] {
+  const compte = (allie: boolean): number =>
+    distribution.filter((entry) => (entry.camp === 'heros') === allie).reduce((sum, entry) => sum + Math.max(1, entry.qty), 0);
+  return [true, false].flatMap((allie) => {
+    const n = compte(allie);
+    const mot = allie ? 'allié' : 'adversaire';
+    return n > 0 ? [{allie, texte: `${n} ${mot}${n > 1 ? 's' : ''}`}] : [];
   });
 }
 

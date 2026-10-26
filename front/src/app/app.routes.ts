@@ -99,6 +99,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'session/:id/combat',
+    loadComponent: () =>
+      import('./bol/session/start-combat/start-combat-page').then((module) => module.StartCombatPageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/sessions',
     loadComponent: () =>
       import('./bol/session/library/session-library-page').then(

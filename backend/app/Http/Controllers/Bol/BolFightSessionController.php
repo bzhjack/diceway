@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bol;
 
+use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolFightSessionService;
@@ -169,7 +170,11 @@ class BolFightSessionController extends Controller
     {
         $data = $request->validate(['exclus' => 'sometimes|array', 'exclus.*' => 'string']);
 
-        $session = $this->fightSessionService->startCombat($id, Auth::id(), $data['exclus'] ?? []);
+        try {
+            $session = $this->fightSessionService->startCombat($id, Auth::id(), $data['exclus'] ?? []);
+        } catch (CombatWithoutAdversaryException) {
+            return response()->json(['error' => 'Aucun adversaire : ajoutes-en un pour pouvoir démarrer le combat.'], 422);
+        }
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);

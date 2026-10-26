@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Bol;
 
+use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
@@ -112,6 +113,12 @@ class BolFightSessionService
             return null;
         }
 
+        // Un combat ne démarre que face à au moins un adversaire : un PNJ, une créature ou un démon qui n'est pas du camp des héros, et
+        // pas exclu de ce combat. Un nouveau jet de réaction en plein combat n'est pas concerné.
+        if ($session->statut === 'libre' && !$this->hasAdversary($session, $exclus)) {
+            throw new CombatWithoutAdversaryException();
+        }
+
         // Nouveau jet de réaction en plein combat : le round en cours et la vitalité de départ sont gardés, personne n'a encore joué.
         $enCours = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat) : null;
         $round = $enCours['round'] ?? 1;
@@ -120,6 +127,20 @@ class BolFightSessionService
         $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus, 'depart' => $depart])]);
 
         return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** @param array<int, string> $exclus clés `{kind}-{pivotId}` des combattants exclus de ce combat */
+    private function hasAdversary(BolFightSession $session, array $exclus): bool
+    {
+        foreach (['pnj' => $session->pnjs, 'creature' => $session->creatures, 'demon' => $session->demons] as $kind => $lignes) {
+            foreach ($lignes as $ligne) {
+                if ($ligne->camp !== 'heros' && !in_array("{$kind}-{$ligne->id}", $exclus, true)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
