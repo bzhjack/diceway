@@ -1,0 +1,661 @@
+<!-- Un clic n'importe où dégage les dés 3D restés posés sur la page. -->
+<div class="scd-shell" (click)="dismissDice()">
+  <!-- Le canvas de dés mesure son conteneur à la création : ne l'instancier qu'une fois le panneau
+       à sa taille finale (liste des héros chargée), sinon il se fige sur une résolution minuscule
+       et déforme les dés une fois étiré en CSS. -->
+  @if (!loading()) {
+    <app-dice-box-host
+      class="scd-dice-layer"
+      [scale]="6"
+      [theme]="'wooden-red'"
+      [themeColor]="'#ef4444'"
+    />
+  }
+
+  <div class="scd-fg">
+    <!-- L'en-tête de la page, sur une rangée : le retour à la table ; le titre (la règle du jet en infobulle sur son « i ») avec l'avancement
+         des jets, et dessous la session et la scène ; les actions à droite. Dessous, l'alerte sans adversaire. -->
+    <header class="scd-bar">
+      <button mat-stroked-button size="small" type="button" class="scd-back" (click)="close()">
+        <mat-icon>arrow_back</mat-icon> Retour à la table
+      </button>
+      <div class="scd-heading">
+        <div class="scd-title-row">
+          <h1 class="scd-title">
+            {{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}
+          </h1>
+          <button
+            type="button"
+            class="scd-info"
+            aria-label="Règles du jet de réaction"
+            [matTooltip]="rules"
+            matTooltipClass="scd-tooltip"
+          >
+            <mat-icon>info_outline</mat-icon>
+          </button>
+          @if (heroCount() > 0) {
+            <span class="scd-progress" aria-live="polite">
+              <b>{{ rolledCount() }}</b> / {{ heroCount() }} {{ heroCount() > 1 ? 'jets' : 'jet' }}
+            </span>
+          }
+        </div>
+        @if (where()) {
+          <span class="scd-where">{{ where() }}</span>
+        }
+      </div>
+      <div class="scd-actions">
+        <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, et l'avertissement se voit. -->
+        @if (noAdversary()) {
+          <button mat-flat-button type="button" (click)="openAddAdversary()">
+            <mat-icon>add</mat-icon> Ajouter un adversaire
+          </button>
+        } @else {
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="loading()"
+            (click)="openAddAdversary()"
+          >
+            <mat-icon>add</mat-icon> Ajouter un adversaire
+          </button>
+        }
+        <!-- Proposé tant qu'un héros n'a pas lancé : une fois tous les jets faits, il n'a plus rien à lancer. Tant qu'il reste des jets (et
+             qu'il y a un adversaire), c'est l'action principale : le seul bouton plein, « Commencer le combat » attend en contour. -->
+        @if (pendingHeroes().length > 0) {
+          @if (noAdversary()) {
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="loading() || rolling()"
+              (click)="rollAll()"
+            >
+              <mat-icon>casino</mat-icon> Lancer pour tous
+            </button>
+          } @else {
+            <button
+              mat-flat-button
+              type="button"
+              [disabled]="loading() || rolling()"
+              (click)="rollAll()"
+            >
+              <mat-icon>casino</mat-icon> Lancer pour tous
+            </button>
+          }
+        }
+        <!-- Un seul bouton plein : « Ajouter un adversaire » sans adversaire, « Lancer pour tous » tant qu'il reste des jets, sinon celui-ci. -->
+        @if (noAdversary() || pendingHeroes().length > 0) {
+          <button #startButton mat-stroked-button type="button" disabled>
+            <mat-icon>play_arrow</mat-icon>
+            {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+          </button>
+        } @else {
+          <button
+            #startButton
+            mat-flat-button
+            type="button"
+            [disabled]="!canStart() || starting()"
+            (click)="start()"
+          >
+            <mat-icon>play_arrow</mat-icon>
+            {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+          </button>
+        }
+      </div>
+      @if (noAdversary()) {
+        <p class="scd-note scd-note--alert" aria-live="polite">
+          <mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire : ajoutes-en un pour
+          pouvoir démarrer.
+        </p>
+      }
+    </header>
+
+    <main class="scd-content">
+      <div class="scd-layout">
+        <!-- Le registre : une ligne par héros, par agilité décroissante ; ses colonnes s'alignent d'un héros à l'autre (subgrid). -->
+        <section class="scd-main" aria-label="Les jets des héros">
+          <!-- Les modificateurs communs à toute la rencontre -->
+          <section class="scd-mods" aria-label="Modificateurs de la rencontre">
+            <div class="scd-mod" role="group" aria-labelledby="scd-ambush-label">
+              <span class="scd-label" id="scd-ambush-label">Embuscade</span>
+              <div class="scd-seg">
+                @for (option of ambushOptions; track option.label) {
+                  <button
+                    type="button"
+                    [attr.aria-pressed]="ambushState() === option.value"
+                    (click)="setAmbush(option.value)"
+                  >
+                    {{ option.label }}
+                    @if (option.bonus) {
+                      <b>{{ option.bonus }}</b>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+            @if (hasInitiativeAdversary()) {
+              <div class="scd-mod" role="group" aria-labelledby="scd-enemy-label">
+                <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
+                <div class="scd-stepper">
+                  <button
+                    type="button"
+                    aria-label="Diminuer l'initiative ennemie"
+                    [disabled]="adversaryInitiativeMalus() <= 0"
+                    (click)="stepAdversaryMalus(-1)"
+                  >
+                    −
+                  </button>
+                  <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
+                  <button
+                    type="button"
+                    aria-label="Augmenter l'initiative ennemie"
+                    (click)="stepAdversaryMalus(1)"
+                  >
+                    +
+                  </button>
+                </div>
+                <span class="scd-hint scd-hint--wide"
+                  >la plus haute des rivaux et coriaces, retranchée à chaque jet</span
+                >
+              </div>
+            }
+          </section>
+
+          @if (loading()) {
+            <p class="scd-empty">Chargement…</p>
+          } @else {
+            <ol class="scd-rows" aria-label="Jets de réaction des héros">
+              @for (card of heroCards(); track card.hero.pivotId) {
+                <li
+                  [class]="'scd-row scd-row--' + (card.hero.resultat ?? 'attente')"
+                  [class.scd-row--out]="card.excluded"
+                >
+                  <!-- Le portrait ouvre la fiche -->
+                  <button
+                    type="button"
+                    class="scd-med scd-med--btn"
+                    [attr.aria-label]="'Voir la fiche de ' + card.hero.nom"
+                    matTooltip="Voir la fiche"
+                    (click)="openSheet(card.hero)"
+                  >
+                    @if (card.avatar; as avatar) {
+                      <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
+                    } @else {
+                      {{ initial(card.hero.nom) }}
+                    }
+                  </button>
+
+                  <!-- Deux niveaux : en haut l'essentiel (nom, ce qu'il faut, le total et les dés, le verdict) ; dessous, le détail de chacun
+                       (l'héroïsme, les chances, le calcul, la conséquence). Portrait, options, modificateurs et menu tiennent les deux. -->
+                  <b class="scd-name">{{ card.hero.nom }}</b>
+                  @if (card.excluded) {
+                    <span class="scd-tags scd-stats">Hors de ce combat</span>
+                  } @else {
+                    <span class="scd-tags">
+                      <span
+                        class="scd-gems"
+                        role="img"
+                        [attr.aria-label]="
+                          card.heroisme + ' point' + (card.heroisme > 1 ? 's' : '') + ' d’héroïsme'
+                        "
+                      >
+                        @for (lit of card.gems; track $index) {
+                          <i class="scd-gem" [class.scd-gem--off]="!lit"></i>
+                        }
+                      </span>
+                    </span>
+
+                    <!-- Ce qu'il lui faut aux dés ; dessous, ses chances et ses dés de bonus ou de malus. Le calcul en infobulle. -->
+                    <span
+                      class="scd-need"
+                      role="img"
+                      tabindex="0"
+                      [matTooltip]="card.formula"
+                      [attr.aria-label]="
+                        'Il te faut ' +
+                        card.target.big +
+                        ' ' +
+                        card.target.small +
+                        ', ' +
+                        card.chance +
+                        ' % de chances. ' +
+                        card.formula
+                      "
+                    >
+                      <b aria-hidden="true">{{ card.target.big }}</b>
+                    </span>
+                    <span class="scd-chance" aria-hidden="true">
+                      <em
+                        [class]="
+                          card.chance >= 50
+                            ? 'scd-chance--good'
+                            : card.chance >= 25
+                              ? 'scd-chance--mid'
+                              : 'scd-chance--low'
+                        "
+                        >{{ card.chance }} %</em
+                      >
+                      @if (card.diceLabel; as dice) {
+                        <small
+                          [class]="
+                            'scd-dice-note scd-dice-note--' + (card.diceNet > 0 ? 'plus' : 'minus')
+                          "
+                          >{{ dice }}</small
+                        >
+                      } @else {
+                        <small>{{ card.target.small }}</small>
+                      }
+                    </span>
+
+                    <!-- La case du total (tapé à table, ou lancé à l'écran par le bouton) -->
+                    <span class="scd-entry">
+                      <input
+                        #totalInput
+                        class="scd-total"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="2"
+                        autocomplete="off"
+                        placeholder="total"
+                        [id]="totalInputId(card.hero.pivotId)"
+                        [value]="card.dice ?? ''"
+                        [disabled]="rolling()"
+                        [attr.aria-label]="
+                          'Total des deux dés lancés à table pour ' + card.hero.nom
+                        "
+                        (focus)="totalInput.select()"
+                        (input)="onTotalInput(card.hero, totalInput.value)"
+                        (blur)="restoreTotal(totalInput, card.dice)"
+                      />
+                      <button
+                        type="button"
+                        class="scd-dice-btn"
+                        [disabled]="rolling()"
+                        [attr.aria-label]="'Lancer les dés à l’écran pour ' + card.hero.nom"
+                        matTooltip="Lancer à l’écran"
+                        (click)="rollFor(card.hero)"
+                      >
+                        <mat-icon>casino</mat-icon>
+                      </button>
+                    </span>
+
+                    <!-- Ses dés : les faces lancées à l'écran (le dé écarté estompé) ou un double tapé ; sinon une place par dé à lancer -->
+                    <dw-dice-row class="scd-faces" [slots]="card.diceCount" [dice]="card.faces" />
+                    <!-- Dessous, le calcul du jet (déjà lu avec ce qu'il faut) -->
+                    <span class="scd-formula" aria-hidden="true">{{ card.formula }}</span>
+
+                    <!-- Le verdict ; dessous, ce qu'il change au combat -->
+                    <span class="scd-verdict" aria-live="polite">
+                      @if (card.verdict; as v) {
+                        <b>{{ v.title }}</b>
+                      } @else if (card.favorPending) {
+                        <small class="scd-verdict-wait"
+                          >Faveur divine : relance les deux dés.</small
+                        >
+                      } @else {
+                        <small class="scd-verdict-wait">En attente du total</small>
+                      }
+                    </span>
+                    <span class="scd-consequence" [matTooltip]="card.verdict?.detail ?? ''">{{
+                      card.verdict?.detail
+                    }}</span>
+
+                    <!-- L'option d'héroïsme qu'ouvre le jet (double 1, double 6, réussite) et la faveur divine après un échec -->
+                    <!-- L'option d'héroïsme qu'ouvre le jet, en bouton icône avec son coût : l'échec critique (double 1, +1 point), le succès
+                         légendaire (double 6) ou héroïque (réussite), des bascules ; la faveur divine après un échec, une action. -->
+                    <span class="scd-opt">
+                      @if (card.option === 'critique') {
+                        <button
+                          type="button"
+                          class="scd-act scd-act--critique"
+                          [attr.aria-pressed]="card.optionChosen"
+                          aria-label="Échec critique : gagner 1 point d’héroïsme"
+                          matTooltip="Échec critique : il agit en dernier, et gagne 1 point d’héroïsme"
+                          (click)="toggleOption(card)"
+                        >
+                          <mat-icon svgIcon="skull" aria-hidden="true" />
+                          <span class="scd-cost" aria-hidden="true"
+                            >+1 <span class="scd-gem"></span
+                          ></span>
+                        </button>
+                      } @else if (card.option === 'legendaire') {
+                        <button
+                          type="button"
+                          class="scd-act scd-act--legendaire"
+                          [attr.aria-pressed]="card.optionChosen"
+                          aria-label="Succès légendaire, pour 1 point d’héroïsme"
+                          matTooltip="Succès légendaire, pour 1 point d’héroïsme : +1 à ses attaques tout le combat"
+                          (click)="toggleOption(card)"
+                        >
+                          <mat-icon svgIcon="crown" aria-hidden="true" />
+                          <span class="scd-cost" aria-hidden="true"
+                            >−1 <span class="scd-gem"></span
+                          ></span>
+                        </button>
+                      } @else if (card.option === 'heroique') {
+                        <button
+                          type="button"
+                          class="scd-act"
+                          [attr.aria-pressed]="card.optionChosen"
+                          aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
+                          matTooltip="Succès héroïque, pour 1 point d’héroïsme : au round 1, coriaces et piétaille ne jouent pas"
+                          (click)="toggleOption(card)"
+                        >
+                          <mat-icon aria-hidden="true">{{
+                            card.optionChosen ? 'star' : 'star_border'
+                          }}</mat-icon>
+                          <span class="scd-cost" aria-hidden="true"
+                            >−1 <span class="scd-gem"></span
+                          ></span>
+                        </button>
+                      }
+                      @if (card.favor && !card.optionChosen) {
+                        <button
+                          type="button"
+                          class="scd-act scd-act--action"
+                          [disabled]="rolling()"
+                          matTooltip="Faveur divine, pour 1 point d’héroïsme : efface le jet ; relance les deux dés, à table ou à l’écran"
+                          [attr.aria-label]="
+                            'Faveur divine : relancer les dés de ' +
+                            card.hero.nom +
+                            ' pour 1 point d’héroïsme'
+                          "
+                          (click)="divineFavor(card)"
+                        >
+                          <mat-icon aria-hidden="true">replay</mat-icon>
+                          <span class="scd-cost" aria-hidden="true"
+                            >−1 <span class="scd-gem"></span
+                          ></span>
+                        </button>
+                      }
+                    </span>
+                  }
+
+                  @if (!card.excluded) {
+                    <!-- Les modificateurs du jet accordés par le MJ (dé de bonus ou de malus, carrière utile), dans un popover -->
+                    <button
+                      type="button"
+                      class="scd-mods-btn"
+                      cdkOverlayOrigin
+                      #modsOrigin="cdkOverlayOrigin"
+                      [id]="'scd-mods-' + card.hero.pivotId"
+                      aria-haspopup="dialog"
+                      [attr.aria-expanded]="modsOpen() === card.hero.pivotId"
+                      [attr.aria-label]="
+                        'Modificateurs du jet de ' +
+                        card.hero.nom +
+                        (card.modsCount
+                          ? ' : ' + card.modsCount + ' actif' + (card.modsCount > 1 ? 's' : '')
+                          : '')
+                      "
+                      matTooltip="Dé du MJ, carrière utile"
+                      (click)="toggleMods(card.hero.pivotId)"
+                    >
+                      <mat-icon aria-hidden="true">tune</mat-icon>
+                      <span class="scd-mods-label">Modificateurs</span>
+                      @if (card.modsCount) {
+                        <b class="scd-mods-count" aria-hidden="true">{{ card.modsCount }}</b>
+                      }
+                    </button>
+                    <ng-template
+                      cdkConnectedOverlay
+                      [cdkConnectedOverlayOrigin]="modsOrigin"
+                      [cdkConnectedOverlayOpen]="modsOpen() === card.hero.pivotId"
+                      [cdkConnectedOverlayPositions]="popoverPositions"
+                      [cdkConnectedOverlayPush]="true"
+                      [cdkConnectedOverlayViewportMargin]="12"
+                      [cdkConnectedOverlayHasBackdrop]="true"
+                      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+                      (backdropClick)="closeMods()"
+                      (overlayKeydown)="onModsKeydown($event)"
+                      (detach)="modsOpen.set(null)"
+                    >
+                      <div
+                        class="scd-pop"
+                        role="dialog"
+                        [attr.aria-label]="'Modificateurs du jet de ' + card.hero.nom"
+                        cdkTrapFocus
+                        [cdkTrapFocusAutoCapture]="true"
+                      >
+                        <p class="scd-pop-title">Modificateurs du jet de {{ card.hero.nom }}</p>
+                        @if (card.traitNote; as trait) {
+                          <p class="scd-pop-note">{{ trait }}</p>
+                        }
+                        <div class="scd-pop-group" role="group" [attr.aria-label]="'Dé du MJ'">
+                          <span class="scd-label">Dé du MJ</span>
+                          <div class="scd-seg">
+                            <button
+                              type="button"
+                              [attr.aria-pressed]="card.gmDie === null"
+                              (click)="setGmDie(card.hero, null)"
+                            >
+                              Aucun
+                            </button>
+                            <button
+                              type="button"
+                              class="scd-gm-opt scd-gm-opt--plus"
+                              [attr.aria-pressed]="card.gmDie === 1"
+                              (click)="setGmDie(card.hero, 1)"
+                            >
+                              Dé de bonus
+                            </button>
+                            <button
+                              type="button"
+                              class="scd-gm-opt scd-gm-opt--minus"
+                              [attr.aria-pressed]="card.gmDie === -1"
+                              (click)="setGmDie(card.hero, -1)"
+                            >
+                              Dé de malus
+                            </button>
+                          </div>
+                          <small class="scd-hint"
+                            >Un dé de plus : on garde les deux meilleurs (bonus) ou les deux moins
+                            bons (malus).</small
+                          >
+                        </div>
+                        <div
+                          class="scd-pop-group"
+                          role="group"
+                          [attr.aria-label]="'Carrière utile'"
+                        >
+                          <span class="scd-label">Carrière utile</span>
+                          @if (card.hero.carrieres.length > 0) {
+                            <div class="scd-seg">
+                              <button
+                                type="button"
+                                [attr.aria-pressed]="card.career === null"
+                                (click)="setCareer(card.hero, null)"
+                              >
+                                Aucune
+                              </button>
+                              @for (c of card.hero.carrieres; track c.label) {
+                                <button
+                                  type="button"
+                                  [attr.aria-pressed]="card.career?.label === c.label"
+                                  (click)="setCareer(card.hero, c.label)"
+                                >
+                                  {{ c.label }} <b>+{{ c.value }}</b>
+                                </button>
+                              }
+                            </div>
+                            <small class="scd-hint"
+                              >Accordée par le MJ quand elle sert la réaction : son rang s’ajoute au
+                              jet.</small
+                            >
+                          } @else {
+                            <small class="scd-hint">Aucune carrière sur sa fiche.</small>
+                          }
+                        </div>
+                      </div>
+                    </ng-template>
+                  }
+
+                  <!-- La fiche et l'exclusion, en boutons icônes : un clic suffit -->
+                  <span class="scd-row-icons">
+                    <button
+                      type="button"
+                      class="scd-icon"
+                      [attr.aria-label]="'Voir la fiche de ' + card.hero.nom"
+                      matTooltip="Voir la fiche"
+                      (click)="openSheet(card.hero)"
+                    >
+                      <mat-icon aria-hidden="true">description</mat-icon>
+                    </button>
+                    <button
+                      type="button"
+                      class="scd-icon scd-icon--exclude"
+                      [attr.aria-pressed]="card.excluded"
+                      [attr.aria-label]="
+                        (card.excluded ? 'Réintégrer ' : 'Exclure ') +
+                        card.hero.nom +
+                        (card.excluded ? ' dans le combat' : ' de ce combat')
+                      "
+                      [matTooltip]="
+                        card.excluded
+                          ? 'Réintégrer dans le combat'
+                          : 'Exclure de ce combat (reste sur la table)'
+                      "
+                      (click)="toggleExcluded('hero', card.hero.pivotId)"
+                    >
+                      <mat-icon aria-hidden="true">{{
+                        card.excluded ? 'undo' : 'person_off'
+                      }}</mat-icon>
+                    </button>
+                  </span>
+                </li>
+              } @empty {
+                <li class="scd-empty">Aucun héros à table.</li>
+              }
+            </ol>
+            <p class="scd-hint">
+              Tape le total annoncé à table : la saisie passe d’elle-même au héros suivant. Le
+              calcul du jet est en infobulle sur ce qu’il lui faut.
+            </p>
+          }
+        </section>
+
+        <!-- L'ordre d'action, qui se remplit à mesure des jets : un bloc par rang, numéroté dans le round. Les héros y sont en médaillons
+             avec leur total (leur nom est en face) ; les adversaires nommés, avec leur case « participe ». -->
+        <aside class="scd-rail" aria-labelledby="scd-order-label">
+          <h2 class="scd-label scd-label--gold" id="scd-order-label">
+            Ordre d’action <small>round 1</small>
+          </h2>
+          <ol class="scd-track">
+            @for (entry of track(); track entry.lane.id) {
+              <!-- Une carte par rang : son liseré dit qui s'y trouve (héros qui réussissent en vert, en échec en rouge, adversaires en
+                   brun-rouge) ; un rang qui ne joue pas au round 1 a tout son fond hachuré. -->
+              <li
+                [class]="'scd-lane scd-lane--' + entry.lane.id"
+                [class.scd-lane--blocked]="entry.lane.blocked"
+              >
+                <p class="scd-lane-head">
+                  <span class="scd-lane-n" aria-hidden="true">{{ entry.step }}</span>
+                  <span class="scd-lane-title">{{ entry.lane.title }}</span>
+                  <b class="scd-label-count">{{ entry.lane.tokens.length }}</b>
+                </p>
+                @if (entry.lane.blocked) {
+                  <p class="scd-lane-note">Ne joue pas au round 1</p>
+                }
+                @if (entry.heroes) {
+                  <ul class="scd-roster">
+                    @for (token of entry.lane.tokens; track token.pivotId) {
+                      <li class="scd-foe scd-foe--hero">
+                        <span class="scd-token" aria-hidden="true">
+                          @if (token.avatar; as avatar) {
+                            <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
+                          } @else {
+                            {{ initial(token.nom) }}
+                          }
+                        </span>
+                        <span class="scd-foe-id">
+                          <b>{{ token.nom }}</b>
+                        </span>
+                        @if (token.total !== null && token.total !== undefined) {
+                          <span
+                            [class]="'scd-tot scd-tot--' + entry.lane.id"
+                            [attr.aria-label]="'total ' + token.total"
+                            >{{ token.total }}</span
+                          >
+                        }
+                      </li>
+                    }
+                  </ul>
+                } @else {
+                  <ul class="scd-roster">
+                    @for (group of entry.lane.groups; track group.key) {
+                      @let first = group.tokens[0];
+                      @let included = groupIncluded(group);
+                      @let many = group.tokens.length > 1;
+                      <li
+                        class="scd-foe"
+                        [class.scd-foe--ally]="first.detail === 'allié'"
+                        [class.scd-foe--out]="included === 0"
+                      >
+                        <span class="scd-token scd-token--adv" aria-hidden="true">
+                          @if (first.avatar; as avatar) {
+                            <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
+                          } @else {
+                            {{ initial(group.nom) }}
+                          }
+                        </span>
+                        <span class="scd-foe-id">
+                          <b>{{ group.nom }}</b>
+                          @if (first.detail === 'allié') {
+                            <small>allié des héros</small>
+                          }
+                        </span>
+                        @if (many) {
+                          <button
+                            type="button"
+                            class="scd-foe-unfold"
+                            [attr.aria-expanded]="unfolded().has(group.key)"
+                            [attr.aria-label]="
+                              'Voir les ' + group.tokens.length + ' exemplaires de ' + group.nom
+                            "
+                            (click)="toggleUnfolded(group.key)"
+                          >
+                            {{
+                              included === group.tokens.length
+                                ? '×' + included
+                                : included + '/' + group.tokens.length
+                            }}
+                          </button>
+                        }
+                        <mat-checkbox
+                          class="scd-foe-check"
+                          [checked]="included === group.tokens.length"
+                          [indeterminate]="included > 0 && included < group.tokens.length"
+                          [aria-label]="
+                            group.nom +
+                            (many ? ' (les ' + group.tokens.length + ')' : '') +
+                            ' : participe à ce combat'
+                          "
+                          (change)="toggleGroupExcluded(group)"
+                        />
+                        @if (many && unfolded().has(group.key)) {
+                          <ul class="scd-foe-copies">
+                            @for (token of group.tokens; track token.pivotId) {
+                              <li>
+                                <mat-checkbox
+                                  [checked]="!token.excluded"
+                                  (change)="toggleExcluded(token.kind, token.pivotId)"
+                                >
+                                  {{ token.nom }}
+                                </mat-checkbox>
+                              </li>
+                            }
+                          </ul>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+              </li>
+            } @empty {
+              <li class="scd-hint">Personne à table pour l’instant.</li>
+            }
+          </ol>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>

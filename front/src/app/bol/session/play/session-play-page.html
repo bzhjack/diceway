@@ -11,7 +11,7 @@
     <bol-session-header
       [mode]="mode()"
       [titre]="headerTitle()"
-      (startCombat)="openStartCombatDialog()"
+      (startCombat)="openStartCombat()"
       (endCombat)="askEndCombat()"
       (search)="openPalette()"
       [coulissesOpen]="reserveOpen()"
@@ -31,7 +31,7 @@
           (gaveBack)="onGiveBackTurn($event)"
           (interruptRequested)="onInterrupt($event)"
           (addRequested)="openAddCombatantDialog()"
-          (rerollRequested)="openStartCombatDialog(true)"
+          (rerollRequested)="openStartCombat(true)"
         />
       }
     </bol-session-header>

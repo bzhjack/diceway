@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat-dialog.model';
+import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat.model';
 import {reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
 
 const parts = (overrides: Partial<ReactionParts> = {}): ReactionParts => ({esprit: 0, initiative: 0, embuscade: 0, initiativeEnnemie: 0, ...overrides});
@@ -18,6 +18,7 @@ const adversary = (pivotId: number, rang: ReactionAdversary['rang'], overrides: 
   nom: `Adversaire ${pivotId}`,
   avatar: null,
   rang,
+  sourceId: null,
   ally: false,
   excluded: false,
   ...overrides,
@@ -149,6 +150,21 @@ describe('reactionLanes', () => {
     expect(lanes[0].tokens).toEqual([
       {kind: 'pnj', pivotId: 1, nom: 'Adversaire 1', avatar: null, detail: '', excluded: true},
       {kind: 'creature', pivotId: 2, nom: 'Adversaire 2', avatar: null, detail: 'allié', excluded: false},
+    ]);
+  });
+});
+
+describe('reactionLanes — groupes', () => {
+  it('regroupe les exemplaires d’une même fiche et du même camp, à la place du premier, sans le numéro', () => {
+    const guet = (pivotId: number, overrides: Partial<ReactionAdversary> = {}) =>
+      adversary(pivotId, 'pietaille', {nom: `Sergent du guet #${pivotId}`, sourceId: '12', ...overrides});
+    const lanes = reactionLanes([], [guet(1), adversary(2, 'pietaille'), guet(3, {excluded: true}), guet(4, {ally: true}), adversary(5, 'pietaille')]);
+    expect(lanes[0].tokens.length).toBe(5);
+    expect(lanes[0].groups.map((group) => [group.nom, group.tokens.map((token) => token.pivotId)])).toEqual([
+      ['Sergent du guet', [1, 3]],
+      ['Adversaire 2', [2]],
+      ['Sergent du guet #4', [4]],
+      ['Adversaire 5', [5]],
     ]);
   });
 });

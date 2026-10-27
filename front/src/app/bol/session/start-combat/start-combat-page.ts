@@ -14,38 +14,41 @@ import {
   viewChildren,
   WritableSignal,
 } from '@angular/core';
+import {A11yModule} from '@angular/cdk/a11y';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialog} from '@angular/material/dialog';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
-import {extractApiErrorMessage} from '../../../../core/api-error.utils';
-import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
-import {BolFightSessionModel, InitiativeResultat} from '../../../models/bol-fight-session.model';
-import {AmbushState} from '../../../models/combat-selection.model';
-import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {BolHerosService} from '../../../services/bol-heros.service';
-import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
-import {openStatblockDialog} from '../../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {BolHerosModel} from '../../../models/bol-heros.model';
-import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
-import {heroStatblockData} from '../../../shared/statblock/bol-statblock.builders';
-import {DiceRowDie} from '../../../../shared/models/dice-row.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keptDiceIndexes, parseDiceTotal} from '../../action-roll.util';
-import {applyHeroismeDelta} from '../../heroisme-spend.util';
-import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../../models/action-roll.model';
-import {heroDetails} from '../tapis/tapis.util';
-import {CombatEffect} from '../../models/combat-effect.model';
-import {InitiativeKind} from '../../models/initiative.model';
-import {appliquerEvenement, effetSurpris, idAleatoire} from '../tapis/combat-effects.util';
-import {ReactionAdversary, ReactionParts, ReactionToken, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
-import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
-import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
-import {pnjAvatar} from '../../combat-play.util';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
+import {BolFightSessionModel, InitiativeResultat} from '../../models/bol-fight-session.model';
+import {AmbushState} from '../../models/combat-selection.model';
+import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {BolHerosService} from '../../services/bol-heros.service';
+import {DwDiceRowComponent} from '../../../shared/dice-row/dice-row';
+import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {BolHerosModel} from '../../models/bol-heros.model';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {heroStatblockData} from '../../shared/statblock/bol-statblock.builders';
+import {DiceRowDie} from '../../../shared/models/dice-row.model';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keptDiceIndexes, parseDiceTotal} from '../action-roll.util';
+import {applyHeroismeDelta} from '../heroisme-spend.util';
+import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../models/action-roll.model';
+import {heroDetails} from '../play/tapis/tapis.util';
+import {CombatEffect} from '../models/combat-effect.model';
+import {InitiativeKind} from '../models/initiative.model';
+import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
+import {ReactionAdversary, ReactionGroup, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
+import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
+import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
+import {pnjAvatar} from '../combat-play.util';
 
-/** Un PNJ, une créature ou un démon tel que le dialogue le charge : ce que l'ordre d'action en montre, plus son initiative. */
+/** Un PNJ, une créature ou un démon tel que la page le charge : ce que l'ordre d'action en montre, plus son initiative. */
 interface AdversaryRow extends Omit<ReactionAdversary, 'excluded'> {
   /** Initiative : celle d'un PNJ ; les créatures et démons n'en ont pas (0). */
   readonly initiative: number;
@@ -89,8 +92,18 @@ interface HeroCard {
   readonly faces: readonly DiceRowDie[] | null;
   /** Combien de dés il lance : 2, ou 3 et plus avec un dé de bonus ou de malus. Avant le jet, autant de places vides. */
   readonly diceCount: number;
-  /** Son dé de bonus ou de malus, en clair (« Dé de bonus », avec le trait qui le donne en infobulle) ; `null` sans. */
-  readonly diceMod: {readonly label: string; readonly tone: 'plus' | 'minus'; readonly trait: string} | null;
+  /** Ses dés de bonus (positif) ou de malus (négatif), trait et MJ réunis. */
+  readonly diceNet: number;
+  /** Ces dés en clair, sous ce qu'il lui faut (« dé de malus », « 2 dés de bonus ») ; `null` sans. */
+  readonly diceLabel: string | null;
+  /** Le dé de bonus (1) ou de malus (−1) accordé par le MJ pour ce jet, en plus de celui du trait ; `null` sans. */
+  readonly gmDie: 1 | -1 | null;
+  /** Combien de modificateurs le MJ a accordés (dé du MJ, carrière) : le nombre sur le bouton « Modificateurs ». */
+  readonly modsCount: number;
+  /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
+  readonly traitNote: string | null;
+  /** Le calcul du jet en une ligne (« 3d6 +1 esprit −2 ennemi ≥ 9 »), en infobulle sur ce qu'il lui faut. */
+  readonly formula: string;
   readonly verdict: ReactionVerdict | null;
   readonly sum: readonly RollSumTerm[];
   /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1),
@@ -109,6 +122,9 @@ interface HeroCard {
   readonly favorPending: boolean;
 }
 
+/** Le trait qui donne au héros un dé de bonus ou de malus au jet de réaction, rappelé à la fin de son calcul. */
+const TRAIT_DIE: Readonly<Record<number, string>> = {1: ' · Vigilant : un dé de bonus', [-1]: ' · Lent à la détente : un dé de malus'};
+
 /** Embuscade (02-actions-combat.md, « Modificateurs au jet de réaction ») : la tendre ou surprendre l'ennemi donne +2 (Très facile),
  * être surpris ou pris en embuscade donne −1 (Ardue). */
 const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: string; readonly bonus: string; readonly modifier: number}[] = [
@@ -117,31 +133,30 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
   {value: 'heroes_ambushed', label: 'Héros surpris', bonus: '−1', modifier: -1},
 ];
 
-/** Largeur du dialogue jusqu'à quatre héros, et ce qu'ajoute chaque héros au-delà : cinq ou six cartes tiennent ainsi sur une rangée,
- * sans défilement. L'écran borne le tout (`maxWidth` du dialogue). */
-const BASE_WIDTH_PX = 1480;
-const CARD_WIDTH_PX = 340;
-const MAX_CARDS_PER_ROW = 6;
-
 /**
- * Ajoute les adversaires (dialog existant, réutilisé) puis recueille le jet de réaction de chaque héros avant de démarrer le
- * combat. Chaque héros a sa carte, dans le langage de sa fiche : ce qu'il lui faut aux dés, ses chances, la case où taper le total
- * de ses deux dés lancés à table (un bouton les lance à l'écran, sur le plateau de dés partagé), puis son verdict et ce qu'il change
- * au combat. Le double 1 et le double 6 se décident sur la carte. Dessous, l'ordre d'action se remplit à mesure des jets. Les
- * modificateurs d'embuscade et d'initiative adverse (02-actions-combat.md) sont communs à toute la rencontre, réglés une fois
- * au-dessus des cartes. Le calcul est dans `reaction-roll.util.ts`.
+ * La page « Démarrer le combat » (`session/:id/combat`, `?reroll=1` pour un nouveau jet en plein combat), sur tout l'écran : elle
+ * ajoute les adversaires (dialog existant, réutilisé) puis recueille le jet de réaction de chaque héros avant de démarrer le
+ * combat. Un registre, une ligne par héros dont les colonnes s'alignent d'un héros à l'autre : ce qu'il lui faut aux dés et ses
+ * chances, la case où taper le total de ses deux dés lancés à table (un bouton les lance à l'écran, sur le plateau de dés partagé),
+ * ses dés, son verdict et l'option d'héroïsme qu'il ouvre. À droite, l'ordre d'action se remplit à mesure des jets, et c'est là
+ * qu'on coche les adversaires qui jouent. Les modificateurs d'embuscade et d'initiative adverse (02-actions-combat.md) sont communs à
+ * toute la rencontre, réglés une fois au-dessus des lignes. Le calcul est dans `reaction-roll.util.ts`.
  */
 @Component({
-  selector: 'bol-start-combat-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
-  templateUrl: './start-combat-dialog.html',
-  styleUrl: './start-combat-dialog.scss',
+  selector: 'bol-start-combat-page',
+  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatCheckboxModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
+  templateUrl: './start-combat-page.html',
+  styleUrl: './start-combat-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class StartCombatDialogComponent {
-  protected readonly ref = inject(MatDialogRef<StartCombatDialogComponent, boolean>);
-  protected readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
+export class StartCombatPageComponent {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  protected readonly data: StartCombatContext = {
+    sessionId: this.route.snapshot.paramMap.get('id') ?? '',
+    reroll: this.route.snapshot.queryParamMap.get('reroll') === '1',
+  };
   private readonly dialog = inject(MatDialog);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
@@ -161,7 +176,7 @@ export class StartCombatDialogComponent {
 
   /** Héroïsme courant par héros (clé pivotId) — signal dédié car `applyHeroismeDelta` le mute en place. */
   private readonly heroismeByPivot = new Map<number, WritableSignal<number>>();
-  /** Total des deux dés de chaque héros (clé pivotId), saisi ou lancé dans ce dialogue. Non persisté : le back ne stocke que le
+  /** Total des deux dés de chaque héros (clé pivotId), saisi ou lancé sur cette page. Non persisté : le back ne stocke que le
    * résultat. */
   /** Les faces des dés de chaque héros lancés à l'écran (clé pivotId), dé de bonus ou de malus compris : elles s'affichent à côté de
    * la case du total. */
@@ -171,6 +186,8 @@ export class StartCombatDialogComponent {
   private readonly heroicUpgrades = signal<ReadonlySet<number>>(new Set());
   /** Héros (clé pivotId) dont la faveur divine attend le total des dés relancés à table. */
   private readonly favorPendingPivots = signal<ReadonlySet<number>>(new Set());
+  /** Le dé de bonus (1) ou de malus (−1) que le MJ accorde à un héros pour ce jet (règle générale des dés de bonus et de malus). */
+  private readonly gmDieByPivot = signal<ReadonlyMap<number, 1 | -1>>(new Map());
   /** La carrière utile que le MJ accorde à chaque héros pour ce jet (clé pivotId → nom de la carrière). */
   private readonly careerByPivot = signal<ReadonlyMap<number, string>>(new Map());
 
@@ -210,7 +227,8 @@ export class StartCombatDialogComponent {
       const parts = this.partsFor(hero);
       const modifier = reactionModifier(parts);
       const dice = this.diceTotalFor(hero.pivotId);
-      const chance = Math.round(actionSuccessChance(hero.diceNet, modifier, REACTION_ROLL_THRESHOLD) * 100);
+      const net = this.diceNetFor(hero);
+      const chance = Math.round(actionSuccessChance(net, modifier, REACTION_ROLL_THRESHOLD) * 100);
       const upgraded = this.heroicUpgrades().has(hero.pivotId);
       const optionChosen = hero.resultat === 'echec_critique' || hero.resultat === 'legendaire' || upgraded;
       const heroisme = this.heroismeSignal(hero.pivotId)();
@@ -226,16 +244,25 @@ export class StartCombatDialogComponent {
         target: actionDiceTargetLabel(actionDiceTarget(modifier, REACTION_ROLL_THRESHOLD)),
         chance,
         faces: this.facesFor(hero, dice),
-        diceCount: 2 + Math.abs(hero.diceNet),
-        diceMod:
-          hero.diceNet === 0
-            ? null
-            : hero.diceNet > 0
-              ? {label: 'Dé de bonus', tone: 'plus', trait: 'Vigilant : un dé de bonus au jet de réaction'}
-              : {label: 'Dé de malus', tone: 'minus', trait: 'Lent à la détente : un dé de malus au jet de réaction'},
+        diceCount: 2 + Math.abs(net),
+        diceNet: net,
+        diceLabel: net === 0 ? null : `${Math.abs(net) > 1 ? '2 dés' : 'dé'} de ${net > 0 ? 'bonus' : 'malus'}`,
+        gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
+        modsCount: (this.gmDieByPivot().has(hero.pivotId) ? 1 : 0) + (parts.carriere ? 1 : 0),
+        traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
+        formula: reactionSumTerms(null, parts, net)
+          .map((term) =>
+            term.tone === 'dice'
+              ? `${term.value}${net > 0 ? ' (2 meilleurs)' : net < 0 ? ' (2 moins bons)' : ''}`
+              : term.tone === 'total'
+                ? term.value
+                : `${term.value} ${term.caption}`,
+          )
+          .join(' ')
+          .concat(TRAIT_DIE[Math.sign(hero.diceNet)] ?? ''),
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
-        sum: reactionSumTerms(dice, parts, hero.diceNet),
+        sum: reactionSumTerms(dice, parts, net),
         option: dice === 2 ? 'critique' : legendary ? 'legendaire' : heroic ? 'heroique' : null,
         optionChosen,
         career: parts.carriere ?? null,
@@ -258,24 +285,34 @@ export class StartCombatDialogComponent {
     ),
   );
 
-  protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
-  /** Aucun adversaire (une fois la table chargée) : le combat ne peut pas commencer, ajouter un adversaire devient l'action principale. */
-  protected readonly noAdversary = computed(() => !this.loading() && this.activeAdversaries().length === 0);
-  protected readonly canStart = computed(() => this.activeAdversaries().length > 0 && this.pendingHeroes().length === 0);
+  /** L'ordre d'action en frise, chaque bloc avec son rang dans le round (1, 2…). Les héros qui n'ont pas lancé n'y sont pas : leurs lignes,
+   * en face, l'indiquent déjà. */
+  protected readonly track = computed(() =>
+    this.lanes()
+      .filter((lane) => lane.id !== 'attente')
+      .map((lane, index) => ({lane, step: index + 1, heroes: lane.id === 'heros' || lane.id === 'echec' || lane.id === 'echec_critique'})),
+  );
 
-  /** Ce que la table doit savoir avant de commencer : ce qui manque, puis les égalités entre héros. L'ordre des cartes est déjà celui
-   * du livre pour les départager : par agilité décroissante. */
-  protected readonly note = computed(() => {
-    if (this.activeAdversaries().length === 0) {
-      return 'Aucun adversaire : ajoutes-en un pour pouvoir démarrer.';
-    }
-    const missing = this.pendingHeroes().length;
-    return missing === 0 ? '' : missing === 1 ? 'Il manque 1 jet.' : `Il manque ${missing} jets.`;
-  });
+  /** Les groupes dont on a déplié les exemplaires, pour en cocher un seul. */
+  protected readonly unfolded = signal<ReadonlySet<string>>(new Set());
+
+  protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
+  /** « 2 / 4 jets » dans l'en-tête. */
+  protected readonly rolledCount = computed(() => this.activeHeroes().length - this.pendingHeroes().length);
+  protected readonly heroCount = computed(() => this.activeHeroes().length);
+  /** Où on en est, au-dessus du titre : la session, puis la scène en cours s'il y en a une. */
+  protected readonly where = signal('');
+  /** Aucun adversaire (une fois la table chargée) : le combat ne peut pas commencer, ajouter un adversaire devient l'action principale. */
+  /** Les adversaires qui comptent pour démarrer : ni exclus, ni du camp des héros (un allié ne suffit pas à faire un combat). */
+  private readonly activeEnemies = computed(() => this.activeAdversaries().filter((a) => !a.ally));
+  /** Pas d'adversaire pour démarrer. Un nouveau jet de réaction en plein combat n'en demande pas (comme côté serveur). */
+  protected readonly noAdversary = computed(() => !this.loading() && !this.data.reroll && this.activeEnemies().length === 0);
+  protected readonly canStart = computed(() => !this.noAdversary() && !this.loading() && this.pendingHeroes().length === 0);
 
   /** La règle du jet et de l'ordre, dans l'infobulle du « i » à côté du titre (02-actions-combat.md, « Jet de réaction »). */
   protected readonly rules =
     'Jet de réaction : 2d6 + esprit + initiative, réussite à 9. Les PNJ, créatures et démons n’ont pas de jet : leur rang les place.\n' +
+    'Initiative ennemie : la plus haute des rivaux et coriaces adverses, retranchée à chaque jet.\n' +
     'Égalité entre héros : l’agilité la plus haute agit d’abord, sauf s’ils en décident autrement ; à agilité égale, ils agissent en même temps.';
 
   constructor() {
@@ -330,11 +367,18 @@ export class StartCombatDialogComponent {
       .pipe(take(1))
       .subscribe({
         next: (session) => {
+          // On n'arrive ici que depuis la table, mais un lien direct ou un onglet resté ouvert peut tomber sur une session où ce jet n'a
+          // plus de sens : en combat sans être un nouveau jet, ou terminée. Retour à la table.
+          if (session.statut !== 'libre' && !(this.data.reroll && session.statut === 'combat')) {
+            this.close();
+            return;
+          }
+          this.where.set([session.titre, session.scene?.titre].filter((part): part is string => !!part).join(' · '));
           // Mêmes portraits que sur la table (`combat-play.util.ts`) : celui de la fiche, sinon l'image du catalogue.
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, avatar: pnjAvatar(p), rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
-            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null), rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
-            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null), rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, avatar: pnjAvatar(p), sourceId: p.pnj_id, rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null), sourceId: c.creature_id, rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null), sourceId: d.demon_id, rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
@@ -347,8 +391,8 @@ export class StartCombatDialogComponent {
 
           forkJoin(heroEntries.map((h) => this.herosService.heros(h.heros_id).pipe(take(1)))).subscribe({
             next: (fullHeroes) => {
-              // Un nouveau combat réclame un nouveau jet de réaction (02-actions-combat.md) : seuls comptent les jets faits dans ce
-              // dialogue. Un résultat resté en base d'un combat précédent ou d'un dialogue annulé n'est pas repris, et il est effacé.
+              // Un nouveau combat réclame un nouveau jet de réaction (02-actions-combat.md) : seuls comptent les jets faits sur cette
+              // page. Un résultat resté en base d'un combat précédent ou d'une page quittée n'est pas repris, et il est effacé.
               const rolledHere = new Map(this.heroes().map((h) => [h.pivotId, h.resultat]));
               const rows = heroEntries.map((h, i): HeroRow => {
                 const hero = fullHeroes[i];
@@ -372,7 +416,6 @@ export class StartCombatDialogComponent {
               // Par agilité décroissante : entre héros de même résultat, c'est l'ordre dans lequel ils agiront par défaut
               // (02-actions-combat.md). À agilité égale, l'ordre de la table est gardé.
               this.heroes.set(rows.sort((a, b) => b.agilite - a.agilite));
-              this.fitWidth(heroEntries.length);
               for (const h of heroEntries) {
                 if (h.initiative_resultat !== null && !rolledHere.get(h.id)) {
                   this.enqueueSave(h.id, null, "Impossible d'effacer un jet de réaction précédent.");
@@ -398,24 +441,20 @@ export class StartCombatDialogComponent {
       });
   }
 
-  /** Élargit le dialogue au-delà de quatre héros, pour garder leurs cartes sur une seule rangée. */
-  private fitWidth(heroCount: number): void {
-    const width = Math.max(BASE_WIDTH_PX, 40 + Math.min(heroCount, MAX_CARDS_PER_ROW) * CARD_WIDTH_PX);
-    this.ref.updateSize(`min(${width}px, 96vw)`);
-  }
-
-  /** Les faces à montrer d'un héros : celles lancées à l'écran, le dé écarté marqué ; sinon celles qu'un total tapé suffit à connaître
-   * (2 : double 1, 12 : double 6) ; sinon aucune. */
+  /** Les faces à montrer d'un héros : celles lancées à l'écran, les deux dés gardés d'abord puis le dé écarté, marqué (d'une ligne à
+   * l'autre, les dés qui comptent tombent ainsi à la même place) ; sinon celles qu'un total tapé suffit à connaître (2 : double 1,
+   * 12 : double 6) ; sinon aucune. */
   private facesFor(hero: HeroRow, dice: number | null): readonly DiceRowDie[] | null {
     const rolled = this.facesByPivot().get(hero.pivotId);
     if (rolled) {
-      const kept = keptDiceIndexes(rolled, hero.diceNet);
-      return rolled.map((value, index) => ({value, dropped: !kept.includes(index)}));
+      const kept = keptDiceIndexes(rolled, this.diceNetFor(hero));
+      const faces = rolled.map((value, index) => ({value, dropped: !kept.includes(index)}));
+      return [...faces.filter((face) => !face.dropped), ...faces.filter((face) => face.dropped)];
     }
     return dice === 2 ? [{value: 1}, {value: 1}] : dice === 12 ? [{value: 6}, {value: 6}] : null;
   }
 
-  /** Ouvre le statbloc d'un héros par-dessus le dialogue. */
+  /** Ouvre le statbloc d'un héros par-dessus la page. */
   protected openSheet(hero: HeroRow): void {
     openStatblockDialog(this.dialog, BolStatblockComponent, {data: heroStatblockData(hero.fiche), imageSrc: hero.avatar ?? '', kind: 'hero'});
   }
@@ -450,6 +489,38 @@ export class StartCombatDialogComponent {
     });
   }
 
+  /** La case d'un groupe : cochée (tous jouent), elle les exclut tous ; sinon, en partie ou pas du tout, tous reviennent. */
+  protected toggleGroupExcluded(group: ReactionGroup): void {
+    const exclude = group.tokens.every((token) => !token.excluded);
+    this.excluded.update((set) => {
+      const next = new Set(set);
+      for (const token of group.tokens) {
+        const key = `${token.kind}-${token.pivotId}`;
+        if (exclude) {
+          next.add(key);
+        } else {
+          next.delete(key);
+        }
+      }
+      return next;
+    });
+  }
+
+  protected toggleUnfolded(key: string): void {
+    this.unfolded.update((set) => {
+      const next = new Set(set);
+      if (!next.delete(key)) {
+        next.add(key);
+      }
+      return next;
+    });
+  }
+
+  /** Combien d'exemplaires d'un groupe jouent ce combat. */
+  protected groupIncluded(group: ReactionGroup): number {
+    return group.tokens.filter((token) => !token.excluded).length;
+  }
+
   protected onAvatarError(avatar: string): void {
     this.brokenAvatars.update((set) => new Set(set).add(avatar));
   }
@@ -458,17 +529,8 @@ export class StartCombatDialogComponent {
     return avatar && !this.brokenAvatars().has(avatar) ? avatar : null;
   }
 
-  protected signed(value: number): string {
-    return value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : '0';
-  }
-
   protected initial(nom: string): string {
     return nom.trim().charAt(0).toUpperCase();
-  }
-
-  /** L'infobulle d'un jeton de l'ordre d'action : son nom, puis son détail (« total 14 · légendaire », « allié »). */
-  protected tokenInfo(token: ReactionToken): string {
-    return token.detail ? `${token.nom} · ${token.detail}` : token.nom;
   }
 
   protected totalInputId(pivotId: number): string {
@@ -548,9 +610,10 @@ export class StartCombatDialogComponent {
     try {
       await box.clear();
       // Avec un dé de bonus ou de malus, il lance un dé de plus et garde les deux meilleurs ou les deux moins bons.
-      const results = await box.rollNotation(`${2 + Math.abs(hero.diceNet)}d6`);
+      const net = this.diceNetFor(hero);
+      const results = await box.rollNotation(`${2 + Math.abs(net)}d6`);
       const values = results.map((result) => result.value);
-      const [first, second] = keptDiceIndexes(values, hero.diceNet);
+      const [first, second] = keptDiceIndexes(values, net);
       this.setRoll(hero.pivotId, values[first] + values[second]);
       this.facesByPivot.update((map) => new Map(map).set(hero.pivotId, values));
     } finally {
@@ -565,11 +628,62 @@ export class StartCombatDialogComponent {
     }
   }
 
-  /** Dégage les dés 3D encore posés sur le dialogue (les jets ne sont pas touchés). Ignoré pendant un lancer : ce clear() entrerait
+  /** Dégage les dés 3D encore posés sur la page (les jets ne sont pas touchés). Ignoré pendant un lancer : ce clear() entrerait
    * en course avec celui du lancer et corromprait l'état de la librairie de dés. */
   protected dismissDice(): void {
     if (!this.rolling()) {
       void this.diceBox()?.clear();
+    }
+  }
+
+  /** Les dés de bonus (positif) ou de malus (négatif) du jet d'un héros : ceux de son trait, plus celui du MJ ; deux au plus. */
+  private diceNetFor(hero: HeroRow): number {
+    return Math.max(-2, Math.min(2, hero.diceNet + (this.gmDieByPivot().get(hero.pivotId) ?? 0)));
+  }
+
+  /** Le MJ accorde à un héros un dé de bonus (1) ou de malus (−1) pour ce jet, ou le retire (`null`). Le total déjà tapé reste ; les
+   * faces d'un lancer à l'écran, qui ne comptaient pas ce dé, s'effacent. */
+  protected setGmDie(hero: HeroRow, die: 1 | -1 | null): void {
+    this.gmDieByPivot.update((map) => {
+      const next = new Map(map);
+      if (die === null) {
+        next.delete(hero.pivotId);
+      } else {
+        next.set(hero.pivotId, die);
+      }
+      return next;
+    });
+    this.facesByPivot.update((map) => {
+      const next = new Map(map);
+      next.delete(hero.pivotId);
+      return next;
+    });
+  }
+
+  /** Le popover des modificateurs ouvert (clé pivotId du héros), `null` sinon : un seul à la fois. */
+  protected readonly modsOpen = signal<number | null>(null);
+  protected readonly popoverPositions: ConnectedPosition[] = [
+    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
+    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
+  ];
+
+  protected toggleMods(pivotId: number): void {
+    this.modsOpen.update((open) => (open === pivotId ? null : pivotId));
+  }
+
+  /** Ferme le popover des modificateurs et rend le focus à son bouton. */
+  protected closeMods(): void {
+    const pivotId = this.modsOpen();
+    this.modsOpen.set(null);
+    if (pivotId !== null) {
+      document.getElementById(`scd-mods-${pivotId}`)?.focus();
+    }
+  }
+
+  protected onModsKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeMods();
     }
   }
 
@@ -734,7 +848,7 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: () => {
           this.starting.set(false);
-          this.ref.close(true);
+          this.close();
         },
         error: (error: unknown) => {
           this.starting.set(false);
@@ -762,7 +876,8 @@ export class StartCombatDialogComponent {
     return this.fightSessionService.updateCombatState(this.data.sessionId, {round: etat.round, joues: [], effets: [...effets], exclus: [...(etat.exclus ?? [])]});
   }
 
+  /** Retour à la table, qui recharge la session en arrivant. */
   protected close(): void {
-    this.ref.close(undefined);
+    void this.router.navigate(['/session', this.data.sessionId, 'play']);
   }
 }

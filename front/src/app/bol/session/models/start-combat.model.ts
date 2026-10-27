@@ -2,8 +2,8 @@ import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {ActionRollTone} from './action-roll.model';
 import {InitiativeKind} from './initiative.model';
 
-/** Données du dialogue de démarrage d'un combat. */
-export interface StartCombatDialogData {
+/** Ce que la page de démarrage d'un combat lit de sa route : la session (`session/:id/combat`) et `?reroll=1`. */
+export interface StartCombatContext {
   readonly sessionId: string;
   /** Nouveau jet de réaction en plein combat : les rounds déjà joués sont conservés. */
   readonly reroll?: boolean;
@@ -50,6 +50,9 @@ export interface ReactionAdversary {
   readonly nom: string;
   readonly avatar: string | null;
   readonly rang: 'rival' | 'coriace' | 'pietaille';
+  /** La fiche d'où il vient (PNJ, créature ou démon) : les exemplaires d'une même fiche se regroupent dans l'ordre d'action. `null`
+   * pour un combattant sans fiche, qui reste seul. */
+  readonly sourceId: string | null;
   /** Dans le camp des héros. */
   readonly ally: boolean;
   /** Exclu de ce combat : il reste sur la table, mais ne joue pas. */
@@ -65,6 +68,16 @@ export interface ReactionToken {
   /** Précision derrière le nom : « total 14 · légendaire » pour un héros qui a lancé, « allié » pour un allié des héros. Vide sinon. */
   readonly detail: string;
   readonly excluded: boolean;
+  /** Le total du jet de réaction d'un héros qui a lancé ; absent pour un adversaire. */
+  readonly total?: number | null;
+}
+
+/** Des jetons de l'ordre d'action montrés en un seul médaillon : les exemplaires d'une même fiche, du même camp (cinq « Sergent du
+ * guet »), ou un combattant seul. `nom` est celui de la fiche, sans le numéro d'exemplaire. */
+export interface ReactionGroup {
+  readonly key: string;
+  readonly nom: string;
+  readonly tokens: readonly ReactionToken[];
 }
 
 /** Un bloc de l'ordre d'action : ses combattants, et s'il est bloqué au round 1. `attente` réunit les héros qui n'ont pas lancé. */
@@ -73,4 +86,6 @@ export interface ReactionLane {
   readonly title: string;
   readonly blocked: boolean;
   readonly tokens: readonly ReactionToken[];
+  /** Les mêmes combattants, regroupés par fiche, dans l'ordre de `tokens` (un héros est toujours seul). */
+  readonly groups: readonly ReactionGroup[];
 }

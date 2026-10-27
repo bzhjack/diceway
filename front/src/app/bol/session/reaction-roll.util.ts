@@ -2,7 +2,7 @@ import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {actionDiceTarget, actionResultTone, netDiceModifier} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
 import {HeroDetailTrait} from './models/tapis.model';
-import {ReactionAdversary, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat-dialog.model';
+import {ReactionAdversary, ReactionGroup, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat.model';
 
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
@@ -96,6 +96,11 @@ const HERO_LANE: Record<InitiativeResultat, 'heros' | 'echec' | 'echec_critique'
   echec_critique: 'echec_critique',
 };
 
+/** Le nom d'une fiche sans le numéro d'exemplaire que la table ajoute (« Sergent du guet #3 » → « Sergent du guet »). */
+function sansNumero(nom: string): string {
+  return nom.replace(/\s*#\d+$/, '');
+}
+
 /** Dans le premier bloc, le succès légendaire agit avant l'héroïque, qui agit avant la simple réussite. */
 const HERO_RANK: Partial<Record<InitiativeResultat, number>> = {legendaire: 0, heroique: 1, reussite: 2};
 const HERO_RANK_WORD: Partial<Record<InitiativeResultat, string>> = {legendaire: 'légendaire', heroique: 'héroïque'};
@@ -109,7 +114,7 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
   const heroToken = (h: ReactionHero): ReactionToken => {
     const word = h.resultat ? HERO_RANK_WORD[h.resultat] : undefined;
     const total = h.total === null ? '' : `total ${h.total}`;
-    return {kind: 'hero', pivotId: h.pivotId, nom: h.nom, avatar: h.avatar, detail: word && total ? `${total} · ${word}` : (word ?? total), excluded: false};
+    return {kind: 'hero', pivotId: h.pivotId, nom: h.nom, avatar: h.avatar, detail: word && total ? `${total} · ${word}` : (word ?? total), excluded: false, total: h.total};
   };
   const rank = (h: ReactionHero): number => (h.resultat ? HERO_RANK[h.resultat] : undefined) ?? 0;
   const heroTokens = (lane: 'heros' | 'echec' | 'echec_critique'): readonly ReactionToken[] =>
@@ -121,15 +126,33 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
     adversaries
       .filter((a) => a.rang === rang)
       .map((a) => ({kind: a.kind, pivotId: a.pivotId, nom: a.nom, avatar: a.avatar, detail: a.ally ? 'allié' : '', excluded: a.excluded}));
+  // Les exemplaires d'une même fiche, du même camp, ne font qu'un médaillon ; le groupe prend la place du premier.
+  const source = new Map(adversaries.map((a) => [`${a.kind}-${a.pivotId}`, a.sourceId === null ? null : `${a.kind}-${a.sourceId}-${a.ally}`]));
+  const groupsOf = (tokens: readonly ReactionToken[]): readonly ReactionGroup[] => {
+    const groups = new Map<string, ReactionToken[]>();
+    for (const token of tokens) {
+      const key = token.kind === 'hero' ? null : source.get(`${token.kind}-${token.pivotId}`);
+      const groupKey = key ?? `${token.kind}-${token.pivotId}`;
+      groups.set(groupKey, [...(groups.get(groupKey) ?? []), token]);
+    }
+    return [...groups].map(([key, members]) => ({key, nom: members.length > 1 ? sansNumero(members[0].nom) : members[0].nom, tokens: members}));
+  };
+  const lane = (id: ReactionLane['id'], title: string, blocked: boolean, tokens: readonly ReactionToken[]): ReactionLane => ({
+    id,
+    title,
+    blocked,
+    tokens,
+    groups: groupsOf(tokens),
+  });
 
   const lanes: readonly ReactionLane[] = [
-    {id: 'attente', title: 'À lancer', blocked: false, tokens: heroes.filter((h) => h.resultat === null).map(heroToken)},
-    {id: 'heros', title: 'Héros', blocked: false, tokens: heroTokens('heros')},
-    {id: 'rival', title: 'Rivaux', blocked: false, tokens: adversaryTokens('rival')},
-    {id: 'coriace', title: 'Coriaces', blocked: locked, tokens: adversaryTokens('coriace')},
-    {id: 'echec', title: 'Héros en échec', blocked: false, tokens: heroTokens('echec')},
-    {id: 'pietaille', title: 'Piétaille', blocked: locked, tokens: adversaryTokens('pietaille')},
-    {id: 'echec_critique', title: 'Échec critique', blocked: false, tokens: heroTokens('echec_critique')},
+    lane('attente', 'À lancer', false, heroes.filter((h) => h.resultat === null).map(heroToken)),
+    lane('heros', 'Héros', false, heroTokens('heros')),
+    lane('rival', 'Rivaux', false, adversaryTokens('rival')),
+    lane('coriace', 'Coriaces', locked, adversaryTokens('coriace')),
+    lane('echec', 'Héros en échec', false, heroTokens('echec')),
+    lane('pietaille', 'Piétaille', locked, adversaryTokens('pietaille')),
+    lane('echec_critique', 'Échec critique', false, heroTokens('echec_critique')),
   ];
   return lanes.filter((lane) => lane.tokens.length > 0);
 }

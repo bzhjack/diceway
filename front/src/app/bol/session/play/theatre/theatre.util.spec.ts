@@ -1,8 +1,7 @@
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {acteLabel, ATTITUDES, cartonTenue, compagnie, distributionPortraits, lieuTexte, sceneActs, sceneDecor, troupe} from './theatre.util';
+import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, campsComptes, sceneActs, sceneDecor, troupe} from './theatre.util';
 
 function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): BolSceneModel {
   return {
@@ -53,21 +52,6 @@ describe('sceneDecor', () => {
     expect(sceneDecor(scene('s', 0, {image: '  ', region_id: 5}))).toBe(parDefaut);
     expect(sceneDecor(scene('s', 0))).toBe(parDefaut);
     expect(sceneDecor(null)).toBe(parDefaut);
-  });
-});
-
-describe('distributionPortraits', () => {
-  it('retrouve nom et portrait dans le catalogue et garde la quantité', () => {
-    const catalog = [{catalogId: 'creature-24', kind: 'creature', sourceId: '24', nom: 'Kroark', vitalite: 14, avatar: '/k.jpg'}] as unknown as CombatCatalogEntry[];
-    expect(
-      distributionPortraits(
-        [
-          {kind: 'creature', source_id: '24', qty: 3, positions: []},
-          {kind: 'pnj', source_id: '404', qty: 1, positions: []},
-        ],
-        catalog,
-      ),
-    ).toEqual([{nom: 'Kroark', avatar: '/k.jpg', qty: 3}]);
   });
 });
 
@@ -153,5 +137,21 @@ describe('compagnie', () => {
 describe('ATTITUDES', () => {
   it('va de l’hostile à l’amical', () => {
     expect(ATTITUDES.map((a) => a.label)).toEqual(['Hostile', 'Méfiant', 'Neutre', 'Amical']);
+  });
+});
+
+describe('campsComptes', () => {
+  const entry = (qty: number, camp?: 'heros' | 'adversaires') => ({kind: 'pnj' as const, source_id: 'x', qty, camp, positions: []});
+  const textes = (comptes: ReturnType<typeof campsComptes>) => comptes.map((c) => `${c.allie ? 'A' : 'E'} ${c.texte}`);
+
+  it('compte alliés puis adversaires, quantités comprises (sans camp = adversaire)', () => {
+    expect(textes(campsComptes([entry(6), entry(4, 'adversaires'), entry(2), entry(3, 'heros'), entry(2, 'heros')]))).toEqual(['A 5 alliés', 'E 12 adversaires']);
+    expect(textes(campsComptes([entry(1), entry(1, 'heros')]))).toEqual(['A 1 allié', 'E 1 adversaire']);
+  });
+
+  it('tait un camp vide, et ne dit rien sans distribution', () => {
+    expect(textes(campsComptes([entry(2)]))).toEqual(['E 2 adversaires']);
+    expect(textes(campsComptes([entry(1, 'heros')]))).toEqual(['A 1 allié']);
+    expect(campsComptes([])).toEqual([]);
   });
 });
