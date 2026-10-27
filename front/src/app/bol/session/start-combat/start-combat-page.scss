@@ -547,7 +547,7 @@ bol-start-combat-page {
   background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-legendary) 15%, #1a120c), #1a120c 55%);
 }
 
-// Le succès légendaire en cramoisi, comme dans le reste de l'app (l'héroïque est doré).
+// Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
 .scd-row--legendaire {
   border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 75%, transparent);
   background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-succes-legendaire) 15%, #1a120c), #1a120c 55%);
@@ -936,7 +936,7 @@ bol-start-combat-page {
 }
 
 // Chaque option à la couleur de son résultat, comme ailleurs dans l'app : l'échec critique en rouge, le succès héroïque en doré (la
-// couleur de base des options), le succès légendaire en cramoisi. Choisie, l'option se remplit de sa couleur.
+// couleur de base des options), le succès légendaire en violet. Choisie, l'option se remplit de sa couleur.
 .scd-act.scd-act--critique {
   border-color: color-mix(in srgb, var(--dw-color-echec-forte) 65%, transparent);
   background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
@@ -965,7 +965,7 @@ bol-start-combat-page {
   &[aria-pressed='true'] {
     border-color: var(--dw-color-succes-legendaire);
     background: var(--dw-color-succes-legendaire);
-    color: #fff;
+    color: #1d0b33;
   }
 }
 
