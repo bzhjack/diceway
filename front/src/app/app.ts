@@ -8,6 +8,7 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   sword: '/assets/icons/sword.svg',
   d6: '/assets/icons/d6.svg',
   skull: '/assets/icons/skull.svg',
+  crown: '/assets/icons/crown.svg',
 };
 
 @Component({

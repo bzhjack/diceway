@@ -14,12 +14,13 @@ import {
   viewChildren,
   WritableSignal,
 } from '@angular/core';
+import {A11yModule} from '@angular/cdk/a11y';
+import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
@@ -97,6 +98,10 @@ interface HeroCard {
   readonly diceLabel: string | null;
   /** Le dé de bonus (1) ou de malus (−1) accordé par le MJ pour ce jet, en plus de celui du trait ; `null` sans. */
   readonly gmDie: 1 | -1 | null;
+  /** Combien de modificateurs le MJ a accordés (dé du MJ, carrière) : le nombre sur le bouton « Modificateurs ». */
+  readonly modsCount: number;
+  /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
+  readonly traitNote: string | null;
   /** Le calcul du jet en une ligne (« 3d6 +1 esprit −2 ennemi ≥ 9 »), en infobulle sur ce qu'il lui faut. */
   readonly formula: string;
   readonly verdict: ReactionVerdict | null;
@@ -140,7 +145,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatCheckboxModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrl: './start-combat-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -244,6 +249,8 @@ export class StartCombatPageComponent {
         diceNet: net,
         diceLabel: net === 0 ? null : `${Math.abs(net) > 1 ? '2 dés' : 'dé'} de ${net > 0 ? 'bonus' : 'malus'}`,
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
+        modsCount: (this.gmDieByPivot().has(hero.pivotId) ? 1 : 0) + (parts.carriere ? 1 : 0),
+        traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
         formula: reactionSumTerms(null, parts, net)
           .map((term) =>
             term.tone === 'dice'
@@ -435,13 +442,15 @@ export class StartCombatPageComponent {
       });
   }
 
-  /** Les faces à montrer d'un héros : celles lancées à l'écran, le dé écarté marqué ; sinon celles qu'un total tapé suffit à connaître
-   * (2 : double 1, 12 : double 6) ; sinon aucune. */
+  /** Les faces à montrer d'un héros : celles lancées à l'écran, les deux dés gardés d'abord puis le dé écarté, marqué (d'une ligne à
+   * l'autre, les dés qui comptent tombent ainsi à la même place) ; sinon celles qu'un total tapé suffit à connaître (2 : double 1,
+   * 12 : double 6) ; sinon aucune. */
   private facesFor(hero: HeroRow, dice: number | null): readonly DiceRowDie[] | null {
     const rolled = this.facesByPivot().get(hero.pivotId);
     if (rolled) {
       const kept = keptDiceIndexes(rolled, this.diceNetFor(hero));
-      return rolled.map((value, index) => ({value, dropped: !kept.includes(index)}));
+      const faces = rolled.map((value, index) => ({value, dropped: !kept.includes(index)}));
+      return [...faces.filter((face) => !face.dropped), ...faces.filter((face) => face.dropped)];
     }
     return dice === 2 ? [{value: 1}, {value: 1}] : dice === 12 ? [{value: 6}, {value: 6}] : null;
   }
@@ -644,7 +653,7 @@ export class StartCombatPageComponent {
 
   /** Le MJ accorde à un héros un dé de bonus (1) ou de malus (−1) pour ce jet, ou le retire (`null`). Le total déjà tapé reste ; les
    * faces d'un lancer à l'écran, qui ne comptaient pas ce dé, s'effacent. */
-  private setGmDie(hero: HeroRow, die: 1 | -1 | null): void {
+  protected setGmDie(hero: HeroRow, die: 1 | -1 | null): void {
     this.gmDieByPivot.update((map) => {
       const next = new Map(map);
       if (die === null) {
@@ -661,18 +670,31 @@ export class StartCombatPageComponent {
     });
   }
 
-  /** Le bouton du dé du MJ passe d'une position à la suivante : aucun dé, un dé de bonus, un dé de malus, puis de nouveau aucun. */
-  protected cycleGmDie(hero: HeroRow, current: 1 | -1 | null): void {
-    this.setGmDie(hero, current === null ? 1 : current === 1 ? -1 : null);
+  /** Le popover des modificateurs ouvert (clé pivotId du héros), `null` sinon : un seul à la fois. */
+  protected readonly modsOpen = signal<number | null>(null);
+  protected readonly popoverPositions: ConnectedPosition[] = [
+    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
+    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
+  ];
+
+  protected toggleMods(pivotId: number): void {
+    this.modsOpen.update((open) => (open === pivotId ? null : pivotId));
   }
 
-  /** Ce que dit le bouton du dé du MJ : sa position, et ce que fait le prochain clic. */
-  protected gmDieLabel(die: 1 | -1 | null): string {
-    return die === 1
-      ? 'Dé de bonus du MJ (on garde les deux meilleurs). Clic : un dé de malus à la place'
-      : die === -1
-        ? 'Dé de malus du MJ (on garde les deux moins bons). Clic : plus de dé du MJ'
-        : 'Pas de dé du MJ. Clic : un dé de bonus';
+  /** Ferme le popover des modificateurs et rend le focus à son bouton. */
+  protected closeMods(): void {
+    const pivotId = this.modsOpen();
+    this.modsOpen.set(null);
+    if (pivotId !== null) {
+      document.getElementById(`scd-mods-${pivotId}`)?.focus();
+    }
+  }
+
+  protected onModsKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeMods();
+    }
   }
 
   /** Le MJ accorde à un héros le rang d'une de ses carrières pour ce jet, ou le retire (`null`). */

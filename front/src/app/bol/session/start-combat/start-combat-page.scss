@@ -200,6 +200,9 @@ bol-start-combat-page {
 }
 
 .scd-main {
+  // Les colonnes du registre se règlent sur la largeur de cette zone (requêtes de conteneur plus bas), pas sur celle de la fenêtre : le
+  // zoom du navigateur, l'échelle de l'écran ou l'ordre d'action à côté la font varier.
+  container: scd-main / inline-size;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
@@ -232,8 +235,8 @@ bol-start-combat-page {
   }
 }
 
-// Écran étroit : l'ordre d'action passe sous le registre, la page défile en entier.
-@media (max-width: 64rem) {
+// Fenêtre étroite (moins de 1200 px) : l'ordre d'action passe sous le registre, la page défile en entier.
+@media (max-width: 75rem) {
   .scd-content {
     overflow-y: auto;
   }
@@ -375,8 +378,18 @@ bol-start-combat-page {
 // mêmes colonnes d'un héros à l'autre. Les colonnes d'extrémité sont en `auto` : la marge intérieure de la ligne s'ajoute à leur
 // largeur (une colonne fixe la ferait chevaucher le portrait).
 .scd-rows {
+  // Largeurs fixes pour le nom, ce qu'il faut, les dés et les options : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au
+  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. Le verdict prend le reste.
+  --scd-col-who: 9rem;
+  --scd-col-need: 8.5rem;
+  --scd-col-faces: 7.6rem;
+  --scd-col-opt: 10.6rem;
+  --scd-col-mods: 9.6rem;
+
   display: grid;
-  grid-template-columns: auto auto auto auto auto minmax(7rem, 1fr) auto auto;
+  grid-template-columns:
+    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) var(--scd-col-opt)
+    var(--scd-col-mods) auto;
   gap: 0.6rem 0.9rem;
   margin: 0;
   padding: 0;
@@ -387,15 +400,128 @@ bol-start-combat-page {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
+  grid-template-rows: auto auto;
   align-items: center;
+  row-gap: 0.15rem;
   padding: 0.5rem 0.9rem;
   border: 1.5px solid var(--dw-border);
   border-radius: 12px;
   background: linear-gradient(90deg, #261b12, #1a120c);
 }
 
-// Écran peu haut (portable) : les lignes se resserrent pour que six héros tiennent sans défiler.
-@media (max-height: 45rem) {
+// Deux niveaux : en haut l'essentiel, dessous le détail de chaque colonne. Portrait, options, modificateurs et menu tiennent les deux.
+.scd-row > .scd-med,
+.scd-row > .scd-opt,
+.scd-row > .scd-mods-btn,
+.scd-row > .scd-row-icons {
+  grid-row: 1 / 3;
+}
+
+.scd-row > .scd-med {
+  grid-column: 1;
+}
+
+.scd-row > .scd-name {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+
+.scd-row > .scd-tags {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+}
+
+.scd-row > .scd-need {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  justify-self: start;
+}
+
+.scd-row > .scd-chance {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+}
+
+.scd-row > .scd-entry {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.scd-row > .scd-faces {
+  grid-column: 5;
+  grid-row: 1;
+}
+
+.scd-row > .scd-formula {
+  grid-column: 4 / 6;
+  grid-row: 2;
+  align-self: start;
+}
+
+.scd-row > .scd-verdict {
+  grid-column: 6;
+  grid-row: 1;
+  align-self: end;
+}
+
+.scd-row > .scd-consequence {
+  grid-column: 6;
+  grid-row: 2;
+  align-self: start;
+}
+
+.scd-row > .scd-opt {
+  grid-column: 7;
+}
+
+.scd-row > .scd-mods-btn {
+  grid-column: 8;
+}
+
+// Le calcul du jet, sous la case et les dés, et la conséquence du verdict, dessous : une ligne chacun, coupée s'il le faut (le texte
+// entier est dans l'infobulle de « 9+ » et du verdict).
+.scd-formula,
+.scd-consequence {
+  // Sans largeur propre : ils prennent celle de leurs colonnes au lieu de les élargir à la longueur de leur texte.
+  contain: inline-size;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scd-formula {
+  color: var(--dw-surface-500);
+}
+
+.scd-consequence {
+  color: var(--dw-surface-800);
+}
+
+// Écran peu haut (portable) : la ligne se replie sur un niveau (le détail s'efface ; la case, les dés et le verdict tiennent la hauteur
+// du nom et de ses gemmes), et les lignes se resserrent, pour que six héros tiennent sans défiler.
+@media (max-height: 46rem) {
+  .scd-row > .scd-formula,
+  .scd-row > .scd-consequence {
+    display: none;
+  }
+
+  .scd-row > .scd-entry,
+  .scd-row > .scd-faces,
+  .scd-row > .scd-verdict {
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  .scd-row {
+    row-gap: 0;
+  }
+
   .scd-main {
     gap: 0.7rem;
     padding-top: 0.7rem;
@@ -416,10 +542,15 @@ bol-start-combat-page {
   background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-reussite) 13%, #1a120c), #1a120c 55%);
 }
 
-.scd-row--heroique,
-.scd-row--legendaire {
+.scd-row--heroique {
   border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
   background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-legendary) 15%, #1a120c), #1a120c 55%);
+}
+
+// Le succès légendaire en cramoisi, comme dans le reste de l'app (l'héroïque est doré).
+.scd-row--legendaire {
+  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 75%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-succes-legendaire) 15%, #1a120c), #1a120c 55%);
 }
 
 .scd-row--echec {
@@ -432,15 +563,52 @@ bol-start-combat-page {
   background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec-forte) 22%, #1a120c), #1a120c 55%);
 }
 
-// Exclu de ce combat : la ligne s'estompe, seul son menu reste net pour l'y réintégrer.
-.scd-row--out > :not(.scd-row-menu) {
+// Exclu de ce combat : la ligne s'estompe, seuls ses boutons restent nets pour l'y réintégrer.
+.scd-row--out > :not(.scd-row-icons) {
   opacity: 0.4;
 }
 
-// Le menu « ⋯ » toujours dans la dernière colonne, même quand une ligne exclue n'a pas les cellules du milieu.
-.scd-row-menu.scd-row-menu {
+// La fiche et l'exclusion, toujours dans la dernière colonne, même quand une ligne exclue n'a pas les cellules du milieu.
+.scd-row > .scd-row-icons {
+  display: flex;
   grid-column: -2;
+  gap: 0.3rem;
+}
+
+// Des boutons icônes ronds, du même gabarit que celui des modificateurs.
+.scd-icon {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
   color: var(--dw-surface-600);
+  cursor: pointer;
+
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+}
+
+// L'exclusion rougit au survol ; une fois exclu, le bouton (qui réintègre) reste allumé.
+.scd-icon--exclude:hover {
+  border-color: var(--dw-color-echec);
+  color: var(--dw-color-echec);
+}
+
+.scd-icon--exclude[aria-pressed='true'] {
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-color-legendary);
 }
 
 // Un médaillon : le portrait d'un héros (bouton vers sa fiche) ou d'un combattant de l'ordre d'action.
@@ -481,15 +649,10 @@ bol-start-combat-page {
 }
 
 // Le nom ; dessous, les gemmes d'héroïsme et les badges du jet (dé du trait, carrière, dé du MJ).
-.scd-who {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
 .scd-name {
+  overflow: hidden;
   font: 400 1.3rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  text-overflow: ellipsis;
   white-space: nowrap;
   color: #f3d68e;
 }
@@ -526,36 +689,8 @@ bol-start-combat-page {
   background: rgba(241, 230, 208, 0.18);
 }
 
-// La carrière utile : un choix (menu des carrières), donc un rectangle ; pleine une fois accordée.
-.scd-career-btn {
-  padding: 0.1rem 0.5rem;
-  border: 1px dashed var(--dw-border);
-  border-radius: var(--dw-radius-toggle);
-  background: none;
-  color: var(--dw-surface-600);
-  font: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
-  }
-
-  &[aria-pressed='true'] {
-    border-style: solid;
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
-  }
-}
-
 // Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge) ; le calcul en infobulle.
 .scd-need {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
   border-radius: 6px;
 
   > b {
@@ -563,37 +698,38 @@ bol-start-combat-page {
     color: var(--dw-color-text-bright);
     white-space: nowrap;
   }
+}
 
-  > span {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.15;
-  }
+// Sous « 9+ » : les chances (vert, ambre ou rouge) et les dés de bonus ou de malus, ou « aux dés ».
+.scd-chance {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  line-height: 1.2;
+  white-space: nowrap;
 
   em {
     font-size: 0.82rem;
     font-style: normal;
     font-weight: 800;
-    white-space: nowrap;
   }
 
   small {
     color: var(--dw-surface-500);
-    font-size: 0.66rem;
-    white-space: nowrap;
+    font-size: 0.68rem;
   }
 }
 
 // Ses dés de bonus ou de malus (trait et MJ réunis), sous ce qu'il lui faut, à la place de « aux dés ».
-.scd-need .scd-dice-note {
+.scd-chance .scd-dice-note {
   font-weight: 800;
 }
 
-.scd-need .scd-dice-note--plus {
+.scd-chance .scd-dice-note--plus {
   color: var(--dw-color-reussite);
 }
 
-.scd-need .scd-dice-note--minus {
+.scd-chance .scd-dice-note--minus {
   color: var(--dw-color-echec);
 }
 
@@ -607,53 +743,6 @@ bol-start-combat-page {
 
 .scd-chance--low {
   color: var(--dw-color-echec);
-}
-
-// Le dé du MJ, à côté des dés qu'il change : un bouton à trois positions (rectangle, comme une bascule), « MJ » au-dessus du signe ;
-// vert avec un dé de bonus, rouge avec un dé de malus.
-.scd-gm {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  flex: none;
-  width: 2rem;
-  height: 2.4rem;
-  padding: 0;
-  border: 1px solid var(--dw-border);
-  border-radius: var(--dw-radius-toggle);
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--dw-surface-600);
-  font: inherit;
-  line-height: 1;
-  cursor: pointer;
-
-  small {
-    font-size: 0.55rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-  }
-
-  b {
-    font-size: 1rem;
-    font-weight: 800;
-  }
-
-  &:hover {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
-  }
-}
-
-.scd-gm.scd-gm--plus {
-  border-color: var(--dw-color-reussite);
-  background: var(--dw-color-reussite);
-  color: #041a0d;
-}
-
-.scd-gm.scd-gm--minus {
-  border-color: var(--dw-color-echec);
-  background: var(--dw-color-echec);
-  color: #2a0505;
 }
 
 // La case du total et le bouton qui lance à l'écran.
@@ -724,8 +813,11 @@ bol-start-combat-page {
   }
 }
 
-.scd-faces {
+// Les dés alignés à gauche dans leur colonne (le composant les centre) : avec un dé de bonus ou de malus, les deux dés gardés restent à
+// la même place que ceux des autres lignes, le dé écarté vient à leur droite.
+.scd-row .scd-faces {
   --dw-die-size: 1.6rem;
+  justify-content: flex-start;
 }
 
 // Le verdict et ce qu'il change au combat, sur une ligne (le texte entier en infobulle s'il est coupé).
@@ -741,17 +833,12 @@ bol-start-combat-page {
     text-transform: uppercase;
     white-space: nowrap;
   }
-
-  small {
-    overflow: hidden;
-    color: var(--dw-surface-800);
-    font-size: 0.76rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }
 
 .scd-verdict-wait.scd-verdict-wait {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--dw-surface-500);
   font-size: 0.8rem;
 }
@@ -760,9 +847,12 @@ bol-start-combat-page {
   color: var(--dw-color-reussite);
 }
 
-.scd-row--heroique .scd-verdict b,
-.scd-row--legendaire .scd-verdict b {
+.scd-row--heroique .scd-verdict b {
   color: var(--dw-color-legendary);
+}
+
+.scd-row--legendaire .scd-verdict b {
+  color: var(--dw-color-succes-legendaire);
 }
 
 .scd-row--echec .scd-verdict b {
@@ -778,14 +868,14 @@ bol-start-combat-page {
 .scd-opt {
   display: flex;
   justify-content: flex-end;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
-.scd-act-label {
-  min-width: 0;
-  overflow: hidden;
-  text-align: left;
-  text-overflow: ellipsis;
+// Deux options côte à côte (double 1 : échec critique et faveur divine) : plus serrées, pour tenir dans la colonne sans passer l'une
+// sous l'autre.
+.scd-opt:has(.scd-act + .scd-act) .scd-act {
+  gap: 0.3rem;
+  padding: 0 0.5rem 0 0.4rem;
 }
 
 .scd-act {
@@ -793,7 +883,7 @@ bol-start-combat-page {
   align-items: center;
   gap: 0.4rem;
   height: 2.1rem;
-  padding: 0 0.7rem;
+  padding: 0 0.65rem 0 0.5rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
   border-radius: var(--dw-radius-toggle);
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
@@ -845,54 +935,201 @@ bol-start-combat-page {
   font-variant-numeric: tabular-nums;
 }
 
-// L'échec critique rapporte un point d'héroïsme : vert, pour le distinguer du succès légendaire qui en coûte un.
-.scd-act--gain {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
-  background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);
-  color: var(--dw-color-reussite);
-
-  .scd-gem {
-    background: linear-gradient(160deg, #bbf7d0, var(--dw-color-reussite) 55%, #14532d);
-  }
+// Chaque option à la couleur de son résultat, comme ailleurs dans l'app : l'échec critique en rouge, le succès héroïque en doré (la
+// couleur de base des options), le succès légendaire en cramoisi. Choisie, l'option se remplit de sa couleur.
+.scd-act.scd-act--critique {
+  border-color: color-mix(in srgb, var(--dw-color-echec-forte) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
+  color: var(--dw-color-echec);
 
   &:hover {
-    background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 20%, transparent);
   }
 
   &[aria-pressed='true'] {
-    background: var(--dw-color-reussite);
-    color: #041a0d;
+    border-color: var(--dw-color-echec-forte);
+    background: var(--dw-color-echec-forte);
+    color: #fff;
   }
 }
 
-// Un double 1 avec de l'héroïsme : l'échec critique et la faveur divine l'un sous l'autre, en libellés courts, plutôt que d'élargir
-// toute la colonne.
-.scd-opt:has(.scd-act + .scd-act) {
-  flex-direction: column;
-  gap: 0.2rem;
+.scd-act.scd-act--legendaire {
+  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-succes-legendaire) 10%, transparent);
+  color: var(--dw-color-succes-legendaire);
 
-  .scd-act {
-    height: 1.75rem;
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-succes-legendaire) 20%, transparent);
   }
 
-  .scd-act-more {
-    display: none;
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-succes-legendaire);
+    background: var(--dw-color-succes-legendaire);
+    color: #fff;
   }
 }
 
-// Écran moyen (portable) : le verdict garde son titre, la conséquence passe en infobulle ; la faveur divine se raccourcit ; l'explication
+
+// Écran moyen (portable) : la faveur divine se raccourcit ; l'explication
 // de l'initiative ennemie n'est plus que dans la règle du titre (« i »), les réglages tiennent sur une ligne.
-@media (max-width: 90rem) {
+@container scd-main (max-width: 75rem) {
   .scd-hint--wide {
     display: none;
   }
 
-  .scd-verdict small:not(.scd-verdict-wait) {
+}
+
+// En fin de ligne, avec l'option d'héroïsme et le menu : le bouton des modificateurs (une action qui ouvre un popover : une pilule),
+// le nombre de modificateurs accordés en pastille.
+.scd-mods-btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 2.1rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-pill);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--dw-surface-700);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+}
+
+.scd-mods-count {
+  display: grid;
+  place-items: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+// Écran moyen : le bouton ne garde que son icône (un cercle) et sa pastille ; son nom reste dans l'infobulle et le libellé accessible.
+// Zone resserrée (moins de 1200 px) : les colonnes fixes se resserrent, le bouton des modificateurs ne garde que son icône.
+@container scd-main (max-width: 75rem) {
+  .scd-mods-btn {
+    justify-content: center;
+    min-width: 2.1rem;
+    padding: 0 0.45rem;
+  }
+
+  .scd-mods-label {
     display: none;
   }
 
-  .scd-act-more {
+  // Plus étroit : les dés un peu plus petits, les colonnes fixes resserrées.
+  .scd-rows {
+    --scd-col-who: 8rem;
+    --scd-col-need: 7rem;
+    --scd-col-faces: 6.4rem;
+    --scd-col-opt: 9.6rem;
+    --scd-col-mods: 3.8rem;
+
+    column-gap: 0.65rem;
+  }
+
+
+  .scd-row .scd-faces {
+    --dw-die-size: 1.35rem;
+
+    gap: 0.3rem;
+  }
+}
+
+// Zone étroite (moins de 960 px) : les dés s'effacent (le total est dans sa case), les options prennent leur libellé court
+// (« Héroïque », « Faveur »), les autres colonnes se resserrent encore.
+@container scd-main (max-width: 60rem) {
+  .scd-rows {
+    --scd-col-who: 7rem;
+    --scd-col-need: 5.6rem;
+    --scd-col-faces: 0;
+    --scd-col-opt: 9.6rem;
+  }
+
+  .scd-row > .scd-faces {
     display: none;
+  }
+
+  .scd-row > .scd-formula {
+    grid-column: 4;
+  }
+
+}
+
+// Le popover des modificateurs : opaque, au-dessus de la page (rendu dans le calque des overlays, hors du composant).
+.scd-pop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: min(25rem, 92vw);
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--bar-bronze, var(--dw-border));
+  border-radius: 12px;
+  background: var(--dw-surface-100);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  color: var(--dw-surface-900);
+}
+
+.scd-pop-title {
+  margin: 0;
+  font: 400 1.15rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-color-text-bright);
+}
+
+.scd-pop-note {
+  margin: -0.4rem 0 0;
+  color: var(--dw-surface-600);
+  font-size: 0.8rem;
+}
+
+// Le dé du MJ choisi prend la couleur de son effet : vert pour un dé de bonus, rouge pour un dé de malus.
+.scd-seg .scd-gm-opt--plus[aria-pressed='true'] {
+  border-color: var(--dw-color-reussite);
+  background: var(--dw-color-reussite);
+
+  &,
+  b {
+    color: #041a0d;
+  }
+}
+
+.scd-seg .scd-gm-opt--minus[aria-pressed='true'] {
+  border-color: var(--dw-color-echec);
+  background: var(--dw-color-echec);
+
+  &,
+  b {
+    color: #2a0505;
+  }
+}
+
+.scd-pop-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  .scd-hint {
+    font-size: 0.74rem;
   }
 }
 
@@ -1085,7 +1322,8 @@ bol-start-combat-page {
 .scd-content button:not(.mat-mdc-button-base):focus-visible,
 .scd-content input:not(.mdc-checkbox__native-control):focus-visible,
 .scd-need:focus-visible,
-.scd-hchip:focus-visible {
+.scd-hchip:focus-visible,
+.scd-pop button:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;
 }
