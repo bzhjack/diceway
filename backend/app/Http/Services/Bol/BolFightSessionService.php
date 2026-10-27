@@ -129,8 +129,12 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** @param array<int, string> $exclus clés `{kind}-{pivotId}` des combattants exclus de ce combat */
-    private function hasAdversary(BolFightSession $session, array $exclus): bool
+    /**
+     * Un combat a-t-il au moins un adversaire : un PNJ, une créature ou un démon qui n'est pas du camp des héros et pas exclu ?
+     *
+     * @param array<int, string> $exclus clés `{kind}-{pivotId}` des combattants exclus de ce combat
+     */
+    public function hasAdversary(BolFightSession $session, array $exclus): bool
     {
         foreach (['pnj' => $session->pnjs, 'creature' => $session->creatures, 'demon' => $session->demons] as $kind => $lignes) {
             foreach ($lignes as $ligne) {

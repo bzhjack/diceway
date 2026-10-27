@@ -43,7 +43,7 @@ import {heroDetails} from '../play/tapis/tapis.util';
 import {CombatEffect} from '../models/combat-effect.model';
 import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
-import {ReactionAdversary, ReactionGroup, ReactionParts, ReactionToken, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
+import {ReactionAdversary, ReactionGroup, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
 import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../combat-play.util';
@@ -132,7 +132,6 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
   {value: 'heroes_ambush', label: 'Tendue par les héros', bonus: '+2', modifier: 2},
   {value: 'heroes_ambushed', label: 'Héros surpris', bonus: '−1', modifier: -1},
 ];
-
 
 /**
  * La page « Démarrer le combat » (`session/:id/combat`, `?reroll=1` pour un nouveau jet en plein combat), sur tout l'écran : elle
@@ -530,17 +529,8 @@ export class StartCombatPageComponent {
     return avatar && !this.brokenAvatars().has(avatar) ? avatar : null;
   }
 
-  protected signed(value: number): string {
-    return value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : '0';
-  }
-
   protected initial(nom: string): string {
     return nom.trim().charAt(0).toUpperCase();
-  }
-
-  /** L'infobulle d'un jeton de l'ordre d'action : son nom, puis son détail (« total 14 · légendaire », « allié »). */
-  protected tokenInfo(token: ReactionToken): string {
-    return token.detail ? `${token.nom} · ${token.detail}` : token.nom;
   }
 
   protected totalInputId(pivotId: number): string {
