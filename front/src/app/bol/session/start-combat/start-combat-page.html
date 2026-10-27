@@ -541,25 +541,24 @@
           </h2>
           <ol class="scd-track">
             @for (entry of track(); track entry.lane.id) {
-              <li class="scd-lane" [class.scd-lane--blocked]="entry.lane.blocked">
+              <!-- Une carte par rang : son liseré dit qui s'y trouve (héros qui réussissent en vert, en échec en rouge, adversaires en
+                   brun-rouge) ; un rang qui ne joue pas au round 1 a tout son fond hachuré. -->
+              <li
+                [class]="'scd-lane scd-lane--' + entry.lane.id"
+                [class.scd-lane--blocked]="entry.lane.blocked"
+              >
                 <p class="scd-lane-head">
                   <span class="scd-lane-n" aria-hidden="true">{{ entry.step }}</span>
-                  {{ entry.lane.title }}
+                  <span class="scd-lane-title">{{ entry.lane.title }}</span>
                   <b class="scd-label-count">{{ entry.lane.tokens.length }}</b>
                 </p>
                 @if (entry.lane.blocked) {
-                  <p class="scd-lane-note">bloqués au round 1</p>
+                  <p class="scd-lane-note">Ne joue pas au round 1</p>
                 }
                 @if (entry.heroes) {
-                  <div class="scd-hchips">
+                  <ul class="scd-roster">
                     @for (token of entry.lane.tokens; track token.pivotId) {
-                      <span
-                        class="scd-hchip"
-                        role="img"
-                        tabindex="0"
-                        [attr.aria-label]="tokenInfo(token)"
-                        [matTooltip]="tokenInfo(token)"
-                      >
+                      <li class="scd-foe scd-foe--hero">
                         <span class="scd-token" aria-hidden="true">
                           @if (token.avatar; as avatar) {
                             <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
@@ -567,14 +566,19 @@
                             {{ initial(token.nom) }}
                           }
                         </span>
+                        <span class="scd-foe-id">
+                          <b>{{ token.nom }}</b>
+                        </span>
                         @if (token.total !== null && token.total !== undefined) {
-                          <span [class]="'scd-tot scd-tot--' + entry.lane.id" aria-hidden="true">{{
-                            token.total
-                          }}</span>
+                          <span
+                            [class]="'scd-tot scd-tot--' + entry.lane.id"
+                            [attr.aria-label]="'total ' + token.total"
+                            >{{ token.total }}</span
+                          >
                         }
-                      </span>
+                      </li>
                     }
-                  </div>
+                  </ul>
                 } @else {
                   <ul class="scd-roster">
                     @for (group of entry.lane.groups; track group.key) {
