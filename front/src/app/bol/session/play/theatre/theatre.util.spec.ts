@@ -1,7 +1,7 @@
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, campsComptes, sceneActs, sceneDecor, troupe} from './theatre.util';
+import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, parFiche, campsComptes, sceneActs, sceneDecor, troupe} from './theatre.util';
 
 function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): BolSceneModel {
   return {
@@ -153,5 +153,21 @@ describe('campsComptes', () => {
     expect(textes(campsComptes([entry(2)]))).toEqual(['E 2 adversaires']);
     expect(textes(campsComptes([entry(1, 'heros')]))).toEqual(['A 1 allié']);
     expect(campsComptes([])).toEqual([]);
+  });
+});
+
+describe('parFiche', () => {
+  const card = (key: string, kind: string, sourceId: string | null) => ({key, kind, sourceId}) as unknown as TapisCard;
+
+  it('regroupe les exemplaires d’une même fiche, à la place du premier, et laisse seule une carte sans fiche', () => {
+    const groupes = parFiche([
+      card('pnj-1', 'pnj', '10'),
+      card('pnj-2', 'pnj', '12'),
+      card('creature-3', 'creature', '12'),
+      card('pnj-4', 'pnj', '12'),
+      card('pnj-5', 'pnj', null),
+      card('pnj-6', 'pnj', null),
+    ]);
+    expect(groupes.map((g) => g.map((c) => c.key))).toEqual([['pnj-1'], ['pnj-2', 'pnj-4'], ['creature-3'], ['pnj-5'], ['pnj-6']]);
   });
 });

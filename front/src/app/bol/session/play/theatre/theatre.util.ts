@@ -113,6 +113,17 @@ function parTypePuisArrivee(left: TapisCard, right: TapisCard): number {
   return KIND_ORDRE[left.kind] - KIND_ORDRE[right.kind] || left.pivotId - right.pivotId;
 }
 
+/** Les cartes regroupées par fiche, dans leur ordre : les exemplaires d'une même fiche (cinq « Sergent du guet ») se suivent dans un
+ * groupe, à la place du premier ; une carte sans fiche reste seule. */
+export function parFiche(cards: readonly TapisCard[]): TapisCard[][] {
+  const groupes = new Map<string, TapisCard[]>();
+  for (const card of cards) {
+    const cle = card.sourceId === null ? card.key : `${card.kind}-${card.sourceId}`;
+    groupes.set(cle, [...(groupes.get(cle) ?? []), card]);
+  }
+  return [...groupes.values()];
+}
+
 /** La compagnie : les héros, puis leurs alliés (PNJ, créatures ou démons du camp des héros), par type puis
  * par ordre d'arrivée. */
 export function compagnie(cards: readonly TapisCard[]): {heros: TapisCard[]; allies: TapisCard[]} {

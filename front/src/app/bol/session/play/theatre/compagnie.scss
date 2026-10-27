@@ -264,6 +264,128 @@
   scrollbar-width: thin;
 }
 
+// Un groupe d'alliés de la même fiche, en éventail : le premier en carte entière, les autres en tranches glissées derrière lui. Chaque
+// tranche est un bouton (elle ouvre ce personnage, Ctrl + clic le sélectionne) et se glisse comme une carte.
+.cmp-groupe {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+}
+
+.cmp-groupe--eventail .cmp-drag {
+  position: relative;
+  z-index: 2;
+}
+
+.cmp-tranche {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  width: calc(2.1rem * var(--thr-k, 1));
+  height: calc(8.8rem * var(--thr-k, 1));
+  // Collée à la précédente sans la recouvrir : chaque tranche garde toute sa surface de clic.
+  margin-left: 0;
+  padding: 0 0.35rem 0.45rem 0.45rem;
+  border: 2px solid color-mix(in srgb, var(--dw-color-pnj) 70%, #1a120b);
+  border-left: 0;
+  border-radius: 0 10px 10px 0;
+  background-color: #1a120b;
+  background-position: 30% center;
+  background-size: cover;
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  cursor: pointer;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.55);
+
+  // Le portrait assombri : il dit « encore un sergent », le numéro et la vitalité restent lisibles par-dessus.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0.55));
+  }
+
+  b,
+  .cmp-tranche-vit {
+    position: relative;
+  }
+
+  b {
+    font-size: 0.72rem;
+    font-weight: 800;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  &:hover {
+    z-index: 3;
+    transform: translateY(-4px);
+  }
+
+  &:focus-visible {
+    z-index: 3;
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.cmp-tranche.cmp-tranche--selected {
+  border-color: var(--dw-color-legendary);
+  box-shadow: 0 0 0 2px var(--dw-color-legendary);
+}
+
+// À 0 de vitalité : le portrait passe en gris, comme sur la carte.
+.cmp-tranche.cmp-tranche--tombe {
+  filter: grayscale(1);
+}
+
+.cmp-tranche-vit {
+  display: block;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+
+  i {
+    display: block;
+    height: 100%;
+    background: var(--dw-color-reussite);
+  }
+
+  .cmp-tranche-vit--bas {
+    background: var(--dw-color-echec);
+  }
+}
+
+// Le nombre d'exemplaires, en pastille en haut de l'éventail (dedans : la rangée défile et couperait ce qui dépasse).
+.cmp-groupe-nombre {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.25rem;
+  z-index: 4;
+  padding: 2px 0.45rem 0;
+  border-radius: 999px;
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.25;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmp-tranche:hover {
+    transform: none;
+  }
+}
+
 .cmp-ghost {
   display: flex;
   align-items: center;
