@@ -5,72 +5,288 @@
   min-height: 0;
 }
 
-// Un tour, en deux colonnes : à gauche qui attaque (et Fin du tour), à droite le coup en trois étapes (1 · contre qui, avec quoi et
-// comment ; 2 · l'attaque ; 3 · les dégâts), puis ce qu'il reste à faire. Tout tient sur un écran : seule la colonne de gauche défile
-// si elle déborde.
+// ── Le registre du tour : un bandeau pour qui attaque, puis une ligne par étape ────────────────────────────────────────────────
+// Le camp de l'attaquant (vert pour un héros ou un allié, rouge pour un adversaire) colore son liseré, son médaillon, son nom et sa pastille.
 .tas {
-  display: grid;
-  grid-template-columns: minmax(17rem, 21rem) minmax(0, 1fr);
-  gap: 0.75rem;
+  --tas-side: var(--dw-color-reussite);
+  --tas-side-ink: #041a0d;
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
   min-height: 0;
   padding: 0.6rem 0.75rem;
-}
-
-// ── À gauche : préparer ──────────────────────────────────────────────────────────────────────────
-.tas-prep {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
 }
 
-// Une carte de préparation : son libellé, puis ses lignes, serrées.
-.tas-pc {
-  --tas-side: var(--dw-border);
-  --tas-side-ink: #041a0d;
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.6rem 0.7rem 0.65rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 12px;
-  background: var(--dw-surface-100);
-}
-
-// L'attaquant dit d'un coup d'œil de quel côté il est : vert pour un héros ou un allié, rouge pour un adversaire — son liseré, son
-// médaillon, son nom et sa pastille en prennent la couleur.
-.tas-pc--who {
-  --tas-side: var(--dw-color-reussite);
-  border-left: 4px solid var(--tas-side);
-  background: linear-gradient(100deg, color-mix(in srgb, var(--tas-side) 10%, var(--dw-surface-100)), var(--dw-surface-100) 60%);
-}
-
-.tas-pc--foe {
+.tas.tas--foe {
   --tas-side: var(--dw-color-echec-forte);
   --tas-side-ink: #2a0505;
 }
 
-// La fiche : un bouton rond, au bout de la ligne.
-.tas-round-btn {
+.tas-head {
+  display: flex;
   flex: none;
-  margin-left: auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--dw-border);
+  border-left: 4px solid var(--tas-side);
+  border-radius: 12px;
+  background: linear-gradient(100deg, color-mix(in srgb, var(--tas-side) 10%, var(--dw-surface-100)), var(--dw-surface-100) 60%);
 }
 
-.tas-pc-actions {
-  display: flex;
-  gap: 0.4rem;
+.tas-me-id {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
 
-  > button {
-    flex: 1;
+.tas-me-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+}
+
+// Sa vitalité, en lecture : elle se corrige sous ⓘ.
+.tas-heart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--dw-surface-900);
+  font-weight: 800;
+
+  .mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    color: var(--dw-color-echec);
+  }
+
+  small {
+    color: var(--dw-surface-500);
+    font-weight: 600;
   }
 }
 
-// Les listes (cible, arme, posture) : des champs Material, serrés, sans place réservée aux messages.
+.tas-gems {
+  display: inline-flex;
+  gap: 0.12rem;
+}
+
+// Ce qui pousse le reste au bout de la ligne.
+.tas-sp {
+  flex: 1;
+}
+
+// Un bouton ⓘ : un cercle, le nombre d'effets en pastille sur son coin.
+.tas-ib {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--dw-surface-600);
+  cursor: pointer;
+
+  .mat-icon {
+    width: 1.3rem;
+    height: 1.3rem;
+    font-size: 1.3rem;
+  }
+
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+}
+
+.tas-count.tas-count--corner {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+}
+
+.tas-reg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Une étape : son nom, puis ce qu'il faut, le jet et sa formule, le verdict, et en bout de ligne les actions ; ce qui suit (options
+// d'un succès héroïque) passe dessous, aligné sur le jet. La ligne où il faut agir s'allume ; une étape à venir s'estompe.
+.tas-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid var(--dw-border);
+  border-radius: 12px;
+  background: linear-gradient(90deg, #261b12, #1a120c);
+}
+
+.tas-line--cur {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+}
+
+.tas-line--todo {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+// L'attaque prend la couleur de son verdict.
+.tas-line.tas-line--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-reussite) 12%, #1a120c), #1a120c 55%);
+}
+
+.tas-line.tas-line--heroique {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-legendary) 14%, #1a120c), #1a120c 55%);
+}
+
+.tas-line.tas-line--legendaire {
+  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 70%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-succes-legendaire) 13%, #1a120c), #1a120c 55%);
+}
+
+.tas-line.tas-line--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 55%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec) 11%, #1a120c), #1a120c 55%);
+}
+
+// Le nom de l'étape, en colonne fixe : les jets s'alignent d'une ligne à l'autre.
+.tas-lbl {
+  flex: none;
+  width: 6.4rem;
+  font: 400 1.15rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dw-surface-800);
+}
+
+// La case et les dés, la formule dessous.
+.tas-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.tas-r1 {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+// Ce qui passe sous la ligne (options d'un succès héroïque, note), aligné sur le jet.
+.tas-sub {
+  flex-basis: 100%;
+  padding-left: 7.3rem;
+}
+
+// Ce qu'il faut aux dés (ou la fourchette des dégâts), et dessous les chances et le nombre de dés gardés.
+.tas-goal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 6.6rem;
+  white-space: nowrap;
+
+  > b {
+    font: 400 1.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-surface-900);
+  }
+
+  > span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  em {
+    font-size: 0.86rem;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  small {
+    color: var(--dw-surface-500);
+    font-size: 0.7rem;
+  }
+}
+
+.tas-chance--good {
+  color: var(--dw-color-reussite);
+}
+
+.tas-chance--mid {
+  color: #e8b04a;
+}
+
+.tas-chance--low {
+  color: var(--dw-color-echec);
+}
+
+// Les popovers : leur titre, et les entrées d'un menu (« Autres actions »).
+.tas-pop-title {
+  font: 400 1.1rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-color-legendary);
+}
+
+.tas-pop-item {
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--dw-surface-900);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  b {
+    font-weight: 700;
+  }
+
+  small {
+    color: var(--dw-surface-600);
+    font-size: 0.8rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+  }
+}
+
+// Les listes (cible, arme) : des champs Material, serrés, sans place réservée aux messages ; dans la phrase du coup, chacune sa largeur.
+.tas-select.tas-select--target {
+  flex: 0 1 24rem;
+  width: auto;
+}
+
+.tas-select.tas-select--arme {
+  flex: 0 1 19rem;
+  width: auto;
+}
+
 .tas-select {
   width: 100%;
   --mat-form-field-container-height: 2.9rem;
@@ -248,6 +464,14 @@
 
 // Les popovers (options du coup, effets de l'attaquant) : une carte flottante et opaque, sous leur bouton. Écrite avant `.tas-options`
 // (un panneau translucide), elle doit l'emporter : d'où les deux classes.
+.tas-options.tas-options--wide {
+  width: min(34rem, 92vw);
+}
+
+.tas-options.tas-options--menu {
+  width: min(22rem, 92vw);
+}
+
 .tas-options.tas-options--pop {
   width: min(26rem, 92vw);
   max-height: 70vh;
@@ -266,57 +490,6 @@
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.25);
-}
-
-// « Fin du tour » : l'action principale de la colonne, en or plein, toujours en bas.
-.tas-end {
-  flex: none;
-  margin-top: auto;
-}
-
-// ── À droite : jouer ─────────────────────────────────────────────────────────────────────────────
-.tas-play {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  min-width: 0;
-  min-height: 0;
-
-  .tas-next {
-    margin-top: auto;
-  }
-}
-
-// 1 · La cible, en tête de la colonne : le liseré prend la couleur de son camp (posée par le gabarit). Sa liste, puis ses chiffres à côté.
-.tas-station--target {
-  border-left: 4px solid var(--tas-side, var(--dw-border));
-}
-
-
-// Les cases du coup (l'attaque, les dégâts) en grille : sur la ligne du titre, les boutons du moment en haut à droite (héroïsme,
-// « Appliquer », parade…) ; dessous, la ligne du jet ; puis, sur toute la largeur, ce qui suit (options héroïques, attentes).
-.tas-play .tas-station {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.5rem 0.8rem;
-
-  > * {
-    grid-column: 1 / -1;
-  }
-
-  > .tas-station-head,
-  > h3 {
-    grid-row: 1;
-    grid-column: 1;
-  }
-
-  > .tas-acts {
-    grid-row: 1;
-    grid-column: 2;
-    justify-content: flex-end;
-    min-height: 0;
-  }
 }
 
 // Pas encore de cible : un portrait par cible possible, ses chances et sa vie dessous ; un clic la choisit.
@@ -380,70 +553,8 @@
 }
 
 // La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.
-.tas-row {
-  display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
-  grid-template-areas:
-    'entry dice verdict'
-    'sum sum verdict';
-  align-items: center;
-  gap: 0.45rem 0.9rem;
 
-  // Les enfants directs seulement : la protection, dans l'addition, a sa propre case (`.tas-entry`) qui ne doit pas être placée ici.
-  > .tas-entry {
-    grid-area: entry;
-    justify-content: flex-start;
-  }
-
-  > .tas-row-dice {
-    grid-area: dice;
-  }
-
-  > .tas-verdict,
-  > .tas-die-note {
-    grid-area: verdict;
-    justify-items: start;
-    text-align: left;
-  }
-
-  > .tas-sum {
-    grid-area: sum;
-    justify-content: flex-start;
-  }
-}
-
-// La ligne de la cible n'est pas une ligne de jet : sa liste, puis ses chiffres, qui passent à la ligne s'il le faut. Après `.tas-row`,
-// qu'elle remplace.
-.tas-row--target {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem 0.9rem;
-
-  // La vie de la cible prend la place qui reste, à côté de ses chiffres.
-  .tas-life {
-    flex: 1 1 14rem;
-  }
-}
-
-// 1 · La phrase du coup : « contre [la cible] avec [l'arme] en [la posture] [Options] ». Les mots de liaison sont décoratifs (chaque liste
-// a son libellé) ; la phrase passe à la ligne quand la case est étroite.
-.tas-phrase {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.7rem;
-
-  .tas-select {
-    flex: 0 1 14rem;
-    width: auto;
-  }
-
-  .tas-select--target {
-    flex-basis: 19rem;
-  }
-}
-
+// Les mots de liaison de la phrase du coup (« contre », « avec ») : décoratifs, chaque liste a son libellé.
 .tas-w {
   font: 400 1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   letter-spacing: 0.06em;
@@ -469,22 +580,6 @@
   text-transform: uppercase;
 }
 
-.tas-me {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.tas-me-id {
-  display: grid;
-  gap: 0.1rem;
-  min-width: 0;
-}
-
-// La cible, dans sa case centrée : sa ligne et ses tuiles s'alignent à gauche, comme sur la carte « Qui attaque ».
-.tas-tiles--cible {
-  align-self: stretch;
-}
 
 .tas-med {
   display: grid;
@@ -646,9 +741,9 @@
   list-style: none;
 }
 
-.tas-station .tas-pills,
-.tas-station .tas-chips {
-  justify-content: center;
+// Dans un popover, les choix s'alignent à gauche.
+.tas-options .tas-chips {
+  justify-content: flex-start;
 }
 
 // Les choix (arme, carrière, dé du MJ…) : des toggles rectangulaires.
@@ -674,6 +769,11 @@
     // Or uni, comme le bouton « Fin du tour » : pas de dégradé.
     background: var(--dw-color-legendary);
     color: #1c1200;
+
+    // Sur l'or, le détail (« d6B ») reste lisible : pas d'estompage, qui le ferait passer sous le contraste AA.
+    em {
+      opacity: 1;
+    }
   }
 
   &[aria-disabled='true'],
@@ -767,109 +867,11 @@
     b {
       color: var(--dw-color-legendary);
     }
-  }
-}
 
-// ── Les trois cases ──────────────────────────────────────────────────────────────────────────────
-
-.tas-station {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-items: stretch;
-  gap: 0.55rem;
-  min-width: 0;
-  padding: 0.65rem 0.9rem 0.75rem;
-  border: 2px solid var(--dw-border);
-  border-radius: 16px;
-  background: var(--dw-surface-100);
-
-  h3 {
-    display: flex;
-    align-items: center;
-    align-self: flex-start;
-    gap: 0.55rem;
-    margin: 0;
-    font: 400 1.1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--dw-surface-900);
-
-    span {
-      display: grid;
-      place-items: center;
-      width: 1.65rem;
-      height: 1.65rem;
-      border-radius: 50%;
-      background: var(--dw-color-legendary);
-      color: #1c1200;
-      font: 800 0.9rem 'Muse Sans', sans-serif;
+    // Le détail (« att +1 · déf −1 ») plus clair sur le fond doré, pour garder le contraste AA.
+    small {
+      color: var(--dw-surface-700);
     }
-  }
-}
-
-// Un bouton posé seul dans une case (« Fin du tour », « Juste une égratignure », « Annuler l'égratignure ») garde sa taille, centré :
-// la case s'étire, pas lui.
-.tas-station > button {
-  align-self: center;
-  justify-self: center;
-  min-width: 12rem;
-}
-
-// La case où il faut agir : dorée, sur le tapis.
-.tas-station--cur {
-  border-color: var(--dw-color-legendary);
-  background: radial-gradient(ellipse at 50% 30%, var(--dw-surface-300), var(--dw-surface-50) 75%);
-  box-shadow:
-    inset 0 0 44px rgba(0, 0, 0, 0.75),
-    0 0 16px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
-}
-
-// Une étape faite : seule sa pastille numérotée passe au vert, la bordure reste neutre.
-.tas-station--done {
-  h3 span {
-    background: var(--dw-color-reussite);
-    color: #04210f;
-  }
-}
-
-.tas-station--todo {
-  border-style: dashed;
-  opacity: 0.6;
-}
-
-// Le titre de la case, et juste derrière ce qui le précise (les chances de l'attaque) ; un bouton de fiche, lui, va au bout.
-.tas-station-head {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-// Ce qu'il faut aux dés et les chances, en pastille sur la ligne du titre de l'attaque.
-.tas-goal {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.25rem 0.7rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 999px;
-
-  b {
-    font: 400 1.35rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
-  }
-
-  i {
-    font-style: normal;
-    font-size: 0.75rem;
-    line-height: 1;
-    color: var(--dw-surface-600);
-  }
-
-  // Les chances, en or comme sur la maquette : la règle `b` ci-dessus ne doit pas l'emporter.
-  .tas-goal-pc {
-    color: var(--dw-color-legendary);
   }
 }
 
@@ -955,11 +957,12 @@
 
 .tas-verdict {
   display: grid;
-  justify-items: center;
+  justify-items: start;
   align-content: center;
   gap: 0.05rem;
+  min-width: 9rem;
   min-height: 2.9rem;
-  text-align: center;
+  text-align: left;
 
   span {
     font-size: 0.84rem;
@@ -994,7 +997,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.3rem 0.55rem;
   max-width: 100%;
 }
@@ -1106,6 +1109,15 @@
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
+// Une gemme éteinte, dans le bandeau ; un point de la cible (vilénie), en rouge.
+.tas-gem.tas-gem--off {
+  background: rgba(241, 230, 208, 0.18);
+}
+
+.tas-gem.tas-gem--foe {
+  background: linear-gradient(160deg, #fecaca, var(--dw-color-echec-forte) 55%, #7f1d1d);
+}
+
 // Le héros a obtenu un succès légendaire au jet de réaction : son +1 aux attaques, rappelé sous son nom.
 .tas-legend {
   justify-self: start;
@@ -1123,7 +1135,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 0.35rem;
   min-height: 1.9rem;
 }
@@ -1176,28 +1188,65 @@
   padding-left: 0.3rem;
 }
 
-// Un échec critique rapporte un point au lieu d'en coûter un : en vert.
-.tas-act--gain {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
-  background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);
-  color: var(--dw-color-reussite);
-
-  .tas-gem {
-    background: linear-gradient(160deg, #bbf7d0, var(--dw-color-reussite) 55%, #14532d);
-  }
+// Chaque option à la couleur de son résultat, comme sur l'écran de démarrage : l'échec critique en rouge, le succès légendaire en violet ;
+// le succès héroïque et la faveur divine gardent l'or. Choisie, l'option se remplit de sa couleur.
+.tas-act.tas-act--critique {
+  border-color: color-mix(in srgb, var(--dw-color-echec-forte) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
+  color: var(--dw-color-echec);
 
   &:hover {
-    background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 20%, transparent);
   }
 
   &[aria-pressed='true'] {
-    background: var(--dw-color-reussite);
-    color: #041a0d;
+    border-color: var(--dw-color-echec-forte);
+    background: var(--dw-color-echec-forte);
+    color: #fff;
 
     .tas-gem {
-      background: #041a0d;
+      background: currentColor;
     }
   }
+}
+
+.tas-act.tas-act--legendaire {
+  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-succes-legendaire) 10%, transparent);
+  color: var(--dw-color-succes-legendaire);
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-succes-legendaire) 20%, transparent);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-succes-legendaire);
+    background: var(--dw-color-succes-legendaire);
+    color: #1d0b33;
+
+    .tas-gem {
+      background: currentColor;
+    }
+  }
+}
+
+// Ce que la cible oppose au coup, de ses points : son portrait sur le bouton, en rouge (elle est de l'autre côté du coup).
+.tas-act.tas-act--foe {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--dw-color-echec-forte) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 8%, transparent);
+  color: var(--dw-color-danger-muted);
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 18%, transparent);
+  }
+}
+
+.tas-med.tas-med--face {
+  width: 1.45rem;
+  height: 1.45rem;
+  border-width: 1.5px;
+  font-size: 0.7rem;
 }
 
 .tas-apply {
@@ -1266,45 +1315,9 @@
   }
 }
 
-// ── Ce qu'il y a à faire maintenant ──────────────────────────────────────────────────────────────
-.tas-next {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0.4rem 0.75rem;
-  border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
-  border-radius: 10px;
-  font-size: 0.92rem;
-  color: var(--dw-surface-700);
-
-  .mat-icon {
-    flex: none;
-    width: 1.15rem;
-    height: 1.15rem;
-    font-size: 1.15rem;
-    color: var(--dw-color-legendary);
-  }
-
-  b {
-    color: var(--dw-color-legendary);
-  }
-}
-
 // Focus visible commun aux boutons et aux champs de l'assistant (les boutons Material ont le leur).
 .tas button:not(.mat-mdc-button-base):focus-visible,
 .tas input:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;
-}
-
-// Écran étroit : les deux colonnes s'empilent, la page défile.
-@media (max-width: 1100px) {
-  .tas {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .tas-prep {
-    overflow: visible;
-  }
 }

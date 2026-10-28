@@ -1,4 +1,5 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, input, linkedSignal, output, signal, untracked, viewChild} from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
@@ -24,7 +25,7 @@ import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
 import {estArmeFavorite} from '../../../shared/arme/arme-favorite.util';
-import {egratignure} from '../../heroisme-spend.util';
+import {egratignure, heroismeGems} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
@@ -66,8 +67,11 @@ const DICE_TIMEOUT_MS = 12000;
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
 /** Un réglage rare actif (option spéciale, dé ou modificateur du MJ, carrière), montré en pastille quand « Options » est replié. */
+/** Les popovers de l'assistant : l'attaquant, la cible, les modificateurs du coup, les autres actions. */
+type TurnPopover = 'me' | 'cible' | 'mods' | 'more';
+
 interface ActiveOption {
-  readonly id: 'special' | 'gm' | 'mod' | 'career';
+  readonly id: 'deuxMains' | 'posture' | 'special' | 'brawl' | 'tir' | 'horde' | 'gm' | 'mod' | 'career';
   readonly label: string;
 }
 
@@ -161,10 +165,10 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   return {points, titre: nom.charAt(0).toUpperCase() + nom.slice(1)};
 }
 
-/** L'assistant de tour, sous la frise en combat : un coup en trois temps. Trois cartes portent les réglages de la carte active — qui
- * attaque (ses chiffres, les effets en cours, la fin de son tour), avec quoi (arme, distance), comment (posture, options) ; dessous,
- * sur la même grille, trois cases — qui elle vise, son jet d'attaque (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où
- * il faut agir s'allume, et une ligne qui dit quoi faire ensuite.
+/** L'assistant de tour, sous la frise en combat : un registre. En bandeau qui attaque (sa vie, ses points ; ses chiffres, ses effets et
+ * sa fiche sous ⓘ ; ce qu'il peut faire au lieu d'attaquer, et la fin de son tour) ; puis une ligne par étape — le coup (contre qui, avec
+ * quoi, les réglages actifs en pastilles et les autres sous « Modificateurs »), le jet d'attaque (2d6 + bonus − défense, 9+), le jet de
+ * dégâts — dont celle où il faut agir s'allume. La formule de chaque jet reste à l'écran ; les actions sont en bout de ligne.
  * Il annonce ce qu'il faut aux dés et les chances, prend les totaux lancés à table, et montre sur la vie de la cible ce que le coup va
  * lui retirer. Pour un héros, le jet d'attaque ouvre les usages de l'héroïsme : faveur divine après un coup raté, échec critique sur un
  * double 1, succès héroïque acheté sur un coup qui touche, succès légendaire sur un double 6 — avec leurs options de combat.
@@ -184,6 +188,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
     MatIconModule,
     MatSelectModule,
     MatTooltipModule,
+    NgTemplateOutlet,
     PointsStepperComponent,
     ReactiveFormsModule,
   ],
@@ -423,53 +428,63 @@ export class TurnAssistantComponent {
     return slug !== null && SCALE_SLUGS.includes(slug) ? slug : null;
   });
 
-  /** « Options » replié ou déplié ; il se replie à chaque nouveau tour. */
-  protected readonly optionsOpen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+  /** Le popover ouvert — l'attaquant (« me »), la cible, les modificateurs du coup, les autres actions — ou aucun ; il se ferme à chaque
+   * nouveau tour. */
+  protected readonly openPop = linkedSignal<string, TurnPopover | null>({source: () => this.cardKey(), computation: () => null});
 
-  /** Les popovers (options, effets) s'ouvrent sous leur bouton, calées sur son bord gauche ; près du bord droit de l'écran, sur son bord
-   * droit ; au-dessus s'il n'y a pas la place en bas. En dernier recours, elles sont poussées dans l'écran (`cdkConnectedOverlayPush`). */
+  /** Les popovers s'ouvrent sous leur bouton, calés sur son bord gauche ; près du bord droit de l'écran, sur son bord droit ; au-dessus
+   * s'il n'y a pas la place en bas. En dernier recours, ils sont poussés dans l'écran (`cdkConnectedOverlayPush`). */
   protected readonly popoverPositions: ConnectedPosition[] = [
     {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6},
     {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
     {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6},
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
   ];
-  private readonly optionsButton = viewChild<ElementRef<HTMLButtonElement>>('optionsButton');
 
-  /** Ferme la popover des options et rend le focus à son bouton. */
-  protected closeOptions(): void {
-    this.optionsOpen.set(false);
-    this.optionsButton()?.nativeElement.focus();
+  /** L'identifiant du bouton d'un popover, pour lui rendre le focus à la fermeture. */
+  protected popId(pop: TurnPopover): string {
+    return `tas-pop-${pop}`;
   }
 
-  protected onOptionsKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.closeOptions();
+  protected togglePop(pop: TurnPopover): void {
+    this.openPop.update((open) => (open === pop ? null : pop));
+  }
+
+  /** Ferme le popover ouvert et rend le focus à son bouton. */
+  protected closePop(): void {
+    const open = this.openPop();
+    this.openPop.set(null);
+    if (open) {
+      document.getElementById(this.popId(open))?.focus();
     }
   }
 
-  private readonly effectsButton = viewChild<ElementRef<HTMLButtonElement>>('effectsButton');
-
-  /** Ferme la popover des effets et rend le focus à son bouton. */
-  protected closeEffects(): void {
-    this.effectsOpen.set(false);
-    this.effectsButton()?.nativeElement.focus();
-  }
-
-  protected onEffectsKeydown(event: KeyboardEvent): void {
+  protected onPopKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
       event.preventDefault();
-      this.closeEffects();
+      this.closePop();
     }
   }
 
-  /** Les réglages rares actifs, en pastilles sous « Options » replié : ils se voient sans ouvrir le menu, et se retirent d'un clic. */
+  /** Les réglages actifs du coup, en pastilles sur la ligne du coup : ils se voient sans ouvrir « Modificateurs », et se retirent d'un
+   * clic. Ils sont aussi dans la formule. */
   protected readonly activeOptions = computed<readonly ActiveOption[]>(() => {
     const active: ActiveOption[] = [];
+    if (this.deuxMains()) {
+      active.push({id: 'deuxMains', label: `À deux mains · ${this.degatsDeuxMains()}`});
+    }
     const option = this.effectiveOption();
-    if (option && !SCALE_SLUGS.includes(option.slug)) {
-      active.push({id: 'special', label: option.label});
+    if (option && option.slug !== 'none') {
+      active.push({id: SCALE_SLUGS.includes(option.slug) ? 'posture' : 'special', label: option.label});
+    }
+    if (this.brawl()) {
+      active.push({id: 'brawl', label: 'Bagarre'});
+    }
+    if (this.distanceModes().length > 1 && this.isTir()) {
+      active.push({id: 'tir', label: 'Tir'});
+    }
+    if (this.hordeSize() > 0) {
+      active.push({id: 'horde', label: `Horde · ${this.hordeSize()} piétailles`});
     }
     const gm = this.gmDie();
     if (gm) {
@@ -487,8 +502,21 @@ export class TurnAssistantComponent {
 
   protected clearOption(id: ActiveOption['id']): void {
     switch (id) {
+      case 'deuxMains':
+        this.deuxMainsChoisi.set(false);
+        break;
+      case 'posture':
       case 'special':
         this.selectOption('none');
+        break;
+      case 'brawl':
+        this.brawlChosen.set(false);
+        break;
+      case 'tir':
+        this.useTir.set(false);
+        break;
+      case 'horde':
+        this.hordeChosen.set([]);
         break;
       case 'gm':
         this.gmDie.set(null);
@@ -677,6 +705,8 @@ export class TurnAssistantComponent {
   /** « 3 points d'héroïsme » de l'attaquant, ou « 3 points de vilénie » d'un rival. */
   /** Les points d'héroïsme (héros) ou de vilénie (rival) de l'attaquant, avec leur titre ; `null` s'il n'en a pas. */
   protected readonly pointsAttaquant = computed(() => pointsAffiches(this.card().kind, this.heroisme()));
+  /** Les gemmes du bandeau de l'attaquant : allumées jusqu'à son nombre de points. */
+  protected readonly attackerGems = computed(() => heroismeGems(this.heroisme() ?? 0));
   /** Ceux de la cible, de même : un coriace, une piétaille, une créature ou un démon n'en ont pas. */
   protected readonly pointsCible = computed(() => pointsAffiches(this.target()?.kind ?? 'hero', this.targetStats()?.heroisme ?? null));
   /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */
@@ -844,8 +874,6 @@ export class TurnAssistantComponent {
     return {[this.card().key]: this.card().nom, ...(target ? {[target.key]: target.nom} : {})};
   });
 
-  /** « Effets » replié ou déplié ; il se replie à chaque nouveau tour. */
-  protected readonly effectsOpen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
 
   /** Le nombre d'effets en cours sur l'attaquant et sa cible : le compteur du bouton « Effets ». */
   protected readonly effetsCount = computed(() => {
@@ -1068,6 +1096,15 @@ export class TurnAssistantComponent {
   /** Les dégâts de l'arme ou du profil, lus en entier (dé, multiplicateur, modificateur, ou valeur fixe) ; `null` pour des dégâts
    * spéciaux, dont le MJ tape le total. */
   protected readonly damageSpec = computed(() => parseDamage(this.degats()));
+  /** La fourchette des dégâts possibles (« 2 à 7 »), en tête de leur ligne ; `null` pour des dégâts spéciaux, tapés tels quels. */
+  protected readonly damageSpan = computed(() => {
+    const spec = this.damageSpec();
+    if (spec === null) {
+      return null;
+    }
+    const [min, max] = damageRange(spec, this.vigueur(), this.effectiveProtection(), this.devastating());
+    return min === max ? `${min}` : `${min} à ${max}`;
+  });
   protected readonly die = computed<DamageDie>(() => this.damageSpec()?.die ?? 'd6');
   /** Dégâts spéciaux : pas de dé à proposer, le total se tape. */
   protected readonly specialDamage = computed(() => this.damageSpec() === null);
@@ -1199,48 +1236,6 @@ export class TurnAssistantComponent {
       endsHere || (aimed && rolled) ? 'done' : aimed ? 'cur' : 'todo',
       this.hasDamageStep() || endsHere ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo',
     ];
-  });
-
-  /** Ce qu'il y a à faire maintenant, en une phrase ; `step` est le numéro de la case concernée, vide quand il ne reste qu'à conclure. */
-  protected readonly nextStep = computed<{readonly step: string; readonly text: string}>(() => {
-    if (this.actionPerdue()) {
-      return {step: '', text: `Juste une égratignure : se remettre du coup coûte son action à ${this.card().nom}. Il ne reste qu’à finir son tour.`};
-    }
-    const target = this.target();
-    // Les dégâts sont appliqués et rien ne suit : il ne reste qu'à finir le tour, même si la cible est tombée.
-    if (!target && this.lastHit() && this.carnageOwed() === 0) {
-      return {step: '', text: `${this.lastHit()?.parried ? 'Coup paré' : 'Dégâts appliqués'}. Il ne reste qu’à finir le tour.`};
-    }
-    if (!target) {
-      return this.targets().length === 0
-        ? {step: '', text: 'Plus personne à viser en face : le combat peut se terminer.'}
-        : {step: '1', text: `Choisis qui ${this.card().nom} attaque.`};
-    }
-    const verdict = this.attackVerdict();
-    if (!verdict && this.favor()) {
-      return {step: '2', text: 'Faveur divine : relance tous les dés d’attaque, puis tape le nouveau total — ou lance-les à l’écran.'};
-    }
-    if (!verdict && this.carnageOwed() > 0) {
-      return {step: '2', text: `Carnage : ${this.card().nom} attaque de nouveau tout de suite, sans dépenser d’héroïsme. Garde la cible ou changes-en, puis tape le total.`};
-    }
-    if (!verdict) {
-      return this.lastHit()
-        ? {step: '', text: `${this.lastHit()?.parried ? 'Coup paré' : 'Dégâts appliqués'}. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.`}
-        : {step: '2', text: this.netDice() !== 0 ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de ${this.diceCount()}d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
-    }
-    if (!this.hasDamageStep()) {
-      return verdict.tone !== 'echec' && this.carnagePicked()
-        ? {step: '', text: 'Désarmement. Valide-le pour enchaîner sur l’attaque du Carnage.'}
-        : {step: '', text: `${verdict.tone === 'echec' ? 'Raté' : 'Désarmement'}. Il ne reste qu’à finir le tour.`};
-    }
-    const damage = this.damage();
-    const toPick = this.picksMax() - this.picks().length;
-    if (damage === null && toPick > 0) {
-      return {step: '2', text: `Choisis ${toPick > 1 ? 'les deux options' : 'l’option'} du coup ${this.picksMax() > 1 ? 'légendaire' : 'héroïque'}, puis tape le dé de dégâts (${this.dieNote()}).`};
-    }
-    return damage === null
-      ? {step: '3', text: `Tape le dé de dégâts (${this.dieNote()}), ou lance-le à l’écran.`}
-      : {step: '', text: `Entrée applique ${damage} ${damage > 1 ? 'dégâts' : 'dégât'} à ${target.nom}.`};
   });
 
   // Les cases et boutons du plateau, pour passer la main de l'un à l'autre au fil de la saisie.
