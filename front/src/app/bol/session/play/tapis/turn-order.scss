@@ -5,15 +5,11 @@
   min-width: 0;
 }
 
-// Comme les modificateurs sur la page du jet de réaction : séparée du titre par un filet, la frise (titre et round compris) qui prend
-// la place qui reste, puis les commandes du tour.
+// Comme sur la page du jet de réaction : la frise sous le titre, sa légende au-dessus (la pastille du blocage y est projetée).
 .tor {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
   min-width: 0;
-  padding-top: 0.3rem;
-  border-top: 1px solid rgba(107, 74, 22, 0.5);
 }
 
 .tor-frise {
@@ -21,28 +17,16 @@
   min-width: 0;
 }
 
-.tor-actions {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.tor-icon {
-  --mat-icon-button-state-layer-size: 2.2rem;
-  border: 1px solid var(--dw-border);
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--dw-surface-800);
-}
-
+// Sur la ligne de la légende de la frise : pas plus haute qu'elle.
 .tor-pill {
   flex: none;
-  padding: 0.2rem 0.65rem;
+  padding: 0 0.5rem;
+  line-height: 0.95rem;
   border: 1px solid var(--dw-color-legendary);
   border-radius: 999px;
   white-space: nowrap;
   color: var(--dw-color-legendary);
-  font-size: 0.74rem;
+  font-size: 0.66rem;
   font-weight: 800;
 }
 

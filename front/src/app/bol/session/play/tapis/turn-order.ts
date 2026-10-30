@@ -1,8 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
+import {TurnOrderEntry} from '../../models/turn-order.model';
 import {OrdreFriseComponent} from '../../ordre-frise/ordre-frise';
 import {turnOrderFrise} from './combat-turn.util';
 
@@ -11,7 +9,7 @@ import {turnOrderFrise} from './combat-turn.util';
  * ceux qui ont joué s'estompent ; un clic sur un médaillon « a joué » lui rend la main. */
 @Component({
   selector: 'bol-turn-order',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent],
+  imports: [MatTooltipModule, OrdreFriseComponent],
   templateUrl: './turn-order.html',
   styleUrl: './turn-order.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,13 +24,8 @@ export class TurnOrderComponent {
   /** Clé du combattant visé par le tour en cours : son médaillon est cerclé de rouge. */
   readonly targetKey = input<string | null>(null);
 
-  /** Les héros qui ont retardé leur action ce round : chacun peut l'interrompre pour agir tout de suite. */
-  readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
-
   readonly gaveBack = output<string>();
-  readonly interruptRequested = output<string>();
   readonly addRequested = output<void>();
-  readonly rerollRequested = output<void>();
 
   /** Les médaillons de la frise, dans l'ordre où ils jouent. */
   protected readonly steps = computed(() => turnOrderFrise(this.entries(), this.targetKey()));

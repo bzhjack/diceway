@@ -127,12 +127,8 @@ interface HeroCard {
   readonly vitaliteLow: boolean;
 }
 
-
 /** Embuscade (02-actions-combat.md, « Modificateurs au jet de réaction ») : la tendre ou surprendre l'ennemi donne +2 (Très facile),
  * être surpris ou pris en embuscade donne −1 (Ardue). */
-/** Au-delà de ce nombre de places, la frise ne partage plus la rangée du titre sur un petit écran. */
-const FRISE_DENSE = 23;
-
 const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: string; readonly hint: string; readonly bonus: string; readonly modifier: number}[] = [
   {value: null, label: 'Aucune', hint: '', bonus: '', modifier: 0},
   {value: 'heroes_ambush', label: 'Tendue', hint: 'Tendue par les héros', bonus: '+2', modifier: 2},
@@ -287,8 +283,6 @@ export class StartCombatPageComponent {
   protected readonly frise = computed(() => reactionFrise(this.lanes()));
   /** Les places de la frise : tous les combattants, y compris les héros qui n'ont pas lancé, et le « + » : rien ne bouge pendant les jets. */
   protected readonly frisePlaces = computed(() => this.activeHeroes().length + this.adversaries().length + 1);
-  /** Trop de monde pour partager la rangée du titre sur un petit écran : la frise passe sur sa propre rangée. */
-  protected readonly friseDense = computed(() => this.frisePlaces() > FRISE_DENSE);
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   /** « 2 / 4 jets » dans l'en-tête. */
@@ -354,8 +348,12 @@ export class StartCombatPageComponent {
     }
   }
 
-  private reload(): void {
-    this.loading.set(true);
+  /** Charge la session. `refresh` : une mise à jour (un combattant ajouté), sans repasser par « Chargement… » ; les jets déjà faits
+   * restent. */
+  private reload(refresh = false): void {
+    if (!refresh) {
+      this.loading.set(true);
+    }
     this.fightSessionService
       .fightSession(this.data.sessionId)
       .pipe(take(1))
@@ -527,7 +525,11 @@ export class StartCombatPageComponent {
         },
       })
       .afterClosed()
-      .subscribe(() => this.reload());
+      .subscribe((didAdd: boolean | undefined) => {
+        if (didAdd) {
+          this.reload(true);
+        }
+      });
   }
 
   /** Saisie du total des deux dés lancés à table (pas le résultat avec ses bonus). De 2 à 9 un chiffre suffit : le jet est pris tout
@@ -634,6 +636,24 @@ export class StartCombatPageComponent {
     {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
   ];
+
+  /** Le popover des options de la rencontre (embuscade, initiative ennemie). */
+  protected readonly optionsOpen = signal(false);
+  /** Le bonus de l'embuscade choisie, lu sur le bouton des options (« +2 », « −1 ») ; vide sans embuscade. */
+  protected readonly ambushBonus = computed(() => AMBUSH_OPTIONS.find((option) => option.value === this.ambushState())?.bonus ?? '');
+
+  /** Ferme le popover des options et rend le focus à son bouton. */
+  protected closeOptions(): void {
+    this.optionsOpen.set(false);
+    document.getElementById('scd-options-btn')?.focus();
+  }
+
+  protected onOptionsKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeOptions();
+    }
+  }
 
   protected toggleMods(pivotId: number): void {
     this.modsOpen.update((open) => (open === pivotId ? null : pivotId));

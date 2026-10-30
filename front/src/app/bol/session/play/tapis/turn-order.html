@@ -1,7 +1,15 @@
-<!-- Sous la barre de titre, comme sur la page du jet de réaction : l'ordre d'action en frise (avec son titre et le round), puis les
-     commandes du tour à droite -->
+<!-- Sous la barre de titre, comme sur la page du jet de réaction : l'ordre d'action en frise, sa légende au-dessus, et au bout le « + »
+     qui ajoute un combattant -->
 <section class="tor" aria-label="Ordre d’action">
-  <bol-ordre-frise class="tor-frise" [round]="round()" [steps]="steps()" (stepClicked)="gaveBack.emit($event.key)">
+  <bol-ordre-frise
+    class="tor-frise"
+    [legende]="true"
+    [round]="round()"
+    [steps]="steps()"
+    addLabel="Ajouter un combattant"
+    (stepClicked)="gaveBack.emit($event.key)"
+    (addClicked)="addRequested.emit()"
+  >
     @if (roundOneLock()) {
       <span
         class="tor-pill"
@@ -12,25 +20,5 @@
       </span>
     }
   </bol-ordre-frise>
-  <div class="tor-actions">
-    @for (i of interrupters(); track i.key) {
-      <button
-        mat-flat-button
-        size="small"
-        type="button"
-        matTooltip="A retardé son action : 1 point d'héroïsme pour agir tout de suite, avant la carte active"
-        (click)="interruptRequested.emit(i.key)"
-      >
-        Interrompre : {{ i.nom }} (−1 PH)
-      </button>
-    }
-    <button mat-icon-button type="button" class="tor-icon" aria-label="Ajouter un combattant" matTooltip="Ajouter un combattant" (click)="addRequested.emit()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button mat-icon-button type="button" class="tor-icon" aria-label="Nouveau jet de réaction" matTooltip="Nouveau jet de réaction des héros" (click)="rerollRequested.emit()">
-      <mat-icon>replay</mat-icon>
-    </button>
-  </div>
-
   <p class="tor-live" aria-live="polite">{{ announcement() }}</p>
 </section>

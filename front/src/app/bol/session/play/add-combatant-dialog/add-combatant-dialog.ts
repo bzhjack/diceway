@@ -67,6 +67,14 @@ export class AddCombatantDialogComponent {
 
   constructor() {
     this.selection.loadCatalog();
+    // Fermé par Échap ou d'un clic à côté, il dit aussi s'il a ajouté quelqu'un : sinon la page ne se mettrait pas à jour.
+    this.ref.disableClose = true;
+    this.ref.backdropClick().subscribe(() => this.close());
+    this.ref.keydownEvents().subscribe((event) => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    });
   }
 
   protected setType(type: CatalogFilter): void {

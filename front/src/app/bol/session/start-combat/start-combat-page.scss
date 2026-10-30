@@ -57,27 +57,37 @@ bol-start-combat-page {
 
   // Sa largeur décide de ce qui passe à la ligne (requêtes de conteneur plus bas).
   container: scd-bar / inline-size;
+  position: relative;
+  isolation: isolate;
   flex: none;
-  padding: 0.55rem 1.4rem 0.6rem;
-  border-bottom: 2px solid var(--bar-bronze, var(--dw-border));
-  // L'image du combat de la table, assombrie : assez partout pour que les légendes restent lisibles dessus.
-  background:
-    linear-gradient(90deg, rgba(15, 10, 6, 0.96) 25%, rgba(15, 10, 6, 0.8) 60%, rgba(15, 10, 6, 0.9)),
-    url('/assets/bol/header-combat.png') center 40% / cover no-repeat;
+  padding: 0.55rem 1.4rem 0.9rem;
+
+  // L'image du combat de la table, à peine voilée au milieu ; plus sombre à gauche, sous le titre et la frise, pour qu'ils restent lisibles.
+  // Pas de bordure en bas : l'image s'y fond dans la page (sur un calque à part, pour ne pas estomper le contenu).
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(15, 10, 6, 0.9) 15%, rgba(15, 10, 6, 0.55) 40%, rgba(15, 10, 6, 0.3) 70%, rgba(15, 10, 6, 0.55)),
+      url('/assets/bol/header-combat.png') center 40% / cover no-repeat;
+    mask-image: linear-gradient(#000 70%, transparent);
+    pointer-events: none;
+  }
 }
 
-// La première rangée : qui joue. Le lieu et le titre, l'ordre d'action, le retour à la table ; les légendes sur une ligne, dessous le reste.
+// La première rangée : le lieu et le titre à gauche, les boutons à droite ; ils passent sous le titre quand la place manque.
 .scd-bar-top {
-  display: grid;
-  grid-template-areas: 'title frise close';
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 0.4rem 1.3rem;
-  align-items: start;
 }
 
 .scd-heading {
   display: grid;
-  grid-area: title;
   grid-template-rows: 0.95rem var(--scd-ctl);
   gap: 0.2rem;
   min-width: 0;
@@ -150,13 +160,13 @@ bol-start-combat-page {
   color: var(--dw-color-text-bright);
 }
 
-// L'ordre d'action prend la place qui reste (voir `bol-ordre-frise`) ; l'alerte sans adversaire, à son bout, ne change pas la hauteur.
+// L'ordre d'action, sous le titre (voir `bol-ordre-frise`) ; l'alerte sans adversaire, à son bout, ne change pas la hauteur.
 .scd-frise-line {
   display: flex;
-  grid-area: frise;
   align-items: flex-end;
   gap: 0.8rem;
   min-width: 0;
+  margin-top: 0.5rem;
 }
 
 .scd-frise {
@@ -182,114 +192,55 @@ bol-start-combat-page {
   }
 }
 
-// Le retour à la table, tout au bout, à l'écart du reste.
-.scd-close {
+// Les boutons, groupés à droite ; le retour à la table tout au bout, après un filet.
+.scd-actions {
   display: flex;
-  grid-area: close;
+  flex-wrap: wrap;
   align-items: center;
-  align-self: end;
-  gap: 0.9rem;
-  height: var(--scd-ctl);
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
 }
 
 .scd-close-sep {
   width: 1px;
   height: 1.5rem;
+  margin-inline: 0.4rem;
   background: var(--dw-border);
 }
 
 // Rond et cerclé comme les boutons icônes de la table (deux classes : plus fort que le bouton icône de Material).
-.scd-close .scd-close-btn {
+.scd-actions .scd-close-btn {
   border: 1px solid var(--dw-border);
   background: rgba(0, 0, 0, 0.45);
   color: var(--dw-surface-800);
 }
 
-// La seconde rangée : les trois étapes, reliées par un trait. Le trait s'étire ; les étapes gardent leur place d'un état à l'autre.
-.scd-flow {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin: 0.4rem 0 0;
-  padding: 0.4rem 0 0;
-  border-top: 1px solid rgba(107, 74, 22, 0.5);
-  list-style: none;
-  // Un bouton inactif reste lisible : il dit ce qui vient ensuite.
+// Un bouton en contour sur l'image : un fond sombre pour qu'il reste lisible (deux classes : plus fort que Material).
+.scd-actions .mat-mdc-outlined-button {
+  background-color: rgba(0, 0, 0, 0.45);
   --mat-button-outlined-disabled-label-text-color: var(--dw-surface-600);
   --mat-button-outlined-disabled-outline-color: var(--dw-border);
 }
 
-.scd-flow-step {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.scd-flow-line {
-  flex: 1;
-  min-width: 0.8rem;
-  height: 2px;
-  background: var(--dw-surface-400);
-}
-
-// Le numéro de l'étape : en or pour celle où il faut agir, coché quand elle est faite.
-.scd-flow-n {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 1.6rem;
-  height: 1.6rem;
-  border: 1px solid var(--dw-surface-500);
-  border-radius: 50%;
-  color: var(--dw-surface-700);
-  font-size: 0.78rem;
-  font-weight: 800;
-
-  .mat-icon {
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
-  }
-}
-
-.scd-flow-n.scd-flow-n--cur {
-  border-color: var(--dw-color-legendary);
-  background: var(--dw-color-legendary);
-  color: #1c1200;
-}
-
-.scd-flow-n.scd-flow-n--ok {
-  border-color: var(--dw-color-reussite);
-  background: var(--dw-color-reussite);
-  color: #041a0d;
-}
-
-.scd-flow-label {
-  flex: none;
-  color: var(--dw-surface-700);
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+// « Lancer pour tous » garde sa largeur d'un état à l'autre : les boutons à sa gauche ne bougent pas.
+.scd-actions .scd-act-btn {
+  min-width: 12.5rem;
   white-space: nowrap;
 }
 
-// La même largeur quel que soit leur texte : rien ne bouge quand une étape change d'état (deux classes : plus fort que Material).
-.scd-flow .scd-flow-btn {
-  min-width: 14rem;
-  white-space: nowrap;
-}
-
-// Un bouton en contour sur l'image : un fond sombre pour qu'il reste lisible (deux classes : plus fort que Material).
-.scd-flow .mat-mdc-outlined-button {
-  background-color: rgba(0, 0, 0, 0.45);
+// L'embuscade choisie, sur le bouton des options.
+.scd-options-bonus {
+  margin-left: 0.35rem;
+  color: var(--dw-color-legendary);
 }
 
 // Les jets faits : ce n'est plus un bouton, seulement où on en est, à la même place.
-.scd-flow-done {
-  display: inline-grid;
-  place-items: center;
+.scd-done {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   box-sizing: border-box;
   height: var(--scd-ctl);
   border: 1px solid color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
@@ -298,57 +249,12 @@ bol-start-combat-page {
   color: var(--dw-surface-800);
   font-size: 0.9rem;
   font-weight: 600;
-}
 
-// Ce que l'étape 3 attend : sa place est réservée, le bouton ne bouge pas quand elle se vide.
-.scd-flow-hint {
-  flex: none;
-  min-width: 5.4rem;
-  color: var(--dw-surface-600);
-  font-size: 0.8rem;
-  white-space: nowrap;
-}
-
-// Quand elles ne tiennent plus sur une ligne, les étapes passent à la ligne, sans leurs traits : sous 1296 px avec le compteur de l'initiative
-// ennemie, sous 1136 px sans lui.
-@container scd-bar (max-width: 81rem) {
-  .scd-bar--enemy .scd-flow {
-    flex-wrap: wrap;
-    row-gap: 0.4rem;
-  }
-
-  .scd-bar--enemy .scd-flow-line {
-    display: none;
-  }
-}
-
-@container scd-bar (max-width: 71rem) {
-  .scd-flow {
-    flex-wrap: wrap;
-    row-gap: 0.4rem;
-  }
-
-  .scd-flow-line {
-    display: none;
-  }
-}
-
-// Moins de 1344 px avec beaucoup de monde, ou moins de 1152 px : l'ordre d'action passe sur sa propre rangée, sous le titre.
-@container scd-bar (max-width: 84rem) {
-  .scd-bar--dense .scd-bar-top {
-    grid-template-areas:
-      'title close'
-      'frise frise';
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-}
-
-@container scd-bar (max-width: 72rem) {
-  .scd-bar-top {
-    grid-template-areas:
-      'title close'
-      'frise frise';
-    grid-template-columns: minmax(0, 1fr) auto;
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--dw-color-reussite);
+    font-size: 1.1rem;
   }
 }
 
@@ -428,17 +334,11 @@ bol-start-combat-page {
   }
 }
 
-// L'embuscade dans l'en-tête : à la hauteur des autres contrôles.
-.scd-flow .scd-seg {
-  flex-wrap: nowrap;
-
-  button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    height: var(--scd-ctl);
-    padding: 0 0.7rem;
-  }
+// L'initiative ennemie, dans le popover des options : le compteur, et à côté ce qu'il vaut.
+.scd-pop-line {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 // L'initiative ennemie : la valeur entre deux boutons ronds, dans une capsule de la hauteur des autres contrôles.
@@ -1249,10 +1149,12 @@ bol-start-combat-page {
 
 // Le popover des modificateurs : opaque, au-dessus de la page (rendu dans le calque des overlays, hors du composant).
 .scd-pop {
+  // Rendu hors de l'en-tête : les contrôles y reprennent la même hauteur.
+  --scd-ctl: 2.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  width: min(25rem, 92vw);
+  width: min(28rem, 92vw);
   padding: 0.9rem 1rem 1rem;
   border: 1px solid var(--bar-bronze, var(--dw-border));
   border-radius: 12px;

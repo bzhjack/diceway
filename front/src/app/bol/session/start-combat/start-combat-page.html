@@ -13,10 +13,10 @@
   }
 
   <div class="scd-fg">
-    <!-- L'en-tête se lit comme un parcours. En haut, qui joue : le lieu et le titre (la règle du jet sur son « i »), l'ordre d'action, qui se
-         remplit à mesure des jets, le retour à la table. En bas, les trois étapes reliées : 1 régler la rencontre, 2 lancer, 3 valider. Tous les
-         contrôles ont la hauteur des médaillons de la frise ; il n'y a qu'un seul bouton plein à la fois. -->
-    <header class="scd-bar" [class.scd-bar--dense]="friseDense()" [class.scd-bar--enemy]="hasInitiativeAdversary()">
+    <!-- L'en-tête. En haut : le lieu et le titre (la règle du jet sur son « i ») à gauche ; à droite, groupés contre le retour à la table, les
+         options de la rencontre (dans un popover), « Lancer pour tous » et « Commencer le combat » — un seul bouton plein à la fois. Dessous,
+         l'ordre d'action, qui se remplit à mesure des jets. Tous les contrôles ont la hauteur des médaillons de la frise. -->
+    <header class="scd-bar">
       <div class="scd-bar-top">
         <div class="scd-heading">
           <span class="scd-where" [matTooltip]="where()">{{ where() }}</span>
@@ -35,25 +35,103 @@
             </button>
           </div>
         </div>
-        <!-- Le médaillon d'un adversaire se clique : il l'exclut de ce combat, ou l'y réintègre. Le « + » du bout en ajoute un : c'est ce qu'il
-             faut faire maintenant s'il n'y en a aucun. -->
-        <div class="scd-frise-line">
-          <bol-ordre-frise
-            class="scd-frise"
-            [legende]="true"
-            [round]="1"
-            [steps]="frise()"
-            [places]="frisePlaces()"
-            [addLabel]="loading() ? null : 'Ajouter un adversaire'"
-            [addUrgent]="noAdversary()"
-            (stepClicked)="toggleExcludedKey($event.key)"
-            (addClicked)="openAddAdversary()"
-          />
-          @if (noAdversary()) {
-            <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
+
+        <div class="scd-actions">
+          <!-- Les options de la rencontre (embuscade, initiative ennemie), dans un popover ; l'embuscade choisie se lit sur le bouton -->
+          <button
+            mat-stroked-button
+            type="button"
+            id="scd-options-btn"
+            cdkOverlayOrigin
+            #optionsOrigin="cdkOverlayOrigin"
+            aria-haspopup="dialog"
+            [attr.aria-expanded]="optionsOpen()"
+            matTooltip="Embuscade, initiative ennemie"
+            (click)="optionsOpen.set(!optionsOpen())"
+          >
+            <mat-icon>tune</mat-icon> Options
+            @if (ambushBonus(); as bonus) {
+              <b class="scd-options-bonus">{{ bonus }}</b>
+            }
+          </button>
+          <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="optionsOrigin"
+            [cdkConnectedOverlayOpen]="optionsOpen()"
+            [cdkConnectedOverlayPositions]="popoverPositions"
+            [cdkConnectedOverlayPush]="true"
+            [cdkConnectedOverlayViewportMargin]="12"
+            [cdkConnectedOverlayHasBackdrop]="true"
+            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+            (backdropClick)="closeOptions()"
+            (overlayKeydown)="onOptionsKeydown($event)"
+            (detach)="optionsOpen.set(false)"
+          >
+            <div class="scd-pop" role="dialog" aria-label="Options de la rencontre" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+              <p class="scd-pop-title">Options de la rencontre</p>
+              <div class="scd-pop-group" role="group" aria-labelledby="scd-ambush-label">
+                <span class="scd-label" id="scd-ambush-label">Embuscade</span>
+                <div class="scd-seg">
+                  @for (option of ambushOptions; track option.label) {
+                    <button type="button" [attr.aria-pressed]="ambushState() === option.value" (click)="setAmbush(option.value)">
+                      {{ option.hint || option.label }}
+                      @if (option.bonus) {
+                        <b>{{ option.bonus }}</b>
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+              @if (hasInitiativeAdversary()) {
+                <div class="scd-pop-group" role="group" aria-labelledby="scd-enemy-label">
+                  <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
+                  <div class="scd-pop-line">
+                    <div class="scd-stepper">
+                      <button
+                        type="button"
+                        aria-label="Diminuer l'initiative ennemie"
+                        [disabled]="adversaryInitiativeMalus() <= 0"
+                        (click)="stepAdversaryMalus(-1)"
+                      >
+                        −
+                      </button>
+                      <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
+                      <button type="button" aria-label="Augmenter l'initiative ennemie" (click)="stepAdversaryMalus(1)">+</button>
+                    </div>
+                    <span class="scd-hint">La plus haute des rivaux et coriaces, retranchée à chaque jet.</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </ng-template>
+
+          <!-- Les jets, tapés dans les lignes ou lancés ici pour tous : le bouton plein tant qu'il en reste, sauf sans adversaire (le « + » de
+               la frise passe avant). Faits, ce n'est plus un bouton, seulement où on en est. -->
+          @if (pendingHeroes().length === 0 && !loading()) {
+            <span class="scd-act-btn scd-done"><mat-icon>check</mat-icon> {{ rolledCount() }} {{ rolledCount() > 1 ? 'jets faits' : 'jet fait' }}</span>
+          } @else if (noAdversary()) {
+            <button mat-stroked-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+            </button>
+          } @else {
+            <button mat-flat-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+            </button>
           }
-        </div>
-        <div class="scd-close">
+
+          <!-- Démarrer, dès que tous les héros ont lancé et qu'il y a un adversaire -->
+          @if (canStart()) {
+            <button #startButton mat-flat-button type="button" [disabled]="starting()" (click)="start()">
+              <mat-icon>play_arrow</mat-icon>
+              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+            </button>
+          } @else {
+            <button #startButton mat-stroked-button type="button" disabled>
+              <mat-icon>play_arrow</mat-icon>
+              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+            </button>
+          }
+
           <span class="scd-close-sep" aria-hidden="true"></span>
           <button
             mat-icon-button
@@ -68,104 +146,24 @@
         </div>
       </div>
 
-      <ol class="scd-flow" aria-label="Les étapes du jet de réaction">
-        <!-- 1 : ce qui vaut pour toute la rencontre -->
-        <li class="scd-flow-step">
-          <span class="scd-flow-n" aria-hidden="true">1</span>
-          <span class="scd-flow-label" id="scd-ambush-label">Embuscade</span>
-          <div class="scd-seg" role="group" aria-labelledby="scd-ambush-label">
-            @for (option of ambushOptions; track option.label) {
-              <button
-                type="button"
-                [attr.aria-pressed]="ambushState() === option.value"
-                [matTooltip]="option.hint"
-                (click)="setAmbush(option.value)"
-              >
-                {{ option.label }}
-                @if (option.bonus) {
-                  <b>{{ option.bonus }}</b>
-                }
-              </button>
-            }
-          </div>
-          @if (hasInitiativeAdversary()) {
-            <span class="scd-flow-label" id="scd-enemy-label">Initiative ennemie</span>
-            <div
-              class="scd-stepper"
-              role="group"
-              aria-labelledby="scd-enemy-label"
-              matTooltip="La plus haute des rivaux et coriaces, retranchée à chaque jet"
-            >
-              <button
-                type="button"
-                aria-label="Diminuer l'initiative ennemie"
-                [disabled]="adversaryInitiativeMalus() <= 0"
-                (click)="stepAdversaryMalus(-1)"
-              >
-                −
-              </button>
-              <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
-              <button
-                type="button"
-                aria-label="Augmenter l'initiative ennemie"
-                (click)="stepAdversaryMalus(1)"
-              >
-                +
-              </button>
-            </div>
-          }
-        </li>
-        <li class="scd-flow-line" aria-hidden="true"></li>
-        <!-- 2 : les jets, tapés dans les lignes ou lancés ici pour tous. C'est le bouton plein tant qu'il en reste, sauf sans adversaire : le « + »
-             de la frise passe avant. -->
-        <li class="scd-flow-step">
-          @if (pendingHeroes().length === 0 && !loading()) {
-            <span class="scd-flow-n scd-flow-n--ok" aria-hidden="true"><mat-icon>check</mat-icon></span>
-            <span class="scd-flow-btn scd-flow-done">{{ rolledCount() }} {{ rolledCount() > 1 ? 'jets faits' : 'jet fait' }}</span>
-          } @else if (noAdversary()) {
-            <span class="scd-flow-n" aria-hidden="true">2</span>
-            <button mat-stroked-button type="button" class="scd-flow-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
-            </button>
-          } @else {
-            <span class="scd-flow-n scd-flow-n--cur" aria-hidden="true">2</span>
-            <button mat-flat-button type="button" class="scd-flow-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
-            </button>
-          }
-        </li>
-        <li class="scd-flow-line" aria-hidden="true"></li>
-        <!-- 3 : démarrer. Tant que ce n'est pas possible, le bouton dit ce qu'il attend. -->
-        <li class="scd-flow-step">
-          @if (noAdversary() || pendingHeroes().length > 0) {
-            <span class="scd-flow-n" aria-hidden="true">3</span>
-            <button #startButton mat-stroked-button type="button" class="scd-flow-btn" disabled>
-              <mat-icon>play_arrow</mat-icon>
-              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
-            </button>
-          } @else {
-            <span class="scd-flow-n" [class.scd-flow-n--cur]="canStart()" aria-hidden="true">3</span>
-            <button
-              #startButton
-              mat-flat-button
-              type="button"
-              class="scd-flow-btn"
-              [disabled]="!canStart() || starting()"
-              (click)="start()"
-            >
-              <mat-icon>play_arrow</mat-icon>
-              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
-            </button>
-          }
-          <span class="scd-flow-hint" aria-live="polite">
-            @if (noAdversary()) {
-              sans adversaire
-            } @else if (pendingHeroes().length > 0) {
-              encore {{ pendingHeroes().length }} {{ pendingHeroes().length > 1 ? 'jets' : 'jet' }}
-            }
-          </span>
-        </li>
-      </ol>
+      <!-- L'ordre d'action, dessous. Le médaillon d'un adversaire se clique : il l'exclut de ce combat, ou l'y réintègre. Le « + » du bout en
+           ajoute un : c'est ce qu'il faut faire maintenant s'il n'y en a aucun. -->
+      <div class="scd-frise-line">
+        <bol-ordre-frise
+          class="scd-frise"
+          [legende]="true"
+          [round]="1"
+          [steps]="frise()"
+          [places]="frisePlaces()"
+          [addLabel]="loading() ? null : 'Ajouter un adversaire'"
+          [addUrgent]="noAdversary()"
+          (stepClicked)="toggleExcludedKey($event.key)"
+          (addClicked)="openAddAdversary()"
+        />
+        @if (noAdversary()) {
+          <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
+        }
+      </div>
     </header>
 
     <main class="scd-content">

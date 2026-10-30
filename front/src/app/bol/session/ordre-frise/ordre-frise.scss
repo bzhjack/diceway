@@ -29,12 +29,19 @@
   }
 }
 
-// En légende : le titre sur une ligne, au-dessus de la frise, aligné sur les autres légendes de la page. La marge de la frise (le halo) ne
-// compte pas dans la hauteur.
+// En légende : le titre sur une ligne, au-dessus de la frise, aligné sur les autres légendes de la page ; ce que la page projette (une
+// pastille) sur la même ligne, à sa droite. La marge de la frise (le halo) ne compte pas dans la hauteur.
 :host(.ofr--legende) {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.2rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  gap: 0.2rem 0.6rem;
+
+  .ofr-zone {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+  }
 
   .ofr-title {
     display: flex;

@@ -16,6 +16,9 @@
       (search)="openPalette()"
       [coulissesOpen]="reserveOpen()"
       (coulissesToggled)="toggleReserve()"
+      [interrupters]="interrupters()"
+      (interruptRequested)="onInterrupt($event)"
+      (rerollRequested)="openStartCombat(true)"
     >
       @if (mode() === 'libre') {
         <bol-scene-acts [sessionTitre]="session()?.titre ?? null" (sceneChanged)="onSceneLoaded($event)" />
@@ -28,11 +31,8 @@
           [targetKey]="selectedTarget()?.key ?? null"
           [legendaryActive]="b.legendaryActive"
           [announcement]="turnAnnouncement()"
-          [interrupters]="interrupters()"
           (gaveBack)="onGiveBackTurn($event)"
-          (interruptRequested)="onInterrupt($event)"
           (addRequested)="openAddCombatantDialog()"
-          (rerollRequested)="openStartCombat(true)"
         />
       }
     </bol-session-header>

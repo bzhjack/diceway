@@ -15,19 +15,33 @@
     url('/assets/bol/header-combat.png') center / cover no-repeat;
 }
 
-// En combat, l'image est calée sur la fenêtre (`fixed`), avec un voile sombre qui descend sur elle.
+// En combat, comme sur la page du jet de réaction : l'image, calée sur la fenêtre (`fixed`), à peine voilée au milieu, plus sombre à
+// gauche sous le titre et la frise. Pas de bordure en bas : l'image s'y fond dans la table (le fondu est sur un calque à part, pour ne
+// pas estomper le contenu).
 .cp-header--combat {
-  background:
-    linear-gradient(transparent, color-mix(in srgb, var(--dw-surface-0) 45%, transparent)),
-    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 22%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 100%),
-    url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
+  position: relative;
+  isolation: isolate;
+  border-bottom: none;
+  background: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(15, 10, 6, 0.9) 15%, rgba(15, 10, 6, 0.55) 40%, rgba(15, 10, 6, 0.3) 70%, rgba(15, 10, 6, 0.55)),
+      url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
+    mask-image: linear-gradient(#000 70%, transparent);
+    pointer-events: none;
+  }
 }
 
 // En combat : le titre et les actions, puis l'ordre d'action en seconde rangée (`turn-order.scss`).
 .cp-header--combat {
   flex-wrap: wrap;
   row-gap: 0.5rem;
-  padding-block: 0.5rem 0.3rem;
+  padding-block: 0.5rem 0.8rem;
 }
 
 .cp-header-title {

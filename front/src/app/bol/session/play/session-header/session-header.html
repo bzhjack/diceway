@@ -8,8 +8,31 @@
   <!-- Projeté par la page : en mode libre, le titre du scénario et la frise des actes. -->
   <div class="cp-header-center"><ng-content /></div>
 
-  <!-- Les actions à droite, comme sur la page du jet de réaction : en icône ronde cerclée, sauf l'action principale en toutes lettres -->
+  <!-- Les actions à droite, groupées comme sur la page du jet de réaction : en icône ronde cerclée, sauf l'action principale en toutes
+       lettres ; en combat, d'abord les commandes du round (interrompre, nouveau jet de réaction) -->
   <div class="cp-header-actions">
+    @if (mode() === 'combat') {
+      @for (i of interrupters(); track i.key) {
+        <button
+          mat-stroked-button
+          type="button"
+          matTooltip="A retardé son action : 1 point d'héroïsme pour agir tout de suite, avant la carte active"
+          (click)="interruptRequested.emit(i.key)"
+        >
+          Interrompre : {{ i.nom }} (−1 PH)
+        </button>
+      }
+      <button
+        mat-icon-button
+        type="button"
+        class="cp-head-icon"
+        aria-label="Nouveau jet de réaction"
+        matTooltip="Nouveau jet de réaction des héros"
+        (click)="rerollRequested.emit()"
+      >
+        <mat-icon>replay</mat-icon>
+      </button>
+    }
     <button
       mat-icon-button
       type="button"
