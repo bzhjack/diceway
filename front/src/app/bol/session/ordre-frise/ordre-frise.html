@@ -3,7 +3,7 @@
 <div class="ofr-zone">
   <ol class="ofr" [attr.aria-label]="'Ordre d’action du round ' + round()">
     @for (step of steps(); track step.key) {
-      <li class="ofr-step" [class.ofr-step--long]="step.link === 'long'" [class.ofr-step--last]="step.link === null">
+      <li class="ofr-step" [class.ofr-step--long]="step.link === 'long'" [class.ofr-step--last]="step.link === null && !addLabel()">
         <span class="ofr-slot">
           @if (step.clickable) {
             <button
@@ -27,9 +27,16 @@
             <i class="ofr-dot" aria-hidden="true"></i>
           }
         </span>
-        @if (step.link) {
+        @if (step.link || addLabel()) {
           <i class="ofr-link" aria-hidden="true"></i>
         }
+      </li>
+    }
+    @if (addLabel(); as label) {
+      <li class="ofr-step ofr-step--last">
+        <button type="button" class="ofr-c ofr-c--add" [class.ofr-c--add-urgent]="addUrgent()" [attr.aria-label]="label" [matTooltip]="label" (click)="addClicked.emit()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+        </button>
       </li>
     }
   </ol>

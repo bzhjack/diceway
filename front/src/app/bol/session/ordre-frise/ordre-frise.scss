@@ -29,6 +29,42 @@
   }
 }
 
+// En légende : le titre sur une ligne, au-dessus de la frise, aligné sur les autres légendes de la page. La marge de la frise (le halo) ne
+// compte pas dans la hauteur.
+:host(.ofr--legende) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.2rem;
+
+  .ofr-title {
+    display: flex;
+    gap: 0.35rem;
+    height: 0.95rem;
+    color: var(--dw-surface-700);
+    font-size: 0.66rem;
+    line-height: 0.95rem;
+    letter-spacing: 0.12em;
+
+    span {
+      color: var(--dw-color-legendary);
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      text-transform: uppercase;
+
+      &::before {
+        content: '· ';
+        color: var(--dw-surface-700);
+      }
+    }
+  }
+
+  .ofr {
+    margin: -0.2rem 0;
+    padding: 0.2rem 0.25rem;
+  }
+}
+
 // Sa largeur règle la taille des médaillons (unité `cqw`).
 .ofr-zone {
   flex: 1;
@@ -133,6 +169,30 @@ button.ofr-c {
 
 .ofr-c--hero {
   border-radius: 22%;
+}
+
+// Le « + » du bout de la frise : la place du prochain combattant, en pointillés ; en or quand c'est ce qu'il faut faire maintenant.
+.ofr-c--add {
+  border-style: dashed;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--dw-surface-800);
+
+  .mat-icon {
+    width: calc(var(--ofr-size) * 0.6);
+    height: calc(var(--ofr-size) * 0.6);
+    font-size: calc(var(--ofr-size) * 0.6);
+  }
+
+  &:hover {
+    color: var(--dw-color-legendary);
+  }
+}
+
+.ofr-c--add.ofr-c--add-urgent {
+  border-style: solid;
+  border-color: var(--dw-color-legendary);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
 }
 
 // L'anneau dit le résultat d'un héros, ou le camp des autres.

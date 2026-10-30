@@ -130,10 +130,13 @@ interface HeroCard {
 
 /** Embuscade (02-actions-combat.md, « Modificateurs au jet de réaction ») : la tendre ou surprendre l'ennemi donne +2 (Très facile),
  * être surpris ou pris en embuscade donne −1 (Ardue). */
-const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: string; readonly bonus: string; readonly modifier: number}[] = [
-  {value: null, label: 'Aucune', bonus: '', modifier: 0},
-  {value: 'heroes_ambush', label: 'Tendue par les héros', bonus: '+2', modifier: 2},
-  {value: 'heroes_ambushed', label: 'Héros surpris', bonus: '−1', modifier: -1},
+/** Au-delà de ce nombre de places, la frise ne partage plus la rangée du titre sur un petit écran. */
+const FRISE_DENSE = 23;
+
+const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: string; readonly hint: string; readonly bonus: string; readonly modifier: number}[] = [
+  {value: null, label: 'Aucune', hint: '', bonus: '', modifier: 0},
+  {value: 'heroes_ambush', label: 'Tendue', hint: 'Tendue par les héros', bonus: '+2', modifier: 2},
+  {value: 'heroes_ambushed', label: 'Surpris', hint: 'Héros surpris', bonus: '−1', modifier: -1},
 ];
 
 /**
@@ -282,6 +285,10 @@ export class StartCombatPageComponent {
 
   /** L'ordre d'action en frise : un médaillon par combattant. */
   protected readonly frise = computed(() => reactionFrise(this.lanes()));
+  /** Les places de la frise : tous les combattants, y compris les héros qui n'ont pas lancé, et le « + » : rien ne bouge pendant les jets. */
+  protected readonly frisePlaces = computed(() => this.activeHeroes().length + this.adversaries().length + 1);
+  /** Trop de monde pour partager la rangée du titre sur un petit écran : la frise passe sur sa propre rangée. */
+  protected readonly friseDense = computed(() => this.frisePlaces() > FRISE_DENSE);
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   /** « 2 / 4 jets » dans l'en-tête. */

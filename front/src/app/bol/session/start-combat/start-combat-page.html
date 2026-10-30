@@ -13,127 +13,72 @@
   }
 
   <div class="scd-fg">
-    <!-- L'en-tête de la page, sur une rangée, comme celui de la table : à gauche le titre (la règle du jet en infobulle sur son « i ») avec
-         l'avancement des jets, et la session et la scène ; à droite tous les boutons, en icône ronde sauf l'action principale du moment
-         (le seul bouton plein) et « Commencer le combat » ; tout au bout, le retour à la table. Dessous, l'ordre d'action, les modificateurs de
-         la rencontre, puis l'alerte sans adversaire. -->
-    <header class="scd-bar">
-      <div class="scd-heading">
-        <div class="scd-title-row">
-          <h1 class="scd-title">
-            {{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}
-          </h1>
-          <button
-            type="button"
-            class="scd-info"
-            aria-label="Règles du jet de réaction"
-            [matTooltip]="rules"
-            matTooltipClass="scd-tooltip"
-          >
-            <mat-icon>info_outline</mat-icon>
-          </button>
-          @if (heroCount() > 0) {
-            <span class="scd-progress" aria-live="polite">
-              <b>{{ rolledCount() }}</b> / {{ heroCount() }} {{ heroCount() > 1 ? 'jets' : 'jet' }}
-            </span>
+    <!-- L'en-tête se lit comme un parcours. En haut, qui joue : le lieu et le titre (la règle du jet sur son « i »), l'ordre d'action, qui se
+         remplit à mesure des jets, le retour à la table. En bas, les trois étapes reliées : 1 régler la rencontre, 2 lancer, 3 valider. Tous les
+         contrôles ont la hauteur des médaillons de la frise ; il n'y a qu'un seul bouton plein à la fois. -->
+    <header class="scd-bar" [class.scd-bar--dense]="friseDense()">
+      <div class="scd-bar-top">
+        <div class="scd-heading">
+          <span class="scd-where" [matTooltip]="where()">{{ where() }}</span>
+          <div class="scd-title-row">
+            <h1 class="scd-title">
+              {{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}
+            </h1>
+            <button
+              type="button"
+              class="scd-info"
+              aria-label="Règles du jet de réaction"
+              [matTooltip]="rules"
+              matTooltipClass="scd-tooltip"
+            >
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+        <!-- Le médaillon d'un adversaire se clique : il l'exclut de ce combat, ou l'y réintègre. Le « + » du bout en ajoute un : c'est ce qu'il
+             faut faire maintenant s'il n'y en a aucun. -->
+        <div class="scd-frise-line">
+          <bol-ordre-frise
+            class="scd-frise"
+            [legende]="true"
+            [round]="1"
+            [steps]="frise()"
+            [places]="frisePlaces()"
+            [addLabel]="loading() ? null : 'Ajouter un adversaire'"
+            [addUrgent]="noAdversary()"
+            (stepClicked)="toggleExcludedKey($event.key)"
+            (addClicked)="openAddAdversary()"
+          />
+          @if (noAdversary()) {
+            <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
           }
         </div>
-        @if (where()) {
-          <span class="scd-where">{{ where() }}</span>
-        }
-      </div>
-      <div class="scd-actions">
-        <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, en toutes lettres, et l'avertissement se voit. -->
-        @if (noAdversary()) {
-          <button mat-flat-button type="button" (click)="openAddAdversary()">
-            <mat-icon>add</mat-icon> Ajouter un adversaire
-          </button>
-        } @else {
+        <div class="scd-close">
+          <span class="scd-close-sep" aria-hidden="true"></span>
           <button
             mat-icon-button
             type="button"
-            class="scd-head-icon"
-            aria-label="Ajouter un adversaire"
-            matTooltip="Ajouter un adversaire"
-            [disabled]="loading()"
-            (click)="openAddAdversary()"
+            class="scd-close-btn"
+            aria-label="Retour à la table"
+            matTooltip="Retour à la table"
+            (click)="close()"
           >
-            <mat-icon>add</mat-icon>
+            <mat-icon>close</mat-icon>
           </button>
-        }
-        <!-- Proposé tant qu'un héros n'a pas lancé. Tant qu'il reste des jets (et qu'il y a un adversaire), c'est l'action principale, en
-             toutes lettres ; sinon une icône. -->
-        @if (pendingHeroes().length > 0) {
-          @if (noAdversary()) {
-            <button
-              mat-icon-button
-              type="button"
-              class="scd-head-icon"
-              aria-label="Lancer pour tous"
-              matTooltip="Lancer pour tous les héros"
-              [disabled]="loading() || rolling()"
-              (click)="rollAll()"
-            >
-              <mat-icon>casino</mat-icon>
-            </button>
-          } @else {
-            <button
-              mat-flat-button
-              type="button"
-              [disabled]="loading() || rolling()"
-              (click)="rollAll()"
-            >
-              <mat-icon>casino</mat-icon> Lancer pour tous
-            </button>
-          }
-        }
-        <!-- Un seul bouton plein : « Ajouter un adversaire » sans adversaire, « Lancer pour tous » tant qu'il reste des jets, sinon celui-ci. -->
-        @if (noAdversary() || pendingHeroes().length > 0) {
-          <button #startButton mat-stroked-button type="button" disabled>
-            <mat-icon>play_arrow</mat-icon>
-            {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
-          </button>
-        } @else {
-          <button
-            #startButton
-            mat-flat-button
-            type="button"
-            [disabled]="!canStart() || starting()"
-            (click)="start()"
-          >
-            <mat-icon>play_arrow</mat-icon>
-            {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
-          </button>
-        }
-        <button
-          mat-icon-button
-          type="button"
-          class="scd-head-icon scd-head-icon--close"
-          aria-label="Retour à la table"
-          matTooltip="Retour à la table"
-          (click)="close()"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
+        </div>
       </div>
-      <!-- L'ordre d'action en seconde rangée, qui se remplit à mesure des jets (la même frise que dans l'en-tête de la table en combat).
-           Le médaillon d'un adversaire se clique : il l'exclut de ce combat, ou l'y réintègre. -->
-      <section class="scd-frise" aria-label="Ordre d’action">
-        <bol-ordre-frise class="scd-frise-zone" [round]="1" [steps]="frise()" (stepClicked)="toggleExcludedKey($event.key)">
-          @if (frise().length === 0 && !loading()) {
-            <p class="scd-hint">Personne à table pour l’instant.</p>
-          }
-        </bol-ordre-frise>
-      </section>
-      <!-- Les modificateurs communs à toute la rencontre, sur une troisième rangée de l'en-tête -->
-      <section class="scd-mods" aria-label="Modificateurs de la rencontre">
-        <div class="scd-mod" role="group" aria-labelledby="scd-ambush-label">
-          <span class="scd-label" id="scd-ambush-label">Embuscade</span>
-          <div class="scd-seg">
+
+      <ol class="scd-flow" aria-label="Les étapes du jet de réaction">
+        <!-- 1 : ce qui vaut pour toute la rencontre -->
+        <li class="scd-flow-step">
+          <span class="scd-flow-n" aria-hidden="true">1</span>
+          <span class="scd-flow-label" id="scd-ambush-label">Embuscade</span>
+          <div class="scd-seg" role="group" aria-labelledby="scd-ambush-label">
             @for (option of ambushOptions; track option.label) {
               <button
                 type="button"
                 [attr.aria-pressed]="ambushState() === option.value"
+                [matTooltip]="option.hint"
                 (click)="setAmbush(option.value)"
               >
                 {{ option.label }}
@@ -143,11 +88,14 @@
               </button>
             }
           </div>
-        </div>
-        @if (hasInitiativeAdversary()) {
-          <div class="scd-mod" role="group" aria-labelledby="scd-enemy-label">
-            <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
-            <div class="scd-stepper">
+          @if (hasInitiativeAdversary()) {
+            <span class="scd-flow-label" id="scd-enemy-label">Initiative ennemie</span>
+            <div
+              class="scd-stepper"
+              role="group"
+              aria-labelledby="scd-enemy-label"
+              matTooltip="La plus haute des rivaux et coriaces, retranchée à chaque jet"
+            >
               <button
                 type="button"
                 aria-label="Diminuer l'initiative ennemie"
@@ -165,18 +113,59 @@
                 +
               </button>
             </div>
-            <span class="scd-hint scd-hint--wide"
-              >la plus haute des rivaux et coriaces, retranchée à chaque jet</span
+          }
+        </li>
+        <li class="scd-flow-line" aria-hidden="true"></li>
+        <!-- 2 : les jets, tapés dans les lignes ou lancés ici pour tous. C'est le bouton plein tant qu'il en reste, sauf sans adversaire : le « + »
+             de la frise passe avant. -->
+        <li class="scd-flow-step">
+          @if (pendingHeroes().length === 0 && !loading()) {
+            <span class="scd-flow-n scd-flow-n--ok" aria-hidden="true"><mat-icon>check</mat-icon></span>
+            <span class="scd-flow-btn scd-flow-done">{{ rolledCount() }} {{ rolledCount() > 1 ? 'jets faits' : 'jet fait' }}</span>
+          } @else if (noAdversary()) {
+            <span class="scd-flow-n" aria-hidden="true">2</span>
+            <button mat-stroked-button type="button" class="scd-flow-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+            </button>
+          } @else {
+            <span class="scd-flow-n scd-flow-n--cur" aria-hidden="true">2</span>
+            <button mat-flat-button type="button" class="scd-flow-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+            </button>
+          }
+        </li>
+        <li class="scd-flow-line" aria-hidden="true"></li>
+        <!-- 3 : démarrer. Tant que ce n'est pas possible, le bouton dit ce qu'il attend. -->
+        <li class="scd-flow-step">
+          @if (noAdversary() || pendingHeroes().length > 0) {
+            <span class="scd-flow-n" aria-hidden="true">3</span>
+            <button #startButton mat-stroked-button type="button" class="scd-flow-btn" disabled>
+              <mat-icon>play_arrow</mat-icon>
+              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+            </button>
+          } @else {
+            <span class="scd-flow-n" [class.scd-flow-n--cur]="canStart()" aria-hidden="true">3</span>
+            <button
+              #startButton
+              mat-flat-button
+              type="button"
+              class="scd-flow-btn"
+              [disabled]="!canStart() || starting()"
+              (click)="start()"
             >
-          </div>
-        }
-      </section>
-      @if (noAdversary()) {
-        <p class="scd-note scd-note--alert" aria-live="polite">
-          <mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire : ajoutes-en un pour
-          pouvoir démarrer.
-        </p>
-      }
+              <mat-icon>play_arrow</mat-icon>
+              {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+            </button>
+          }
+          <span class="scd-flow-hint" aria-live="polite">
+            @if (noAdversary()) {
+              sans adversaire
+            } @else if (pendingHeroes().length > 0) {
+              encore {{ pendingHeroes().length }} {{ pendingHeroes().length > 1 ? 'jets' : 'jet' }}
+            }
+          </span>
+        </li>
+      </ol>
     </header>
 
     <main class="scd-content">
