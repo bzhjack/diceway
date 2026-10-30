@@ -61,9 +61,8 @@
 }
 
 // Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand le jet
-// change d'état (faveur divine, échec critique) et la zone de jeu des dés garde une taille confortable. Le corps
-// occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat, réduit au
-// bandeau, garde sa hauteur naturelle.
+// change d'état (faveur divine, échec critique) et la zone de jeu des dés garde une taille confortable. Un héros
+// en combat, réduit au bandeau, garde sa hauteur naturelle.
 .exc--fixed {
   height: min(400px, 88dvh);
   display: flex;
@@ -73,26 +72,10 @@
     height: min(660px, 92dvh);
   }
 
-  .exc-body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--dw-border) transparent;
-  }
-
   bol-action-roll-panel {
     flex: 1;
     min-height: 0;
   }
-}
-
-// Bandeau commun à toutes les cartes dépliées : portrait carré à gauche, identité et vitalité à droite.
-.exc-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
-  padding: 0.6rem 0.5rem 0.6rem 0.6rem;
 }
 
 .exc-portrait {
@@ -127,72 +110,6 @@
   object-fit: cover;
 }
 
-.exc-id {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.exc-line {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.6rem;
-
-  > .exc-title {
-    flex: 1;
-  }
-}
-
-.exc-title {
-  min-width: 0;
-}
-
-// Chiffres d'un héros, entre son identité et les boutons : ses statistiques de combat en petites tuiles
-// libellé / valeur, et dessous sa vitalité et son héroïsme, en tuiles du même style mais modifiables.
-.exc-figures {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.exc-stats {
-  display: flex;
-  gap: 0.3rem;
-  margin: 0;
-}
-
-.exc-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 2.7rem;
-  padding: 0.2rem 0.4rem 0.25rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 6px;
-  background: var(--dw-surface-100);
-
-  dt {
-    font-size: 0.56rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dw-surface-500);
-  }
-
-  dd {
-    margin: 0;
-    font-size: 0.92rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    color: var(--dw-surface-900);
-  }
-}
-
 .exc-name {
   margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
@@ -206,47 +123,16 @@
   text-transform: capitalize;
 }
 
-.exc-details {
-  margin-top: 0.25rem;
-}
-
 .exc-sub {
   margin: 0.1rem 0 0;
   font-size: 0.8rem;
   color: var(--dw-surface-500);
 }
 
-// Vitalité et héroïsme sur une ligne qui passe à la suivante au besoin.
-.exc-resources {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 1.2rem;
-
-  bol-instance-vitalite {
-    justify-content: flex-start;
-    gap: 0.5rem;
-  }
-}
-
-.exc-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  padding: 0.7rem 0.9rem 0.9rem;
-  border-top: 1px solid var(--dw-border);
-}
-
 .exc-loading {
   margin: 0;
   font-size: 0.88rem;
   color: var(--dw-surface-500);
-}
-
-.exc-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
 }
 
 .exc-icon-btn {

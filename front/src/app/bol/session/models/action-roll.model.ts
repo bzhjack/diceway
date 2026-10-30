@@ -50,10 +50,6 @@ export interface ActionRollParts {
   readonly modifier: number;
 }
 
-/** Le nom de chaque terme de la formule, entre parenthèses derrière sa valeur : « + 1 (agi) ». Un terme sans nom
- * s'affiche seul. */
-export type ActionRollLabels = Partial<Record<keyof ActionRollParts, string>>;
-
 /** Ce qu'il faut obtenir aux dés pour réussir : un total minimal (`seuil`), « tout sauf le double 1 » (`tout`) ou « seul le
  * double 6 » (`double-six`). `value` est le total demandé, même quand il sort de l'intervalle 2-12. */
 export interface ActionDiceTarget {

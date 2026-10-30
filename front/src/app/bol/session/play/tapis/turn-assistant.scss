@@ -688,15 +688,6 @@
   }
 }
 
-// La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.
-
-.tas-side {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-}
-
 .tas-side-chip {
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
@@ -707,7 +698,6 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-
 
 .tas-med {
   display: grid;

@@ -68,10 +68,6 @@ export class SessionLibraryPageComponent {
   protected readonly totalCount = computed(() => this.sessions.data().length);
   protected readonly visibleCount = computed(() => this.filteredSummaries().length);
 
-  protected clearSearch(): void {
-    this.searchTerm.set('');
-  }
-
   protected askDelete(session: BolFightSessionModel): void {
     if (!session.id) {
       return;

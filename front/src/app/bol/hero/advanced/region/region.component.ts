@@ -70,9 +70,6 @@ export class HeroAdvancedRegionComponent {
     }),
   );
   protected readonly hoveredRegionId = signal<number | null>(null);
-  protected readonly hoveredRegion = computed(
-    () => (this.regionList() ?? []).find((region) => Number(region.id) === Number(this.hoveredRegionId())) ?? null,
-  );
 
   constructor(public readonly ref: MatDialogRef<HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult | null>) {
     effect(() => this.selectedRegion());

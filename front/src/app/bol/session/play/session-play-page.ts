@@ -126,7 +126,6 @@ export class SessionPlayPageComponent {
   protected readonly mode = computed<'libre' | 'combat'>(() => (this.session()?.statut === 'combat' ? 'combat' : 'libre'));
 
 
-  protected readonly heroTokens = computed(() => this.board()?.tokens.filter((t) => t.camp === 'heros') ?? []);
   protected readonly sessionId = computed(() => this.session()?.id ?? null);
 
   /** Page à laquelle revenir depuis un formulaire ou une bibliothèque ouverts depuis la table. */

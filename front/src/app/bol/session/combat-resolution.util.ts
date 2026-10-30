@@ -8,7 +8,7 @@ export const ATTACK_THRESHOLD = 9;
  * deux fois si on veut. */
 export type HeroicSlug = 'carnage' | 'devastateur' | 'precis' | 'desarmement' | 'pietaille' | 'renversement';
 
-export interface HeroicOption {
+interface HeroicOption {
   readonly slug: HeroicSlug;
   readonly label: string;
   readonly effect: string;

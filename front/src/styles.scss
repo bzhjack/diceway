@@ -12,12 +12,10 @@
 
 // ── Composants UI ─────────────────────────────────────────────────────────────
 @use 'styles/auth';
-@use 'styles/workspace';
 
 // ── App spécifique ────────────────────────────────────────────────────────────
 @use 'styles/diceway';
 @use 'styles/bol-layout';
-@use 'styles/colors';
 @use 'styles/form';
 @use 'styles/dialog';
 @use 'styles/barbare';

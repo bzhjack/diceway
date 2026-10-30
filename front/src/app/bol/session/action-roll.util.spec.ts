@@ -9,9 +9,7 @@ import {
   actionSuccessChance,
   actionVerdict,
   chanceRingDash,
-  diceCountLabel,
   diceFromTotal,
-  formatActionFormula,
   keepBestOrWorstTwo,
   keptDiceDistribution,
   keptDiceIndexes,
@@ -89,24 +87,6 @@ describe('netDiceModifier', () => {
   });
 });
 
-describe('diceCountLabel', () => {
-  it('is empty for a plain roll', () => {
-    expect(diceCountLabel(0, 0)).toBe('');
-  });
-
-  it('says the traits cancel out when both kinds are selected and net is 0', () => {
-    expect(diceCountLabel(1, 1)).toBe("S'annulent — 2d6");
-  });
-
-  it('describes a bonus die', () => {
-    expect(diceCountLabel(1, 0)).toBe('3d6, garde les 2 meilleurs');
-  });
-
-  it('describes two malus dice', () => {
-    expect(diceCountLabel(0, 2)).toBe('4d6, garde les 2 moins bons');
-  });
-});
-
 describe('signedModifier', () => {
   it('prefixes positive values with + and never writes +0', () => {
     expect(signedModifier(2)).toBe('+2');
@@ -118,34 +98,6 @@ describe('signedModifier', () => {
 describe('actionModifierSum', () => {
   it('adds attribute, career, difficulty, equipment and free modifier', () => {
     expect(actionModifierSum({attribute: 2, carriere: 1, difficulty: -1, equipment: -1, modifier: 3})).toBe(4);
-  });
-});
-
-describe('formatActionFormula', () => {
-  it('lists every non-zero term before the roll', () => {
-    expect(formatActionFormula({attribute: 2, carriere: 1, difficulty: -1, equipment: 0, modifier: 0}, null)).toBe(
-      '2d6 + 2 + 1 − 1 ≥ 9',
-    );
-  });
-
-  it('names each term in parentheses when labels are given', () => {
-    expect(
-      formatActionFormula({attribute: 1, carriere: 2, difficulty: -4, equipment: 0, modifier: 1}, null, {
-        attribute: 'agi', carriere: 'chasseur', difficulty: 'très difficile', modifier: 'modificateur',
-      }),
-    ).toBe('2d6 + 1 (agi) + 2 (chasseur) − 4 (très difficile) + 1 (modificateur) ≥ 9');
-  });
-
-  it('shows only 2d6 when every modifier is zero', () => {
-    expect(formatActionFormula({attribute: 0, carriere: 0, difficulty: 0, equipment: 0, modifier: 0}, null)).toBe(
-      '2d6 ≥ 9',
-    );
-  });
-
-  it('replaces 2d6 by the kept dice once rolled', () => {
-    expect(formatActionFormula({attribute: 2, carriere: 0, difficulty: -4, equipment: -1, modifier: 0}, [4, 5])).toBe(
-      '4 + 5 + 2 − 1 − 4 ≥ 9',
-    );
   });
 });
 

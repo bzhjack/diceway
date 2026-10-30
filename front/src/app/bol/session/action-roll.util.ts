@@ -1,5 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {ActionAttribute, ActionDiceTarget, ActionDiceTargetLabel, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone, ActionVerdict} from './models/action-roll.model';
+import {ActionAttribute, ActionDiceTarget, ActionDiceTargetLabel, ActionDifficulty, ActionRollParts, ActionRollTone, ActionVerdict} from './models/action-roll.model';
 
 export const ACTION_ATTRIBUTES: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
 
@@ -174,15 +174,6 @@ export function netDiceModifier(avantages: number, desavantages: number): number
   return Math.max(-2, Math.min(2, avantages - desavantages));
 }
 
-export function diceCountLabel(avantages: number, desavantages: number): string {
-  const net = netDiceModifier(avantages, desavantages);
-  if (net === 0) {
-    return avantages > 0 && desavantages > 0 ? "S'annulent — 2d6" : '';
-  }
-  const count = 2 + Math.abs(net);
-  return net > 0 ? `${count}d6, garde les 2 meilleurs` : `${count}d6, garde les 2 moins bons`;
-}
-
 /** Formate un modificateur avec son signe — jamais de "+0" (zéro n'est ni un bonus ni un malus). */
 export function signedModifier(value: number): string {
   return value > 0 ? `+${value}` : `${value}`;
@@ -190,26 +181,6 @@ export function signedModifier(value: number): string {
 
 export function actionModifierSum(parts: ActionRollParts): number {
   return parts.attribute + parts.carriere + parts.equipment + parts.difficulty + parts.modifier;
-}
-
-const FORMULA_TERMS = ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const;
-
-/** Formule en clair : `2d6 + 2 (agi) + 1 (chasseur) − 1 (ardue) ≥ 9`. Les termes nuls sont omis ; une fois les dés
- * lancés, `2d6` est remplacé par les deux dés gardés. `labels` donne le nom de chaque terme, entre parenthèses. */
-export function formatActionFormula(
-  parts: ActionRollParts,
-  dice: readonly [number, number] | null,
-  labels: ActionRollLabels = {},
-): string {
-  const head = dice ? `${dice[0]} + ${dice[1]}` : '2d6';
-  const terms = FORMULA_TERMS.filter((term) => parts[term] !== 0)
-    .map((term) => {
-      const value = parts[term];
-      const label = labels[term] ? ` (${labels[term]})` : '';
-      return `${value > 0 ? ' + ' : ' − '}${Math.abs(value)}${label}`;
-    })
-    .join('');
-  return `${head}${terms} ≥ ${ACTION_ROLL_THRESHOLD}`;
 }
 
 export function actionResultTone(result: InitiativeResultat): ActionRollTone {
