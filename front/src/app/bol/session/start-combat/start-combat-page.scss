@@ -1098,20 +1098,44 @@ bol-start-combat-page {
   }
 }
 
-.scd-mods-count {
+// Ce qui est accordé, aux coins du bouton : le dé du MJ en haut (vert pour un bonus, rouge pour un malus), la carrière en bas (en or).
+.scd-mods-die,
+.scd-mods-career {
   position: absolute;
-  top: -0.3rem;
-  right: -0.3rem;
+  right: -0.35rem;
   display: grid;
   place-items: center;
   min-width: 1.15rem;
   height: 1.15rem;
-  padding: 0 0.25rem;
   border-radius: 999px;
+  line-height: 1;
+}
+
+.scd-mods-die {
+  top: -0.35rem;
+  background: var(--dw-surface-0);
+
+  .mat-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
+  }
+}
+
+.scd-mods-die--plus {
+  color: var(--dw-color-reussite);
+}
+
+.scd-mods-die--minus {
+  color: var(--dw-color-echec);
+}
+
+.scd-mods-career {
+  bottom: -0.35rem;
+  padding: 0 0.25rem;
   background: var(--dw-color-legendary);
   color: #1c1200;
-  font-size: 0.72rem;
-  line-height: 1;
+  font-size: 0.68rem;
 }
 
 // Moins de 1600 px : les colonnes fixes restent resserrées, pour que la place aille au résultat.

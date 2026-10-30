@@ -101,8 +101,8 @@ interface HeroCard {
   readonly diceLabel: string | null;
   /** Le dé de bonus (1) ou de malus (−1) accordé par le MJ pour ce jet, en plus de celui du trait ; `null` sans. */
   readonly gmDie: 1 | -1 | null;
-  /** Combien de modificateurs le MJ a accordés (dé du MJ, carrière) : le nombre sur le bouton « Modificateurs ». */
-  readonly modsCount: number;
+  /** Le nom du bouton « Modificateurs », avec ce que le MJ a accordé (dé du MJ, carrière), que le bouton marque à ses coins. */
+  readonly modsLabel: string;
   /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
   readonly traitNote: string | null;
   readonly verdict: ReactionVerdict | null;
@@ -251,7 +251,7 @@ export class StartCombatPageComponent {
         diceNet: net,
         diceLabel: net === 0 ? null : `${Math.abs(net) > 1 ? '2 dés' : 'dé'} de ${net > 0 ? 'bonus' : 'malus'}`,
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
-        modsCount: (this.gmDieByPivot().has(hero.pivotId) ? 1 : 0) + (parts.carriere ? 1 : 0),
+        modsLabel: this.modsLabel(hero, parts.carriere ?? null),
         traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
@@ -636,6 +636,14 @@ export class StartCombatPageComponent {
       next.delete(hero.pivotId);
       return next;
     });
+  }
+
+  /** Le nom du bouton des modificateurs d'un héros, avec ce qui est accordé (dé du MJ, carrière) : les marques du bouton, en clair. */
+  private modsLabel(hero: HeroRow, carriere: ActionRollCarriere | null): string {
+    const gm = this.gmDieByPivot().get(hero.pivotId);
+    const actifs = [gm === 1 ? 'dé de bonus du MJ' : gm === -1 ? 'dé de malus du MJ' : '', carriere ? `carrière ${carriere.label} +${carriere.value}` : ''];
+    const detail = actifs.filter((part) => part).join(', ');
+    return `Modificateurs du jet de ${hero.nom}${detail ? ' : ' + detail : ''}`;
   }
 
   /** Le popover des modificateurs ouvert (clé pivotId du héros), `null` sinon : un seul à la fois. */

@@ -51,7 +51,7 @@
           >
             <mat-icon>tune</mat-icon> Options
             @if (ambushBonus(); as bonus) {
-              <b class="scd-options-bonus">{{ bonus }}</b>
+              <b class="scd-options-bonus" aria-hidden="true">{{ bonus }}</b>
               <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
             }
             <!-- Le malus adverse en cours : une petite épée et sa valeur, en rouge -->
@@ -436,19 +436,17 @@
                       [id]="'scd-mods-' + card.hero.pivotId"
                       aria-haspopup="dialog"
                       [attr.aria-expanded]="modsOpen() === card.hero.pivotId"
-                      [attr.aria-label]="
-                        'Modificateurs du jet de ' +
-                        card.hero.nom +
-                        (card.modsCount
-                          ? ' : ' + card.modsCount + ' actif' + (card.modsCount > 1 ? 's' : '')
-                          : '')
-                      "
+                      [attr.aria-label]="card.modsLabel"
                       matTooltip="Modificateurs : dé du MJ, carrière utile"
                       (click)="toggleMods(card.hero.pivotId)"
                     >
                       <mat-icon aria-hidden="true">tune</mat-icon>
-                      @if (card.modsCount) {
-                        <b class="scd-mods-count" aria-hidden="true">{{ card.modsCount }}</b>
+                      <!-- Ce qui est accordé, comme sur le bouton des options : un petit dé vert ou rouge, le bonus de la carrière -->
+                      @if (card.gmDie; as gm) {
+                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon>casino</mat-icon></span>
+                      }
+                      @if (card.career; as career) {
+                        <b class="scd-mods-career" aria-hidden="true">+{{ career.value }}</b>
                       }
                     </button>
                     <ng-template
