@@ -51,7 +51,7 @@ bol-start-combat-page {
 .scd-bar {
   display: grid;
   flex: none;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.35rem 1.2rem;
   padding: 0.65rem 1.4rem;
@@ -157,6 +157,21 @@ bol-start-combat-page {
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+// Les actions secondaires en icône ronde, cerclée comme celles de l'ordre d'action de la table (deux classes : plus fort que le bouton
+// icône de Material).
+.scd-actions .scd-head-icon {
+  --mat-icon-button-state-layer-size: 2.4rem;
+
+  border: 1px solid var(--dw-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--dw-surface-800);
+}
+
+// Le retour à la table, tout au bout, un peu à l'écart des actions du jet.
+.scd-actions .scd-head-icon--close {
+  margin-left: 0.5rem;
 }
 
 .scd-note {

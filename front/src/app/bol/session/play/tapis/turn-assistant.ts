@@ -60,6 +60,7 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
+import {ActeurComponent} from '../theatre/acteur';
 import {parFiche} from '../theatre/theatre.util';
 import {sansNumero} from '../../reaction-roll.util';
 
@@ -217,6 +218,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   selector: 'bol-turn-assistant',
   imports: [
     A11yModule,
+    ActeurComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
@@ -1359,12 +1361,24 @@ export class TurnAssistantComponent {
   private readonly damageInput = viewChild<ElementRef<HTMLInputElement>>('damageInput');
   private readonly applyButton = viewChild('applyButton', {read: ElementRef<HTMLButtonElement>});
   private readonly endButton = viewChild('endButton', {read: ElementRef<HTMLButtonElement>});
-  private readonly firstPick = viewChild('pick', {read: ElementRef<HTMLButtonElement>});
+  private readonly picksList = viewChild<ElementRef<HTMLElement>>('picks');
   /** Une cible vient d'être choisie : la case du jet d'attaque prend la main dès qu'elle est à l'écran. */
   private attackFocusWanted = false;
 
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
+    // Les flèches de la ligne des cibles suivent sa taille (fenêtre, panneau) et son contenu (cibles qui changent).
+    effect((onCleanup) => {
+      const list = this.picksList()?.nativeElement;
+      this.targetGroups();
+      afterNextRender(() => this.updatePicksScroll(), {injector: this.injector});
+      if (!list || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observer = new ResizeObserver(() => this.updatePicksScroll());
+      observer.observe(list);
+      onCleanup(() => observer.disconnect());
+    });
     effect(() => this.hordeChanged.emit(this.horde().map((card) => card.key)));
 
     this.bindVitalite(this.vitaliteControl, () => this.card());
@@ -1445,6 +1459,31 @@ export class TurnAssistantComponent {
   }
 
   /** Donne la main à un élément du plateau une fois l'écran à jour (il n'existe parfois qu'après le rendu). */
+  /** Le premier bouton de la liste des cibles (la première carte), pour y rendre le focus. */
+  private firstPick(): ElementRef<HTMLElement> | undefined {
+    const button = this.picksList()?.nativeElement.querySelector<HTMLElement>('.tas-cible button');
+    return button ? new ElementRef(button) : undefined;
+  }
+
+  /** La ligne des cartes de cible déborde-t-elle, et peut-elle défiler vers la gauche ou la droite : les flèches s'affichent et se grisent. */
+  protected readonly canScrollPrev = signal(false);
+  protected readonly canScrollNext = signal(false);
+  protected readonly picksOverflow = computed(() => this.canScrollPrev() || this.canScrollNext());
+
+  protected updatePicksScroll(): void {
+    const list = this.picksList()?.nativeElement;
+    // Quelques pixels de tolérance : l'aimantation des cartes laisse parfois la ligne à 2 px du bord.
+    this.canScrollPrev.set(!!list && list.scrollLeft > 4);
+    this.canScrollNext.set(!!list && list.scrollLeft + list.clientWidth < list.scrollWidth - 4);
+  }
+
+  /** Fait défiler la ligne des cartes d'à peu près sa largeur, d'un côté ou de l'autre. */
+  protected scrollPicks(direction: -1 | 1): void {
+    const list = this.picksList()?.nativeElement;
+    const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    list?.scrollBy({left: direction * list.clientWidth * 0.8, behavior: reduced ? 'auto' : 'smooth'});
+  }
+
   private focusAfterRender(element: () => ElementRef<HTMLElement> | undefined): void {
     afterNextRender(() => element()?.nativeElement.focus(), {injector: this.injector});
   }

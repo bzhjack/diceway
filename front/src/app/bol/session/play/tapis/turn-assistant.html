@@ -102,18 +102,21 @@
 
     <span class="tas-sp"></span>
 
-    <!-- Ce qu'il peut faire au lieu d'attaquer -->
+    <!-- Les boutons à droite, comme sur l'en-tête de la table : ce qu'il peut faire au lieu d'attaquer, en icône ronde ; « Fin du tour »,
+         l'action principale, en toutes lettres -->
     <button
-      mat-stroked-button
       type="button"
+      class="tas-ib"
       [id]="popId('more')"
       cdkOverlayOrigin
       #moreOrigin="cdkOverlayOrigin"
       aria-haspopup="dialog"
+      aria-label="Autres actions, au lieu d’attaquer"
+      matTooltip="Au lieu d’attaquer : retarder, défense totale…"
       [attr.aria-expanded]="openPop() === 'more'"
       (click)="togglePop('more')"
     >
-      <mat-icon>more_horiz</mat-icon> Autres actions
+      <mat-icon aria-hidden="true">more_horiz</mat-icon>
     </button>
     <ng-template
       cdkConnectedOverlay
@@ -279,58 +282,52 @@
         }
 
         @if (!played() && !target() && targets().length > 0) {
-          <!-- Pas encore de cible : sous la phrase, les cibles possibles par fiche (les squelettes ensemble), leurs chances à côté du nom ;
-               un bouton par exemplaire, son numéro et sa vie dessous. Une fiche seule se choisit d'un clic sur son nom. Le liseré dit le camp. -->
-          <ul class="tas-cibles" aria-label="Choisir la cible">
-            @for (g of targetGroups(); track g.key) {
-              <li class="tas-grp" [class.tas-grp--foe]="g.foe">
-                @if (g.members.length === 1) {
-                  @let m = g.members[0];
-                  <button
-                    #pick
-                    type="button"
-                    class="tas-num tas-num--solo"
-                    [attr.aria-label]="m.card.nom + (targetDetails()[m.card.key] ? ', ' + targetDetails()[m.card.key] : '') + (g.odds ? ', ' + g.odds : '')"
-                    [matTooltip]="targetDetails()[m.card.key] ?? ''"
-                    (click)="selectTarget(m.card)"
-                  >
-                    <span class="tas-grp-head" aria-hidden="true">
-                      <b>{{ g.nom }}</b>
-                      @if (g.odds) {
-                        <em>{{ g.odds }}</em>
-                      }
-                    </span>
-                    <span class="tas-bar" [class.tas-bar--low]="m.life.low" aria-hidden="true"><i [style.width.%]="m.life.rest"></i></span>
-                  </button>
-                } @else {
-                  <span class="tas-grp-head" aria-hidden="true">
-                    <b>{{ g.nom }}</b>
-                    @if (g.odds) {
-                      <em>{{ g.odds }}</em>
-                    }
-                  </span>
-                  <span class="tas-nums" role="group" [attr.aria-label]="g.nom">
-                    @for (m of g.members; track m.card.key) {
-                      <button
-                        #pick
-                        type="button"
-                        class="tas-num"
-                        [attr.aria-label]="m.card.nom + (targetDetails()[m.card.key] ? ', ' + targetDetails()[m.card.key] : '') + (odds()[m.card.key] ? ', ' + odds()[m.card.key] : '')"
-                        [matTooltip]="m.card.nom + (targetDetails()[m.card.key] ? ' · ' + targetDetails()[m.card.key] : '')"
-                        (click)="selectTarget(m.card)"
-                      >
-                        <b aria-hidden="true">{{ m.num }}</b>
-                        @if (m.odds) {
-                          <em aria-hidden="true">{{ m.odds }}</em>
-                        }
-                        <span class="tas-bar" [class.tas-bar--low]="m.life.low" aria-hidden="true"><i [style.width.%]="m.life.rest"></i></span>
-                      </button>
-                    }
-                  </span>
-                }
-              </li>
+          <!-- Pas encore de cible : une carte portrait par cible (celle du Théâtre, en petit), sur une seule ligne, les exemplaires d'une même
+               fiche côte à côte ; ses chances dessous ; un clic la choisit. Quand elles débordent, une flèche de chaque côté les fait défiler. -->
+          <div class="tas-carousel">
+            @if (picksOverflow()) {
+              <button
+                mat-icon-button
+                type="button"
+                class="tas-caret"
+                aria-label="Cibles précédentes"
+                [disabled]="!canScrollPrev()"
+                (click)="scrollPicks(-1)"
+              >
+                <mat-icon>chevron_left</mat-icon>
+              </button>
             }
-          </ul>
+            <ul #picks class="tas-cibles" aria-label="Choisir la cible" (scroll)="updatePicksScroll()">
+              @for (g of targetGroups(); track g.key) {
+                @for (m of g.members; track m.card.key) {
+                  <li class="tas-cible">
+                    <bol-acteur
+                      [card]="m.card"
+                      taille="coriace"
+                      [detail]="odds()[m.card.key] ?? null"
+                      [matTooltip]="m.card.nom + (targetDetails()[m.card.key] ? ' · ' + targetDetails()[m.card.key] : '')"
+                      (toggled)="selectTarget(m.card)"
+                    />
+                    @if (odds()[m.card.key]; as chance) {
+                      <em aria-hidden="true">{{ chance }}</em>
+                    }
+                  </li>
+                }
+              }
+            </ul>
+            @if (picksOverflow()) {
+              <button
+                mat-icon-button
+                type="button"
+                class="tas-caret"
+                aria-label="Cibles suivantes"
+                [disabled]="!canScrollNext()"
+                (click)="scrollPicks(1)"
+              >
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            }
+          </div>
         }
         </div>
         <div class="tas-part tas-part--arme" role="group" aria-labelledby="tas-part-arme">

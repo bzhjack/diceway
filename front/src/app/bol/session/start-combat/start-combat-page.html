@@ -13,12 +13,10 @@
   }
 
   <div class="scd-fg">
-    <!-- L'en-tête de la page, sur une rangée : le retour à la table ; le titre (la règle du jet en infobulle sur son « i ») avec l'avancement
-         des jets, et dessous la session et la scène ; les actions à droite. Dessous, l'alerte sans adversaire. -->
+    <!-- L'en-tête de la page, sur une rangée, comme celui de la table : à gauche le titre (la règle du jet en infobulle sur son « i ») avec
+         l'avancement des jets, et la session et la scène ; à droite tous les boutons, en icône ronde sauf l'action principale du moment
+         (le seul bouton plein) et « Commencer le combat » ; tout au bout, le retour à la table. Dessous, l'alerte sans adversaire. -->
     <header class="scd-bar">
-      <button mat-stroked-button size="small" type="button" class="scd-back" (click)="close()">
-        <mat-icon>arrow_back</mat-icon> Retour à la table
-      </button>
       <div class="scd-heading">
         <div class="scd-title-row">
           <h1 class="scd-title">
@@ -44,32 +42,38 @@
         }
       </div>
       <div class="scd-actions">
-        <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, et l'avertissement se voit. -->
+        <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, en toutes lettres, et l'avertissement se voit. -->
         @if (noAdversary()) {
           <button mat-flat-button type="button" (click)="openAddAdversary()">
             <mat-icon>add</mat-icon> Ajouter un adversaire
           </button>
         } @else {
           <button
-            mat-stroked-button
+            mat-icon-button
             type="button"
+            class="scd-head-icon"
+            aria-label="Ajouter un adversaire"
+            matTooltip="Ajouter un adversaire"
             [disabled]="loading()"
             (click)="openAddAdversary()"
           >
-            <mat-icon>add</mat-icon> Ajouter un adversaire
+            <mat-icon>add</mat-icon>
           </button>
         }
-        <!-- Proposé tant qu'un héros n'a pas lancé : une fois tous les jets faits, il n'a plus rien à lancer. Tant qu'il reste des jets (et
-             qu'il y a un adversaire), c'est l'action principale : le seul bouton plein, « Commencer le combat » attend en contour. -->
+        <!-- Proposé tant qu'un héros n'a pas lancé. Tant qu'il reste des jets (et qu'il y a un adversaire), c'est l'action principale, en
+             toutes lettres ; sinon une icône. -->
         @if (pendingHeroes().length > 0) {
           @if (noAdversary()) {
             <button
-              mat-stroked-button
+              mat-icon-button
               type="button"
+              class="scd-head-icon"
+              aria-label="Lancer pour tous"
+              matTooltip="Lancer pour tous les héros"
               [disabled]="loading() || rolling()"
               (click)="rollAll()"
             >
-              <mat-icon>casino</mat-icon> Lancer pour tous
+              <mat-icon>casino</mat-icon>
             </button>
           } @else {
             <button
@@ -100,6 +104,16 @@
             {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
           </button>
         }
+        <button
+          mat-icon-button
+          type="button"
+          class="scd-head-icon scd-head-icon--close"
+          aria-label="Retour à la table"
+          matTooltip="Retour à la table"
+          (click)="close()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
       @if (noAdversary()) {
         <p class="scd-note scd-note--alert" aria-live="polite">

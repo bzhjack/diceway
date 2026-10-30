@@ -93,6 +93,15 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
-.cp-header-search {
-  color: var(--dw-surface-700);
+// Les actions secondaires en icône ronde, cerclée comme le « + » et le « ↻ » de l'ordre d'action (deux classes : plus fort que le bouton
+// icône de Material) ; ouverte (les coulisses), elle s'allume en or.
+.cp-header-actions .cp-head-icon {
+  border: 1px solid var(--dw-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--dw-surface-800);
+
+  &[aria-expanded='true'] {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
 }
