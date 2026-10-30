@@ -1,0 +1,174 @@
+// Une carte en largeur, liserée de la couleur du camp (rouge en face, vert dans le camp des héros) : le portrait à gauche, carré sur toute
+// la hauteur, fondu vers la droite ; le texte à côté.
+:host {
+  --cc-camp: var(--dw-color-echec-forte);
+
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--cc-camp) 60%, transparent);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(58, 42, 28, 0.85), rgba(26, 18, 11, 0.95));
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+:host(.cc--allie) {
+  --cc-camp: var(--dw-color-reussite);
+}
+
+.cc-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.6rem 0.8rem 0.7rem;
+}
+
+.cc-head {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.cc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cc-rang,
+.cc-attitude {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(15, 10, 6, 0.82);
+  color: var(--dw-surface-800);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+// L'attitude : une pastille de sa couleur devant son nom.
+.cc-attitude {
+  --cc-attitude: var(--dw-surface-500);
+
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--cc-attitude);
+  }
+}
+
+.cc-attitude--hostile {
+  --cc-attitude: var(--dw-color-echec);
+}
+
+.cc-attitude--mefiant {
+  --cc-attitude: var(--dw-color-warn);
+}
+
+.cc-attitude--amical {
+  --cc-attitude: var(--dw-color-reussite);
+}
+
+.cc-titre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+  margin: 0;
+}
+
+.cc-nom {
+  font: 400 1.2rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-color-text-bright);
+}
+
+.cc-chance {
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--dw-color-legendary);
+}
+
+// Sa vie, et en hachures rouges ce que le coup en cours va lui retirer.
+.cc-vie {
+  position: relative;
+  height: 5px;
+  max-width: 16rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(241, 230, 208, 0.15);
+
+  i,
+  u {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+
+  i {
+    left: 0;
+    background: var(--dw-color-health);
+    transition: width 0.3s;
+  }
+
+  u {
+    background: repeating-linear-gradient(45deg, var(--dw-color-echec), var(--dw-color-echec) 4px, #7f1d1d 4px, #7f1d1d 8px);
+  }
+}
+
+.cc-vie--bas i {
+  background: var(--dw-color-echec);
+}
+
+// Le portrait, à gauche : un carré, de la hauteur du texte (`--cc-art`, mesurée par le composant, entre 8 et 13rem ; au-delà, l'image remplit
+// la hauteur), fondu vers la droite sous le texte.
+.cc-art {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--cc-art, 10rem);
+  min-height: var(--cc-art, 10rem);
+  margin-right: -1.5rem;
+  background: var(--dw-surface-200);
+  color: color-mix(in srgb, var(--cc-camp) 70%, var(--dw-surface-700));
+  mask-image: linear-gradient(90deg, #000 72%, transparent);
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  .mat-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 3rem;
+  }
+}
+
+// À 0 de vitalité ou moins : le portrait passe en gris.
+:host(.cc--tombe) .cc-art {
+  filter: grayscale(1) brightness(0.7);
+}

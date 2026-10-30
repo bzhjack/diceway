@@ -149,7 +149,7 @@
   <ol class="tas-reg">
     <!-- 1 · Le coup, en trois blocs : Contre (la cible), Arme, Options (les réglages actifs en pastilles, un clic les retire, et
          « Modificateurs » pour les autres). La cible se choisit dans la rangée des cartes ; choisie, il ne reste que sa carte, et
-         « Changer d’adversaire » ramène la rangée ; ses chiffres, sa vie réglable et sa fiche la prolongent sur la droite. Le coup joué reste écrit,
+         « Changer d’adversaire » ramène la rangée ; sa carte, portrait à droite, porte ses chiffres, sa vie réglable et sa fiche. Le coup joué reste écrit,
          figé, jusqu'à la fin du tour. -->
     <li [class]="'tas-line tas-line--' + stations()[0]" [style.--tas-target]="targetSide() ? (targetSide()!.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)') : null" aria-labelledby="tas-l1">
       <span class="tas-lbl" id="tas-l1">Le coup</span>
@@ -158,64 +158,51 @@
         <div class="tas-part tas-part--contre" role="group" aria-labelledby="tas-part-contre">
           <span class="tas-part-label" id="tas-part-contre">Contre</span>
         @if (target(); as t) {
-          <!-- La cible : sa carte, comme dans le choix des cibles, ses chances dessous ; à sa droite, en prolongement de la carte, ses chiffres,
-               sa vie et ses points réglables, ses effets, sa fiche, et de quoi viser quelqu'un d'autre (tant que le coup n'est pas joué) -->
-          <div class="tas-target">
-            <div class="tas-cible">
-              <bol-acteur
-                [card]="t"
-                taille="coriace"
-                [detail]="odds()[t.key] ?? null"
-                [matTooltip]="'Voir la fiche de ' + t.nom"
-                (toggled)="sheetRequested.emit(t)"
-              />
-            </div>
-            <div class="tas-target-panel" role="group" [attr.aria-label]="t.nom + ' : défense, protection, vitalité, effets'">
-              <p class="tas-target-head">
-                <b>{{ t.nom }}</b>
-                @if (odds()[t.key]; as chance) {
-                  <em>{{ chance }}</em>
-                }
-              </p>
-              <div class="tas-tiles tas-tiles--start">
-                @for (tile of targetTiles(); track tile.label) {
-                  <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'">
-                    <b>{{ tile.value }}</b>
-                    @if (tile.sub) {
-                      <small>{{ tile.sub }}</small>
-                    }
-                    <span>{{ tile.label }}</span>
-                  </div>
-                }
-                <div class="tas-vit">
-                  <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
-                  <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
-                </div>
-                @if (pointsCible(); as pts) {
-                  <div class="tas-vit">
-                    <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
-                    <span class="tas-tag">{{ pts.titre }}</span>
-                  </div>
-                }
-              </div>
-              @if (targetBadges().length > 0) {
-                <ul class="tas-pills tas-pills--cible" aria-label="Effets sur la cible">
-                  @for (badge of targetBadges(); track $index) {
-                    <li class="tas-pill">{{ badge }}</li>
+          <!-- La cible : sa carte à elle, son portrait à droite ; dedans, ses chiffres, sa vie et ses points réglables, ses effets, sa fiche, et
+               de quoi viser quelqu'un d'autre (tant que le coup n'est pas joué) -->
+          <bol-cible-carte class="tas-target" [card]="t" [chance]="odds()[t.key] ?? null" [perte]="damage() ?? 0" role="group" [attr.aria-label]="'Cible : ' + t.nom">
+            <div class="tas-tiles tas-tiles--start">
+              @for (tile of targetTiles(); track tile.label) {
+                <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'">
+                  <b>{{ tile.value }}</b>
+                  @if (tile.sub) {
+                    <small>{{ tile.sub }}</small>
                   }
-                </ul>
+                  <span>{{ tile.label }}</span>
+                </div>
               }
-              <div class="tas-target-actions">
-                @if (played() && playedTargetOut()) {
-                  <span class="tas-pill">hors de combat</span>
-                }
-                <button mat-stroked-button size="small" type="button" (click)="sheetRequested.emit(t)"><mat-icon>description</mat-icon> Voir la fiche</button>
-                @if (!played()) {
-                  <button mat-stroked-button size="small" type="button" (click)="changeTarget()"><mat-icon>swap_horiz</mat-icon> Changer d’adversaire</button>
-                }
+              <div class="tas-vit">
+                <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
+                <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
               </div>
+              @if (pointsCible(); as pts) {
+                <div class="tas-vit">
+                  <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
+                  <span class="tas-tag">{{ pts.titre }}</span>
+                </div>
+              }
             </div>
-          </div>
+            @if (targetBadges().length > 0) {
+              <ul class="tas-pills" aria-label="Effets sur la cible">
+                @for (badge of targetBadges(); track $index) {
+                  <li class="tas-pill">{{ badge }}</li>
+                }
+              </ul>
+            }
+            @if (played() && playedTargetOut()) {
+              <span class="tas-pill">hors de combat</span>
+            }
+            <div ccActions class="tas-target-actions">
+              <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="sheetRequested.emit(t)">
+                <mat-icon>description</mat-icon>
+              </button>
+              @if (!played()) {
+                <button type="button" class="tas-ib" aria-label="Changer d’adversaire" matTooltip="Changer d’adversaire" (click)="changeTarget()">
+                  <mat-icon>swap_horiz</mat-icon>
+                </button>
+              }
+            </div>
+          </bol-cible-carte>
         } @else if (played(); as p) {
           <span class="tas-played">
             <b>{{ p.target.nom }}</b>

@@ -224,6 +224,11 @@
   flex: 1 1 22rem;
 }
 
+// Avec la carte de la cible, assez de largeur pour qu'elle tienne sans passer à la ligne : l'arme et les options passent dessous.
+.tas-part--contre:has(.tas-target) {
+  flex-basis: 36rem;
+}
+
 .tas-part--arme {
   flex-grow: 0;
 }
@@ -547,59 +552,15 @@
   }
 }
 
-// La cible choisie : sa carte, et à sa droite, collé à son bord, un panneau qui la prolonge (même hauteur, liseré de son camp) : ses
-// chiffres, sa vie et ses points, ses effets, ses actions.
+// La cible choisie (`bol-cible-carte`) : la largeur de son contenu ; ses boutons ronds en haut à droite.
 .tas-target {
-  display: flex;
-  align-items: stretch;
-  min-width: 0;
-}
-
-.tas-target .tas-cible {
-  position: relative;
-  z-index: 1;
-}
-
-.tas-target-panel {
-  display: flex;
   flex: 0 1 auto;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.45rem;
-  min-width: 0;
-  margin-left: -0.6rem;
-  padding: 0.5rem 0.8rem 0.55rem 1.3rem;
-  border: 1px solid color-mix(in srgb, var(--tas-target, var(--dw-border)) 55%, transparent);
-  border-left: 0;
-  border-radius: 0 12px 12px 0;
-  background: linear-gradient(90deg, var(--dw-surface-100), color-mix(in srgb, var(--dw-surface-100) 70%, transparent));
-}
-
-.tas-target-head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin: 0;
-
-  b {
-    font: 400 1.05rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-color-text-bright);
-  }
-
-  em {
-    font-size: 0.8rem;
-    font-style: normal;
-    font-weight: 800;
-    white-space: nowrap;
-    color: var(--dw-color-legendary);
-  }
 }
 
 .tas-target-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
+  flex: none;
+  gap: 0.3rem;
 }
 
 // Les armes : une case carrée par arme, le symbole de l'arme dedans, ses dégâts dessous ; celle qui est choisie s'allume en or.

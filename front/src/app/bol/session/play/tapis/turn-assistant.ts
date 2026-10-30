@@ -59,6 +59,7 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
+import {CibleCarteComponent} from './cible-carte';
 import {ActeurComponent} from '../theatre/acteur';
 import {parFiche} from '../theatre/theatre.util';
 import {sansNumero} from '../../reaction-roll.util';
@@ -218,6 +219,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   imports: [
     A11yModule,
     ActeurComponent,
+    CibleCarteComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
