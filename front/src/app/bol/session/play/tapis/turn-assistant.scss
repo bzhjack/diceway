@@ -194,6 +194,53 @@
   gap: 0.7rem;
 }
 
+// 1 · Le coup, en trois blocs bien distincts : Contre, Arme, Options. Côte à côte quand la ligne est large, l'un sous l'autre sinon.
+.tas-coup {
+  display: flex;
+  flex: 1 1 0;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.tas-part {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  gap: 0.5rem 0.7rem;
+  min-width: 0;
+  padding: 0.5rem 0.75rem 0.65rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.22);
+
+  // Les fiches à viser restent dans le bloc « Contre », sans le retrait des lignes du registre.
+  .tas-cibles {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    padding-left: 0;
+  }
+}
+
+.tas-part--contre {
+  flex: 2 1 22rem;
+}
+
+.tas-part--options {
+  flex-basis: 14rem;
+}
+
+// Le titre du bloc, sur sa propre ligne.
+.tas-part-label {
+  flex-basis: 100%;
+  font: 400 0.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dw-surface-600);
+}
+
 // Ce qui passe sous la ligne (options d'un succès héroïque, note), aligné sur le jet.
 .tas-sub {
   flex-basis: 100%;
@@ -406,15 +453,6 @@
   font-size: 0.74rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-}
-
-.tas-chevron {
-  margin-left: auto;
-  transition: transform 0.2s ease-out;
-}
-
-.tas-chevron--open {
-  transform: rotate(180deg);
 }
 
 // Les réglages rares actifs, quand « Options » est replié : une pastille chacun, avec sa croix.
@@ -711,14 +749,6 @@
 }
 
 // La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.
-
-// Les mots de liaison de la phrase du coup (« contre », « avec ») : décoratifs, chaque liste a son libellé.
-.tas-w {
-  font: 400 1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--dw-surface-600);
-}
 
 .tas-side {
   display: flex;
@@ -1438,39 +1468,6 @@
 
 .tas-bar--low i {
   background: #f59e0b;
-}
-
-.tas-bar--big {
-  height: 8px;
-}
-
-.tas-life {
-  display: grid;
-  align-self: stretch;
-  gap: 0.2rem;
-
-  span {
-    font-size: 0.82rem;
-    text-align: center;
-    color: var(--dw-surface-600);
-  }
-}
-
-.tas-life-line {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-
-  b {
-    font: 400 1.25rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    white-space: nowrap;
-    color: var(--dw-surface-900);
-  }
-
-  s {
-    color: var(--dw-color-echec);
-    text-decoration: none;
-  }
 }
 
 // Focus visible commun aux boutons et aux champs de l'assistant (les boutons Material ont le leur).
