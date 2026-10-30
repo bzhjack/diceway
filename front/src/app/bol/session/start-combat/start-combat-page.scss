@@ -220,15 +220,14 @@ bol-start-combat-page {
   overflow-y: auto;
 }
 
-// ── L'ordre d'action : une frise sous l'en-tête ─────────────────────────────────────────────────────────────────
+// ── L'ordre d'action : une rangée de l'en-tête, sous le titre, séparée par un filet ──────────────────────────────
 .scd-frise {
   display: flex;
-  flex: none;
+  grid-column: 1 / -1;
   align-items: center;
   gap: 0.9rem;
-  padding: 0.3rem 1.4rem;
-  border-bottom: 1px solid var(--dw-border);
-  background: rgba(0, 0, 0, 0.28);
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(107, 74, 22, 0.5);
 }
 
 // La frise prend la place qui reste (voir `bol-ordre-frise`).
@@ -267,7 +266,7 @@ bol-start-combat-page {
   gap: 0.5rem 0.6rem;
 }
 
-// Une seconde rangée de l'en-tête, sous le titre et les boutons, séparée par un filet.
+// Une rangée de l'en-tête, sous l'ordre d'action, séparée par un filet.
 .scd-mods {
   grid-column: 1 / -1;
   column-gap: 1.8rem;

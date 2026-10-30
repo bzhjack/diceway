@@ -1,18 +1,19 @@
+// Toute la largeur de l'en-tête de la table, en seconde rangée sous le titre et les actions.
 :host {
   display: block;
-  flex-shrink: 0;
+  flex: 1 0 100%;
+  min-width: 0;
 }
 
-// Une bande sous la barre de titre, comme sur la page du jet de réaction : la frise (titre et round compris) qui prend la place qui
-// reste, puis les commandes du tour.
+// Comme les modificateurs sur la page du jet de réaction : séparée du titre par un filet, la frise (titre et round compris) qui prend
+// la place qui reste, puis les commandes du tour.
 .tor {
   display: flex;
   align-items: center;
   gap: 0.9rem;
   min-width: 0;
-  padding: 0.3rem 1.1rem;
-  border-bottom: 1px solid var(--dw-border);
-  background: rgba(0, 0, 0, 0.28);
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(107, 74, 22, 0.5);
 }
 
 .tor-frise {

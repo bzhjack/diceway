@@ -15,8 +15,7 @@
     url('/assets/bol/header-combat.png') center / cover no-repeat;
 }
 
-// En combat, l'image est calée sur la fenêtre (`fixed`) ; un voile sombre descend sur elle jusqu'à 45 %, au-dessus de la bande de
-// l'ordre d'action (`turn-order.scss`).
+// En combat, l'image est calée sur la fenêtre (`fixed`), avec un voile sombre qui descend sur elle.
 .cp-header--combat {
   background:
     linear-gradient(transparent, color-mix(in srgb, var(--dw-surface-0) 45%, transparent)),
@@ -24,9 +23,11 @@
     url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
 }
 
-// Une seule ligne en combat : le titre et les actions.
+// En combat : le titre et les actions, puis l'ordre d'action en seconde rangée (`turn-order.scss`).
 .cp-header--combat {
-  padding-block: 0.5rem;
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+  padding-block: 0.5rem 0.3rem;
 }
 
 .cp-header-title {
