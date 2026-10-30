@@ -7,12 +7,15 @@ namespace App\Http\Services\Bol;
  * les effets en cours (bonus, malus et traces d'usage : posture, défense totale, petit bouclier dépensé…), les cartes
  * exclues de ce combat (restées sur la table, mais qui n'y participent pas : elles réintègrent la scène à la fin du
  * combat) et la vitalité de chaque carte au début du combat (la récupération d'après combat rend la moitié des points perdus
- * pendant ce combat, pas des blessures plus anciennes). Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
+ * pendant ce combat, pas des blessures plus anciennes), et le dé du MJ pour tous (`deMj` : `bonus`, `malus` ou `null`), qui s'ajoute à chaque
+ * jet d'attaque des héros tant qu'il est choisi. Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
  * effets sans connaître les règles. Fonctions pures, sans base.
  */
 class BolCombatState
 {
-    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => []];
+    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => [], 'deMj' => null];
+
+    private const DES_MJ = ['bonus', 'malus'];
 
     private const MAX_EFFETS = 200;
     private const MAX_DEPART = 200;
@@ -27,7 +30,7 @@ class BolCombatState
      * (combat démarré avant que l'état n'existe) vaut le round 1, personne n'ayant joué. Un état de l'ancien format
      * (`defense_totale`, `attaquees`) est converti en effets.
      *
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, deMj: ?string}
      */
     public static function normalize(mixed $raw): array
     {
@@ -41,15 +44,17 @@ class BolCombatState
             'effets' => array_key_exists('effets', $raw) ? self::effets($raw['effets']) : self::effetsDeLAncienFormat($raw),
             'exclus' => self::keys($raw['exclus'] ?? null),
             'depart' => self::depart($raw['depart'] ?? null),
+            'deMj'   => in_array($raw['deMj'] ?? null, self::DES_MJ, true) ? $raw['deMj'] : null,
         ];
     }
 
     /**
      * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage, les effets ne sont pas
-     * réécrits par un état envoyé sans eux, et la vitalité de départ ne vient que du démarrage (le front ne peut pas la changer).
+     * réécrits par un état envoyé sans eux, le dé du MJ pour tous non plus (envoyé à `null`, il est retiré), et la vitalité de départ ne
+     * vient que du démarrage (le front ne peut pas la changer).
      *
      * @param array<string, mixed> $envoye
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, deMj: ?string}
      */
     public static function merge(array $envoye, mixed $existant): array
     {
@@ -57,6 +62,9 @@ class BolCombatState
         $envoye['exclus'] ??= $garde['exclus'];
         $envoye['effets'] ??= $garde['effets'];
         $envoye['depart'] = $garde['depart'];
+        if (!array_key_exists('deMj', $envoye)) {
+            $envoye['deMj'] = $garde['deMj'];
+        }
 
         return self::normalize($envoye);
     }

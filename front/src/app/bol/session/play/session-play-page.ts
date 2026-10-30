@@ -52,7 +52,7 @@ import {bloqueeCeRound, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives
 import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
-import {CombatOutcome, EtatCombat} from '../models/combat-turn.model';
+import {CombatOutcome, DeMj, EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
@@ -956,7 +956,7 @@ export class SessionPlayPageComponent {
         return EMPTY;
       }
       return this.fightSessionService
-        .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus]})
+        .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus], deMj: next.deMj})
         .pipe(
           switchMap(() => this.fightSessionService.fightSession(sessionId)),
           tap((session) => this.session.set(session)),
@@ -1133,6 +1133,11 @@ export class SessionPlayPageComponent {
         },
         error: (error: unknown) => this.tableError(error, 'Impossible de charger le secouriste.'),
       });
+  }
+
+  /** Le dé du MJ pour tous (options du combat) : ajouté à chaque jet d'attaque des héros, tant qu'il est choisi ; gardé dans l'état du combat. */
+  protected setDeMj(deMj: DeMj | null): void {
+    this.saveEtat((etat) => ({...etat, deMj}));
   }
 
   /** « Interrompre une action » (02-actions-combat.md, « Retarder son action et interrompre ») : le héros qui a retardé la sienne dépense

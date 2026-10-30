@@ -12,6 +12,55 @@
        lettres ; en combat, d'abord les commandes du round (interrompre, nouveau jet de réaction) -->
   <div class="cp-header-actions">
     @if (mode() === 'combat') {
+      <!-- Les options du combat, dans un popover : le dé du MJ pour tous, qui se lit sur le bouton (un petit dé vert ou rouge) -->
+      <button
+        mat-stroked-button
+        type="button"
+        id="cp-options-btn"
+        class="cp-options-btn"
+        cdkOverlayOrigin
+        #optionsOrigin="cdkOverlayOrigin"
+        aria-haspopup="dialog"
+        [attr.aria-expanded]="optionsOpen()"
+        matTooltip="Dé du MJ pour tous"
+        (click)="optionsOpen.set(!optionsOpen())"
+      >
+        <mat-icon>tune</mat-icon> Options
+        @if (deMj(); as de) {
+          <mat-icon [class]="'cp-options-die cp-options-die--' + de">casino</mat-icon>
+          <span class="cdk-visually-hidden">, dé de {{ de }} du MJ pour tous</span>
+        }
+      </button>
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="optionsOrigin"
+        [cdkConnectedOverlayOpen]="optionsOpen()"
+        [cdkConnectedOverlayPositions]="optionsPositions"
+        [cdkConnectedOverlayPush]="true"
+        [cdkConnectedOverlayViewportMargin]="12"
+        [cdkConnectedOverlayHasBackdrop]="true"
+        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+        (backdropClick)="closeOptions()"
+        (overlayKeydown)="onOptionsKeydown($event)"
+        (detach)="optionsOpen.set(false)"
+      >
+        <div class="cp-pop" role="dialog" aria-label="Options du combat" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+          <p class="cp-pop-title">Options du combat</p>
+          <div class="cp-pop-group" role="group" aria-labelledby="cp-gm-all-label">
+            <span class="cp-pop-label" id="cp-gm-all-label">Dé du MJ pour tous</span>
+            <div class="cp-seg">
+              <button type="button" [attr.aria-pressed]="deMj() === null" (click)="deMjChanged.emit(null)">Aucun</button>
+              <button type="button" class="cp-seg--bonus" [attr.aria-pressed]="deMj() === 'bonus'" (click)="deMjChanged.emit('bonus')">
+                Dé de bonus
+              </button>
+              <button type="button" class="cp-seg--malus" [attr.aria-pressed]="deMj() === 'malus'" (click)="deMjChanged.emit('malus')">
+                Dé de malus
+              </button>
+            </div>
+            <span class="cp-pop-hint">Ajouté à chaque jet d'attaque des héros, tant qu'il est choisi.</span>
+          </div>
+        </div>
+      </ng-template>
       @for (i of interrupters(); track i.key) {
         <button
           mat-stroked-button

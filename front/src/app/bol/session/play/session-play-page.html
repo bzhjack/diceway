@@ -17,6 +17,8 @@
       [coulissesOpen]="reserveOpen()"
       (coulissesToggled)="toggleReserve()"
       [interrupters]="interrupters()"
+      [deMj]="etat().deMj"
+      (deMjChanged)="setDeMj($event)"
       (interruptRequested)="onInterrupt($event)"
       (rerollRequested)="openStartCombat(true)"
     >
@@ -87,6 +89,7 @@
         <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
         <bol-combat-board
           [effets]="effetsAffiches()"
+          [deMj]="etat().deMj"
           [activeCard]="activeCard()"
           [armes]="assistantArmes()"
           [ownedArmes]="activeOwnedArmes()"

@@ -18,6 +18,8 @@ export interface EtatCombatDto {
   effets?: unknown[];
   /** Cartes laissées sur la table mais exclues du combat. */
   exclus?: string[];
+  /** Le dé du MJ pour tous (`null` : retiré). */
+  deMj?: 'bonus' | 'malus' | null;
 }
 
 /** Scène courante d'une session, telle que sérialisée avec la session (titres pour la barre du haut). */

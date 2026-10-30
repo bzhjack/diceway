@@ -84,7 +84,7 @@ describe('reactionSumTerms', () => {
       {value: '2d6', caption: 'dés', tone: 'dice'},
       {value: '+1', caption: 'esprit', tone: 'plus'},
       {value: '+2', caption: 'init.', tone: 'plus'},
-      {value: '−1', caption: 'ennemi', tone: 'minus'},
+      {value: '−1', caption: 'adverse', tone: 'minus'},
       {value: '≥ 9', caption: 'seuil', tone: 'total'},
     ]);
   });

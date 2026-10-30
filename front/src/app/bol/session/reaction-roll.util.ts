@@ -21,7 +21,7 @@ export function reactionDiceNet(traits: readonly HeroDetailTrait[]): number {
   return netDiceModifier(named('avantage', REACTION_BONUS_TRAIT), named('desavantage', REACTION_MALUS_TRAIT));
 }
 
-/** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − initiative ennemie + carrière utile. */
+/** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − malus adverse + carrière utile. */
 export function reactionModifier(parts: ReactionParts): number {
   return parts.esprit + parts.initiative + parts.embuscade - parts.initiativeEnnemie + (parts.carriere?.value ?? 0);
 }
@@ -71,7 +71,7 @@ export function reactionSumTerms(dice: number | null, parts: ReactionParts, dice
     [parts.equipement ?? 0, 'équip.'],
     [parts.carriere?.value ?? 0, parts.carriere?.label.toLowerCase() ?? ''],
     [parts.embuscade, parts.embuscade > 0 ? 'embusc.' : 'surpris'],
-    [-parts.initiativeEnnemie, 'ennemi'],
+    [-parts.initiativeEnnemie, 'adverse'],
   ];
   return [
     {

@@ -37,7 +37,7 @@
         </div>
 
         <div class="scd-actions">
-          <!-- Les options de la rencontre (embuscade, initiative ennemie), dans un popover ; l'embuscade choisie se lit sur le bouton -->
+          <!-- Les options de la rencontre (embuscade, dé du MJ pour tous, malus adverse), dans un popover ; l'embuscade et le dé du MJ choisis se lisent sur le bouton -->
           <button
             mat-stroked-button
             type="button"
@@ -46,12 +46,23 @@
             #optionsOrigin="cdkOverlayOrigin"
             aria-haspopup="dialog"
             [attr.aria-expanded]="optionsOpen()"
-            matTooltip="Embuscade, initiative ennemie"
+            matTooltip="Embuscade, dé du MJ pour tous, malus adverse"
             (click)="optionsOpen.set(!optionsOpen())"
           >
             <mat-icon>tune</mat-icon> Options
             @if (ambushBonus(); as bonus) {
               <b class="scd-options-bonus">{{ bonus }}</b>
+              <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
+            }
+            <!-- Le malus adverse en cours : une petite épée et sa valeur, en rouge -->
+            @if (adversaryInitiativeMalus() > 0) {
+              <b class="scd-options-malus" aria-hidden="true"><mat-icon svgIcon="sword" />−{{ adversaryInitiativeMalus() }}</b>
+              <span class="cdk-visually-hidden">, malus adverse −{{ adversaryInitiativeMalus() }}</span>
+            }
+            <!-- Le dé du MJ pour tous : un petit dé vert (bonus) ou rouge (malus) -->
+            @if (globalGmDie(); as gm) {
+              <mat-icon [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')">casino</mat-icon>
+              <span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span>
             }
           </button>
           <ng-template
@@ -82,41 +93,69 @@
                   }
                 </div>
               </div>
-              @if (hasInitiativeAdversary()) {
-                <div class="scd-pop-group" role="group" aria-labelledby="scd-enemy-label">
-                  <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
-                  <div class="scd-pop-line">
-                    <div class="scd-stepper">
-                      <button
-                        type="button"
-                        aria-label="Diminuer l'initiative ennemie"
-                        [disabled]="adversaryInitiativeMalus() <= 0"
-                        (click)="stepAdversaryMalus(-1)"
-                      >
-                        −
-                      </button>
-                      <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
-                      <button type="button" aria-label="Augmenter l'initiative ennemie" (click)="stepAdversaryMalus(1)">+</button>
-                    </div>
-                    <span class="scd-hint">La plus haute des rivaux et coriaces, retranchée à chaque jet.</span>
-                  </div>
+              <!-- Un dé du MJ pour tous les héros : il s'ajoute à celui que le MJ accorde à chacun et à ses traits, deux dés au plus -->
+              <div class="scd-pop-group" role="group" aria-labelledby="scd-gm-all-label">
+                <span class="scd-label" id="scd-gm-all-label">Dé du MJ pour tous</span>
+                <div class="scd-seg">
+                  <button type="button" [attr.aria-pressed]="globalGmDie() === null" (click)="setGlobalGmDie(null)">Aucun</button>
+                  <button
+                    type="button"
+                    class="scd-gm-opt scd-gm-opt--plus"
+                    [attr.aria-pressed]="globalGmDie() === 1"
+                    (click)="setGlobalGmDie(1)"
+                  >
+                    Dé de bonus
+                  </button>
+                  <button
+                    type="button"
+                    class="scd-gm-opt scd-gm-opt--minus"
+                    [attr.aria-pressed]="globalGmDie() === -1"
+                    (click)="setGlobalGmDie(-1)"
+                  >
+                    Dé de malus
+                  </button>
                 </div>
-              }
+              </div>
+              <!-- Le malus adverse, toujours là : prérempli avec la plus haute initiative des rivaux et coriaces, s'il y en a -->
+              <div class="scd-pop-group" role="group" aria-labelledby="scd-enemy-label">
+                <span class="scd-label" id="scd-enemy-label">Malus adverse</span>
+                <div class="scd-pop-line">
+                  <div class="scd-stepper">
+                    <button
+                      type="button"
+                      aria-label="Diminuer le malus adverse"
+                      [disabled]="adversaryInitiativeMalus() <= 0"
+                      (click)="stepAdversaryMalus(-1)"
+                    >
+                      −
+                    </button>
+                    <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
+                    <button type="button" aria-label="Augmenter le malus adverse" (click)="stepAdversaryMalus(1)">+</button>
+                  </div>
+                  <span class="scd-hint">
+                    @if (hasInitiativeAdversary()) {
+                      La plus haute initiative des rivaux et coriaces ({{ detectedInitiative() }}), retranchée à chaque jet.
+                    } @else {
+                      Aucun rival ni coriace avec une initiative ; retranché à chaque jet.
+                    }
+                  </span>
+                </div>
+              </div>
             </div>
           </ng-template>
 
           <!-- Les jets, tapés dans les lignes ou lancés ici pour tous : le bouton plein tant qu'il en reste, sauf sans adversaire (le « + » de
-               la frise passe avant). Faits, ce n'est plus un bouton, seulement où on en est. -->
-          @if (pendingHeroes().length === 0 && !loading()) {
-            <span class="scd-act-btn scd-done"><mat-icon>check</mat-icon> {{ rolledCount() }} {{ rolledCount() > 1 ? 'jets faits' : 'jet fait' }}</span>
-          } @else if (noAdversary()) {
-            <button mat-stroked-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
-            </button>
-          } @else {
-            <button mat-flat-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-              <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
-            </button>
+               la frise passe avant). Tous faits, le bouton s'en va. -->
+          @if (pendingHeroes().length > 0 || loading()) {
+            @if (noAdversary()) {
+              <button mat-stroked-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+                <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+              </button>
+            } @else {
+              <button mat-flat-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
+                <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+              </button>
+            }
           }
 
           <!-- Démarrer, dès que tous les héros ont lancé et qu'il y a un adversaire -->

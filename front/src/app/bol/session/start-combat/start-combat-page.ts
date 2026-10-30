@@ -217,9 +217,10 @@ export class StartCombatPageComponent {
    * ils ont une initiative) ; le MJ peut la corriger à la main. */
   private readonly initiativeAdversaries = computed(() => this.activeAdversaries().filter((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')));
   protected readonly hasInitiativeAdversary = computed(() => this.initiativeAdversaries().length > 0);
-  private readonly detectedInitiative = computed(() => Math.max(0, ...this.initiativeAdversaries().map((a) => a.initiative)));
+  protected readonly detectedInitiative = computed(() => Math.max(0, ...this.initiativeAdversaries().map((a) => a.initiative)));
   private readonly initiativeOverride = signal<number | null>(null);
-  protected readonly adversaryInitiativeMalus = computed(() => (this.hasInitiativeAdversary() ? (this.initiativeOverride() ?? this.detectedInitiative()) : 0));
+  /** Le malus adverse : prérempli avec l'initiative détectée (0 sans rival ni coriace), corrigé à la main au besoin. */
+  protected readonly adversaryInitiativeMalus = computed(() => this.initiativeOverride() ?? this.detectedInitiative());
 
   /** Ce que les modificateurs de la rencontre ajoutent au jet de chaque héros. */
   private readonly tableModifier = computed(() => this.ambushModifier() - this.adversaryInitiativeMalus());
@@ -300,13 +301,13 @@ export class StartCombatPageComponent {
   /** La règle du jet et de l'ordre, dans l'infobulle du « i » à côté du titre (02-actions-combat.md, « Jet de réaction »). */
   protected readonly rules =
     'Jet de réaction : 2d6 + esprit + initiative, réussite à 9. Les PNJ, créatures et démons n’ont pas de jet : leur rang les place.\n' +
-    'Initiative ennemie : la plus haute des rivaux et coriaces adverses, retranchée à chaque jet.\n' +
+    'Malus adverse : la plus haute initiative des rivaux et coriaces adverses, retranchée à chaque jet.\n' +
     'Égalité entre héros : l’agilité la plus haute agit d’abord, sauf s’ils en décident autrement ; à agilité égale, ils agissent en même temps.';
 
   constructor() {
     this.reload();
 
-    // Un modificateur change (embuscade, initiative ennemie, carrière accordée) : les jets déjà faits sont recalculés avec leurs dés.
+    // Un modificateur change (embuscade, malus adverse, carrière accordée) : les jets déjà faits sont recalculés avec leurs dés.
     effect(() => {
       this.tableModifier();
       this.careerByPivot();
@@ -507,7 +508,7 @@ export class StartCombatPageComponent {
     this.ambushState.set(state);
   }
 
-  /** Corrige à la main l'initiative ennemie ; revenue à la valeur détectée, elle suit de nouveau les adversaires présents. */
+  /** Corrige à la main le malus adverse ; revenu à la valeur détectée, elle suit de nouveau les adversaires présents. */
   protected stepAdversaryMalus(delta: number): void {
     const value = Math.max(0, this.adversaryInitiativeMalus() + delta);
     this.initiativeOverride.set(value === this.detectedInitiative() ? null : value);
@@ -606,9 +607,19 @@ export class StartCombatPageComponent {
     }
   }
 
-  /** Les dés de bonus (positif) ou de malus (négatif) du jet d'un héros : ceux de son trait, plus celui du MJ ; deux au plus. */
+  /** Les dés de bonus (positif) ou de malus (négatif) du jet d'un héros : ceux de son trait, celui que le MJ lui accorde et celui du MJ
+   * pour tous ; deux au plus. */
   private diceNetFor(hero: HeroRow): number {
-    return Math.max(-2, Math.min(2, hero.diceNet + (this.gmDieByPivot().get(hero.pivotId) ?? 0)));
+    return Math.max(-2, Math.min(2, hero.diceNet + (this.gmDieByPivot().get(hero.pivotId) ?? 0) + (this.globalGmDie() ?? 0)));
+  }
+
+  /** Le dé du MJ pour tous les héros : bonus (1), malus (−1) ou aucun (`null`). Les totaux tapés restent ; les faces des lancers à
+   * l'écran, qui ne comptaient pas ce dé, s'effacent. */
+  protected readonly globalGmDie = signal<1 | -1 | null>(null);
+
+  protected setGlobalGmDie(die: 1 | -1 | null): void {
+    this.globalGmDie.set(die);
+    this.facesByPivot.set(new Map());
   }
 
   /** Le MJ accorde à un héros un dé de bonus (1) ou de malus (−1) pour ce jet, ou le retire (`null`). Le total déjà tapé reste ; les
@@ -637,7 +648,7 @@ export class StartCombatPageComponent {
     {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
   ];
 
-  /** Le popover des options de la rencontre (embuscade, initiative ennemie). */
+  /** Le popover des options de la rencontre (embuscade, dé du MJ pour tous, malus adverse). */
   protected readonly optionsOpen = signal(false);
   /** Le bonus de l'embuscade choisie, lu sur le bouton des options (« +2 », « −1 ») ; vide sans embuscade. */
   protected readonly ambushBonus = computed(() => AMBUSH_OPTIONS.find((option) => option.value === this.ambushState())?.bonus ?? '');

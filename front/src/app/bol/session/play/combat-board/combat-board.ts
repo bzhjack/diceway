@@ -8,6 +8,7 @@ import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {TurnAssistantComponent} from '../tapis/turn-assistant';
+import {DeMj} from '../../models/combat-turn.model';
 
 /** L'écran du mode combat : l'assistant de tour, sous les dés 3D (l'ordre d'action est dans l'en-tête de la page). Il ne porte aucun
  * état : la page lui donne tout et reçoit chaque action. */
@@ -35,6 +36,8 @@ export class CombatBoardComponent {
   readonly targetsStats = input<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
   readonly legendaryBonus = input(false);
   readonly effets = input<readonly CombatEffect[]>([]);
+  /** Le dé du MJ pour tous (options du combat), transmis à l'assistant de tour. */
+  readonly deMj = input<DeMj | null>(null);
   readonly carrieres = input<readonly ActionRollCarriere[]>([]);
   /** Un héros mourant, du camp de la carte active, peut être secouru. */
   readonly canRescue = input(false);

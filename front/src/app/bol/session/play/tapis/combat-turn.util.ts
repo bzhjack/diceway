@@ -8,7 +8,7 @@ import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, deMj: null};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -32,6 +32,7 @@ export function normalizeEtat(raw: unknown): EtatCombat {
     effets: 'effets' in source ? normalizeEffets(source['effets']) : effetsDeLAncienFormat(source),
     exclus: uniqueKeys(source['exclus']),
     depart: departOf(source['depart']),
+    deMj: source['deMj'] === 'bonus' || source['deMj'] === 'malus' ? source['deMj'] : null,
   };
 }
 

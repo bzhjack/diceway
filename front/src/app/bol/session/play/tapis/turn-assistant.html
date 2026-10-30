@@ -513,6 +513,9 @@
                 </button>
                 <dw-value-stepper [formControl]="modifierControl" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
               </div>
+              @if (deMjPourTous(); as de) {
+                <span class="tas-note">Dé de {{ de }} du MJ pour tous (options du combat) : il s'ajoute à ce coup.</span>
+              }
               @if (usefulCarrieres().length > 0) {
                 <span class="tas-label" id="tas-carriere">Carrière : manœuvre ou feinte</span>
                 <div class="tas-chips" role="group" aria-labelledby="tas-carriere">

@@ -13,6 +13,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
+import {DeMj} from '../../models/combat-turn.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
 import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, perdSonAction, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
@@ -258,6 +259,8 @@ export class TurnAssistantComponent {
   readonly legendaryBonus = input(false);
   /** Les effets en cours (registre du combat) : leurs modificateurs entrent dans les jets. */
   readonly effets = input<readonly CombatEffect[]>([]);
+  /** Le dé du MJ pour tous (options du combat) : il s'ajoute à chaque jet d'attaque d'un héros, en plus du dé du MJ de ce coup. */
+  readonly deMj = input<DeMj | null>(null);
   /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
   /** Carrières de l'attaquant (un héros) : le MJ peut en laisser une aider une manœuvre ou une feinte. */
@@ -712,11 +715,15 @@ export class TurnAssistantComponent {
     const malus = a?.attaqueDesavantages ?? [];
     return [...bonus.map((nom) => `${nom} : dé de bonus`), ...malus.map((nom) => `${nom} : dé de malus`)].join(' · ');
   });
-  /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant) : ils s'annulent un pour un (02-actions-combat.md). */
+  /** Le dé du MJ pour tous, quand l'attaquant est un héros : `null` sinon. */
+  protected readonly deMjPourTous = computed(() => (this.card().kind === 'hero' ? this.deMj() : null));
+  /** Dés de bonus moins dés de malus (dé du MJ du coup et pour tous, capacités de l'attaquant) : ils s'annulent un pour un
+   * (02-actions-combat.md). */
   private readonly netDice = computed(() => {
     const a = this.attacker();
-    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
-    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
+    const pourTous = this.deMjPourTous();
+    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (pourTous === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
+    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (pourTous === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
     return netDiceModifier(avantages, desavantages);
   });
   /** Nombre de dés du jet d'attaque : deux, plus un par dé de bonus ou de malus qui reste. */
@@ -1391,6 +1398,7 @@ export class TurnAssistantComponent {
       this.targetKey();
       this.choiceKey();
       this.gmDie();
+      this.deMjPourTous();
       this.brawl();
       untracked(() => this.resetRoll());
     });

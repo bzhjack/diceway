@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {EtatCombat} from '../models/combat-turn.model';
 import {EtatSaver} from './etat-saver';
 
-const base: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}};
+const base: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, deMj: null};
 const jouer = (key: string) => (etat: EtatCombat): EtatCombat => ({...etat, joues: [...etat.joues, key]});
 
 function setup() {

@@ -220,6 +220,7 @@ class BolFightSessionController extends Controller
             'effets.*'         => 'array',
             'exclus'           => 'sometimes|array',
             'exclus.*'         => 'string',
+            'deMj'             => 'sometimes|nullable|in:bonus,malus',
         ]);
 
         $session = $this->fightSessionService->updateCombatState($id, Auth::id(), $data);

@@ -15,7 +15,12 @@ export interface EtatCombat {
   /** Vitalité de chaque carte au début du combat, notée par le serveur au démarrage : le repos d'après combat rend la moitié des
    * points perdus pendant ce combat, pas des blessures plus anciennes. Une carte absente est entrée au maximum. */
   readonly depart: Readonly<Record<string, number>>;
+  /** Le dé du MJ pour tous : un dé de bonus ou de malus ajouté à chaque jet d'attaque des héros, tant qu'il est choisi ; `null` sans. */
+  readonly deMj: DeMj | null;
 }
+
+/** Le dé que le MJ accorde (bonus) ou impose (malus). */
+export type DeMj = 'bonus' | 'malus';
 
 /** Où en est une carte dans le round : c'est à elle, elle a joué, elle est sautée (hors combat ou
  * bloquée au round 1), ou son tour viendra. */

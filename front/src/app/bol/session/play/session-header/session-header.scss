@@ -117,3 +117,107 @@
     color: var(--dw-color-legendary);
   }
 }
+
+// Le bouton des options du combat : un fond sombre pour rester lisible sur l'image (deux classes : plus fort que Material).
+.cp-header-actions .cp-options-btn {
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+// Le dé du MJ pour tous, sur le bouton : vert pour un dé de bonus, rouge pour un dé de malus.
+.cp-header-actions .cp-options-die {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: 0.4rem;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
+.cp-header-actions .cp-options-die--bonus {
+  color: var(--dw-color-reussite);
+}
+
+.cp-header-actions .cp-options-die--malus {
+  color: var(--dw-color-echec);
+}
+
+// Le popover des options, comme celui du jet de réaction : opaque, au-dessus de la page (rendu dans le calque des overlays).
+.cp-pop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: min(24rem, 92vw);
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--bar-bronze, var(--dw-border));
+  border-radius: 12px;
+  background: var(--dw-surface-100);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  color: var(--dw-surface-900);
+}
+
+.cp-pop-title {
+  margin: 0;
+  font: 400 1.15rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-color-text-bright);
+}
+
+.cp-pop-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cp-pop-label {
+  color: var(--dw-surface-500);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cp-pop-hint {
+  color: var(--dw-surface-500);
+  font-size: 0.74rem;
+}
+
+// Un choix en groupe (rectangles) : en or pour « Aucun », en vert ou en rouge pour le dé choisi.
+.cp-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+
+  button {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--dw-border);
+    border-radius: var(--dw-radius-toggle);
+    background: var(--dw-surface-0);
+    color: var(--dw-surface-700);
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &[aria-pressed='true'] {
+      border-color: var(--dw-color-legendary);
+      background: var(--dw-color-legendary);
+      color: #1c1200;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--dw-color-legendary);
+      outline-offset: 2px;
+    }
+  }
+
+  .cp-seg--bonus[aria-pressed='true'] {
+    border-color: var(--dw-color-reussite);
+    background: var(--dw-color-reussite);
+    color: #041a0d;
+  }
+
+  .cp-seg--malus[aria-pressed='true'] {
+    border-color: var(--dw-color-echec);
+    background: var(--dw-color-echec);
+    color: #2a0505;
+  }
+}

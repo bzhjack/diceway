@@ -119,12 +119,13 @@ class BolFightSessionService
             throw new CombatWithoutAdversaryException();
         }
 
-        // Nouveau jet de réaction en plein combat : le round en cours et la vitalité de départ sont gardés, personne n'a encore joué.
+        // Nouveau jet de réaction en plein combat : le round en cours, la vitalité de départ et le dé du MJ pour tous sont gardés, personne
+        // n'a encore joué.
         $enCours = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat) : null;
         $round = $enCours['round'] ?? 1;
         $depart = $enCours['depart'] ?? $this->vitalitesDeDepart($session);
 
-        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus, 'depart' => $depart])]);
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus, 'depart' => $depart, 'deMj' => $enCours['deMj'] ?? null])]);
 
         return $this->getSessionWithRelations($sessionId);
     }

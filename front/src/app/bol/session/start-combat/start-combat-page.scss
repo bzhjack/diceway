@@ -223,7 +223,7 @@ bol-start-combat-page {
   --mat-button-outlined-disabled-outline-color: var(--dw-border);
 }
 
-// « Lancer pour tous » garde sa largeur d'un état à l'autre : les boutons à sa gauche ne bougent pas.
+// « Lancer pour tous » garde sa largeur pendant les jets (« 0/3 », « 1/3 ») : les boutons à sa gauche ne bougent pas.
 .scd-actions .scd-act-btn {
   min-width: 12.5rem;
   white-space: nowrap;
@@ -235,27 +235,38 @@ bol-start-combat-page {
   color: var(--dw-color-legendary);
 }
 
-// Les jets faits : ce n'est plus un bouton, seulement où on en est, à la même place.
-.scd-done {
+// Le malus adverse en cours, sur le bouton des options : une petite épée et sa valeur, en rouge (deux classes : plus fort que Material).
+.scd-actions .scd-options-malus {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  box-sizing: border-box;
-  height: var(--scd-ctl);
-  border: 1px solid color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
-  border-radius: var(--dw-radius-pill);
-  background: rgba(0, 0, 0, 0.45);
-  color: var(--dw-surface-800);
-  font-size: 0.9rem;
-  font-weight: 600;
+  gap: 0.15rem;
+  margin-left: 0.45rem;
+  color: var(--dw-color-echec);
 
   .mat-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    color: var(--dw-color-reussite);
-    font-size: 1.1rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    margin: 0;
+    font-size: 0.95rem;
   }
+}
+
+// Le dé du MJ pour tous, sur le bouton des options : vert pour un dé de bonus, rouge pour un dé de malus (deux classes : plus fort que
+// la couleur des icônes de Material).
+.scd-actions .scd-options-die {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: 0.4rem;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
+.scd-actions .scd-options-die--plus {
+  color: var(--dw-color-reussite);
+}
+
+.scd-actions .scd-options-die--minus {
+  color: var(--dw-color-echec);
 }
 
 // ── Le registre des jets, qui défile seul sous l'en-tête ─────────────────────────────────────────────────────────
