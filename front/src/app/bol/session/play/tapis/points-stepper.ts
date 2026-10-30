@@ -40,12 +40,12 @@ import {TapisKind} from '../../models/tapis.model';
     .pst-gemme {
       width: 0.75rem;
       height: 1rem;
-      background: rgba(241, 230, 208, 0.18);
+      background: var(--dw-forge-gem-off);
       clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
     }
 
     .pst-gemme--on {
-      background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+      background: var(--dw-forge-gem);
     }
 
     // La vilénie, en braise : le pendant sombre des gemmes d'héroïsme.
@@ -58,18 +58,20 @@ import {TapisKind} from '../../models/tapis.model';
       width: 1.4rem;
       height: 1.4rem;
       padding: 0;
-      border: 1px solid var(--dw-border);
+      border: 1px solid var(--dw-forge-bronze-dim);
       border-radius: 50%;
-      background: transparent;
-      color: var(--dw-surface-600);
+      background: var(--dw-forge-stud);
+      box-shadow: var(--dw-forge-stud-shadow);
+      color: var(--dw-forge-bronze-text);
       font: inherit;
       font-weight: 700;
       line-height: 1;
       cursor: pointer;
 
       &:hover:not([aria-disabled='true']) {
-        border-color: var(--dw-color-legendary);
-        color: var(--dw-color-legendary);
+        border-color: var(--dw-forge-hot);
+        box-shadow: var(--dw-forge-stud-glow);
+        color: var(--dw-forge-hot-text);
       }
 
       &:focus-visible {

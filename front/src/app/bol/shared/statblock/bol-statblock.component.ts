@@ -12,7 +12,7 @@ import {BolStatblockData, BolStatblockEntry, BolStatblockTile} from '../models/b
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 const KIND_LABEL: Record<SheetKind, string> = {hero: 'Héros', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
-const KIND_ICON: Record<SheetKind, string> = {hero: 'person', pnj: 'person', creature: 'pets', demon: 'whatshot'};
+const KIND_ICON: Record<SheetKind, string> = {hero: 'gi-sword', pnj: 'gi-group', creature: 'gi-paw', demon: 'gi-demon'};
 
 /** Une famille de tuiles du statbloc : son titre et ses chiffres. */
 interface TileGroup {

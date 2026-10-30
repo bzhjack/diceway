@@ -9,9 +9,13 @@
   --exc-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
   --exc-metal-3: var(--bar-pj-3, #92620a);
   width: min(21rem, 92vw);
-  border: 1px solid var(--exc-metal-2);
+  // La forge, comme le jet de réaction : de la suie, et la lueur de la braise qui descend du bandeau.
+  border: 1px solid var(--dw-forge-bronze);
   border-radius: 8px;
-  background: var(--dw-surface-50);
+  background:
+    radial-gradient(70% 38% at 72% 0, rgba(232, 98, 42, 0.2), transparent 70%),
+    radial-gradient(60% 45% at 100% 100%, rgba(150, 52, 14, 0.14), transparent 70%),
+    var(--dw-forge-soot);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
 
   // Le focus y entre à l'ouverture (tabindex -1) : pas d'anneau sur le conteneur lui-même, la
@@ -46,38 +50,10 @@
 // doivent tenir sur une ligne.
 .exc--hero {
   width: min(84rem, 96vw);
-  // La forge, comme le jet de réaction : de la suie, et la lueur de la braise qui descend du bandeau.
-  border-color: var(--dw-forge-bronze);
-  background:
-    radial-gradient(70% 38% at 72% 0, rgba(232, 98, 42, 0.2), transparent 70%),
-    radial-gradient(60% 45% at 100% 100%, rgba(150, 52, 14, 0.14), transparent 70%),
-    var(--dw-forge-soot);
 
   .exc-name {
     color: var(--dw-forge-name);
     text-shadow: 0 1px 2px #000, 0 0 18px rgba(232, 135, 58, 0.25);
-  }
-
-  // Les boutons du bandeau : des clous de bronze, qui rougeoient au survol. L'anneau est une ombre : il ne change pas le gabarit.
-  .exc-icon-btn {
-    --mat-icon-button-icon-color: var(--dw-forge-stud-text);
-    background: var(--dw-forge-stud);
-    box-shadow:
-      inset 0 0 0 1px var(--dw-forge-bronze-dim),
-      var(--dw-forge-stud-shadow);
-
-    &:hover {
-      --mat-icon-button-icon-color: var(--dw-forge-hot-text);
-      background: var(--dw-forge-stud);
-      box-shadow:
-        inset 0 0 0 1px var(--dw-forge-hot),
-        var(--dw-forge-stud-glow);
-    }
-  }
-
-  .exc-icon-btn--danger:hover {
-    --mat-icon-button-icon-color: #fff;
-    background: var(--dw-forge-critique);
   }
 }
 
@@ -168,20 +144,26 @@
   color: var(--dw-surface-500);
 }
 
+// Les boutons de la carte : des clous de bronze, qui rougeoient au survol. L'anneau est une ombre : il ne change pas le gabarit.
 .exc-icon-btn {
-  --mat-icon-button-icon-color: var(--dw-surface-700);
+  --mat-icon-button-icon-color: var(--dw-forge-stud-text);
   --mat-icon-button-state-layer-color: var(--dw-surface-900);
-  background: var(--dw-surface-200);
+  background: var(--dw-forge-stud);
+  box-shadow:
+    inset 0 0 0 1px var(--dw-forge-bronze-dim),
+    var(--dw-forge-stud-shadow);
 
   &:hover {
-    --mat-icon-button-icon-color: var(--dw-surface-900);
-    background: var(--dw-surface-300);
+    --mat-icon-button-icon-color: var(--dw-forge-hot-text);
+    box-shadow:
+      inset 0 0 0 1px var(--dw-forge-hot),
+      var(--dw-forge-stud-glow);
   }
 }
 
 .exc-icon-btn--danger:hover {
   --mat-icon-button-icon-color: #fff;
-  background: var(--dw-color-echec-forte);
+  background: var(--dw-forge-critique);
 }
 
 // Vitalité : libellé, grand cœur et stepper, empilés et centrés.

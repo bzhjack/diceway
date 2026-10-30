@@ -1,4 +1,5 @@
-// Couleur du métal (anneau du médaillon, cadre, pastilles), selon le type du personnage.
+// Couleur du métal (anneau du médaillon, pastilles), selon le type du personnage. La fiche elle-même est de la forge : de la suie,
+// et la lueur de la braise qui descend du bandeau.
 :host {
   --bs-metal-1: var(--bar-pnj-1, #d8dde3);
   --bs-metal-2: var(--bar-pnj-2, #8b949e);
@@ -6,9 +7,12 @@
   --bs-kind: var(--dw-color-pnj);
   display: block;
   width: min(64rem, 94vw);
-  border: 1px solid var(--bs-metal-2);
-  border-radius: 8px;
-  background: linear-gradient(var(--dw-surface-100), var(--dw-surface-50));
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background:
+    radial-gradient(70% 38% at 72% 0, rgba(232, 98, 42, 0.2), transparent 70%),
+    radial-gradient(60% 45% at 100% 100%, rgba(150, 52, 14, 0.14), transparent 70%),
+    var(--dw-forge-soot);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
@@ -55,8 +59,14 @@
   align-items: center;
   gap: 1rem;
   padding: 0.85rem 1.1rem;
-  border-bottom: 1px solid var(--dw-border);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bs-kind) 12%, var(--dw-surface-100)), transparent 70%);
+  // Une plaque de fer, chauffée à gauche à la couleur du type.
+  border-bottom: 1px solid var(--dw-forge-bronze);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--bs-kind) 12%, transparent), transparent 70%),
+    var(--dw-forge-plate);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.17),
+    0 3px 10px rgba(0, 0, 0, 0.55);
 }
 
 .bs-portrait {
@@ -118,8 +128,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--bs-kind);
+  text-shadow: 0 1px 2px #000, 0 0 18px rgba(232, 135, 58, 0.25);
   // Une capitale à l'initiale de chaque mot : « bogomit » → « Bogomit ».
   text-transform: capitalize;
+}
+
+// Un héros porte son nom en or, comme partout ailleurs dans la forge.
+:host(.bs--hero) .bs-name {
+  color: var(--dw-forge-name);
 }
 
 // Ce qu'il est, sur une ligne : type, rang, joueur, région.
@@ -129,18 +145,18 @@
   gap: 0.1rem 0.5rem;
   margin: 0;
   font-size: 0.9rem;
-  color: var(--dw-surface-600);
+  color: var(--dw-surface-700);
 
   span + span::before {
     content: '·';
     margin-right: 0.5rem;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 }
 
 .bs-meta-strong {
   font-weight: 700;
-  color: var(--dw-surface-900);
+  color: var(--dw-forge-bone);
 }
 
 // La vie et l'héroïsme, côte à côte ; la carte d'un personnage sur la table y pose son stepper de vitalité.
@@ -159,7 +175,7 @@
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 .bs-heart {
@@ -193,12 +209,12 @@
   i {
     width: 0.65rem;
     height: 0.9rem;
-    background: var(--dw-surface-300);
+    background: var(--dw-forge-gem-off);
     clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
   }
 
   .bs-gem--on {
-    background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+    background: var(--dw-forge-gem);
   }
 }
 
@@ -211,14 +227,33 @@
   gap: 0.4rem;
 }
 
+// Un bouton en contour : du bronze sur un fond sombre.
 .bs-edit {
+  --mat-button-outlined-outline-color: var(--dw-forge-bronze);
+  --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
+  background-color: rgba(10, 6, 4, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.14),
+    0 2px 5px rgba(0, 0, 0, 0.55);
   white-space: nowrap;
 }
 
+// Un clou de bronze, qui rougeoie au survol ; l'anneau est une ombre, pour ne pas changer le gabarit.
 .bs-icon-btn {
   --mdc-icon-button-state-layer-size: 2.25rem;
   padding: 0.35rem;
-  color: var(--dw-surface-600);
+  background: var(--dw-forge-stud);
+  box-shadow:
+    inset 0 0 0 1px var(--dw-forge-bronze-dim),
+    var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
+
+  &:hover {
+    box-shadow:
+      inset 0 0 0 1px var(--dw-forge-hot),
+      var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
+  }
 }
 
 // ── Les chiffres, en tuiles ──────────────────────────────────────────────────────────────────────
@@ -227,7 +262,7 @@
   flex-wrap: wrap;
   gap: 0.6rem 1.6rem;
   padding: 0.75rem 1.1rem 0.9rem;
-  border-bottom: 1px solid var(--dw-border);
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
 }
 
 .bs-group {
@@ -241,7 +276,8 @@
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px #000;
 }
 
 .bs-tiles {
@@ -259,15 +295,17 @@
   gap: 0.05rem;
   min-width: 3.75rem;
   padding: 0.3rem 0.6rem 0.35rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 9px;
-  background: var(--dw-surface-0);
+  // Un creux dans le fer, cerclé de bronze.
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
 
   dd {
     margin: 0;
     font: 400 1.5rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
     white-space: nowrap;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
   }
 
   // Un long nom d'arme (« Dégâts · Épée / hache à 2 mains ») est coupé : la liste des armes le donne en entier.
@@ -280,7 +318,7 @@
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-700);
   }
 }
 
@@ -291,13 +329,16 @@
 }
 
 .bs-tile--hot dd {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
+  text-shadow: 0 0 10px rgba(232, 80, 46, 0.6);
 }
 
 // ── Les listes, en colonnes ──────────────────────────────────────────────────────────────────────
 .bs-lists {
   display: grid;
   grid-template-columns: repeat(var(--bs-cols, 1), minmax(0, 1fr));
+  // Les listes sur une plaque de fer.
+  background: var(--dw-forge-plate);
 }
 
 .bs-list {
@@ -308,7 +349,7 @@
   padding: 0.75rem 1rem 0.9rem;
 
   & + & {
-    border-left: 1px solid var(--dw-border);
+    border-left: 1px solid var(--dw-forge-bronze-edge);
   }
 }
 
@@ -334,20 +375,20 @@
   gap: 0.45rem;
   font-weight: 700;
   overflow-wrap: anywhere;
-  color: var(--dw-surface-900);
+  color: var(--dw-forge-bone);
 }
 
 .bs-row-value {
   font: 400 1.1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   white-space: nowrap;
-  color: var(--dw-surface-900);
+  color: var(--dw-forge-gold);
 }
 
 .bs-row-detail {
   grid-column: 1 / -1;
   font-size: 0.8rem;
   line-height: 1.3;
-  color: var(--dw-surface-600);
+  color: var(--dw-surface-700);
 }
 
 // Équipement : chaque ligne tient sur une ligne. Un nom trop long est coupé, et le détail est dans l'infobulle — un soulignement
@@ -374,7 +415,7 @@
 
 .bs-row--more {
   .bs-row-label {
-    text-decoration: underline dotted var(--dw-surface-500);
+    text-decoration: underline dotted var(--dw-surface-600);
     text-underline-offset: 0.2em;
   }
 }
@@ -389,11 +430,11 @@
   .bs-row-name,
   .bs-row-value {
     font-weight: 500;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 
   .bs-row-detail {
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 }
 
@@ -415,7 +456,7 @@
 .bs-mark--off {
   border: 0.18rem solid transparent;
   background: transparent;
-  box-shadow: inset 0 0 0 2px var(--dw-surface-500);
+  box-shadow: inset 0 0 0 2px var(--dw-surface-600);
   clip-path: circle(0.27rem);
 }
 
@@ -440,16 +481,16 @@
 .bs-empty {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 .bs-comment {
   margin: 0;
   padding: 0.6rem 1.1rem 0.7rem;
-  border-top: 1px solid var(--dw-border);
+  border-top: 1px solid var(--dw-forge-bronze-edge);
   font-size: 0.88rem;
   font-style: italic;
-  color: var(--dw-surface-600);
+  color: var(--dw-surface-700);
 }
 
 // Ce que veulent dire les pastilles et les signes.
@@ -460,9 +501,9 @@
   gap: 0.3rem 1.1rem;
   margin: 0;
   padding: 0.45rem 1.1rem 0.55rem;
-  border-top: 1px solid var(--dw-border);
+  border-top: 1px solid var(--dw-forge-bronze-edge);
   font-size: 0.76rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 
   span {
     display: inline-flex;
@@ -501,7 +542,7 @@
   }
 
   .bs-list:nth-child(n + 3) {
-    border-top: 1px solid var(--dw-border);
+    border-top: 1px solid var(--dw-forge-bronze-edge);
   }
 }
 
@@ -512,7 +553,7 @@
   }
 
   .bs-list + .bs-list {
-    border-top: 1px solid var(--dw-border);
+    border-top: 1px solid var(--dw-forge-bronze-edge);
     border-left: 0;
   }
 }

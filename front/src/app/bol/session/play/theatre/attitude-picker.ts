@@ -51,9 +51,10 @@ import {ATTITUDES} from './theatre.util';
       align-items: center;
       gap: 0.3rem;
       padding: 0.2rem 0.55rem 0.2rem 0.4rem;
-      border: 1px solid var(--dw-border);
+      border: 1px solid var(--dw-forge-bronze-edge);
       border-radius: var(--dw-radius-toggle);
-      background: transparent;
+      background: var(--dw-forge-recess);
+      box-shadow: var(--dw-forge-recess-shadow);
       color: var(--dw-surface-700);
       font: inherit;
       font-size: 0.78rem;
@@ -69,7 +70,7 @@ import {ATTITUDES} from './theatre.util';
 
       &[aria-pressed='true'] {
         border-color: var(--atp-couleur);
-        background: color-mix(in srgb, var(--atp-couleur) 18%, transparent);
+        background: color-mix(in srgb, var(--atp-couleur) 18%, var(--dw-forge-recess));
         color: var(--dw-color-text-bright);
       }
 
