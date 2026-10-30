@@ -11,14 +11,13 @@ import {DwRowTone} from '../models/dw-collapsible-row.model';
     class: 'dw-row',
     '[class.dw-row--positive]': "tone() === 'positive'",
     '[class.dw-row--negative]': "tone() === 'negative'",
-    '[class.dw-row--expanded]': 'expandable() && expanded()',
+    '[class.dw-row--expanded]': 'expanded()',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwCollapsibleRowComponent {
   readonly tone = input<DwRowTone>('neutral');
   readonly expanded = input(false);
-  readonly expandable = input(true);
   readonly ariaLabel = input<string | null>(null);
   readonly label = input<string | null>(null);
   readonly labelGrows = input(false);

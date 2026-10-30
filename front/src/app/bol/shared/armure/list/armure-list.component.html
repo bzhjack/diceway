@@ -44,11 +44,9 @@
           </p>
         }
 
-        @if (removeEnabled()) {
-          <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
-            <mat-icon>delete</mat-icon> Supprimer
-          </button>
-        }
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
       </ng-container>
     </dw-collapsible-row>
   } @empty {

@@ -15,7 +15,6 @@ import {DwBadgeColor} from '../models/dw-badge.model';
 export class DwLibraryHeaderComponent {
   readonly title = input.required<string>();
   readonly description = input<string>('');
-  readonly kicker = input<string>('Bibliothèque BOL');
   readonly color = input<DwBadgeColor>('amber');
   /** Illustration de bannière optionnelle (même traitement que le header du dashboard). */
   readonly image = input<string | null>(null);
