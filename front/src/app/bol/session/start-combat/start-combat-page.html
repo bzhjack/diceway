@@ -16,7 +16,7 @@
     <!-- L'en-tête se lit comme un parcours. En haut, qui joue : le lieu et le titre (la règle du jet sur son « i »), l'ordre d'action, qui se
          remplit à mesure des jets, le retour à la table. En bas, les trois étapes reliées : 1 régler la rencontre, 2 lancer, 3 valider. Tous les
          contrôles ont la hauteur des médaillons de la frise ; il n'y a qu'un seul bouton plein à la fois. -->
-    <header class="scd-bar" [class.scd-bar--dense]="friseDense()">
+    <header class="scd-bar" [class.scd-bar--dense]="friseDense()" [class.scd-bar--enemy]="hasInitiativeAdversary()">
       <div class="scd-bar-top">
         <div class="scd-heading">
           <span class="scd-where" [matTooltip]="where()">{{ where() }}</span>

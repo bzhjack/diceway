@@ -275,9 +275,9 @@ bol-start-combat-page {
   white-space: nowrap;
 }
 
-// La même largeur quel que soit leur texte : rien ne bouge quand une étape change d'état.
-.scd-flow-btn {
-  min-width: 13.5rem;
+// La même largeur quel que soit leur texte : rien ne bouge quand une étape change d'état (deux classes : plus fort que Material).
+.scd-flow .scd-flow-btn {
+  min-width: 14rem;
   white-space: nowrap;
 }
 
@@ -303,14 +303,26 @@ bol-start-combat-page {
 // Ce que l'étape 3 attend : sa place est réservée, le bouton ne bouge pas quand elle se vide.
 .scd-flow-hint {
   flex: none;
-  min-width: 6.6rem;
+  min-width: 5.4rem;
   color: var(--dw-surface-600);
   font-size: 0.8rem;
   white-space: nowrap;
 }
 
-// Moins de 1216 px : les étapes passent à la ligne, sans leurs traits.
-@container scd-bar (max-width: 76rem) {
+// Quand elles ne tiennent plus sur une ligne, les étapes passent à la ligne, sans leurs traits : sous 1296 px avec le compteur de l'initiative
+// ennemie, sous 1136 px sans lui.
+@container scd-bar (max-width: 81rem) {
+  .scd-bar--enemy .scd-flow {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .scd-bar--enemy .scd-flow-line {
+    display: none;
+  }
+}
+
+@container scd-bar (max-width: 71rem) {
   .scd-flow {
     flex-wrap: wrap;
     row-gap: 0.4rem;
