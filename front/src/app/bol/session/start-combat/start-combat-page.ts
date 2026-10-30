@@ -286,9 +286,6 @@ export class StartCombatPageComponent {
   protected readonly frisePlaces = computed(() => this.activeHeroes().length + this.adversaries().length + 1);
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
-  /** « 2 / 4 jets » dans l'en-tête. */
-  protected readonly rolledCount = computed(() => this.activeHeroes().length - this.pendingHeroes().length);
-  protected readonly heroCount = computed(() => this.activeHeroes().length);
   /** Où on en est, au-dessus du titre : la session, puis la scène en cours s'il y en a une. */
   protected readonly where = signal('');
   /** Aucun adversaire (une fois la table chargée) : le combat ne peut pas commencer, ajouter un adversaire devient l'action principale. */

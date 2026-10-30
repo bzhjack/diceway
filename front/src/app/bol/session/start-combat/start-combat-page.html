@@ -61,8 +61,9 @@
             }
             <!-- Le dé du MJ pour tous : un petit dé vert (bonus) ou rouge (malus) -->
             @if (globalGmDie(); as gm) {
-              <mat-icon [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')">casino</mat-icon>
-              <span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span>
+              <span [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')"
+                ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
+              >
             }
           </button>
           <ng-template
@@ -148,12 +149,12 @@
                la frise passe avant). Tous faits, le bouton s'en va. -->
           @if (pendingHeroes().length > 0 || loading()) {
             @if (noAdversary()) {
-              <button mat-stroked-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+              <button mat-stroked-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
+                <mat-icon>casino</mat-icon> Lancer pour tous
               </button>
             } @else {
-              <button mat-flat-button type="button" class="scd-act-btn" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon>casino</mat-icon> Lancer pour tous · {{ rolledCount() }}/{{ heroCount() }}
+              <button mat-flat-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
+                <mat-icon>casino</mat-icon> Lancer pour tous
               </button>
             }
           }

@@ -27,8 +27,9 @@
       >
         <mat-icon>tune</mat-icon> Options
         @if (deMj(); as de) {
-          <mat-icon [class]="'cp-options-die cp-options-die--' + de">casino</mat-icon>
-          <span class="cdk-visually-hidden">, dé de {{ de }} du MJ pour tous</span>
+          <span [class]="'cp-options-die cp-options-die--' + de"
+            ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ de }} du MJ pour tous</span></span
+          >
         }
       </button>
       <ng-template
