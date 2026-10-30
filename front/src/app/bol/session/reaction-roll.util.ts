@@ -2,7 +2,7 @@ import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {actionDiceTarget, actionResultTone, netDiceModifier} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
 import {HeroDetailTrait} from './models/tapis.model';
-import {ReactionAdversary, ReactionGroup, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat.model';
+import {ReactionAdversary, ReactionFriseStep, ReactionGroup, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat.model';
 
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
@@ -67,7 +67,7 @@ export function reactionSumTerms(dice: number | null, parts: ReactionParts, dice
   const named: readonly (readonly [value: number, caption: string])[] = [
     [parts.esprit, 'esprit'],
     [parts.initiative - (parts.equipement ?? 0), 'init.'],
-    [parts.equipement ?? 0, 'équipement'],
+    [parts.equipement ?? 0, 'équip.'],
     [parts.carriere?.value ?? 0, parts.carriere?.label.toLowerCase() ?? ''],
     [parts.embuscade, parts.embuscade > 0 ? 'embusc.' : 'surpris'],
     [-parts.initiativeEnnemie, 'ennemi'],
@@ -114,7 +114,7 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
   const heroToken = (h: ReactionHero): ReactionToken => {
     const word = h.resultat ? HERO_RANK_WORD[h.resultat] : undefined;
     const total = h.total === null ? '' : `total ${h.total}`;
-    return {kind: 'hero', pivotId: h.pivotId, nom: h.nom, avatar: h.avatar, detail: word && total ? `${total} · ${word}` : (word ?? total), excluded: false, total: h.total};
+    return {kind: 'hero', pivotId: h.pivotId, nom: h.nom, avatar: h.avatar, detail: word && total ? `${total} · ${word}` : (word ?? total), excluded: false, total: h.total, resultat: h.resultat};
   };
   const rank = (h: ReactionHero): number => (h.resultat ? HERO_RANK[h.resultat] : undefined) ?? 0;
   const heroTokens = (lane: 'heros' | 'echec' | 'echec_critique'): readonly ReactionToken[] =>
@@ -155,4 +155,24 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
     lane('echec_critique', 'Échec critique', false, heroTokens('echec_critique')),
   ];
   return lanes.filter((lane) => lane.tokens.length > 0);
+}
+
+/** L'ordre d'action en frise : un cercle par combattant, dans l'ordre où ils jouent. Les héros qui n'ont pas lancé n'y sont pas : leurs
+ * lignes, en face, l'indiquent déjà. Les exemplaires d'une même fiche se suivent ; un trait long sépare deux groupes. */
+export function reactionFrise(lanes: readonly ReactionLane[]): readonly ReactionFriseStep[] {
+  const placed = lanes.filter((lane) => lane.id !== 'attente');
+  return placed.flatMap((lane, laneIndex) => {
+    const tokens = lane.groups.flatMap((group) => group.tokens);
+    return tokens.map((token, index): ReactionFriseStep => {
+      const ally = token.detail === 'allié';
+      const hero = token.resultat ? `, ${VERDICTS[token.resultat][0].toLowerCase()}, total ${token.total ?? '—'}` : '';
+      return {
+        token,
+        tone: token.resultat ?? (ally ? 'allie' : 'adversaire'),
+        label: `${token.nom}${hero}${ally ? ', allié des héros' : ''}${lane.blocked ? ', ne joue pas au round 1' : ''}`,
+        blocked: lane.blocked,
+        link: index < tokens.length - 1 ? 'court' : laneIndex < placed.length - 1 ? 'long' : null,
+      };
+    });
+  });
 }

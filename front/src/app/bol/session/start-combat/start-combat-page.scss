@@ -207,18 +207,12 @@ bol-start-combat-page {
   min-height: 0;
 }
 
-.scd-layout {
-  display: grid;
-  flex: 1 1 auto;
-  grid-template-columns: minmax(0, 1fr) 20rem;
-  min-height: 0;
-}
-
 .scd-main {
   // Les colonnes du registre se règlent sur la largeur de cette zone (requêtes de conteneur plus bas), pas sur celle de la fenêtre : le
-  // zoom du navigateur, l'échelle de l'écran ou l'ordre d'action à côté la font varier.
+  // zoom du navigateur ou l'échelle de l'écran la font varier.
   container: scd-main / inline-size;
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 0.9rem;
   min-height: 0;
@@ -226,49 +220,182 @@ bol-start-combat-page {
   overflow-y: auto;
 }
 
-.scd-rail {
+// ── L'ordre d'action : une frise sous l'en-tête ─────────────────────────────────────────────────────────────────
+.scd-frise {
   display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  min-height: 0;
-  padding: 0.9rem 1rem 1.2rem;
-  overflow-y: auto;
-  border-left: 1px solid var(--dw-border);
-  background: rgba(0, 0, 0, 0.22);
+  flex: none;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.3rem 1.4rem;
+  border-bottom: 1px solid var(--dw-border);
+  background: rgba(0, 0, 0, 0.28);
+}
 
-  h2 {
-    margin: 0;
+// Son nom, sur deux lignes, et le round dessous. Deux classes : `.scd-label`, écrite plus bas, l'imposerait sur une seule ligne.
+.scd-label.scd-frise-label {
+  flex: none;
+  display: grid;
+  gap: 0.1rem;
+  width: 4.6rem;
+  margin: 0;
+  line-height: 1.15;
+  white-space: normal;
 
-    small {
-      margin-left: 0.4rem;
-      color: var(--dw-surface-500);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: none;
-    }
+  small {
+    color: var(--dw-surface-500);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: none;
   }
 }
 
-// Fenêtre étroite (moins de 1200 px) : l'ordre d'action passe sous le registre, la page défile en entier.
-@media (max-width: 75rem) {
-  .scd-content {
-    overflow-y: auto;
-  }
+// Sa largeur règle la taille des cercles (unité `cqw`).
+.scd-frise-zone {
+  flex: 1;
+  min-width: 0;
+  container-type: inline-size;
+}
 
-  .scd-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
+// Une seule ligne : les cercles font 1.75rem ; sur une très grande table ils rétrécissent, jusqu'à 1.2rem, et en dernier recours la ligne
+// défile (`--scd-frise-n` et `--scd-frise-longs` sont posés par le gabarit). La marge laisse de la place au halo du survol et du focus.
+.scd-frise-list {
+  --scd-c-size: clamp(1.2rem, (100cqw - var(--scd-frise-longs, 0) * 1.6rem - var(--scd-frise-n, 1) * 0.3rem) / var(--scd-frise-n, 1), 1.75rem);
 
-  .scd-main,
-  .scd-rail {
-    overflow: visible;
-  }
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 0.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  list-style: none;
+}
 
-  .scd-rail {
-    border-top: 1px solid var(--dw-border);
-    border-left: 0;
+// Un cercle et le trait qui le relie au suivant : court dans un même groupe, long entre deux groupes.
+.scd-step {
+  display: flex;
+  flex: 0 1 calc(var(--scd-c-size) + 0.8rem);
+  align-items: center;
+  min-width: calc(var(--scd-c-size) + 0.3rem);
+}
+
+.scd-step--long {
+  flex: 1 1 calc(var(--scd-c-size) + 3rem);
+  min-width: calc(var(--scd-c-size) + 1.6rem);
+  max-width: calc(var(--scd-c-size) + 7rem);
+}
+
+.scd-step--last {
+  flex: none;
+  min-width: 0;
+}
+
+.scd-link {
+  flex: 1;
+  height: 2px;
+  background: var(--dw-surface-400);
+}
+
+// L'anneau dit le résultat d'un héros, ou le camp des autres.
+.scd-c {
+  --scd-c-ring: var(--dw-surface-500);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--scd-c-size);
+  height: var(--scd-c-size);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid var(--scd-c-ring);
+  border-radius: 50%;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font: 800 calc(var(--scd-c-size) * 0.42) / 1 'Muse Sans', sans-serif;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
+}
+
+button.scd-c {
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--dw-color-legendary);
+  }
+}
+
+.scd-c--reussite,
+.scd-c--allie {
+  --scd-c-ring: var(--dw-color-reussite);
+}
+
+.scd-c--heroique {
+  --scd-c-ring: var(--dw-color-legendary);
+}
+
+.scd-c--legendaire {
+  --scd-c-ring: var(--dw-color-succes-legendaire);
+}
+
+.scd-c--echec {
+  --scd-c-ring: var(--dw-color-echec);
+}
+
+.scd-c--echec_critique {
+  --scd-c-ring: var(--dw-color-echec-forte);
+}
+
+.scd-c--adversaire {
+  --scd-c-ring: #b4534b;
+}
+
+// Il ne joue pas au round 1 : anneau en pointillés et cercle hachuré ; le trait de son groupe en pointillés.
+.scd-c--blocked {
+  border-style: dashed;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--dw-color-echec) 30%, transparent) 0 2px, transparent 2px 6px);
+  }
+}
+
+.scd-step:not(.scd-step--long) .scd-c--blocked + .scd-link {
+  background: repeating-linear-gradient(90deg, var(--dw-surface-400) 0 3px, transparent 3px 6px);
+}
+
+// Exclu de ce combat : éteint et barré, à sa place, pour pouvoir le réintégrer.
+.scd-c--out {
+  border-style: dotted;
+  opacity: 0.45;
+  filter: grayscale(1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: -10%;
+    left: -10%;
+    height: 2px;
+    background: var(--dw-surface-900);
+    transform: rotate(-45deg);
+  }
+}
+
+.scd-frise-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .scd-empty {
@@ -288,12 +415,6 @@ bol-start-combat-page {
 
 .scd-label--gold {
   color: var(--dw-color-legendary);
-}
-
-.scd-label-count {
-  margin-left: 0.4rem;
-  color: var(--dw-color-text-bright);
-  letter-spacing: 0;
 }
 
 .scd-hint {
@@ -394,16 +515,17 @@ bol-start-combat-page {
 // largeur (une colonne fixe la ferait chevaucher le portrait).
 .scd-rows {
   // Largeurs fixes pour le nom, ce qu'il faut, les dés et les options : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au
-  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. Le verdict prend le reste.
+  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. L'addition prend sa largeur, le verdict le reste.
   --scd-col-who: 9rem;
   --scd-col-need: 8.5rem;
   --scd-col-faces: 7.6rem;
   --scd-col-opt: 10.6rem;
+  --scd-col-sum: 23.5rem;
 
   display: grid;
   grid-template-columns:
-    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) var(--scd-col-opt)
-    auto;
+    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) fit-content(var(--scd-col-sum)) minmax(6rem, 1fr)
+    var(--scd-col-opt) auto;
   gap: 0.6rem 0.9rem;
   margin: 0;
   padding: 0;
@@ -431,11 +553,13 @@ bol-start-combat-page {
   background: linear-gradient(90deg, #261b12, #1a120c);
 }
 
-// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances ; le verdict, la conséquence et le calcul. Portrait, case du
-// total, dés, options, modificateurs et menu tiennent toute la hauteur.
+// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances. Portrait, case du total, dés, addition, verdict, options,
+// modificateurs et menu tiennent toute la hauteur.
 .scd-row > .scd-med,
 .scd-row > .scd-entry,
 .scd-row > .scd-faces,
+.scd-row > .scd-sum,
+.scd-row > .scd-verdict,
 .scd-row > .scd-opt,
 .scd-row > .scd-row-icons {
   grid-row: 1 / 4;
@@ -544,51 +668,92 @@ bol-start-combat-page {
   grid-column: 5;
 }
 
-.scd-row > .scd-formula {
+.scd-row > .scd-sum {
   grid-column: 6;
-  grid-row: 3;
-}
-
-// Sans conséquence (en attente du total), le calcul remonte juste sous le verdict.
-.scd-row > .scd-formula--up {
-  grid-row: 2;
 }
 
 .scd-row > .scd-verdict {
-  grid-column: 6;
-  grid-row: 1;
-  align-self: end;
-}
-
-.scd-row > .scd-consequence {
-  grid-column: 6;
-  grid-row: 2;
-  align-self: start;
-}
-
-.scd-row > .scd-opt {
   grid-column: 7;
 }
 
-// Le calcul du jet, sous la case et les dés, et la conséquence du verdict, dessous : une ligne chacun, coupée s'il le faut (le texte
-// entier est dans l'infobulle de « 9+ » et du verdict).
-.scd-formula,
-.scd-consequence {
-  // Sans largeur propre : ils prennent celle de leurs colonnes au lieu de les élargir à la longueur de leur texte.
-  contain: inline-size;
+.scd-row > .scd-opt {
+  grid-column: 8;
+}
+
+// L'addition du jet, comme sur le jet d'action : un nombre par terme, son nom dessous, le total en or. Sur une ligne, sauf si la place manque.
+.scd-sum {
+  --scd-sum-gap: 0.55rem;
+  --scd-sum-row: 1.9rem;
+  --scd-sum-value: 1.4rem;
+  --scd-sum-total: 1.65rem;
+  --scd-sum-caption: 0.64rem;
+  --scd-sum-min: 1.7rem;
+  --scd-sum-pad: 0.65rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: flex-start;
+  gap: 0.15rem var(--scd-sum-gap);
   min-width: 0;
-  overflow: hidden;
-  font-size: 0.74rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.scd-formula {
-  color: var(--dw-surface-500);
+.scd-sum-term {
+  display: grid;
+  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros.
+  grid-template-rows: var(--scd-sum-row) auto;
+  place-items: center;
+  min-width: var(--scd-sum-min);
+
+  b {
+    font: 400 var(--scd-sum-value) / 1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-surface-900);
+    white-space: nowrap;
+  }
+
+  small {
+    color: var(--dw-surface-500);
+    font-size: var(--scd-sum-caption);
+    font-weight: 700;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
 }
 
+.scd-sum-term--plus b {
+  color: var(--dw-color-reussite);
+}
+
+.scd-sum-term--minus b {
+  color: var(--dw-color-danger-muted);
+}
+
+.scd-sum-term--total {
+  padding-left: var(--scd-sum-pad);
+  border-left: 1px solid var(--dw-border);
+
+  b {
+    font-size: var(--scd-sum-total);
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Avant le jet, l'addition annonce les termes en plus pâle.
+.scd-sum--pending .scd-sum-term:not(.scd-sum-term--total) b {
+  opacity: 0.75;
+}
+
+// Ce que le verdict change au combat, en entier ; au-delà de trois lignes, le texte complet est dans son infobulle.
 .scd-consequence {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 0.1rem;
   color: var(--dw-surface-800);
+  font-size: 0.76rem;
+  line-height: 1.22;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 // Écran peu haut (portable) : les lignes, à hauteur fixe, se rapprochent un peu.
@@ -678,9 +843,8 @@ bol-start-combat-page {
   color: var(--dw-color-legendary);
 }
 
-// Un médaillon : le portrait d'un héros (bouton vers sa fiche) ou d'un combattant de l'ordre d'action.
-.scd-med,
-.scd-token {
+// Le portrait d'un héros : un bouton vers sa fiche.
+.scd-med {
   display: grid;
   place-items: center;
   flex: none;
@@ -758,10 +922,8 @@ bol-start-combat-page {
   background: rgba(241, 230, 208, 0.18);
 }
 
-// Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge) ; le calcul en infobulle.
+// Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge).
 .scd-need {
-  border-radius: 6px;
-
   > b {
     font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-color-text-bright);
@@ -889,7 +1051,7 @@ bol-start-combat-page {
   justify-content: flex-start;
 }
 
-// Le verdict et ce qu'il change au combat, sur une ligne (le texte entier en infobulle s'il est coupé).
+// Le verdict et, dessous, ce qu'il change au combat.
 .scd-verdict {
   display: flex;
   flex-direction: column;
@@ -1075,9 +1237,9 @@ bol-start-combat-page {
   line-height: 1;
 }
 
-// Zone resserrée (moins de 1200 px) : les colonnes fixes se resserrent.
-@container scd-main (max-width: 75rem) {
-  // Plus étroit : les dés un peu plus petits, les colonnes fixes resserrées.
+// Moins de 1600 px : les colonnes fixes restent resserrées, pour que la place aille au résultat.
+@container scd-main (max-width: 100rem) {
+  // Les dés un peu plus petits, les colonnes fixes resserrées.
   .scd-rows {
     --scd-col-who: 8rem;
     --scd-col-need: 7rem;
@@ -1095,9 +1257,33 @@ bol-start-combat-page {
   }
 }
 
-// Zone étroite (moins de 960 px) : les dés s'effacent (le total est dans sa case), les options prennent leur libellé court
-// (« Héroïque », « Faveur »), les autres colonnes se resserrent encore.
-@container scd-main (max-width: 60rem) {
+// Moins de 1360 px : l'addition rétrécit, pour que même la plus longue tienne sur une ligne à côté du verdict.
+@container scd-main (max-width: 85rem) {
+  .scd-rows {
+    --scd-col-sum: 19rem;
+  }
+
+  .scd-sum {
+    --scd-sum-gap: 0.4rem;
+    --scd-sum-row: 1.45rem;
+    --scd-sum-value: 1.2rem;
+    --scd-sum-total: 1.35rem;
+    --scd-sum-caption: 0.6rem;
+    --scd-sum-min: 1.4rem;
+    --scd-sum-pad: 0.45rem;
+  }
+}
+
+// Moins de 1200 px : une longue addition passe sur deux lignes.
+@container scd-main (max-width: 75rem) {
+  .scd-rows {
+    --scd-col-sum: 13.4rem;
+  }
+}
+
+// Zone étroite (moins de 1120 px) : les dés s'effacent, le total est dans sa case et dans l'addition ; leur place va au résultat. Les autres
+// colonnes se resserrent encore.
+@container scd-main (max-width: 70rem) {
   .scd-rows {
     --scd-col-who: 7rem;
     --scd-col-need: 5.6rem;
@@ -1109,6 +1295,13 @@ bol-start-combat-page {
     display: none;
   }
 
+}
+
+// Moins de 1024 px : le bouton de la fiche s'efface, le portrait l'ouvre déjà ; sa place va à l'addition.
+@container scd-main (max-width: 64rem) {
+  .scd-icon--sheet {
+    display: none;
+  }
 }
 
 // Le popover des modificateurs : opaque, au-dessus de la page (rendu dans le calque des overlays, hors du composant).
@@ -1168,235 +1361,10 @@ bol-start-combat-page {
   }
 }
 
-// ── L'ordre d'action : une carte par rang ───────────────────────────────────────────────────────────────────────
-.scd-track {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-// Le liseré de gauche dit qui s'y trouve : les héros qui réussissent en vert, ceux en échec en rouge, les adversaires en brun-rouge.
-.scd-lane {
-  --scd-lane-tone: #b4534b;
-  overflow: hidden;
-  border: 1px solid var(--dw-border);
-  border-left: 4px solid var(--scd-lane-tone);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.scd-lane.scd-lane--heros {
-  --scd-lane-tone: var(--dw-color-reussite);
-}
-
-.scd-lane.scd-lane--echec,
-.scd-lane.scd-lane--echec_critique {
-  --scd-lane-tone: var(--dw-color-echec);
-}
-
-// Un rang qui ne joue pas au round 1 (un héros a obtenu un succès héroïque ou légendaire) : tout son fond hachuré, les noms restent nets.
-.scd-lane.scd-lane--blocked {
-  background: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--dw-color-echec) 13%, transparent) 0 7px,
-    color-mix(in srgb, var(--dw-color-echec) 4%, transparent) 7px 14px
-  );
-}
-
-.scd-lane-head {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0.4rem 0.6rem;
-  background: rgba(255, 255, 255, 0.03);
-
-  // Combien de combattants dans le bloc : une pastille dorée au bout du titre.
-  .scd-label-count {
-    display: grid;
-    place-items: center;
-    min-width: 1.35rem;
-    height: 1.25rem;
-    margin-left: auto;
-    // Les chiffres de la police sont un peu hauts dans leur boîte : 2 px en haut les recentrent.
-    padding: 2px 0.35rem 0;
-    border-radius: 999px;
-    background: var(--dw-color-legendary);
-    color: #1c1200;
-    font-size: 0.78rem;
-    font-weight: 800;
-    line-height: 1;
-  }
-}
-
-.scd-lane-title {
-  font: 400 1.05rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
-  color: var(--dw-color-text-bright);
-}
-
-// Le rang du bloc dans le round.
-.scd-lane-n {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 1.35rem;
-  height: 1.35rem;
-  border-radius: 50%;
-  background: var(--dw-surface-200);
-  color: var(--dw-color-legendary);
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.scd-lane-note {
-  margin: 0;
-  padding: 0.25rem 0.6rem 0;
-  color: var(--dw-color-danger-muted);
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-.scd-lane .scd-roster {
-  padding: 0.35rem 0.6rem 0.5rem;
-}
-
-.scd-token {
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 0.8rem;
-}
-
-.scd-tot {
-  grid-column: 3 / 5;
-  justify-self: end;
-  padding: 0 0.35rem;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.35);
-  font: 400 0.95rem/1.4 'Muse Display Harmony', 'Muse Sans', serif;
-}
-
-.scd-tot--heros {
-  color: var(--dw-color-reussite);
-}
-
-.scd-tot--echec {
-  color: var(--dw-color-echec);
-}
-
-.scd-tot--echec_critique {
-  color: var(--dw-color-echec-forte);
-}
-
-// Les adversaires d'un bloc : une ligne par fiche, cochée tant qu'elle joue ce combat ; plusieurs exemplaires se cochent ensemble, ou un
-// par un une fois dépliés.
-.scd-roster,
-.scd-foe-copies {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-// Chaque combattant a sa petite ligne, cerclée de la couleur de son camp (héros doré, adversaire brun, allié vert) ; son portrait est un
-// carré collé au bord gauche, qui fixe la hauteur de la ligne, ses coins gauches épousant ceux de la ligne (8px moins le liseré), fondu
-// vers la droite.
-.scd-foe {
-  --scd-foe-camp: var(--bar-pj-2, #a8762a);
-
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
-  align-items: center;
-  column-gap: 0.5rem;
-  padding-right: 0.35rem;
-  border: 1px solid color-mix(in srgb, var(--scd-foe-camp) 55%, transparent);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.22);
-}
-
-.scd-foe:has(.scd-token--adv) {
-  --scd-foe-camp: var(--dw-surface-500);
-}
-
-.scd-foe--ally {
-  --scd-foe-camp: var(--dw-color-reussite);
-}
-
-.scd-foe > .scd-token {
-  align-self: start;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 0;
-  border-radius: 7px 0 0 7px;
-  background: linear-gradient(90deg, var(--dw-surface-200), transparent);
-
-  img {
-    mask-image: linear-gradient(90deg, #000 72%, transparent);
-  }
-}
-
-.scd-foe-id {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.2;
-
-  b {
-    overflow: hidden;
-    color: var(--dw-color-text-bright);
-    font-size: 0.84rem;
-    font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  small {
-    color: var(--dw-color-reussite);
-    font-size: 0.68rem;
-  }
-}
-
-// Le nombre d'exemplaires : un bouton qui les déplie.
-.scd-foe-unfold {
-  grid-column: 3;
-  padding: 0.05rem 0.4rem;
-  border: 1px solid transparent;
-  border-radius: var(--dw-radius-pill);
-  background: none;
-  color: var(--dw-color-legendary);
-  font: 400 1rem/1.2 'Muse Display Harmony', 'Muse Sans', serif;
-  cursor: pointer;
-
-  &:hover,
-  &[aria-expanded='true'] {
-    border-color: var(--dw-border);
-  }
-}
-
-.scd-foe-check {
-  grid-column: 4;
-}
-
-.scd-foe-copies {
-  grid-column: 2 / -1;
-  padding-bottom: 0.3rem;
-  font-size: 0.8rem;
-}
-
-// Exclu de ce combat : il reste sur la table, estompé ici.
-.scd-foe--out .scd-token,
-.scd-foe--out .scd-foe-id {
-  opacity: 0.4;
-}
-
 // Focus visible commun aux boutons, champs et médaillons du contenu (les boutons Material ont le leur).
 .scd-content button:not(.mat-mdc-button-base):focus-visible,
 .scd-content input:not(.mdc-checkbox__native-control):focus-visible,
-.scd-need:focus-visible,
+.scd-frise button:focus-visible,
 .scd-pop button:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;

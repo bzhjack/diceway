@@ -70,6 +70,8 @@ export interface ReactionToken {
   readonly excluded: boolean;
   /** Le total du jet de réaction d'un héros qui a lancé ; absent pour un adversaire. */
   readonly total?: number | null;
+  /** Le résultat du jet d'un héros ; absent pour un adversaire. */
+  readonly resultat?: InitiativeResultat | null;
 }
 
 /** Des jetons de l'ordre d'action montrés en un seul médaillon : les exemplaires d'une même fiche, du même camp (cinq « Sergent du
@@ -88,4 +90,17 @@ export interface ReactionLane {
   readonly tokens: readonly ReactionToken[];
   /** Les mêmes combattants, regroupés par fiche, dans l'ordre de `tokens` (un héros est toujours seul). */
   readonly groups: readonly ReactionGroup[];
+}
+
+/** Un cercle de la frise de l'ordre d'action : un combattant, dans l'ordre où ils jouent. */
+export interface ReactionFriseStep {
+  readonly token: ReactionToken;
+  /** La couleur de son anneau : le résultat du jet d'un héros, sinon son camp. */
+  readonly tone: InitiativeResultat | 'adversaire' | 'allie';
+  /** Son nom et ce qu'il faut en savoir, en infobulle et pour les lecteurs d'écran. */
+  readonly label: string;
+  /** Il ne joue pas au round 1. */
+  readonly blocked: boolean;
+  /** Le trait qui le relie au suivant : court dans un même groupe, long entre deux groupes, aucun pour le dernier. */
+  readonly link: 'court' | 'long' | null;
 }

@@ -14,10 +14,10 @@ import {
   viewChildren,
   WritableSignal,
 } from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
@@ -43,8 +43,8 @@ import {heroDetails, isLowVitalite, vitalitePercent} from '../play/tapis/tapis.u
 import {CombatEffect} from '../models/combat-effect.model';
 import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
-import {ReactionAdversary, ReactionGroup, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
-import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
+import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
+import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../combat-play.util';
 
@@ -105,9 +105,8 @@ interface HeroCard {
   readonly modsCount: number;
   /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
   readonly traitNote: string | null;
-  /** Le calcul du jet en une ligne (« 2d6B +1 esprit −2 ennemi ≥ 9 »), sous le verdict et en infobulle sur ce qu'il lui faut. */
-  readonly formula: string;
   readonly verdict: ReactionVerdict | null;
+  /** L'addition du jet : un nombre par terme, son nom dessous, le total à la fin. */
   readonly sum: readonly RollSumTerm[];
   /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1),
    * le succès héroïque sur une réussite (−1). */
@@ -128,8 +127,6 @@ interface HeroCard {
   readonly vitaliteLow: boolean;
 }
 
-/** Le trait qui donne au héros un dé de bonus ou de malus au jet de réaction, rappelé à la fin de son calcul. */
-const TRAIT_DIE: Readonly<Record<number, string>> = {1: ' · Vigilant : un dé de bonus', [-1]: ' · Lent à la détente : un dé de malus'};
 
 /** Embuscade (02-actions-combat.md, « Modificateurs au jet de réaction ») : la tendre ou surprendre l'ennemi donne +2 (Très facile),
  * être surpris ou pris en embuscade donne −1 (Ardue). */
@@ -150,7 +147,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatCheckboxModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, NgTemplateOutlet, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrl: './start-combat-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -243,9 +240,6 @@ export class StartCombatPageComponent {
       const base = dice === null ? null : reactionResult(dice, modifier);
       const legendary = dice === 12 && base === 'heroique' && (optionChosen || heroisme > 0);
       const heroic = base === 'reussite' && (upgraded || heroisme > 0);
-      // Dans la formule, avec un dé de bonus ou de malus : « 2d6B » (on garde les deux meilleurs) ou « 2d6M » (les deux moins bons) ; le
-      // nombre de dés en plus est dit sous ses chances.
-      const keptDice = net > 0 ? '2d6B' : net < 0 ? '2d6M' : null;
       return {
         hero,
         avatar: this.usableAvatar(hero.avatar),
@@ -259,16 +253,6 @@ export class StartCombatPageComponent {
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
         modsCount: (this.gmDieByPivot().has(hero.pivotId) ? 1 : 0) + (parts.carriere ? 1 : 0),
         traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
-        formula: reactionSumTerms(null, parts, net)
-          .map((term) =>
-            term.tone === 'dice'
-              ? (keptDice ?? term.value)
-              : term.tone === 'total'
-                ? term.value
-                : `${term.value} ${term.caption}`,
-          )
-          .join(' ')
-          .concat(TRAIT_DIE[Math.sign(hero.diceNet)] ?? ''),
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts, net),
@@ -296,16 +280,10 @@ export class StartCombatPageComponent {
     ),
   );
 
-  /** L'ordre d'action en frise, chaque bloc avec son rang dans le round (1, 2…). Les héros qui n'ont pas lancé n'y sont pas : leurs lignes,
-   * en face, l'indiquent déjà. */
-  protected readonly track = computed(() =>
-    this.lanes()
-      .filter((lane) => lane.id !== 'attente')
-      .map((lane, index) => ({lane, step: index + 1, heroes: lane.id === 'heros' || lane.id === 'echec' || lane.id === 'echec_critique'})),
-  );
-
-  /** Les groupes dont on a déplié les exemplaires, pour en cocher un seul. */
-  protected readonly unfolded = signal<ReadonlySet<string>>(new Set());
+  /** L'ordre d'action en frise : un cercle par combattant. */
+  protected readonly frise = computed(() => reactionFrise(this.lanes()));
+  /** Combien de traits longs : avec le nombre de cercles, il règle leur taille pour que la frise tienne sur une ligne. */
+  protected readonly friseLongs = computed(() => this.frise().filter((step) => step.link === 'long').length);
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   /** « 2 / 4 jets » dans l'en-tête. */
@@ -500,38 +478,6 @@ export class StartCombatPageComponent {
       }
       return next;
     });
-  }
-
-  /** La case d'un groupe : cochée (tous jouent), elle les exclut tous ; sinon, en partie ou pas du tout, tous reviennent. */
-  protected toggleGroupExcluded(group: ReactionGroup): void {
-    const exclude = group.tokens.every((token) => !token.excluded);
-    this.excluded.update((set) => {
-      const next = new Set(set);
-      for (const token of group.tokens) {
-        const key = `${token.kind}-${token.pivotId}`;
-        if (exclude) {
-          next.add(key);
-        } else {
-          next.delete(key);
-        }
-      }
-      return next;
-    });
-  }
-
-  protected toggleUnfolded(key: string): void {
-    this.unfolded.update((set) => {
-      const next = new Set(set);
-      if (!next.delete(key)) {
-        next.add(key);
-      }
-      return next;
-    });
-  }
-
-  /** Combien d'exemplaires d'un groupe jouent ce combat. */
-  protected groupIncluded(group: ReactionGroup): number {
-    return group.tokens.filter((token) => !token.excluded).length;
   }
 
   protected onAvatarError(avatar: string): void {

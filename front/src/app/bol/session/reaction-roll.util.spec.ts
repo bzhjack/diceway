@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat.model';
-import {reactionDiceNet, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
+import {reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
 
 const parts = (overrides: Partial<ReactionParts> = {}): ReactionParts => ({esprit: 0, initiative: 0, embuscade: 0, initiativeEnnemie: 0, ...overrides});
 
@@ -109,7 +109,7 @@ describe('reactionSumTerms', () => {
 
   it('shows the helmet malus apart from the initiative it lowers', () => {
     const terms = reactionSumTerms(null, parts({esprit: 0, initiative: 0, equipement: -1}));
-    expect(terms.map((term) => `${term.value} ${term.caption}`)).toEqual(['2d6 dés', '+1 init.', '−1 équipement', '≥ 9 seuil']);
+    expect(terms.map((term) => `${term.value} ${term.caption}`)).toEqual(['2d6 dés', '+1 init.', '−1 équip.', '≥ 9 seuil']);
   });
 });
 
@@ -166,6 +166,35 @@ describe('reactionLanes — groupes', () => {
       ['Sergent du guet #4', [4]],
       ['Adversaire 5', [5]],
     ]);
+  });
+});
+
+describe('reactionFrise', () => {
+  it('met un cercle par combattant, dans l’ordre du round, sans les héros qui n’ont pas lancé', () => {
+    const frise = reactionFrise(reactionLanes([hero(1, null), hero(2, 'echec', 5), hero(3, 'reussite', 10)], [adversary(1, 'pietaille'), adversary(2, 'rival')]));
+    expect(frise.map((step) => step.token.nom)).toEqual(['Héros 3', 'Adversaire 2', 'Héros 2', 'Adversaire 1']);
+  });
+
+  it('relie d’un trait court dans un groupe, d’un trait long entre deux groupes, et ne prolonge pas le dernier', () => {
+    const frise = reactionFrise(reactionLanes([hero(1, 'reussite', 10), hero(2, 'reussite', 9)], [adversary(1, 'rival'), adversary(2, 'rival')]));
+    expect(frise.map((step) => step.link)).toEqual(['court', 'long', 'court', null]);
+  });
+
+  it('garde ensemble les exemplaires d’une même fiche', () => {
+    const guet = (pivotId: number) => adversary(pivotId, 'pietaille', {nom: `Sergent du guet #${pivotId}`, sourceId: '12'});
+    const frise = reactionFrise(reactionLanes([], [guet(1), adversary(2, 'pietaille'), guet(3)]));
+    expect(frise.map((step) => step.token.pivotId)).toEqual([1, 3, 2]);
+  });
+
+  it('colore l’anneau d’un héros par son résultat, celui des autres par leur camp', () => {
+    const frise = reactionFrise(reactionLanes([hero(1, 'legendaire', 15), hero(2, 'echec_critique', 2)], [adversary(1, 'rival'), adversary(2, 'rival', {ally: true})]));
+    expect(frise.map((step) => step.tone)).toEqual(['legendaire', 'adversaire', 'allie', 'echec_critique']);
+  });
+
+  it('dit dans son libellé le résultat, le camp et le blocage du round 1', () => {
+    const frise = reactionFrise(reactionLanes([hero(1, 'heroique', 12)], [adversary(1, 'coriace', {ally: true})]));
+    expect(frise.map((step) => step.label)).toEqual(['Héros 1, succès héroïque, total 12', 'Adversaire 1, allié des héros, ne joue pas au round 1']);
+    expect(frise.map((step) => step.blocked)).toEqual([false, true]);
   });
 });
 
