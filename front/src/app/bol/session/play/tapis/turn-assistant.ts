@@ -24,7 +24,7 @@ import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
 import {estArmeFavorite} from '../../../shared/arme/arme-favorite.util';
-import {egratignure, heroismeGems} from '../../heroisme-spend.util';
+import {egratignure} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
@@ -59,7 +59,7 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
-import {CibleCarteComponent} from './cible-carte';
+import {CombattantCarteComponent} from './combattant-carte';
 import {ActeurComponent} from '../theatre/acteur';
 import {parFiche} from '../theatre/theatre.util';
 import {sansNumero} from '../../reaction-roll.util';
@@ -71,7 +71,7 @@ const DICE_TIMEOUT_MS = 12000;
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
 /** Les popovers de l'assistant : l'attaquant, la cible, les modificateurs du coup, les autres actions. */
-type TurnPopover = 'me' | 'mods' | 'more';
+type TurnPopover = 'effets' | 'mods' | 'more';
 
 /** Un réglage actif du coup (deux mains, posture, dé ou modificateur du MJ, carrière…), montré en pastille avec sa croix. */
 interface ActiveOption {
@@ -219,7 +219,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   imports: [
     A11yModule,
     ActeurComponent,
-    CibleCarteComponent,
+    CombattantCarteComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
@@ -302,14 +302,8 @@ export class TurnAssistantComponent {
   protected readonly vitaliteMin = computed(() => (this.card().kind === 'hero' ? -20 : 0));
   protected readonly targetVitaliteMin = computed(() => (this.target()?.kind === 'hero' ? -20 : 0));
 
-  /** De quel côté est la carte qui attaque, dit en gros sur sa carte : « Héros », « Allié » ou « Adversaire », puis ce qu'elle est
-   * (« PNJ · Coriace », « Créature · Rival »…) pour tout ce qui n'est pas un héros. */
+  /** De quel côté est la carte qui attaque : l'assistant prend la couleur de son camp (`tas--foe`). */
   protected readonly side = computed(() => sideOf(this.card()));
-  /** La même pastille pour la cible, sur la carte « Qui ? ». */
-  protected readonly targetSide = computed(() => {
-    const target = this.target();
-    return target ? sideOf(target) : null;
-  });
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
@@ -770,8 +764,6 @@ export class TurnAssistantComponent {
   /** « 3 points d'héroïsme » de l'attaquant, ou « 3 points de vilénie » d'un rival. */
   /** Les points d'héroïsme (héros) ou de vilénie (rival) de l'attaquant, avec leur titre ; `null` s'il n'en a pas. */
   protected readonly pointsAttaquant = computed(() => pointsAffiches(this.card().kind, this.heroisme()));
-  /** Les gemmes du bandeau de l'attaquant : allumées jusqu'à son nombre de points. */
-  protected readonly attackerGems = computed(() => heroismeGems(this.heroisme() ?? 0));
   /** Ceux de la cible, de même : un coriace, une piétaille, une créature ou un démon n'en ont pas. */
   protected readonly pointsCible = computed(() => pointsAffiches(this.target()?.kind ?? 'hero', this.targetStats()?.heroisme ?? null));
   /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */

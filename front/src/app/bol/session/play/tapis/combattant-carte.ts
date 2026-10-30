@@ -1,33 +1,28 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, linkedSignal, signal, viewChild} from '@angular/core';
-import {MatIconModule} from '@angular/material/icon';
 import {EMPTY_AVATAR} from '../../combat-play.util';
-import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 
-/** La carte de la cible choisie, dans l'assistant de tour : à gauche son portrait, carré sur toute la hauteur, qui se fond vers la droite ;
+/** La carte d'un combattant dans l'assistant de tour, la même pour celui qui joue et pour sa cible : à gauche son portrait, carré sur toute la hauteur, qui se fond vers la droite ;
  * à côté son rang et son attitude (et en haut à droite les boutons projetés avec `ccActions`), son nom, ses chances et sa barre de vie
  * (avec ce que le coup va lui retirer), puis ce que l'assistant y projette (chiffres, vie réglable, effets). Le liseré dit son camp. */
 @Component({
-  selector: 'bol-cible-carte',
-  imports: [MatIconModule],
+  selector: 'bol-combattant-carte',
   template: `
     <div class="cc-art" aria-hidden="true">
       @if (hasAvatar()) {
         <img [src]="card().avatar" alt="" (error)="avatarFailed.set(true)" />
-      } @else if (kindIconIsSvg()) {
-        <mat-icon [svgIcon]="kindIcon()" />
       } @else {
-        <mat-icon>{{ kindIcon() }}</mat-icon>
+        <span class="cc-initiale">{{ initiale() }}</span>
       }
     </div>
     <div #body class="cc-body">
       <header class="cc-head">
         <div class="cc-top">
           <span class="cc-tags">
-            @if (card().rang; as rang) {
-              <span class="cc-rang">{{ rang }}</span>
+            @if (etiquette(); as e) {
+              <span class="cc-rang">{{ e }}</span>
             }
             @if (attitude(); as a) {
               <span [class]="'cc-attitude cc-attitude--' + a.value">{{ a.label }}</span>
@@ -47,7 +42,7 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
       <ng-content />
     </div>
   `,
-  styleUrl: './cible-carte.scss',
+  styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.cc--allie]': "card().camp === 'heros'",
@@ -55,14 +50,14 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
     '[style.--cc-art.px]': 'artSize()',
   },
 })
-export class CibleCarteComponent {
+export class CombattantCarteComponent {
   readonly card = input.required<TapisCard>();
-  /** Ses chances d'être touchée (« 8+ · 42 % ») ; `null` sans. */
+  /** Pour une cible, ses chances d'être touchée (« 8+ · 42 % ») ; `null` sans. */
   readonly chance = input<string | null>(null);
-  /** Les points de vie que le coup en cours va lui retirer, montrés sur sa barre. */
+  /** Pour une cible, les points de vie que le coup en cours va lui retirer, montrés sur sa barre. */
   readonly perte = input(0);
 
-  /** Le côté du portrait carré, en px : la hauteur du texte, entre 8 et 13rem ; `null` avant la première mesure (la valeur du style). */
+  /** Le côté du portrait carré, en px : la hauteur du texte, entre 8 et 18rem ; `null` avant la première mesure (la valeur du style). */
   protected readonly artSize = signal<number | null>(null);
   private readonly body = viewChild.required<ElementRef<HTMLElement>>('body');
 
@@ -72,18 +67,20 @@ export class CibleCarteComponent {
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
       const observer = new ResizeObserver(([entry]) => {
         const height = entry.borderBoxSize?.[0]?.blockSize ?? entry.target.getBoundingClientRect().height;
-        this.artSize.set(Math.round(Math.min(13 * rem, Math.max(8 * rem, height))));
+        this.artSize.set(Math.round(Math.min(18 * rem, Math.max(8 * rem, height))));
       });
       observer.observe(this.body().nativeElement);
       destroyRef.onDestroy(() => observer.disconnect());
     });
   }
 
-  /** Le portrait n'a pas pu se charger : repli sur l'icône du type (à nouveau tenté pour une autre carte). */
+  /** Le portrait n'a pas pu se charger : repli sur l'initiale (à nouveau tenté pour une autre carte). */
   protected readonly avatarFailed = linkedSignal({source: () => this.card().key, computation: () => false});
   protected readonly hasAvatar = computed(() => !!this.card().avatar && this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
-  protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
-  protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));
+  /** Sans portrait, son initiale. */
+  protected readonly initiale = computed(() => this.card().nom.trim().charAt(0).toUpperCase());
+  /** L'étiquette du coin : son rang, ou « Héros » pour un héros. */
+  protected readonly etiquette = computed(() => this.card().rang ?? (this.card().kind === 'hero' ? 'Héros' : null));
   /** Son attitude envers les héros, pour un personnage du camp d'en face. */
   protected readonly attitude = computed(() => {
     const card = this.card();

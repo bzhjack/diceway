@@ -26,59 +26,27 @@
   --tas-side-ink: #2a0505;
 }
 
+// Ce qui pousse le reste au bout de la ligne.
+// Qui joue : sa carte (`bol-combattant-carte`), toute la largeur ; ses boutons en haut à droite, ce qui change ses dés dessous.
 .tas-head {
+  flex: none;
+}
+
+.tas-head-actions {
   display: flex;
   flex: none;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 0.75rem;
-  padding: 0.5rem 0.8rem;
-  border: 1px solid var(--dw-border);
-  border-left: 4px solid var(--tas-side);
-  border-radius: 12px;
-  background: linear-gradient(100deg, color-mix(in srgb, var(--tas-side) 10%, var(--dw-surface-100)), var(--dw-surface-100) 60%);
+  gap: 0.3rem;
 }
 
-.tas-me-id {
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.tas-me-line {
+.tas-head-notes {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.3rem 0.6rem;
+  margin: 0;
 }
 
-// Sa vitalité, en lecture : elle se corrige sous ⓘ.
-.tas-heart {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  color: var(--dw-surface-900);
-  font-weight: 800;
-
-  .mat-icon {
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
-    color: var(--dw-color-echec);
-  }
-
-  small {
-    color: var(--dw-surface-500);
-    font-weight: 600;
-  }
-}
-
-.tas-gems {
-  display: inline-flex;
-  gap: 0.12rem;
-}
-
-// Ce qui pousse le reste au bout de la ligne.
 .tas-sp {
   flex: 1;
 }
@@ -194,13 +162,22 @@
   gap: 0.7rem;
 }
 
-// 1 · Le coup, en trois blocs bien distincts : Contre, Arme, Options. Côte à côte quand la ligne est large, l'un sous l'autre sinon.
-.tas-coup {
+// Le coup qu'il prépare, sur la carte de l'attaquant : l'arme et les options, chacune dans son bloc, côte à côte, l'un sous l'autre si la
+// place manque.
+.tas-head-coup {
   display: flex;
-  flex: 1 1 0;
   flex-wrap: wrap;
   align-items: stretch;
   gap: 0.6rem;
+}
+
+// La cible, sous la carte de l'attaquant : la rangée des cartes à choisir, ou sa carte.
+.tas-contre {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
   min-width: 0;
 }
 
@@ -216,17 +193,6 @@
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.22);
-
-}
-
-// « Contre » prend la place qui reste, pour montrer le plus de cartes ; l'arme et les options, celle de leur contenu.
-.tas-part--contre {
-  flex: 1 1 22rem;
-}
-
-// Avec la carte de la cible, assez de largeur pour qu'elle tienne sans passer à la ligne : l'arme et les options passent dessous.
-.tas-part--contre:has(.tas-target) {
-  flex-basis: 36rem;
 }
 
 .tas-part--arme {
@@ -552,7 +518,7 @@
   }
 }
 
-// La cible choisie (`bol-cible-carte`) : la largeur de son contenu ; ses boutons ronds en haut à droite.
+// La cible choisie (`bol-combattant-carte`) : la largeur de son contenu ; ses boutons ronds en haut à droite.
 .tas-target {
   flex: 0 1 auto;
 }
@@ -669,17 +635,6 @@
   }
 }
 
-.tas-side-chip {
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: var(--tas-side);
-  color: var(--tas-side-ink);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .tas-med {
   display: grid;
   place-items: center;
@@ -698,28 +653,6 @@
     height: 100%;
     object-fit: cover;
   }
-}
-
-// Médaillon du combattant actif, sur sa ligne : cerclé de braise.
-.tas-med--active {
-  width: 2.9rem;
-  height: 2.9rem;
-  font-size: 1.3rem;
-  border-color: var(--tas-side);
-  box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--tas-side) 35%, transparent),
-    0 0 14px color-mix(in srgb, var(--tas-side) 55%, transparent);
-}
-
-.tas-name {
-  font: 400 1.25rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--dw-surface-900);
-}
-
-.tas-name--active {
-  color: var(--tas-side);
 }
 
 .tas-tag,
@@ -1191,7 +1124,7 @@
 }
 
 // ── L'héroïsme sur le jet d'attaque ──────────────────────────────────────────────────────────────
-// La gemme d'un point d'héroïsme, et le compteur de l'attaquant à droite de son nom.
+// La gemme d'un point d'héroïsme, dans le coût des options du jet.
 .tas-gem {
   display: inline-block;
   flex: none;
@@ -1199,11 +1132,6 @@
   height: 0.8rem;
   background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
-}
-
-// Une gemme éteinte, dans le bandeau ; un point de la cible (vilénie), en rouge.
-.tas-gem.tas-gem--off {
-  background: rgba(241, 230, 208, 0.18);
 }
 
 .tas-gem.tas-gem--foe {
@@ -1343,35 +1271,6 @@
 
 .tas-apply {
   font-weight: 800;
-}
-
-.tas-bar {
-  position: relative;
-  flex: 1;
-  height: 7px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--dw-surface-300);
-
-  i,
-  u {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-  }
-
-  i {
-    left: 0;
-    background: var(--dw-color-reussite);
-  }
-
-  u {
-    background: repeating-linear-gradient(45deg, var(--dw-color-echec), var(--dw-color-echec) 4px, #7f1d1d 4px, #7f1d1d 8px);
-  }
-}
-
-.tas-bar--low i {
-  background: #f59e0b;
 }
 
 // Focus visible commun aux boutons et aux champs de l'assistant (les boutons Material ont le leur).
