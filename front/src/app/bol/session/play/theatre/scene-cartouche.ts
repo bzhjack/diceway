@@ -21,12 +21,12 @@ import {lieuTexte} from './theatre.util';
           @if (lieu(); as lieu) {
             @if (point()) {
               <button type="button" class="ctc-lieu-carte" [attr.aria-label]="lieu + ' : voir sur la carte'" (click)="voirCarte()">
-                <mat-icon aria-hidden="true">place</mat-icon>
+                <mat-icon svgIcon="gi-marker" aria-hidden="true" />
                 <span class="ctc-lieu-texte">{{ lieu }}</span>
-                <mat-icon class="ctc-lieu-icone" aria-hidden="true">map</mat-icon>
+                <mat-icon class="ctc-lieu-icone" svgIcon="gi-map" aria-hidden="true" />
               </button>
             } @else {
-              <mat-icon aria-hidden="true">place</mat-icon>
+              <mat-icon svgIcon="gi-marker" aria-hidden="true" />
               <span>{{ lieu }}</span>
             }
           }
@@ -55,10 +55,10 @@ import {lieuTexte} from './theatre.util';
       align-items: center;
       gap: 0.35rem;
       margin: 0 0 0.25rem;
-      color: var(--dw-color-legendary);
+      color: var(--dw-forge-gold);
       font-size: 0.9rem;
       font-weight: 600;
-      text-shadow: 0 1px 6px #000;
+      text-shadow: 0 0 3px #000, 0 1px 6px #000;
 
       .mat-icon {
         width: 1.1rem;
@@ -102,20 +102,21 @@ import {lieuTexte} from './theatre.util';
     }
 
     .ctc-num {
-      color: var(--dw-surface-700);
+      color: var(--dw-forge-bone);
       font-weight: 400;
     }
 
     .ctc-titre {
       margin: 0 0 0.7rem;
-      color: var(--dw-color-text-bright);
+      color: var(--dw-forge-bone);
       font-family: 'Muse Display Harmony', serif;
       font-size: calc(clamp(2rem, 4vw, 3.4rem) * var(--thr-k, 1));
       font-weight: 400;
       line-height: 1.02;
       text-shadow:
         0 2px 0 #000,
-        0 6px 24px rgba(0, 0, 0, 0.85);
+        0 6px 24px rgba(0, 0, 0, 0.85),
+        0 0 30px rgba(232, 135, 58, 0.3);
     }
 
     .ctc-aide {

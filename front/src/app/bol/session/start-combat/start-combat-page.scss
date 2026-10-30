@@ -10,28 +10,6 @@ bol-start-combat-page {
   padding: 12px;
 }
 
-// Le cadre de l'app (`styles/_barbare.scss`), en fer martelé et bronze chaud sur cette page seulement.
-body:has(bol-start-combat-page) {
-  &::before {
-    --scd-frame-rivet: radial-gradient(circle at 35% 28%, #e6c58c, #8c6a2f 42%, #2b1c0c 72%);
-
-    background:
-      var(--scd-frame-rivet) 1px 1px / 9px 9px no-repeat,
-      var(--scd-frame-rivet) calc(100% - 1px) 1px / 9px 9px no-repeat,
-      var(--scd-frame-rivet) 1px calc(100% - 1px) / 9px 9px no-repeat,
-      var(--scd-frame-rivet) calc(100% - 1px) calc(100% - 1px) / 9px 9px no-repeat,
-      url('/assets/bol/forge/fer.webp') 0 0 / 320px;
-  }
-
-  &::after {
-    border-color: #a9793a;
-    box-shadow:
-      0 0 0 2px #0c0806,
-      inset 0 0 80px rgba(0, 0, 0, 0.65),
-      inset 0 0 0 1px rgba(255, 214, 160, 0.08);
-  }
-}
-
 // Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté. Le fond : de la
 // suie, et la lueur de la peinture du bandeau qui descend sur la page.
 .scd-shell {
@@ -125,7 +103,7 @@ body:has(bol-start-combat-page) {
 // Le lieu, en légende au-dessus du titre, comme « Combat » sur la table. Coupé si la place manque, entier en infobulle.
 .scd-where {
   overflow: hidden;
-  color: #e8b75c;
+  color: var(--dw-forge-gold);
   font-size: 0.66rem;
   font-weight: 800;
   line-height: 0.95rem;
@@ -213,11 +191,8 @@ body:has(bol-start-combat-page) {
 }
 
 .scd-bar .ofr .ofr-c {
-  background: radial-gradient(circle at 35% 26%, #4b3620, #1c120a 72%);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 235, 200, 0.24),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.55),
-    0 2px 4px rgba(0, 0, 0, 0.7);
+  background: var(--dw-forge-token);
+  box-shadow: var(--dw-forge-token-shadow);
   color: var(--dw-forge-bone);
 }
 
@@ -624,7 +599,7 @@ body:has(bol-start-combat-page) {
   i {
     display: block;
     height: 100%;
-    background: linear-gradient(180deg, #5fe394, #1f9a53);
+    background: var(--dw-forge-health);
   }
 
   .scd-vit-bar--low {

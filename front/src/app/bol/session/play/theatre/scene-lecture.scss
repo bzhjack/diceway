@@ -1,18 +1,22 @@
-// Colonne de droite du plateau : un pupitre de cuir sombre qui défile seul. Pas de marge en haut : les titres de section y restent
+// Colonne de droite du plateau : un pupitre de fer qui défile seul. Pas de marge en haut : les titres de section y restent
 // collés en défilant, et un texte qui passerait dans cette marge se verrait au-dessus d'eux.
 :host {
   --lec-tete-h: 3rem;
   --lec-titre-h: calc(2.6rem * var(--lec-k, 1));
+  // Le fond du pupitre, et de ses titres collés, opaques pour que le texte passe dessous sans se voir.
+  --lec-fond: var(--dw-forge-iron) 0 0 / 420px, #17110c;
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
   padding: 0 1.1rem 0.6rem;
   overflow-y: auto;
-  border: 1px solid rgba(140, 106, 47, 0.55);
-  border-radius: 10px;
-  background: rgba(15, 10, 6, 0.78);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--lec-fond);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.17),
+    0 18px 40px rgba(0, 0, 0, 0.55);
   scrollbar-width: thin;
   scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
 }
@@ -29,13 +33,21 @@
   justify-content: flex-end;
   gap: 0.2rem;
   height: var(--lec-tete-h);
-  border-bottom: 1px solid rgba(156, 135, 99, 0.3);
-  background: #0f0a06;
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+  background: var(--lec-fond);
+
+  .mat-mdc-icon-button {
+    color: var(--dw-forge-stud-text);
+
+    &:hover {
+      color: var(--dw-forge-hot-text);
+    }
+  }
 }
 
 .lec-tete-titre {
   margin-right: auto;
-  color: var(--dw-surface-700);
+  color: var(--dw-forge-gold);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -43,15 +55,12 @@
 }
 
 // En grand : une fenêtre de lecture, le texte une fois et demie plus gros, qui défile seule si la scène est longue.
-// Le fond y est opaque (le pupitre du plateau laisse voir le décor, la fenêtre ne doit rien laisser voir de la page dessous), du même
-// ton que l'en-tête et les titres collés.
 :host(.lec--grand) {
   --lec-k: 1.5;
   width: min(80rem, 96vw);
   max-height: 88dvh;
   padding: 0 1.8rem 0.8rem;
-  border-color: rgba(140, 106, 47, 0.8);
-  background: #0f0a06;
+  border-color: var(--dw-forge-bronze);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
 }
 
@@ -93,9 +102,9 @@
   gap: 0.45rem;
   height: var(--lec-titre-h);
   margin: 0 0 0.5rem;
-  border-bottom: 1px solid rgba(156, 135, 99, 0.3);
-  background: #0f0a06;
-  color: var(--dw-color-legendary);
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+  background: var(--lec-fond);
+  color: var(--dw-forge-gold);
   font-size: calc(0.85rem * var(--lec-k, 1));
   font-weight: 700;
 
@@ -142,7 +151,7 @@
 }
 
 .lec-titre--secret {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
 }
 
 // Le texte à lire, avec sa lettrine.
@@ -156,7 +165,7 @@
   &::first-letter {
     float: left;
     padding: 0.08em 0.1em 0 0;
-    color: var(--dw-color-legendary);
+    color: var(--dw-forge-gold);
     font-family: 'Muse Display Harmony', serif;
     font-size: 3.35em;
     line-height: 0.82;
@@ -213,7 +222,7 @@
     width: 0.4rem;
     height: 0.4rem;
     border-radius: 50%;
-    background: var(--dw-color-legendary);
+    background: var(--dw-forge-gold);
   }
 
   span {
@@ -223,6 +232,18 @@
 
   button {
     flex: none;
+  }
+}
+
+// Le crédit des icônes (licence CC BY), tout au bout des notes.
+.lec-credit {
+  flex: none;
+  margin: 0.4rem 0 0;
+  color: var(--dw-surface-600);
+  font-size: 0.68rem;
+
+  a {
+    color: inherit;
   }
 }
 

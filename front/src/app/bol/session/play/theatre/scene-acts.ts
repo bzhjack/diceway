@@ -52,7 +52,7 @@ import {acteLabel} from './theatre.util';
               >
                 <span class="sca-num" aria-hidden="true">
                   @if (acte.statut === 'jouee') {
-                    <mat-icon>check</mat-icon>
+                    <mat-icon svgIcon="gi-check" />
                   } @else {
                     {{ acte.numero }}
                   }
@@ -89,7 +89,7 @@ import {acteLabel} from './theatre.util';
     .sca-sur {
       display: block;
       overflow: hidden;
-      color: #d9a441;
+      color: var(--dw-forge-gold);
       font-size: 0.7rem;
       line-height: 1.45;
       letter-spacing: 0.08em;
@@ -113,7 +113,7 @@ import {acteLabel} from './theatre.util';
       padding: 0;
       border: none;
       background: none;
-      color: #f1e6d0;
+      color: var(--dw-forge-bone);
       font-family: 'Muse Display Harmony', serif;
       font-size: 1.3rem;
       line-height: 1.1;
@@ -124,11 +124,11 @@ import {acteLabel} from './theatre.util';
         width: 1.1rem;
         height: 1.1rem;
         font-size: 1.1rem;
-        color: #9c8763;
+        color: var(--dw-forge-stud-text);
       }
 
       &:hover .mat-icon {
-        color: #d9a441;
+        color: var(--dw-forge-hot-text);
       }
 
       &:focus-visible {
@@ -171,14 +171,16 @@ import {acteLabel} from './theatre.util';
       align-items: center;
     }
 
-    // Un filet de bronze relie les actes.
+    // Une chaîne de bronze relie les actes.
     .sca-li + .sca-li::before {
       content: '';
       width: clamp(0.75rem, 2vw, 2.2rem);
-      height: 1px;
-      background: linear-gradient(90deg, #6b4a16, #8c6a2f);
+      height: 2px;
+      background: linear-gradient(180deg, #e0bb7c, #6b4a22);
+      box-shadow: 0 1px 1px #000;
     }
 
+    // Un jeton frappé ; une scène jouée est un creux, celle en cours rougeoie.
     .sca-acte {
       display: inline-flex;
       align-items: center;
@@ -186,10 +188,11 @@ import {acteLabel} from './theatre.util';
       height: 2rem;
       min-width: 2rem;
       padding: 0 0.15rem;
-      border: 1px solid #6b4a16;
+      border: 1px solid var(--dw-forge-bronze-dim);
       border-radius: 999px;
-      background: #150e09;
-      color: #b59d78;
+      background: var(--dw-forge-token);
+      box-shadow: var(--dw-forge-token-shadow);
+      color: var(--dw-surface-700);
       font: inherit;
       font-size: 0.8rem;
       font-variant-numeric: tabular-nums;
@@ -199,8 +202,8 @@ import {acteLabel} from './theatre.util';
         background 0.15s;
 
       &:hover {
-        border-color: #d9a441;
-        color: #f1e6d0;
+        border-color: var(--dw-forge-hot);
+        color: var(--dw-forge-hot-text);
       }
 
       &:focus-visible {
@@ -223,31 +226,33 @@ import {acteLabel} from './theatre.util';
       font-weight: 700;
 
       .mat-icon {
-        width: 1.05rem;
-        height: 1.05rem;
-        font-size: 1.05rem;
+        width: 0.85rem;
+        height: 0.85rem;
+        font-size: 0.85rem;
       }
     }
 
     .sca-acte--jouee {
-      background: #1d150f;
-      color: #9c8763;
+      background: var(--dw-forge-recess);
+      box-shadow: var(--dw-forge-recess-shadow);
 
       .sca-num {
-        color: #22c55e;
+        color: var(--dw-forge-verdict-reussite);
       }
     }
 
     .sca-acte--en-cours {
       padding-right: 0.85rem;
-      border-color: #d9a441;
+      border-color: var(--dw-forge-hot);
       background: linear-gradient(180deg, #3b2610, #22160b);
-      box-shadow: 0 0 16px rgba(217, 164, 65, 0.28);
-      color: #f1e6d0;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 225, 170, 0.22),
+        0 0 16px rgba(232, 135, 58, 0.5);
+      color: var(--dw-forge-bone);
 
       .sca-num {
-        background: #d9a441;
-        color: #1a1203;
+        background: var(--dw-forge-coin);
+        color: #1c1200;
       }
     }
 
@@ -259,7 +264,7 @@ import {acteLabel} from './theatre.util';
     }
 
     .sca-vide {
-      color: #9c8763;
+      color: var(--dw-surface-600);
       font-size: 0.82rem;
       white-space: nowrap;
     }

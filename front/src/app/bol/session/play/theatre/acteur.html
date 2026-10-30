@@ -12,10 +12,8 @@
   <span class="act-art">
     @if (hasAvatar()) {
       <img class="act-portrait" [src]="card().avatar" alt="" draggable="false" (error)="onAvatarError()" />
-    } @else if (kindIconIsSvg()) {
-      <mat-icon class="act-repli" [svgIcon]="kindIcon()" />
     } @else {
-      <mat-icon class="act-repli">{{ kindIcon() }}</mat-icon>
+      <mat-icon class="act-repli" [svgIcon]="kindIcon()" />
     }
   </span>
 
@@ -23,11 +21,7 @@
     @if (etiquette(); as etiquette) {
       <span class="act-rang">{{ etiquette }}</span>
     }
-    @if (kindIconIsSvg()) {
-      <mat-icon class="act-type" [svgIcon]="kindIcon()" aria-hidden="true" />
-    } @else {
-      <mat-icon class="act-type" aria-hidden="true">{{ kindIcon() }}</mat-icon>
-    }
+    <mat-icon class="act-type" [svgIcon]="kindIcon()" aria-hidden="true" />
   </span>
 
   <span class="act-bas">

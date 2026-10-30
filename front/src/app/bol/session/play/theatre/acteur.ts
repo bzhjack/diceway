@@ -1,11 +1,14 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {EMPTY_AVATAR} from '../../combat-play.util';
-import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
+import {CombatantKind} from '../../../models/combat-selection.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TroupeTaille} from '../../models/theatre.model';
 import {cardAriaLabel, isLowVitalite, vitalitePercent} from '../tapis/tapis.util';
 import {ATTITUDES} from './theatre.util';
+
+/** L'icône de chaque type, sur la carte et en repli du portrait. */
+const KIND_ICONS: Record<CombatantKind, string> = {hero: 'gi-sword', pnj: 'gi-group', creature: 'gi-paw', demon: 'gi-demon'};
 
 /** Une carte de la troupe (ou un allié de la compagnie) : portrait en pied, rang, type, nom et barre de
  * vitalité. Sa taille dit son rang. Présentation seule : le clic, avec l'événement, est rendu au parent
@@ -34,8 +37,7 @@ export class ActeurComponent {
     return false;
   });
   protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !!this.card().avatar && !this.avatarFailed());
-  protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
-  protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));
+  protected readonly kindIcon = computed(() => KIND_ICONS[this.card().kind]);
   /** Attitude envers les héros, montrée pour un personnage du camp d'en face. */
   protected readonly attitude = computed(() => {
     const card = this.card();

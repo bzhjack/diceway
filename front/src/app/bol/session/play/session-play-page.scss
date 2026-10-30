@@ -85,8 +85,8 @@
 .spp-coulisses-panel {
   width: 21rem;
   max-width: 85vw;
-  border-left: 2px solid #6b4a16;
-  background: linear-gradient(270deg, #0f0a06, #1a120b);
+  border-left: 2px solid var(--dw-forge-bronze);
+  background: var(--dw-forge-iron) 0 0 / 420px, #17110c;
   box-shadow: inset 8px 0 14px -8px rgba(0, 0, 0, 0.8);
   color: inherit;
 }
@@ -109,7 +109,7 @@
 
 .spp-coulisses-titre {
   margin: 0;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
   font-family: 'Muse Display Harmony', serif;
   font-size: 1.3rem;
   font-weight: 400;

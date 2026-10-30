@@ -25,10 +25,10 @@
         matTooltip="Dé du MJ pour tous"
         (click)="optionsOpen.set(!optionsOpen())"
       >
-        <mat-icon>tune</mat-icon> Options
+        <mat-icon svgIcon="gi-tune" /> Options
         @if (deMj(); as de) {
           <span [class]="'cp-options-die cp-options-die--' + de"
-            ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ de }} du MJ pour tous</span></span
+            ><mat-icon svgIcon="gi-dice" /><span class="cdk-visually-hidden">, dé de {{ de }} du MJ pour tous</span></span
           >
         }
       </button>
@@ -80,7 +80,7 @@
         matTooltip="Nouveau jet de réaction des héros"
         (click)="rerollRequested.emit()"
       >
-        <mat-icon>replay</mat-icon>
+        <mat-icon svgIcon="gi-reroll" />
       </button>
     }
     <button
@@ -91,7 +91,7 @@
       matTooltip="Rechercher ou lancer une action ( / )"
       (click)="search.emit()"
     >
-      <mat-icon>search</mat-icon>
+      <mat-icon svgIcon="gi-search" />
     </button>
     @if (mode() === 'libre') {
       <button
@@ -104,12 +104,12 @@
         [matTooltip]="coulissesOpen() ? 'Fermer les coulisses' : 'Coulisses : les personnages en réserve'"
         (click)="coulissesToggled.emit()"
       >
-        <mat-icon>theater_comedy</mat-icon>
+        <mat-icon svgIcon="gi-masks" />
       </button>
-      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
+      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="gi-swords" /> Démarrer un combat</button>
     } @else {
       <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
-      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer</button>
+      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon svgIcon="gi-flag" /> Terminer</button>
     }
     <bol-account-menu />
   </div>

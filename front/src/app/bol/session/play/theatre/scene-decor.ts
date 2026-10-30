@@ -15,12 +15,13 @@ import {sceneDecor} from './theatre.util';
       background: radial-gradient(50% 40% at 50% 55%, #4a3523, transparent 75%), linear-gradient(#241a12, #130d08);
     }
 
-    // Le voile : le bas (la rampe) et les bords plus sombres, le texte reste lisible sur n'importe quel décor.
+    // Le voile : le bas (la rampe), la gauche (le cartouche) et les bords plus sombres, le texte reste lisible sur n'importe quel décor.
     :host::after {
       content: '';
       position: absolute;
       inset: 0;
       background:
+        linear-gradient(90deg, rgba(10, 6, 4, 0.5), transparent 42%),
         linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 30%, transparent 55%, rgba(0, 0, 0, 0.75)),
         radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.75));
     }
@@ -30,7 +31,7 @@ import {sceneDecor} from './theatre.util';
       height: 100%;
       object-fit: cover;
       object-position: 50% 35%;
-      filter: saturate(0.9) brightness(0.72);
+      filter: saturate(1.12) contrast(1.05) brightness(0.72);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

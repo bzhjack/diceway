@@ -20,15 +20,15 @@ import {SceneStageStore} from './scene-stage.store';
       <ng-template matMenuContent let-acte="acte">
         <bol-scene-preview [scene]="acte.scene" [statut]="acte.statut" [regionNom]="store.regionNom(acte.scene)" />
         <button mat-menu-item type="button" (click)="load(acte.scene, 'replace')">
-          <mat-icon>theater_comedy</mat-icon> Charger la scène
+          <mat-icon svgIcon="gi-masks" /> Charger la scène
         </button>
         @if (acte.scene.distribution.length) {
           <button mat-menu-item type="button" (click)="load(acte.scene, 'add')">
-            <mat-icon>group_add</mat-icon> Ajouter ses personnages
+            <mat-icon svgIcon="gi-group" /> Ajouter ses personnages
           </button>
         }
         <button mat-menu-item type="button" (click)="store.prepare(acte.scene)">
-          <mat-icon>edit_note</mat-icon> Préparer la scène
+          <mat-icon svgIcon="gi-quill" /> Préparer la scène
         </button>
       </ng-template>
     </mat-menu>

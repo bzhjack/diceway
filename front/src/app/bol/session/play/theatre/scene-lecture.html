@@ -6,10 +6,10 @@
   } @else {
     <span class="lec-tete-titre">Notes de la scène</span>
     <button mat-icon-button type="button" class="lec-agrandir" aria-label="Agrandir la lecture" matTooltip="Agrandir pour mieux lire" (click)="grandToggled.emit()">
-      <mat-icon>open_in_full</mat-icon>
+      <mat-icon svgIcon="gi-expand" />
     </button>
     <button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
-      <mat-icon>edit_note</mat-icon>
+      <mat-icon svgIcon="gi-quill" />
     </button>
   }
 </header>
@@ -17,7 +17,7 @@
 <section class="lec-bloc" aria-labelledby="lec-lire-titre">
   <h3 class="lec-titre" id="lec-lire-titre">
       <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('lire')" (click)="basculer('lire')">
-        <mat-icon aria-hidden="true">record_voice_over</mat-icon>À lire aux joueurs
+        <mat-icon svgIcon="gi-talk" aria-hidden="true" />À lire aux joueurs
         <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('lire')" aria-hidden="true">expand_more</mat-icon>
       </button>
     </h3>
@@ -27,7 +27,7 @@
     } @else {
       <p class="lec-vide">Pas de texte à lire.</p>
       <button mat-stroked-button size="small" type="button" class="lec-action" (click)="store.prepare(scene())">
-        <mat-icon>edit_note</mat-icon> Préparer la scène
+        <mat-icon svgIcon="gi-quill" /> Préparer la scène
       </button>
     }
   }
@@ -37,7 +37,7 @@
   <section class="lec-bloc" aria-labelledby="lec-jeu-titre">
     <h3 class="lec-titre" id="lec-jeu-titre">
       <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('jeu')" (click)="basculer('jeu')">
-        <mat-icon aria-hidden="true">casino</mat-icon>En jeu
+        <mat-icon svgIcon="gi-dice" aria-hidden="true" />En jeu
         <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('jeu')" aria-hidden="true">expand_more</mat-icon>
       </button>
     </h3>
@@ -51,7 +51,7 @@
   <section class="lec-bloc" aria-labelledby="lec-secret-titre">
     <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre">
       <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('secret')" (click)="basculer('secret')">
-        <mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ
+        <mat-icon svgIcon="gi-secret" aria-hidden="true" />Secret du MJ
         <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('secret')" aria-hidden="true">expand_more</mat-icon>
       </button>
     </h3>
@@ -65,7 +65,7 @@
   <section class="lec-bloc" aria-labelledby="lec-pistes-titre">
     <h3 class="lec-titre" id="lec-pistes-titre">
       <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('pistes')" (click)="basculer('pistes')">
-        <mat-icon aria-hidden="true">alt_route</mat-icon>Pistes
+        <mat-icon svgIcon="gi-paths" aria-hidden="true" />Pistes
         <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('pistes')" aria-hidden="true">expand_more</mat-icon>
       </button>
     </h3>
@@ -93,5 +93,12 @@
     }
   </section>
 }
+
+<p class="lec-credit">
+  Icônes :
+  <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+  (Lorc, Delapouite et contributeurs),
+  <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+</p>
 
 <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />
