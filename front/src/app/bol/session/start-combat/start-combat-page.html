@@ -15,7 +15,8 @@
   <div class="scd-fg">
     <!-- L'en-tête de la page, sur une rangée, comme celui de la table : à gauche le titre (la règle du jet en infobulle sur son « i ») avec
          l'avancement des jets, et la session et la scène ; à droite tous les boutons, en icône ronde sauf l'action principale du moment
-         (le seul bouton plein) et « Commencer le combat » ; tout au bout, le retour à la table. Dessous, l'alerte sans adversaire. -->
+         (le seul bouton plein) et « Commencer le combat » ; tout au bout, le retour à la table. Dessous, les modificateurs de la rencontre,
+         puis l'alerte sans adversaire. -->
     <header class="scd-bar">
       <div class="scd-heading">
         <div class="scd-title-row">
@@ -115,6 +116,52 @@
           <mat-icon>close</mat-icon>
         </button>
       </div>
+      <!-- Les modificateurs communs à toute la rencontre, sur une seconde rangée de l'en-tête -->
+      <section class="scd-mods" aria-label="Modificateurs de la rencontre">
+        <div class="scd-mod" role="group" aria-labelledby="scd-ambush-label">
+          <span class="scd-label" id="scd-ambush-label">Embuscade</span>
+          <div class="scd-seg">
+            @for (option of ambushOptions; track option.label) {
+              <button
+                type="button"
+                [attr.aria-pressed]="ambushState() === option.value"
+                (click)="setAmbush(option.value)"
+              >
+                {{ option.label }}
+                @if (option.bonus) {
+                  <b>{{ option.bonus }}</b>
+                }
+              </button>
+            }
+          </div>
+        </div>
+        @if (hasInitiativeAdversary()) {
+          <div class="scd-mod" role="group" aria-labelledby="scd-enemy-label">
+            <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
+            <div class="scd-stepper">
+              <button
+                type="button"
+                aria-label="Diminuer l'initiative ennemie"
+                [disabled]="adversaryInitiativeMalus() <= 0"
+                (click)="stepAdversaryMalus(-1)"
+              >
+                −
+              </button>
+              <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
+              <button
+                type="button"
+                aria-label="Augmenter l'initiative ennemie"
+                (click)="stepAdversaryMalus(1)"
+              >
+                +
+              </button>
+            </div>
+            <span class="scd-hint scd-hint--wide"
+              >la plus haute des rivaux et coriaces, retranchée à chaque jet</span
+            >
+          </div>
+        }
+      </section>
       @if (noAdversary()) {
         <p class="scd-note scd-note--alert" aria-live="polite">
           <mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire : ajoutes-en un pour
@@ -136,53 +183,6 @@
     <main class="scd-content">
       <!-- Le registre : une ligne par héros, par agilité décroissante ; ses colonnes s'alignent d'un héros à l'autre (subgrid). -->
       <section class="scd-main" aria-label="Les jets des héros">
-        <!-- Les modificateurs communs à toute la rencontre -->
-        <section class="scd-mods" aria-label="Modificateurs de la rencontre">
-          <div class="scd-mod" role="group" aria-labelledby="scd-ambush-label">
-            <span class="scd-label" id="scd-ambush-label">Embuscade</span>
-            <div class="scd-seg">
-              @for (option of ambushOptions; track option.label) {
-                <button
-                  type="button"
-                  [attr.aria-pressed]="ambushState() === option.value"
-                  (click)="setAmbush(option.value)"
-                >
-                  {{ option.label }}
-                  @if (option.bonus) {
-                    <b>{{ option.bonus }}</b>
-                  }
-                </button>
-              }
-            </div>
-          </div>
-          @if (hasInitiativeAdversary()) {
-            <div class="scd-mod" role="group" aria-labelledby="scd-enemy-label">
-              <span class="scd-label" id="scd-enemy-label">Initiative ennemie</span>
-              <div class="scd-stepper">
-                <button
-                  type="button"
-                  aria-label="Diminuer l'initiative ennemie"
-                  [disabled]="adversaryInitiativeMalus() <= 0"
-                  (click)="stepAdversaryMalus(-1)"
-                >
-                  −
-                </button>
-                <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
-                <button
-                  type="button"
-                  aria-label="Augmenter l'initiative ennemie"
-                  (click)="stepAdversaryMalus(1)"
-                >
-                  +
-                </button>
-              </div>
-              <span class="scd-hint scd-hint--wide"
-                >la plus haute des rivaux et coriaces, retranchée à chaque jet</span
-              >
-            </div>
-          }
-        </section>
-
         @if (loading()) {
           <p class="scd-empty">Chargement…</p>
         } @else {

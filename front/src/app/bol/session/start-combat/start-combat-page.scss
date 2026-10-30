@@ -267,8 +267,12 @@ bol-start-combat-page {
   gap: 0.5rem 0.6rem;
 }
 
+// Une seconde rangée de l'en-tête, sous le titre et les boutons, séparée par un filet.
 .scd-mods {
+  grid-column: 1 / -1;
   column-gap: 1.8rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(107, 74, 22, 0.5);
 }
 
 .scd-seg {

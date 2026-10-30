@@ -1,34 +1,38 @@
-import {Directive, HostBinding, HostListener, input, output} from '@angular/core';
+import {Directive, input, output, signal} from '@angular/core';
 
+/** Zone de dépôt de fichiers : pose la classe `drag-over` pendant le survol (sauf si le dépôt est désactivé) et émet les fichiers
+ * déposés. */
 @Directive({
   selector: '[dwDragDropFile]',
+  host: {
+    '[class.drag-over]': 'dragOver()',
+    '(dragover)': 'onDragOver($event)',
+    '(dragleave)': 'onDragLeave($event)',
+    '(drop)': 'onDrop($event)',
+  },
 })
 export class DragDropFileDirective {
   readonly dropDisabled = input(false);
   readonly filesDropped = output<File[]>();
 
-  @HostBinding('class.drag-over')
-  protected dragOverClass?: string;
+  protected readonly dragOver = signal(false);
 
-  @HostListener('dragover', ['$event'])
-  protected dragOver(event: DragEvent): void {
+  protected onDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.dragOverClass = this.dropDisabled() ? undefined : 'drag-over';
+    this.dragOver.set(!this.dropDisabled());
   }
 
-  @HostListener('dragleave', ['$event'])
-  protected dragLeave(event: DragEvent): void {
+  protected onDragLeave(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.dragOverClass = undefined;
+    this.dragOver.set(false);
   }
 
-  @HostListener('drop', ['$event'])
-  protected drop(event: DragEvent): void {
+  protected onDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.dragOverClass = undefined;
+    this.dragOver.set(false);
     if (this.dropDisabled()) {
       return;
     }
