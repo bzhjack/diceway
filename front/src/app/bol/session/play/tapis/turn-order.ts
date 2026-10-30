@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, Injector, input, output, signal, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -6,6 +6,9 @@ import {TurnStatus} from '../../models/combat-turn.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {groupByTier} from './combat-turn.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+
+/** Part d'un médaillon qui reste visible quand les médaillons se chevauchent : au-delà, la ligne défile. */
+const VISIBLE_SLICE = 0.3;
 
 const STATUS_LABELS: Record<TurnStatus, string> = {
   active: 'joue maintenant',
@@ -49,6 +52,45 @@ export class TurnOrderComponent {
   protected readonly total = computed(() => this.entries().length);
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */
   protected readonly roundOneLock = computed(() => this.round() === 1 && this.entries().some((entry) => entry.locked));
+  /** De combien chaque médaillon couvre le précédent, en px : 0 quand toute la frise tient sur sa ligne (cf. `fitStrip`). */
+  protected readonly overlap = signal(0);
+
+  private readonly strip = viewChild.required<ElementRef<HTMLElement>>('strip');
+
+  constructor() {
+    const injector = inject(Injector);
+    const destroyRef = inject(DestroyRef);
+    // La frise se remesure quand la barre change de largeur, et quand des combattants arrivent, partent ou changent de bloc.
+    afterNextRender(() => {
+      const observer = new ResizeObserver(() => this.fitStrip());
+      observer.observe(this.strip().nativeElement);
+      destroyRef.onDestroy(() => observer.disconnect());
+    });
+    effect(() => {
+      this.groups();
+      afterNextRender(() => this.fitStrip(), {injector});
+    });
+  }
+
+  /** Fait tenir la frise sur sa ligne : la largeur qu'elle prendrait sans chevauchement, comparée à sa place, dit de combien chaque
+   * médaillon doit couvrir le précédent. Il en reste toujours une tranche visible ; au-delà, la ligne défile. */
+  private fitStrip(): void {
+    const strip = this.strip().nativeElement;
+    const blocks = strip.querySelectorAll<HTMLElement>('.tor-group');
+    const steps = this.total() - blocks.length;
+    const last = blocks.item(blocks.length - 1);
+    const medal = strip.querySelector<HTMLElement>('.tor-med');
+    const chips = strip.querySelector<HTMLElement>('.tor-chips');
+    if (!last || !medal || !chips || steps <= 0) {
+      this.overlap.set(0);
+      return;
+    }
+    const content = last.getBoundingClientRect().right - strip.getBoundingClientRect().left + strip.scrollLeft;
+    const natural = content + this.overlap() * steps;
+    const gap = parseFloat(getComputedStyle(chips).columnGap) || 0;
+    const max = gap + medal.offsetWidth * (1 - VISIBLE_SLICE);
+    this.overlap.set(Math.min(max, Math.max(0, Math.ceil((natural - strip.clientWidth) / steps))));
+  }
 
   protected statusLabel(status: TurnStatus): string {
     return STATUS_LABELS[status];

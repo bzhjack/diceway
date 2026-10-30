@@ -97,7 +97,7 @@ const HERO_LANE: Record<InitiativeResultat, 'heros' | 'echec' | 'echec_critique'
 };
 
 /** Le nom d'une fiche sans le numéro d'exemplaire que la table ajoute (« Sergent du guet #3 » → « Sergent du guet »). */
-function sansNumero(nom: string): string {
+export function sansNumero(nom: string): string {
   return nom.replace(/\s*#\d+$/, '');
 }
 

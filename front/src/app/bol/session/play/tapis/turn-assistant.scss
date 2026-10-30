@@ -328,7 +328,8 @@
   }
 }
 
-.tas-med--foe {
+// Écrite avant `.tas-med`, qui fixe le liseré : d'où les deux classes.
+.tas-med.tas-med--foe {
   border-color: var(--dw-color-echec-forte);
 }
 
@@ -351,7 +352,7 @@
 }
 
 // Les réglages qui ne servent qu'à certains combattants (bagarre, deux mains, mêlée ou tir, portée), sur une seule ligne.
-.tas-line {
+.tas-optrow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -457,6 +458,11 @@
   }
 }
 
+// Les réglages du coup joué : les mêmes pastilles, sans croix.
+.tas-active.tas-active--static li {
+  padding: 0.1rem 0.6rem;
+}
+
 // Les popovers (options du coup, effets de l'attaquant) : une carte flottante et opaque, sous leur bouton. Écrite avant `.tas-options`
 // (un panneau translucide), elle doit l'emporter : d'où les deux classes.
 .tas-options.tas-options--wide {
@@ -487,8 +493,118 @@
   background: rgba(0, 0, 0, 0.25);
 }
 
-// Pas encore de cible : la carte de chaque cible possible, ses chances dessous ; un clic la choisit. Les armes reprennent la même liste,
-// en cases carrées.
+// Pas encore de cible : sous la phrase du coup, alignées sur elle comme les options d'un succès sous le jet, les cibles possibles par
+// fiche, en colonnes qui se remplissent selon la place. Chaque fiche : son nom et ses chances, puis un bouton par exemplaire, son numéro
+// et sa vie dessous. Le liseré dit le camp : rouge en face, vert dans le camp des héros.
+.tas-cibles {
+  display: grid;
+  flex-basis: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.4rem 0.6rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0 7.3rem;
+  list-style: none;
+}
+
+.tas-grp {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.35rem 0.5rem 0.45rem 0.6rem;
+  border-left: 3px solid var(--dw-color-reussite);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.tas-grp.tas-grp--foe {
+  border-left-color: var(--dw-color-echec-forte);
+}
+
+.tas-grp-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
+
+  b {
+    overflow: hidden;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dw-surface-900);
+  }
+
+  em {
+    margin-left: auto;
+    font-size: 0.74rem;
+    font-style: normal;
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
+  }
+}
+
+.tas-nums {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+// Un exemplaire à viser : un choix parmi d'autres, donc un rectangle ; il s'allume en or au survol.
+.tas-num {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  min-width: 2.3rem;
+  padding: 0.2rem 0.35rem 0.3rem;
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-toggle);
+  background: var(--dw-surface-100);
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+
+  em {
+    font-size: 0.68rem;
+    font-style: normal;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
+  }
+
+  .tas-bar {
+    flex: none;
+    width: 100%;
+    height: 4px;
+  }
+
+  &:hover {
+    border-color: var(--dw-color-legendary);
+  }
+}
+
+// Une fiche seule : tout son bloc (nom, chances, vie) est le bouton.
+.tas-num.tas-num--solo {
+  justify-items: stretch;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+
+  &:hover b {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Les armes : une case carrée par arme, le symbole de l'arme dedans, ses dégâts dessous ; celle qui est choisie s'allume en or.
 .tas-picks {
   display: flex;
   flex-wrap: wrap;
@@ -496,24 +612,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-// La carte du Théâtre, réduite (son facteur d'échelle `--thr-k`) ; ses chances de toucher dessous, en or.
-.tas-cible {
-  --thr-k: 0.72;
-
-  display: grid;
-  justify-items: center;
-  gap: 0.3rem;
-  padding-top: 0.25rem;
-
-  em {
-    font-size: 0.76rem;
-    font-style: normal;
-    font-weight: 800;
-    white-space: nowrap;
-    color: var(--dw-color-legendary);
-  }
 }
 
 .tas-pick {
@@ -549,7 +647,6 @@
     0 0 14px color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
 }
 
-// Les armes : une case carrée avec le symbole de l'arme, ses dégâts dessous ; celle qui est choisie s'allume en or.
 .tas-picks--arme {
   gap: 0.35rem;
 }
@@ -591,6 +688,26 @@
 // L'arme choisie, en clair à côté de ses cases : son nom et les dégâts du coup (deux mains, double frappe compris).
 .tas-arme-nom {
   flex: 0 1 auto;
+}
+
+// Le coup joué, figé jusqu'à la fin du tour : la cible et l'arme en clair, à la place de leurs listes.
+.tas-played {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+
+  b {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--dw-surface-900);
+  }
+
+  em {
+    font-style: normal;
+    font-weight: 800;
+    color: var(--dw-color-legendary);
+  }
 }
 
 // La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.

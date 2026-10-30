@@ -33,7 +33,7 @@
   </div>
 
   <!-- L'ordre d'action, sur sa propre ligne : un bloc par rang de réaction, dans l'ordre où ils jouent -->
-  <ol class="tor-groups" aria-label="Ordre d'action par rang de réaction" [style.--tor-groups]="groups().length" [style.--tor-total]="total()">
+  <ol #strip class="tor-groups" aria-label="Ordre d'action par rang de réaction" [style.--tor-groups]="groups().length" [style.--tor-total]="total()" [style.--tor-overlap.px]="overlap()">
     @for (group of groups(); track group.id) {
       <li class="tor-group" [class.tor-group--blocked]="group.blocked">
         <h3 class="tor-group-title">

@@ -60,7 +60,8 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
-import {ActeurComponent} from '../theatre/acteur';
+import {parFiche} from '../theatre/theatre.util';
+import {sansNumero} from '../../reaction-roll.util';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -68,10 +69,10 @@ const DICE_TIMEOUT_MS = 12000;
 /** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
-/** Un réglage rare actif (option spéciale, dé ou modificateur du MJ, carrière), montré en pastille quand « Options » est replié. */
 /** Les popovers de l'assistant : l'attaquant, la cible, les modificateurs du coup, les autres actions. */
 type TurnPopover = 'me' | 'cible' | 'mods' | 'more';
 
+/** Un réglage actif du coup (deux mains, posture, dé ou modificateur du MJ, carrière…), montré en pastille avec sa croix. */
 interface ActiveOption {
   readonly id: 'deuxMains' | 'posture' | 'special' | 'brawl' | 'tir' | 'horde' | 'gm' | 'mod' | 'career';
   readonly label: string;
@@ -139,6 +140,43 @@ interface LifeBar {
   readonly low: boolean;
 }
 
+/** Les cibles possibles d'une même fiche (les squelettes ensemble) : leur nom commun, leur camp, et leurs chances quand ce sont les mêmes
+ * pour toutes ; chacune avec son numéro et sa vie. */
+interface TargetGroup {
+  readonly key: string;
+  readonly nom: string;
+  readonly foe: boolean;
+  readonly odds: string | null;
+  readonly members: readonly TargetMember[];
+}
+
+interface TargetMember {
+  readonly card: TapisCard;
+  /** Son numéro d'exemplaire (« 3 » pour « Squelette #3 »). */
+  readonly num: string;
+  readonly life: LifeBar;
+  /** Ses chances, quand ce ne sont pas celles du groupe. */
+  readonly odds: string | null;
+}
+
+/** Le coup joué, figé quand il se conclut (dégâts appliqués, parade, bouclier humain) : les lignes du coup et de l'attaque le montrent
+ * jusqu'à la fin du tour, même quand la cible, tombée, n'est plus à viser. */
+interface PlayedAttack {
+  readonly target: TapisCard;
+  /** L'arme choisie, `null` pour une carte qui frappe avec ses seuls dégâts. */
+  readonly arme: string | null;
+  readonly degats: string;
+  readonly options: readonly string[];
+  readonly goal: AttackGoal | null;
+  readonly dice: readonly DiceRowDie[] | null;
+  readonly total: number | null;
+  readonly slots: number;
+  readonly sum: readonly TraySumTerm[];
+  readonly verdict: AttackVerdict;
+  /** Les options prises sur un succès héroïque ou légendaire, en clair. */
+  readonly picks: string | null;
+}
+
 /** Typographie d'un terme signé : « +2 », « −1 ». */
 function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
@@ -179,7 +217,6 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   selector: 'bol-turn-assistant',
   imports: [
     A11yModule,
-    ActeurComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
@@ -813,6 +850,27 @@ export class TurnAssistantComponent {
   /** Sur le jeton de chaque carte visable, ce qu'il faut pour la toucher avec l'arme et la posture choisies : « 6+ · 72 % ». Absent tant
    * que ses statistiques ne sont pas connues. */
   /** Ce qu'est chaque cible à choisir, en clair (« PNJ · Rival », « Créature · Coriace ») ; vide pour un héros de la compagnie. */
+  /** Les cibles possibles, par fiche : les exemplaires d'une même fiche (les squelettes) sous leur nom commun, chacun par son numéro. */
+  protected readonly targetGroups = computed<readonly TargetGroup[]>(() => {
+    const odds = this.odds();
+    return parFiche(this.targets()).map((cards) => {
+      const shared = new Set(cards.map((card) => odds[card.key] ?? null));
+      const groupOdds = shared.size === 1 ? [...shared][0] : null;
+      return {
+        key: cards[0].key,
+        nom: cards.length > 1 ? sansNumero(cards[0].nom) : cards[0].nom,
+        foe: cards[0].camp !== 'heros',
+        odds: groupOdds,
+        members: cards.map((card, index) => ({
+          card,
+          num: card.nom.match(/#(\d+)$/)?.[1] ?? `${index + 1}`,
+          life: this.lifeOf(card),
+          odds: groupOdds === null ? (odds[card.key] ?? null) : null,
+        })),
+      };
+    });
+  });
+
   protected readonly targetDetails = computed<Readonly<Record<string, string>>>(() =>
     Object.fromEntries(this.targets().map((t) => [t.key, sideOf(t).detail])),
   );
@@ -1232,6 +1290,28 @@ export class TurnAssistantComponent {
 
   /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
   protected readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.cardKey(), computation: () => null});
+  /** Le coup joué, figé quand il se conclut (cf. `PlayedAttack`). */
+  private readonly playedAttack = linkedSignal<string, PlayedAttack | null>({source: () => this.cardKey(), computation: () => null});
+  /** Le coup joué à montrer : pas quand un Carnage donne une nouvelle attaque, ni une fois une autre attaque commencée. */
+  protected readonly played = computed(() => (this.carnageOwed() === 0 && this.attackVerdict() === null ? this.playedAttack() : null));
+  /** La cible du coup joué n'est plus à viser : tombée, ou sortie du combat. */
+  protected readonly playedTargetOut = computed(() => {
+    const played = this.played();
+    return played !== null && !this.targets().some((card) => card.key === played.target.key);
+  });
+  /** La couleur de la ligne de l'attaque : celle du jet en cours, ou du coup joué. */
+  protected readonly attackTone = computed(() => (this.attackVerdict() ?? this.played()?.verdict)?.tone ?? null);
+  /** « Fin du tour » est le bouton or de la ligne des dégâts (coup raté, désarmement, coup joué) : celui du bandeau s'efface alors. */
+  protected readonly endTurnInLine = computed(() => {
+    if (this.hasDamageStep() || this.actionPerdue()) {
+      return false;
+    }
+    const verdict = this.attackVerdict();
+    if (verdict) {
+      return verdict.tone === 'echec' || !this.carnagePicked();
+    }
+    return this.hitSummary() !== null && this.carnageOwed() === 0;
+  });
 
   /** La vie de la cible choisie, en chiffres : ce qu'il lui reste, et où le coup en cours la fait tomber (`after`, `null` sans dégâts). */
   protected readonly targetLife = computed(() => {
@@ -1244,7 +1324,7 @@ export class TurnAssistantComponent {
   });
 
   /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Quand il ne reste qu'à finir le tour, c'est
-   * la case des dégâts, qui porte « Fin du tour » ; après des dégâts appliqués, une nouvelle attaque reste possible dans la case 2. */
+   * la case des dégâts, qui porte « Fin du tour » ; après le coup joué, les cases 1 et 2 le gardent, figé (« Autre attaque » les rouvre). */
   protected readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
     // Action perdue : seule la case d'attaque, qui le dit, est allumée.
     if (this.actionPerdue()) {
@@ -1268,6 +1348,7 @@ export class TurnAssistantComponent {
   private readonly damageInput = viewChild<ElementRef<HTMLInputElement>>('damageInput');
   private readonly applyButton = viewChild('applyButton', {read: ElementRef<HTMLButtonElement>});
   private readonly endButton = viewChild('endButton', {read: ElementRef<HTMLButtonElement>});
+  private readonly firstPick = viewChild('pick', {read: ElementRef<HTMLButtonElement>});
   /** Une cible vient d'être choisie : la case du jet d'attaque prend la main dès qu'elle est à l'écran. */
   private attackFocusWanted = false;
 
@@ -1287,6 +1368,18 @@ export class TurnAssistantComponent {
       this.gmDie();
       this.brawl();
       untracked(() => this.resetRoll());
+    });
+
+    // Une autre cible désignée sur le plateau après le coup joué : c'est une autre attaque, le coup joué s'efface. Une cible tombée, elle,
+    // laisse le coup joué à l'écran.
+    effect(() => {
+      const key = this.targetKey();
+      untracked(() => {
+        const played = this.playedAttack();
+        if (played && key !== null && key !== played.target.key) {
+          this.playedAttack.set(null);
+        }
+      });
     });
 
     // Une nouvelle carte active : le modificateur libre repart de 0.
@@ -1389,6 +1482,7 @@ export class TurnAssistantComponent {
     this.damageValues.set(null);
     this.dice.set(null);
     this.lastHit.set(null);
+    this.playedAttack.set(null);
     this.markAttacked();
     const net = this.netDice();
     const count = this.diceCount();
@@ -1448,6 +1542,7 @@ export class TurnAssistantComponent {
     this.clearHeroism(true);
     this.damageValues.set(null);
     this.lastHit.set(null);
+    this.playedAttack.set(null);
     this.manualTotal.set(total);
     this.markAttacked();
     this.focusAfterRender(() => (this.hasDamageStep() ? (this.damageInput() ?? this.applyButton()) : this.endButton()));
@@ -1646,6 +1741,7 @@ export class TurnAssistantComponent {
     if (!target || damage === null) {
       return;
     }
+    this.freezePlayed(target);
     this.conclude(target);
     const hit = {target, damage, unarmed: this.unarmed()};
     this.damageApplied.emit(hit);
@@ -1694,6 +1790,37 @@ export class TurnAssistantComponent {
     return {title, detail, scratch};
   });
 
+  /** Fige le coup qui se conclut, avant que le jet s'efface (cf. `PlayedAttack`). */
+  private freezePlayed(target: TapisCard): void {
+    const verdict = this.attackVerdict();
+    if (!verdict) {
+      return;
+    }
+    const counts = this.pickCounts();
+    const picks = HEROIC_OPTIONS.filter((o) => counts[o.slug]).map((o) => ((counts[o.slug] ?? 0) > 1 ? `${o.label} ×${counts[o.slug]}` : o.label));
+    const armed = this.displayArmes().length > 0;
+    this.playedAttack.set({
+      target,
+      arme: armed ? (this.effectiveArme()?.arme?.arme ?? null) : null,
+      degats: armed ? this.degats() : this.card().degats,
+      options: this.activeOptions().map((o) => o.label),
+      goal: this.attackGoal(),
+      dice: this.attackRowDice(),
+      total: this.diceSum(),
+      slots: this.diceCount(),
+      sum: this.attackSum(),
+      verdict,
+      picks: picks.length > 0 ? picks.join(' · ') : null,
+    });
+  }
+
+  /** « Autre attaque », après le coup joué (une créature qui frappe plusieurs fois par round) : les lignes du coup et de l'attaque se
+   * rouvrent ; la main va à la case du jet, ou au choix de la cible si elle est tombée. */
+  protected newAttack(): void {
+    this.playedAttack.set(null);
+    this.focusAfterRender(() => this.attackInput() ?? this.firstPick());
+  }
+
   /** Parade in extremis : la cible dépense 1 point d'héroïsme (ou de vilénie) et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
    * coup ne fait pas de dégâts, et ses options héroïques non plus. Un Carnage garde son attaque de plus. */
   protected parry(): void {
@@ -1705,6 +1832,7 @@ export class TurnAssistantComponent {
     const bouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0 || (stats?.bouclierDefenseToutes ?? 0) > 0;
     this.targetHeroismeAdjusted.emit({card: target, delta: -1});
     this.effectAdded.emit(effetParade(target.key, bouclier));
+    this.freezePlayed(target);
     this.conclude(target, false);
     this.resetRoll();
     this.lastHit.set({target, damage: 0, unarmed: false, parried: bouclier ? 'bouclier' : 'arme'});
@@ -1722,6 +1850,7 @@ export class TurnAssistantComponent {
     }
     this.targetHeroismeAdjusted.emit({card: target, delta: -1});
     this.damageApplied.emit({target: sbire, damage: Math.max(1, sbire.vitaliteCourante ?? 1), unarmed: this.unarmed()});
+    this.freezePlayed(target);
     this.conclude(target, false);
     this.resetRoll();
     this.lastHit.set({target, damage: 0, unarmed: false, parried: 'sbire', sbire: sbire.nom});
