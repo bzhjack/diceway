@@ -384,12 +384,11 @@ bol-start-combat-page {
   --scd-col-need: 8.5rem;
   --scd-col-faces: 7.6rem;
   --scd-col-opt: 10.6rem;
-  --scd-col-mods: 9.6rem;
 
   display: grid;
   grid-template-columns:
     auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) var(--scd-col-opt)
-    var(--scd-col-mods) auto;
+    auto;
   gap: 0.6rem 0.9rem;
   margin: 0;
   padding: 0;
@@ -405,21 +404,26 @@ bol-start-combat-page {
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
+  align-content: center;
   align-items: center;
-  row-gap: 0.15rem;
+  row-gap: 0.1rem;
+  // Hauteur fixe, quel que soit l'écran : le portrait carré plus le liseré.
+  height: calc(var(--scd-med-size) + 3px);
   padding: var(--scd-row-py) 0.9rem;
   border: 1.5px solid var(--dw-border);
   border-radius: 12px;
   background: linear-gradient(90deg, #261b12, #1a120c);
 }
 
-// Deux niveaux : en haut l'essentiel, dessous le détail de chaque colonne. Portrait, options, modificateurs et menu tiennent les deux.
+// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances ; le verdict, la conséquence et le calcul. Portrait, case du
+// total, dés, options, modificateurs et menu tiennent toute la hauteur.
 .scd-row > .scd-med,
+.scd-row > .scd-entry,
+.scd-row > .scd-faces,
 .scd-row > .scd-opt,
-.scd-row > .scd-mods-btn,
 .scd-row > .scd-row-icons {
-  grid-row: 1 / 3;
+  grid-row: 1 / 4;
 }
 
 // Le portrait : un carré collé au bord gauche de la ligne, qui en fixe la hauteur, ses coins gauches épousant ceux de la ligne (12px moins
@@ -451,13 +455,57 @@ bol-start-combat-page {
 .scd-row > .scd-name {
   grid-column: 2;
   grid-row: 1;
-  align-self: end;
 }
 
 .scd-row > .scd-tags {
   grid-column: 2;
   grid-row: 2;
-  align-self: start;
+}
+
+.scd-row > .scd-vit {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+// Sa vie : le cœur, une barre courte et les points.
+.scd-vit {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+
+  .mat-icon {
+    flex: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
+    color: var(--dw-color-echec);
+  }
+
+  b {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--dw-surface-800);
+    white-space: nowrap;
+  }
+}
+
+.scd-vit-bar {
+  flex: 0 1 3.2rem;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+
+  i {
+    display: block;
+    height: 100%;
+    background: var(--dw-color-reussite);
+  }
+
+  .scd-vit-bar--low {
+    background: var(--dw-color-echec);
+  }
 }
 
 .scd-row > .scd-need {
@@ -475,18 +523,20 @@ bol-start-combat-page {
 
 .scd-row > .scd-entry {
   grid-column: 4;
-  grid-row: 1;
 }
 
 .scd-row > .scd-faces {
   grid-column: 5;
-  grid-row: 1;
 }
 
 .scd-row > .scd-formula {
-  grid-column: 4 / 6;
+  grid-column: 6;
+  grid-row: 3;
+}
+
+// Sans conséquence (en attente du total), le calcul remonte juste sous le verdict.
+.scd-row > .scd-formula--up {
   grid-row: 2;
-  align-self: start;
 }
 
 .scd-row > .scd-verdict {
@@ -503,10 +553,6 @@ bol-start-combat-page {
 
 .scd-row > .scd-opt {
   grid-column: 7;
-}
-
-.scd-row > .scd-mods-btn {
-  grid-column: 8;
 }
 
 // Le calcul du jet, sous la case et les dés, et la conséquence du verdict, dessous : une ligne chacun, coupée s'il le faut (le texte
@@ -530,25 +576,8 @@ bol-start-combat-page {
   color: var(--dw-surface-800);
 }
 
-// Écran peu haut (portable) : la ligne se replie sur un niveau (le détail s'efface ; la case, les dés et le verdict tiennent la hauteur
-// du nom et de ses gemmes), et les lignes se resserrent, pour que six héros tiennent sans défiler.
+// Écran peu haut (portable) : les lignes, à hauteur fixe, se rapprochent un peu.
 @media (max-height: 46rem) {
-  .scd-row > .scd-formula,
-  .scd-row > .scd-consequence {
-    display: none;
-  }
-
-  .scd-row > .scd-entry,
-  .scd-row > .scd-faces,
-  .scd-row > .scd-verdict {
-    grid-row: 1 / 3;
-    align-self: center;
-  }
-
-  .scd-row {
-    row-gap: 0;
-  }
-
   .scd-main {
     gap: 0.7rem;
     padding-top: 0.7rem;
@@ -556,11 +585,6 @@ bol-start-combat-page {
 
   .scd-rows {
     row-gap: 0.4rem;
-  }
-
-  .scd-row {
-    --scd-row-py: 0.35rem;
-    --scd-med-size: 3.4rem;
   }
 }
 
@@ -1009,32 +1033,11 @@ bol-start-combat-page {
 
 }
 
-// En fin de ligne, avec l'option d'héroïsme et le menu : le bouton des modificateurs (une action qui ouvre un popover : une pilule),
-// le nombre de modificateurs accordés en pastille.
-.scd-mods-btn {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  height: 2.1rem;
-  padding: 0 0.75rem;
-  border: 1px solid var(--dw-border);
-  border-radius: var(--dw-radius-pill);
-  background: rgba(0, 0, 0, 0.3);
+// Le bouton des modificateurs, rond comme ses voisins : ouvert, il s'allume ; le nombre de modificateurs accordés en pastille sur son coin.
+.scd-icon.scd-mods-btn {
+  position: relative;
   color: var(--dw-surface-700);
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
 
-  .mat-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    font-size: 1.1rem;
-  }
-
-  &:hover,
   &[aria-expanded='true'] {
     border-color: var(--dw-color-legendary);
     color: var(--dw-color-legendary);
@@ -1042,6 +1045,9 @@ bol-start-combat-page {
 }
 
 .scd-mods-count {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.3rem;
   display: grid;
   place-items: center;
   min-width: 1.15rem;
@@ -1054,26 +1060,14 @@ bol-start-combat-page {
   line-height: 1;
 }
 
-// Écran moyen : le bouton ne garde que son icône (un cercle) et sa pastille ; son nom reste dans l'infobulle et le libellé accessible.
-// Zone resserrée (moins de 1200 px) : les colonnes fixes se resserrent, le bouton des modificateurs ne garde que son icône.
+// Zone resserrée (moins de 1200 px) : les colonnes fixes se resserrent.
 @container scd-main (max-width: 75rem) {
-  .scd-mods-btn {
-    justify-content: center;
-    min-width: 2.1rem;
-    padding: 0 0.45rem;
-  }
-
-  .scd-mods-label {
-    display: none;
-  }
-
   // Plus étroit : les dés un peu plus petits, les colonnes fixes resserrées.
   .scd-rows {
     --scd-col-who: 8rem;
     --scd-col-need: 7rem;
     --scd-col-faces: 6.4rem;
     --scd-col-opt: 9.6rem;
-    --scd-col-mods: 3.8rem;
 
     column-gap: 0.65rem;
   }
@@ -1098,10 +1092,6 @@ bol-start-combat-page {
 
   .scd-row > .scd-faces {
     display: none;
-  }
-
-  .scd-row > .scd-formula {
-    grid-column: 4;
   }
 
 }

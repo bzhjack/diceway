@@ -39,7 +39,7 @@ import {DiceRowDie} from '../../../shared/models/dice-row.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keptDiceIndexes, parseDiceTotal} from '../action-roll.util';
 import {applyHeroismeDelta} from '../heroisme-spend.util';
 import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../models/action-roll.model';
-import {heroDetails} from '../play/tapis/tapis.util';
+import {heroDetails, isLowVitalite, vitalitePercent} from '../play/tapis/tapis.util';
 import {CombatEffect} from '../models/combat-effect.model';
 import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
@@ -75,6 +75,9 @@ interface HeroRow {
   /** Dés de bonus (positif, « Vigilant ») ou de malus (négatif, « Lent à la détente ») à son jet de réaction : il lance 2 + |n| dés et
    * garde les deux meilleurs ou les deux moins bons. */
   readonly diceNet: number;
+  /** Sa vitalité dans cette session (`null` si inconnue) et son maximum. */
+  readonly vitalite: number | null;
+  readonly vitaliteMax: number | null;
 }
 
 /** La carte d'un héros, prête à afficher : ce qu'il lui faut aux dés, ses chances, son jet et son verdict. */
@@ -102,7 +105,7 @@ interface HeroCard {
   readonly modsCount: number;
   /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
   readonly traitNote: string | null;
-  /** Le calcul du jet en une ligne (« 3d6 +1 esprit −2 ennemi ≥ 9 »), en infobulle sur ce qu'il lui faut. */
+  /** Le calcul du jet en une ligne (« 2d6B +1 esprit −2 ennemi ≥ 9 »), sous le verdict et en infobulle sur ce qu'il lui faut. */
   readonly formula: string;
   readonly verdict: ReactionVerdict | null;
   readonly sum: readonly RollSumTerm[];
@@ -120,6 +123,9 @@ interface HeroCard {
   readonly gems: readonly boolean[];
   /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à taper. */
   readonly favorPending: boolean;
+  /** Sa vie en pourcentage, pour sa barre, et si elle est basse. */
+  readonly vitalitePercent: number;
+  readonly vitaliteLow: boolean;
 }
 
 /** Le trait qui donne au héros un dé de bonus ou de malus au jet de réaction, rappelé à la fin de son calcul. */
@@ -237,6 +243,9 @@ export class StartCombatPageComponent {
       const base = dice === null ? null : reactionResult(dice, modifier);
       const legendary = dice === 12 && base === 'heroique' && (optionChosen || heroisme > 0);
       const heroic = base === 'reussite' && (upgraded || heroisme > 0);
+      // Dans la formule, avec un dé de bonus ou de malus : « 2d6B » (on garde les deux meilleurs) ou « 2d6M » (les deux moins bons) ; le
+      // nombre de dés en plus est dit sous ses chances.
+      const keptDice = net > 0 ? '2d6B' : net < 0 ? '2d6M' : null;
       return {
         hero,
         avatar: this.usableAvatar(hero.avatar),
@@ -253,7 +262,7 @@ export class StartCombatPageComponent {
         formula: reactionSumTerms(null, parts, net)
           .map((term) =>
             term.tone === 'dice'
-              ? `${term.value}${net > 0 ? ' (2 meilleurs)' : net < 0 ? ' (2 moins bons)' : ''}`
+              ? (keptDice ?? term.value)
               : term.tone === 'total'
                 ? term.value
                 : `${term.value} ${term.caption}`,
@@ -270,6 +279,8 @@ export class StartCombatPageComponent {
         heroisme,
         gems: Array.from({length: Math.max(5, heroisme)}, (_, index) => index < heroisme),
         favorPending: this.favorPendingPivots().has(hero.pivotId),
+        vitalitePercent: vitalitePercent(hero.vitalite, hero.vitaliteMax),
+        vitaliteLow: isLowVitalite(hero.vitalite, hero.vitaliteMax),
       };
     }),
   );
@@ -411,6 +422,8 @@ export class StartCombatPageComponent {
                   diceNet: reactionDiceNet(details.traits),
                   agilite: hero.attributs.agilite,
                   fiche: hero,
+                  vitalite: h.vitalite_courante ?? hero.ressources.vitalite,
+                  vitaliteMax: hero.ressources.vitalite,
                 };
               });
               // Par agilité décroissante : entre héros de même résultat, c'est l'ordre dans lequel ils agiront par défaut
