@@ -9,6 +9,20 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   d6: '/assets/icons/d6.svg',
   skull: '/assets/icons/skull.svg',
   crown: '/assets/icons/crown.svg',
+  // game-icons.net, CC BY 3.0 : crédit à afficher (voir assets/icons/game-icons/README.md).
+  'gi-dice': '/assets/icons/game-icons/perspective-dice-six-faces-three.svg',
+  'gi-tune': '/assets/icons/game-icons/settings-knobs.svg',
+  'gi-sheet': '/assets/icons/game-icons/scroll-unfurled.svg',
+  'gi-exit': '/assets/icons/game-icons/exit-door.svg',
+  'gi-return': '/assets/icons/game-icons/return-arrow.svg',
+  'gi-heart': '/assets/icons/game-icons/hearts.svg',
+  'gi-info': '/assets/icons/game-icons/info.svg',
+  'gi-swords': '/assets/icons/game-icons/crossed-swords.svg',
+  'gi-favor': '/assets/icons/game-icons/sunbeams.svg',
+  'gi-laurels': '/assets/icons/game-icons/laurels.svg',
+  'gi-warning': '/assets/icons/game-icons/hazard-sign.svg',
+  'gi-skull': '/assets/icons/game-icons/death-skull.svg',
+  'gi-crown': '/assets/icons/game-icons/queen-crown.svg',
 };
 
 @Component({

@@ -10,7 +10,43 @@ bol-start-combat-page {
   padding: 12px;
 }
 
-// Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté.
+// La forge, l'habillage de cette page : du fer, du bronze, de la braise. Aussi sur ses popovers, rendus hors du composant.
+bol-start-combat-page,
+.scd-pop {
+  --scd-bronze: #a9793a;
+  --scd-bronze-dim: #7a5a2a;
+  --scd-bronze-text: #f0cf8e;
+  --scd-bone: #f5e8cf;
+  --scd-iron: url('/assets/bol/forge/fer.webp');
+  --scd-rivet: radial-gradient(circle at 36% 30%, #e0bf86, #8c6a2f 44%, #231608 74%, transparent 77%);
+  --scd-stud: radial-gradient(circle at 35% 26%, #4a3418, #241708 62%, #120a04);
+  --scd-plate-light: linear-gradient(180deg, rgba(255, 210, 150, 0.075), transparent 28%, rgba(0, 0, 0, 0.3));
+}
+
+// Le cadre de l'app (`styles/_barbare.scss`), en fer martelé et bronze chaud sur cette page seulement.
+body:has(bol-start-combat-page) {
+  &::before {
+    --scd-frame-rivet: radial-gradient(circle at 35% 28%, #e6c58c, #8c6a2f 42%, #2b1c0c 72%);
+
+    background:
+      var(--scd-frame-rivet) 1px 1px / 9px 9px no-repeat,
+      var(--scd-frame-rivet) calc(100% - 1px) 1px / 9px 9px no-repeat,
+      var(--scd-frame-rivet) 1px calc(100% - 1px) / 9px 9px no-repeat,
+      var(--scd-frame-rivet) calc(100% - 1px) calc(100% - 1px) / 9px 9px no-repeat,
+      url('/assets/bol/forge/fer.webp') 0 0 / 320px;
+  }
+
+  &::after {
+    border-color: #a9793a;
+    box-shadow:
+      0 0 0 2px #0c0806,
+      inset 0 0 80px rgba(0, 0, 0, 0.65),
+      inset 0 0 0 1px rgba(255, 214, 160, 0.08);
+  }
+}
+
+// Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté. Le fond : de la
+// suie, et la lueur de la peinture du bandeau qui descend sur la page.
 .scd-shell {
   position: relative;
   display: flex;
@@ -18,7 +54,12 @@ bol-start-combat-page {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: linear-gradient(#241a12, #130d08);
+  background:
+    radial-gradient(70% 42% at 66% 8%, rgba(232, 98, 42, 0.26), transparent 70%),
+    radial-gradient(55% 45% at 100% 100%, rgba(150, 52, 14, 0.16), transparent 70%),
+    radial-gradient(70% 70% at 0% 100%, rgba(0, 0, 0, 0.6), transparent 72%),
+    url('/assets/bol/forge/suie.webp') center / 900px 560px,
+    #0f0a07;
 }
 
 // Au-dessus du contenu (z-index 2) : posé derrière les panneaux, les dés se retrouveraient à moitié masqués.
@@ -62,17 +103,18 @@ bol-start-combat-page {
   flex: none;
   padding: 0.55rem 1.4rem 0.9rem;
 
-  // L'image du combat de la table, à peine voilée au milieu ; plus sombre à gauche, sous le titre et la frise, pour qu'ils restent lisibles.
-  // Pas de bordure en bas : l'image s'y fond dans la page (sur un calque à part, pour ne pas estomper le contenu).
+  // L'image du combat de la table, plus contrastée et plus chaude, à peine voilée au milieu ; plus sombre à gauche, sous le titre et la frise,
+  // pour qu'ils restent lisibles. Pas de bordure en bas : l'image s'y fond dans la page (sur un calque à part, pour ne pas estomper le contenu).
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
     background:
-      linear-gradient(90deg, rgba(15, 10, 6, 0.9) 15%, rgba(15, 10, 6, 0.55) 40%, rgba(15, 10, 6, 0.3) 70%, rgba(15, 10, 6, 0.55)),
+      linear-gradient(90deg, rgba(10, 6, 4, 0.92) 12%, rgba(10, 6, 4, 0.5) 40%, rgba(10, 6, 4, 0.14) 68%, rgba(10, 6, 4, 0.5)),
       url('/assets/bol/header-combat.png') center 40% / cover no-repeat;
-    mask-image: linear-gradient(#000 70%, transparent);
+    filter: saturate(1.22) contrast(1.07);
+    mask-image: linear-gradient(#000 62%, transparent);
     pointer-events: none;
   }
 }
@@ -97,13 +139,14 @@ bol-start-combat-page {
 // Le lieu, en légende au-dessus du titre, comme « Combat » sur la table. Coupé si la place manque, entier en infobulle.
 .scd-where {
   overflow: hidden;
-  color: var(--dw-color-legendary);
+  color: #e8b75c;
   font-size: 0.66rem;
   font-weight: 800;
   line-height: 0.95rem;
   letter-spacing: 0.12em;
   text-overflow: ellipsis;
   text-transform: uppercase;
+  text-shadow: 0 1px 3px #000;
   white-space: nowrap;
 }
 
@@ -125,7 +168,7 @@ bol-start-combat-page {
   border: 0;
   border-radius: 50%;
   background: none;
-  color: var(--dw-surface-600);
+  color: #d9b77c;
 
   .mat-icon {
     width: 1.2rem;
@@ -135,7 +178,7 @@ bol-start-combat-page {
 
   &:hover,
   &:focus-visible {
-    color: var(--dw-color-legendary);
+    color: #ffd98a;
   }
 }
 
@@ -157,7 +200,10 @@ bol-start-combat-page {
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
-  color: var(--dw-color-text-bright);
+  color: var(--scd-bone);
+  text-shadow:
+    0 2px 8px #000,
+    0 0 22px rgba(232, 135, 58, 0.28);
 }
 
 // L'ordre d'action, sous le titre (voir `bol-ordre-frise`) ; l'alerte sans adversaire, à son bout, ne change pas la hauteur.
@@ -174,15 +220,51 @@ bol-start-combat-page {
   min-width: 0;
 }
 
+// La frise de cette page : une chaîne de bronze et des jetons frappés. Portée par l'en-tête : celle de la table garde son style.
+.scd-bar .ofr .ofr-link {
+  background: linear-gradient(180deg, #e0bb7c, #6b4a22);
+  box-shadow: 0 1px 1px #000;
+}
+
+.scd-bar .ofr .ofr-c {
+  background: radial-gradient(circle at 35% 26%, #4b3620, #1c120a 72%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 235, 200, 0.24),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.55),
+    0 2px 4px rgba(0, 0, 0, 0.7);
+  color: var(--scd-bone);
+}
+
+.scd-bar .ofr .ofr-c--hero img {
+  border-radius: 16%;
+}
+
+.scd-bar .ofr .ofr-c--add {
+  background: rgba(10, 6, 4, 0.6);
+  color: var(--scd-bronze-text);
+
+  &:hover {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Le « + » quand il faut ajouter un adversaire : l'aplat d'or du composant (plus fort que le jeton ci-dessus).
+.scd-bar .ofr .ofr-c--add.ofr-c--add-urgent {
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+}
+
 .scd-warn {
   display: inline-flex;
   flex: none;
   align-items: center;
   gap: 0.3rem;
   height: var(--scd-ctl);
-  color: var(--dw-color-warn);
+  // Plus clair que l'alerte ordinaire : il se lit sur la peinture.
+  color: #ffb27a;
   font-size: 0.86rem;
   font-weight: 700;
+  text-shadow: 0 1px 3px #000;
   white-space: nowrap;
 
   .mat-icon {
@@ -209,18 +291,26 @@ bol-start-combat-page {
   background: var(--dw-border);
 }
 
-// Rond et cerclé comme les boutons icônes de la table (deux classes : plus fort que le bouton icône de Material).
+// Rond et cerclé comme les boutons icônes de la table, en clou de bronze (deux classes : plus fort que le bouton icône de Material).
 .scd-actions .scd-close-btn {
-  border: 1px solid var(--dw-border);
-  background: rgba(0, 0, 0, 0.45);
-  color: var(--dw-surface-800);
+  border: 1px solid var(--scd-bronze);
+  background: radial-gradient(circle at 35% 26%, #4a3418, #1f1408 68%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.3),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+  color: var(--scd-bronze-text);
 }
 
-// Un bouton en contour sur l'image : un fond sombre pour qu'il reste lisible (deux classes : plus fort que Material).
+// Un bouton en contour sur l'image : du bronze sur un fond sombre, pour qu'il reste lisible (deux classes : plus fort que Material).
 .scd-actions .mat-mdc-outlined-button {
-  background-color: rgba(0, 0, 0, 0.45);
-  --mat-button-outlined-disabled-label-text-color: var(--dw-surface-600);
-  --mat-button-outlined-disabled-outline-color: var(--dw-border);
+  background-color: rgba(10, 6, 4, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.14),
+    0 2px 5px rgba(0, 0, 0, 0.55);
+  --mat-button-outlined-outline-color: var(--scd-bronze);
+  --mat-button-outlined-label-text-color: var(--scd-bronze-text);
+  --mat-button-outlined-disabled-label-text-color: #c4a877;
+  --mat-button-outlined-disabled-outline-color: #6b4a22;
 }
 
 // L'embuscade choisie, sur le bouton des options.
@@ -307,7 +397,18 @@ bol-start-combat-page {
 .scd-hint {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
+}
+
+// Le crédit des icônes (licence CC BY), tout en bas.
+.scd-credit {
+  margin: auto 0 0;
+  color: var(--dw-surface-600);
+  font-size: 0.7rem;
+
+  a {
+    color: inherit;
+  }
 }
 
 // ── Les choix en groupe : l'embuscade, et le dé du MJ et la carrière dans le popover ─────────────────────────────
@@ -403,17 +504,14 @@ bol-start-combat-page {
 // mêmes colonnes d'un héros à l'autre. Les colonnes d'extrémité sont en `auto` : la marge intérieure de la ligne s'ajoute à leur
 // largeur (une colonne fixe la ferait chevaucher le portrait).
 .scd-rows {
-  // Largeurs fixes pour le nom, ce qu'il faut, les dés et les options : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au
-  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. Le résultat prend le reste.
+  // Largeurs fixes pour le nom, ce qu'il faut et les dés : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au lieu de
+  // « aux dés » ou un dé de plus ne décalent plus la ligne. Le résultat prend le reste, options d'héroïsme comprises.
   --scd-col-who: 9rem;
   --scd-col-need: 8.5rem;
   --scd-col-faces: 7.6rem;
-  --scd-col-opt: 10.6rem;
 
   display: grid;
-  grid-template-columns:
-    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) var(--scd-col-opt)
-    auto;
+  grid-template-columns: auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) auto;
   gap: 0.6rem 0.9rem;
   margin: 0;
   padding: 0;
@@ -425,6 +523,10 @@ bol-start-combat-page {
   // remplit la hauteur de la ligne.
   --scd-row-py: 0.5rem;
   --scd-med-size: 4.9rem;
+  // La couleur du résultat, qui chauffe la plaque : le liseré, le voile de gauche et la lueur autour.
+  --heat: transparent;
+  // La hauteur du mot du verdict et des options d'héroïsme à sa droite.
+  --scd-verdict-h: 1.6rem;
 
   display: grid;
   grid-column: 1 / -1;
@@ -436,23 +538,34 @@ bol-start-combat-page {
   // Hauteur fixe, quel que soit l'écran : le portrait carré plus le liseré.
   height: calc(var(--scd-med-size) + 3px);
   padding: var(--scd-row-py) 0.9rem;
-  border: 1.5px solid var(--dw-border);
-  border-radius: 12px;
-  background: linear-gradient(90deg, #261b12, #1a120c);
+  // Une plaque de fer rivetée, bordée de bronze, posée sur la suie.
+  border: 1.5px solid color-mix(in srgb, var(--heat) 62%, #6d4f28);
+  border-radius: 7px;
+  background:
+    var(--scd-rivet) calc(100% - 6px) 6px / 9px 9px no-repeat,
+    var(--scd-rivet) calc(100% - 6px) calc(100% - 6px) / 9px 9px no-repeat,
+    linear-gradient(90deg, color-mix(in srgb, var(--heat) 22%, transparent), transparent 52%),
+    var(--scd-plate-light),
+    var(--scd-iron) 0 0 / 420px,
+    #1c1510;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.17),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.75),
+    0 0 16px -5px var(--heat),
+    0 5px 12px rgba(0, 0, 0, 0.6);
 }
 
-// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances. Portrait, case du total, dés, addition, verdict, options,
-// modificateurs et menu tiennent toute la hauteur.
+// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances. Portrait, case du total, dés, résultat, modificateurs et
+// menu tiennent toute la hauteur.
 .scd-row > .scd-med,
 .scd-row > .scd-entry,
 .scd-row > .scd-faces,
 .scd-row > .scd-res,
-.scd-row > .scd-opt,
 .scd-row > .scd-row-icons {
   grid-row: 1 / 4;
 }
 
-// Le portrait : un carré collé au bord gauche de la ligne, qui en fixe la hauteur, ses coins gauches épousant ceux de la ligne (12px moins
+// Le portrait : un carré collé au bord gauche de la ligne, qui en fixe la hauteur, ses coins gauches épousant ceux de la ligne (7px moins
 // le liseré) ; il se fond vers la droite dans le fond de la ligne.
 .scd-row > .scd-med {
   grid-column: 1;
@@ -460,8 +573,9 @@ bol-start-combat-page {
   height: var(--scd-med-size);
   margin: calc(-1 * var(--scd-row-py)) 0 calc(-1 * var(--scd-row-py)) -0.9rem;
   border: 0;
-  border-radius: 10.5px 0 0 10.5px;
-  background: linear-gradient(90deg, var(--dw-surface-200), transparent);
+  border-radius: 5.5px 0 0 5.5px;
+  background: linear-gradient(90deg, #33241a, transparent);
+  color: var(--scd-bone);
 
   img {
     mask-image: linear-gradient(90deg, #000 72%, transparent);
@@ -521,12 +635,15 @@ bol-start-combat-page {
   height: 4px;
   overflow: hidden;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.14);
+  background: #090503;
+  box-shadow:
+    inset 0 1px 1px #000,
+    0 1px 0 rgba(255, 214, 160, 0.12);
 
   i {
     display: block;
     height: 100%;
-    background: var(--dw-color-reussite);
+    background: linear-gradient(180deg, #5fe394, #1f9a53);
   }
 
   .scd-vit-bar--low {
@@ -559,20 +676,25 @@ bol-start-combat-page {
   grid-column: 6;
 }
 
-.scd-row > .scd-opt {
-  grid-column: 7;
-}
-
-// Le résultat, en haut, à la hauteur du nom du héros : le verdict, ce qu'il change, et l'addition dessous. Il tient dans la hauteur fixe de la
-// ligne sans en décaler le reste : sa taille propre ne compte pas (`contain`), il prend celle des trois niveaux.
+// Le résultat : le verdict et ses options, ce qu'il change, et l'addition dessous. Il tient dans la hauteur fixe de la ligne sans en décaler
+// le reste : sa taille propre ne compte pas (`contain`), il prend celle des trois niveaux, plus un peu du retrait haut et bas de la ligne.
 .scd-row > .scd-res {
   contain: size;
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  gap: 0.05rem;
   min-width: 0;
-  margin-top: 3px;
+  margin-block: -0.2rem;
+}
+
+// Le haut du résultat : le mot du verdict et, à sa droite, à la même hauteur, les options d'héroïsme.
+.scd-res-top {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.6rem;
+  height: var(--scd-verdict-h);
+  min-width: 0;
 }
 
 // L'addition du jet, en petit : un nombre par terme, son nom dessous, le total en or.
@@ -633,8 +755,9 @@ bol-start-combat-page {
 // Ce que le verdict change au combat ; le texte complet est dans son infobulle s'il est coupé.
 .scd-consequence {
   display: -webkit-box;
+  flex: none;
   overflow: hidden;
-  color: var(--dw-surface-800);
+  color: #efe2c8;
   font-size: 0.76rem;
   line-height: 1.22;
   white-space: normal;
@@ -654,31 +777,25 @@ bol-start-combat-page {
   }
 }
 
-// La ligne prend la couleur de son résultat : le liseré, et un voile qui part de la gauche.
+// La plaque chauffe à la couleur de son résultat. Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
 .scd-row--reussite {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-reussite) 13%, #1a120c), #1a120c 55%);
+  --heat: #3ecf77;
 }
 
 .scd-row--heroique {
-  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-legendary) 15%, #1a120c), #1a120c 55%);
+  --heat: #eab54a;
 }
 
-// Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
 .scd-row--legendaire {
-  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 75%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-succes-legendaire) 15%, #1a120c), #1a120c 55%);
+  --heat: #c084fc;
 }
 
 .scd-row--echec {
-  border-color: color-mix(in srgb, var(--dw-color-echec) 55%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec) 12%, #1a120c), #1a120c 55%);
+  --heat: #e8502e;
 }
 
 .scd-row--echec_critique {
-  border-color: var(--dw-color-echec-forte);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec-forte) 22%, #1a120c), #1a120c 55%);
+  --heat: #ff3a1a;
 }
 
 // Exclu de ce combat : la ligne s'estompe, seuls ses boutons restent nets pour l'y réintégrer.
@@ -693,17 +810,21 @@ bol-start-combat-page {
   gap: 0.3rem;
 }
 
-// Des boutons icônes ronds, du même gabarit que celui des modificateurs.
+// Des boutons icônes ronds, du même gabarit que celui des modificateurs : des clous de bronze, qui rougeoient au survol.
 .scd-icon {
   display: grid;
   place-items: center;
   width: 2.1rem;
   height: 2.1rem;
   padding: 0;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--scd-bronze-dim);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--dw-surface-600);
+  background: var(--scd-stud);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.65);
+  color: #e6c98e;
   cursor: pointer;
 
   .mat-icon {
@@ -713,8 +834,11 @@ bol-start-combat-page {
   }
 
   &:hover {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
+    border-color: #ffc96a;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 225, 170, 0.4),
+      0 0 12px rgba(232, 135, 58, 0.6);
+    color: #ffe0a0;
   }
 }
 
@@ -773,7 +897,8 @@ bol-start-combat-page {
   font: 400 1.3rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #f3d68e;
+  color: #f6d98f;
+  text-shadow: 0 1px 2px #000;
 }
 
 .scd-tags {
@@ -799,20 +924,21 @@ bol-start-combat-page {
   flex: none;
   width: 0.62rem;
   height: 0.85rem;
-  background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+  background: linear-gradient(160deg, #fff0b3, #e8b75c 48%, #9a6410);
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
 // Une gemme éteinte : écrite après `.scd-gem`, mais en deux classes pour ne dépendre d'aucun ordre.
 .scd-gem.scd-gem--off {
-  background: rgba(241, 230, 208, 0.18);
+  background: rgba(245, 232, 207, 0.16);
 }
 
 // Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge).
 .scd-need {
   > b {
     font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-color-text-bright);
+    color: var(--scd-bone);
+    text-shadow: 0 1px 2px #000;
     white-space: nowrap;
   }
 }
@@ -832,7 +958,7 @@ bol-start-combat-page {
   }
 
   small {
-    color: var(--dw-surface-500);
+    color: #b8a582;
     font-size: 0.68rem;
   }
 }
@@ -869,30 +995,39 @@ bol-start-combat-page {
   gap: 0.4rem;
 }
 
+// La case : un creux dans le fer, cerclé de bronze, où le chiffre rougeoie.
 .scd-total {
   flex: none;
   width: 3.8rem;
   height: 2.7rem;
   padding: 0;
-  border: 2px solid color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.45);
-  color: var(--dw-surface-900);
+  border: 2px solid var(--scd-bronze);
+  border-radius: 7px;
+  background: #0a0604;
+  box-shadow:
+    inset 0 3px 7px #000,
+    0 1px 0 rgba(255, 214, 160, 0.16);
+  color: #ffe9bd;
   font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   text-align: center;
+  text-shadow: 0 0 12px rgba(232, 135, 58, 0.5);
 
   // Case vide : la police du champ lui-même passe à celle de l'invite, qui reste ainsi centrée en hauteur.
   &:placeholder-shown {
     font: 600 0.8rem 'Muse Sans', sans-serif;
+    text-shadow: none;
   }
 
   &::placeholder {
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 
   &:focus {
-    border-color: var(--dw-color-legendary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
+    border-color: #ffc96a;
+    box-shadow:
+      inset 0 3px 7px #000,
+      0 0 0 2px rgba(255, 201, 106, 0.35),
+      0 0 14px rgba(232, 135, 58, 0.5);
   }
 
   &:disabled {
@@ -907,10 +1042,14 @@ bol-start-combat-page {
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--scd-bronze-dim);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--dw-surface-600);
+  background: var(--scd-stud);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.65);
+  color: #e6c98e;
   cursor: pointer;
 
   .mat-icon {
@@ -920,8 +1059,11 @@ bol-start-combat-page {
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
+    border-color: #ffc96a;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 225, 170, 0.4),
+      0 0 12px rgba(232, 135, 58, 0.6);
+    color: #ffe0a0;
   }
 
   &:disabled {
@@ -937,7 +1079,15 @@ bol-start-combat-page {
   justify-content: flex-start;
 }
 
-// Le verdict et, dessous, ce qu'il change au combat.
+// Un peu de relief sur les dés, comme les dés 3D (trois sélecteurs : plus fort que le composant).
+.scd-row .scd-faces [data-v] {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+// Le verdict, écrit à la hauteur des options d'héroïsme.
 .scd-verdict {
   display: flex;
   flex-direction: column;
@@ -945,7 +1095,7 @@ bol-start-combat-page {
   line-height: 1.2;
 
   b {
-    font: 400 1.15rem/1.15 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 var(--scd-verdict-h)/1 'Muse Display Harmony', 'Muse Sans', serif;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     white-space: nowrap;
@@ -960,50 +1110,51 @@ bol-start-combat-page {
   font-size: 0.8rem;
 }
 
+// Le titre du verdict brille de la couleur qui chauffe la plaque.
 .scd-row--reussite .scd-verdict b {
-  color: var(--dw-color-reussite);
+  color: #5fe394;
+  text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
 }
 
 .scd-row--heroique .scd-verdict b {
-  color: var(--dw-color-legendary);
+  color: #f6c964;
+  text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
 }
 
 .scd-row--legendaire .scd-verdict b {
-  color: var(--dw-color-succes-legendaire);
+  color: #d3a6ff;
+  text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
 }
 
 .scd-row--echec .scd-verdict b {
-  color: var(--dw-color-echec);
+  color: #ff7a59;
+  text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
 }
 
 .scd-row--echec_critique .scd-verdict b {
-  color: var(--dw-color-echec-forte);
+  color: #ff6a4a;
+  text-shadow: 0 0 14px rgba(255, 58, 26, 0.75);
 }
 
-// L'option d'héroïsme du jet (une case à cocher, son prix en points à droite) et la faveur divine après un échec. Rien tant qu'il n'y a
-// rien à décider : la colonne ne réserve pas de place vide.
+// L'option d'héroïsme du jet (son prix en points à droite) et la faveur divine après un échec, juste après le mot du verdict.
 .scd-opt {
   display: flex;
-  justify-content: flex-end;
+  flex: none;
   gap: 0.3rem;
-}
-
-// Deux options côte à côte (double 1 : échec critique et faveur divine) : plus serrées, pour tenir dans la colonne sans passer l'une
-// sous l'autre.
-.scd-opt:has(.scd-act + .scd-act) .scd-act {
-  gap: 0.3rem;
-  padding: 0 0.5rem 0 0.4rem;
 }
 
 .scd-act {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  height: 2.1rem;
+  height: var(--scd-verdict-h);
   padding: 0 0.65rem 0 0.5rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
   border-radius: var(--dw-radius-toggle);
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.14),
+    0 2px 4px rgba(0, 0, 0, 0.5);
   color: var(--dw-color-legendary);
   font: inherit;
   font-size: 0.84rem;
@@ -1063,9 +1214,10 @@ bol-start-combat-page {
     background: color-mix(in srgb, var(--dw-color-echec-forte) 20%, transparent);
   }
 
+  // Un rouge assez sombre pour son texte blanc (AA).
   &[aria-pressed='true'] {
-    border-color: var(--dw-color-echec-forte);
-    background: var(--dw-color-echec-forte);
+    border-color: #b3261e;
+    background: #a81f17;
     color: #fff;
   }
 }
@@ -1090,7 +1242,6 @@ bol-start-combat-page {
 // Le bouton des modificateurs, rond comme ses voisins : ouvert, il s'allume ; le nombre de modificateurs accordés en pastille sur son coin.
 .scd-icon.scd-mods-btn {
   position: relative;
-  color: var(--dw-surface-700);
 
   &[aria-expanded='true'] {
     border-color: var(--dw-color-legendary);
@@ -1145,7 +1296,6 @@ bol-start-combat-page {
     --scd-col-who: 8rem;
     --scd-col-need: 7rem;
     --scd-col-faces: 6.4rem;
-    --scd-col-opt: 9.6rem;
 
     column-gap: 0.65rem;
   }
@@ -1165,7 +1315,6 @@ bol-start-combat-page {
     --scd-col-who: 7rem;
     --scd-col-need: 5.6rem;
     --scd-col-faces: 0;
-    --scd-col-opt: 9.6rem;
   }
 
   .scd-row > .scd-faces {
@@ -1190,10 +1339,13 @@ bol-start-combat-page {
   gap: 0.8rem;
   width: min(28rem, 92vw);
   padding: 0.9rem 1rem 1rem;
-  border: 1px solid var(--bar-bronze, var(--dw-border));
-  border-radius: 12px;
-  background: var(--dw-surface-100);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  // Une plaque de fer, comme les lignes.
+  border: 1px solid var(--scd-bronze);
+  border-radius: 7px;
+  background: var(--scd-plate-light), var(--scd-iron) 0 0 / 420px, #1c1510;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 160, 0.17),
+    0 18px 40px rgba(0, 0, 0, 0.6);
   color: var(--dw-surface-900);
 }
 

@@ -31,7 +31,7 @@
               [matTooltip]="rules"
               matTooltipClass="scd-tooltip"
             >
-              <mat-icon>info_outline</mat-icon>
+              <mat-icon svgIcon="gi-info" />
             </button>
           </div>
         </div>
@@ -49,7 +49,7 @@
             matTooltip="Embuscade, dé du MJ pour tous, malus adverse"
             (click)="optionsOpen.set(!optionsOpen())"
           >
-            <mat-icon>tune</mat-icon> Options
+            <mat-icon svgIcon="gi-tune" /> Options
             @if (ambushBonus(); as bonus) {
               <b class="scd-options-bonus" aria-hidden="true">{{ bonus }}</b>
               <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
@@ -62,7 +62,7 @@
             <!-- Le dé du MJ pour tous : un petit dé vert (bonus) ou rouge (malus) -->
             @if (globalGmDie(); as gm) {
               <span [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')"
-                ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
+                ><mat-icon svgIcon="gi-dice" /><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
               >
             }
           </button>
@@ -150,11 +150,11 @@
           @if (pendingHeroes().length > 0 || loading()) {
             @if (noAdversary()) {
               <button mat-stroked-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon>casino</mat-icon> Lancer pour tous
+                <mat-icon svgIcon="gi-dice" /> Lancer pour tous
               </button>
             } @else {
               <button mat-flat-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon>casino</mat-icon> Lancer pour tous
+                <mat-icon svgIcon="gi-dice" /> Lancer pour tous
               </button>
             }
           }
@@ -162,12 +162,12 @@
           <!-- Démarrer, dès que tous les héros ont lancé et qu'il y a un adversaire -->
           @if (canStart()) {
             <button #startButton mat-flat-button type="button" [disabled]="starting()" (click)="start()">
-              <mat-icon>play_arrow</mat-icon>
+              <mat-icon svgIcon="gi-swords" />
               {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
             </button>
           } @else {
             <button #startButton mat-stroked-button type="button" disabled>
-              <mat-icon>play_arrow</mat-icon>
+              <mat-icon svgIcon="gi-swords" />
               {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
             </button>
           }
@@ -201,7 +201,7 @@
           (addClicked)="openAddAdversary()"
         />
         @if (noAdversary()) {
-          <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
+          <span class="scd-warn" role="status"><mat-icon svgIcon="gi-warning" aria-hidden="true" /> Aucun adversaire</span>
         }
       </div>
     </header>
@@ -258,7 +258,7 @@
                     role="img"
                     [attr.aria-label]="'Vitalité ' + (card.hero.vitalite ?? '—') + ' sur ' + (card.hero.vitaliteMax ?? '—')"
                   >
-                    <mat-icon aria-hidden="true">favorite</mat-icon>
+                    <mat-icon svgIcon="gi-heart" aria-hidden="true" />
                     <span class="scd-vit-bar" aria-hidden="true"
                       ><i [class.scd-vit-bar--low]="card.vitaliteLow" [style.width.%]="card.vitalitePercent"></i
                     ></span>
@@ -324,25 +324,93 @@
                       matTooltip="Lancer à l’écran"
                       (click)="rollFor(card.hero)"
                     >
-                      <mat-icon>casino</mat-icon>
+                      <mat-icon svgIcon="gi-dice" />
                     </button>
                   </span>
 
                   <!-- Ses dés : les faces lancées à l'écran (le dé écarté estompé) ou un double tapé ; sinon une place par dé à lancer -->
                   <dw-dice-row class="scd-faces" [slots]="card.diceCount" [dice]="card.faces" />
-                  <!-- Le résultat : le verdict et ce qu'il change au combat ; dessous, en petit, l'addition du jet : un nombre par terme, son nom
-                       dessous, le total en or -->
+                  <!-- Le résultat : le verdict et, à sa droite, à la même hauteur, l'option d'héroïsme qu'ouvre le jet ; dessous, ce qu'il change au
+                       combat ; dessous, en petit, l'addition du jet : un nombre par terme, son nom dessous, le total en or -->
                   <span class="scd-res">
-                    <span class="scd-verdict" aria-live="polite">
-                      @if (card.verdict; as v) {
-                        <b>{{ v.title }}</b>
-                        <span class="scd-consequence" [matTooltip]="v.detail">{{ v.detail }}</span>
-                      } @else if (card.favorPending) {
-                        <small class="scd-verdict-wait">Faveur divine : relance les deux dés.</small>
-                      } @else {
-                        <small class="scd-verdict-wait">En attente du total</small>
-                      }
+                    <span class="scd-res-top">
+                      <span class="scd-verdict" aria-live="polite">
+                        @if (card.verdict; as v) {
+                          <b>{{ v.title }}</b>
+                        } @else if (card.favorPending) {
+                          <small class="scd-verdict-wait">Faveur divine : relance les deux dés.</small>
+                        } @else {
+                          <small class="scd-verdict-wait">En attente du total</small>
+                        }
+                      </span>
+                      <!-- L'option d'héroïsme, en bouton icône avec son coût : l'échec critique (double 1, +1 point), le succès légendaire (double 6)
+                           ou héroïque (réussite), des bascules ; la faveur divine après un échec, une action. -->
+                      <span class="scd-opt">
+                        @if (card.option === 'critique') {
+                          <button
+                            type="button"
+                            class="scd-act scd-act--critique"
+                            [attr.aria-pressed]="card.optionChosen"
+                            aria-label="Échec critique : gagner 1 point d’héroïsme"
+                            matTooltip="Échec critique : il agit en dernier, et gagne 1 point d’héroïsme"
+                            (click)="toggleOption(card)"
+                          >
+                            <mat-icon svgIcon="gi-skull" aria-hidden="true" />
+                            <span class="scd-cost" aria-hidden="true"
+                              >+1 <span class="scd-gem"></span
+                            ></span>
+                          </button>
+                        } @else if (card.option === 'legendaire') {
+                          <button
+                            type="button"
+                            class="scd-act scd-act--legendaire"
+                            [attr.aria-pressed]="card.optionChosen"
+                            aria-label="Succès légendaire, pour 1 point d’héroïsme"
+                            matTooltip="Succès légendaire, pour 1 point d’héroïsme : +1 à ses attaques tout le combat"
+                            (click)="toggleOption(card)"
+                          >
+                            <mat-icon svgIcon="gi-crown" aria-hidden="true" />
+                            <span class="scd-cost" aria-hidden="true"
+                              >−1 <span class="scd-gem"></span
+                            ></span>
+                          </button>
+                        } @else if (card.option === 'heroique') {
+                          <button
+                            type="button"
+                            class="scd-act"
+                            [attr.aria-pressed]="card.optionChosen"
+                            aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
+                            matTooltip="Succès héroïque, pour 1 point d’héroïsme : au round 1, coriaces et piétaille ne jouent pas"
+                            (click)="toggleOption(card)"
+                          >
+                            <mat-icon svgIcon="gi-laurels" aria-hidden="true" />
+                            <span class="scd-cost" aria-hidden="true"
+                              >−1 <span class="scd-gem"></span
+                            ></span>
+                          </button>
+                        }
+                        @if (card.favor && !card.optionChosen) {
+                          <button
+                            type="button"
+                            class="scd-act scd-act--action"
+                            [disabled]="rolling()"
+                            matTooltip="Faveur divine, pour 1 point d’héroïsme : efface le jet ; relance les deux dés, à table ou à l’écran"
+                            [attr.aria-label]="
+                              'Faveur divine : relancer les dés de ' +
+                              card.hero.nom +
+                              ' pour 1 point d’héroïsme'
+                            "
+                            (click)="divineFavor(card)"
+                          >
+                            <mat-icon svgIcon="gi-favor" aria-hidden="true" />
+                            <span class="scd-cost" aria-hidden="true"
+                              >−1 <span class="scd-gem"></span
+                            ></span>
+                          </button>
+                        }
+                      </span>
                     </span>
+                    <span class="scd-consequence" aria-live="polite" [matTooltip]="card.verdict?.detail ?? ''">{{ card.verdict?.detail }}</span>
                     <span class="scd-sum" [class.scd-sum--pending]="card.dice === null" role="group" [attr.aria-label]="'Calcul du jet de ' + card.hero.nom">
                       @for (term of card.sum; track $index) {
                         <span class="scd-sum-term" [class.scd-sum-term--plus]="term.tone === 'plus'" [class.scd-sum-term--minus]="term.tone === 'minus'" [class.scd-sum-term--total]="term.tone === 'total'">
@@ -351,76 +419,6 @@
                         </span>
                       }
                     </span>
-                  </span>
-
-                  <!-- L'option d'héroïsme qu'ouvre le jet (double 1, double 6, réussite) et la faveur divine après un échec -->
-                  <!-- L'option d'héroïsme qu'ouvre le jet, en bouton icône avec son coût : l'échec critique (double 1, +1 point), le succès
-                       légendaire (double 6) ou héroïque (réussite), des bascules ; la faveur divine après un échec, une action. -->
-                  <span class="scd-opt">
-                    @if (card.option === 'critique') {
-                      <button
-                        type="button"
-                        class="scd-act scd-act--critique"
-                        [attr.aria-pressed]="card.optionChosen"
-                        aria-label="Échec critique : gagner 1 point d’héroïsme"
-                        matTooltip="Échec critique : il agit en dernier, et gagne 1 point d’héroïsme"
-                        (click)="toggleOption(card)"
-                      >
-                        <mat-icon svgIcon="skull" aria-hidden="true" />
-                        <span class="scd-cost" aria-hidden="true"
-                          >+1 <span class="scd-gem"></span
-                        ></span>
-                      </button>
-                    } @else if (card.option === 'legendaire') {
-                      <button
-                        type="button"
-                        class="scd-act scd-act--legendaire"
-                        [attr.aria-pressed]="card.optionChosen"
-                        aria-label="Succès légendaire, pour 1 point d’héroïsme"
-                        matTooltip="Succès légendaire, pour 1 point d’héroïsme : +1 à ses attaques tout le combat"
-                        (click)="toggleOption(card)"
-                      >
-                        <mat-icon svgIcon="crown" aria-hidden="true" />
-                        <span class="scd-cost" aria-hidden="true"
-                          >−1 <span class="scd-gem"></span
-                        ></span>
-                      </button>
-                    } @else if (card.option === 'heroique') {
-                      <button
-                        type="button"
-                        class="scd-act"
-                        [attr.aria-pressed]="card.optionChosen"
-                        aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
-                        matTooltip="Succès héroïque, pour 1 point d’héroïsme : au round 1, coriaces et piétaille ne jouent pas"
-                        (click)="toggleOption(card)"
-                      >
-                        <mat-icon aria-hidden="true">{{
-                          card.optionChosen ? 'star' : 'star_border'
-                        }}</mat-icon>
-                        <span class="scd-cost" aria-hidden="true"
-                          >−1 <span class="scd-gem"></span
-                        ></span>
-                      </button>
-                    }
-                    @if (card.favor && !card.optionChosen) {
-                      <button
-                        type="button"
-                        class="scd-act scd-act--action"
-                        [disabled]="rolling()"
-                        matTooltip="Faveur divine, pour 1 point d’héroïsme : efface le jet ; relance les deux dés, à table ou à l’écran"
-                        [attr.aria-label]="
-                          'Faveur divine : relancer les dés de ' +
-                          card.hero.nom +
-                          ' pour 1 point d’héroïsme'
-                        "
-                        (click)="divineFavor(card)"
-                      >
-                        <mat-icon aria-hidden="true">replay</mat-icon>
-                        <span class="scd-cost" aria-hidden="true"
-                          >−1 <span class="scd-gem"></span
-                        ></span>
-                      </button>
-                    }
                   </span>
                 }
 
@@ -440,10 +438,10 @@
                       matTooltip="Modificateurs : dé du MJ, carrière utile"
                       (click)="toggleMods(card.hero.pivotId)"
                     >
-                      <mat-icon aria-hidden="true">tune</mat-icon>
+                      <mat-icon svgIcon="gi-tune" aria-hidden="true" />
                       <!-- Ce qui est accordé, comme sur le bouton des options : un petit dé vert ou rouge, le bonus de la carrière -->
                       @if (card.gmDie; as gm) {
-                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon>casino</mat-icon></span>
+                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon svgIcon="gi-dice" /></span>
                       }
                       @if (card.career; as career) {
                         <b class="scd-mods-career" aria-hidden="true">+{{ career.value }}</b>
@@ -548,7 +546,7 @@
                     matTooltip="Voir la fiche"
                     (click)="openSheet(card.hero)"
                   >
-                    <mat-icon aria-hidden="true">description</mat-icon>
+                    <mat-icon svgIcon="gi-sheet" aria-hidden="true" />
                   </button>
                   <button
                     type="button"
@@ -566,9 +564,7 @@
                     "
                     (click)="toggleExcluded('hero', card.hero.pivotId)"
                   >
-                    <mat-icon aria-hidden="true">{{
-                      card.excluded ? 'undo' : 'person_off'
-                    }}</mat-icon>
+                    <mat-icon [svgIcon]="card.excluded ? 'gi-return' : 'gi-exit'" aria-hidden="true" />
                   </button>
                 </span>
               </li>
@@ -578,6 +574,12 @@
           </ol>
           <p class="scd-hint">
             Tape le total annoncé à table : la saisie passe d’elle-même au héros suivant.
+          </p>
+          <p class="scd-credit">
+            Icônes :
+            <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+            (Lorc, Delapouite et contributeurs),
+            <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
           </p>
         }
       </section>
