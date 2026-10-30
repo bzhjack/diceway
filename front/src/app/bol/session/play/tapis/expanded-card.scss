@@ -84,11 +84,11 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 5.2rem;
+  width: 6.6rem;
   aspect-ratio: 1 / 1;
-  // Médaillon : portrait rond dans un anneau métallique de la couleur du type.
-  border: 5px solid transparent;
-  border-radius: 50%;
+  // Portrait carré aux coins arrondis, dans un cadre métallique de la couleur du type.
+  border: 4px solid transparent;
+  border-radius: 12px;
   background:
     radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--exc-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
     conic-gradient(from 210deg, var(--exc-metal-1), var(--exc-metal-2), var(--exc-metal-3), var(--exc-metal-2), var(--exc-metal-1)) border-box;
@@ -106,7 +106,7 @@
 .exc-portrait-img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 8px;
   object-fit: cover;
 }
 

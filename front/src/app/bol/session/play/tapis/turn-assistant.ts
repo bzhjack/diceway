@@ -6,9 +6,7 @@ import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
@@ -72,7 +70,7 @@ const DICE_TIMEOUT_MS = 12000;
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
 /** Les popovers de l'assistant : l'attaquant, la cible, les modificateurs du coup, les autres actions. */
-type TurnPopover = 'me' | 'cible' | 'mods' | 'more';
+type TurnPopover = 'me' | 'mods' | 'more';
 
 /** Un réglage actif du coup (deux mains, posture, dé ou modificateur du MJ, carrière…), montré en pastille avec sa croix. */
 interface ActiveOption {
@@ -228,9 +226,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
     DwValueStepperComponent,
     EffectsListComponent,
     MatButtonModule,
-    MatFormFieldModule,
     MatIconModule,
-    MatSelectModule,
     MatTooltipModule,
     NgTemplateOutlet,
     PointsStepperComponent,
@@ -1452,11 +1448,10 @@ export class TurnAssistantComponent {
   }
 
   /** La cible choisie dans la liste : la même ne change rien. */
-  protected pickTarget(key: string | null): void {
-    const card = this.targets().find((t) => t.key === key);
-    if (card && card.key !== this.target()?.key) {
-      this.selectTarget(card);
-    }
+  /** « Changer d'adversaire » : la cible est abandonnée, la rangée des cartes revient, le focus sur la première. */
+  protected changeTarget(): void {
+    this.targetSelected.emit(null);
+    this.focusAfterRender(() => this.firstPick());
   }
 
   /** Vise une carte — ou, si c'est déjà la cible, y renonce. */

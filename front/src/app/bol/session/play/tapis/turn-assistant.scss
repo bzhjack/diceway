@@ -323,19 +323,7 @@
   }
 }
 
-// Les listes (cible, arme) : des champs Material, serrés, sans place réservée aux messages ; dans la phrase du coup, chacune sa largeur.
-.tas-select.tas-select--target {
-  flex: 0 1 24rem;
-  width: auto;
-}
-
-.tas-select {
-  width: 100%;
-  --mat-form-field-container-height: 2.9rem;
-  --mat-form-field-container-vertical-padding: 0.7rem;
-}
-
-// Une ligne de liste : le nom, puis ce qui le précise (dés d'une arme, effet d'une posture, chances d'une cible).
+// L'arme choisie, en clair à côté des cases : son nom, puis ses dégâts.
 .tas-opt {
   display: flex;
   align-items: center;
@@ -355,29 +343,6 @@
     font-size: 0.85em;
     color: var(--dw-color-legendary);
   }
-
-  .tas-bar {
-    flex: none;
-    width: 3rem;
-  }
-}
-
-.tas-opt-id {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.2;
-
-  small {
-    font-size: 0.72rem;
-    color: var(--dw-surface-600);
-  }
-}
-
-// Écrite avant `.tas-med`, qui fixe le liseré : d'où les deux classes.
-.tas-med.tas-med--foe {
-  border-color: var(--dw-color-echec-forte);
 }
 
 // Les postures gardent leur couleur dans la liste, comme sur l'ancienne échelle : un filet à gauche de leur nom.
@@ -582,6 +547,61 @@
   }
 }
 
+// La cible choisie : sa carte, et à sa droite, collé à son bord, un panneau qui la prolonge (même hauteur, liseré de son camp) : ses
+// chiffres, sa vie et ses points, ses effets, ses actions.
+.tas-target {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.tas-target .tas-cible {
+  position: relative;
+  z-index: 1;
+}
+
+.tas-target-panel {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.45rem;
+  min-width: 0;
+  margin-left: -0.6rem;
+  padding: 0.5rem 0.8rem 0.55rem 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--tas-target, var(--dw-border)) 55%, transparent);
+  border-left: 0;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(90deg, var(--dw-surface-100), color-mix(in srgb, var(--dw-surface-100) 70%, transparent));
+}
+
+.tas-target-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+
+  b {
+    font: 400 1.05rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-color-text-bright);
+  }
+
+  em {
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
+  }
+}
+
+.tas-target-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 // Les armes : une case carrée par arme, le symbole de l'arme dedans, ses dégâts dessous ; celle qui est choisie s'allume en or.
 .tas-picks {
   display: flex;
@@ -728,13 +748,6 @@
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--tas-side) 35%, transparent),
     0 0 14px color-mix(in srgb, var(--tas-side) 55%, transparent);
-}
-
-.tas-med--small {
-  width: 2.4rem;
-  height: 2.4rem;
-  border-width: 2px;
-  font-size: 1.05rem;
 }
 
 .tas-name {

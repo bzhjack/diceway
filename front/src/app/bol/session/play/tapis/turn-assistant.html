@@ -148,8 +148,8 @@
 
   <ol class="tas-reg">
     <!-- 1 · Le coup, en trois blocs : Contre (la cible), Arme, Options (les réglages actifs en pastilles, un clic les retire, et
-         « Modificateurs » pour les autres). La cible se choisit d'abord par fiche et numéro, puis dans la liste ; sa barre
-         de vie montre ce que le coup va lui retirer ; ses chiffres, sa vie réglable et sa fiche sont sous son ⓘ. Le coup joué reste écrit,
+         « Modificateurs » pour les autres). La cible se choisit dans la rangée des cartes ; choisie, il ne reste que sa carte, et
+         « Changer d’adversaire » ramène la rangée ; ses chiffres, sa vie réglable et sa fiche la prolongent sur la droite. Le coup joué reste écrit,
          figé, jusqu'à la fin du tour. -->
     <li [class]="'tas-line tas-line--' + stations()[0]" [style.--tas-target]="targetSide() ? (targetSide()!.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)') : null" aria-labelledby="tas-l1">
       <span class="tas-lbl" id="tas-l1">Le coup</span>
@@ -157,96 +157,26 @@
       <div class="tas-coup">
         <div class="tas-part tas-part--contre" role="group" aria-labelledby="tas-part-contre">
           <span class="tas-part-label" id="tas-part-contre">Contre</span>
-        @if (played(); as p) {
-          <span class="tas-played">
-            <b>{{ p.target.nom }}</b>
-            @if (playedTargetOut()) {
-              <span class="tas-pill">hors de combat</span>
-            }
-          </span>
-        } @else if (!target() && targets().length > 0) {
-          <span class="tas-wait">à choisir ci-dessous</span>
-        } @else if (targets().length > 0 || target()) {
-          <mat-form-field class="tas-select tas-select--target" subscriptSizing="dynamic">
-            <mat-label>Cible</mat-label>
-            <mat-select [value]="target()?.key ?? null" placeholder="Qui vise-t-il ?" (selectionChange)="pickTarget($event.value)">
-              <mat-select-trigger>
-                @if (target(); as t) {
-                  @let life = lifeOf(t);
-                  <span class="tas-opt">
-                    <span class="tas-opt-id">
-                      <b>{{ t.nom }}</b>
-                      <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
-                    </span>
-                    @if (odds()[t.key]; as chance) {
-                      <em>{{ chance }}</em>
-                    }
-                  </span>
-                }
-              </mat-select-trigger>
-              @for (t of targets(); track t.key) {
-                @let life = lifeOf(t);
-                <mat-option [value]="t.key">
-                  <span class="tas-opt">
-                    <span class="tas-med tas-med--small" [class.tas-med--foe]="t.camp !== 'heros'" aria-hidden="true">
-                      @if (t.avatar) {
-                        <img dwAvatarFallback [src]="t.avatar" alt="" />
-                      } @else {
-                        {{ t.nom.charAt(0).toUpperCase() }}
-                      }
-                    </span>
-                    <span class="tas-opt-id">
-                      <b>{{ t.nom }}</b>
-                      @if (targetDetails()[t.key]; as detail) {
-                        <small>{{ detail }}</small>
-                      }
-                    </span>
-                    @if (odds()[t.key]; as chance) {
-                      <em>{{ chance }}</em>
-                    }
-                    <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
-                  </span>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        } @else {
-          <span class="tas-note">Personne à viser.</span>
-        }
         @if (target(); as t) {
-          <!-- La cible : ses chiffres, sa vie et ses points réglables, ses effets, sa fiche -->
-          <button
-            type="button"
-            class="tas-ib"
-            [id]="popId('cible')"
-            cdkOverlayOrigin
-            #cibleOrigin="cdkOverlayOrigin"
-            aria-haspopup="dialog"
-            [attr.aria-expanded]="openPop() === 'cible'"
-            [attr.aria-label]="t.nom + ' : défense, protection, vitalité, effets, fiche'"
-            matTooltip="Défense, protection, vie, effets, fiche"
-            (click)="togglePop('cible')"
-          >
-            <mat-icon aria-hidden="true">info_outline</mat-icon>
-            @if (targetBadges().length > 0) {
-              <b class="tas-count tas-count--corner" aria-hidden="true">{{ targetBadges().length }}</b>
-            }
-          </button>
-          <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="cibleOrigin"
-            [cdkConnectedOverlayOpen]="openPop() === 'cible'"
-            [cdkConnectedOverlayPositions]="popoverPositions"
-            [cdkConnectedOverlayPush]="true"
-            [cdkConnectedOverlayViewportMargin]="12"
-            [cdkConnectedOverlayHasBackdrop]="true"
-            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-            (backdropClick)="closePop()"
-            (overlayKeydown)="onPopKeydown($event)"
-            (detach)="openPop.set(null)"
-          >
-            <div class="tas-options tas-options--pop" role="dialog" [attr.aria-label]="t.nom" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
-              <span class="tas-pop-title">{{ t.nom }}</span>
+          <!-- La cible : sa carte, comme dans le choix des cibles, ses chances dessous ; à sa droite, en prolongement de la carte, ses chiffres,
+               sa vie et ses points réglables, ses effets, sa fiche, et de quoi viser quelqu'un d'autre (tant que le coup n'est pas joué) -->
+          <div class="tas-target">
+            <div class="tas-cible">
+              <bol-acteur
+                [card]="t"
+                taille="coriace"
+                [detail]="odds()[t.key] ?? null"
+                [matTooltip]="'Voir la fiche de ' + t.nom"
+                (toggled)="sheetRequested.emit(t)"
+              />
+            </div>
+            <div class="tas-target-panel" role="group" [attr.aria-label]="t.nom + ' : défense, protection, vitalité, effets'">
+              <p class="tas-target-head">
+                <b>{{ t.nom }}</b>
+                @if (odds()[t.key]; as chance) {
+                  <em>{{ chance }}</em>
+                }
+              </p>
               <div class="tas-tiles tas-tiles--start">
                 @for (tile of targetTiles(); track tile.label) {
                   <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'">
@@ -261,24 +191,42 @@
                   <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
                   <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
                 </div>
-                @if (pointsCible(); as p) {
+                @if (pointsCible(); as pts) {
                   <div class="tas-vit">
-                    <bol-points-stepper [kind]="t.kind" [points]="p.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
-                    <span class="tas-tag">{{ p.titre }}</span>
+                    <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
+                    <span class="tas-tag">{{ pts.titre }}</span>
                   </div>
                 }
               </div>
               @if (targetBadges().length > 0) {
-                <span class="tas-label">Effets sur la cible</span>
                 <ul class="tas-pills tas-pills--cible" aria-label="Effets sur la cible">
                   @for (badge of targetBadges(); track $index) {
                     <li class="tas-pill">{{ badge }}</li>
                   }
                 </ul>
               }
-              <button mat-stroked-button size="small" type="button" (click)="closePop(); sheetRequested.emit(t)"><mat-icon>description</mat-icon> Voir la fiche</button>
+              <div class="tas-target-actions">
+                @if (played() && playedTargetOut()) {
+                  <span class="tas-pill">hors de combat</span>
+                }
+                <button mat-stroked-button size="small" type="button" (click)="sheetRequested.emit(t)"><mat-icon>description</mat-icon> Voir la fiche</button>
+                @if (!played()) {
+                  <button mat-stroked-button size="small" type="button" (click)="changeTarget()"><mat-icon>swap_horiz</mat-icon> Changer d’adversaire</button>
+                }
+              </div>
             </div>
-          </ng-template>
+          </div>
+        } @else if (played(); as p) {
+          <span class="tas-played">
+            <b>{{ p.target.nom }}</b>
+            @if (playedTargetOut()) {
+              <span class="tas-pill">hors de combat</span>
+            }
+          </span>
+        } @else if (targets().length > 0) {
+          <span class="tas-wait">à choisir ci-dessous</span>
+        } @else {
+          <span class="tas-note">Personne à viser.</span>
         }
 
         @if (!played() && !target() && targets().length > 0) {
