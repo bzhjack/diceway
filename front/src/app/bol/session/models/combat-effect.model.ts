@@ -67,8 +67,10 @@ export interface ModifierTerm {
   readonly tone: 'plus' | 'minus';
 }
 
-/** Ce que la carte active a choisi pour son tour et qui dure : la posture (slug du référentiel) et la défense totale. */
+/** Ce que la carte active a choisi pour son tour et qui dure : la posture et l'option spéciale qui s'y ajoute (slugs du référentiel :
+ * la parade à deux armes dure aussi), et la défense totale. */
 export interface TurnChoice {
   readonly posture: string | null;
+  readonly special?: string | null;
   readonly defenseTotale: boolean;
 }

@@ -59,6 +59,8 @@ import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
+import {ActeurComponent} from '../theatre/acteur';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -177,9 +179,11 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   selector: 'bol-turn-assistant',
   imports: [
     A11yModule,
+    ActeurComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkOverlayOrigin,
+    DwArmeIconComponent,
     DwDiceRowComponent,
     DwValueStepperComponent,
     EffectsListComponent,
@@ -284,6 +288,8 @@ export class TurnAssistantComponent {
   // ces choix à zéro — et, avec eux, le jet en cours.
   private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
   private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.cardKey(), computation: () => null});
+  /** L'option spéciale (défaut de l'armure, deux armes), à part de la posture : les deux se cumulent. */
+  private readonly selectedSpecialSlug = linkedSignal<string, string | null>({source: () => this.cardKey(), computation: () => null});
   private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
 
   /** Les armes lourdes que l'attaquant ne peut pas manier : toutes, s'il a moins de 0 en vigueur (02-actions-combat.md, « Dégâts »). */
@@ -398,9 +404,10 @@ export class TurnAssistantComponent {
     return filterVisiblePostures(options, main && isDualWieldWeapon(main) ? (main.arme?.degats ?? null) : null, otherDegats);
   });
 
+  /** La posture retenue sur l'échelle (« Aucune » par défaut). */
   protected readonly effectiveOption = computed(() => {
-    const list = this.visibleOptions();
-    return list.find((o) => o.slug === this.selectedOptionSlug()) ?? list[0] ?? null;
+    const list = this.scalePostures();
+    return list.find((o) => o.slug === this.selectedOptionSlug()) ?? list.find((o) => o.slug === 'none') ?? list[0] ?? null;
   });
 
   /** Les trois postures simples plus « Aucune », dans l'ordre de l'échelle. */
@@ -408,8 +415,14 @@ export class TurnAssistantComponent {
     SCALE_SLUGS.map((slug) => this.visibleOptions().find((o) => o.slug === slug)).filter((o): o is BolCombatOptionModel => !!o),
   );
 
-  /** Combat à deux armes, attaque au défaut de l'armure : des options qui se cochent, en plus de la posture. */
-  protected readonly specialPostures = computed(() => this.visibleOptions().filter((o) => !SCALE_SLUGS.includes(o.slug)));
+  /** Combat à deux armes, attaque au défaut de l'armure : des options qui se cochent, en plus de la posture. L'attaque intrépide prive
+   * de l'arme secondaire de parade (livre p. 64) : la parade disparaît tant qu'elle est choisie. */
+  protected readonly specialPostures = computed(() =>
+    this.visibleOptions().filter((o) => !SCALE_SLUGS.includes(o.slug) && !(o.slug === 'dual-parry' && this.effectiveOption()?.slug === 'intrepid')),
+  );
+
+  /** L'option spéciale cochée, ou `null`. */
+  protected readonly effectiveSpecial = computed(() => this.specialPostures().find((o) => o.slug === this.selectedSpecialSlug()) ?? null);
 
   /** « Posture offensive » → « Offensive », « Attaque intrépide » → « Intrépide ». */
   protected scaleName(option: BolCombatOptionModel): string {
@@ -422,11 +435,8 @@ export class TurnAssistantComponent {
     return `att ${this.signed(option.modificateur)} · déf ${this.signed(POSTURE_DEFENSE[option.slug] ?? 0)}`;
   }
 
-  /** La posture de l'échelle retenue, pour sa liste ; `null` quand c'est une option spéciale (le défaut de l'armure…) qui est cochée. */
-  protected readonly postureSlug = computed(() => {
-    const slug = this.effectiveOption()?.slug ?? null;
-    return slug !== null && SCALE_SLUGS.includes(slug) ? slug : null;
-  });
+  /** La posture de l'échelle retenue. */
+  protected readonly postureSlug = computed(() => this.effectiveOption()?.slug ?? null);
 
   /** Le popover ouvert — l'attaquant (« me »), la cible, les modificateurs du coup, les autres actions — ou aucun ; il se ferme à chaque
    * nouveau tour. */
@@ -475,7 +485,11 @@ export class TurnAssistantComponent {
     }
     const option = this.effectiveOption();
     if (option && option.slug !== 'none') {
-      active.push({id: SCALE_SLUGS.includes(option.slug) ? 'posture' : 'special', label: option.label});
+      active.push({id: 'posture', label: option.label});
+    }
+    const special = this.effectiveSpecial();
+    if (special) {
+      active.push({id: 'special', label: special.label});
     }
     if (this.brawl()) {
       active.push({id: 'brawl', label: 'Bagarre'});
@@ -506,8 +520,10 @@ export class TurnAssistantComponent {
         this.deuxMainsChoisi.set(false);
         break;
       case 'posture':
-      case 'special':
         this.selectOption('none');
+        break;
+      case 'special':
+        this.toggleSpecial(this.effectiveSpecial()?.slug ?? '');
         break;
       case 'brawl':
         this.brawlChosen.set(false);
@@ -530,12 +546,16 @@ export class TurnAssistantComponent {
     }
   }
 
-  /** Une option spéciale se coche et se décoche ; décochée, on revient à « Aucune ». */
+  /** Une option spéciale se coche et se décoche, sans toucher à la posture ; cocher l'une décoche l'autre. */
   protected toggleSpecial(slug: string): void {
-    this.selectOption(this.effectiveOption()?.slug === slug ? 'none' : slug);
+    const next = this.effectiveSpecial()?.slug === slug ? null : slug;
+    this.selectedSpecialSlug.set(next);
+    if (!DUAL_WIELD_SLUGS.has(next ?? '')) {
+      this.selectedOffHandId.set(null);
+    }
   }
 
-  protected readonly isDualWieldSelected = computed(() => DUAL_WIELD_SLUGS.has(this.effectiveOption()?.slug ?? ''));
+  protected readonly isDualWieldSelected = computed(() => DUAL_WIELD_SLUGS.has(this.effectiveSpecial()?.slug ?? ''));
 
   protected readonly effectiveOffHand = computed(() => {
     const list = this.eligibleOffHandArmes();
@@ -549,12 +569,13 @@ export class TurnAssistantComponent {
     }
 
     const option = this.effectiveOption();
+    const special = this.effectiveSpecial();
     const mainDegats = degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, this.deuxMains());
     const offHand = this.effectiveOffHand();
     const degats =
-      this.hordeSize() > 0 ? HORDE_DEGATS : option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
+      this.hordeSize() > 0 ? HORDE_DEGATS : special?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
 
-    return {degats, posture: option && option.slug !== 'none' ? option : null};
+    return {degats, posture: option && option.slug !== 'none' ? option : null, special};
   });
 
   // Les clés, pas les objets : la table rechargée repasse des cartes identiques mais neuves, qui ne doivent pas effacer le jet en cours.
@@ -562,7 +583,7 @@ export class TurnAssistantComponent {
   private readonly targetKey = computed(() => this.target()?.key ?? null);
   private readonly choiceKey = computed(() => {
     const choice = this.choice();
-    return choice ? `${this.effectiveArme()?.id ?? ''}|${this.effectiveOffHand()?.id ?? ''}|${choice.degats}|${choice.posture?.slug ?? ''}` : '';
+    return choice ? `${this.effectiveArme()?.id ?? ''}|${this.effectiveOffHand()?.id ?? ''}|${choice.degats}|${choice.posture?.slug ?? ''}|${choice.special?.slug ?? ''}` : '';
   });
 
   // ── Étape 3 : le jet d'attaque ──
@@ -675,7 +696,7 @@ export class TurnAssistantComponent {
     if (!stats) {
       return [];
     }
-    const posture = POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0;
+    const posture = (POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0) + (POSTURE_DEFENSE[this.effectiveSpecial()?.slug ?? ''] ?? 0);
     return [
       {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir(), this.brawl())), hint: this.attackHint(stats)},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
@@ -690,7 +711,7 @@ export class TurnAssistantComponent {
     if (!stats) {
       return [];
     }
-    const armorIgnored = this.choice()?.posture?.slug === 'armor-chink';
+    const armorIgnored = this.choice()?.special?.slug === 'armor-chink';
     return [
       {label: 'Défense', value: String(stats.defense)},
       armorIgnored ? {label: 'Armure ignorée', value: '0', tone: 'up'} : protectionTile(stats.protectionText, stats.protection),
@@ -727,9 +748,10 @@ export class TurnAssistantComponent {
   private readonly canSpend = computed(() => (this.heroisme() ?? 0) > 0 && !this.carnageUsed());
 
   protected readonly degats = computed(() => this.choice()?.degats ?? this.attacker()?.degats ?? this.card().degats);
-  protected readonly postureModifier = computed(() =>
-    resolvePostureAttackModifier(this.choice()?.posture ?? null, this.targetStats()?.protection ?? 0),
-  );
+  /** Ce que la posture, puis l'option spéciale, ajoutent au jet d'attaque contre la cible choisie ; et les deux ensemble. */
+  private readonly stanceModifier = computed(() => resolvePostureAttackModifier(this.choice()?.posture ?? null, this.targetStats()?.protection ?? 0));
+  private readonly specialModifier = computed(() => resolvePostureAttackModifier(this.choice()?.special ?? null, this.targetStats()?.protection ?? 0));
+  protected readonly postureModifier = computed(() => this.stanceModifier() + this.specialModifier());
 
   /** Ce qui s'ajoute aux deux dés contre la cible choisie : bonus d'attaque − défense + posture + effets en cours. `null` sans cible. */
   protected readonly attackModifier = computed(() => {
@@ -815,7 +837,8 @@ export class TurnAssistantComponent {
                 sommeModificateurs(modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})) +
                   sommeModificateurs(this.extraAttackTerms()),
                 this.legendaryBonus() ? 1 : 0,
-                resolvePostureAttackModifier(this.choice()?.posture ?? null, stats.protection),
+                resolvePostureAttackModifier(this.choice()?.posture ?? null, stats.protection) +
+                  resolvePostureAttackModifier(this.choice()?.special ?? null, stats.protection),
               )
             : null;
       if (modifier !== null) {
@@ -855,7 +878,8 @@ export class TurnAssistantComponent {
       add(this.isTir() ? a.tir : a.melee, this.isTir() ? 'tir' : 'mêlée');
     }
     add(-t.defense, 'défense');
-    add(this.postureModifier(), 'posture');
+    add(this.stanceModifier(), 'posture');
+    add(this.specialModifier(), this.choice()?.special?.slug === 'armor-chink' ? 'défaut de l’armure' : 'deux armes');
     add(this.legendaryBonus() ? 1 : 0, 'légendaire');
     terms.push(...this.effectTerms().map((term) => this.sumTermOf(term)));
     const total = this.total();
@@ -921,7 +945,7 @@ export class TurnAssistantComponent {
     }
     add(this.vigueur(), 'vigueur');
     add(devastatingBonus(this.devastating()), this.devastating() > 1 ? `dévastateur ×${this.devastating()}` : 'dévastateur');
-    if (this.choice()?.posture?.slug === 'armor-chink') {
+    if (this.choice()?.special?.slug === 'armor-chink') {
       terms.push({value: '0', caption: 'armure ignorée', tone: 'dice'});
     } else {
       const protection = this.protection();
@@ -1128,7 +1152,7 @@ export class TurnAssistantComponent {
   private readonly injector = inject(Injector);
   private readonly dialog = inject(MatDialog);
   protected readonly protection = computed(() => {
-    if (this.choice()?.posture?.slug === 'armor-chink') {
+    if (this.choice()?.special?.slug === 'armor-chink') {
       return 0;
     }
     const manual = this.protectionManual();
@@ -1350,9 +1374,6 @@ export class TurnAssistantComponent {
 
   protected selectOption(slug: string): void {
     this.selectedOptionSlug.set(slug);
-    if (!DUAL_WIELD_SLUGS.has(slug)) {
-      this.selectedOffHandId.set(null);
-    }
   }
 
   protected selectOffHand(id: number | undefined): void {

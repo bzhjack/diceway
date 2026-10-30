@@ -184,6 +184,16 @@ describe('appliquerEvenement', () => {
 });
 
 describe('effetsDeTour', () => {
+  it('cumule la posture et la parade à deux armes', () => {
+    const crees = effetsDeTour('hero-1', {posture: 'offensive', special: 'dual-parry', defenseTotale: false});
+    expect(crees.map((e) => e.valeur)).toEqual([-1, 1]);
+    expect(crees[1].duree).toEqual({type: 'usages', restants: 1, expireAuTour: true});
+  });
+
+  it("le défaut de l'armure ne crée pas d'effet de défense", () => {
+    expect(effetsDeTour('hero-1', {posture: 'defensive', special: 'armor-chink', defenseTotale: false}).map((e) => e.valeur)).toEqual([1]);
+  });
+
   it('gives nothing for a turn without a lasting choice', () => {
     expect(effetsDeTour('hero-1', {posture: null, defenseTotale: false})).toEqual([]);
     expect(effetsDeTour('hero-1', {posture: 'none', defenseTotale: false})).toEqual([]);

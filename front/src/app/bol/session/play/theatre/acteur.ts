@@ -21,6 +21,8 @@ export class ActeurComponent {
   readonly card = input.required<TapisCard>();
   readonly taille = input.required<TroupeTaille>();
   readonly selected = input(false);
+  /** Ce que le lecteur d'écran entend en plus du nom (les chances de toucher, quand la carte sert à choisir une cible). */
+  readonly detail = input<string | null>(null);
   readonly toggled = output<MouseEvent>();
 
   /** L'avatar a échoué au chargement : repli sur l'icône du type, jusqu'au prochain changement d'avatar. */
@@ -38,7 +40,9 @@ export class ActeurComponent {
   });
   protected readonly ariaLabel = computed(() => {
     const attitude = this.attitude();
-    return attitude ? `${cardAriaLabel(this.card())}, ${attitude.label.toLowerCase()}` : cardAriaLabel(this.card());
+    const label = attitude ? `${cardAriaLabel(this.card())}, ${attitude.label.toLowerCase()}` : cardAriaLabel(this.card());
+    const detail = this.detail();
+    return detail ? `${label}, ${detail}` : label;
   });
   protected readonly percent = computed(() => vitalitePercent(this.card().vitaliteCourante, this.card().vitaliteMax));
   protected readonly low = computed(() => isLowVitalite(this.card().vitaliteCourante, this.card().vitaliteMax));

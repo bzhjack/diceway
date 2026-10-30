@@ -66,7 +66,7 @@ if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier 
 
 // Nouvelle attaque (changement d'arme) contre la même cible, même round : plus de bouclier. L'arme par défaut est la première autorisée,
 // pas forcément la première (une arme lourde est interdite à un héros de vigueur négative) : on prend une autre arme autorisée.
-const armes = page.locator('.tas-chips[aria-labelledby="tas-arme"] .tas-chip[aria-pressed="false"]:not([aria-disabled="true"])');
+const armes = page.locator('.tas-pick--arme[aria-pressed="false"]:not([aria-disabled="true"])');
 if ((await armes.count()) > 0) {
   await armes.first().click();
   await page.waitForTimeout(1000);

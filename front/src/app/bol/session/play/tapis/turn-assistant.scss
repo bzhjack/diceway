@@ -282,11 +282,6 @@
   width: auto;
 }
 
-.tas-select.tas-select--arme {
-  flex: 0 1 19rem;
-  width: auto;
-}
-
 .tas-select {
   width: 100%;
   --mat-form-field-container-height: 2.9rem;
@@ -492,22 +487,40 @@
   background: rgba(0, 0, 0, 0.25);
 }
 
-// Pas encore de cible : un portrait par cible possible, ses chances et sa vie dessous ; un clic la choisit.
+// Pas encore de cible : la carte de chaque cible possible, ses chances dessous ; un clic la choisit. Les armes reprennent la même liste,
+// en cases carrées.
 .tas-picks {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+// La carte du Théâtre, réduite (son facteur d'échelle `--thr-k`) ; ses chances de toucher dessous, en or.
+.tas-cible {
+  --thr-k: 0.72;
+
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  padding-top: 0.25rem;
+
+  em {
+    font-size: 0.76rem;
+    font-style: normal;
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--dw-color-legendary);
+  }
 }
 
 .tas-pick {
   display: grid;
   justify-items: center;
   gap: 0.2rem;
-  width: 4.2rem;
-  padding: 0.35rem 0.25rem 0.4rem;
+  padding: 0.2rem 0.1rem;
   border: 0;
   background: none;
   color: var(--dw-surface-800);
@@ -521,35 +534,63 @@
     white-space: nowrap;
     color: var(--dw-color-legendary);
   }
-
-  .tas-bar {
-    width: 100%;
-  }
 }
 
-// Au survol comme au focus clavier, c'est le cercle du portrait qui s'allume (un halo doré), pas un cadre autour du bouton. Plus fort
-// que le contour de focus commun à l'assistant (`.tas button:focus-visible`), que le halo remplace.
+// Au survol comme au focus clavier, c'est la case de l'arme qui s'allume d'un halo doré, pas un cadre autour du bouton. Plus fort que
+// le contour de focus commun à l'assistant (`.tas button:focus-visible`), que le halo remplace.
 .tas .tas-picks button.tas-pick:focus-visible {
   outline: none;
 }
 
-.tas-pick:hover .tas-med--pick,
-.tas-pick:focus-visible .tas-med--pick {
+.tas-pick--arme:not([aria-disabled='true']):hover .tas-med--arme,
+.tas-pick--arme:focus-visible .tas-med--arme {
   box-shadow:
-    0 0 0 3px var(--dw-color-legendary),
-    0 0 14px color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+    0 0 0 2px var(--dw-color-legendary),
+    0 0 14px color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
 }
 
-// Le cercle du portrait dit son camp : rouge en face, vert dans le camp des héros.
-.tas-med--pick {
-  width: 3rem;
-  height: 3rem;
-  border-color: var(--dw-color-reussite);
-  font-size: 1.3rem;
+// Les armes : une case carrée avec le symbole de l'arme, ses dégâts dessous ; celle qui est choisie s'allume en or.
+.tas-picks--arme {
+  gap: 0.35rem;
 }
 
-.tas-pick--foe .tas-med--pick {
-  border-color: var(--dw-color-echec-forte);
+.tas-pick--arme {
+  width: 2.9rem;
+}
+
+// Deux classes : `.tas-med`, déclarée plus bas, imposerait sinon son cercle et sa taille.
+.tas-med.tas-med--arme {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-width: 2px;
+  border-radius: var(--dw-radius-toggle);
+  color: var(--dw-surface-800);
+
+  .dw-arme-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+.tas-pick--arme[aria-pressed='true'] .tas-med--arme {
+  border-color: var(--dw-color-legendary);
+  background: color-mix(in srgb, var(--dw-color-legendary) 16%, var(--dw-surface-200));
+  color: var(--dw-color-legendary);
+}
+
+.tas-pick--arme[aria-pressed='false'] em {
+  color: var(--dw-surface-700);
+}
+
+// Une arme lourde que l'attaquant ne peut pas manier : grisée, son nom et la raison au survol.
+.tas-pick--arme[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+// L'arme choisie, en clair à côté de ses cases : son nom et les dégâts du coup (deux mains, double frappe compris).
+.tas-arme-nom {
+  flex: 0 1 auto;
 }
 
 // La ligne d'un jet : la case et son bouton, puis les dés ; l'addition juste sous la case ; le verdict à droite, sur les deux rangées.

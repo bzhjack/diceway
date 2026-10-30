@@ -148,31 +148,20 @@
       <span class="tas-lbl" id="tas-l1">Le coup</span>
       <span class="tas-w" aria-hidden="true">contre</span>
       @if (!target() && targets().length > 0) {
-        <!-- Pas encore de cible : un portrait par cible possible, un clic la choisit ; son nom au survol, ses chances et sa vie dessous -->
+        <!-- Pas encore de cible : la carte de chaque cible possible (celle du Théâtre, en petit), ses chances dessous ; un clic la choisit -->
         <ul class="tas-picks" aria-label="Choisir la cible">
           @for (t of targets(); track t.key) {
-            @let life = lifeOf(t);
-            <li>
-              <button
-                type="button"
-                class="tas-pick"
-                [class.tas-pick--foe]="t.camp !== 'heros'"
-                [attr.aria-label]="t.nom + (targetDetails()[t.key] ? ', ' + targetDetails()[t.key] : '') + (odds()[t.key] ? ', ' + odds()[t.key] : '')"
+            <li class="tas-cible">
+              <bol-acteur
+                [card]="t"
+                taille="coriace"
+                [detail]="odds()[t.key] ?? null"
                 [matTooltip]="t.nom + (targetDetails()[t.key] ? ' · ' + targetDetails()[t.key] : '')"
-                (click)="selectTarget(t)"
-              >
-                <span class="tas-med tas-med--pick" aria-hidden="true">
-                  @if (t.avatar) {
-                    <img dwAvatarFallback [src]="t.avatar" alt="" />
-                  } @else {
-                    {{ t.nom.charAt(0).toUpperCase() }}
-                  }
-                </span>
-                @if (odds()[t.key]; as chance) {
-                  <em aria-hidden="true">{{ chance }}</em>
-                }
-                <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
-              </button>
+                (toggled)="selectTarget(t)"
+              />
+              @if (odds()[t.key]; as chance) {
+                <em aria-hidden="true">{{ chance }}</em>
+              }
             </li>
           }
         </ul>
@@ -293,33 +282,34 @@
 
       <span class="tas-w" aria-hidden="true">avec</span>
       @if (displayArmes().length > 0) {
-        <mat-form-field class="tas-select tas-select--arme" subscriptSizing="dynamic">
-          <mat-label>Arme</mat-label>
-          <mat-select [value]="effectiveArme()?.id" (selectionChange)="selectArme($event.value)">
-            <mat-select-trigger>
-              @if (effectiveArme(); as a) {
-                <span class="tas-opt">
-                  <b>{{ a.arme?.arme }}</b>
-                  <em>{{ degats() }}</em>
-                </span>
-              }
-            </mat-select-trigger>
-            @for (a of displayArmes(); track a.id) {
-              <mat-option
-                [value]="a.id"
-                [disabled]="heavyForbidden().has(a.id)"
-                [matTooltip]="heavyForbidden().has(a.id) ? 'Arme lourde : impossible à manier avec moins de 0 en vigueur.' : ''"
+        <!-- L'arme : une case carrée par arme, son symbole dedans et ses dégâts dessous ; son nom au survol ; celle qui est choisie, en clair à côté -->
+        <ul class="tas-picks tas-picks--arme" aria-label="Choisir l’arme">
+          @for (a of displayArmes(); track a.id) {
+            @let forbidden = heavyForbidden().has(a.id);
+            <li>
+              <button
+                type="button"
+                class="tas-pick tas-pick--arme"
+                [attr.aria-pressed]="effectiveArme()?.id === a.id"
+                [attr.aria-disabled]="forbidden || null"
+                [attr.aria-label]="a.arme?.arme + (a.arme?.degats ? ', ' + a.arme?.degats : '')"
+                [matTooltip]="forbidden ? a.arme?.arme + ' · arme lourde : impossible à manier avec moins de 0 en vigueur' : (a.arme?.arme ?? '')"
+                (click)="selectArme(a.id)"
               >
-                <span class="tas-opt">
-                  <b>{{ a.arme?.arme }}</b>
-                  @if (a.arme?.degats) {
-                    <em>{{ a.arme?.degats }}</em>
-                  }
-                </span>
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+                <span class="tas-med tas-med--arme" aria-hidden="true"><dw-arme-icon [nom]="a.arme?.arme" /></span>
+                @if (a.arme?.degats) {
+                  <em aria-hidden="true">{{ a.arme?.degats }}</em>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+        @if (effectiveArme(); as a) {
+          <span class="tas-opt tas-arme-nom" aria-hidden="true">
+            <b>{{ a.arme?.arme }}</b>
+            <em>{{ degats() }}</em>
+          </span>
+        }
       } @else {
         <span class="tas-fixed"><span class="tas-label">Dégâts</span> {{ card().degats }}</span>
       }
@@ -419,7 +409,7 @@
             <span class="tas-label" id="tas-posture">Posture</span>
             <span class="tas-segm" role="group" aria-labelledby="tas-posture">
               @for (o of scalePostures(); track o.slug) {
-                <button type="button" [class]="'tas-seg tas-posture tas-posture--' + o.slug" [attr.aria-pressed]="(postureSlug() ?? (effectiveOption() ? null : 'none')) === o.slug" (click)="selectOption(o.slug)">
+                <button type="button" [class]="'tas-seg tas-posture tas-posture--' + o.slug" [attr.aria-pressed]="postureSlug() === o.slug" (click)="selectOption(o.slug)">
                   <b>{{ scaleName(o) }}</b>
                   <small>{{ scaleEffect(o) }}</small>
                 </button>
@@ -430,7 +420,7 @@
             <span class="tas-label" id="tas-options">Options spéciales</span>
             <div class="tas-chips" role="group" aria-labelledby="tas-options">
               @for (o of specialPostures(); track o.slug) {
-                <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="toggleSpecial(o.slug)">{{ o.label }}</button>
+                <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveSpecial()?.slug === o.slug" [matTooltip]="o.note" (click)="toggleSpecial(o.slug)">{{ o.label }}</button>
               }
             </div>
           }

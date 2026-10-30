@@ -182,16 +182,18 @@ export function effetsDeTour(carte: string, choix: TurnChoice): NewEffect[] {
   const jusquAuTour = {type: 'debut-tour-porteur'} as const;
   const effets: NewEffect[] = [];
   const posture = choix.posture;
-  const valeur = posture ? POSTURE_DEFENSE[posture] : undefined;
 
-  if (posture && valeur) {
-    effets.push({
-      ...defense,
-      origine: POSTURE_ORIGINE[posture],
-      valeur,
-      // La parade ne couvre qu'une attaque subie, et tombe avec le tour de son porteur si elle n'a pas servi.
-      duree: posture === 'dual-parry' ? {type: 'usages', restants: 1, expireAuTour: true} : jusquAuTour,
-    });
+  for (const slug of [posture, choix.special ?? null]) {
+    const valeur = slug ? POSTURE_DEFENSE[slug] : undefined;
+    if (slug && valeur) {
+      effets.push({
+        ...defense,
+        origine: POSTURE_ORIGINE[slug],
+        valeur,
+        // La parade ne couvre qu'une attaque subie, et tombe avec le tour de son porteur si elle n'a pas servi.
+        duree: slug === 'dual-parry' ? {type: 'usages', restants: 1, expireAuTour: true} : jusquAuTour,
+      });
+    }
   }
   if (posture === 'intrepid') {
     effets.push({...defense, origine: SANS_BOUCLIER, valeur: 0, duree: jusquAuTour});
