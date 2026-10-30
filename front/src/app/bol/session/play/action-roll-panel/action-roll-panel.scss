@@ -540,7 +540,7 @@ bol-action-roll-panel {
   height: 2.4rem;
   padding: 0 0.9rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
-  // Une action (Faveur divine) est une pilule ; les cases à cocher (`aria-pressed`) sont des toggles rectangulaires.
+  // Une action (Faveur divine) est une pilule ; les options qui se choisissent (`aria-pressed`) sont des toggles rectangulaires.
   border-radius: var(--dw-radius-pill);
 
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
