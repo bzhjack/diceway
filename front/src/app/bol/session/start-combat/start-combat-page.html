@@ -346,25 +346,27 @@
 
                   <!-- Ses dés : les faces lancées à l'écran (le dé écarté estompé) ou un double tapé ; sinon une place par dé à lancer -->
                   <dw-dice-row class="scd-faces" [slots]="card.diceCount" [dice]="card.faces" />
-                  <!-- L'addition du jet, comme sur le jet d'action : un nombre par terme, son nom dessous, le total en or -->
-                  <span class="scd-sum" [class.scd-sum--pending]="card.dice === null" role="group" [attr.aria-label]="'Calcul du jet de ' + card.hero.nom">
-                    @for (term of card.sum; track $index) {
-                      <span class="scd-sum-term" [class.scd-sum-term--plus]="term.tone === 'plus'" [class.scd-sum-term--minus]="term.tone === 'minus'" [class.scd-sum-term--total]="term.tone === 'total'">
-                        <b>{{ term.value }}</b>
-                        <small>{{ term.caption }}</small>
-                      </span>
-                    }
-                  </span>
-                  <!-- Le verdict ; dessous, ce qu'il change au combat -->
-                  <span class="scd-verdict" aria-live="polite">
-                    @if (card.verdict; as v) {
-                      <b>{{ v.title }}</b>
-                      <span class="scd-consequence" [matTooltip]="v.detail">{{ v.detail }}</span>
-                    } @else if (card.favorPending) {
-                      <small class="scd-verdict-wait">Faveur divine : relance les deux dés.</small>
-                    } @else {
-                      <small class="scd-verdict-wait">En attente du total</small>
-                    }
+                  <!-- Le résultat : le verdict et ce qu'il change au combat ; dessous, en petit, l'addition du jet : un nombre par terme, son nom
+                       dessous, le total en or -->
+                  <span class="scd-res">
+                    <span class="scd-verdict" aria-live="polite">
+                      @if (card.verdict; as v) {
+                        <b>{{ v.title }}</b>
+                        <span class="scd-consequence" [matTooltip]="v.detail">{{ v.detail }}</span>
+                      } @else if (card.favorPending) {
+                        <small class="scd-verdict-wait">Faveur divine : relance les deux dés.</small>
+                      } @else {
+                        <small class="scd-verdict-wait">En attente du total</small>
+                      }
+                    </span>
+                    <span class="scd-sum" [class.scd-sum--pending]="card.dice === null" role="group" [attr.aria-label]="'Calcul du jet de ' + card.hero.nom">
+                      @for (term of card.sum; track $index) {
+                        <span class="scd-sum-term" [class.scd-sum-term--plus]="term.tone === 'plus'" [class.scd-sum-term--minus]="term.tone === 'minus'" [class.scd-sum-term--total]="term.tone === 'total'">
+                          <b>{{ term.value }}</b>
+                          <small>{{ term.caption }}</small>
+                        </span>
+                      }
+                    </span>
                   </span>
 
                   <!-- L'option d'héroïsme qu'ouvre le jet (double 1, double 6, réussite) et la faveur divine après un échec -->

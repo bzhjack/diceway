@@ -515,17 +515,16 @@ button.scd-c {
 // largeur (une colonne fixe la ferait chevaucher le portrait).
 .scd-rows {
   // Largeurs fixes pour le nom, ce qu'il faut, les dés et les options : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au
-  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. L'addition prend sa largeur, le verdict le reste.
+  // lieu de « aux dés », un dé de plus ou une option ne décalent plus la ligne. Le résultat prend le reste.
   --scd-col-who: 9rem;
   --scd-col-need: 8.5rem;
   --scd-col-faces: 7.6rem;
   --scd-col-opt: 10.6rem;
-  --scd-col-sum: 23.5rem;
 
   display: grid;
   grid-template-columns:
-    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) fit-content(var(--scd-col-sum)) minmax(6rem, 1fr)
-    var(--scd-col-opt) auto;
+    auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) var(--scd-col-opt)
+    auto;
   gap: 0.6rem 0.9rem;
   margin: 0;
   padding: 0;
@@ -558,8 +557,7 @@ button.scd-c {
 .scd-row > .scd-med,
 .scd-row > .scd-entry,
 .scd-row > .scd-faces,
-.scd-row > .scd-sum,
-.scd-row > .scd-verdict,
+.scd-row > .scd-res,
 .scd-row > .scd-opt,
 .scd-row > .scd-row-icons {
   grid-row: 1 / 4;
@@ -668,54 +666,54 @@ button.scd-c {
   grid-column: 5;
 }
 
-.scd-row > .scd-sum {
+.scd-row > .scd-res {
   grid-column: 6;
 }
 
-.scd-row > .scd-verdict {
+.scd-row > .scd-opt {
   grid-column: 7;
 }
 
-.scd-row > .scd-opt {
-  grid-column: 8;
+// Le résultat, en haut, à la hauteur du nom du héros : le verdict, ce qu'il change, et l'addition dessous. Il tient dans la hauteur fixe de la
+// ligne sans en décaler le reste : sa taille propre ne compte pas (`contain`), il prend celle des trois niveaux.
+.scd-row > .scd-res {
+  contain: size;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 0.05rem;
+  min-width: 0;
+  margin-top: 3px;
 }
 
-// L'addition du jet, comme sur le jet d'action : un nombre par terme, son nom dessous, le total en or. Sur une ligne, sauf si la place manque.
+// L'addition du jet, en petit : un nombre par terme, son nom dessous, le total en or.
 .scd-sum {
-  --scd-sum-gap: 0.55rem;
-  --scd-sum-row: 1.9rem;
-  --scd-sum-value: 1.4rem;
-  --scd-sum-total: 1.65rem;
-  --scd-sum-caption: 0.64rem;
-  --scd-sum-min: 1.7rem;
-  --scd-sum-pad: 0.65rem;
-
   display: flex;
   flex-wrap: wrap;
-  align-content: center;
   align-items: flex-start;
-  gap: 0.15rem var(--scd-sum-gap);
+  gap: 0 0.45rem;
   min-width: 0;
 }
 
 .scd-sum-term {
   display: grid;
-  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros.
-  grid-template-rows: var(--scd-sum-row) auto;
-  place-items: center;
-  min-width: var(--scd-sum-min);
+  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros. Calés à gauche.
+  grid-template-rows: 1.05rem auto;
+  align-items: center;
+  justify-items: start;
+  min-width: 1rem;
 
   b {
-    font: 400 var(--scd-sum-value) / 1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 0.95rem / 1.05 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
     white-space: nowrap;
   }
 
   small {
     color: var(--dw-surface-500);
-    font-size: var(--scd-sum-caption);
+    font-size: 0.58rem;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.1;
     white-space: nowrap;
   }
 }
@@ -729,11 +727,11 @@ button.scd-c {
 }
 
 .scd-sum-term--total {
-  padding-left: var(--scd-sum-pad);
+  padding-left: 0.4rem;
   border-left: 1px solid var(--dw-border);
 
   b {
-    font-size: var(--scd-sum-total);
+    font-size: 1.05rem;
     color: var(--dw-color-legendary);
   }
 }
@@ -743,17 +741,16 @@ button.scd-c {
   opacity: 0.75;
 }
 
-// Ce que le verdict change au combat, en entier ; au-delà de trois lignes, le texte complet est dans son infobulle.
+// Ce que le verdict change au combat ; le texte complet est dans son infobulle s'il est coupé.
 .scd-consequence {
   display: -webkit-box;
   overflow: hidden;
-  margin-top: 0.1rem;
   color: var(--dw-surface-800);
   font-size: 0.76rem;
   line-height: 1.22;
   white-space: normal;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 1;
 }
 
 // Écran peu haut (portable) : les lignes, à hauteur fixe, se rapprochent un peu.
@@ -1254,30 +1251,6 @@ button.scd-c {
     --dw-die-size: 1.35rem;
 
     gap: 0.3rem;
-  }
-}
-
-// Moins de 1360 px : l'addition rétrécit, pour que même la plus longue tienne sur une ligne à côté du verdict.
-@container scd-main (max-width: 85rem) {
-  .scd-rows {
-    --scd-col-sum: 19rem;
-  }
-
-  .scd-sum {
-    --scd-sum-gap: 0.4rem;
-    --scd-sum-row: 1.45rem;
-    --scd-sum-value: 1.2rem;
-    --scd-sum-total: 1.35rem;
-    --scd-sum-caption: 0.6rem;
-    --scd-sum-min: 1.4rem;
-    --scd-sum-pad: 0.45rem;
-  }
-}
-
-// Moins de 1200 px : une longue addition passe sur deux lignes.
-@container scd-main (max-width: 75rem) {
-  .scd-rows {
-    --scd-col-sum: 13.4rem;
   }
 }
 
