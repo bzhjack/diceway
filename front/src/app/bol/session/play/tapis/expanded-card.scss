@@ -46,6 +46,39 @@
 // doivent tenir sur une ligne.
 .exc--hero {
   width: min(84rem, 96vw);
+  // La forge, comme le jet de réaction : de la suie, et la lueur de la braise qui descend du bandeau.
+  border-color: var(--dw-forge-bronze);
+  background:
+    radial-gradient(70% 38% at 72% 0, rgba(232, 98, 42, 0.2), transparent 70%),
+    radial-gradient(60% 45% at 100% 100%, rgba(150, 52, 14, 0.14), transparent 70%),
+    var(--dw-forge-soot);
+
+  .exc-name {
+    color: var(--dw-forge-name);
+    text-shadow: 0 1px 2px #000, 0 0 18px rgba(232, 135, 58, 0.25);
+  }
+
+  // Les boutons du bandeau : des clous de bronze, qui rougeoient au survol. L'anneau est une ombre : il ne change pas le gabarit.
+  .exc-icon-btn {
+    --mat-icon-button-icon-color: var(--dw-forge-stud-text);
+    background: var(--dw-forge-stud);
+    box-shadow:
+      inset 0 0 0 1px var(--dw-forge-bronze-dim),
+      var(--dw-forge-stud-shadow);
+
+    &:hover {
+      --mat-icon-button-icon-color: var(--dw-forge-hot-text);
+      background: var(--dw-forge-stud);
+      box-shadow:
+        inset 0 0 0 1px var(--dw-forge-hot),
+        var(--dw-forge-stud-glow);
+    }
+  }
+
+  .exc-icon-btn--danger:hover {
+    --mat-icon-button-icon-color: #fff;
+    background: var(--dw-forge-critique);
+  }
 }
 
 // PNJ, créature, démon : entrée de bestiaire en deux colonnes, à la hauteur de son contenu (limitée à l'écran,
@@ -178,9 +211,10 @@
   align-items: center;
   gap: 0.8rem 1.2rem;
   padding: 0.8rem 1rem;
-  border-bottom: 1px solid var(--dw-border);
+  border-bottom: 1px solid var(--dw-forge-bronze);
   border-radius: 7px 7px 0 0;
-  background: linear-gradient(var(--dw-surface-100), var(--dw-surface-50));
+  background: var(--dw-forge-plate);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
 }
 
 .exc-hb-id {
@@ -240,9 +274,11 @@
   flex-direction: column-reverse;
   align-items: center;
   padding: 0.45rem 0.2rem;
-  border: 1px solid var(--bar-bronze, var(--dw-border));
-  border-radius: 8px;
-  background: var(--dw-surface-100);
+  // Un creux dans le fer, cerclé de bronze.
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
   text-align: center;
 
   dd {
@@ -250,7 +286,7 @@
     font-family: 'Muse Display Harmony', 'Muse Sans', serif;
     font-size: 1.25rem;
     line-height: 1.1;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
     white-space: nowrap;
   }
 
@@ -264,7 +300,8 @@
 }
 
 .exc-tile--hot dd {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
+  text-shadow: 0 0 10px rgba(232, 80, 46, 0.6);
 }
 
 // Zone du jet d'action, sous le bandeau du héros.

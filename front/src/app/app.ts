@@ -23,6 +23,17 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   'gi-warning': '/assets/icons/game-icons/hazard-sign.svg',
   'gi-skull': '/assets/icons/game-icons/death-skull.svg',
   'gi-crown': '/assets/icons/game-icons/queen-crown.svg',
+  'gi-sprint': '/assets/icons/game-icons/sprint.svg',
+  'gi-biceps': '/assets/icons/game-icons/biceps.svg',
+  'gi-brain': '/assets/icons/game-icons/brain.svg',
+  'gi-aura': '/assets/icons/game-icons/aura.svg',
+  'gi-medal': '/assets/icons/game-icons/medal.svg',
+  'gi-sparkles': '/assets/icons/game-icons/sparkles.svg',
+  'gi-sword': '/assets/icons/game-icons/broadsword.svg',
+  'gi-shield': '/assets/icons/game-icons/checked-shield.svg',
+  'gi-quill': '/assets/icons/game-icons/quill.svg',
+  'gi-trash': '/assets/icons/game-icons/trash-can.svg',
+  'gi-check': '/assets/icons/game-icons/check-mark.svg',
 };
 
 @Component({

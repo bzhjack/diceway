@@ -21,7 +21,7 @@ import {HeroDetails} from '../../models/tapis.model';
       matTooltip="Carrières"
       [attr.aria-label]="'Carrières, ' + details().carrieres.length + ' : afficher le détail'"
     >
-      <mat-icon>military_tech</mat-icon> <b>{{ details().carrieres.length }}</b>
+      <mat-icon svgIcon="gi-medal" /> <b>{{ details().carrieres.length }}</b>
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
     <button
@@ -31,7 +31,7 @@ import {HeroDetails} from '../../models/tapis.model';
       matTooltip="Traits"
       [attr.aria-label]="'Traits, ' + details().traits.length + ' : afficher le détail'"
     >
-      <mat-icon>auto_awesome</mat-icon> <b>{{ details().traits.length }}</b>
+      <mat-icon svgIcon="gi-sparkles" /> <b>{{ details().traits.length }}</b>
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
     <button
@@ -41,7 +41,7 @@ import {HeroDetails} from '../../models/tapis.model';
       matTooltip="Armes"
       [attr.aria-label]="'Armes, ' + details().armes.length + ' : afficher le détail'"
     >
-      <mat-icon svgIcon="sword" /> <b>{{ details().armes.length }}</b>
+      <mat-icon svgIcon="gi-sword" /> <b>{{ details().armes.length }}</b>
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
     <button
@@ -51,7 +51,7 @@ import {HeroDetails} from '../../models/tapis.model';
       matTooltip="Armures"
       [attr.aria-label]="'Armures, ' + details().armures.length + ' : afficher le détail'"
     >
-      <mat-icon>shield</mat-icon> <b>{{ details().armures.length }}</b>
+      <mat-icon svgIcon="gi-shield" /> <b>{{ details().armures.length }}</b>
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
 
@@ -63,7 +63,7 @@ import {HeroDetails} from '../../models/tapis.model';
         matTooltip="Informations"
         aria-label="Informations sur le personnage : afficher le détail"
       >
-        <mat-icon>info</mat-icon>
+        <mat-icon svgIcon="gi-info" />
         <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
       </button>
     }

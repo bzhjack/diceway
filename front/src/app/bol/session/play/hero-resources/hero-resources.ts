@@ -49,9 +49,10 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       align-items: center;
       gap: 0.1rem;
       padding: 0.2rem 0.4rem 0.25rem;
-      border: 1px solid var(--dw-border);
-      border-radius: 6px;
-      background: var(--dw-surface-100);
+      border: 1px solid var(--dw-forge-bronze);
+      border-radius: 7px;
+      background: var(--dw-forge-recess);
+      box-shadow: var(--dw-forge-recess-shadow);
     }
 
     // Cœur de la vitalité, plus petit que sur le reste de l'app : les tuiles de cet en-tête sont serrées.
@@ -61,13 +62,22 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       --vs-heart-font: var(--hrs-heart-font, 0.8rem);
     }
 
+    // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement.
+    dw-value-stepper ::ng-deep .vs__btn {
+      border-color: var(--dw-forge-bronze-dim);
+      background: var(--dw-forge-stud);
+      box-shadow: var(--dw-forge-stud-shadow);
+      color: var(--dw-forge-bronze-text);
+    }
+
     // Jauge de vitalité sous le cœur : du rouge au vert, à la mesure de ce qu'il reste.
     .hrs-bar {
       align-self: stretch;
       height: 5px;
       margin-top: 0.15rem;
       border-radius: 3px;
-      background: var(--dw-surface-300);
+      background: #000;
+      box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
       overflow: hidden;
 
       i {
@@ -95,12 +105,12 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
     .hrs-gem {
       width: 0.85rem;
       height: 1.1rem;
-      background: var(--dw-surface-300);
+      background: var(--dw-forge-gem-off);
       clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
     }
 
     .hrs-gem--on {
-      background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+      background: var(--dw-forge-gem);
     }
 
     .hrs-step {
@@ -108,18 +118,20 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       width: 1.5rem;
       height: 1.5rem;
       padding: 0;
-      border: 1px solid var(--dw-border);
+      border: 1px solid var(--dw-forge-bronze-dim);
       border-radius: 50%;
-      background: transparent;
-      color: var(--dw-surface-500);
+      background: var(--dw-forge-stud);
+      box-shadow: var(--dw-forge-stud-shadow);
+      color: var(--dw-forge-bronze-text);
       font: inherit;
       font-weight: 700;
       line-height: 1;
       cursor: pointer;
 
       &:hover:not(:disabled) {
-        border-color: var(--dw-color-legendary);
-        color: var(--dw-color-legendary);
+        border-color: var(--dw-forge-hot);
+        box-shadow: var(--dw-forge-stud-glow);
+        color: var(--dw-forge-hot-text);
       }
 
       &:focus-visible {
@@ -138,7 +150,7 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--dw-surface-500);
+      color: var(--dw-surface-600);
       white-space: nowrap;
     }
   `,

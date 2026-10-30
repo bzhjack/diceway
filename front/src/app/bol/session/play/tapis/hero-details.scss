@@ -9,10 +9,14 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.15rem 0.3rem 0.15rem 0.5rem;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 999px;
-  background: var(--dw-surface-100);
-  color: var(--dw-surface-700);
+  // Du bronze bombé, comme les clous du bandeau.
+  background: linear-gradient(180deg, #3a2913, #1a1007);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.22),
+    0 2px 3px rgba(0, 0, 0, 0.6);
+  color: var(--dw-forge-stud-text);
   font: inherit;
   font-size: 0.74rem;
   font-weight: 600;
@@ -23,11 +27,11 @@
     font-size: 0.95rem;
     width: 0.95rem;
     height: 0.95rem;
-    color: var(--dw-surface-500);
+    color: var(--dw-forge-stud-text);
   }
 
   b {
-    color: var(--dw-color-legendary);
+    color: #f0c869;
     font-variant-numeric: tabular-nums;
   }
 
@@ -39,8 +43,8 @@
   }
 
   &:hover {
-    border-color: var(--dw-surface-500);
-    color: var(--dw-surface-900);
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
   }
 
   &:focus-visible {
@@ -53,6 +57,10 @@
 ::ng-deep .hd-menu.mat-mdc-menu-panel {
   min-width: 15rem;
   max-width: 22rem;
+  // Une plaque de fer, comme les panneaux du jet.
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-plate);
 }
 
 .hd-panel {
@@ -66,7 +74,7 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 .hd-list {
@@ -111,7 +119,7 @@
 .hd-note {
   grid-column: 1 / -1;
   font-size: 0.74rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 
@@ -139,7 +147,7 @@
     font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 
   dd {
@@ -152,13 +160,13 @@
 .hd-hint {
   margin: 0.5rem 0 0;
   font-size: 0.72rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 .hd-empty {
   padding: 0.3rem 0.4rem;
   font-size: 0.84rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 // Case « équipé » : compacte, le libellé de l'arme ou de l'armure est son texte.

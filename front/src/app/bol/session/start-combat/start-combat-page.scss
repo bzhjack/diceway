@@ -10,19 +10,6 @@ bol-start-combat-page {
   padding: 12px;
 }
 
-// La forge, l'habillage de cette page : du fer, du bronze, de la braise. Aussi sur ses popovers, rendus hors du composant.
-bol-start-combat-page,
-.scd-pop {
-  --scd-bronze: #a9793a;
-  --scd-bronze-dim: #7a5a2a;
-  --scd-bronze-text: #f0cf8e;
-  --scd-bone: #f5e8cf;
-  --scd-iron: url('/assets/bol/forge/fer.webp');
-  --scd-rivet: radial-gradient(circle at 36% 30%, #e0bf86, #8c6a2f 44%, #231608 74%, transparent 77%);
-  --scd-stud: radial-gradient(circle at 35% 26%, #4a3418, #241708 62%, #120a04);
-  --scd-plate-light: linear-gradient(180deg, rgba(255, 210, 150, 0.075), transparent 28%, rgba(0, 0, 0, 0.3));
-}
-
 // Le cadre de l'app (`styles/_barbare.scss`), en fer martelé et bronze chaud sur cette page seulement.
 body:has(bol-start-combat-page) {
   &::before {
@@ -58,8 +45,7 @@ body:has(bol-start-combat-page) {
     radial-gradient(70% 42% at 66% 8%, rgba(232, 98, 42, 0.26), transparent 70%),
     radial-gradient(55% 45% at 100% 100%, rgba(150, 52, 14, 0.16), transparent 70%),
     radial-gradient(70% 70% at 0% 100%, rgba(0, 0, 0, 0.6), transparent 72%),
-    url('/assets/bol/forge/suie.webp') center / 900px 560px,
-    #0f0a07;
+    var(--dw-forge-soot);
 }
 
 // Au-dessus du contenu (z-index 2) : posé derrière les panneaux, les dés se retrouveraient à moitié masqués.
@@ -200,7 +186,7 @@ body:has(bol-start-combat-page) {
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
-  color: var(--scd-bone);
+  color: var(--dw-forge-bone);
   text-shadow:
     0 2px 8px #000,
     0 0 22px rgba(232, 135, 58, 0.28);
@@ -232,7 +218,7 @@ body:has(bol-start-combat-page) {
     inset 0 1px 1px rgba(255, 235, 200, 0.24),
     inset 0 -2px 3px rgba(0, 0, 0, 0.55),
     0 2px 4px rgba(0, 0, 0, 0.7);
-  color: var(--scd-bone);
+  color: var(--dw-forge-bone);
 }
 
 .scd-bar .ofr .ofr-c--hero img {
@@ -241,7 +227,7 @@ body:has(bol-start-combat-page) {
 
 .scd-bar .ofr .ofr-c--add {
   background: rgba(10, 6, 4, 0.6);
-  color: var(--scd-bronze-text);
+  color: var(--dw-forge-bronze-text);
 
   &:hover {
     color: var(--dw-color-legendary);
@@ -293,12 +279,12 @@ body:has(bol-start-combat-page) {
 
 // Rond et cerclé comme les boutons icônes de la table, en clou de bronze (deux classes : plus fort que le bouton icône de Material).
 .scd-actions .scd-close-btn {
-  border: 1px solid var(--scd-bronze);
+  border: 1px solid var(--dw-forge-bronze);
   background: radial-gradient(circle at 35% 26%, #4a3418, #1f1408 68%);
   box-shadow:
     inset 0 1px 0 rgba(255, 225, 170, 0.3),
     0 2px 5px rgba(0, 0, 0, 0.6);
-  color: var(--scd-bronze-text);
+  color: var(--dw-forge-bronze-text);
 }
 
 // Un bouton en contour sur l'image : du bronze sur un fond sombre, pour qu'il reste lisible (deux classes : plus fort que Material).
@@ -307,8 +293,8 @@ body:has(bol-start-combat-page) {
   box-shadow:
     inset 0 1px 0 rgba(255, 214, 160, 0.14),
     0 2px 5px rgba(0, 0, 0, 0.55);
-  --mat-button-outlined-outline-color: var(--scd-bronze);
-  --mat-button-outlined-label-text-color: var(--scd-bronze-text);
+  --mat-button-outlined-outline-color: var(--dw-forge-bronze);
+  --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
   --mat-button-outlined-disabled-label-text-color: #c4a877;
   --mat-button-outlined-disabled-outline-color: #6b4a22;
 }
@@ -542,17 +528,12 @@ body:has(bol-start-combat-page) {
   border: 1.5px solid color-mix(in srgb, var(--heat) 62%, #6d4f28);
   border-radius: 7px;
   background:
-    var(--scd-rivet) calc(100% - 6px) 6px / 9px 9px no-repeat,
-    var(--scd-rivet) calc(100% - 6px) calc(100% - 6px) / 9px 9px no-repeat,
+    var(--dw-forge-rivets),
     linear-gradient(90deg, color-mix(in srgb, var(--heat) 22%, transparent), transparent 52%),
-    var(--scd-plate-light),
-    var(--scd-iron) 0 0 / 420px,
-    #1c1510;
+    var(--dw-forge-plate);
   box-shadow:
-    inset 0 1px 0 rgba(255, 214, 160, 0.17),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.75),
     0 0 16px -5px var(--heat),
-    0 5px 12px rgba(0, 0, 0, 0.6);
+    var(--dw-forge-plate-shadow);
 }
 
 // Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances. Portrait, case du total, dés, résultat, modificateurs et
@@ -575,7 +556,7 @@ body:has(bol-start-combat-page) {
   border: 0;
   border-radius: 5.5px 0 0 5.5px;
   background: linear-gradient(90deg, #33241a, transparent);
-  color: var(--scd-bone);
+  color: var(--dw-forge-bone);
 
   img {
     mask-image: linear-gradient(90deg, #000 72%, transparent);
@@ -779,23 +760,23 @@ body:has(bol-start-combat-page) {
 
 // La plaque chauffe à la couleur de son résultat. Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
 .scd-row--reussite {
-  --heat: #3ecf77;
+  --heat: var(--dw-forge-heat-reussite);
 }
 
 .scd-row--heroique {
-  --heat: #eab54a;
+  --heat: var(--dw-forge-heat-heroique);
 }
 
 .scd-row--legendaire {
-  --heat: #c084fc;
+  --heat: var(--dw-forge-heat-legendaire);
 }
 
 .scd-row--echec {
-  --heat: #e8502e;
+  --heat: var(--dw-forge-heat-echec);
 }
 
 .scd-row--echec_critique {
-  --heat: #ff3a1a;
+  --heat: var(--dw-forge-heat-critique);
 }
 
 // Exclu de ce combat : la ligne s'estompe, seuls ses boutons restent nets pour l'y réintégrer.
@@ -817,14 +798,11 @@ body:has(bol-start-combat-page) {
   width: 2.1rem;
   height: 2.1rem;
   padding: 0;
-  border: 1px solid var(--scd-bronze-dim);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--scd-stud);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 225, 170, 0.3),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
-    0 2px 4px rgba(0, 0, 0, 0.65);
-  color: #e6c98e;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   .mat-icon {
@@ -834,11 +812,9 @@ body:has(bol-start-combat-page) {
   }
 
   &:hover {
-    border-color: #ffc96a;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 225, 170, 0.4),
-      0 0 12px rgba(232, 135, 58, 0.6);
-    color: #ffe0a0;
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
   }
 }
 
@@ -897,7 +873,7 @@ body:has(bol-start-combat-page) {
   font: 400 1.3rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #f6d98f;
+  color: var(--dw-forge-name);
   text-shadow: 0 1px 2px #000;
 }
 
@@ -924,20 +900,20 @@ body:has(bol-start-combat-page) {
   flex: none;
   width: 0.62rem;
   height: 0.85rem;
-  background: linear-gradient(160deg, #fff0b3, #e8b75c 48%, #9a6410);
+  background: var(--dw-forge-gem);
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
 // Une gemme éteinte : écrite après `.scd-gem`, mais en deux classes pour ne dépendre d'aucun ordre.
 .scd-gem.scd-gem--off {
-  background: rgba(245, 232, 207, 0.16);
+  background: var(--dw-forge-gem-off);
 }
 
 // Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge).
 .scd-need {
   > b {
     font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--scd-bone);
+    color: var(--dw-forge-bone);
     text-shadow: 0 1px 2px #000;
     white-space: nowrap;
   }
@@ -1001,12 +977,10 @@ body:has(bol-start-combat-page) {
   width: 3.8rem;
   height: 2.7rem;
   padding: 0;
-  border: 2px solid var(--scd-bronze);
+  border: 2px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: #0a0604;
-  box-shadow:
-    inset 0 3px 7px #000,
-    0 1px 0 rgba(255, 214, 160, 0.16);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
   color: #ffe9bd;
   font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   text-align: center;
@@ -1023,7 +997,7 @@ body:has(bol-start-combat-page) {
   }
 
   &:focus {
-    border-color: #ffc96a;
+    border-color: var(--dw-forge-hot);
     box-shadow:
       inset 0 3px 7px #000,
       0 0 0 2px rgba(255, 201, 106, 0.35),
@@ -1042,14 +1016,11 @@ body:has(bol-start-combat-page) {
   width: 2.4rem;
   height: 2.4rem;
   padding: 0;
-  border: 1px solid var(--scd-bronze-dim);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--scd-stud);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 225, 170, 0.3),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.6),
-    0 2px 4px rgba(0, 0, 0, 0.65);
-  color: #e6c98e;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   .mat-icon {
@@ -1059,11 +1030,9 @@ body:has(bol-start-combat-page) {
   }
 
   &:hover:not(:disabled) {
-    border-color: #ffc96a;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 225, 170, 0.4),
-      0 0 12px rgba(232, 135, 58, 0.6);
-    color: #ffe0a0;
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
   }
 
   &:disabled {
@@ -1112,27 +1081,27 @@ body:has(bol-start-combat-page) {
 
 // Le titre du verdict brille de la couleur qui chauffe la plaque.
 .scd-row--reussite .scd-verdict b {
-  color: #5fe394;
+  color: var(--dw-forge-verdict-reussite);
   text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
 }
 
 .scd-row--heroique .scd-verdict b {
-  color: #f6c964;
+  color: var(--dw-forge-verdict-heroique);
   text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
 }
 
 .scd-row--legendaire .scd-verdict b {
-  color: #d3a6ff;
+  color: var(--dw-forge-verdict-legendaire);
   text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
 }
 
 .scd-row--echec .scd-verdict b {
-  color: #ff7a59;
+  color: var(--dw-forge-verdict-echec);
   text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
 }
 
 .scd-row--echec_critique .scd-verdict b {
-  color: #ff6a4a;
+  color: var(--dw-forge-verdict-critique);
   text-shadow: 0 0 14px rgba(255, 58, 26, 0.75);
 }
 
@@ -1217,7 +1186,7 @@ body:has(bol-start-combat-page) {
   // Un rouge assez sombre pour son texte blanc (AA).
   &[aria-pressed='true'] {
     border-color: #b3261e;
-    background: #a81f17;
+    background: var(--dw-forge-critique);
     color: #fff;
   }
 }
@@ -1340,9 +1309,9 @@ body:has(bol-start-combat-page) {
   width: min(28rem, 92vw);
   padding: 0.9rem 1rem 1rem;
   // Une plaque de fer, comme les lignes.
-  border: 1px solid var(--scd-bronze);
+  border: 1px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--scd-plate-light), var(--scd-iron) 0 0 / 420px, #1c1510;
+  background: var(--dw-forge-plate);
   box-shadow:
     inset 0 1px 0 rgba(255, 214, 160, 0.17),
     0 18px 40px rgba(0, 0, 0, 0.6);

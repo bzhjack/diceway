@@ -52,15 +52,30 @@ bol-action-roll-panel {
   align-items: stretch;
 }
 
+// Un panneau : une plaque de fer rivetée, comme les lignes du jet de réaction.
 .ard-pan {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   min-width: 0;
   padding: 0.85rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-100);
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background:
+    var(--dw-forge-rivets),
+    var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+}
+
+// Le crédit des icônes (licence CC BY), au pied du premier panneau.
+.ard-credit {
+  margin: auto 0 0;
+  color: var(--dw-surface-600);
+  font-size: 0.66rem;
+
+  a {
+    color: inherit;
+  }
 }
 
 .ard-h {
@@ -72,8 +87,10 @@ bol-action-roll-panel {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dw-color-legendary);
+  color: #e8b75c;
+  text-shadow: 0 1px 2px #000;
 
+  // Le numéro de l'étape : une pièce de bronze.
   span {
     display: grid;
     place-items: center;
@@ -81,9 +98,11 @@ bol-action-roll-panel {
     width: 1.4rem;
     height: 1.4rem;
     border-radius: 50%;
-    background: var(--dw-color-legendary);
-    color: var(--dw-surface-0);
+    background: radial-gradient(circle at 35% 26%, #f0cf8e, #b98a45 70%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+    color: #1c1200;
     letter-spacing: 0;
+    text-shadow: none;
   }
 }
 
@@ -100,10 +119,15 @@ bol-action-roll-panel {
   align-content: center;
   aspect-ratio: 1;
   padding: 0.2rem;
-  border: 2px solid var(--dw-border);
+  border: 2px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 28%, var(--dw-surface-300), var(--dw-surface-50));
-  color: var(--dw-surface-600);
+  // Un jeton frappé.
+  background: radial-gradient(circle at 35% 26%, #4b3620, #1c120a 72%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 235, 200, 0.24),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.55),
+    0 2px 4px rgba(0, 0, 0, 0.7);
+  color: var(--dw-forge-stud-text);
   font: inherit;
   cursor: pointer;
 
@@ -115,7 +139,7 @@ bol-action-roll-panel {
 
   b {
     font: 400 1.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
   }
 
   span {
@@ -126,15 +150,17 @@ bol-action-roll-panel {
   }
 
   &:hover {
-    border-color: var(--dw-surface-500);
+    border-color: var(--dw-forge-hot);
   }
 
+  // Choisi : le jeton rougeoie.
   &[aria-pressed='true'] {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
     box-shadow:
-      0 0 0 3px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent),
-      0 0 22px color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+      inset 0 1px 1px rgba(255, 235, 200, 0.3),
+      0 0 0 2px rgba(255, 201, 106, 0.35),
+      0 0 18px rgba(232, 135, 58, 0.65);
   }
 }
 
@@ -146,30 +172,32 @@ bol-action-roll-panel {
   gap: 0.45rem;
 }
 
-// Des toggles : rectangulaires.
+// Des toggles : rectangulaires, creusés dans le fer.
 .ard-chip {
   padding: 0.35rem 0.85rem;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: var(--dw-radius-toggle);
-  background: var(--dw-surface-0);
-  color: var(--dw-surface-600);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: var(--dw-surface-700);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
 
   b {
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
   }
 
   &:hover {
-    border-color: var(--dw-surface-500);
+    border-color: var(--dw-forge-hot);
     color: var(--dw-surface-800);
   }
 
   &[aria-pressed='true'] {
     border-color: var(--dw-color-legendary);
     background: var(--dw-color-legendary);
+    box-shadow: none;
     color: #1c1200;
 
     b {
@@ -198,7 +226,10 @@ bol-action-roll-panel {
 }
 
 // ── Le plateau ───────────────────────────────────────────────────────────────────────────────────
+// Le foyer : de la suie, de la braise qui monte du bas ; le résultat du jet le chauffe à sa couleur.
 .ard-tray {
+  --heat: transparent;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -206,10 +237,31 @@ bol-action-roll-panel {
   gap: 0.6rem;
   min-width: 0;
   padding: 1.1rem 1rem 1.2rem;
-  border: 2px solid var(--bar-bronze, #6b4a22);
-  border-radius: 16px;
-  background: radial-gradient(ellipse at 50% 35%, var(--dw-surface-300), var(--dw-surface-50) 72%);
-  box-shadow: inset 0 0 44px rgba(0, 0, 0, 0.75);
+  border: 2px solid color-mix(in srgb, var(--heat) 62%, var(--dw-forge-bronze));
+  border-radius: 7px;
+  background:
+    radial-gradient(70% 45% at 50% 100%, rgba(232, 98, 42, 0.22), transparent 72%),
+    radial-gradient(60% 50% at 50% 40%, color-mix(in srgb, var(--heat) 14%, transparent), transparent 75%),
+    var(--dw-forge-soot);
+  box-shadow:
+    inset 0 0 44px rgba(0, 0, 0, 0.75),
+    0 0 18px -5px var(--heat);
+}
+
+.ard-tray:has(.ard-verdict-title--reussite) {
+  --heat: var(--dw-forge-heat-reussite);
+}
+
+.ard-tray:has(.ard-verdict-title--heroique) {
+  --heat: var(--dw-forge-heat-heroique);
+}
+
+.ard-tray:has(.ard-verdict-title--legendaire) {
+  --heat: var(--dw-forge-heat-legendaire);
+}
+
+.ard-tray:has(.ard-verdict-title--echec) {
+  --heat: var(--dw-forge-heat-echec);
 }
 
 .ard-top {
@@ -236,18 +288,19 @@ bol-action-roll-panel {
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 
   b {
     font: 400 4rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
+    text-shadow: 0 2px 8px #000, 0 0 22px rgba(232, 135, 58, 0.28);
   }
 
   i {
     font-style: normal;
     font-size: 0.95rem;
-    color: var(--dw-surface-600);
+    color: var(--dw-surface-700);
   }
 }
 
@@ -270,7 +323,7 @@ bol-action-roll-panel {
   b {
     position: relative;
     font: 400 1.8rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
   }
 
   span {
@@ -279,7 +332,7 @@ bol-action-roll-panel {
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-700);
   }
 }
 
@@ -290,12 +343,14 @@ bol-action-roll-panel {
 }
 
 .ard-ring-bg {
-  stroke: var(--dw-surface-300);
+  stroke: #2a1c12;
 }
 
+// La jauge de chances, comme du bronze chauffé.
 .ard-ring-fg {
-  stroke: var(--dw-color-legendary);
+  stroke: #e8b75c;
   stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(232, 135, 58, 0.6));
   transition: stroke-dasharray 0.25s;
 }
 
@@ -327,7 +382,7 @@ bol-action-roll-panel {
 
 // Emplacement vide, avant le lancer.
 .ard-die--ghost {
-  border: 2px dashed var(--dw-border);
+  border: 2px dashed var(--dw-forge-bronze-edge);
   background: transparent;
   box-shadow: none;
 }
@@ -353,7 +408,7 @@ bol-action-roll-panel {
   span {
     max-width: 22rem;
     font-size: 1rem;
-    color: var(--dw-surface-600);
+    color: #efe2c8;
   }
 }
 
@@ -363,25 +418,30 @@ bol-action-roll-panel {
   text-transform: uppercase;
 }
 
+// Le mot du verdict brille de la couleur qui chauffe le foyer.
 .ard-verdict-title--reussite {
-  color: var(--dw-color-reussite);
+  color: var(--dw-forge-verdict-reussite);
+  text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
 }
 
 .ard-verdict-title--echec {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
+  text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
 }
 
 .ard-verdict-title--heroique {
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-verdict-heroique);
+  text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
 }
 
 .ard-verdict-title--legendaire {
-  color: var(--dw-color-succes-legendaire);
+  color: var(--dw-forge-verdict-legendaire);
+  text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
 }
 
 .ard-verdict .ard-verdict-wait {
   font-size: 1rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
 }
 
 // L'action principale : seule à porter l'or plein, uni comme « Fin du tour » (ni dégradé ni relief).
@@ -425,14 +485,14 @@ bol-action-roll-panel {
 
   b {
     font: 400 2.6rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
     white-space: nowrap;
   }
 
   small {
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
     white-space: nowrap;
   }
 }
@@ -447,11 +507,11 @@ bol-action-roll-panel {
 
 .ard-sum-term--total {
   padding-left: 1.1rem;
-  border-left: 1px solid var(--dw-border);
+  border-left: 1px solid var(--dw-forge-bronze-edge);
 
   b {
     font-size: 3.2rem;
-    color: var(--dw-color-legendary);
+    color: #e8b75c;
   }
 }
 
@@ -483,16 +543,20 @@ bol-action-roll-panel {
   // Une action (Faveur divine) est une pilule ; les cases à cocher (`aria-pressed`) sont des toggles rectangulaires.
   border-radius: var(--dw-radius-pill);
 
-  &[aria-pressed] {
-    border-radius: var(--dw-radius-toggle);
-  }
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 225, 170, 0.14),
+    0 2px 4px rgba(0, 0, 0, 0.5);
   color: var(--dw-color-legendary);
   font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
+
+  &[aria-pressed] {
+    border-radius: var(--dw-radius-toggle);
+  }
 
   &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
@@ -503,8 +567,18 @@ bol-action-roll-panel {
     background: var(--dw-color-legendary);
     color: #1c1200;
 
-    // À gauche, l'icône dit ce que fait le bouton : une flèche pour celui qui relance les dés, une case pour ceux qui se cochent et se
-// décochent. À droite, le prix en points d'héroïsme.
+    .ard-gem {
+      background: currentColor;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+}
+
+// À gauche, l'icône de l'option ; à droite, son prix en points d'héroïsme.
 .ard-act .mat-icon {
   flex: none;
   width: 1.2rem;
@@ -521,34 +595,37 @@ bol-action-roll-panel {
   font-variant-numeric: tabular-nums;
 }
 
-// Une option qui rapporte un point d'héroïsme (échec critique) : gemme et liseré verts, pour la distinguer de celles qui en coûtent un.
-.ard-act--gain {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
-  background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);
-  color: var(--dw-color-reussite);
-
-  .ard-gem {
-    background: linear-gradient(160deg, #bbf7d0, var(--dw-color-reussite) 55%, #14532d);
-  }
+// Chaque option à la couleur de son résultat, comme dans le jet de réaction : l'échec critique en rouge, le succès héroïque en doré (la
+// couleur de base), le succès légendaire en violet. Choisie, l'option se remplit de sa couleur.
+.ard-act.ard-act--critique {
+  border-color: color-mix(in srgb, var(--dw-color-echec-forte) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
+  color: var(--dw-color-echec);
 
   &:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 20%, transparent);
   }
 
   &[aria-pressed='true'] {
-    background: var(--dw-color-reussite);
-    color: #041a0d;
+    border-color: #b3261e;
+    background: var(--dw-forge-critique);
+    color: #fff;
   }
 }
 
-.ard-gem {
-      background: #1c1200;
-    }
+.ard-act.ard-act--legendaire {
+  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 65%, transparent);
+  background: color-mix(in srgb, var(--dw-color-succes-legendaire) 10%, transparent);
+  color: var(--dw-color-succes-legendaire);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-color-succes-legendaire) 20%, transparent);
   }
 
-  &:disabled {
-    opacity: 0.45;
-    cursor: default;
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-succes-legendaire);
+    background: var(--dw-color-succes-legendaire);
+    color: #1d0b33;
   }
 }
 
@@ -556,7 +633,7 @@ bol-action-roll-panel {
   flex: none;
   width: 0.75rem;
   height: 1rem;
-  background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+  background: var(--dw-forge-gem);
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
@@ -569,24 +646,26 @@ bol-action-roll-panel {
 
 .ard-manual-hint {
   font-size: 0.95rem;
-  color: var(--dw-surface-600);
+  color: var(--dw-surface-700);
   white-space: nowrap;
 }
 
 .ard-manual-input {
   width: 5.2rem;
   height: 3.1rem;
-  border: 1px solid var(--dw-surface-500);
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
-  color: var(--dw-surface-900);
+  // Un creux dans le fer, cerclé de bronze, comme la case du total du jet de réaction.
+  border: 2px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: #ffe9bd;
   font: inherit;
   font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
   text-align: center;
 
   &::placeholder {
-    color: var(--dw-surface-500);
+    color: var(--dw-surface-600);
   }
 }
 
@@ -597,10 +676,11 @@ bol-action-roll-panel {
   width: 3.1rem;
   height: 3.1rem;
   padding: 0;
-  border: 1px solid var(--dw-surface-500);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--dw-surface-0) 30%, transparent);
-  color: var(--dw-surface-600);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   .mat-icon {
@@ -610,8 +690,9 @@ bol-action-roll-panel {
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-surface-700);
-    color: var(--dw-surface-900);
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
   }
 
   &:disabled {
@@ -637,11 +718,12 @@ bol-action-roll-panel {
     justify-content: space-between;
     gap: 0.4rem;
     padding: 0.3rem 0.6rem;
-    border: 1px solid var(--dw-border);
+    border: 1px solid var(--dw-forge-bronze-edge);
     border-left: 4px solid var(--ard-tone);
     border-radius: var(--dw-radius-toggle);
-    background: var(--dw-surface-0);
-    color: var(--dw-surface-600);
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+    color: var(--dw-surface-700);
     font: inherit;
     font-size: 0.88rem;
     font-weight: 700;
@@ -657,18 +739,20 @@ bol-action-roll-panel {
     &:nth-child(8) { --ard-tone: var(--dw-color-echec-forte); }
 
     b {
-      color: var(--dw-surface-900);
+      color: var(--dw-forge-bone);
       font-variant-numeric: tabular-nums;
     }
 
     &:hover {
-      border-color: var(--dw-surface-500);
+      border-color: var(--dw-forge-hot);
+      border-left-color: var(--ard-tone);
     }
 
     &[aria-pressed='true'] {
       border-color: var(--dw-color-legendary);
       border-left-color: var(--ard-tone);
       background: var(--dw-color-legendary);
+      box-shadow: none;
       color: #1c1200;
 
       b {
@@ -714,17 +798,20 @@ bol-action-roll-panel {
     width: 1.75rem;
     height: 1.75rem;
     padding: 0;
-    border: 1px solid var(--dw-border);
+    border: 1px solid var(--dw-forge-bronze-dim);
     border-radius: 50%;
-    background: var(--dw-surface-0);
-    color: var(--dw-color-legendary);
+    background: var(--dw-forge-stud);
+    box-shadow: var(--dw-forge-stud-shadow);
+    color: var(--dw-forge-bronze-text);
     font: inherit;
     font-size: 1rem;
     font-weight: 800;
     cursor: pointer;
 
     &:hover {
-      background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+      border-color: var(--dw-forge-hot);
+      box-shadow: var(--dw-forge-stud-glow);
+      color: var(--dw-forge-hot-text);
     }
   }
 
@@ -732,7 +819,7 @@ bol-action-roll-panel {
     display: grid;
     place-items: center;
     min-width: 2rem;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
     font-size: 1rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;

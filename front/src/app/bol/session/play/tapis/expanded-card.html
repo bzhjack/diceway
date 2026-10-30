@@ -37,7 +37,7 @@
       <div class="exc-hb-actions">
         @if (hero()?.details?.editRoute; as editRoute) {
           <a mat-icon-button class="exc-icon-btn" aria-label="Modifier la fiche" matTooltip="Modifier la fiche" [routerLink]="editRoute" [state]="navigationState()">
-            <mat-icon>edit</mat-icon>
+            <mat-icon svgIcon="gi-quill" />
           </a>
         }
         <button
@@ -48,7 +48,7 @@
           [matTooltip]="removeLabel"
           (click)="removeRequested.emit(card())"
         >
-          <mat-icon>delete</mat-icon>
+          <mat-icon svgIcon="gi-trash" />
         </button>
         <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
           <mat-icon>close</mat-icon>

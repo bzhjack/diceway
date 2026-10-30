@@ -31,6 +31,42 @@
   --dw-color-dice-muted:      #f1e6d0; // parchemin — badges/actifs dés
   --dw-color-text-bright:     #f1e6d0; // quasi-blanc — titres, valeurs fortes
 
+  // ── La forge : fer, bronze et braise (jet de réaction, carte d'un héros) ──
+  --dw-forge-bronze:       #a9793a; // bords forts : case de saisie, plateau, popover
+  --dw-forge-bronze-dim:   #7a5a2a; // bord des clous
+  --dw-forge-bronze-edge:  #6d4f28; // bord des plaques
+  --dw-forge-bronze-text:  #f0cf8e; // texte et icône sur fond sombre
+  --dw-forge-stud-text:    #e6c98e; // icône d'un clou
+  --dw-forge-hot:          #ffc96a; // bord au survol et au focus
+  --dw-forge-hot-text:     #ffe0a0; // icône au survol
+  --dw-forge-bone:         #f5e8cf; // valeurs fortes
+  --dw-forge-name:         #f6d98f; // nom d'un héros
+  --dw-forge-recess:       #0a0604; // fond d'un creux
+  --dw-forge-iron:         url('/assets/bol/forge/fer.webp');
+  --dw-forge-soot:         url('/assets/bol/forge/suie.webp') center / 900px 560px, #0f0a07;
+  --dw-forge-plate:        linear-gradient(180deg, rgba(255, 210, 150, 0.075), transparent 28%, rgba(0, 0, 0, 0.3)), var(--dw-forge-iron) 0 0 / 420px, #1c1510;
+  --dw-forge-plate-shadow: inset 0 1px 0 rgba(255, 214, 160, 0.17), inset 0 -1px 0 rgba(0, 0, 0, 0.75), 0 5px 12px rgba(0, 0, 0, 0.6);
+  --dw-forge-rivet:        radial-gradient(circle at 36% 30%, #e0bf86, #8c6a2f 44%, #231608 74%, transparent 77%);
+  --dw-forge-rivets:       var(--dw-forge-rivet) calc(100% - 6px) 6px / 9px 9px no-repeat, var(--dw-forge-rivet) calc(100% - 6px) calc(100% - 6px) / 9px 9px no-repeat; // les deux coins droits d'une plaque
+  --dw-forge-stud:         radial-gradient(circle at 35% 26%, #4a3418, #241708 62%, #120a04);
+  --dw-forge-stud-shadow:  inset 0 1px 0 rgba(255, 225, 170, 0.3), inset 0 -1px 2px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.65);
+  --dw-forge-stud-glow:    inset 0 1px 0 rgba(255, 225, 170, 0.4), 0 0 12px rgba(232, 135, 58, 0.6);
+  --dw-forge-recess-shadow: inset 0 3px 7px #000, 0 1px 0 rgba(255, 214, 160, 0.16);
+  --dw-forge-gem:          linear-gradient(160deg, #fff0b3, #e8b75c 48%, #9a6410);
+  --dw-forge-gem-off:      rgba(245, 232, 207, 0.16);
+  --dw-forge-critique:     #a81f17; // l'échec critique choisi : assez sombre pour son texte blanc (AA)
+  // Le résultat : la couleur qui chauffe une plaque, et celle du mot du verdict.
+  --dw-forge-heat-reussite:      #3ecf77;
+  --dw-forge-heat-heroique:      #eab54a;
+  --dw-forge-heat-legendaire:    #c084fc;
+  --dw-forge-heat-echec:         #e8502e;
+  --dw-forge-heat-critique:      #ff3a1a;
+  --dw-forge-verdict-reussite:   #5fe394;
+  --dw-forge-verdict-heroique:   #f6c964;
+  --dw-forge-verdict-legendaire: #d3a6ff;
+  --dw-forge-verdict-echec:      #ff7a59;
+  --dw-forge-verdict-critique:   #ff6a4a;
+
   // ── Bordures UI ───────────────────────────────────────────────────────────
   --dw-border:        #4f3b27; // bordure sombre standard
   --dw-border-remove: #5b2a2a; // bordeaux — bouton suppression

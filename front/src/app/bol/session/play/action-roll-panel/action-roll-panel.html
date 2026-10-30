@@ -8,7 +8,7 @@
       <div class="ard-medals" role="group" aria-labelledby="ard-attr-title">
         @for (attr of attributes; track attr) {
           <button type="button" class="ard-medal" [attr.aria-pressed]="attribute() === attr" (click)="attribute.set(attr)">
-            <mat-icon aria-hidden="true">{{ attributeIcons[attr] }}</mat-icon>
+            <mat-icon [svgIcon]="attributeIcons[attr]" aria-hidden="true" />
             <b>{{ signed(data()[attr]) }}</b>
             <span>{{ attributeLabels[attr] }}</span>
           </button>
@@ -26,6 +26,13 @@
           }
         </div>
       }
+
+      <p class="ard-credit">
+        Icônes :
+        <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+        (Lorc, Delapouite et contributeurs),
+        <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+      </p>
     </section>
 
     <!-- La difficulté sur son échelle, puis les coups de pouce ; le plateau vient après, à droite -->
@@ -158,23 +165,23 @@
             aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme"
             (click)="rollWithDivineFavor()"
           >
-            <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine : relancer <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
+            <mat-icon svgIcon="gi-favor" aria-hidden="true" /> Faveur divine : relancer <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         }
 
         @if (isNatural2()) {
-          <button type="button" class="ard-act ard-act--gain" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
-            <mat-icon aria-hidden="true">{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique <span class="ard-cost">+1 <span class="ard-gem" aria-hidden="true"></span></span>
+          <button type="button" class="ard-act ard-act--critique" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
+            <mat-icon svgIcon="gi-skull" aria-hidden="true" /> Échec critique <span class="ard-cost">+1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         } @else if (isHeroic12() && (legendaryChosen() || heroisme() > 0)) {
           <button
             type="button"
-            class="ard-act"
+            class="ard-act ard-act--legendaire"
             [attr.aria-pressed]="legendaryChosen()"
             aria-label="Succès légendaire, pour 1 point d’héroïsme"
             (click)="toggleLegendaire()"
           >
-            <mat-icon aria-hidden="true">{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
+            <mat-icon svgIcon="gi-crown" aria-hidden="true" /> Succès légendaire <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         } @else if (canUpgradeToHeroique() && (heroicUpgradeChosen() || heroisme() > 0)) {
           <button
@@ -184,7 +191,7 @@
             aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
             (click)="toggleHeroicUpgrade()"
           >
-            <mat-icon aria-hidden="true">{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
+            <mat-icon svgIcon="gi-laurels" aria-hidden="true" /> Succès héroïque <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         }
       </div>
@@ -206,7 +213,7 @@
           (keydown.enter)="submitManualTotal()"
         />
         <button type="button" class="ard-manual-btn" aria-label="Valider le total des dés lancés à table" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
-          <mat-icon>check</mat-icon>
+          <mat-icon svgIcon="gi-check" />
         </button>
       </div>
     </section>
