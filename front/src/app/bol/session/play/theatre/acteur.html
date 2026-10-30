@@ -3,6 +3,7 @@
   [id]="'act-' + card().key"
   [class]="'act act--' + taille() + ' act--' + card().kind"
   [class.act--selected]="selected()"
+  [class.act--plaque]="forme() === 'plaque'"
   [class.act--tombe]="tombe()"
   [attr.aria-pressed]="selected() ? 'true' : null"
   [attr.aria-label]="ariaLabel()"

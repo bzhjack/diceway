@@ -21,6 +21,9 @@ export class ActeurComponent {
   readonly card = input.required<TapisCard>();
   readonly taille = input.required<TroupeTaille>();
   readonly selected = input(false);
+  /** « carte » : le portrait en pied ; « plaque » : une ligne, le portrait carré à gauche, le nom et la vie à droite (les alliés de la
+   * compagnie, comme les plaques des héros). */
+  readonly forme = input<'carte' | 'plaque'>('carte');
   /** Ce que le lecteur d'écran entend en plus du nom (les chances de toucher, quand la carte sert à choisir une cible). */
   readonly detail = input<string | null>(null);
   readonly toggled = output<MouseEvent>();

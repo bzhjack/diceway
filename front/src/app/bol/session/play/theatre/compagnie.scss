@@ -35,7 +35,8 @@
   // Les tailles des plaques sont en em : `--cmp-k`, réglé selon le nombre de héros, les grandit quand ils sont peu nombreux et
   // les resserre quand la compagnie est grande, pour qu'elle tienne le plus souvent sur une ligne.
   font-size: calc(1rem * var(--cmp-k, 1));
-  grid-template-columns: repeat(auto-fill, minmax(min(12.5em, 100%), 1fr));
+  // 16em : le portrait carré (4,8em) puis le nom, la vie et l'héroïsme, sans rogner le cœur.
+  grid-template-columns: repeat(auto-fill, minmax(min(16em, 100%), 1fr));
   gap: 0.5em;
   margin: 0;
   padding: 0;
@@ -59,15 +60,18 @@
   outline-offset: 1px;
 }
 
+// Le portrait : un carré collé au bord gauche de la plaque (marges négatives : il reprend le retrait de la plaque), dont il fixe la hauteur ;
+// ses coins gauches épousent ceux de la plaque (10px moins le liseré) ; il se fond vers la droite dans le fond.
 .cmp-portrait {
   flex: none;
-  width: calc(2.8em * var(--thr-k, 1));
-  height: calc(2.8em * var(--thr-k, 1));
+  width: 4.8em;
+  height: 4.8em;
+  margin: -0.35em 0 -0.35em -0.35em;
   padding: 0;
   overflow: hidden;
-  border: 2px solid #8c6a2f;
-  border-radius: 50%;
-  background: #120c07;
+  border: 0;
+  border-radius: 9px 0 0 9px;
+  background: linear-gradient(90deg, #120c07, transparent);
   cursor: pointer;
 
   img {
@@ -75,11 +79,16 @@
     height: 100%;
     object-fit: cover;
     object-position: center top;
+    mask-image: linear-gradient(90deg, #000 72%, transparent);
+  }
+
+  &:hover {
+    filter: brightness(1.15);
   }
 
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
+    outline-offset: -2px;
   }
 }
 
@@ -163,6 +172,7 @@
 }
 
 .cmp-coeur {
+  flex: none;
   width: 1em;
   height: 1em;
   font-size: 1em;
@@ -287,7 +297,8 @@
   justify-content: flex-end;
   gap: 0.3rem;
   width: calc(2.1rem * var(--thr-k, 1));
-  height: calc(8.8rem * var(--thr-k, 1));
+  // La hauteur de la plaque de l'allié qu'elle suit (`.act--plaque`).
+  height: calc(4.4rem * var(--thr-k, 1));
   // Collée à la précédente sans la recouvrir : chaque tranche garde toute sa surface de clic.
   margin-left: 0;
   padding: 0 0.35rem 0.45rem 0.45rem;
