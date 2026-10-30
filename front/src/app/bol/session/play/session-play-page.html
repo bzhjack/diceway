@@ -19,22 +19,23 @@
     >
       @if (mode() === 'libre') {
         <bol-scene-acts [sessionTitre]="session()?.titre ?? null" (sceneChanged)="onSceneLoaded($event)" />
-      } @else {
-        <!-- En combat, l'ordre d'action tient dans la barre du haut : le round, les blocs de réaction, ajouter, relancer la réaction -->
-        <bol-turn-order
-          [entries]="turnEntries()"
-          [round]="etat().round"
-          [targetKey]="selectedTarget()?.key ?? null"
-          [legendaryActive]="b.legendaryActive"
-          [announcement]="turnAnnouncement()"
-          [interrupters]="interrupters()"
-          (gaveBack)="onGiveBackTurn($event)"
-          (interruptRequested)="onInterrupt($event)"
-          (addRequested)="openAddCombatantDialog()"
-          (rerollRequested)="openStartCombat(true)"
-        />
       }
     </bol-session-header>
+    @if (mode() === 'combat') {
+      <!-- En combat, l'ordre d'action en bande sous la barre de titre, comme sur la page du jet de réaction -->
+      <bol-turn-order
+        [entries]="turnEntries()"
+        [round]="etat().round"
+        [targetKey]="selectedTarget()?.key ?? null"
+        [legendaryActive]="b.legendaryActive"
+        [announcement]="turnAnnouncement()"
+        [interrupters]="interrupters()"
+        (gaveBack)="onGiveBackTurn($event)"
+        (interruptRequested)="onInterrupt($event)"
+        (addRequested)="openAddCombatantDialog()"
+        (rerollRequested)="openStartCombat(true)"
+      />
+    }
 
     @if (sessionId(); as sid) {
       @if (mode() === 'libre') {

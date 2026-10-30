@@ -2,7 +2,8 @@ import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {actionDiceTarget, actionResultTone, netDiceModifier} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
 import {HeroDetailTrait} from './models/tapis.model';
-import {ReactionAdversary, ReactionFriseStep, ReactionGroup, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat.model';
+import {OrdreFriseStep} from './models/ordre-frise.model';
+import {ReactionAdversary, ReactionGroup, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat.model';
 
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
@@ -157,21 +158,35 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
   return lanes.filter((lane) => lane.tokens.length > 0);
 }
 
-/** L'ordre d'action en frise : un cercle par combattant, dans l'ordre où ils jouent. Les héros qui n'ont pas lancé n'y sont pas : leurs
- * lignes, en face, l'indiquent déjà. Les exemplaires d'une même fiche se suivent ; un trait long sépare deux groupes. */
-export function reactionFrise(lanes: readonly ReactionLane[]): readonly ReactionFriseStep[] {
+/** L'ordre d'action en frise : un médaillon par combattant, dans l'ordre où ils jouent. Les héros qui n'ont pas lancé n'y sont pas :
+ * leurs lignes, en face, l'indiquent déjà. Les exemplaires d'une même fiche se suivent ; un trait long sépare deux groupes. Le médaillon
+ * d'un adversaire se clique : il l'exclut de ce combat, ou l'y réintègre (sa clé est celle de l'exclusion, `kind-pivotId`). */
+export function reactionFrise(lanes: readonly ReactionLane[]): readonly OrdreFriseStep[] {
   const placed = lanes.filter((lane) => lane.id !== 'attente');
   return placed.flatMap((lane, laneIndex) => {
     const tokens = lane.groups.flatMap((group) => group.tokens);
-    return tokens.map((token, index): ReactionFriseStep => {
+    return tokens.map((token, index): OrdreFriseStep => {
       const ally = token.detail === 'allié';
-      const hero = token.resultat ? `, ${VERDICTS[token.resultat][0].toLowerCase()}, total ${token.total ?? '—'}` : '';
+      const hero = token.kind === 'hero';
+      const result = token.resultat ? `, ${VERDICTS[token.resultat][0].toLowerCase()}, total ${token.total ?? '—'}` : '';
+      const label = `${token.nom}${result}${ally ? ', allié des héros' : ''}${lane.blocked ? ', ne joue pas au round 1' : ''}`;
       return {
-        token,
+        key: `${token.kind}-${token.pivotId}`,
+        nom: token.nom,
+        avatar: token.avatar,
+        hero,
         tone: token.resultat ?? (ally ? 'allie' : 'adversaire'),
-        label: `${token.nom}${hero}${ally ? ', allié des héros' : ''}${lane.blocked ? ', ne joue pas au round 1' : ''}`,
-        blocked: lane.blocked,
+        label: hero ? label : `${label} : participe à ce combat`,
+        tooltip: hero ? label : `${label}${token.excluded ? ' : exclu, cliquer pour le réintégrer' : ' : cliquer pour l’exclure de ce combat'}`,
         link: index < tokens.length - 1 ? 'court' : laneIndex < placed.length - 1 ? 'long' : null,
+        blocked: lane.blocked,
+        clickable: !hero,
+        pressed: hero ? null : !token.excluded,
+        status: null,
+        target: false,
+        down: false,
+        effects: false,
+        excluded: token.excluded,
       };
     });
   });

@@ -1,0 +1,237 @@
+// Le titre, ce que la page projette (une pastille, un message), puis la frise qui prend la place qui reste.
+:host {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+// « Ordre d'action » en petites capitales dorées, et le round dessous, plus gros et plus clair.
+.ofr-title {
+  display: grid;
+  flex: none;
+  gap: 0.1rem;
+  margin: 0;
+  white-space: nowrap;
+  color: var(--dw-color-legendary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  span {
+    color: var(--dw-surface-800);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+}
+
+// Sa largeur règle la taille des médaillons (unité `cqw`).
+.ofr-zone {
+  flex: 1;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+// Une seule ligne : les médaillons font 2.25rem ; sur une très grande table ils rétrécissent, jusqu'à 1.4rem, et en dernier recours la
+// ligne défile (`--ofr-n` et `--ofr-longs` sont posés sur l'hôte). La marge laisse de la place au halo du survol, du focus et du tour.
+.ofr {
+  --ofr-size: clamp(1.4rem, (100cqw - var(--ofr-longs, 0) * 1.6rem - var(--ofr-n, 1) * 0.3rem) / var(--ofr-n, 1), 2.25rem);
+
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.35rem 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+// Un médaillon et le trait qui le relie au suivant : court dans un même groupe, long entre deux groupes.
+.ofr-step {
+  display: flex;
+  flex: 0 1 calc(var(--ofr-size) + 0.8rem);
+  align-items: center;
+  min-width: calc(var(--ofr-size) + 0.3rem);
+}
+
+.ofr-step--long {
+  flex: 0 1 calc(var(--ofr-size) + 2.4rem);
+  min-width: calc(var(--ofr-size) + 1.6rem);
+}
+
+.ofr-step--last {
+  flex: none;
+  min-width: 0;
+}
+
+.ofr-link {
+  flex: 1;
+  height: 2px;
+  background: var(--dw-surface-400);
+}
+
+// Le médaillon et son point d'effets, qui déborde au coin.
+.ofr-slot {
+  position: relative;
+  flex: none;
+}
+
+.ofr-dot {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.2rem;
+  z-index: 2;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 2px solid var(--dw-surface-0);
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
+}
+
+.ofr-c {
+  --ofr-ring: var(--dw-surface-500);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--ofr-size);
+  height: var(--ofr-size);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid var(--ofr-ring);
+  border-radius: 50%;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font: 800 calc(var(--ofr-size) * 0.42) / 1 'Muse Sans', sans-serif;
+  transition: opacity 0.12s ease-out, box-shadow 0.12s ease-out;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+  }
+}
+
+button.ofr-c {
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--dw-color-legendary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.ofr-c--hero {
+  border-radius: 22%;
+}
+
+// L'anneau dit le résultat d'un héros, ou le camp des autres.
+.ofr-c--reussite,
+.ofr-c--allie {
+  --ofr-ring: var(--dw-color-reussite);
+}
+
+.ofr-c--heroique {
+  --ofr-ring: var(--dw-color-legendary);
+}
+
+.ofr-c--legendaire {
+  --ofr-ring: var(--dw-color-succes-legendaire);
+}
+
+.ofr-c--echec {
+  --ofr-ring: var(--dw-color-echec);
+}
+
+.ofr-c--echec_critique {
+  --ofr-ring: var(--dw-color-echec-forte);
+}
+
+.ofr-c--adversaire {
+  --ofr-ring: #b4534b;
+}
+
+// Il ne joue pas au round 1 : anneau en pointillés et médaillon hachuré ; le trait de son groupe en pointillés.
+.ofr-c--blocked {
+  border-style: dashed;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--dw-color-echec) 30%, transparent) 0 2px, transparent 2px 6px);
+  }
+}
+
+.ofr-step:not(.ofr-step--long):has(.ofr-c--blocked) .ofr-link {
+  background: repeating-linear-gradient(90deg, var(--dw-surface-400) 0 3px, transparent 3px 6px);
+}
+
+// Exclu de ce combat : éteint et barré, à sa place, pour pouvoir le réintégrer.
+.ofr-c--out {
+  border-style: dotted;
+  opacity: 0.45;
+  filter: grayscale(1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: -10%;
+    left: -10%;
+    height: 2px;
+    background: var(--dw-surface-900);
+    transform: rotate(-45deg);
+  }
+}
+
+// Pendant le combat : celui qui joue est auréolé d'or, la cible de rouge ; ceux qui ont joué s'estompent.
+.ofr-c--active {
+  box-shadow: 0 0 0 2px var(--bar-ember, var(--dw-color-legendary)), 0 0 8px 2px rgba(232, 135, 58, 0.6);
+}
+
+.ofr-c--target {
+  --ofr-ring: var(--dw-color-echec-forte);
+  box-shadow: 0 0 0 2px var(--dw-color-echec-forte), 0 0 8px 2px rgba(208, 42, 42, 0.6);
+}
+
+.ofr-c--played {
+  opacity: 0.5;
+}
+
+.ofr-c--skipped {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+// Hors de combat (héros inconscient ou mourant, adversaire tombé) : éteint, anneau en pointillés.
+.ofr-c--down {
+  border-style: dashed;
+  filter: grayscale(1) brightness(0.6);
+}
+
+.ofr-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ofr-c {
+    transition: none;
+  }
+}

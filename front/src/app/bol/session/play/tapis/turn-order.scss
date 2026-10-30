@@ -1,24 +1,21 @@
 :host {
   display: block;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
-// Dans la barre du haut, sur une ligne : le round (et la pastille d'un succès héroïque), l'ordre d'action, puis les commandes du tour.
+// Une bande sous la barre de titre, comme sur la page du jet de réaction : la frise (titre et round compris) qui prend la place qui
+// reste, puis les commandes du tour.
 .tor {
-  // Le round et les blocs de l'ordre d'action ont la même hauteur : une seule bande, alignée.
-  --tor-bar-h: 2.7rem;
   display: flex;
   align-items: center;
-  gap: 0.6rem 0.8rem;
+  gap: 0.9rem;
   min-width: 0;
+  padding: 0.3rem 1.1rem;
+  border-bottom: 1px solid var(--dw-border);
+  background: rgba(0, 0, 0, 0.28);
 }
 
-.tor-head {
-  display: contents;
-}
-
-.tor-groups {
-  order: 1;
+.tor-frise {
   flex: 1;
   min-width: 0;
 }
@@ -28,7 +25,6 @@
   flex: none;
   align-items: center;
   gap: 0.3rem;
-  order: 2;
 }
 
 .tor-icon {
@@ -36,45 +32,6 @@
   border: 1px solid var(--dw-border);
   background: rgba(0, 0, 0, 0.35);
   color: var(--dw-surface-800);
-}
-
-.tor-round {
-  box-sizing: border-box;
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.6rem;
-  height: var(--tor-bar-h);
-  padding: 0 0.6rem 0 0.4rem;
-  border: 2px solid var(--bar-bronze, var(--dw-border));
-  border-radius: 6px;
-  background: repeating-linear-gradient(135deg, #2c2118 0 6px, #251b13 6px 12px);
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55), 0 2px 0 #000;
-  line-height: 1;
-
-  // Case gravée qui porte le numéro du round.
-  b {
-    display: grid;
-    place-items: center;
-    min-width: 2rem;
-    height: 2rem;
-    padding-inline: 0.3rem;
-    border-radius: 4px;
-    background: #0f0a06;
-    box-shadow: inset 0 0 8px #000;
-    color: var(--bar-ember, var(--dw-color-legendary));
-    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-  }
-
-  span {
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--dw-surface-500);
-  }
 }
 
 .tor-pill {
@@ -94,202 +51,6 @@
   color: var(--dw-color-succes-legendaire);
 }
 
-// L'ordre d'action, sur une seule ligne : un bloc par rang (ou famille de rangs) de réaction qui a des combattants. Quand la place
-// manque, les médaillons rétrécissent (voir `--tor-size`), puis se chevauchent (`--tor-overlap`, voir `fitStrip`) ; la ligne ne défile
-// qu'en dernier recours.
-.tor-groups {
-  display: flex;
-  // Une seule ligne dans la barre du haut : les médaillons rétrécissent, et en dernier recours la ligne défile.
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  // La largeur de la ligne sert de mesure aux médaillons (unité `cqw`).
-  container-type: inline-size;
-}
-
-.tor-group {
-  box-sizing: border-box;
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.5rem;
-  height: var(--tor-bar-h);
-  padding: 0 0.6rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-0);
-}
-
-.tor-group--blocked {
-  border-style: dashed;
-  opacity: 0.6;
-}
-
-.tor-group-title {
-  display: flex;
-  flex: none;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.3rem;
-  margin: 0;
-  white-space: nowrap;
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--dw-surface-500);
-
-  em {
-    font-style: normal;
-    color: var(--dw-color-legendary);
-  }
-}
-
-.tor-group--blocked .tor-group-title::after {
-  content: 'bloqué';
-  color: var(--dw-color-danger-muted);
-}
-
-// Médaillon d'un combattant : anneau du métal de son type. Il fait 2rem ; quand la ligne est pleine il rétrécit, jusqu'à 1.4rem, pour
-// que tout l'ordre d'action tienne sur une ligne : la largeur de la ligne, moins la place des titres de bloc (environ 9.8rem par
-// bloc), partagée entre tous les médaillons (`--tor-groups` et `--tor-total` sont posés par le gabarit).
-.tor-chips {
-  --tor-size: clamp(1.4rem, (100cqw - var(--tor-groups, 1) * 9.8rem) / var(--tor-total, 1) - 0.4rem, 2rem);
-  display: flex;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-// Quand même les plus petits médaillons ne tiennent pas, chacun couvre le bord du précédent, juste assez pour que la ligne tienne.
-.tor-chips > li + li {
-  margin-left: calc(-1 * var(--tor-overlap, 0px));
-}
-
-.tor-med {
-  --tor-metal: var(--bar-pj-2, #a8762a);
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: var(--tor-size);
-  height: var(--tor-size);
-  padding: 0;
-  border: 3px solid var(--tor-metal);
-  border-radius: 50%;
-  background: var(--dw-surface-200);
-  color: var(--dw-surface-900);
-  font: inherit;
-  font-size: calc(var(--tor-size) * 0.4);
-  font-weight: 800;
-  overflow: hidden;
-  cursor: default;
-  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
-
-  &:not(:disabled) {
-    cursor: pointer;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
-}
-
-.tor-med--pnj {
-  --tor-metal: var(--bar-pnj-2, #8b949e);
-}
-.tor-med--creature {
-  --tor-metal: var(--bar-creature-2, #a04a1c);
-}
-.tor-med--demon {
-  --tor-metal: var(--bar-demon-2, #8f1d1d);
-}
-
-.tor-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-// Le combattant actif et la cible passent devant leurs voisins quand les médaillons se chevauchent.
-.tor-med--active,
-.tor-med--target {
-  position: relative;
-  z-index: 1;
-}
-
-.tor-med--active {
-  box-shadow: 0 0 0 3px var(--bar-ember, var(--dw-color-legendary)), 0 0 14px 3px rgba(232, 135, 58, 0.6);
-}
-
-.tor-med--target {
-  border-color: var(--dw-color-echec-forte);
-  box-shadow: 0 0 0 3px var(--dw-color-echec-forte), 0 0 14px 3px rgba(208, 42, 42, 0.6);
-}
-
-// Une carte hors de combat (héros inconscient ou mourant, adversaire tombé) : médaillon éteint, liseré en pointillés.
-.tor-med--down {
-  border-style: dashed;
-  filter: grayscale(1) brightness(0.6);
-}
-
-// Une carte qui porte des effets : un point doré au coin haut du médaillon.
-.tor-med--effects {
-  overflow: visible;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -0.2rem;
-    right: -0.2rem;
-    z-index: 1;
-    width: 0.6rem;
-    height: 0.6rem;
-    border: 2px solid var(--dw-surface-0);
-    border-radius: 50%;
-    background: var(--dw-color-legendary);
-  }
-}
-
-.tor-med--ally {
-  // Allié des héros : une pastille verte au coin du médaillon.
-  overflow: visible;
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: -0.2rem;
-    bottom: -0.2rem;
-    width: 0.8rem;
-    height: 0.8rem;
-    border: 2px solid var(--dw-surface-0);
-    border-radius: 50%;
-    background: var(--dw-color-reussite);
-  }
-}
-
-.tor-med--played {
-  opacity: 0.5;
-}
-
-.tor-med--skipped {
-  opacity: 0.3;
-  filter: grayscale(1);
-}
-
-.tor-med--locked {
-  border-style: dashed;
-}
-
 .tor-live {
   position: absolute;
   width: 1px;
@@ -297,17 +58,4 @@
   margin: 0;
   overflow: hidden;
   clip-path: inset(50%);
-}
-
-// Écran étroit : les blocs passent de toute façon à la ligne, les médaillons gardent leur taille.
-@media (max-width: 900px) {
-  .tor-chips {
-    --tor-size: 2rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tor-med {
-    transition: none;
-  }
 }

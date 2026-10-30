@@ -15,19 +15,16 @@
     url('/assets/bol/header-combat.png') center / cover no-repeat;
 }
 
-// En combat, l'image court d'un seul tenant sous l'en-tête et la frise (`turn-order.scss`) : chacun en montre sa tranche.
-// Elle est calée sur la fenêtre (`fixed`), assez grande pour couvrir les deux ; la page ne défile pas.
-// Un voile sombre descend sur elle d'un bout à l'autre : il part de rien en haut de l'en-tête et arrive ici à 45 %, là où la frise le
-// reprend — sans quoi la jointure se voit.
+// En combat, l'image est calée sur la fenêtre (`fixed`) ; un voile sombre descend sur elle jusqu'à 45 %, au-dessus de la bande de
+// l'ordre d'action (`turn-order.scss`).
 .cp-header--combat {
-  border-bottom: none;
   background:
     linear-gradient(transparent, color-mix(in srgb, var(--dw-surface-0) 45%, transparent)),
     linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 22%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 100%),
     url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
 }
 
-// Une seule ligne en combat : le titre, l'ordre d'action, les actions.
+// Une seule ligne en combat : le titre et les actions.
 .cp-header--combat {
   padding-block: 0.5rem;
 }

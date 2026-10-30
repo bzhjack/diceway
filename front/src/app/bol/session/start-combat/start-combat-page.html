@@ -123,57 +123,15 @@
       }
     </header>
 
-    <!-- L'ordre d'action, qui se remplit à mesure des jets : un cercle par combattant, dans l'ordre où ils jouent ; un trait court dans un
-         même groupe, un trait long entre deux groupes. L'anneau dit le résultat d'un héros, ou le camp des autres. Le cercle d'un adversaire
-         se clique : il l'exclut de ce combat, ou l'y réintègre. -->
-    <section class="scd-frise" aria-labelledby="scd-order-label">
-      <h2 class="scd-label scd-label--gold scd-frise-label" id="scd-order-label">
-        Ordre d’action <small>round 1</small>
-      </h2>
-      <div class="scd-frise-zone">
-        @if (frise().length > 0) {
-          <ol class="scd-frise-list" [style.--scd-frise-n]="frise().length" [style.--scd-frise-longs]="friseLongs()">
-            @for (step of frise(); track step.token.kind + '-' + step.token.pivotId) {
-              <li class="scd-step" [class.scd-step--long]="step.link === 'long'" [class.scd-step--last]="step.link === null">
-                @if (step.token.kind === 'hero') {
-                  <span [class]="'scd-c scd-c--' + step.tone" [matTooltip]="step.label">
-                    <ng-container *ngTemplateOutlet="face; context: {$implicit: step.token}" />
-                    <span class="scd-frise-vh">{{ step.label }}</span>
-                  </span>
-                } @else {
-                  <button
-                    type="button"
-                    [class]="'scd-c scd-c--' + step.tone"
-                    [class.scd-c--blocked]="step.blocked"
-                    [class.scd-c--out]="step.token.excluded"
-                    [attr.aria-pressed]="!step.token.excluded"
-                    [attr.aria-label]="step.label + ' : participe à ce combat'"
-                    [matTooltip]="step.label + (step.token.excluded ? ' : exclu, cliquer pour le réintégrer' : ' : cliquer pour l’exclure de ce combat')"
-                    (click)="toggleExcluded(step.token.kind, step.token.pivotId)"
-                  >
-                    <ng-container *ngTemplateOutlet="face; context: {$implicit: step.token}" />
-                  </button>
-                }
-                @if (step.link) {
-                  <i class="scd-link" aria-hidden="true"></i>
-                }
-              </li>
-            }
-          </ol>
-        } @else if (!loading()) {
+    <!-- L'ordre d'action, qui se remplit à mesure des jets (la même frise que sur la table en combat). Le médaillon d'un adversaire se
+         clique : il l'exclut de ce combat, ou l'y réintègre. -->
+    <section class="scd-frise" aria-label="Ordre d’action">
+      <bol-ordre-frise class="scd-frise-zone" [round]="1" [steps]="frise()" (stepClicked)="toggleExcludedKey($event.key)">
+        @if (frise().length === 0 && !loading()) {
           <p class="scd-hint">Personne à table pour l’instant.</p>
         }
-      </div>
+      </bol-ordre-frise>
     </section>
-
-    <!-- Le portrait d'un combattant de la frise, ou son initiale -->
-    <ng-template #face let-token>
-      @if (token.avatar; as avatar) {
-        <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
-      } @else {
-        {{ initial(token.nom) }}
-      }
-    </ng-template>
 
     <main class="scd-content">
       <!-- Le registre : une ligne par héros, par agilité décroissante ; ses colonnes s'alignent d'un héros à l'autre (subgrid). -->

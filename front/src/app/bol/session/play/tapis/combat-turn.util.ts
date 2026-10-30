@@ -2,6 +2,8 @@ import {PlayToken} from '../../models/combat-play.model';
 import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
+import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
+import {EMPTY_AVATAR} from '../../combat-play.util';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
@@ -318,4 +320,59 @@ export function groupByTier(entries: readonly TurnOrderEntry[]): TurnOrderGroup[
     const members = entries.filter((entry) => tiers.includes(entry.tier));
     return {id, title, entries: members, blocked: members.length > 0 && members.every((entry) => entry.locked)};
   });
+}
+
+const TURN_STATUS_LABELS: Record<TurnStatus, string> = {
+  active: 'joue maintenant',
+  played: 'a joué',
+  skipped: 'ne joue pas ce round',
+  upcoming: 'à venir',
+};
+
+/** Le rang d'un héros donne la couleur de son anneau dans la frise ; sans rang, il n'a pas encore lancé. */
+const HERO_TONES: Partial<Record<InitiativeTierKey, OrdreFriseTone>> = {
+  legendaire: 'legendaire',
+  heroique: 'heroique',
+  reussite: 'reussite',
+  echec: 'echec',
+  echec_critique: 'echec_critique',
+};
+
+/** L'ordre d'action de la table en combat, en médaillons de la frise commune : rang après rang de réaction (`groupByTier`), un trait
+ * long entre deux rangs. L'anneau dit le résultat d'un héros, ou le camp des autres. Un médaillon « a joué » se clique pour lui rendre
+ * la main. */
+export function turnOrderFrise(entries: readonly TurnOrderEntry[], targetKey: string | null): readonly OrdreFriseStep[] {
+  const groups = groupByTier(entries).filter((group) => group.entries.length > 0);
+  return groups.flatMap((group, groupIndex) =>
+    group.entries.map((entry, index): OrdreFriseStep => {
+      const hero = entry.kind === 'hero';
+      const target = entry.key === targetKey;
+      const etat = `${TURN_STATUS_LABELS[entry.status]}${entry.locked ? ', bloqué ce round' : ''}`;
+      const label = `${entry.nom}${entry.ally ? ' (allié)' : ''}, ${group.title.toLowerCase()}, ${etat}${entry.horsCombat ? ', ' + entry.horsCombat : ''}${target ? ', visé' : ''}`;
+      const tooltip = [
+        entry.nom + (entry.ally ? ' (allié des héros)' : ''),
+        entry.horsCombat,
+        entry.effets.length ? entry.effets.join(', ') : null,
+        entry.status === 'played' ? 'cliquer pour lui rendre la main' : null,
+      ];
+      return {
+        key: entry.key,
+        nom: entry.nom,
+        avatar: entry.avatar && entry.avatar !== EMPTY_AVATAR ? entry.avatar : null,
+        hero,
+        tone: hero ? ((entry.tier && HERO_TONES[entry.tier]) ?? 'attente') : entry.ally ? 'allie' : 'adversaire',
+        label,
+        tooltip: tooltip.filter((part) => part).join(' — '),
+        link: index < group.entries.length - 1 ? 'court' : groupIndex < groups.length - 1 ? 'long' : null,
+        blocked: entry.locked,
+        clickable: entry.status === 'played',
+        pressed: null,
+        status: entry.status,
+        target,
+        down: entry.horsCombat !== null,
+        effects: entry.effets.length > 0,
+        excluded: false,
+      };
+    }),
+  );
 }

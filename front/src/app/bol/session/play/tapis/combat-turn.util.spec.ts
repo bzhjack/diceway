@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -418,6 +418,44 @@ describe('groupByTier', () => {
     expect(groups[2].blocked).toBe(true);
     expect(groups[4].blocked).toBe(false);
     expect(groups[1].blocked).toBe(false);
+  });
+});
+
+describe('turnOrderFrise', () => {
+  const entry = (key: string, tier: TurnOrderEntry['tier'], over: Partial<TurnOrderEntry> = {}): TurnOrderEntry => ({
+    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked: false, ally: false, effets: [], horsCombat: null, ...over,
+  });
+
+  it('suit les rangs de réaction, avec un trait long entre deux rangs', () => {
+    const frise = turnOrderFrise([entry('p1', 'pietaille', {kind: 'pnj'}), entry('h1', 'reussite'), entry('p2', 'pietaille', {kind: 'pnj'})], null);
+    expect(frise.map((step) => [step.key, step.link])).toEqual([
+      ['h1', 'long'],
+      ['p1', 'court'],
+      ['p2', null],
+    ]);
+  });
+
+  it('colore un héros par son rang, les autres par leur camp, et fait d’un héros un carré', () => {
+    const frise = turnOrderFrise([entry('h1', null), entry('r1', 'rival', {kind: 'pnj', ally: true}), entry('c1', 'coriace', {kind: 'creature'}), entry('h2', 'echec')], null);
+    expect(frise.map((step) => [step.tone, step.hero])).toEqual([
+      ['attente', true],
+      ['allie', false],
+      ['adversaire', false],
+      ['echec', true],
+    ]);
+  });
+
+  it('ne laisse cliquer que celui qui a joué, et marque la cible, les effets et le hors de combat', () => {
+    const frise = turnOrderFrise(
+      [entry('h1', 'reussite', {status: 'played'}), entry('r1', 'rival', {kind: 'pnj', effets: ['Sonné'], horsCombat: 'mort'})],
+      'r1',
+    );
+    expect(frise.map((step) => [step.clickable, step.target, step.effects, step.down])).toEqual([
+      [true, false, false, false],
+      [false, true, true, true],
+    ]);
+    expect(frise[0].tooltip).toBe('h1 — cliquer pour lui rendre la main');
+    expect(frise[1].label).toBe('r1, rivaux, à venir, mort, visé');
   });
 });
 

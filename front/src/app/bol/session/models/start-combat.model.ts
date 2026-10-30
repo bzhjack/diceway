@@ -91,16 +91,3 @@ export interface ReactionLane {
   /** Les mêmes combattants, regroupés par fiche, dans l'ordre de `tokens` (un héros est toujours seul). */
   readonly groups: readonly ReactionGroup[];
 }
-
-/** Un cercle de la frise de l'ordre d'action : un combattant, dans l'ordre où ils jouent. */
-export interface ReactionFriseStep {
-  readonly token: ReactionToken;
-  /** La couleur de son anneau : le résultat du jet d'un héros, sinon son camp. */
-  readonly tone: InitiativeResultat | 'adversaire' | 'allie';
-  /** Son nom et ce qu'il faut en savoir, en infobulle et pour les lecteurs d'écran. */
-  readonly label: string;
-  /** Il ne joue pas au round 1. */
-  readonly blocked: boolean;
-  /** Le trait qui le relie au suivant : court dans un même groupe, long entre deux groupes, aucun pour le dernier. */
-  readonly link: 'court' | 'long' | null;
-}

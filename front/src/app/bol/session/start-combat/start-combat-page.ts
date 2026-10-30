@@ -14,7 +14,6 @@ import {
   viewChildren,
   WritableSignal,
 } from '@angular/core';
-import {NgTemplateOutlet} from '@angular/common';
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
@@ -44,6 +43,7 @@ import {CombatEffect} from '../models/combat-effect.model';
 import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
 import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
+import {OrdreFriseComponent} from '../ordre-frise/ordre-frise';
 import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../combat-play.util';
@@ -147,7 +147,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, NgTemplateOutlet, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrl: './start-combat-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -280,10 +280,8 @@ export class StartCombatPageComponent {
     ),
   );
 
-  /** L'ordre d'action en frise : un cercle par combattant. */
+  /** L'ordre d'action en frise : un médaillon par combattant. */
   protected readonly frise = computed(() => reactionFrise(this.lanes()));
-  /** Combien de traits longs : avec le nombre de cercles, il règle leur taille pour que la frise tienne sur une ligne. */
-  protected readonly friseLongs = computed(() => this.frise().filter((step) => step.link === 'long').length);
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   /** « 2 / 4 jets » dans l'en-tête. */
@@ -470,7 +468,11 @@ export class StartCombatPageComponent {
 
   /** Exclut un héros ou un adversaire de ce combat — ou le réintègre. Rien n'est retiré de la table. */
   protected toggleExcluded(kind: InitiativeKind, pivotId: number): void {
-    const key = `${kind}-${pivotId}`;
+    this.toggleExcludedKey(`${kind}-${pivotId}`);
+  }
+
+  /** La même chose depuis la frise, dont chaque médaillon porte la clé d'exclusion (`kind-pivotId`). */
+  protected toggleExcludedKey(key: string): void {
     this.excluded.update((set) => {
       const next = new Set(set);
       if (!next.delete(key)) {

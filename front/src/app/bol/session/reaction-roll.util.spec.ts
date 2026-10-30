@@ -172,7 +172,7 @@ describe('reactionLanes — groupes', () => {
 describe('reactionFrise', () => {
   it('met un cercle par combattant, dans l’ordre du round, sans les héros qui n’ont pas lancé', () => {
     const frise = reactionFrise(reactionLanes([hero(1, null), hero(2, 'echec', 5), hero(3, 'reussite', 10)], [adversary(1, 'pietaille'), adversary(2, 'rival')]));
-    expect(frise.map((step) => step.token.nom)).toEqual(['Héros 3', 'Adversaire 2', 'Héros 2', 'Adversaire 1']);
+    expect(frise.map((step) => step.nom)).toEqual(['Héros 3', 'Adversaire 2', 'Héros 2', 'Adversaire 1']);
   });
 
   it('relie d’un trait court dans un groupe, d’un trait long entre deux groupes, et ne prolonge pas le dernier', () => {
@@ -183,7 +183,7 @@ describe('reactionFrise', () => {
   it('garde ensemble les exemplaires d’une même fiche', () => {
     const guet = (pivotId: number) => adversary(pivotId, 'pietaille', {nom: `Sergent du guet #${pivotId}`, sourceId: '12'});
     const frise = reactionFrise(reactionLanes([], [guet(1), adversary(2, 'pietaille'), guet(3)]));
-    expect(frise.map((step) => step.token.pivotId)).toEqual([1, 3, 2]);
+    expect(frise.map((step) => step.key)).toEqual(['pnj-1', 'pnj-3', 'pnj-2']);
   });
 
   it('colore l’anneau d’un héros par son résultat, celui des autres par leur camp', () => {
@@ -193,8 +193,17 @@ describe('reactionFrise', () => {
 
   it('dit dans son libellé le résultat, le camp et le blocage du round 1', () => {
     const frise = reactionFrise(reactionLanes([hero(1, 'heroique', 12)], [adversary(1, 'coriace', {ally: true})]));
-    expect(frise.map((step) => step.label)).toEqual(['Héros 1, succès héroïque, total 12', 'Adversaire 1, allié des héros, ne joue pas au round 1']);
+    expect(frise.map((step) => step.label)).toEqual(['Héros 1, succès héroïque, total 12', 'Adversaire 1, allié des héros, ne joue pas au round 1 : participe à ce combat']);
     expect(frise.map((step) => step.blocked)).toEqual([false, true]);
+  });
+
+  it('fait d’un héros un carré qui ne se clique pas, d’un adversaire un bouton qui l’exclut ou le réintègre', () => {
+    const frise = reactionFrise(reactionLanes([hero(1, 'reussite', 10)], [adversary(1, 'rival', {excluded: true})]));
+    expect(frise.map((step) => [step.hero, step.clickable, step.pressed])).toEqual([
+      [true, false, null],
+      [false, true, false],
+    ]);
+    expect(frise[1].tooltip).toContain('exclu, cliquer pour le réintégrer');
   });
 });
 

@@ -1,0 +1,45 @@
+<h2 class="ofr-title">Ordre d’action <span>Round {{ round() }}</span></h2>
+<ng-content />
+<div class="ofr-zone">
+  <ol class="ofr" [attr.aria-label]="'Ordre d’action du round ' + round()">
+    @for (step of steps(); track step.key) {
+      <li class="ofr-step" [class.ofr-step--long]="step.link === 'long'" [class.ofr-step--last]="step.link === null">
+        <span class="ofr-slot">
+          @if (step.clickable) {
+            <button
+              type="button"
+              [class]="medClass(step)"
+              [attr.aria-pressed]="step.pressed"
+              [attr.aria-current]="step.status === 'active' ? 'true' : null"
+              [attr.aria-label]="step.label"
+              [matTooltip]="step.tooltip"
+              (click)="stepClicked.emit(step)"
+            >
+              <ng-container *ngTemplateOutlet="face; context: {$implicit: step}" />
+            </button>
+          } @else {
+            <span [class]="medClass(step)" [attr.aria-current]="step.status === 'active' ? 'true' : null" [matTooltip]="step.tooltip">
+              <ng-container *ngTemplateOutlet="face; context: {$implicit: step}" />
+              <span class="ofr-vh">{{ step.label }}</span>
+            </span>
+          }
+          @if (step.effects) {
+            <i class="ofr-dot" aria-hidden="true"></i>
+          }
+        </span>
+        @if (step.link) {
+          <i class="ofr-link" aria-hidden="true"></i>
+        }
+      </li>
+    }
+  </ol>
+</div>
+
+<!-- Le portrait d'un combattant, ou son initiale -->
+<ng-template #face let-step>
+  @if (avatar(step); as src) {
+    <img [src]="src" alt="" (error)="onAvatarError(src)" />
+  } @else {
+    {{ initial(step) }}
+  }
+</ng-template>
