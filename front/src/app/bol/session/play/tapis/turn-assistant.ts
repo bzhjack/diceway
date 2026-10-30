@@ -815,6 +815,12 @@ export class TurnAssistantComponent {
     return {big: label.big, small, chance};
   }
 
+  /** Les dés gardés, en notation du livre : « 2d6B » (les deux meilleurs) ou « 2d6M » (les deux moins bons) ; `null` pour un jet à deux dés. */
+  private keptDice(): string | null {
+    const net = this.netDice();
+    return net > 0 ? '2d6B' : net < 0 ? '2d6M' : null;
+  }
+
   /** Lesquels des trois dés comptent : « 2 meilleurs » ou « 2 moins bons » ; « dés » pour un jet à deux dés. */
   private keptCaption(): string {
     const net = this.netDice();
@@ -916,7 +922,12 @@ export class TurnAssistantComponent {
       return [];
     }
     const dice = this.diceSum();
-    const terms: TraySumTerm[] = [{value: dice === null ? `${this.diceCount()}d6` : `${dice}`, caption: this.keptCaption(), tone: 'dice'}];
+    // Avec un dé de bonus ou de malus, « 2d6B » ou « 2d6M » (les deux meilleurs ou les deux moins bons gardés), comme au jet de réaction :
+    // avant le jet en valeur, après le jet sous le total des dés.
+    const kept = this.keptDice();
+    const terms: TraySumTerm[] = [
+      {value: dice === null ? (kept ?? '2d6') : `${dice}`, caption: dice === null ? 'dés' : (kept ?? 'dés'), tone: 'dice'},
+    ];
     const add = (value: number, caption: string): void => {
       if (value !== 0) {
         terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
