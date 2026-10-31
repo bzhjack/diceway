@@ -282,6 +282,13 @@ describe('totalDefense', () => {
   it('does nothing when nobody is active', () => {
     expect(totalDefense([], etat(1))).toEqual(etat(1));
   });
+
+  it('adds up with the parry of two weapons, as the rules say', () => {
+    const sansParade = totalDefense(ordered(KALENA, PRETRE), etat(1));
+    const avecParade = totalDefense(ordered(KALENA, PRETRE), etat(1), undefined, true);
+    expect(sansParade.effets?.some((e) => e.origine !== 'defense-totale')).toBe(false);
+    expect(avecParade.effets?.filter((e) => e.stat === 'defense').map((e) => e.valeur).sort()).toEqual([1, 2]);
+  });
 });
 
 describe('total defense leaves with the turn', () => {

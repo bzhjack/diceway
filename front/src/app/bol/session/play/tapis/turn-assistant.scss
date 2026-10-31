@@ -27,26 +27,6 @@
 }
 
 // Ce qui pousse le reste au bout de la ligne.
-// Qui joue : sa carte (`bol-combattant-carte`), toute la largeur ; ses boutons en haut à droite, ce qui change ses dés dessous.
-.tas-head {
-  flex: none;
-}
-
-.tas-head-actions {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.tas-head-notes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.6rem;
-  margin: 0;
-}
-
 .tas-sp {
   flex: 1;
 }
@@ -162,15 +142,6 @@
   gap: 0.7rem;
 }
 
-// Le coup qu'il prépare, sur la carte de l'attaquant : l'arme et les options, chacune dans son bloc, côte à côte, l'un sous l'autre si la
-// place manque.
-.tas-head-coup {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 0.6rem;
-}
-
 // La cible, sous la carte de l'attaquant : la rangée des cartes à choisir, ou sa carte.
 .tas-contre {
   display: flex;
@@ -179,37 +150,6 @@
   align-items: center;
   gap: 0.5rem 0.7rem;
   min-width: 0;
-}
-
-.tas-part {
-  display: flex;
-  flex: 1 1 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: flex-start;
-  gap: 0.5rem 0.7rem;
-  min-width: 0;
-  padding: 0.5rem 0.75rem 0.65rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.22);
-}
-
-.tas-part--arme {
-  flex-grow: 0;
-}
-
-.tas-part--options {
-  flex: 0 1 14rem;
-}
-
-// Le titre du bloc, sur sa propre ligne.
-.tas-part-label {
-  flex-basis: 100%;
-  font: 400 0.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--dw-surface-600);
 }
 
 // Ce qui passe sous la ligne (options d'un succès héroïque, note), aligné sur le jet.
@@ -261,118 +201,10 @@
   color: var(--dw-color-echec);
 }
 
-// Les popovers : leur titre, et les entrées d'un menu (« Autres actions »).
+// Les popovers : leur titre.
 .tas-pop-title {
   font: 400 1.1rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
   color: var(--dw-color-legendary);
-}
-
-.tas-pop-item {
-  display: grid;
-  gap: 0.1rem;
-  width: 100%;
-  padding: 0.5rem 0.6rem;
-  border: 0;
-  border-radius: 8px;
-  background: none;
-  color: var(--dw-surface-900);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  b {
-    font-weight: 700;
-  }
-
-  small {
-    color: var(--dw-surface-600);
-    font-size: 0.8rem;
-  }
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
-  }
-}
-
-// L'arme choisie, en clair à côté des cases : son nom, puis ses dégâts.
-.tas-opt {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-width: 0;
-
-  b {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  em {
-    flex: none;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85em;
-    color: var(--dw-color-legendary);
-  }
-}
-
-// Les postures gardent leur couleur dans la liste, comme sur l'ancienne échelle : un filet à gauche de leur nom.
-.tas-posture {
-  padding-left: 0.5rem;
-  border-left: 3px solid var(--dw-surface-500);
-}
-
-.tas-posture--defensive {
-  border-left-color: #3b82f6;
-}
-
-.tas-posture--offensive {
-  border-left-color: #f59e0b;
-}
-
-.tas-posture--intrepid {
-  border-left-color: #ef4444;
-}
-
-// Les réglages qui ne servent qu'à certains combattants (bagarre, deux mains, mêlée ou tir, portée), sur une seule ligne.
-.tas-optrow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.5rem;
-}
-
-.tas-range {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-// « Options » : les réglages rares, repliés ; ouvert, le panneau s'insère sous le bouton.
-.tas-options-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  height: 2.5rem;
-  padding: 0 0.7rem;
-  border: 1px dashed var(--dw-border);
-  border-radius: var(--dw-radius-toggle);
-  background: none;
-  color: var(--dw-surface-800);
-  font: inherit;
-  font-size: 0.86rem;
-  font-weight: 700;
-  cursor: pointer;
-
-  .mat-icon {
-    width: 1.15rem;
-    height: 1.15rem;
-    font-size: 1.15rem;
-  }
-
-  &:hover {
-    border-color: var(--dw-color-legendary);
-  }
 }
 
 .tas-count {
@@ -391,7 +223,7 @@
   line-height: 1;
 }
 
-// Les réglages rares actifs, quand « Options » est replié : une pastille chacun, avec sa croix.
+// Les réglages du coup joué : une pastille chacun.
 .tas-active {
   display: flex;
   flex-wrap: wrap;
@@ -401,52 +233,17 @@
   list-style: none;
 
   li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.1rem 0.2rem 0.1rem 0.6rem;
+    padding: 0.1rem 0.6rem;
     border: 1px solid var(--dw-color-legendary);
     border-radius: 999px;
     color: var(--dw-color-legendary);
     font-size: 0.76rem;
     font-weight: 700;
   }
-
-  button {
-    display: grid;
-    place-items: center;
-    width: 1.3rem;
-    height: 1.3rem;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
-    color: inherit;
-    cursor: pointer;
-
-    .mat-icon {
-      width: 0.85rem;
-      height: 0.85rem;
-      font-size: 0.85rem;
-    }
-  }
 }
 
-// Les réglages du coup joué : les mêmes pastilles, sans croix.
-.tas-active.tas-active--static li {
-  padding: 0.1rem 0.6rem;
-}
-
-// Les popovers (options du coup, effets de l'attaquant) : une carte flottante et opaque, sous leur bouton. Écrite avant `.tas-options`
+// Le popover des effets de l'attaquant : une carte flottante et opaque, sous leur bouton. Écrite avant `.tas-options`
 // (un panneau translucide), elle doit l'emporter : d'où les deux classes.
-.tas-options.tas-options--wide {
-  width: min(34rem, 92vw);
-}
-
-.tas-options.tas-options--menu {
-  width: min(22rem, 92vw);
-}
-
 .tas-options.tas-options--pop {
   width: min(26rem, 92vw);
   max-height: 70vh;
@@ -527,92 +324,6 @@
   display: flex;
   flex: none;
   gap: 0.3rem;
-}
-
-// Les armes : une case carrée par arme, le symbole de l'arme dedans, ses dégâts dessous ; celle qui est choisie s'allume en or.
-.tas-picks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tas-pick {
-  display: grid;
-  justify-items: center;
-  gap: 0.2rem;
-  padding: 0.2rem 0.1rem;
-  border: 0;
-  background: none;
-  color: var(--dw-surface-800);
-  font: inherit;
-  cursor: pointer;
-
-  em {
-    font-size: 0.72rem;
-    font-style: normal;
-    font-weight: 800;
-    white-space: nowrap;
-    color: var(--dw-color-legendary);
-  }
-}
-
-// Au survol comme au focus clavier, c'est la case de l'arme qui s'allume d'un halo doré, pas un cadre autour du bouton. Plus fort que
-// le contour de focus commun à l'assistant (`.tas button:focus-visible`), que le halo remplace.
-.tas .tas-picks button.tas-pick:focus-visible {
-  outline: none;
-}
-
-.tas-pick--arme:not([aria-disabled='true']):hover .tas-med--arme,
-.tas-pick--arme:focus-visible .tas-med--arme {
-  box-shadow:
-    0 0 0 2px var(--dw-color-legendary),
-    0 0 14px color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
-}
-
-.tas-picks--arme {
-  gap: 0.35rem;
-}
-
-.tas-pick--arme {
-  width: 2.9rem;
-}
-
-// Deux classes : `.tas-med`, déclarée plus bas, imposerait sinon son cercle et sa taille.
-.tas-med.tas-med--arme {
-  width: 2.4rem;
-  height: 2.4rem;
-  border-width: 2px;
-  border-radius: var(--dw-radius-toggle);
-  color: var(--dw-surface-800);
-
-  .dw-arme-icon {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-}
-
-.tas-pick--arme[aria-pressed='true'] .tas-med--arme {
-  border-color: var(--dw-color-legendary);
-  background: color-mix(in srgb, var(--dw-color-legendary) 16%, var(--dw-surface-200));
-  color: var(--dw-color-legendary);
-}
-
-.tas-pick--arme[aria-pressed='false'] em {
-  color: var(--dw-surface-700);
-}
-
-// Une arme lourde que l'attaquant ne peut pas manier : grisée, son nom et la raison au survol.
-.tas-pick--arme[aria-disabled='true'] {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-// L'arme choisie, en clair à côté de ses cases : son nom et les dégâts du coup (deux mains, double frappe compris).
-.tas-arme-nom {
-  flex: 0 1 auto;
 }
 
 // Le coup joué, figé jusqu'à la fin du tour : la cible et l'arme en clair, à la place de leurs listes.

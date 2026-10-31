@@ -56,7 +56,8 @@ export class CombatBoardComponent {
   readonly effectRemoved = output<string>();
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
-  readonly totalDefenseRequested = output<void>();
+  /** `true` : avec la parade du combat à deux armes, qui se cumule. */
+  readonly totalDefenseRequested = output<boolean>();
   readonly rescueRequested = output<void>();
   /** Points d'héroïsme dépensés ou gagnés par la carte active sur son jet d'attaque. */
   readonly heroismeAdjusted = output<number>();

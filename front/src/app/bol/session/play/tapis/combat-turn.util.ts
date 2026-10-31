@@ -234,13 +234,14 @@ export function hordeMates(ordered: readonly OrderedCard[], etat: EtatCombat): r
     .filter((card) => card.rang === PIETAILLE && card.camp === active.camp && state.statuses.get(card.key) === 'upcoming');
 }
 
-/** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. */
-export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId): EtatCombat {
+/** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. Elle se cumule avec la
+ * parade du combat à deux armes (`parade`, 02-actions-combat.md). */
+export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId, parade = false): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   if (activeKey === null) {
     return etat;
   }
-  return endTurn(ordered, etat, effetsDeTour(activeKey, {posture: null, defenseTotale: true}), genererId);
+  return endTurn(ordered, etat, effetsDeTour(activeKey, {posture: null, special: parade ? 'dual-parry' : null, defenseTotale: true}), genererId);
 }
 
 /** « Rendre la main » : une carte qui a joué redevient jouable ce round. Ce que son tour avait fait naître (défense totale, posture) est

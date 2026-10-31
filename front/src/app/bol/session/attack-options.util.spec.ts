@@ -65,6 +65,18 @@ describe('isDualWieldWeapon', () => {
     expect(isDualWieldWeapon(real('d6B'))).toBe(false);
   });
 
+  it('refuses a two-handed weapon, whatever its damage', () => {
+    const notes = (texte: string) => ({...real('d6'), arme: {...real('d6').arme, notes: texte}});
+    expect(isDualWieldWeapon(notes('Arme à deux mains'))).toBe(false);
+    expect(isDualWieldWeapon(notes('Arme à deux mains ; rechargement : 1 round de combat'))).toBe(false);
+  });
+
+  it('accepts a weapon held in one hand or two', () => {
+    const notes = (texte: string) => ({...real('d6M'), arme: {...real('d6M').arme, notes: texte}});
+    expect(isDualWieldWeapon(notes('Arme à une main / arme à deux mains.'))).toBe(true);
+    expect(isDualWieldWeapon(notes('Se manie à une ou deux mains.'))).toBe(true);
+  });
+
   it('refuses bare hands and the improvised weapon, which are not weapons of the hero', () => {
     expect(isDualWieldWeapon(MAINS_NUES)).toBe(false);
     expect(isDualWieldWeapon(ARME_IMPROVISEE)).toBe(false);

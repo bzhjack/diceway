@@ -1,0 +1,586 @@
+// La ligne de qui joue, en forge : son nom et sa vie (`combattant-carte`, en ligne), puis ses zones. Chaque zone prend sa place dans la grille de
+// la carte ; un filet pointillé les sépare.
+.tas-head {
+  flex: none;
+}
+
+.tas-zone-vit {
+  grid-area: vit;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+  padding-right: 0.7rem;
+}
+
+.tas-zone-chiffres {
+  grid-area: chiffres;
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  min-width: 0;
+  padding-right: 0.7rem;
+}
+
+.tas-chiffres {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.tas-zone {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0 0.7rem;
+  border-left: 1px dashed var(--dw-forge-bronze-edge);
+}
+
+.tas-zone--post {
+  grid-area: post;
+}
+
+.tas-zone--armes {
+  grid-area: armes;
+}
+
+// En bout de ligne : les boutons de la même largeur, « Fin du tour » tout en bas.
+.tas-zone--act {
+  --mat-button-outlined-container-height: 1.9rem;
+  --mat-button-filled-container-height: 1.9rem;
+
+  grid-area: act;
+  align-content: space-between;
+  gap: 0.25rem;
+  padding-right: 0;
+}
+
+.tas-head-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.tas-end {
+  width: 100%;
+  padding-inline: 0.5rem;
+  white-space: nowrap;
+
+  .mat-icon {
+    flex: none;
+  }
+}
+
+// Un bloc : son titre, puis ses choix ; le titre porte ce qui dépend du choix, pour que la hauteur de la ligne ne bouge pas.
+.tas-bloc {
+  display: grid;
+  align-content: start;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.tas-cap {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 1.45rem;
+  min-width: 0;
+  white-space: nowrap;
+  color: var(--dw-forge-gold);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px #000;
+
+  // Un nom trop long se coupe, pour que le titre tienne sur sa ligne : il est entier en infobulle.
+  > em {
+    flex: 0 1 auto;
+    min-width: 2rem;
+    overflow: hidden;
+    color: var(--dw-forge-bone);
+    font-size: 0.72rem;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-overflow: ellipsis;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  // Les boutons posés sur le titre ne reprennent pas sa typographie.
+  button,
+  .tas-chip {
+    letter-spacing: 0;
+    text-transform: none;
+    text-shadow: none;
+  }
+
+  .tas-segm,
+  .tas-range,
+  .tas-chip {
+    flex: none;
+  }
+
+  .tas-chip {
+    min-height: 1.3rem;
+    padding: 0 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  .tas-mini {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+.tas-off {
+  opacity: 0.38;
+}
+
+// Le combat à deux armes, sous le râtelier.
+.tas-deux {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.35rem;
+}
+
+.tas-deux-lbl {
+  color: var(--dw-forge-gold);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px #000;
+  white-space: nowrap;
+}
+
+.tas-head-notes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.5rem;
+  margin: 0;
+
+  .tas-note {
+    color: var(--dw-surface-700);
+    font-size: 0.7rem;
+  }
+}
+
+.tas-deux .tas-note {
+  color: var(--dw-surface-700);
+  font-size: 0.7rem;
+}
+
+.tas-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+// Le MJ, à côté des chiffres qu'il change.
+.tas-mj {
+  display: grid;
+  flex: none;
+  justify-items: center;
+  gap: 0.1rem;
+}
+
+.tas-mj-row {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+// Le dé, et ce qu'il fait : + ou − (trois classes : plus fort que les options, déclarées plus bas).
+.tas-head .tas-chip.tas-chip--de {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+  min-height: 1.45rem;
+  padding: 0 0.2rem;
+
+  .mat-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
+  }
+
+  i {
+    font-size: 0.82rem;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 1;
+  }
+}
+
+.tas-chip--bonus:not([aria-pressed='true']) i {
+  color: var(--dw-forge-verdict-reussite);
+}
+
+.tas-chip--malus:not([aria-pressed='true']) i {
+  color: var(--dw-forge-verdict-echec);
+}
+
+// Les tuiles de ses chiffres : des creux dans le fer, qui s'allument quand les réglages les changent.
+.tas-head .tas-tiles {
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+
+.tas-head .tas-tile {
+  gap: 0.05rem;
+  min-width: 3.1rem;
+  padding: 0.12rem 0.25rem 0.18rem;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+
+  b {
+    font-size: 1.15rem;
+    line-height: 1.15;
+    color: var(--dw-forge-bone);
+  }
+
+  span {
+    color: var(--dw-surface-700);
+    font-size: 0.54rem;
+    letter-spacing: 0.07em;
+  }
+}
+
+.tas-head .tas-tile--up {
+  border-color: var(--dw-forge-heat-reussite);
+  box-shadow:
+    var(--dw-forge-recess-shadow),
+    0 0 10px -2px var(--dw-forge-heat-reussite);
+
+  b {
+    color: var(--dw-forge-verdict-reussite);
+  }
+}
+
+.tas-head .tas-tile--down {
+  border-color: var(--dw-forge-heat-echec);
+  box-shadow:
+    var(--dw-forge-recess-shadow),
+    0 0 10px -2px var(--dw-forge-heat-echec);
+
+  b {
+    color: var(--dw-forge-verdict-echec);
+  }
+}
+
+.tas-head .tas-tile--hot b {
+  color: var(--dw-forge-verdict-echec);
+  text-shadow: 0 0 10px rgba(232, 80, 46, 0.6);
+}
+
+.tas-head .tas-vit {
+  flex: none;
+  margin: 0;
+}
+
+.tas-head .tas-tag {
+  color: var(--dw-surface-700);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+
+// Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement. Celui du MJ, resserré à côté des tuiles.
+.tas-head dw-value-stepper ::ng-deep .vs__btn {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-color: var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-bronze-text);
+}
+
+.tas-mj dw-value-stepper ::ng-deep {
+  .vs {
+    gap: 0.05rem;
+  }
+
+  .vs__btn {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .vs__value {
+    width: 1.5rem;
+    color: var(--dw-forge-bone);
+  }
+}
+
+// Les boutons ronds : des clous de bronze, qui rougeoient au survol.
+.tas-head .tas-ib {
+  border-color: var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
+
+  &:hover,
+  &[aria-expanded='true'] {
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
+  }
+}
+
+// L'échelle : un seul creux, le segment choisi en or.
+.tas-head .tas-segm {
+  flex: none;
+  width: fit-content;
+  border-color: var(--dw-forge-bronze-edge);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+}
+
+.tas-head .tas-seg {
+  gap: 0.02rem;
+  padding: 0.2rem 0.42rem 0.16rem;
+  border-right-color: var(--dw-forge-bronze-edge);
+  border-bottom: 0;
+  white-space: nowrap;
+
+  b {
+    font-size: 0.8rem;
+    color: var(--dw-surface-800);
+  }
+
+  small {
+    font-size: 0.62rem;
+    color: var(--dw-surface-600);
+  }
+
+  &:hover:not(:disabled) b {
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--dw-color-legendary);
+
+    b,
+    small {
+      color: #1c1200;
+    }
+  }
+}
+
+.tas-head .tas-segm--mini .tas-seg {
+  padding: 0.04rem 0.35rem;
+
+  b {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+// Une option qui se coche : un creux, or une fois choisie.
+.tas-head .tas-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.45rem;
+  padding: 0.05rem 0.42rem;
+  border-color: var(--dw-forge-bronze-edge);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: var(--dw-surface-800);
+  font-size: 0.74rem;
+
+  em {
+    margin: 0;
+    color: var(--dw-forge-gold);
+    opacity: 1;
+  }
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
+    box-shadow: none;
+    color: #1c1200;
+
+    em {
+      color: #1c1200;
+    }
+  }
+}
+
+.tas-head .tas-chip.tas-chip--bonus[aria-pressed='true'] {
+  border-color: var(--dw-color-reussite);
+  background: var(--dw-color-reussite);
+  color: #041a0d;
+}
+
+.tas-head .tas-chip.tas-chip--malus[aria-pressed='true'] {
+  border-color: var(--dw-color-echec);
+  background: var(--dw-color-echec);
+  color: #2a0505;
+}
+
+// Les armes : une case par arme, le symbole dedans, ses dégâts dessous ; autant de rangs qu'il en faut.
+.tas-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tas-pick {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.08rem;
+  width: 2.85rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: var(--dw-radius-toggle);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: var(--dw-surface-700);
+  font: inherit;
+  cursor: pointer;
+
+  em {
+    color: var(--dw-forge-gold);
+    font: 700 0.62rem/1 'Muse Sans', sans-serif;
+    white-space: nowrap;
+  }
+
+  &:hover:not([aria-disabled='true']) {
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
+    box-shadow: none;
+    color: #1c1200;
+
+    em {
+      color: #1c1200;
+    }
+  }
+
+  // Une arme qu'il ne peut pas prendre : grisée, la raison au survol.
+  &[aria-disabled='true'] {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+// Le symbole, sans le médaillon d'un portrait (deux classes : `.tas-med` est déclarée dans la feuille principale).
+.tas-med.tas-med--arme {
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+
+  .dw-arme-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// L'arme secondaire : cerclée d'or plutôt que pleine ; le rang des deux armes, sur leur coin.
+.tas-pick.tas-pick--secondaire {
+  background: color-mix(in srgb, var(--dw-color-legendary) 24%, var(--dw-forge-recess));
+  color: var(--dw-forge-bone);
+
+  em {
+    color: var(--dw-forge-bone);
+  }
+}
+
+.tas-pick-rang {
+  position: absolute;
+  top: -0.3rem;
+  left: -0.25rem;
+  display: grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--dw-forge-coin);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  color: #1c1200;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tas-head .tas-fixed {
+  color: var(--dw-forge-bone);
+}
+
+// Quand les armes passent sous le reste : elles s'étalent sur un seul rang, le combat à deux armes au bout (la largeur est celle de la carte,
+// conteneur de la ligne).
+@container (max-width: 78rem) {
+  .tas-zone--armes {
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: end;
+    gap: 1.2rem;
+    padding: 0.4rem 0 0;
+    border-top: 1px dashed var(--dw-forge-bronze-edge);
+    border-left: 0;
+  }
+}
+
+// Et quand la posture y passe aussi : sa manœuvre à côté d'elle.
+@container (max-width: 64rem) {
+  .tas-zone--post {
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 1.2rem;
+    padding: 0.4rem 0 0;
+    border-top: 1px dashed var(--dw-forge-bronze-edge);
+    border-left: 0;
+  }
+}
+
+@container (max-width: 44rem) {
+  .tas-zone--post,
+  .tas-zone--armes {
+    grid-auto-flow: row;
+  }
+
+  .tas-zone--act {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tas-head .tas-tile {
+    transition: none;
+  }
+}

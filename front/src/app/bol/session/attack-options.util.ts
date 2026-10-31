@@ -4,7 +4,7 @@ import {isDualWieldEligible} from './combat-attack.util';
 import {degatsEnMain, parseDamage} from './combat-resolution.util';
 
 /** Postures proposées à l'attaquant (doc/rules/02-actions-combat.md, "Options de combat") — "Défense
- * totale" en est exclue : elle empêche d'attaquer, elle a son propre bouton dans la barre d'action. */
+ * totale" n'en vient pas : elle empêche d'attaquer, l'assistant l'ajoute lui-même au bout de l'échelle. */
 const IN_SCOPE_POSTURE_SLUGS: ReadonlySet<string> = new Set([
   'none',
   'offensive',
@@ -39,9 +39,10 @@ function isRealWeapon(arme: BolHerosArmeModel): boolean {
   return arme.id !== MAINS_NUES.id && arme.id !== ARME_IMPROVISEE.id;
 }
 
-/** Une arme jouable en combat à deux armes, en principale ou en secondaire : une vraie arme, légère ou moyenne. */
+/** Une arme jouable en combat à deux armes, en principale ou en secondaire : une vraie arme, légère ou moyenne, qui se tient d'une main
+ * (un arc, légère ou moyenne par ses dégâts, est une « arme à deux mains » d'après ses notes). */
 export function isDualWieldWeapon(arme: BolHerosArmeModel): boolean {
-  return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats);
+  return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats) && !/^armes? à deux mains/i.test(arme.arme?.notes ?? '');
 }
 
 /** Une arme lourde (d6B, même modifiée : khastok d6B+1) : qui a moins de 0 en vigueur ne peut pas la manier (02-actions-combat.md,

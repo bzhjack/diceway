@@ -45,6 +45,7 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
   styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    '[class.cc--ligne]': 'ligne()',
     '[class.cc--allie]': "card().camp === 'heros'",
     '[class.cc--tombe]': 'tombe()',
     '[style.--cc-art.px]': 'artSize()',
@@ -56,6 +57,8 @@ export class CombattantCarteComponent {
   readonly chance = input<string | null>(null);
   /** Pour une cible, les points de vie que le coup en cours va lui retirer, montrés sur sa barre. */
   readonly perte = input(0);
+  /** Celui qui joue : tout sur une ligne, en plaque de fer ; ce que la page y projette se range par zones (`combattant-carte.scss`). */
+  readonly ligne = input(false);
 
   /** Le côté du portrait carré, en px : la hauteur du texte, entre 8 et 18rem ; `null` avant la première mesure (la valeur du style). */
   protected readonly artSize = signal<number | null>(null);

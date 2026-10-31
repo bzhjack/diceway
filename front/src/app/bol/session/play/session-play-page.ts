@@ -1221,8 +1221,8 @@ export class SessionPlayPageComponent {
     }
   }
 
-  protected onTotalDefense(): void {
-    if (this.saveEtat((etat) => totalDefense(this.orderedCards(), etat, idAleatoire), {ignoreIfBusy: true})) {
+  protected onTotalDefense(parade: boolean): void {
+    if (this.saveEtat((etat) => totalDefense(this.orderedCards(), etat, idAleatoire, parade), {ignoreIfBusy: true})) {
       this.targetKey.set(null);
     }
   }

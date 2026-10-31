@@ -171,3 +171,100 @@
 :host(.cc--tombe) .cc-art {
   filter: grayscale(1) brightness(0.7);
 }
+
+// En ligne, pour celui qui joue : une plaque de fer rivetée, lue de gauche à droite. Le nom et la vie, puis ce que la page projette, chacun
+// dans sa zone (`grid-area`) : sa vie et ses points, ses chiffres, sa posture, ses armes, ses actions. Quand la place manque, les zones
+// passent les unes sous les autres, les actions restant en bout de ligne.
+:host(.cc--ligne) {
+  container-type: inline-size;
+  border-radius: 7px;
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+
+  .cc-body {
+    display: grid;
+    grid-template-columns: 9rem 16.4rem 24.6rem minmax(0, 1fr) 7.9rem;
+    grid-template-areas:
+      'who vit post armes act'
+      'chiffres chiffres post armes act';
+    align-content: start;
+    gap: 0.25rem 0;
+    padding: 0.5rem 1.15rem 0.6rem 0.8rem;
+  }
+
+  .cc-head {
+    grid-area: who;
+    gap: 0.15rem;
+  }
+
+  // Le portrait ne dicte pas la hauteur de la ligne : c'est elle qui décide, il la remplit.
+  .cc-art {
+    width: 8.5rem;
+    min-height: 0;
+    margin-right: -0.5rem;
+  }
+
+  .cc-nom {
+    overflow: hidden;
+    font-size: 1.3rem;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px #000;
+    white-space: nowrap;
+    color: var(--dw-forge-name);
+  }
+
+  .cc-vie {
+    background: #000;
+    box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
+  }
+
+  .cc-vie i {
+    background: var(--dw-forge-health);
+  }
+
+  .cc-vie.cc-vie--bas i {
+    background: var(--dw-color-echec);
+  }
+
+  .cc-rang,
+  .cc-attitude {
+    box-shadow: inset 0 0 0 1px var(--dw-forge-bronze-dim);
+    font-size: 0.66rem;
+  }
+}
+
+// Sur un portable : le portrait se resserre, pour que les armes gardent leur place.
+@container (max-width: 86rem) {
+  :host(.cc--ligne) .cc-art {
+    width: 6rem;
+  }
+}
+
+@container (max-width: 78rem) {
+  :host(.cc--ligne) .cc-body {
+    grid-template-columns: 9rem 16.4rem minmax(0, 1fr) 7.9rem;
+    grid-template-areas:
+      'who vit post act'
+      'chiffres chiffres post act'
+      'armes armes armes act';
+    row-gap: 0.5rem;
+  }
+}
+
+@container (max-width: 64rem) {
+  :host(.cc--ligne) .cc-body {
+    grid-template-columns: 9rem minmax(0, 1fr) 7.9rem;
+    grid-template-areas:
+      'who vit act'
+      'chiffres chiffres act'
+      'post post post'
+      'armes armes armes';
+  }
+}
+
+@container (max-width: 44rem) {
+  :host(.cc--ligne) .cc-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'who' 'vit' 'chiffres' 'post' 'armes' 'act';
+  }
+}

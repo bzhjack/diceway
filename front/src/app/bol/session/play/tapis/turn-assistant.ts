@@ -70,14 +70,27 @@ const DICE_TIMEOUT_MS = 12000;
 /** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
-/** Les popovers de l'assistant : l'attaquant, la cible, les modificateurs du coup, les autres actions. */
-type TurnPopover = 'effets' | 'mods' | 'more';
+/** La défense totale, au bout prudent de l'échelle des postures : pas d'attaque, +2 en défense (02-actions-combat.md). */
+const DEFENSE_TOTALE = 'total';
 
-/** Un réglage actif du coup (deux mains, posture, dé ou modificateur du MJ, carrière…), montré en pastille avec sa croix. */
-interface ActiveOption {
-  readonly id: 'deuxMains' | 'posture' | 'special' | 'brawl' | 'tir' | 'horde' | 'gm' | 'mod' | 'career';
-  readonly label: string;
+/** Un choix sur l'échelle des postures : son nom, ce qu'il change à l'attaque et à la défense, sa note. */
+interface PostureChoice {
+  readonly slug: string;
+  readonly name: string;
+  readonly effect: string;
+  readonly hint: string;
 }
+
+/** Un mode du combat à deux armes, et s'il est interdit pour l'instant. */
+interface DualChoice {
+  readonly slug: string;
+  readonly name: string;
+  readonly hint: string;
+  readonly interdit: boolean;
+}
+
+/** Les popovers de l'assistant : les effets en cours de l'attaquant. */
+type TurnPopover = 'effets';
 
 /** Ce que rapporte chaque dé de dégâts, en clair, à côté de la case où on le saisit. */
 const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
@@ -100,8 +113,8 @@ type StationState = 'todo' | 'cur' | 'done';
 interface StatTile {
   readonly label: string;
   readonly value: string;
-  /** La posture choisie améliore (`up`) ou dégrade (`down`) ce chiffre. */
-  readonly tone?: 'up' | 'down';
+  /** Les réglages du coup améliorent (`up`) ou dégradent (`down`) ce chiffre ; `hot` : des dégâts. */
+  readonly tone?: 'up' | 'down' | 'hot';
   /** D'où vient le chiffre, en infobulle. */
   readonly hint?: string;
   /** Le dé qui peut remplacer le chiffre (protection « d6−2 »), en petit sous lui. */
@@ -183,6 +196,11 @@ function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
 }
 
+/** Comme `signedTerm`, avec le 0 tel quel : « +1 · 0 » sur l'échelle des postures. */
+function signedOrZero(value: number): string {
+  return value === 0 ? '0' : signedTerm(value);
+}
+
 /** De quel côté est une carte, en clair : « Héros », « Allié » ou « Adversaire », puis ce qu'elle est (« PNJ · Coriace ») pour tout ce
  * qui n'est pas un héros. */
 function sideOf(card: TapisCard): {readonly foe: boolean; readonly label: string; readonly detail: string} {
@@ -206,10 +224,10 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
   return {points, titre: nom.charAt(0).toUpperCase() + nom.slice(1)};
 }
 
-/** L'assistant de tour, sous la frise en combat : un registre. En bandeau qui attaque (sa vie, ses points ; ses chiffres, ses effets et
- * sa fiche sous ⓘ ; ce qu'il peut faire au lieu d'attaquer, et la fin de son tour) ; puis une ligne par étape — le coup (contre qui, avec
- * quoi, les réglages actifs en pastilles et les autres sous « Modificateurs »), le jet d'attaque (2d6 + bonus − défense, 9+), le jet de
- * dégâts — dont celle où il faut agir s'allume. La formule de chaque jet reste à l'écran ; les actions sont en bout de ligne.
+/** L'assistant de tour, sous la frise en combat : un registre. Sur une ligne, qui attaque, avec tout ce qui prépare son coup : sa vie, ses
+ * points, ses chiffres et ce que dit le MJ ; sa posture et sa manœuvre ; ses armes ; puis ce qu'il peut faire au lieu d'attaquer, et la fin
+ * de son tour. Dessous, la cible, puis une ligne par étape — le jet d'attaque (2d6 + bonus − défense, 9+), le jet de dégâts — dont celle
+ * où il faut agir s'allume. La formule de chaque jet reste à l'écran ; les actions sont en bout de ligne.
  * Il annonce ce qu'il faut aux dés et les chances, prend les totaux lancés à table, et montre sur la vie de la cible ce que le coup va
  * lui retirer. Pour un héros, le jet d'attaque ouvre les usages de l'héroïsme : faveur divine après un coup raté, échec critique sur un
  * double 1, succès héroïque acheté sur un coup qui touche, succès légendaire sur un double 6 — avec leurs options de combat.
@@ -235,7 +253,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
     ReactiveFormsModule,
   ],
   templateUrl: './turn-assistant.html',
-  styleUrl: './turn-assistant.scss',
+  styleUrls: ['./turn-assistant.scss', './turn-assistant-attaquant.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TurnAssistantComponent {
@@ -279,7 +297,8 @@ export class TurnAssistantComponent {
   readonly effectRemoved = output<string>();
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
-  readonly totalDefenseRequested = output<void>();
+  /** « Fin du tour » en défense totale ; `true` avec la parade du combat à deux armes, qui se cumule. */
+  readonly totalDefenseRequested = output<boolean>();
   /** « Retarder » : la carte active joue en dernier ce round. */
   readonly delayRequested = output<void>();
   /** « Secourir » : la carte active tente de stabiliser un héros mourant, à la place de son attaque. */
@@ -389,10 +408,13 @@ export class TurnAssistantComponent {
    * le choix repart de zéro à chaque nouvelle carte active. */
   private readonly hordeChosen = linkedSignal<string, readonly string[]>({source: () => this.cardKey(), computation: () => []});
   /** Les piétailles engagées avec la carte active — celles qui peuvent encore jouer. */
-  protected readonly horde = computed(() => this.hordeMates().filter((card) => this.hordeChosen().includes(card.key)));
+  protected readonly horde = computed(() => (this.defenseTotale() ? [] : this.hordeMates().filter((card) => this.hordeChosen().includes(card.key))));
   /** Nombre de piétailles impliquées, la carte active comprise ; 0 sans horde. C'est aussi le bonus d'attaque. */
   protected readonly hordeDegats = HORDE_DEGATS;
   protected readonly hordeSize = computed(() => (this.horde().length > 0 ? this.horde().length + 1 : 0));
+
+  /** Les piétailles à cocher, de leur seul numéro quand elles en ont un (« #2 ») : la ligne est étroite, et elles ont le même nom. */
+  protected readonly hordeChips = computed(() => this.hordeMates().map((card) => ({card, court: card.nom.match(/#\d+$/)?.[0] ?? card.nom})));
 
   protected toggleHordeMate(key: string): void {
     this.hordeChosen.update((keys) => (keys.includes(key) ? keys.filter((k) => k !== key) : [...keys, key]));
@@ -432,11 +454,120 @@ export class TurnAssistantComponent {
     if (!this.isHero()) {
       return options.filter((o) => !DUAL_WIELD_SLUGS.has(o.slug));
     }
-    const otherDegats = this.eligibleOffHandArmes().map((a) => a.arme?.degats ?? null);
-    // L'arme principale doit elle aussi être une vraie arme légère ou moyenne : mains nues et arme improvisée ne comptent pas.
-    const main = this.effectiveArme();
-    return filterVisiblePostures(options, main && isDualWieldWeapon(main) ? (main.arme?.degats ?? null) : null, otherDegats);
+    // L'arme principale doit elle aussi être une vraie arme légère ou moyenne : si celle qu'il tient n'en est pas une, choisir le combat à
+    // deux armes le fait passer sur la première qui convient (`setDual`).
+    const main = this.dualMains()[0] ?? null;
+    const otherDegats = this.dualArmes()
+      .filter((a) => a.id !== main?.id)
+      .map((a) => a.arme?.degats ?? null);
+    return filterVisiblePostures(options, main?.arme?.degats ?? null, otherDegats);
   });
+
+  /** Les armes qu'il peut tenir en combat à deux armes : parmi toutes celles d'un héros, équipées ou non. */
+  private readonly dualArmes = computed(() => (this.isHero() ? this.ownedArmes() : this.displayArmes()).filter(isDualWieldWeapon));
+  /** Celles qui peuvent être l'arme principale : parmi celles qu'il propose à l'attaque. */
+  private readonly dualMains = computed(() => this.displayArmes().filter(isDualWieldWeapon));
+  /** Il a de quoi combattre à deux armes : sinon, la ligne dit ce qu'il lui manque. */
+  protected readonly dualPossible = computed(() => this.dualMains().length > 0 && this.dualArmes().length > 1);
+
+  /** Les modes du combat à deux armes. L'attaque intrépide prive de la parade (livre p. 64), la défense totale de la double frappe. */
+  protected readonly dualChoices = computed<readonly DualChoice[]>(() => {
+    const options = this.visibleOptions().filter((o) => DUAL_WIELD_SLUGS.has(o.slug));
+    return options.map((o) => {
+      const parade = o.slug === 'dual-parry';
+      const interdit = parade ? this.postureSlug() === 'intrepid' : this.defenseTotale();
+      const hint = parade && interdit ? 'Pas d’arme de parade en attaque intrépide.' : !parade && interdit ? 'Pas d’attaque en défense totale.' : (o.note ?? '');
+      return {slug: o.slug, name: parade ? 'Parade' : 'Double frappe', hint, interdit};
+    });
+  });
+
+  /** Les armes à choisir : en combat à deux armes, s'y ajoutent celles qu'il n'a pas équipées mais peut prendre en secondaire. */
+  protected readonly rackArmes = computed(() => {
+    const list = this.displayArmes();
+    if (!this.isDualWieldSelected()) {
+      return list;
+    }
+    const proposees = new Set(list.map((a) => a.id));
+    return [...list, ...this.dualArmes().filter((a) => !proposees.has(a.id))];
+  });
+
+  /** Ce qu'il a en main, en clair : son arme, ou ses deux armes. */
+  protected readonly armeNom = computed(() => {
+    const main = this.effectiveArme()?.arme?.arme ?? '';
+    return this.isDualWieldSelected() ? `${main} + ${this.effectiveOffHand()?.arme?.arme ?? ''}` : main;
+  });
+
+  /** L'arme est-elle en main : 1 l'arme choisie, 2 la secondaire du combat à deux armes ; `null` sinon. */
+  protected armeRang(arme: BolHerosArmeModel): 1 | 2 | null {
+    if (arme.id === this.effectiveArme()?.id) {
+      return 1;
+    }
+    return this.isDualWieldSelected() && arme.id === this.effectiveOffHand()?.id ? 2 : null;
+  }
+
+  /** Une arme qu'il ne peut pas prendre : trop lourde pour lui, ou impossible à deux armes. */
+  protected armeInterdite(arme: BolHerosArmeModel): boolean {
+    return this.heavyForbidden().has(arme.id) || (this.isDualWieldSelected() && !isDualWieldWeapon(arme));
+  }
+
+  /** Son nom, et pourquoi il ne peut pas la prendre. */
+  protected armeHint(arme: BolHerosArmeModel): string {
+    const nom = arme.arme?.arme ?? '';
+    if (this.heavyForbidden().has(arme.id)) {
+      return `${nom} · arme lourde : impossible à manier avec moins de 0 en vigueur`;
+    }
+    return this.isDualWieldSelected() && !isDualWieldWeapon(arme) ? `${nom} · pas à deux armes : il faut une vraie arme légère ou moyenne, tenue d’une main` : nom;
+  }
+
+  /** Les dégâts sur la case d'une arme : une arme polyvalente donne les deux, sauf en main, où on sait comment elle est tenue. */
+  protected armeDegats(arme: BolHerosArmeModel): string {
+    const degats = arme.arme?.degats ?? '';
+    if (!estPolyvalente(degats)) {
+      return degats;
+    }
+    const une = degatsEnMain(degats, false) ?? degats;
+    const deux = degatsEnMain(degats, true) ?? degats;
+    return this.armeRang(arme) === null ? `${une} / ${deux}` : this.armeRang(arme) === 1 && this.deuxMains() ? deux : une;
+  }
+
+  /** Un clic sur une arme. À deux armes, elle devient la secondaire ; cliquer la secondaire inverse les deux, si elle peut être l'arme principale. */
+  protected pickArme(arme: BolHerosArmeModel): void {
+    if (this.armeInterdite(arme)) {
+      return;
+    }
+    if (!this.isDualWieldSelected()) {
+      this.selectArme(arme.id);
+      return;
+    }
+    const main = this.effectiveArme();
+    if (arme.id === main?.id) {
+      return;
+    }
+    if (arme.id === this.effectiveOffHand()?.id) {
+      if (this.displayArmes().some((a) => a.id === arme.id)) {
+        this.selectedOffHandId.set(main?.id ?? null);
+        this.selectArme(arme.id);
+      }
+      return;
+    }
+    this.selectOffHand(arme.id);
+  }
+
+  /** Choisit un mode du combat à deux armes, ou y renonce (`null`) ; s'il tient une arme qui ne s'y prête pas, il passe sur la première qui convient. */
+  protected setDual(slug: string | null): void {
+    if (slug === null) {
+      if (this.isDualWieldSelected()) {
+        this.selectedSpecialSlug.set(null);
+        this.selectedOffHandId.set(null);
+      }
+      return;
+    }
+    const main = this.effectiveArme();
+    if (!main || !isDualWieldWeapon(main)) {
+      this.selectArme(this.dualMains()[0]?.id);
+    }
+    this.selectedSpecialSlug.set(slug);
+  }
 
   /** La posture retenue sur l'échelle (« Aucune » par défaut). */
   protected readonly effectiveOption = computed(() => {
@@ -450,13 +581,50 @@ export class TurnAssistantComponent {
   );
 
   /** Combat à deux armes, attaque au défaut de l'armure : des options qui se cochent, en plus de la posture. L'attaque intrépide prive
-   * de l'arme secondaire de parade (livre p. 64) : la parade disparaît tant qu'elle est choisie. */
+   * de l'arme secondaire de parade (livre p. 64) : la parade tombe tant qu'elle est choisie. */
   protected readonly specialPostures = computed(() =>
     this.visibleOptions().filter((o) => !SCALE_SLUGS.includes(o.slug) && !(o.slug === 'dual-parry' && this.effectiveOption()?.slug === 'intrepid')),
   );
 
-  /** L'option spéciale cochée, ou `null`. */
-  protected readonly effectiveSpecial = computed(() => this.specialPostures().find((o) => o.slug === this.selectedSpecialSlug()) ?? null);
+  /** Les manœuvres, sous la posture : les options spéciales autres que le combat à deux armes, réglé avec les armes. */
+  protected readonly manoeuvres = computed(() => this.specialPostures().filter((o) => !DUAL_WIELD_SLUGS.has(o.slug)));
+
+  /** L'option spéciale cochée, ou `null`. En défense totale, seule la parade à deux armes reste : elle s'y cumule. */
+  protected readonly effectiveSpecial = computed(() => {
+    const special = this.specialPostures().find((o) => o.slug === this.selectedSpecialSlug()) ?? null;
+    return this.defenseTotale() && special?.slug !== 'dual-parry' ? null : special;
+  });
+
+  /** Il consacre ce round à parer : pas de cible ni de jet, « Fin du tour » applique le +2. */
+  protected readonly defenseTotale = computed(() => this.selectedOptionSlug() === DEFENSE_TOTALE);
+
+  /** L'échelle des postures, de la défense totale à l'attaque intrépide. Une créature ou un démon n'a pas de posture (`visibleOptions`) : il
+   * attaque, ou se défend. */
+  protected readonly postureChoices = computed<readonly PostureChoice[]>(() => {
+    const totale: PostureChoice = {slug: DEFENSE_TOTALE, name: 'Déf. totale', effect: `— · ${signedTerm(2)}`, hint: 'Défense totale : le round entier à esquiver et parer, pas d’attaque. « Fin du tour » applique le +2.'};
+    const echelle = this.scalePostures();
+    if (echelle.length === 0) {
+      return [{slug: 'none', name: 'Attaque', effect: 'une attaque', hint: ''}, totale];
+    }
+    return [
+      totale,
+      ...echelle.map((o) => ({slug: o.slug, name: this.scaleName(o), effect: `${signedOrZero(o.modificateur)} · ${signedOrZero(POSTURE_DEFENSE[o.slug] ?? 0)}`, hint: o.note ?? ''})),
+    ];
+  });
+  /** Le segment allumé sur l'échelle. */
+  protected readonly posturePressed = computed(() => (this.defenseTotale() ? DEFENSE_TOTALE : (this.postureSlug() ?? 'none')));
+  /** Ce que dit le titre de l'échelle. */
+  protected readonly postureNote = computed(() => {
+    if (this.defenseTotale()) {
+      return 'pas d’attaque ce round';
+    }
+    if (this.postureSlug() === 'intrepid') {
+      return 'perd son bouclier ce round';
+    }
+    return this.scalePostures().length > 0 ? 'attaque · défense' : '';
+  });
+  /** L'attaque est lancée ou jouée : il est trop tard pour retarder, secourir ou se mettre en défense totale. */
+  protected readonly attaqueEngagee = computed(() => this.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null);
 
   /** « Posture offensive » → « Offensive », « Attaque intrépide » → « Intrépide ». */
   protected scaleName(option: BolCombatOptionModel): string {
@@ -464,16 +632,16 @@ export class TurnAssistantComponent {
     return short.charAt(0).toUpperCase() + short.slice(1);
   }
 
-  /** « att +1 · déf −1 » : le bonus d'attaque du référentiel et l'effet connu sur la défense. */
-  protected scaleEffect(option: BolCombatOptionModel): string {
-    return `att ${this.signed(option.modificateur)} · déf ${this.signed(POSTURE_DEFENSE[option.slug] ?? 0)}`;
+  /** « Attaque au défaut de l'armure » → « Défaut de l'armure ». */
+  protected specialName(option: BolCombatOptionModel): string {
+    const short = option.label.replace(/^Attaque au /, '');
+    return short.charAt(0).toUpperCase() + short.slice(1);
   }
 
   /** La posture de l'échelle retenue. */
   protected readonly postureSlug = computed(() => this.effectiveOption()?.slug ?? null);
 
-  /** Le popover ouvert — l'attaquant (« me »), la cible, les modificateurs du coup, les autres actions — ou aucun ; il se ferme à chaque
-   * nouveau tour. */
+  /** Le popover ouvert (les effets en cours), ou aucun ; il se ferme à chaque nouveau tour. */
   protected readonly openPop = linkedSignal<string, TurnPopover | null>({source: () => this.cardKey(), computation: () => null});
 
   /** Les popovers s'ouvrent sous leur bouton, calés sur son bord gauche ; près du bord droit de l'écran, sur son bord droit ; au-dessus
@@ -510,75 +678,42 @@ export class TurnAssistantComponent {
     }
   }
 
-  /** Les réglages actifs du coup, en pastilles sur la ligne du coup : ils se voient sans ouvrir « Modificateurs », et se retirent d'un
-   * clic. Ils sont aussi dans la formule. */
-  protected readonly activeOptions = computed<readonly ActiveOption[]>(() => {
-    const active: ActiveOption[] = [];
+  /** Les réglages du coup, en clair : ils restent écrits sur la ligne quand le coup est joué. */
+  private readonly activeOptions = computed<readonly string[]>(() => {
+    const active: string[] = [];
     if (this.deuxMains()) {
-      active.push({id: 'deuxMains', label: `À deux mains · ${this.degatsDeuxMains()}`});
+      active.push(`À deux mains · ${this.degatsDeuxMains()}`);
     }
     const option = this.effectiveOption();
     if (option && option.slug !== 'none') {
-      active.push({id: 'posture', label: option.label});
+      active.push(option.label);
     }
     const special = this.effectiveSpecial();
     if (special) {
-      active.push({id: 'special', label: special.label});
+      active.push(special.label);
     }
     if (this.brawl()) {
-      active.push({id: 'brawl', label: 'Bagarre'});
+      active.push('Bagarre');
     }
     if (this.distanceModes().length > 1 && this.isTir()) {
-      active.push({id: 'tir', label: 'Tir'});
+      active.push('Tir');
     }
     if (this.hordeSize() > 0) {
-      active.push({id: 'horde', label: `Horde · ${this.hordeSize()} piétailles`});
+      active.push(`Horde · ${this.hordeSize()} piétailles`);
     }
     const gm = this.gmDie();
     if (gm) {
-      active.push({id: 'gm', label: gm === 'bonus' ? 'Dé bonus MJ' : 'Dé malus MJ'});
+      active.push(gm === 'bonus' ? 'Dé bonus MJ' : 'Dé malus MJ');
     }
     if (this.freeModifier() !== 0) {
-      active.push({id: 'mod', label: `Modificateur MJ ${this.signed(this.freeModifier())}`});
+      active.push(`Modificateur MJ ${this.signed(this.freeModifier())}`);
     }
     const career = this.career();
     if (career) {
-      active.push({id: 'career', label: `${career.label} +${career.value} aux ${this.careerOn() === 'attaque' ? 'attaques' : 'dégâts'}`});
+      active.push(`${career.label} +${career.value} aux ${this.careerOn() === 'attaque' ? 'attaques' : 'dégâts'}`);
     }
     return active;
   });
-
-  protected clearOption(id: ActiveOption['id']): void {
-    switch (id) {
-      case 'deuxMains':
-        this.deuxMainsChoisi.set(false);
-        break;
-      case 'posture':
-        this.selectOption('none');
-        break;
-      case 'special':
-        this.toggleSpecial(this.effectiveSpecial()?.slug ?? '');
-        break;
-      case 'brawl':
-        this.brawlChosen.set(false);
-        break;
-      case 'tir':
-        this.useTir.set(false);
-        break;
-      case 'horde':
-        this.hordeChosen.set([]);
-        break;
-      case 'gm':
-        this.gmDie.set(null);
-        break;
-      case 'mod':
-        this.modifierControl.setValue(0);
-        break;
-      case 'career':
-        this.careerLabel.set(null);
-        break;
-    }
-  }
 
   /** Une option spéciale se coche et se décoche, sans toucher à la posture ; cocher l'une décoche l'autre. */
   protected toggleSpecial(slug: string): void {
@@ -727,19 +862,26 @@ export class TurnAssistantComponent {
   private readonly rolledDice = signal<readonly number[] | null>(null);
   protected readonly rolling = signal(false);
 
-  /** Les chiffres de l'attaquant, en tuiles : attaque, défense et vigueur (sa vitalité est sur son cœur, à côté). La défense montre
-   * déjà ce que la posture choisie lui fera jusqu'à son prochain tour. */
+  /** Les chiffres de l'attaquant, en tuiles : attaque, défense, vigueur et dégâts (sa vitalité est sur son cœur, à côté). Ils suivent les
+   * réglages du coup : l'attaque compte tout ce qui s'ajoute aux dés avant la défense de la cible, la défense ce que la posture lui fera
+   * jusqu'à son prochain tour, les dégâts ce que le coup fera. En défense totale, ni attaque ni dégâts. */
   protected readonly attackerTiles = computed<readonly StatTile[]>(() => {
     const stats = this.attacker();
     if (!stats) {
       return [];
     }
-    const posture = (POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0) + (POSTURE_DEFENSE[this.effectiveSpecial()?.slug ?? ''] ?? 0);
+    const totale = this.defenseTotale();
+    const posture = (totale ? 2 : (POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0)) + (POSTURE_DEFENSE[this.effectiveSpecial()?.slug ?? ''] ?? 0);
+    const reglages = this.postureModifier() + sommeModificateurs(this.extraAttackTerms());
+    const attaque = attackBonus(stats, this.isTir(), this.brawl()) + (this.legendaryBonus() ? 1 : 0) + reglages;
+    const enPlus = sommeModificateurs(this.extraDamageTerms());
+    const toneOf = (delta: number) => (delta === 0 ? {} : {tone: delta > 0 ? ('up' as const) : ('down' as const)});
     return [
-      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir(), this.brawl())), hint: this.attackHint(stats)},
-      {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
+      {label: 'Attaque', value: totale ? '—' : this.signed(attaque), hint: this.attackHint(stats), ...(totale ? {} : toneOf(reglages))},
+      {label: 'Défense', value: String(stats.defense + posture), ...toneOf(posture)},
       // Une créature n'ajoute pas sa vigueur aux dégâts : pas de tuile, pour ne pas laisser croire le contraire.
       ...(stats.attaque === null ? [{label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir(), this.unarmed()))}] : []),
+      totale ? {label: 'Dégâts', value: '—'} : {label: 'Dégâts', value: `${this.degats() ?? '—'}${enPlus === 0 ? '' : ` ${signedTerm(enPlus)}`}`, tone: 'hot'},
     ];
   });
 
@@ -1340,6 +1482,10 @@ export class TurnAssistantComponent {
     if (this.actionPerdue()) {
       return ['todo', 'cur', 'todo'];
     }
+    // Défense totale : pas de jet, tout se joue sur « Fin du tour », en or sur la ligne de l'attaquant.
+    if (this.defenseTotale()) {
+      return ['todo', 'todo', 'todo'];
+    }
     const aimed = this.target() !== null;
     const rolled = this.attackVerdict() !== null;
     // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée,
@@ -1512,8 +1658,12 @@ export class TurnAssistantComponent {
     this.deuxMainsChoisi.update((on) => !on);
   }
 
+  /** Choisit un segment de l'échelle. La défense totale renonce à la cible visée : il n'y a plus de jet. */
   protected selectOption(slug: string): void {
     this.selectedOptionSlug.set(slug);
+    if (slug === DEFENSE_TOTALE && this.target()) {
+      this.targetSelected.emit(null);
+    }
   }
 
   protected selectOffHand(id: number | undefined): void {
@@ -1850,7 +2000,7 @@ export class TurnAssistantComponent {
       target,
       arme: armed ? (this.effectiveArme()?.arme?.arme ?? null) : null,
       degats: armed ? this.degats() : this.card().degats,
-      options: this.activeOptions().map((o) => o.label),
+      options: this.activeOptions(),
       goal: this.attackGoal(),
       dice: this.attackRowDice(),
       total: this.diceSum(),
@@ -1972,6 +2122,10 @@ export class TurnAssistantComponent {
   /** « Fin du tour » (bouton ou touche F). Un coup qui a touché sans être appliqué perdrait ses dégâts et les effets de ses options
    * héroïques : le MJ choisit d'abord de l'appliquer et finir, de finir sans l'appliquer, ou de rester sur le tour. */
   requestEndTurn(): void {
+    if (this.defenseTotale()) {
+      this.totalDefenseRequested.emit(this.effectiveSpecial()?.slug === 'dual-parry');
+      return;
+    }
     const target = this.target();
     if (!target || !this.verdict()?.hit) {
       this.endTurnRequested.emit(false);

@@ -57,6 +57,8 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   'gi-ashes': '/assets/icons/game-icons/heat-haze.svg',
   'gi-reroll': '/assets/icons/game-icons/anticlockwise-rotation.svg',
   'gi-flag': '/assets/icons/game-icons/flying-flag.svg',
+  'gi-wait': '/assets/icons/game-icons/sands-of-time.svg',
+  'gi-rescue': '/assets/icons/game-icons/first-aid-kit.svg',
 };
 
 @Component({
