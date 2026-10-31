@@ -5,182 +5,149 @@
   [class.cmp--droppable]="droppable()"
   [class.cmp--hot]="hot()"
 >
-  <ul class="cmp-plaques" role="list">
-    @for (plaque of plaques(); track plaque.card.key) {
-      <li class="cmp-plaque" [class.cmp-plaque--selected]="selectedKeys().has(plaque.card.key)">
-        <button
-          type="button"
-          class="cmp-portrait"
-          [attr.aria-label]="'Ouvrir la carte de ' + plaque.card.nom"
-          [attr.aria-pressed]="selectedKeys().has(plaque.card.key) ? 'true' : null"
-          (click)="onFaceClick(plaque.card, $event)"
-        >
-          @if (plaque.avatar) {
-            <img
-              [src]="plaque.avatar"
-              alt=""
-              draggable="false"
-              (error)="onAvatarError(plaque.card)"
-            />
-          } @else {
-            <span class="cmp-initiale" aria-hidden="true">{{ plaque.card.nom.charAt(0) }}</span>
-          }
-        </button>
-
-        <!-- Raccourci vers le jet d'action : il est sur la carte du héros, comme le clic sur le portrait -->
-        <button
-          type="button"
-          class="cmp-jet"
-          [attr.aria-label]="'Jet d’action de ' + plaque.card.nom"
-          matTooltip="Jet d’action"
-          (click)="cardToggled.emit(plaque.card)"
-        >
-          <mat-icon svgIcon="gi-dice" aria-hidden="true" />
-        </button>
-
-        <div class="cmp-corps">
-          <p class="cmp-nom">
-            {{ plaque.card.nom }}
-            @if (plaque.card.joueur) {
-              <small>{{ plaque.card.joueur }}</small>
+  <dw-scroller class="cmp-rang" label="Héros">
+    <ul class="cmp-plaques" role="list">
+      @for (plaque of plaques(); track plaque.card.key) {
+        <li class="cmp-plaque" [class.cmp-plaque--selected]="selectedKeys().has(plaque.card.key)">
+          <button
+            type="button"
+            class="cmp-portrait"
+            [attr.aria-label]="'Ouvrir la carte de ' + plaque.card.nom"
+            [attr.aria-pressed]="selectedKeys().has(plaque.card.key) ? 'true' : null"
+            (click)="onFaceClick(plaque.card, $event)"
+          >
+            @if (plaque.avatar) {
+              <img
+                [src]="plaque.avatar"
+                alt=""
+                draggable="false"
+                (error)="onAvatarError(plaque.card)"
+              />
+            } @else {
+              <span class="cmp-initiale" aria-hidden="true">{{ plaque.card.nom.charAt(0) }}</span>
             }
-          </p>
+          </button>
 
-          <div class="cmp-ligne">
-            <mat-icon class="cmp-coeur" svgIcon="gi-heart" aria-hidden="true" />
-            <button
-              type="button"
-              class="cmp-step"
-              [attr.aria-label]="'Retirer 1 point de vitalité à ' + plaque.card.nom"
-              (click)="stepVitalite(plaque.card, -1)"
-            >
-              −
-            </button>
+          <!-- Raccourci vers le jet d'action : il est sur la carte du héros, comme le clic sur le portrait -->
+          <button
+            type="button"
+            class="cmp-jet"
+            [attr.aria-label]="'Jet d’action de ' + plaque.card.nom"
+            matTooltip="Jet d’action"
+            (click)="cardToggled.emit(plaque.card)"
+          >
+            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
+          </button>
+
+          <div class="cmp-corps">
+            <p class="cmp-nom">
+              {{ plaque.card.nom }}
+              @if (plaque.card.joueur) {
+                <small>{{ plaque.card.joueur }}</small>
+              }
+            </p>
+
             <span class="cmp-barre" aria-hidden="true"
               ><i [class.cmp-barre--bas]="plaque.low" [style.width.%]="plaque.percent"></i
             ></span>
-            <span class="cmp-valeur">{{ plaque.vitalite }}</span>
-            <button
-              type="button"
-              class="cmp-step"
-              [attr.aria-label]="'Rendre 1 point de vitalité à ' + plaque.card.nom"
-              [attr.aria-disabled]="plaque.atMax ? 'true' : null"
-              (click)="stepVitalite(plaque.card, 1)"
-            >
-              +
-            </button>
-          </div>
 
-          <div class="cmp-ligne">
-            <button
-              type="button"
-              class="cmp-step"
-              [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + plaque.card.nom"
-              [attr.aria-disabled]="plaque.heroisme <= 0 ? 'true' : null"
-              (click)="stepHeroisme(plaque.card, -1)"
-            >
-              −
-            </button>
-            <span
-              class="cmp-gemmes"
-              role="img"
-              [attr.aria-label]="plaque.heroisme + ' points d’héroïsme'"
-            >
-              @for (lit of plaque.gems; track $index) {
-                <i class="cmp-gemme" [class.cmp-gemme--on]="lit"></i>
-              }
-            </span>
-            <button
-              type="button"
-              class="cmp-step"
-              [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + plaque.card.nom"
-              (click)="stepHeroisme(plaque.card, 1)"
-            >
-              +
-            </button>
+            <div class="cmp-ligne">
+              <button
+                type="button"
+                class="cmp-step"
+                [attr.aria-label]="'Retirer 1 point de vitalité à ' + plaque.card.nom"
+                (click)="stepVitalite(plaque.card, -1)"
+              >
+                −
+              </button>
+              <span class="cmp-vie">
+                <mat-icon class="cmp-coeur" svgIcon="gi-heart" aria-hidden="true" />
+                <span class="cmp-valeur">{{ plaque.vitalite }}</span>
+              </span>
+              <button
+                type="button"
+                class="cmp-step"
+                [attr.aria-label]="'Rendre 1 point de vitalité à ' + plaque.card.nom"
+                [attr.aria-disabled]="plaque.atMax ? 'true' : null"
+                (click)="stepVitalite(plaque.card, 1)"
+              >
+                +
+              </button>
+            </div>
+
+            <div class="cmp-ligne">
+              <button
+                type="button"
+                class="cmp-step"
+                [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + plaque.card.nom"
+                [attr.aria-disabled]="plaque.heroisme <= 0 ? 'true' : null"
+                (click)="stepHeroisme(plaque.card, -1)"
+              >
+                −
+              </button>
+              <span
+                class="cmp-gemmes"
+                role="img"
+                [attr.aria-label]="plaque.heroisme + ' points d’héroïsme'"
+              >
+                @for (lit of plaque.gems; track $index) {
+                  <i class="cmp-gemme" [class.cmp-gemme--on]="lit"></i>
+                }
+              </span>
+              <button
+                type="button"
+                class="cmp-step"
+                [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + plaque.card.nom"
+                (click)="stepHeroisme(plaque.card, 1)"
+              >
+                +
+              </button>
+            </div>
           </div>
-        </div>
-      </li>
-    } @empty {
-      <li class="cmp-vide">Aucun héros à table.</li>
-    }
-  </ul>
+        </li>
+      } @empty {
+        <li class="cmp-vide">Aucun héros à table.</li>
+      }
+    </ul>
+  </dw-scroller>
 
   @if (allies().length) {
-    <ul
-      class="cmp-allies"
-      role="list"
-      aria-label="Alliés"
-      cdkDropList
-      [cdkDropListSortingDisabled]="true"
-      [cdkDropListEnterPredicate]="rejectDrop"
-    >
-      @for (groupe of alliesParFiche(); track groupe.key) {
-        <!-- Un groupe : le premier exemplaire en carte entière, les autres en tranches glissées derrière (numéro et vitalité), chacune
-             cliquable et déplaçable comme une carte. Seul, un allié reste une carte. -->
-        <li class="cmp-groupe" [class.cmp-groupe--eventail]="groupe.tranches.length > 0">
-          <div
-            class="cmp-drag"
+    <dw-scroller class="cmp-rang cmp-rang--allies" label="Alliés">
+      <ul
+        class="cmp-allies"
+        role="list"
+        aria-label="Alliés"
+        cdkDropList
+        [cdkDropListSortingDisabled]="true"
+        [cdkDropListEnterPredicate]="rejectDrop"
+      >
+        @for (allie of allies(); track allie.key) {
+          <li
             cdkDrag
             cdkDragPreviewContainer="parent"
-            (cdkDragStarted)="onDragStarted(groupe.lead)"
+            (cdkDragStarted)="onDragStarted(allie)"
             (cdkDragMoved)="onDragMoved($event)"
-            (cdkDragEnded)="onDragEnded($event, groupe.lead)"
+            (cdkDragEnded)="onDragEnded($event, allie)"
           >
             <bol-acteur
-              [card]="groupe.lead"
+              [card]="allie"
               taille="allie"
-              [selected]="selectedKeys().has(groupe.lead.key)"
-              (toggled)="onFaceClick(groupe.lead, $event)"
+              [selected]="selectedKeys().has(allie.key)"
+              (toggled)="onFaceClick(allie, $event)"
             />
             <div *cdkDragPreview class="cmp-ghost">
               <img
                 dwAvatarFallback
                 class="cmp-ghost-art"
-                [src]="groupe.lead.avatar"
+                [src]="allie.avatar"
                 alt=""
                 draggable="false"
               />
-              <span>{{ groupe.lead.nom }}</span>
+              <span>{{ allie.nom }}</span>
             </div>
-          </div>
-          @for (tranche of groupe.tranches; track tranche.card.key) {
-            <button
-              type="button"
-              class="cmp-tranche"
-              [class.cmp-tranche--selected]="selectedKeys().has(tranche.card.key)"
-              [class.cmp-tranche--tombe]="tranche.tombe"
-              [style.background-image]="tranche.avatar ? 'url(' + tranche.avatar + ')' : null"
-              [attr.aria-label]="tranche.label"
-              [attr.aria-pressed]="selectedKeys().has(tranche.card.key) ? 'true' : null"
-              cdkDrag
-              cdkDragPreviewContainer="parent"
-              (cdkDragStarted)="onDragStarted(tranche.card)"
-              (cdkDragMoved)="onDragMoved($event)"
-              (cdkDragEnded)="onDragEnded($event, tranche.card)"
-              (click)="onFaceClick(tranche.card, $event)"
-            >
-              <b aria-hidden="true">{{ tranche.numero }}</b>
-              <span class="cmp-tranche-vit" aria-hidden="true"
-                ><i [class.cmp-tranche-vit--bas]="tranche.low" [style.width.%]="tranche.percent"></i
-              ></span>
-              <div *cdkDragPreview class="cmp-ghost">
-                <img
-                  dwAvatarFallback
-                  class="cmp-ghost-art"
-                  [src]="tranche.card.avatar"
-                  alt=""
-                  draggable="false"
-                />
-                <span>{{ tranche.card.nom }}</span>
-              </div>
-            </button>
-          }
-          @if (groupe.tranches.length) {
-            <b class="cmp-groupe-nombre" aria-hidden="true">×{{ groupe.tranches.length + 1 }}</b>
-          }
-        </li>
-      }
-    </ul>
+          </li>
+        }
+      </ul>
+    </dw-scroller>
   }
 </section>

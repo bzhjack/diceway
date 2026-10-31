@@ -221,6 +221,11 @@ export class StartCombatPageComponent {
   private readonly initiativeOverride = signal<number | null>(null);
   /** Le malus adverse : prérempli avec l'initiative détectée (0 sans rival ni coriace), corrigé à la main au besoin. */
   protected readonly adversaryInitiativeMalus = computed(() => this.initiativeOverride() ?? this.detectedInitiative());
+  /** Le bouton Options ne montre que ce que le MJ a choisi : le malus déduit des adversaires est une règle, pas une option. Il se lit
+   * dans la formule de chaque jet et dans le popover. */
+  protected readonly adversaryMalusChosen = computed(() => this.initiativeOverride() !== null && this.adversaryInitiativeMalus() > 0);
+  /** Celui dont l'initiative fait le malus (le premier, à égalité). */
+  protected readonly initiativeSource = computed(() => this.initiativeAdversaries().find((a) => a.initiative > 0 && a.initiative === this.detectedInitiative()) ?? null);
 
   /** Ce que les modificateurs de la rencontre ajoutent au jet de chaque héros. */
   private readonly tableModifier = computed(() => this.ambushModifier() - this.adversaryInitiativeMalus());

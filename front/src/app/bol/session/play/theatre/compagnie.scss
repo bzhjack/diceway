@@ -10,8 +10,8 @@
 
   display: flex;
   align-items: stretch;
-  gap: 1rem;
-  padding: 0.7rem 1rem;
+  gap: 0.7rem;
+  padding: 0.4rem 0.7rem;
   border: 2px dashed transparent;
   border-top: 2px solid var(--dw-forge-bronze);
   background:
@@ -33,30 +33,49 @@
   box-shadow: inset 0 0 28px color-mix(in srgb, var(--dw-color-legendary) 30%, transparent);
 }
 
-.cmp-plaques {
-  flex: 1;
-  min-width: 0;
-  display: grid;
-  // Une seule rangée : les cartes se resserrent, puis la rangée défile. 10,5em : assez pour le cœur, la vie et ses boutons.
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(10.5em, 12em);
-  justify-content: start;
-  gap: 0.6em;
-  // Le contour d'une carte sélectionnée dépasse : la marge négative rend la place prise par ce retrait.
-  margin: -0.3rem;
-  padding: 0.3rem;
-  overflow-x: auto;
-  list-style: none;
-  scrollbar-width: thin;
+// Une rangée de cartes : elle prend la largeur de ses cartes et défile avec ses chevrons (`dw-scroller`) quand la place manque. Sans
+// débordement, les chevrons ne gardent pas leur place : les cartes restent au bord.
+.cmp-rang {
+  flex: 0 1 auto;
+
+  ::ng-deep .dws-chevron--hidden {
+    display: none;
+  }
 }
 
-// Une carte de fer debout : le portrait en haut, le nom, la vie et l'héroïsme en bas.
+// Les héros restent tous visibles tant qu'il reste de quoi montrer un allié entre ses chevrons : ce sont les alliés qui cèdent la place.
+.cmp-rang:has(+ .cmp-rang--allies) {
+  flex-shrink: 0;
+  max-width: calc(100% - 13.4rem);
+}
+
+// Les alliés ne prennent jamais plus de 30 % du pied, même s'il reste de la place : au-delà, leur rangée défile.
+.cmp-rang--allies {
+  max-width: 30%;
+  margin-left: auto;
+  padding-left: 0.7rem;
+  border-left: 1px dashed var(--dw-forge-bronze-edge);
+}
+
+// Le retrait laisse la place au contour d'une carte sélectionnée et à la carte d'allié qui monte au survol : la piste coupe ce qui dépasse.
+.cmp-plaques,
+.cmp-allies {
+  display: flex;
+  gap: 0.6rem;
+  width: max-content;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+}
+
+// Une carte de fer debout, de la largeur d'un allié : le portrait en haut, le nom, la vie et l'héroïsme en bas.
 .cmp-plaque {
   position: relative;
   display: flex;
+  flex: none;
   flex-direction: column;
+  width: 9rem;
   height: var(--cmp-h);
-  min-width: 0;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 7px;
   background: var(--dw-forge-plate);
@@ -114,7 +133,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.3em;
-  padding: 0.15em 0.5em 0.5em;
+  padding: 0.15em 0.45em 0.45em;
 }
 
 .cmp-nom {
@@ -131,10 +150,12 @@
   white-space: nowrap;
 
   small {
-    margin-left: 0.3em;
+    display: block;
+    overflow: hidden;
     color: var(--dw-surface-700);
     font-size: 0.74em; // dans un nom à 0,95em
     font-weight: 400;
+    text-overflow: ellipsis;
   }
 }
 
@@ -172,10 +193,20 @@
   }
 }
 
+// Les − et les + des deux compteurs, l'un au-dessus de l'autre ; entre eux, le cœur et la valeur, ou les gemmes.
 .cmp-ligne {
   display: flex;
   align-items: center;
   gap: 0.25em;
+}
+
+.cmp-vie {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+  min-width: 0;
 }
 
 .cmp-coeur {
@@ -219,8 +250,8 @@
 }
 
 .cmp-barre {
-  flex: 1;
-  min-width: 1.5em;
+  display: block;
+  flex: none;
   height: 5px;
   overflow: hidden;
   border-radius: 3px;
@@ -240,7 +271,6 @@
 }
 
 .cmp-valeur {
-  min-width: 2.9em; // 2,2 fois la taille de base, mesurée sur ce texte plus petit
   color: var(--dw-forge-bone);
   font-size: 0.75em;
   font-variant-numeric: tabular-nums;
@@ -272,144 +302,6 @@
   font-size: 0.9rem;
 }
 
-.cmp-allies {
-  flex: none;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-  max-width: 45%;
-  // Une carte survolée monte de 4 px : la marge négative rend la place prise par ce retrait.
-  margin: -0.3rem 0 0;
-  padding: 0.3rem 0 0 1rem;
-  overflow-x: auto;
-  border-left: 1px dashed var(--dw-forge-bronze-edge);
-  list-style: none;
-  scrollbar-width: thin;
-}
-
-// Un groupe d'alliés de la même fiche, en éventail : le premier en carte entière, les autres en tranches glissées derrière lui. Chaque
-// tranche est un bouton (elle ouvre ce personnage, Ctrl + clic le sélectionne) et se glisse comme une carte.
-.cmp-groupe {
-  position: relative;
-  display: flex;
-  flex: none;
-  align-items: flex-end;
-}
-
-.cmp-groupe--eventail .cmp-drag {
-  position: relative;
-  z-index: 2;
-}
-
-.cmp-tranche {
-  position: relative;
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.3rem;
-  width: calc(2.1rem * var(--thr-k, 1));
-  // La hauteur de la carte de l'allié qu'elle suit.
-  height: var(--cmp-h);
-  // Collée à la précédente sans la recouvrir : chaque tranche garde toute sa surface de clic.
-  margin-left: 0;
-  padding: 0 0.35rem 0.45rem 0.45rem;
-  border: 2px solid color-mix(in srgb, var(--dw-color-pnj) 70%, #1a120b);
-  border-left: 0;
-  border-radius: 0 7px 7px 0;
-  background-color: #1a120b;
-  background-position: 30% center;
-  background-size: cover;
-  color: var(--dw-color-text-bright);
-  font: inherit;
-  cursor: pointer;
-  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.55);
-
-  // Le portrait assombri : il dit « encore un sergent », le numéro et la vitalité restent lisibles par-dessus.
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0.55));
-  }
-
-  b,
-  .cmp-tranche-vit {
-    position: relative;
-  }
-
-  b {
-    font-size: 0.72rem;
-    font-weight: 800;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-  }
-
-  &:hover {
-    z-index: 3;
-    transform: translateY(-4px);
-  }
-
-  &:focus-visible {
-    z-index: 3;
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
-}
-
-.cmp-tranche.cmp-tranche--selected {
-  border-color: var(--dw-color-legendary);
-  box-shadow: 0 0 0 2px var(--dw-color-legendary);
-}
-
-// À 0 de vitalité : le portrait passe en gris, comme sur la carte.
-.cmp-tranche.cmp-tranche--tombe {
-  filter: grayscale(1);
-}
-
-.cmp-tranche-vit {
-  display: block;
-  width: 100%;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: #000;
-
-  i {
-    display: block;
-    height: 100%;
-    background: var(--dw-forge-health);
-  }
-
-  .cmp-tranche-vit--bas {
-    background: var(--dw-color-echec);
-  }
-}
-
-// Le nombre d'exemplaires, en pastille en haut de l'éventail (dedans : la rangée défile et couperait ce qui dépasse).
-.cmp-groupe-nombre {
-  position: absolute;
-  top: 0.35rem;
-  right: 0.25rem;
-  z-index: 4;
-  padding: 2px 0.45rem 0;
-  border-radius: 999px;
-  background: var(--dw-color-legendary);
-  color: #1c1200;
-  font-size: 0.78rem;
-  font-weight: 800;
-  line-height: 1.25;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cmp-tranche:hover {
-    transform: none;
-  }
-}
-
 .cmp-ghost {
   display: flex;
   align-items: center;
@@ -431,15 +323,20 @@
   object-fit: cover;
 }
 
-// Petits écrans : les alliés passent sous les plaques.
+// Petits écrans : les alliés passent sous les héros.
 @media (max-width: 56rem) {
   .cmp {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .cmp-allies {
+  .cmp-rang:has(+ .cmp-rang--allies) {
     max-width: none;
+  }
+
+  .cmp-rang--allies {
+    max-width: none;
+    margin-left: 0;
     padding: 0.6rem 0 0;
     border-top: 1px dashed var(--dw-forge-bronze-edge);
     border-left: none;

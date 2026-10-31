@@ -54,8 +54,8 @@
               <b class="scd-options-bonus" aria-hidden="true">{{ bonus }}</b>
               <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
             }
-            <!-- Le malus adverse en cours : une petite épée et sa valeur, en rouge -->
-            @if (adversaryInitiativeMalus() > 0) {
+            <!-- Le malus adverse, seulement s'il a été corrigé à la main : une petite épée et sa valeur, en rouge -->
+            @if (adversaryMalusChosen()) {
               <b class="scd-options-malus" aria-hidden="true"><mat-icon svgIcon="sword" />−{{ adversaryInitiativeMalus() }}</b>
               <span class="cdk-visually-hidden">, malus adverse −{{ adversaryInitiativeMalus() }}</span>
             }
@@ -134,8 +134,10 @@
                     <button type="button" aria-label="Augmenter le malus adverse" (click)="stepAdversaryMalus(1)">+</button>
                   </div>
                   <span class="scd-hint">
-                    @if (hasInitiativeAdversary()) {
-                      La plus haute initiative des rivaux et coriaces ({{ detectedInitiative() }}), retranchée à chaque jet.
+                    @if (initiativeSource(); as source) {
+                      Automatique : l'initiative de {{ source.nom }} ({{ source.initiative }}), la plus haute des rivaux et coriaces, retranchée à chaque jet.
+                    } @else if (hasInitiativeAdversary()) {
+                      Aucun rival ni coriace avec une initiative au-dessus de 0 ; retranché à chaque jet.
                     } @else {
                       Aucun rival ni coriace avec une initiative ; retranché à chaque jet.
                     }

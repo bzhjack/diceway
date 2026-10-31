@@ -51,11 +51,11 @@
   --h: 10rem;
 }
 
-// Un allié, au pied du plateau : à la hauteur des cartes des héros (`--cmp-h`, posé par la compagnie). Le pied ne suit pas l'échelle du plateau
-// (`--thr-k`) : on la neutralise ici.
+// Un allié, au pied du plateau : plus petit qu'un héros, sa hauteur suit celle du pied (`--cmp-h`, posé par la compagnie). Le pied ne suit pas
+// l'échelle du plateau (`--thr-k`) : on la neutralise ici.
 .act--allie {
-  --w: calc(9rem / var(--thr-k, 1));
-  --h: calc(var(--cmp-h, 12.6rem) / var(--thr-k, 1));
+  --w: calc(7rem / var(--thr-k, 1));
+  --h: calc(var(--cmp-h, 12.6rem) * 0.72 / var(--thr-k, 1));
 }
 
 .act--creature {

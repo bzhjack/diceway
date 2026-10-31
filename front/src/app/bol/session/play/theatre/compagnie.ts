@@ -11,28 +11,11 @@ import {EMPTY_AVATAR} from '../../combat-play.util';
 import {heroismeGems} from '../../heroisme-spend.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ReservePlacementService} from '../../reserve-placement.service';
-import {cardAriaLabel, isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
+import {isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
 import {ActeurComponent} from './acteur';
-import {compagnie, parFiche} from './theatre.util';
+import {compagnie} from './theatre.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
-
-/** Un exemplaire d'un groupe d'alliés montré en tranche derrière le premier : son numéro, son portrait et sa vitalité. */
-interface Tranche {
-  readonly card: TapisCard;
-  readonly numero: string;
-  readonly avatar: string | null;
-  readonly percent: number;
-  readonly low: boolean;
-  readonly tombe: boolean;
-  readonly label: string;
-}
-
-/** Les alliés d'une même fiche : le premier en carte entière, les autres en tranches derrière lui (l'éventail). */
-interface GroupeAllies {
-  readonly key: string;
-  readonly lead: TapisCard;
-  readonly tranches: readonly Tranche[];
-}
+import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 
 /** La plaque d'un héros, avec ses valeurs déjà calculées. */
 interface Plaque {
@@ -46,14 +29,14 @@ interface Plaque {
   readonly atMax: boolean;
 }
 
-/** La compagnie, en pied du plateau : une plaque par héros (portrait, joueur, vitalité et héroïsme réglables
- * pas à pas, chaque pas enregistré tout de suite ; un dé en haut à droite ouvre sa carte et son jet d'action), puis les alliés en petites cartes,
- * ceux d'une même fiche en éventail. Un pas impossible ou en cours
+/** La compagnie, en pied du plateau : une carte debout par héros (portrait, joueur, vitalité et héroïsme réglables pas à pas,
+ * chaque pas enregistré tout de suite ; un dé en haut à droite ouvre sa carte et son jet d'action), puis une carte par allié, sans
+ * chevauchement : chaque rangée défile avec ses chevrons quand la place manque. Un pas impossible ou en cours
  * marque son bouton `aria-disabled` sans le désactiver : le focus clavier reste dessus. C'est la zone de dépôt
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
 @Component({
   selector: 'bol-compagnie',
-  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
+  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, DwScrollerComponent, MatIconModule, MatTooltipModule, ActeurComponent],
   templateUrl: './compagnie.html',
   styleUrl: './compagnie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,22 +65,6 @@ export class CompagnieComponent {
 
   private readonly groupes = computed(() => compagnie(this.cards()));
   protected readonly allies = computed(() => this.groupes().allies);
-  /** Les alliés par fiche : cinq « Sergent du guet » ne font qu'un éventail, chaque exemplaire restant atteignable d'un clic. */
-  protected readonly alliesParFiche = computed<readonly GroupeAllies[]>(() =>
-    parFiche(this.allies()).map(([lead, ...autres]) => ({
-      key: lead.key,
-      lead,
-      tranches: autres.map((card, index) => ({
-        card,
-        numero: card.nom.match(/#\d+$/)?.[0] ?? `#${index + 2}`,
-        avatar: card.avatar && card.avatar !== EMPTY_AVATAR && !this.brokenAvatars().has(card.key) ? card.avatar : null,
-        percent: vitalitePercent(card.vitaliteCourante, card.vitaliteMax),
-        low: isLowVitalite(card.vitaliteCourante, card.vitaliteMax),
-        tombe: card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante <= 0,
-        label: cardAriaLabel(card),
-      })),
-    })),
-  );
   protected readonly plaques = computed<readonly Plaque[]>(() =>
     this.groupes().heros.map((card) => ({
       card,
