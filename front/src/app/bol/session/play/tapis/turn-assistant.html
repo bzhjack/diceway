@@ -290,11 +290,9 @@
         <button mat-stroked-button type="button" class="tas-end" [disabled]="attaqueEngagee()" matTooltip="Stabiliser un héros mourant, à la place de l’attaque. Termine le tour." (click)="rescueRequested.emit()"><mat-icon svgIcon="gi-rescue" aria-hidden="true" /> Secourir</button>
       }
       <button mat-stroked-button type="button" class="tas-end" [disabled]="attaqueEngagee()" matTooltip="Passe son tour en fin de round" (click)="delayRequested.emit()"><mat-icon svgIcon="gi-wait" aria-hidden="true" /> Retarder</button>
-      <!-- Quand la ligne des dégâts porte « Fin du tour » en or (coup raté ou joué), celui de la ligne s'efface ; en défense totale, c'est lui l'action principale -->
-      @if (defenseTotale()) {
+      <!-- Quand la ligne des dégâts porte « Fin du tour » (coup raté ou joué), celui de la ligne s'efface, sauf en défense totale -->
+      @if (defenseTotale() || !endTurnInLine()) {
         <button mat-flat-button type="button" class="tas-end" matTooltip="Raccourci : F" (click)="requestEndTurn()"><mat-icon aria-hidden="true">skip_next</mat-icon> Fin du tour</button>
-      } @else if (!endTurnInLine()) {
-        <button mat-stroked-button type="button" class="tas-end" matTooltip="Raccourci : F" (click)="requestEndTurn()"><mat-icon aria-hidden="true">skip_next</mat-icon> Fin du tour</button>
       }
     </div>
   </bol-combattant-carte>

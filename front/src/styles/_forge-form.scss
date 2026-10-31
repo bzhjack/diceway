@@ -1,0 +1,176 @@
+// La forge sur une page de formulaire (`dw-page dw-forge-form`) : de la suie, des plaques de fer rivetées pour les sections, des creux pour ce
+// qui se saisit, des clous de bronze pour les boutons ronds. La disposition ne change pas. Ces composants sont partagés avec des pages qui
+// gardent l'ancien style : tout passe par cette classe, et deux classes de tête pour l'emporter sur les styles des composants (chargés après).
+.dw-page.dw-forge-form {
+  --dw-border: var(--dw-forge-bronze-edge);
+  --dw-color-legendary: var(--dw-forge-gold);
+
+  --mat-card-outlined-container-color: transparent;
+  --mat-card-outlined-container-shape: 7px;
+  --mat-card-outlined-outline-color: var(--dw-forge-bronze);
+
+  --mat-form-field-outlined-outline-color: var(--dw-forge-bronze-dim);
+  --mat-form-field-outlined-hover-outline-color: var(--dw-forge-bronze);
+  --mat-form-field-outlined-focus-outline-color: var(--dw-forge-hot);
+  --mat-form-field-outlined-label-text-color: var(--dw-forge-bronze-text);
+  --mat-form-field-outlined-hover-label-text-color: var(--dw-forge-bronze-text);
+  --mat-form-field-outlined-focus-label-text-color: var(--dw-forge-hot-text);
+  --mat-form-field-outlined-input-text-color: var(--dw-forge-bone);
+  --mat-select-enabled-trigger-text-color: var(--dw-forge-bone);
+  --mat-select-enabled-arrow-color: var(--dw-forge-bronze-text);
+
+  --mat-button-outlined-outline-color: var(--dw-forge-bronze);
+  --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
+
+  --mat-checkbox-disabled-selected-icon-color: var(--dw-forge-bronze-dim);
+  --mat-checkbox-disabled-selected-checkmark-color: var(--dw-forge-bone);
+
+  --p-tag-contrast-background: var(--dw-forge-recess);
+  --p-tag-contrast-color: var(--dw-forge-bronze-text);
+  --p-tag-font-weight: 700;
+  --p-tag-padding: 0.1rem 0.5rem;
+  --p-tag-border-radius: var(--dw-radius-pill);
+
+  background:
+    radial-gradient(70% 42% at 66% 0, rgba(232, 98, 42, 0.16), transparent 70%),
+    radial-gradient(55% 45% at 100% 100%, rgba(150, 52, 14, 0.14), transparent 70%),
+    var(--dw-forge-soot);
+
+  .mat-mdc-card {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  .dw-section--form {
+    border-color: var(--dw-forge-bronze-edge);
+    border-radius: 7px;
+    background: var(--dw-forge-rivets), var(--dw-forge-plate);
+    box-shadow: var(--dw-forge-plate-shadow);
+  }
+
+  .dw-section--loading {
+    border-color: var(--dw-forge-bronze-edge);
+    border-radius: 7px;
+    background: var(--dw-forge-recess);
+  }
+
+  // Les champs et les lignes : des creux dans le fer. La teinte d'un trait (vert, rouge) se pose par-dessus le creux.
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined,
+  .hs-block,
+  .hs-text,
+  dw-collapsible-row {
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+  }
+
+  .dw-row-toggle,
+  .dw-row-body {
+    background: transparent;
+  }
+
+  .dw-row-chevron {
+    color: var(--dw-forge-bronze-text);
+  }
+
+  .dw-row-label,
+  .dw-entry-label {
+    color: var(--dw-forge-bone);
+  }
+
+  .dw-row-stat {
+    color: var(--dw-forge-gold);
+  }
+
+  .dw-entry-meta,
+  .dw-entry-empty {
+    color: var(--dw-forge-stud-text);
+  }
+
+  .dw-entry-detail-title {
+    color: var(--dw-forge-gold);
+  }
+
+  .dw-entry-delete-btn {
+    color: var(--dw-forge-verdict-echec) !important;
+  }
+
+  dw-tag {
+    border: 1px solid var(--dw-forge-bronze-dim);
+    white-space: nowrap;
+  }
+
+  // Les caractéristiques : le titre de chaque bloc en or, les chiffres en os, la case mise en avant chauffée par la braise.
+  .hs-lbl {
+    color: var(--dw-forge-bronze-text);
+  }
+
+  .hs-cell--key {
+    background: color-mix(in srgb, var(--dw-forge-hot) 9%, transparent);
+  }
+
+  .hs-text {
+    color: var(--dw-forge-bone);
+  }
+
+  .vs__value {
+    color: var(--dw-forge-bone);
+
+    &:focus-visible {
+      outline-color: var(--dw-forge-hot);
+    }
+  }
+
+  // Les boutons ronds : des clous de bronze, qui rougeoient au survol.
+  .vs__btn,
+  .dw-add-trigger {
+    border: 1px solid var(--dw-forge-bronze-dim);
+    background: var(--dw-forge-stud);
+    box-shadow: var(--dw-forge-stud-shadow);
+    color: var(--dw-forge-stud-text);
+
+    &:hover:not(:disabled) {
+      border-color: var(--dw-forge-hot);
+      box-shadow: var(--dw-forge-stud-glow);
+      color: var(--dw-forge-hot-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--dw-forge-hot);
+      outline-offset: 1px;
+    }
+  }
+
+  .dw-add-trigger .mat-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 16px;
+  }
+}
+
+// Les menus d'ajout s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à l'écran.
+body:has(.dw-forge-form) .cdk-overlay-container {
+  --mat-form-field-outlined-outline-color: var(--dw-forge-bronze-dim);
+  --mat-form-field-outlined-hover-outline-color: var(--dw-forge-bronze);
+  --mat-form-field-outlined-focus-outline-color: var(--dw-forge-hot);
+  --mat-form-field-outlined-label-text-color: var(--dw-forge-bronze-text);
+  --mat-form-field-outlined-hover-label-text-color: var(--dw-forge-bronze-text);
+  --mat-form-field-outlined-focus-label-text-color: var(--dw-forge-hot-text);
+  --mat-form-field-outlined-input-text-color: var(--dw-forge-bone);
+  --mat-select-enabled-trigger-text-color: var(--dw-forge-bone);
+  --mat-select-enabled-arrow-color: var(--dw-forge-bronze-text);
+  --mat-select-panel-background-color: #171009;
+
+  .mat-mdc-menu-panel {
+    border-color: var(--dw-forge-bronze);
+    background: var(--dw-forge-soot);
+  }
+
+  .mat-mdc-menu-panel .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+  }
+
+  .mat-mdc-select-panel {
+    border: 1px solid var(--dw-forge-bronze);
+  }
+}

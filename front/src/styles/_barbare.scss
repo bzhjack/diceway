@@ -109,8 +109,8 @@ body::after {
   box-shadow: 0 0 0 2px #14110f, inset 0 0 70px rgba(0, 0, 0, 0.55);
 }
 
-// La forge : sur la table et le jet de réaction, le cadre est en fer martelé, le filet en bronze chaud.
-body:has(bol-session-play-page, bol-start-combat-page)::before {
+// La forge : sur la table, le jet de réaction et les formulaires habillés, le cadre est en fer martelé, le filet en bronze chaud.
+body:has(bol-session-play-page, bol-start-combat-page, .dw-forge-form)::before {
   --forge-frame-rivet: radial-gradient(circle at 35% 28%, #e6c58c, #8c6a2f 42%, #2b1c0c 72%);
 
   background:
@@ -121,7 +121,7 @@ body:has(bol-session-play-page, bol-start-combat-page)::before {
     var(--dw-forge-iron) 0 0 / 320px;
 }
 
-body:has(bol-session-play-page, bol-start-combat-page)::after {
+body:has(bol-session-play-page, bol-start-combat-page, .dw-forge-form)::after {
   border-color: var(--dw-forge-bronze);
   box-shadow:
     0 0 0 2px #0c0806,

@@ -5,17 +5,17 @@
 .pfp-section-eyebrow {
   margin: 0;
   margin-bottom: 0.5rem;
-  font-size: 0.72rem;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-weight: 400;
+  font-size: 0.66rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px #000;
 }
 
 .pfp-field-hint {
   margin: 0;
   margin-top: 0.75rem;
   font-size: 0.875rem;
-  color: #6ee7b7;
+  color: var(--dw-forge-verdict-reussite);
 }
