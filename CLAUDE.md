@@ -100,7 +100,7 @@ When a task touches game rules, character creation, equipment, careers, language
 - Keep state transformations pure.
 
 ### Forms
-- Prefer Reactive Forms over template-driven forms.
+- Prefer Signal Forms (`@angular/forms/signals`) over Reactive Forms and template-driven forms (`ngModel`). New forms use Signal Forms; existing Reactive Forms and `ngModel` are migrated when their component is reworked.
 
 ### Services
 - `inject()` function instead of constructor injection.

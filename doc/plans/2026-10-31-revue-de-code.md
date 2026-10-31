@@ -195,7 +195,8 @@ C'est le gain le plus net. Les portraits sont stockés en base64 dans la base (`
 | Types exportés hors d'un dossier `models/` | 10 | `core/auth/auth.models.ts` (8), `combat-resolution.util.ts:9`, `combat-effects.util.ts:65` | S |
 | `standalone: true` explicite | 1 | `dw-error-message.ts:34` | S |
 | Injection par constructeur | 1 | `region.component.ts:74` | S |
-| `ngModel` alors que les formulaires réactifs sont préférés | 7 fichiers | Barres des bibliothèques, dialogues | M |
+| `ngModel` alors que les Signal Forms sont la règle | 7 fichiers | `dw-library-toolbar`, bibliothèques créatures, démons, PNJ et sessions, dialogues d'ajout de combattant | M |
+| Formulaires réactifs à passer en Signal Forms | 10 fichiers | Bibliothèques armes et armures, `add-menu`, `trait-add-menu`, `region`, `hero-resources`, `card-vitalite`, `turn-assistant`, `scene-editor-dialog`, `dw-prompt-dialog` | M à L |
 | `$any()` dans les gabarits | 7 | 4 dans `trait-add-menu` (`region_id` à typer), 3 pour `$event.target` | S |
 | Image statique sans `NgOptimizedImage` | 1 | `region.component.html:7` | S |
 | Clic sur un `div` sans clavier (AXE, WCAG) | 4 avatars | Traité par M4 | S |
@@ -217,6 +218,8 @@ C'est le gain le plus net. Les portraits sont stockés en base64 dans la base (`
 
 ### 6.3 `CLAUDE.md` lui-même est à corriger
 
+**Décidé le 2026-10-31 :** les Signal Forms sont la règle pour les formulaires, et `CLAUDE.md` le dit désormais. Leur API est publique depuis Angular 22, et 20 fichiers les utilisent déjà.
+
 | Il dit | La réalité |
 |---|---|
 | Laravel 12 | `composer.json` demande `^13.0` |
@@ -224,7 +227,6 @@ C'est le gain le plus net. Les portraits sont stockés en base64 dans la base (`
 | Entité `BolPnj` | Ce modèle n'existe pas : un PNJ est un `BolHeros` |
 | 19 seeders | 22 fichiers dans `database/seeders` |
 | Boutons `size="small"` | 50 usages, sans effet : les boutons Material n'ont pas d'entrée `size`, et aucun style ne reprend cet attribut |
-| « Prefer Reactive Forms » | 20 fichiers utilisent Signal Forms contre 11 en réactif : **à trancher**, soit la règle change, soit le code |
 | — | Rien sur `dw-forge-page` ni sur les jetons `--dw-forge-*`, pourtant le style de toutes les pages |
 
 Autre reste : `dw-tag` lit des variables `--p-tag-*` issues de PrimeNG, définies seulement dans `_forge-page.scss`. À renommer en `--dw-tag-*`, avec des valeurs par défaut.
@@ -279,7 +281,7 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 - [ ] Vérifier puis supprimer les 20 cartes sans référence (−13 Mo)
 - [ ] Retirer Inter et Roboto
 - [ ] `loading="lazy"` dans les grilles
-- [ ] Corriger `CLAUDE.md` (section 6.3) et trancher Signal Forms ou Reactive Forms
+- [ ] Corriger le reste de `CLAUDE.md` (section 6.3)
 - [ ] Petits écarts : `standalone`, constructeur, types hors `models/`, style en ligne, `size="small"`
 
 ### Phase 2 : les outils de contrôle (M)
@@ -300,6 +302,7 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 - [ ] M10, M11, M12 : grille, catalogue d'équipement, barre d'outils
 - [ ] Formulaire d'authentification commun
 - [ ] Classes maison et Tailwind : les 54 écarts
+- [ ] Signal Forms : `dw-library-toolbar`, les 6 autres gabarits en `ngModel`, puis les formulaires réactifs des fiches et bibliothèques
 
 ### Phase 5 : le combat (L)
 
@@ -307,6 +310,7 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 - [ ] M16, M17, M18, M19, M20 : les petites briques
 - [ ] M13, M14, M15 : addition, saisie, verdict
 - [ ] Découpage de `turn-assistant`, puis de `session-play-page`
+- [ ] Signal Forms : `turn-assistant`, `card-vitalite`, `hero-resources`, au moment de leur reprise
 - [ ] `@defer` sur le combat et le théâtre
 
 ### Phase 6 : portraits et backend (L)
