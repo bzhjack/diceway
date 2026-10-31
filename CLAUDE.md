@@ -92,7 +92,7 @@ When a task touches game rules, character creation, equipment, careers, language
 - **Primary action** of a screen, header, card or dialog (Démarrer / Terminer le combat, Fin du tour, Appliquer, Lancer, Commencer le combat, the confirm button of a dialog) → solid gold fill: `mat-flat-button`, or for a custom button `background: var(--dw-color-legendary)` with dark text — flat, no gradient or 3D shadow. Secondary actions stay outlined (`mat-stroked-button` / `matButton="outlined"`); one filled button per zone.
 - Out of scope: portraits, avatars, cards, tiles, list rows and links inside text.
 - Shape is never the only signal: a toggle keeps `aria-pressed` and a visible "on" state. A class used for both kinds styles the toggles with `&[aria-pressed]`.
-- Tokens live in `front/src/styles/_tokens.scss`; inventory and decisions: `doc/plans/2026-10-19-ux-boutons-inventaire.md`.
+- Tokens live in `front/src/styles/_tokens.scss`.
 
 ### State
 - Signals for local state; `computed()` for derived state.

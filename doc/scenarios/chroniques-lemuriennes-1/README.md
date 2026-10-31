@@ -40,5 +40,11 @@ fichier d'import `app/<aventure>.json` (format : `../format-import.md`).
 - **Bestiaire du Khanat** (11 créatures, livre p. 20-26) : au catalogue, par `BolCreatureSeeder`
   (ids 64 à 74, capacités 2001 à 2014), à la demande de Lionel, comme celui du Beshaar.
 - **Prétirés kalukans** (*Les trois coffres*) : dans le Markdown seulement, pas importés.
+- **Une saga d'import par aventure** (`cl1-<aventure>`) : les aventures sont indépendantes, et une saga commune ferait se
+  confondre deux « gardes ».
+- **Pas de région « Khanat »** au catalogue : le Khanat, le plateau de Lhend et la Vallée de la Lune n'ont que leur `lieu`.
 
-Plan et décisions : `doc/plans/2026-10-23-integration-chroniques-lemuriennes-1.md`.
+## Reste à faire
+
+- Jouer le seeder sur les autres environnements, pour le bestiaire du Khanat :
+  `php artisan db:seed --class='Database\Seeders\BolCreatureSeeder' --force`.

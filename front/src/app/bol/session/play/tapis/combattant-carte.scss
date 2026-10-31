@@ -1,17 +1,24 @@
-// Une carte en largeur, une plaque de fer liserée de la couleur du camp (rouge en face, vert dans le camp des héros) : le portrait à gauche,
-// de toute la hauteur, fondu vers la droite ; le texte à côté.
+// Une plaque de fer liserée de la couleur du camp (rouge en face, vert dans le camp des héros).
 :host {
   --cc-camp: var(--dw-color-echec-forte);
 
   position: relative;
-  display: flex;
-  align-items: stretch;
   min-width: 0;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--cc-camp) 55%, var(--dw-forge-bronze-edge));
   border-radius: 7px;
   background: var(--dw-forge-rivets), var(--dw-forge-plate);
   box-shadow: var(--dw-forge-plate-shadow);
+}
+
+// La cible : le portrait entier à gauche, le nom et les chiffres à sa droite ; en bas, sur toute la largeur, ce que la page projette avec
+// `ccBas`. La première rangée prend ce qui reste de la hauteur de la carte.
+:host(:not(.cc--ligne)) {
+  display: grid;
+  grid-template-columns: minmax(8.4rem, min(38%, 13rem)) minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  gap: 0.55rem 0.75rem;
+  padding: 0.7rem 0.8rem;
 }
 
 :host(.cc--allie) {
@@ -24,9 +31,8 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   min-width: 0;
-  padding: 0.6rem 0.8rem 0.7rem;
 }
 
 .cc-head {
@@ -140,17 +146,19 @@
   background: var(--dw-color-echec);
 }
 
-// Le portrait, à gauche : de la hauteur de la carte, fondu vers la droite sous le texte. Il ne dicte pas la hauteur : c'est le texte qui décide.
+// Le portrait : un vrai carré, jamais recadré en bande.
 .cc-art {
   position: relative;
   display: grid;
-  flex: none;
+  align-self: start;
   place-items: center;
-  width: 7.2rem;
-  margin-right: -1rem;
-  background: linear-gradient(180deg, #2a1c11, #120c07);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 6px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
   color: color-mix(in srgb, var(--cc-camp) 70%, var(--dw-surface-700));
-  mask-image: linear-gradient(90deg, #000 72%, transparent);
 
   img {
     position: absolute;
@@ -158,12 +166,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 20%;
+    object-position: center top;
   }
 
   // Sans portrait : son initiale, en grand, de la couleur de son camp.
   .cc-initiale {
-    font: 400 3.4rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 4.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   }
 }
 
@@ -177,15 +185,20 @@
 // passent les unes sous les autres, les actions restant en bout de ligne.
 :host(.cc--ligne) {
   container-type: inline-size;
-  border-radius: 7px;
+  display: flex;
+  align-items: stretch;
+
   .cc-body {
     display: grid;
     grid-template-columns: 9rem 16.4rem 24.6rem minmax(0, 1fr) 7.9rem;
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       'who vit post armes act'
       'chiffres chiffres post armes act';
-    align-content: start;
     gap: 0.25rem 0;
+    // Une hauteur fixe, celle de son contenu le plus chargé à cette largeur (toutes ses notes, une feinte retentée, une horde) : elle ne bouge
+    // ni d'un combattant à l'autre, ni une fois le coup joué. Les paliers ci-dessous suivent les retours à la ligne de ce contenu.
+    min-height: 12.4rem;
     padding: 0.5rem 1.15rem 0.6rem 0.8rem;
   }
 
@@ -194,9 +207,26 @@
     gap: 0.15rem;
   }
 
+  // Le portrait : de la hauteur de la ligne, fondu vers la droite sous le texte. Il ne dicte pas la hauteur : c'est le texte qui décide.
   .cc-art {
+    flex: none;
+    align-self: stretch;
     width: 8.5rem;
     margin-right: -0.5rem;
+    aspect-ratio: auto;
+    border: 0;
+    border-radius: 0;
+    background: linear-gradient(180deg, #2a1c11, #120c07);
+    box-shadow: none;
+    mask-image: linear-gradient(90deg, #000 72%, transparent);
+
+    img {
+      object-position: center 20%;
+    }
+
+    .cc-initiale {
+      font-size: 3.4rem;
+    }
   }
 
   .cc-nom {
@@ -219,31 +249,49 @@
   }
 }
 
-@container (max-width: 78rem) {
+@container (max-width: 97rem) {
+  :host(.cc--ligne) .cc-body {
+    min-height: 13.5rem;
+  }
+}
+
+@container (max-width: 82rem) {
   :host(.cc--ligne) .cc-body {
     grid-template-columns: 9rem 16.4rem minmax(0, 1fr) 7.9rem;
+    grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas:
       'who vit post act'
       'chiffres chiffres post act'
       'armes armes armes act';
     row-gap: 0.5rem;
+    min-height: 15.9rem;
+  }
+}
+
+@container (max-width: 72rem) {
+  :host(.cc--ligne) .cc-body {
+    min-height: 20.7rem;
   }
 }
 
 @container (max-width: 64rem) {
   :host(.cc--ligne) .cc-body {
     grid-template-columns: 9rem minmax(0, 1fr) 7.9rem;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
     grid-template-areas:
       'who vit act'
       'chiffres chiffres act'
       'post post post'
       'armes armes armes';
+    min-height: 26.7rem;
   }
 }
 
 @container (max-width: 44rem) {
   :host(.cc--ligne) .cc-body {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
     grid-template-areas: 'who' 'vit' 'chiffres' 'post' 'armes' 'act';
+    min-height: 0;
   }
 }

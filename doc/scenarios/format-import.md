@@ -77,6 +77,8 @@ Un personnage est soit une fiche créée pour le scénario, soit une référence
   - un objet avec `degats` crée une arme propre au scénario (`type` : `M` pour mêlée, `T` pour tir ; `portee`
     et `notes` facultatifs). Elle est créée dans la bibliothèque du compte, retrouvée par son nom au réimport.
 - **Équipement :** le PNJ porte toutes ses armes et armures.
+- **Vilénie d'un rival :** sa valeur dans le livre, sinon 3, à signaler dans le commentaire de la fiche (consigne de Lionel du
+  2026-10-23).
 - **Points d'un rival :** la fiche PNJ et le combat n'utilisent que `vilenie`. Les points d'héroïsme d'un
   rival allié (Surdral) se portent donc en `vilenie`. `heroisme` est enregistré, mais l'app ne l'affiche pas
   pour un PNJ.

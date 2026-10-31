@@ -326,7 +326,7 @@
         @if (played() && playedTargetOut()) {
           <span class="tas-pill">hors de combat</span>
         }
-        <div class="tas-cible-regl">
+        <div ccBas class="tas-cible-regl">
           <div class="tas-vit">
             <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
             <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>

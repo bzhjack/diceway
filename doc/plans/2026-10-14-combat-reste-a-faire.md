@@ -1,6 +1,6 @@
 # Combat : ce qui reste à faire
 
-Les règles du livre que l'application ne gère pas encore en combat. Les lots 0 à 2 (audit des calculs, points A1 à A10 et 1 à 11) sont faits depuis le 2026-10-16 ; leur détail est dans l'historique git de ce fichier, et le comportement actuel dans `doc/plans/2026-10-13-combat-etat-des-lieux.md`.
+Les règles du livre que l'application ne gère pas encore en combat, revues le 2026-10-31. Ce qui est fait (audit des calculs, horde de piétaille, points de vilenie) est dans l'historique git de ce fichier, et le comportement actuel dans `doc/plans/2026-10-13-combat-etat-des-lieux.md`.
 
 Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons.md`, `05-alchimie-foi-sorcellerie.md` (vérifiables dans `doc/pdf-text/`).
 
@@ -10,9 +10,9 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 | # | Sujet | État | Effort | Lot |
 | --- | --- | --- | --- | --- |
-| 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque faits | L | 3 |
-| 13 | Horde de piétaille | **Fait le 2026-10-19** (sauf piétaille contre piétaille) | M | 3 |
-| 14 | Points de vilenie des rivaux | Règle absente | M | 3 |
+| 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque et attaques multiples faits | L | 3 |
+| 13 | Horde de piétaille | Reste piétaille contre piétaille | S | 3 |
+| 14 | Points de vilenie des rivaux | Reste « Fuite opportune » | S | 3 |
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
 | 16 | Foi en combat | Règle absente | S | 4 |
 | 17 | Petites limites de l'assistant | Confort | S à M | au fil de l'eau |
@@ -21,12 +21,11 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ### 12. Avantages et pouvoirs des créatures et démons
 
-- **Fait** : « Attaque féroce », « Attaque timide » et « Armes améliorées » donnent leur dé à chaque attaque (`attackDiceAbilities`, `combat-play.util.ts`) ; « Attaques dévastatrices » monte les dégâts d'une catégorie (`demonDegats`).
+- **Fait** : « Attaque féroce », « Attaque timide » et « Armes améliorées » donnent leur dé à chaque attaque (`attackDiceAbilities`, `combat-play.util.ts`) ; « Attaques dévastatrices » monte les dégâts d'une catégorie (`demonDegats`) ; « Autre attaque » enchaîne un nouveau jet pour qui frappe plusieurs fois par round (sans limite au nombre d'attaques du profil).
 - **Reste** (règles dans `04-pnj-creatures-demons.md`) :
 
   | Capacité | Effet en combat | Proposition |
   | --- | --- | --- |
-  | Attaques multiples | Plusieurs jets d'attaque distincts | Après un coup, « Attaque suivante » sans finir le tour, jusqu'au nombre d'attaques du profil |
   | Régénération (démon) | +1 vitalité par round ; se débarrasse d'un coup précis au bout de 2 rounds | +1 au passage de round |
   | Intangible (démon) | Blessé seulement par sorcellerie ou alchimie | Rappel sur la carte de la cible |
   | Poison (démon) | Jet de vigueur Difficile (−2) pour éviter la paralysie | Rappel du jet, effet « paralysé » posé à la main |
@@ -37,16 +36,13 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ### 13. Horde de piétaille
 
-- **Règle** : la piétaille attaque en groupe, avec un seul jet, +1 par piétaille engagée ; si la horde touche, dégâts d6M. Piétaille contre piétaille : le groupe le plus nombreux inflige d6M pertes, le plus faible riposte à d3.
-- **Fait le 2026-10-19**, le temps de l'attaque seulement (la frise ne groupe pas les piétailles) : quand c'est le tour d'une piétaille, « Horde » dans « Avec quoi ? » liste les piétailles de son camp qui n'ont pas encore joué ce round. Celles que le MJ coche se joignent à l'attaque : « +3 horde » dans l'addition, d6M de dégâts sans vigueur, et leur tour finit avec celui de la carte active (`hordeMates`, `endTurn` dans `combat-turn.util.ts`).
+- **Fait** : l'attaque en groupe contre un héros (`hordeMates`, `endTurn` dans `combat-turn.util.ts`).
 - **Reste** : piétaille contre piétaille (le camp le plus nombreux tue d6M adversaires, qui lui infligent d3 pertes), sans jet d'attaque.
 
 ### 14. Points de vilenie des rivaux
 
-- **Règle** : les rivaux ont des points de vilenie, équivalents des points d'héroïsme, plus « Bouclier humain » (une piétaille proche encaisse un coup, comme une parade in extremis) et « Fuite opportune ».
-- **Aujourd'hui** : rien ; les options d'héroïsme sont réservées aux héros.
-- **Proposition** : un compteur de vilenie sur la carte d'un rival, rempli depuis son profil ; les boutons d'héroïsme de l'assistant deviennent ceux de la vilenie quand un rival attaque ; « Bouclier humain » est proposé quand un rival va encaisser des dégâts et qu'une piétaille de son camp est sur la table.
-- **Prérequis** : vérifier que le profil PNJ stocke les points de vilenie, sinon ajouter le champ.
+- **Fait** : le compteur de vilenie sur la carte d'un rival, ses dépenses à l'attaque, la parade in extremis et « Bouclier humain ».
+- **Reste** : « Fuite opportune ».
 
 ## Lot 4 : la magie en combat
 

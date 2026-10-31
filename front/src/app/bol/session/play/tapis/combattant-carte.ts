@@ -6,7 +6,7 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
 
 /** La carte d'un combattant dans l'assistant de tour, la même pour celui qui joue et pour sa cible : à gauche son portrait, carré sur toute la hauteur, qui se fond vers la droite ;
  * à côté son rang et son attitude (et en haut à droite les boutons projetés avec `ccActions`), son nom, ses chances et sa barre de vie
- * (avec ce que le coup va lui retirer), puis ce que l'assistant y projette (chiffres, vie réglable, effets). Le liseré dit son camp. */
+ * (avec ce que le coup va lui retirer), puis ce que l'assistant y projette (chiffres, effets ; sa vie réglable en bas, avec `ccBas`). Le liseré dit son camp. */
 @Component({
   selector: 'bol-combattant-carte',
   template: `
@@ -41,6 +41,8 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
       </header>
       <ng-content />
     </div>
+    <!-- Ce qui se règle, sous le portrait et le texte -->
+    <ng-content select="[ccBas]" />
   `,
   styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -60,6 +60,10 @@ Le dossier `app/` contient un fichier JSON par chapitre, importable dans l'app a
 `php artisan bol:import-scenario` (format : `../format-import.md`). Les chapitres se suivent : un personnage
 défini dans un chapitre est repris par les suivants. Importer `ch1.json`, puis `ch2.json`, et ainsi de suite.
 
+Un scénario par chapitre, pour garder la frise des actes à 8 à 15 scènes. Tout appartient au compte de l'utilisateur, sauf
+le bestiaire du Beshaar (13 créatures), au catalogue à la demande de Lionel : `BolCreatureSeeder`, ids 51 à 63, capacités
+1001 à 1013.
+
 ## Pour la séance de ce soir
 
 Lis dans l'ordre `00` → `01` → `02` → `03` → `04`, et pioche dans `05`

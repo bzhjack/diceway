@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13. Ce document décrit le combat tel qu'il fonctionne dans l'application à cette date. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31. Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
 
@@ -8,21 +8,23 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 
 ## 1. Déroulement d'un combat
 
-1. **Démarrer le combat** : le dialogue recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
-2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, l'assistant de tour conduit le coup de la carte active en trois temps (qui, l'attaque, les dégâts). La carte « Qui attaque » porte les actions du tour : Fiche, Retarder, Défense totale, Secourir (s'il y a un mourant), Fin du tour.
+1. **Démarrer le combat** : une page entière (`session/:id/combat`) recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
+2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, la ligne de celui qui joue porte sa posture (dont la défense totale), ses armes et ses actions : Fiche, Effets, Retarder, Secourir (s'il y a un mourant), Fin du tour. Plus bas, trois colonnes conduisent le coup : la cible, l'attaque, les dégâts.
 3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence. Si le coup qui a touché n'est pas appliqué, l'application demande d'abord : l'appliquer et finir, finir sans l'appliquer, ou rester sur le tour.
 4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat). Au début de chaque round :
    - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
    - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
-5. **Secourir** : à son tour, un héros peut tenter de stabiliser un allié mourant au lieu d'attaquer (bouton « Secourir » de la carte « Qui attaque ») : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le tour se termine ensuite.
+5. **Secourir** : à son tour, un héros peut tenter de stabiliser un allié mourant au lieu d'attaquer (bouton « Secourir » de sa ligne) : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le tour se termine ensuite.
 6. **Fin du combat** : dès qu'un camp n'a plus personne debout (hors de combat ou retiré du combat), une boîte « Victoire » ou « Défaite » s'ouvre (après une éventuelle boîte en cours, comme « Défier la mort »). Elle nomme les héros encore mourants ; « Continuer » laisse le temps de les secourir, « Terminer le combat » ouvre « Après combat ». Elle ne revient que si l'issue change, ou au rechargement de la page.
 7. **Terminer le combat** : la boîte « Après combat » (livre p. 65-66) montre, pour chaque blessé du camp des héros, ce qu'il récupère. « Repos » : à 0 ou plus, la moitié des points perdus pendant ce combat, et la totalité des dégâts reçus à mains nues (l'application les retient coup par coup). Le serveur note la vitalité de chacun au démarrage (`etat_combat.depart`) : une blessure d'avant le combat ne se récupère pas ici. « Soins » : si un héros a une carrière de soins (médecin, guérisseur, rebouteux), son rang en vitalité. Le MJ décoche ce qui ne s'applique pas ; « Terminer le combat » enregistre tout et repasse en mode libre.
 
 ## 2. Le jet de réaction
 
-Formule : `2d6 + esprit + initiative`, réussite à 9 ou plus. S'y ajoutent l'embuscade (+2, ou −1 si les héros sont surpris), l'initiative ennemie la plus haute (en malus) et, si le MJ l'accorde, le rang d'une carrière utile du héros (« + Carrière » sur sa carte).
+Formule : `2d6 + esprit + initiative`, réussite à 9 ou plus. S'y ajoutent l'embuscade (+2, ou −1 si les héros sont surpris), l'initiative ennemie la plus haute (en malus, calculée d'office et corrigeable dans les options) et, si le MJ l'accorde, le rang d'une carrière utile du héros (bouton Modificateurs de sa ligne).
 
-- Une carte par héros, triées par agilité brute décroissante. On tape le total des dés, ou « Lancer pour tous ».
+Dés de bonus ou de malus, deux au plus : le trait du héros (Vigilant, Lent à la détente), le dé du MJ pour ce héros (Modificateurs) et le dé du MJ pour tous (Options). La ligne du héros dit d'où ils viennent.
+
+- Une ligne par héros, triées par agilité brute décroissante. On tape le total des dés, ou « Lancer pour tous ».
 - Double 1 : case « échec critique » ; double 6 : case « légendaire » (−1 point d'héroïsme).
 - L'ordre d'action suit le livre : héros légendaires, héroïques, en réussite, rivaux, coriaces, héros en échec, piétaille, héros en échec critique. À égalité entre héros, l'agilité brute départage.
 
@@ -96,7 +98,7 @@ Le menu « + Effet » propose, pour l'attaquant ou la cible : +1 en défense jus
 
 Les usages de l'héroïsme du jet d'action valent pour le jet d'attaque.
 
-- **Dépenser ou gagner des points** : les héros seulement. Leur compteur s'affiche à côté du nom de l'attaquant.
+- **Dépenser des points** : les héros, et les rivaux avec leur vilenie. Gagner un point (échec critique) : les héros seulement. Le compteur est sur la ligne de l'attaquant.
 - **Succès héroïque sur double 6** : les héros et leurs alliés. Pour leurs adversaires, le double 6 touche, sans plus.
 
 | Résultat des dés | Bouton | Effet |
@@ -106,7 +108,7 @@ Les usages de l'héroïsme du jet d'action valent pour le jet d'attaque.
 | Touché | Succès héroïque −1 | Une option de succès héroïque. |
 | Double 6 | Succès légendaire −1 | Deux options au lieu d'une. |
 
-- **Côté défenseur** : un héros touché peut dépenser 1 PH pour une « Parade in extremis » (pas de dégâts ; son bouclier, ou son arme, est brisé), ou, une fois les dégâts appliqués, pour « Juste une égratignure » (1d6 rendu, sans dépasser les dégâts du coup, et il perd sa prochaine action).
+- **Côté défenseur** : un héros ou un rival touché peut dépenser 1 point pour une « Parade in extremis » (pas de dégâts ; son bouclier, ou son arme, est brisé), ou, une fois les dégâts appliqués, pour « Juste une égratignure » (d6B rendu, sans dépasser les dégâts du coup, et il perd sa prochaine action). Un rival avec un sbire à ses côtés a aussi « Bouclier humain » : le sbire encaisse le coup.
 - **Interrompre** : un héros qui a retardé son action peut, pour 1 PH, agir tout de suite (bouton dans la barre de la frise).
 - **Double 6 de justesse** : si seul le double 6 pouvait toucher, le coup touche normalement, sans option gratuite ni légendaire. Il reste convertible en succès héroïque pour 1 point.
 - **Pas de légendaire depuis un succès héroïque acheté**, comme le veut le livre.
@@ -136,30 +138,26 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 ## 8. Limites connues
 
+Ce qui reste à faire est dans `doc/plans/2026-10-14-combat-reste-a-faire.md`.
+
 - Un Carnage pris deux fois doit deux attaques ; si la première rate, l'assistant ne rappelle pas la seconde.
 - La taille de l'adversaire (renversement) et l'arme tenue (désarmement) ne sont pas vérifiées.
 - Retirer une carte ne se fait que hors combat.
 - Pas d'effet libre (valeur et durée au choix) dans le menu « + Effet ».
 - Pas d'annonce vocale des effets expirés.
 
-## 9. Pistes pour la suite
-
-- Massacrer la piétaille : retirer les cartes depuis l'assistant.
-- Un script navigateur rejouable pour l'héroïsme en combat, à côté de `front/scripts/e2e-petit-bouclier.mjs`.
-- Hors périmètre à ce jour : journal complet des événements, annulation d'un coup, sorcellerie, guerre.
-
-## 10. Où c'est dans le code
+## 9. Où c'est dans le code
 
 Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 
 | Sujet | Fichiers |
 | --- | --- |
-| Jet de réaction, ordre d'action | `reaction-roll.util.ts`, `initiative.util.ts`, `play/start-combat-dialog/` |
+| Jet de réaction, ordre d'action | `reaction-roll.util.ts`, `initiative.util.ts`, `start-combat/` |
 | Calcul de l'attaque et des dégâts, options héroïques | `combat-resolution.util.ts` |
 | Statistiques de combat d'une carte | `combat-attack.util.ts` |
 | Registre d'effets | `play/tapis/combat-effects.util.ts`, `models/combat-effect.model.ts` |
 | Tours et rounds | `play/tapis/combat-turn.util.ts`, `play/etat-saver.ts` |
-| Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant.*`, `play/tapis/effects-list.ts`, `play/end-turn-dialog/`, `play/defier-la-mort-dialog/` |
+| Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant*`, `play/tapis/combattant-carte.*`, `play/tapis/effects-list.ts`, `play/end-turn-dialog/`, `play/defier-la-mort-dialog/` |
 | Page, enregistrements | `play/session-play-page.ts` |
 | Jet d'action du héros | `action-roll.util.ts`, `play/action-roll-panel/` |
 | Secours et soins | `rescue.util.ts`, `play/rescue-dialog/`, `play/after-combat-dialog/` |

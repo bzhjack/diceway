@@ -45,4 +45,3 @@ Chaque partie de la saga a un dossier (`introduction/`, `chapitre-1/` … `chapi
 - **Astrologue** : en Markdown seulement (décision de Lionel du 2026-10-23). Les PNJ astrologues prennent la carrière
   la plus proche, avec « astrologue N » en commentaire.
 
-Plan et décisions : `doc/plans/2026-10-23-integration-le-dieu-voile.md`.

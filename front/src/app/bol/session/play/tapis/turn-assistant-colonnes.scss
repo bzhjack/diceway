@@ -179,14 +179,23 @@
   gap: 0.4rem;
 }
 
-// Les réglages de la cible, en bas de sa carte : sa vie et ses points.
+// Les réglages de la cible, sur toute la largeur en bas de sa carte : sa vie et ses points, dans un creux.
 .tas-cible-regl {
   display: flex;
   flex-wrap: wrap;
+  grid-column: 1 / -1;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 0.4rem 0.6rem;
-  margin-top: auto;
+  padding: 0.3rem 0.6rem 0.35rem;
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+}
+
+// Les effets qu'elle porte, à côté de ses chiffres : plus petits, ils tiennent dans la colonne étroite.
+.tas-target .tas-pill {
+  font-size: 0.68rem;
 }
 
 // Un peu moins de largeur : les options d'un succès héroïque passent sur trois rangées, la hauteur fixe suit.
