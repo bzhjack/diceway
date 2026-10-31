@@ -10,6 +10,7 @@
 .tas {
   --tas-side: var(--dw-color-reussite);
   --tas-side-ink: #041a0d;
+  container: tas / inline-size;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -24,11 +25,6 @@
 .tas.tas--foe {
   --tas-side: var(--dw-color-echec-forte);
   --tas-side-ink: #2a0505;
-}
-
-// Ce qui pousse le reste au bout de la ligne.
-.tas-sp {
-  flex: 1;
 }
 
 // Un bouton ⓘ : un cercle, le nombre d'effets en pastille sur son coin.
@@ -65,110 +61,16 @@
   right: -0.35rem;
 }
 
-.tas-reg {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-// Une étape : son nom, puis ce qu'il faut, le jet et sa formule, le verdict, et en bout de ligne les actions ; ce qui suit (options
-// d'un succès héroïque) passe dessous, aligné sur le jet. La ligne où il faut agir s'allume ; une étape à venir s'estompe.
-.tas-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6rem 0.9rem;
-  padding: 0.65rem 1rem;
-  border: 1.5px solid var(--dw-border);
-  border-radius: 12px;
-  background: linear-gradient(90deg, #261b12, #1a120c);
-}
-
-.tas-line--cur {
-  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
-}
-
-.tas-line--todo {
-  border-style: dashed;
-  opacity: 0.6;
-}
-
-// L'attaque prend la couleur de son verdict.
-.tas-line.tas-line--reussite {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-reussite) 12%, #1a120c), #1a120c 55%);
-}
-
-.tas-line.tas-line--heroique {
-  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-legendary) 14%, #1a120c), #1a120c 55%);
-}
-
-.tas-line.tas-line--legendaire {
-  border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 70%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-succes-legendaire) 13%, #1a120c), #1a120c 55%);
-}
-
-.tas-line.tas-line--echec {
-  border-color: color-mix(in srgb, var(--dw-color-echec) 55%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec) 11%, #1a120c), #1a120c 55%);
-}
-
-// Le nom de l'étape, en colonne fixe : les jets s'alignent d'une ligne à l'autre.
-.tas-lbl {
-  flex: none;
-  width: 6.4rem;
-  font: 400 1.15rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--dw-surface-800);
-}
-
-// La case et les dés, la formule dessous.
-.tas-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-.tas-r1 {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
-
-// La cible, sous la carte de l'attaquant : la rangée des cartes à choisir, ou sa carte.
-.tas-contre {
-  display: flex;
-  flex: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.7rem;
-  min-width: 0;
-}
-
-// Ce qui passe sous la ligne (options d'un succès héroïque, note), aligné sur le jet.
-.tas-sub {
-  flex-basis: 100%;
-  padding-left: 7.3rem;
-}
-
 // Ce qu'il faut aux dés (ou la fourchette des dégâts), et dessous les chances et le nombre de dés gardés.
 .tas-goal {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  min-width: 6.6rem;
   white-space: nowrap;
 
   > b {
-    font: 400 1.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
+    font: 400 2.05rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-forge-bone);
   }
 
   > span {
@@ -190,7 +92,7 @@
 }
 
 .tas-chance--good {
-  color: var(--dw-color-reussite);
+  color: var(--dw-forge-verdict-reussite);
 }
 
 .tas-chance--mid {
@@ -198,7 +100,7 @@
 }
 
 .tas-chance--low {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
 }
 
 // Les popovers : leur titre.
@@ -267,7 +169,6 @@
 // Pas encore de cible : les cartes sur une seule ligne, qui défile ; une flèche de chaque côté quand elles débordent.
 .tas-carousel {
   display: flex;
-  flex-basis: 100%;
   align-items: center;
   gap: 0.25rem;
   min-width: 0;
@@ -315,9 +216,9 @@
   }
 }
 
-// La cible choisie (`bol-combattant-carte`) : la largeur de son contenu ; ses boutons ronds en haut à droite.
+// La cible choisie (`bol-combattant-carte`) : toute sa colonne ; ses boutons ronds en haut à droite.
 .tas-target {
-  flex: 0 1 auto;
+  flex: 1;
 }
 
 .tas-target-actions {
@@ -541,11 +442,12 @@
 
 .tas-pill {
   padding: 0.1rem 0.5rem;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 999px;
+  background: var(--dw-forge-recess);
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--dw-surface-700);
+  color: var(--dw-forge-bone);
 }
 
 .tas-fixed {
@@ -555,12 +457,10 @@
 
 .tas-note,
 .tas-wait {
-  font-size: 0.84rem;
-  color: var(--dw-surface-500);
-}
-
-.tas-wait {
-  text-align: center;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  color: var(--dw-forge-stud-text);
 }
 
 // La posture : quatre segments, de la prudence (liseré bleu) à l'audace (liseré rouge), chacun avec ce qu'il change.
@@ -615,18 +515,18 @@
 .tas-entry {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .tas-total {
-  width: 5.6rem;
-  height: 2.7rem;
+  width: 5.4rem;
+  height: 2.9rem;
   padding: 0;
-  border: 2px solid color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.45);
-  color: var(--dw-surface-900);
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 8px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: var(--dw-forge-bone);
   font: 400 1.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   text-align: center;
 
@@ -636,11 +536,11 @@
   }
 
   &::placeholder {
-    color: var(--dw-surface-500);
+    color: var(--dw-forge-stud-text);
   }
 
   &:focus {
-    border-color: var(--dw-color-legendary);
+    border-color: var(--dw-forge-hot);
   }
 }
 
@@ -651,15 +551,17 @@
   place-items: center;
   flex: none;
   padding: 0;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--dw-surface-600);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-color-legendary);
-    color: var(--dw-color-legendary);
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
   }
 
   &:disabled {
@@ -669,8 +571,14 @@
 }
 
 .tas-dice-btn {
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 2.9rem;
+  height: 2.9rem;
+
+  .mat-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+  }
 }
 
 // Dé de protection, retour à la valeur fixe, pas de la portée : petits.
@@ -686,46 +594,56 @@
 }
 
 .tas-die-note {
-  font-size: 0.78rem;
-  text-align: center;
-  color: var(--dw-surface-500);
+  flex: 1;
+  min-width: 5rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+  color: var(--dw-forge-stud-text);
 }
 
+// Le titre, les options et le détail se rangent dans `.tas-issue` : le titre et les options sur une ligne, le détail dessous.
 .tas-verdict {
-  display: grid;
-  justify-items: start;
-  align-content: center;
-  gap: 0.05rem;
-  min-width: 9rem;
-  min-height: 2.9rem;
-  text-align: left;
+  display: contents;
 
   span {
+    order: 2;
+    flex-basis: 100%;
     font-size: 0.84rem;
-    color: var(--dw-surface-600);
+    line-height: 1.25;
+    color: var(--dw-forge-bone);
+  }
+
+  .tas-wait {
+    order: 0;
+    font-size: 0.9rem;
+    color: var(--dw-forge-stud-text);
   }
 }
 
+.tas-issue > button,
+.tas-issue > .tas-acts {
+  order: 1;
+}
+
 .tas-verdict-title {
-  font: 400 1.75rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font: 400 2.1rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+  text-shadow: 0 1px 3px #000;
 }
 
 .tas-verdict-title--reussite {
-  color: var(--dw-color-reussite);
+  color: var(--dw-forge-verdict-reussite);
 }
 
 .tas-verdict-title--echec {
-  color: var(--dw-color-echec);
+  color: var(--dw-forge-verdict-echec);
 }
 
 .tas-verdict-title--heroique {
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-verdict-heroique);
 }
 
 .tas-verdict-title--legendaire {
-  color: var(--dw-color-succes-legendaire);
+  color: var(--dw-forge-verdict-legendaire);
 }
 
 // L'addition d'un jet, sur une ligne : un nombre par terme, son nom dessous ; le total à droite, derrière un filet.
@@ -742,49 +660,48 @@
   position: relative;
   display: grid;
   // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros.
-  grid-template-rows: 1.9rem auto;
+  grid-template-rows: 1.75rem auto;
   place-items: center;
   min-width: 1.7rem;
 
   b,
   .tas-sum-edit {
-    font: 400 1.4rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.35rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
     white-space: nowrap;
-    color: var(--dw-surface-900);
+    color: var(--dw-forge-bone);
   }
 
   small {
     max-width: 9rem;
-    font-size: 0.64rem;
-    font-weight: 700;
+    font-size: 0.66rem;
     line-height: 1.2;
     text-align: center;
-    color: var(--dw-surface-500);
+    color: var(--dw-forge-stud-text);
   }
 }
 
 .tas-sum-term--plus b {
-  color: var(--dw-color-reussite);
+  color: var(--dw-forge-verdict-reussite);
 }
 
 .tas-sum-term--minus b,
 .tas-sum-term--minus .tas-sum-edit {
-  color: var(--dw-color-danger-muted);
+  color: var(--dw-forge-verdict-echec);
 }
 
 .tas-sum-term--total {
-  padding-left: 0.65rem;
-  border-left: 1px solid var(--dw-border);
+  padding-left: 0.55rem;
+  border-left: 1px solid var(--dw-forge-bronze-dim);
 
   b {
-    font-size: 1.65rem;
-    color: var(--dw-color-legendary);
+    font-size: 1.6rem;
+    color: var(--dw-forge-gold);
   }
 }
 
 // Avant le jet, l'addition annonce les termes en plus pâle.
 .tas-sum--pending .tas-sum-term:not(.tas-sum-term--total) b {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 // La protection se clique pour la saisir : soulignée en pointillés.
@@ -831,7 +748,7 @@
 .tas-heroic {
   display: grid;
   justify-items: start;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 // ── L'héroïsme sur le jet d'attaque ──────────────────────────────────────────────────────────────
@@ -866,9 +783,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.35rem;
-  min-height: 1.9rem;
 }
 
 // Les dépenses d'héroïsme : des pilules pour les actions (Faveur divine, Parade…), des rectangles pour les cases à cocher
@@ -876,13 +791,15 @@
 .tas-act {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.65rem;
-  border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  gap: 0.3rem;
+  min-height: 2.3rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: var(--dw-radius-pill);
-  background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
-  color: var(--dw-color-legendary);
-  font-size: 0.82rem;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-bronze-text);
+  font-size: 0.86rem;
   font-weight: 700;
   white-space: nowrap;
 
@@ -894,7 +811,8 @@
   }
 
   &:hover {
-    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
   }
 
   &[aria-pressed] {
@@ -902,7 +820,8 @@
   }
 
   &[aria-pressed='true'] {
-    border-style: solid;
+    border-color: var(--dw-color-legendary);
+    box-shadow: none;
     background: var(--dw-color-legendary);
     color: #1c1200;
 
@@ -923,12 +842,7 @@
 // le succès héroïque et la faveur divine gardent l'or. Choisie, l'option se remplit de sa couleur.
 .tas-act.tas-act--critique {
   border-color: color-mix(in srgb, var(--dw-color-echec-forte) 65%, transparent);
-  background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
-  color: var(--dw-color-echec);
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-color-echec-forte) 20%, transparent);
-  }
+  color: var(--dw-forge-verdict-echec);
 
   &[aria-pressed='true'] {
     border-color: var(--dw-color-echec-forte);
@@ -943,12 +857,7 @@
 
 .tas-act.tas-act--legendaire {
   border-color: color-mix(in srgb, var(--dw-color-succes-legendaire) 65%, transparent);
-  background: color-mix(in srgb, var(--dw-color-succes-legendaire) 10%, transparent);
-  color: var(--dw-color-succes-legendaire);
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-color-succes-legendaire) 20%, transparent);
-  }
+  color: var(--dw-forge-verdict-legendaire);
 
   &[aria-pressed='true'] {
     border-color: var(--dw-color-succes-legendaire);
@@ -963,24 +872,23 @@
 
 // Ce que la cible oppose au coup, de ses points : son portrait sur le bouton, en rouge (elle est de l'autre côté du coup).
 .tas-act.tas-act--foe {
-  border-style: solid;
   border-color: color-mix(in srgb, var(--dw-color-echec-forte) 55%, transparent);
-  background: color-mix(in srgb, var(--dw-color-echec-forte) 8%, transparent);
-  color: var(--dw-color-danger-muted);
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-color-echec-forte) 18%, transparent);
-  }
+  color: var(--dw-forge-verdict-echec);
 }
 
 .tas-med.tas-med--face {
   width: 1.45rem;
   height: 1.45rem;
   border-width: 1.5px;
+  border-color: var(--dw-forge-verdict-echec);
+  background: var(--dw-forge-recess);
+  color: var(--dw-forge-verdict-echec);
   font-size: 0.7rem;
 }
 
 .tas-apply {
+  --mat-button-filled-container-height: 2.5rem;
+
   font-weight: 800;
 }
 

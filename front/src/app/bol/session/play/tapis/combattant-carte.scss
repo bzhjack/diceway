@@ -1,5 +1,5 @@
-// Une carte en largeur, liserée de la couleur du camp (rouge en face, vert dans le camp des héros) : le portrait à gauche, carré sur toute
-// la hauteur, fondu vers la droite ; le texte à côté.
+// Une carte en largeur, une plaque de fer liserée de la couleur du camp (rouge en face, vert dans le camp des héros) : le portrait à gauche,
+// de toute la hauteur, fondu vers la droite ; le texte à côté.
 :host {
   --cc-camp: var(--dw-color-echec-forte);
 
@@ -8,10 +8,10 @@
   align-items: stretch;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--cc-camp) 60%, transparent);
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(58, 42, 28, 0.85), rgba(26, 18, 11, 0.95));
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+  border: 1px solid color-mix(in srgb, var(--cc-camp) 55%, var(--dw-forge-bronze-edge));
+  border-radius: 7px;
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
 }
 
 :host(.cc--allie) {
@@ -56,7 +56,8 @@
   padding: 0.05rem 0.5rem;
   border-radius: 999px;
   background: rgba(15, 10, 6, 0.82);
-  color: var(--dw-surface-800);
+  box-shadow: inset 0 0 0 1px var(--dw-forge-bronze-dim);
+  color: var(--dw-forge-bone);
   font-size: 0.72rem;
   font-weight: 700;
 }
@@ -95,8 +96,9 @@
 }
 
 .cc-nom {
-  font: 400 1.2rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
-  color: var(--dw-color-text-bright);
+  font: 400 1.5rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 3px #000;
 }
 
 .cc-chance {
@@ -104,17 +106,17 @@
   font-style: normal;
   font-weight: 800;
   white-space: nowrap;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
 }
 
 // Sa vie, et en hachures rouges ce que le coup en cours va lui retirer.
 .cc-vie {
   position: relative;
   height: 5px;
-  max-width: 16rem;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(241, 230, 208, 0.15);
+  background: #000;
+  box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
 
   i,
   u {
@@ -125,7 +127,7 @@
 
   i {
     left: 0;
-    background: var(--dw-color-health);
+    background: var(--dw-forge-health);
     transition: width 0.3s;
   }
 
@@ -138,17 +140,15 @@
   background: var(--dw-color-echec);
 }
 
-// Le portrait, à gauche : un carré, de la hauteur du texte (`--cc-art`, mesurée par le composant, entre 8 et 18rem ; au-delà, l'image remplit
-// la hauteur), fondu vers la droite sous le texte.
+// Le portrait, à gauche : de la hauteur de la carte, fondu vers la droite sous le texte. Il ne dicte pas la hauteur : c'est le texte qui décide.
 .cc-art {
   position: relative;
   display: grid;
   flex: none;
   place-items: center;
-  width: var(--cc-art, 10rem);
-  min-height: var(--cc-art, 10rem);
-  margin-right: -1.5rem;
-  background: var(--dw-surface-200);
+  width: 7.2rem;
+  margin-right: -1rem;
+  background: linear-gradient(180deg, #2a1c11, #120c07);
   color: color-mix(in srgb, var(--cc-camp) 70%, var(--dw-surface-700));
   mask-image: linear-gradient(90deg, #000 72%, transparent);
 
@@ -178,9 +178,6 @@
 :host(.cc--ligne) {
   container-type: inline-size;
   border-radius: 7px;
-  background: var(--dw-forge-rivets), var(--dw-forge-plate);
-  box-shadow: var(--dw-forge-plate-shadow);
-
   .cc-body {
     display: grid;
     grid-template-columns: 9rem 16.4rem 24.6rem minmax(0, 1fr) 7.9rem;
@@ -197,10 +194,8 @@
     gap: 0.15rem;
   }
 
-  // Le portrait ne dicte pas la hauteur de la ligne : c'est elle qui décide, il la remplit.
   .cc-art {
     width: 8.5rem;
-    min-height: 0;
     margin-right: -0.5rem;
   }
 
@@ -208,27 +203,11 @@
     overflow: hidden;
     font-size: 1.3rem;
     text-overflow: ellipsis;
-    text-shadow: 0 1px 2px #000;
     white-space: nowrap;
-    color: var(--dw-forge-name);
-  }
-
-  .cc-vie {
-    background: #000;
-    box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
-  }
-
-  .cc-vie i {
-    background: var(--dw-forge-health);
-  }
-
-  .cc-vie.cc-vie--bas i {
-    background: var(--dw-color-echec);
   }
 
   .cc-rang,
   .cc-attitude {
-    box-shadow: inset 0 0 0 1px var(--dw-forge-bronze-dim);
     font-size: 0.66rem;
   }
 }

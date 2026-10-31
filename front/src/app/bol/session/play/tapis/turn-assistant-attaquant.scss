@@ -226,7 +226,8 @@
   gap: 0.25rem;
 }
 
-.tas-head .tas-tile {
+.tas-head .tas-tile,
+.tas-target .tas-tile {
   gap: 0.05rem;
   min-width: 3.1rem;
   padding: 0.12rem 0.25rem 0.18rem;
@@ -251,7 +252,8 @@
   }
 }
 
-.tas-head .tas-tile--up {
+.tas-head .tas-tile--up,
+.tas-target .tas-tile--up {
   border-color: var(--dw-forge-heat-reussite);
   box-shadow:
     var(--dw-forge-recess-shadow),
@@ -259,6 +261,20 @@
 
   b {
     color: var(--dw-forge-verdict-reussite);
+  }
+}
+
+.tas-target .tas-tile {
+  min-width: 3.9rem;
+  padding: 0.3rem 0.45rem 0.35rem;
+
+  b {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  span {
+    font-size: 0.6rem;
   }
 }
 
@@ -278,19 +294,22 @@
   text-shadow: 0 0 10px rgba(232, 80, 46, 0.6);
 }
 
-.tas-head .tas-vit {
+.tas-head .tas-vit,
+.tas-target .tas-vit {
   flex: none;
   margin: 0;
 }
 
-.tas-head .tas-tag {
+.tas-head .tas-tag,
+.tas-target .tas-tag {
   color: var(--dw-surface-700);
   font-size: 0.6rem;
   letter-spacing: 0.08em;
 }
 
 // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement. Celui du MJ, resserré à côté des tuiles.
-.tas-head dw-value-stepper ::ng-deep .vs__btn {
+.tas-head dw-value-stepper ::ng-deep .vs__btn,
+.tas-target dw-value-stepper ::ng-deep .vs__btn {
   width: 1.3rem;
   height: 1.3rem;
   border-color: var(--dw-forge-bronze-dim);
@@ -316,7 +335,8 @@
 }
 
 // Les boutons ronds : des clous de bronze, qui rougeoient au survol.
-.tas-head .tas-ib {
+.tas-head .tas-ib,
+.tas-target .tas-ib {
   border-color: var(--dw-forge-bronze-dim);
   background: var(--dw-forge-stud);
   box-shadow: var(--dw-forge-stud-shadow);

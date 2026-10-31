@@ -1,0 +1,222 @@
+// Les trois colonnes sous la ligne de qui joue : la cible, l'attaque, les dégâts. Leur hauteur est fixe, celle du contenu le plus chargé (un
+// succès héroïque avec toutes ses options) : un résultat ne fait rien bouger.
+.tas-trois {
+  --tas-h: 20.1rem;
+
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.tas-reg {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Avant de viser : les cartes des cibles prennent toute la largeur.
+.tas-trois--choix {
+  .tas-contre {
+    grid-column: 1 / -1;
+  }
+
+  .tas-reg {
+    display: none;
+  }
+}
+
+// Une étape : une plaque de fer. Son nom et ce qu'il faut ; le jet et sa formule ; le verdict ; les options d'un succès héroïque ; le bouton
+// d'or seul en bas, dans la dernière rangée, qui prend ce qui reste. La plaque où il faut agir rougeoie, une étape à venir reste en creux.
+.tas-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: repeat(4, auto) minmax(0, 1fr);
+  gap: 0.45rem 0.6rem;
+  min-width: 0;
+  min-height: var(--tas-h);
+  padding: 0.7rem 0.85rem 0.75rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+
+  > * {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  > .tas-lbl {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  > .tas-goal {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  > .tas-apply {
+    grid-row: 5;
+    align-self: end;
+    width: 100%;
+  }
+}
+
+.tas-line--cur {
+  border-color: var(--dw-forge-hot);
+  box-shadow:
+    0 0 16px -4px rgba(232, 135, 58, 0.75),
+    var(--dw-forge-plate-shadow);
+}
+
+.tas-line--todo {
+  border-style: dashed;
+  border-color: var(--dw-forge-bronze-dim);
+  background: rgba(10, 6, 4, 0.55);
+  box-shadow: none;
+
+  .tas-lbl {
+    color: var(--dw-forge-stud-text);
+  }
+}
+
+// L'attaque prend la couleur de son verdict.
+.tas-line.tas-line--reussite,
+.tas-line.tas-line--heroique,
+.tas-line.tas-line--legendaire,
+.tas-line.tas-line--echec {
+  border: 1.5px solid color-mix(in srgb, var(--heat) 62%, var(--dw-forge-bronze-edge));
+  background:
+    var(--dw-forge-rivets),
+    linear-gradient(90deg, color-mix(in srgb, var(--heat) 20%, transparent), transparent 55%),
+    var(--dw-forge-plate);
+  box-shadow:
+    0 0 16px -5px var(--heat),
+    var(--dw-forge-plate-shadow);
+}
+
+.tas-line.tas-line--reussite {
+  --heat: var(--dw-forge-heat-reussite);
+}
+
+.tas-line.tas-line--heroique {
+  --heat: var(--dw-forge-heat-heroique);
+}
+
+.tas-line.tas-line--legendaire {
+  --heat: var(--dw-forge-heat-legendaire);
+}
+
+.tas-line.tas-line--echec {
+  --heat: var(--dw-forge-heat-echec);
+}
+
+// Le nom de l'étape.
+.tas-lbl {
+  font: 400 1.25rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 3px #000;
+}
+
+// La case et les dés, la formule dessous.
+.tas-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.tas-r1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+// Le verdict, en grand, et à sa droite ce qu'on peut y changer ; son détail dessous.
+.tas-issue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  min-height: 2.5rem;
+}
+
+// La colonne de la cible.
+.tas-contre {
+  display: flex;
+  min-width: 0;
+  min-height: var(--tas-h);
+}
+
+// Le choix de la cible, et ce qui en tient lieu quand il n'y a rien à choisir : une plaque.
+.tas-choix,
+.tas-played,
+.tas-contre > .tas-note {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 0.85rem 0.75rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+}
+
+// Le nom en haut, les cartes au milieu de ce qui reste.
+.tas-choix {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.4rem;
+}
+
+// Les réglages de la cible, en bas de sa carte : sa vie et ses points.
+.tas-cible-regl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.6rem;
+  margin-top: auto;
+}
+
+// Un peu moins de largeur : les options d'un succès héroïque passent sur trois rangées, la hauteur fixe suit.
+@container tas (max-width: 77rem) {
+  .tas-trois {
+    --tas-h: 22.2rem;
+  }
+}
+
+// Moins de place : la cible au-dessus de l'attaque et des dégâts, puis tout l'un sous l'autre.
+@container tas (max-width: 66rem) {
+  .tas-trois {
+    --tas-h: 20.1rem;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tas-contre {
+    grid-column: 1 / -1;
+    min-height: 0;
+  }
+}
+
+@container tas (max-width: 44rem) {
+  .tas-trois,
+  .tas-reg {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tas-reg {
+    grid-column: 1 / -1;
+  }
+}

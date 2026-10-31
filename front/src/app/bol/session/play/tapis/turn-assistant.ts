@@ -59,6 +59,7 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
+import {EMPTY_AVATAR} from '../../combat-play.util';
 import {CombattantCarteComponent} from './combattant-carte';
 import {ActeurComponent} from '../theatre/acteur';
 import {parFiche} from '../theatre/theatre.util';
@@ -253,7 +254,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
     ReactiveFormsModule,
   ],
   templateUrl: './turn-assistant.html',
-  styleUrls: ['./turn-assistant.scss', './turn-assistant-attaquant.scss'],
+  styleUrls: ['./turn-assistant.scss', './turn-assistant-colonnes.scss', './turn-assistant-attaquant.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TurnAssistantComponent {
@@ -1609,6 +1610,17 @@ export class TurnAssistantComponent {
   }
 
   /** La ligne des cartes de cible déborde-t-elle, et peut-elle défiler vers la gauche ou la droite : les flèches s'affichent et se grisent. */
+  /** Le portrait de la cible, sur ses boutons de réaction ; sans portrait, son initiale. */
+  protected readonly targetPortrait = computed(() => {
+    const avatar = this.target()?.avatar;
+    return avatar && avatar !== EMPTY_AVATAR ? avatar : null;
+  });
+
+  /** Il reste à choisir qui viser : les cartes des cibles prennent toute la largeur, l'attaque et les dégâts attendent. */
+  protected readonly choixCible = computed(
+    () => !this.played() && !this.target() && this.targets().length > 0 && !this.defenseTotale() && !this.actionPerdue(),
+  );
+
   protected readonly canScrollPrev = signal(false);
   protected readonly canScrollNext = signal(false);
   protected readonly picksOverflow = computed(() => this.canScrollPrev() || this.canScrollNext());

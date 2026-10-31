@@ -297,6 +297,8 @@
     </div>
   </bol-combattant-carte>
 
+  <!-- Trois colonnes : la cible, l'attaque, les dégâts. Avant de viser, les cartes des cibles prennent toute la largeur. -->
+  <div class="tas-trois" [class.tas-trois--choix]="choixCible()">
   <!-- La cible : avant de viser, une carte par cible sur une ligne (un clic la choisit) ; choisie, il ne reste que sa carte, portrait à gauche,
        avec ses chiffres, sa vie réglable, ses effets, sa fiche, et « Changer d’adversaire » qui ramène la rangée. Le coup joué reste écrit,
        figé, jusqu'à la fin du tour. -->
@@ -313,16 +315,6 @@
               <span>{{ tile.label }}</span>
             </div>
           }
-          <div class="tas-vit">
-            <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
-            <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
-          </div>
-          @if (pointsCible(); as pts) {
-            <div class="tas-vit">
-              <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
-              <span class="tas-tag">{{ pts.titre }}</span>
-            </div>
-          }
         </div>
         @if (targetBadges().length > 0) {
           <ul class="tas-pills" aria-label="Effets sur la cible">
@@ -334,9 +326,21 @@
         @if (played() && playedTargetOut()) {
           <span class="tas-pill">hors de combat</span>
         }
+        <div class="tas-cible-regl">
+          <div class="tas-vit">
+            <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
+            <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
+          </div>
+          @if (pointsCible(); as pts) {
+            <div class="tas-vit">
+              <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
+              <span class="tas-tag">{{ pts.titre }}</span>
+            </div>
+          }
+        </div>
         <div ccActions class="tas-target-actions">
           <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="sheetRequested.emit(t)">
-            <mat-icon>description</mat-icon>
+            <mat-icon svgIcon="gi-sheet" />
           </button>
           @if (!played()) {
             <button type="button" class="tas-ib" aria-label="Changer d’adversaire" matTooltip="Changer d’adversaire" (click)="changeTarget()">
@@ -359,6 +363,8 @@
     @if (!played() && !target() && targets().length > 0) {
       <!-- Pas encore de cible : une carte portrait par cible (celle du Théâtre, en petit), sur une seule ligne, les exemplaires d'une même
            fiche côte à côte ; ses chances dessous ; un clic la choisit. Quand elles débordent, une flèche de chaque côté les fait défiler. -->
+      <div class="tas-choix">
+      <span class="tas-lbl">Quelle cible ?</span>
       <div class="tas-carousel">
         @if (picksOverflow()) {
           <button
@@ -403,6 +409,7 @@
           </button>
         }
       </div>
+      </div>
     }
   </section>
 
@@ -438,12 +445,13 @@
             }
           </span>
         </span>
-        <span class="tas-verdict">
-          <b [class]="'tas-verdict-title tas-verdict-title--' + p.verdict.tone">{{ p.verdict.title }}</b>
-          <span>{{ p.picks ?? p.verdict.detail }}</span>
-        </span>
-        <span class="tas-sp"></span>
-        <button mat-stroked-button type="button" matTooltip="Pour un combattant qui frappe plusieurs fois par round" (click)="newAttack()">Autre attaque</button>
+        <div class="tas-issue">
+          <span class="tas-verdict">
+            <b [class]="'tas-verdict-title tas-verdict-title--' + p.verdict.tone">{{ p.verdict.title }}</b>
+            <span>{{ p.picks ?? p.verdict.detail }}</span>
+          </span>
+          <button mat-stroked-button type="button" matTooltip="Pour un combattant qui frappe plusieurs fois par round" (click)="newAttack()">Autre attaque</button>
+        </div>
       } @else if (attackGoal(); as goal) {
         <span class="tas-goal" [matTooltip]="armeFavoriteNote() ?? ''">
           <b>{{ goal.big }}</b>
@@ -472,7 +480,7 @@
                 (blur)="restoreInput(attackInput, diceSum())"
               />
               <button type="button" class="tas-dice-btn" [disabled]="rolling()" [attr.aria-label]="'Lancer ' + diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + diceCount() + 'd6 à l’écran'" (click)="roll()">
-                <mat-icon>casino</mat-icon>
+                <mat-icon svgIcon="gi-dice" />
               </button>
             </span>
             <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
@@ -489,6 +497,7 @@
             }
           </span>
         </span>
+        <div class="tas-issue">
         <span class="tas-verdict" aria-live="polite">
           @if (rolling()) {
             <span class="tas-wait">Les dés roulent…</span>
@@ -499,7 +508,6 @@
             <span class="tas-wait">Tape le total, ou lance à l’écran.</span>
           }
         </span>
-        <span class="tas-sp"></span>
         <!-- L'héroïsme de l'attaquant sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire -->
         <span class="tas-acts">
           @if (!rolling()) {
@@ -510,7 +518,7 @@
             }
             @if (canFavor()) {
               <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + unPointAttaquant()" (click)="divineFavor()">
-                <mat-icon aria-hidden="true">replay</mat-icon> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+                <mat-icon svgIcon="gi-reroll" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
               </button>
             }
             @if (canLegendary()) {
@@ -525,6 +533,7 @@
             }
           }
         </span>
+        </div>
         @if (picksMax() > 0) {
           <div class="tas-sub tas-heroic" role="group" [attr.aria-label]="picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
             <span class="tas-label" [class.tas-label--gold]="picksMax() === 1" [class.tas-label--red]="picksMax() > 1">{{ picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
@@ -580,7 +589,7 @@
                 />
                 @if (!specialDamage()) {
                   <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="rollDamage()">
-                    <mat-icon>casino</mat-icon>
+                    <mat-icon svgIcon="gi-dice" />
                   </button>
                 }
               </span>
@@ -611,7 +620,7 @@
                     <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.value }}</button>
                     @if (protectionDie()) {
                       <button type="button" class="tas-mini" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
-                        <mat-icon>casino</mat-icon>
+                        <mat-icon svgIcon="gi-dice" />
                       </button>
                     }
                     @if (protectionFace() !== null || protectionManual() !== null) {
@@ -631,6 +640,7 @@
             }
           </span>
         </span>
+        <div class="tas-issue">
         <span class="tas-verdict" aria-live="polite">
           @if (damage(); as d) {
             <b class="tas-verdict-title">{{ d }} {{ d > 1 ? 'dégâts' : 'dégât' }}</b>
@@ -642,7 +652,6 @@
             <span class="tas-wait">Tape le dé, ou lance à l’écran.</span>
           }
         </span>
-        <span class="tas-sp"></span>
         <span class="tas-acts">
           @if (canParry()) {
             <button
@@ -653,7 +662,7 @@
               (click)="parry()"
             >
               <ng-container *ngTemplateOutlet="targetFace" />
-              <mat-icon aria-hidden="true">shield</mat-icon> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
+              <mat-icon svgIcon="gi-shield" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
             </button>
           }
           @if (canHumanShield()) {
@@ -665,25 +674,25 @@
               (click)="humanShield()"
             >
               <ng-container *ngTemplateOutlet="targetFace" />
-              <mat-icon aria-hidden="true">groups</mat-icon> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
+              <mat-icon svgIcon="gi-group" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
             </button>
           }
-          @if (damage() !== null) {
-            <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
-          }
         </span>
+        </div>
+        @if (damage() !== null) {
+          <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
+        }
       } @else if (attackVerdict(); as v) {
         <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
         @if (v.tone === 'echec') {
           <span class="tas-wait">Pas de dégâts : le coup est raté.</span>
-          <span class="tas-sp"></span>
           <button #endButton mat-flat-button type="button" class="tas-apply" (click)="requestEndTurn()">Fin du tour</button>
         } @else {
           <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
-          <span class="tas-sp"></span>
           <button #endButton mat-flat-button type="button" class="tas-apply" (click)="concludeWithoutDamage()">{{ carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
         }
       } @else if (hitSummary(); as hit) {
+        <div class="tas-issue">
         <span class="tas-verdict" aria-live="polite">
           <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.title }}</b>
           <span>{{ hit.detail }}</span>
@@ -691,7 +700,6 @@
             <span>{{ hit.scratch }}</span>
           }
         </span>
-        <span class="tas-sp"></span>
         <span class="tas-acts">
           @if (canScratch()) {
             @if (scratching()) {
@@ -711,7 +719,7 @@
                   (keydown.escape)="cancelScratch($event)"
                 />
                 <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de l’égratignure à l’écran" matTooltip="Lancer le dé de l’égratignure à l’écran" (click)="rollScratch()">
-                  <mat-icon>casino</mat-icon>
+                  <mat-icon svgIcon="gi-dice" />
                 </button>
               </span>
               <small class="tas-die-note">Juste une égratignure : d6B de vitalité rendue</small>
@@ -730,25 +738,38 @@
               </button>
             }
           }
-          @if (carnageOwed() > 0) {
-            <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
-          } @else {
-            <button #endButton mat-flat-button type="button" class="tas-apply" (click)="requestEndTurn()">Fin du tour</button>
-          }
         </span>
+        </div>
+        @if (carnageOwed() > 0) {
+          <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
+        } @else {
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="requestEndTurn()">Fin du tour</button>
+        }
       } @else {
+        <!-- Avant le coup, ce que l'arme peut faire à cette cible : la colonne annonce la fourchette. -->
+        @if (target() && !defenseTotale() && !actionPerdue()) {
+          <span class="tas-sum tas-sum--pending" aria-label="Calcul des dégâts à venir">
+            @for (term of damageSum(); track $index) {
+              <span class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
+                <b>{{ term.value }}</b>
+                <small>{{ term.caption }}</small>
+              </span>
+            }
+          </span>
+        }
         <span class="tas-wait">{{ defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
       }
     </li>
   </ol>
+  </div>
 </div>
 
 <!-- Le portrait de la cible, sur ses boutons de réaction : c'est elle qui décide, et qui paie de ses points -->
 <ng-template #targetFace>
   @if (target(); as t) {
     <span class="tas-med tas-med--face" aria-hidden="true">
-      @if (t.avatar) {
-        <img dwAvatarFallback [src]="t.avatar" alt="" />
+      @if (targetPortrait(); as portrait) {
+        <img dwAvatarFallback [src]="portrait" alt="" />
       } @else {
         {{ t.nom.charAt(0).toUpperCase() }}
       }

@@ -1,4 +1,4 @@
-import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, linkedSignal, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
@@ -17,7 +17,7 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
         <span class="cc-initiale">{{ initiale() }}</span>
       }
     </div>
-    <div #body class="cc-body">
+    <div class="cc-body">
       <header class="cc-head">
         <div class="cc-top">
           <span class="cc-tags">
@@ -48,7 +48,6 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
     '[class.cc--ligne]': 'ligne()',
     '[class.cc--allie]': "card().camp === 'heros'",
     '[class.cc--tombe]': 'tombe()',
-    '[style.--cc-art.px]': 'artSize()',
   },
 })
 export class CombattantCarteComponent {
@@ -59,23 +58,6 @@ export class CombattantCarteComponent {
   readonly perte = input(0);
   /** Celui qui joue : tout sur une ligne, en plaque de fer ; ce que la page y projette se range par zones (`combattant-carte.scss`). */
   readonly ligne = input(false);
-
-  /** Le côté du portrait carré, en px : la hauteur du texte, entre 8 et 18rem ; `null` avant la première mesure (la valeur du style). */
-  protected readonly artSize = signal<number | null>(null);
-  private readonly body = viewChild.required<ElementRef<HTMLElement>>('body');
-
-  constructor() {
-    const destroyRef = inject(DestroyRef);
-    afterNextRender(() => {
-      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-      const observer = new ResizeObserver(([entry]) => {
-        const height = entry.borderBoxSize?.[0]?.blockSize ?? entry.target.getBoundingClientRect().height;
-        this.artSize.set(Math.round(Math.min(18 * rem, Math.max(8 * rem, height))));
-      });
-      observer.observe(this.body().nativeElement);
-      destroyRef.onDestroy(() => observer.disconnect());
-    });
-  }
 
   /** Le portrait n'a pas pu se charger : repli sur l'initiale (à nouveau tenté pour une autre carte). */
   protected readonly avatarFailed = linkedSignal({source: () => this.card().key, computation: () => false});
