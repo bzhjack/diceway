@@ -61,12 +61,28 @@ class BolFightSessionService
         return BolFightSession::with($this->relations())->where('id', $id)->first();
     }
 
-    public function getSessionsWithRelations(string $userId)
+    /** Les sessions d'un compte pour une liste (accueil, bibliothèque) : ni table ni portraits, seulement les effectifs de chaque camp. */
+    public function getSessionSummaries(string $userId)
     {
-        return BolFightSession::with($this->relations())
-            ->where('user_id', $userId)
+        $relations = ['heros', 'pnjs', 'creatures', 'demons'];
+        $counts = [];
+        foreach ($relations as $relation) {
+            $counts["$relation as {$relation}_heros"] = fn ($rows) => $rows->where('camp', 'heros');
+            $counts["$relation as {$relation}_adversaires"] = fn ($rows) => $rows->where('camp', 'adversaires');
+        }
+
+        return BolFightSession::where('user_id', $userId)
+            ->select(['id', 'titre', 'statut'])
+            ->withCount($counts)
             ->orderByDesc('created_at')
-            ->get();
+            ->get()
+            ->map(fn (BolFightSession $session) => [
+                'id'                => $session->id,
+                'titre'             => $session->titre,
+                'statut'            => $session->statut,
+                'heros_count'       => array_sum(array_map(fn ($relation) => $session->{"{$relation}_heros"}, $relations)),
+                'adversaires_count' => array_sum(array_map(fn ($relation) => $session->{"{$relation}_adversaires"}, $relations)),
+            ]);
     }
 
     /** Résultat du jet de réaction d'un héros pour cette session (null pour effacer). */

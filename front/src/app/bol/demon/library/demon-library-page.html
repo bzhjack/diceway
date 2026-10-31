@@ -7,7 +7,7 @@
       title="Bestiaire des démons"
       description="Accès rapide à tous les démons disponibles dans la bibliothèque Barbarians of Lemuria."
       color="rose"
-      image="/assets/bol/header-demons.png"
+      image="/assets/bol/header-demons.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalDemonCount() }} démons</dw-tag>
@@ -17,17 +17,17 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button size="small" routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
+          <button mat-flat-button routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
             <mat-icon>add</mat-icon> Créer un démon
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/creatures">
+          <button mat-stroked-button routerLink="/library/creatures">
             <mat-icon svgIcon="gi-paw" /> Voir les créatures
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+          <button mat-stroked-button routerLink="/library/pnjs">
             <mat-icon svgIcon="gi-masks" /> Voir les PNJ
           </button>
         </div>
-        <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
+        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
         </button>
       </ng-container>
@@ -42,7 +42,6 @@
         [(searchTerm)]="searchTerm"
         [(checked)]="onlyCreations"
         (cleared)="clearFilters()"
-        style="--dw-lt-border: #3f3f46"
       >
         <mat-form-field dwToolbarFilter class="demon-categorie-field" subscriptSizing="dynamic">
           <mat-icon matPrefix>filter_list</mat-icon>

@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Diceway** is a role-playing game companion app for **Barbarians of Lemuria (BoL)**. It supports character creation, creature/demon/NPC management, and live game sessions.
 
 - **Frontend**: Angular 22 app in `/front/`
-- **Backend**: Laravel 12 REST API in `/backend/`
+- **Backend**: Laravel 13 REST API in `/backend/`
 - Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown)
 
 
@@ -117,14 +117,15 @@ When a task touches game rules, character creation, equipment, careers, language
 
 ### UI toolkit
 - **Angular Material only** — the app has fully migrated off PrimeNG (no `primeng`/`primeicons` dependency, no `p-*` element anywhere in `front/src/app/`). Use `mat-flat-button`/`mat-stroked-button`/`mat-icon-button` etc., not PrimeNG component names or `pi-*` icons.
-- For buttons, prefer component inputs/attributes (`mat-flat-button`, `mat-stroked-button`, `size="small"`, `color`) and CSS on container wrappers over ad-hoc inline styling.
+- For buttons, prefer component attributes (`mat-flat-button`, `mat-stroked-button`, `color`) and CSS on container wrappers over ad-hoc inline styling. Material buttons have no `size` input.
 - Small anchored popups (e.g. a menu triggered by an icon button) use `MatMenuModule` (`mat-menu` + `[matMenuTriggerFor]`) — see `bol/shared/add-menu/` for the reference pattern.
 - Custom cross-page primitives live under `front/src/app/shared/` (`dw-tag`, `dw-badge`, `dw-panel`, `dw-collapsible-row`, `dw-confirm-dialog`, `dw-statblock-dialog`, `dw-library-header`, `dw-library-toolbar`, …) — reuse these before inventing a new one.
 
 ### Theming
 - Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
 - `MatFormField` app-wide defaults (`appearance: 'outline'`, `floatLabel: 'always'`) are set via `MAT_FORM_FIELD_DEFAULT_OPTIONS` in `front/src/app/app.config.ts` — don't re-set `appearance="outline"` on individual `<mat-form-field>` elements.
-- Visual/dark-fantasy tokens (`--dw-surface-0` … `--dw-surface-900`, `--dw-border`, `--dw-color-reussite`/`echec`/`echec-forte`/`legendary`/`pnj`/`creature`/`demon`) are defined in `front/src/styles/_tokens.scss` — single fixed dark palette, no light/dark toggle. Display font `'Muse Display Harmony'` and body font `'Muse Sans'` are self-hosted (`front/src/styles/_fonts.scss`, files in `front/src/assets/fonts/`).
+- Visual/dark-fantasy tokens (`--dw-surface-0` … `--dw-surface-900`, `--dw-border`, `--dw-color-reussite`/`echec`/`echec-forte`/`legendary`/`pnj`/`creature`/`demon`, and the forge look `--dw-forge-*`) are defined in `front/src/styles/_tokens.scss` — single fixed dark palette, no light/dark toggle.
+- The forge is the look of every page: `dw-page` goes with `dw-forge-page` (`front/src/styles/_forge-page.scss`), which also restyles the Material components and overlays on those pages. Display font `'Muse Display Harmony'` and body font `'Muse Sans'` are self-hosted (`front/src/styles/_fonts.scss`, files in `front/src/assets/fonts/`).
 
 ### Library pages
 
@@ -132,7 +133,7 @@ Every library page (list of entities) follows this structure:
 
 1. **Header** — `<dw-library-header [title]="…" [description]="…" [color]="…" [image]="…">`:
    - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
-   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à la table</button>` (`/` redirige vers la session ouverte, ou affiche le seuil s'il n'y en a pas).
+   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button`; right side — `<button mat-stroked-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à la table</button>` (`/` redirige vers la session ouverte, ou affiche le seuil s'il n'y en a pas).
 
 2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 
@@ -143,8 +144,9 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 
 ## Backend architecture (`backend/`)
 
-- **RESTful API** — 150+ routes in `routes/api.php`, grouped under `sanctum` auth middleware.
+- **RESTful API** — about 100 routes in `routes/api.php`, grouped under `sanctum` auth middleware.
+- **Ownership** — `app/Policies/Bol/` and the `accessibleTo` scope: another account's sheet answers 404; the public catalogue (`user_id` null) is readable by all and writable by nobody; never take `user_id` from the request.
 - **Service layer** — business logic in `app/Http/Services/Bol/`, not in controllers.
-- **Eloquent models** — in `app/Models/Bol/`. Primary entities: `BolHeros`, `BolCreature`, `BolDemon`, `BolPnj`, `BolScenario`.
+- **Eloquent models** — in `app/Models/Bol/`. Primary entities: `BolHeros` (an NPC is a `BolHeros` whose `type` is not `H`; there is no `BolPnj`), `BolCreature`, `BolDemon`, `BolScenario`, `BolFightSession`.
 - **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
-- **Note** — `DatabaseSeeder.php` does not call the 19 seeders; reference data requires manual population.
+- **Note** — `DatabaseSeeder.php` does not call the 21 other seeders; reference data requires manual population.

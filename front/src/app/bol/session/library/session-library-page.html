@@ -15,11 +15,11 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button size="small" routerLink="/session/new">
+          <button mat-flat-button routerLink="/session/new">
             <mat-icon>add</mat-icon> Nouvelle session
           </button>
         </div>
-        <button mat-stroked-button size="small" routerLink="/">
+        <button mat-stroked-button routerLink="/">
           <mat-icon svgIcon="gi-return" /> Retour à la table
         </button>
       </ng-container>
@@ -42,20 +42,20 @@
       </div>
 
       <div class="cl-list">
-        @for (item of filteredSummaries(); track item.session.id) {
+        @for (session of filteredSessions(); track session.id) {
           <div class="cl-row">
             <div class="cl-row-main">
-              <p class="cl-row-title">{{ item.session.titre || 'Session sans titre' }}</p>
-              <p class="cl-row-meta">{{ item.heroesCount }} héros · {{ item.adversairesCount }} adversaires</p>
+              <p class="cl-row-title">{{ session.titre || 'Session sans titre' }}</p>
+              <p class="cl-row-meta">{{ session.heros_count }} héros · {{ session.adversaires_count }} adversaires</p>
             </div>
             <div class="cl-row-actions">
-              <button mat-flat-button size="small" [routerLink]="['/session', item.session.id, 'play']">
+              <button mat-flat-button [routerLink]="['/session', session.id, 'play']">
                 <mat-icon>play_arrow</mat-icon> Reprendre
               </button>
               <button
                 mat-icon-button
-                (click)="askDelete(item.session)"
-                [attr.aria-label]="'Supprimer ' + (item.session.titre || 'cette session')"
+                (click)="askDelete(session)"
+                [attr.aria-label]="'Supprimer ' + (session.titre || 'cette session')"
               >
                 <mat-icon svgIcon="gi-trash" />
               </button>

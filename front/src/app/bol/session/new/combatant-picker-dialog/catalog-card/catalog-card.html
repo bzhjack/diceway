@@ -6,7 +6,7 @@
     [attr.aria-label]="'Voir le statbloc de ' + entry().nom"
     (click)="openStatblock()"
   >
-    <img dwAvatarFallback [src]="entry().avatar" [alt]="entry().nom" class="cpd-avatar" />
+    <img dwAvatarFallback loading="lazy" [src]="entry().avatar" [alt]="entry().nom" class="cpd-avatar" />
   </button>
   <div class="cpd-info">
     <p class="cpd-name">

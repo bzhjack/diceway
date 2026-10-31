@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {catchError, concatMap, EMPTY, forkJoin, from, map, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, last, map, Observable, of, switchMap, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -44,6 +44,8 @@ import {ReserveComponent} from './reserve/reserve';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
 import {ExpandedHeroData} from '../models/expanded-card.model';
 import {ExpandedCardDialogData} from '../models/expanded-card-dialog.model';
+import {TableChange} from '../models/table-change.model';
+import {applyTableChange} from './table-change.util';
 import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
@@ -568,7 +570,7 @@ export class SessionPlayPageComponent {
         }),
       )
       .subscribe({
-        next: () => this.loadSession(sessionId),
+        next: (session) => this.session.set(session),
         error: (error: unknown) => {
           this.loadSession(sessionId);
           this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {duration: 5000});
@@ -637,6 +639,11 @@ export class SessionPlayPageComponent {
     }
   }
 
+  /** Un réglage de la table vient d'être enregistré : la session suit, sans nouvelle requête. */
+  protected onTableChanged(change: TableChange): void {
+    this.session.update((session) => applyTableChange(session, change));
+  }
+
   /** Une scène a été chargée, enregistrée, renommée ou supprimée : la table a pu changer du tout au
    * tout, la carte dépliée est repliée avant de recharger la session. */
   protected onSceneChanged(): void {
@@ -701,12 +708,12 @@ export class SessionPlayPageComponent {
       from(cards)
         .pipe(
           concatMap((card) => this.fightSessionService.removeCombatant(sessionId, card.kind, card.pivotId)),
-          toArray(),
+          last(),
         )
         .subscribe({
-          next: () => {
+          next: (session) => {
             this.selectedKeys.set(new Set());
-            this.loadSession(sessionId);
+            this.session.set(session);
           },
           error: (error: unknown) => {
             this.loadSession(sessionId);
@@ -737,7 +744,7 @@ export class SessionPlayPageComponent {
       hero: this.expandedHero,
       statblock: this.expandedStatblock,
       returnUrl: this.returnUrl,
-      changed: () => this.reloadSession(),
+      changed: (change) => this.onTableChanged(change),
       remove: (card) => this.askRemoveCard(card),
       toggleArmure: (event) => this.onArmureToggled(event),
       toggleArme: (event) => this.onArmeToggled(event),
@@ -878,7 +885,7 @@ export class SessionPlayPageComponent {
       }
 
       this.fightSessionService.removeCombatant(sessionId, card.kind, card.pivotId).subscribe({
-        next: () => this.loadSession(sessionId),
+        next: (session) => this.session.set(session),
         error: (error: unknown) => this.tableError(error, 'Impossible de retirer ce personnage.'),
       });
     });
@@ -894,7 +901,7 @@ export class SessionPlayPageComponent {
     this.fightSessionService
       .setCamp(sessionId, card.kind, card.pivotId, card.camp === 'heros' ? 'adversaires' : 'heros')
       .subscribe({
-        next: () => this.loadSession(sessionId),
+        next: (session) => this.session.set(session),
         error: (error: unknown) => this.tableError(error, 'Impossible de changer ce personnage de camp.'),
       });
   }
@@ -947,7 +954,7 @@ export class SessionPlayPageComponent {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
   }
 
-  /** Enregistre l'état du combat en série (cf. `EtatSaver`), puis recharge la session : l'affichage suit toujours la base. */
+  /** Enregistre l'état du combat en série (cf. `EtatSaver`) ; la réponse porte la session à jour : l'affichage suit la base. */
   private readonly etatSaver = new EtatSaver(
     () => this.etat(),
     (next) => {
@@ -957,13 +964,9 @@ export class SessionPlayPageComponent {
       }
       return this.fightSessionService
         .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus], deMj: next.deMj})
-        .pipe(
-          switchMap(() => this.fightSessionService.fightSession(sessionId)),
-          tap((session) => this.session.set(session)),
-          take(1),
-        );
+        .pipe(tap((session) => this.session.set(session)));
     },
-    (error) => this.tableError(error, "Impossible d'enregistrer ou de recharger l'état du combat."),
+    (error) => this.tableError(error, "Impossible d'enregistrer l'état du combat."),
   );
 
   private saveEtat(update: (etat: EtatCombat) => EtatCombat, options?: {readonly ignoreIfBusy?: boolean}): boolean {
@@ -1063,7 +1066,7 @@ export class SessionPlayPageComponent {
     const sessionId = this.sessionId();
     if (sessionId && refund !== 0) {
       this.fightSessionService.applyDamage(sessionId, 'hero', card.pivotId, refund).subscribe({
-        next: () => this.loadSession(sessionId),
+        next: (session) => this.session.set(session),
         error: (error: unknown) => this.tableError(error, 'Impossible de rendre la vitalité perdue.'),
       });
     }
@@ -1359,8 +1362,8 @@ export class SessionPlayPageComponent {
     }
 
     this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
-      next: () => {
-        this.loadSession(sessionId);
+      next: (session) => {
+        this.session.set(session);
 
         const before = target.vitaliteCourante ?? 0;
         const newVitalite = before + delta;
@@ -1455,13 +1458,13 @@ export class SessionPlayPageComponent {
             qty: command.qty,
           })
           .subscribe({
-            next: () => {
+            next: (session) => {
               const message =
                 command.qty > 1
                   ? `${command.qty} × ${command.nom} posés sur la table.`
                   : `${command.nom} posé sur la table.`;
               this.snackBar.open(message, undefined, {duration: 2000});
-              this.loadSession(sessionId);
+              this.session.set(session);
             },
             error: (error: unknown) => this.paletteError(error, 'Impossible de poser ce personnage.'),
           });

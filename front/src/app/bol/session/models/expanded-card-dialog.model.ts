@@ -1,6 +1,7 @@
 import {Signal} from '@angular/core';
 import {BolStatblockData} from '../../shared/models/bol-statblock.model';
 import {ExpandedHeroData} from './expanded-card.model';
+import {TableChange} from './table-change.model';
 import {TapisCard} from './tapis.model';
 
 /** Ce que la page donne au dialogue de la carte : l'état de la carte ouverte (des signaux, pour qu'il suive
@@ -12,7 +13,7 @@ export interface ExpandedCardDialogData {
   readonly hero: Signal<ExpandedHeroData | null>;
   readonly statblock: Signal<BolStatblockData | null>;
   readonly returnUrl: Signal<string | null>;
-  readonly changed: () => void;
+  readonly changed: (change: TableChange) => void;
   readonly remove: (card: TapisCard) => void;
   readonly toggleArmure: (event: {card: TapisCard; armureId: number}) => void;
   readonly toggleArme: (event: {card: TapisCard; armeId: number}) => void;

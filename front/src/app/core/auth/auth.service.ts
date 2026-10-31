@@ -13,7 +13,7 @@ import {
   RegisterPayload,
   RegisterResponse,
   ResetPasswordPayload,
-} from './auth.models';
+} from '../models/auth.model';
 import {googleAuthConfig} from './auth.config';
 
 @Injectable({ providedIn: 'root' })

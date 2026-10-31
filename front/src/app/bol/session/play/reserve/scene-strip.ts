@@ -53,10 +53,10 @@ import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
     </ul>
 
     <div class="scs-actions">
-      <button mat-flat-button size="small" type="button" [disabled]="busy() || loading()" (click)="saveTable()">
+      <button mat-flat-button type="button" [disabled]="busy() || loading()" (click)="saveTable()">
         <mat-icon>save</mat-icon> Enregistrer la table
       </button>
-      <button mat-stroked-button size="small" type="button" [disabled]="loading()" (click)="manage()">
+      <button mat-stroked-button type="button" [disabled]="loading()" (click)="manage()">
         <mat-icon>tune</mat-icon> Gérer les scènes
       </button>
     </div>

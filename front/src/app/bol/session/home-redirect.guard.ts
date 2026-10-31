@@ -6,7 +6,7 @@ import {BolFightSessionService} from '../services/bol-fight-session.service';
 
 /** Id de la session ouverte (`libre` ou `combat`) la plus récente — la liste est déjà triée par date
  * décroissante côté backend. `null` s'il n'y en a aucune. */
-export function openSessionId(sessions: readonly BolFightSessionModel[]): string | null {
+export function openSessionId(sessions: readonly Pick<BolFightSessionModel, 'id' | 'statut'>[]): string | null {
   const open = sessions.find((s) => (s.statut === 'libre' || s.statut === 'combat') && !!s.id);
   return open?.id ?? null;
 }

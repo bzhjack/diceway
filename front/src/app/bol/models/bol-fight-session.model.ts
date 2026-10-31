@@ -53,6 +53,16 @@ export interface BolFightSessionModel {
   pnjs?: BolFightSessionPnjModel[];
 }
 
+/** Une session dans une liste : sans sa table ni ses portraits, seulement ce qu'il faut pour la reconnaître et la rouvrir. */
+export interface BolFightSessionSummaryModel {
+  id: string;
+  titre: string | null;
+  statut: BolFightSessionStatut;
+  /** Héros et alliés à la table. */
+  heros_count: number;
+  adversaires_count: number;
+}
+
 /** Un héros posé à la table (ligne de liaison avec la session) : son camp, son jet de réaction, sa vitalité
  * de session et sa fiche. */
 export interface BolFightSessionHerosModel {

@@ -36,10 +36,10 @@
           </div>
 
           <div class="library-header-actions flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <button mat-flat-button size="small" routerLink="/library/heroes">
+            <button mat-flat-button routerLink="/library/heroes">
               <mat-icon svgIcon="gi-group" /> Ouvrir la bibliothèque des héros
             </button>
-            <button mat-stroked-button size="small" routerLink="/">
+            <button mat-stroked-button routerLink="/">
               <mat-icon svgIcon="gi-return" /> Retour à la table
             </button>
           </div>
@@ -79,7 +79,7 @@
               </div>
 
               <div class="flex justify-end">
-                <button mat-stroked-button size="small" [routerLink]="entry.route">
+                <button mat-stroked-button [routerLink]="entry.route">
                   {{ entry.buttonLabel }} <mat-icon>arrow_forward</mat-icon>
                 </button>
               </div>

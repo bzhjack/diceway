@@ -6,7 +6,7 @@
       title="Bestiaire des créatures"
       description="Accès rapide à toutes les créatures actuellement disponibles dans la bibliothèque Barbarians of Lemuria."
       color="amber"
-      image="/assets/bol/header-creatures.png"
+      image="/assets/bol/header-creatures.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalCreatureCount() }} créatures</dw-tag>
@@ -16,17 +16,17 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button size="small" routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
+          <button mat-flat-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
             <mat-icon>add</mat-icon> Créer une créature
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/demons">
+          <button mat-stroked-button routerLink="/library/demons">
             <mat-icon svgIcon="gi-demon" /> Voir les démons
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+          <button mat-stroked-button routerLink="/library/pnjs">
             <mat-icon svgIcon="gi-masks" /> Voir les PNJ
           </button>
         </div>
-        <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
+        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
         </button>
       </ng-container>

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, inject, Injector, input, output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
+import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {BraisesComponent} from './braises';
 import {CompagnieComponent} from './compagnie';
@@ -35,7 +36,7 @@ export class TheatreComponent {
   /** Une scène a été chargée depuis une piste, avec la session à jour. */
   readonly sceneChanged = output<BolSceneLoadResult>();
   /** Une vitalité ou un héroïsme a été enregistré. */
-  readonly changed = output<void>();
+  readonly changed = output<TableChange>();
   readonly coulissesRequested = output<void>();
 
   protected readonly regionNom = computed(() => this.store.regionNom(this.store.displayedScene()));

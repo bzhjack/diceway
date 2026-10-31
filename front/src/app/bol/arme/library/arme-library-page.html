@@ -6,7 +6,7 @@
       title="Arsenal"
       description="Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis l'intendance."
       color="amber"
-      image="/assets/bol/header-armes.png"
+      image="/assets/bol/header-armes.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
@@ -17,15 +17,15 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button size="small" [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
+          <button mat-flat-button [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
             <mat-icon>add</mat-icon>
             {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/armors">
+          <button mat-stroked-button routerLink="/library/armors">
             <mat-icon svgIcon="gi-shield" /> Voir les armures
           </button>
         </div>
-        <button mat-stroked-button size="small" routerLink="/intendance">
+        <button mat-stroked-button routerLink="/intendance">
           <mat-icon svgIcon="gi-return" /> Retour à l'intendance
         </button>
       </ng-container>
@@ -45,10 +45,10 @@
               </div>
 
               <div class="flex flex-wrap gap-2">
-                <button mat-stroked-button size="small" (click)="cancelForm()">
+                <button mat-stroked-button (click)="cancelForm()">
                   <mat-icon>close</mat-icon> Annuler
                 </button>
-                <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
+                <button mat-flat-button [disabled]="submitting()" (click)="submitForm()">
                   <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
                 </button>
               </div>

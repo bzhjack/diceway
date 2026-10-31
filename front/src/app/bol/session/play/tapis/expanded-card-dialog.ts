@@ -21,7 +21,7 @@ import {ExpandedCardComponent} from './expanded-card';
         [statblock]="data.statblock()"
         [returnUrl]="data.returnUrl()"
         (closed)="ref.close()"
-        (changed)="data.changed()"
+        (changed)="data.changed($event)"
         (removeRequested)="data.remove($event)"
         (armureToggled)="data.toggleArmure({card, armureId: $event})"
         (armeToggled)="data.toggleArme({card, armeId: $event})"

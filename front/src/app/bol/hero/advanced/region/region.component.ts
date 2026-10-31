@@ -43,6 +43,7 @@ interface RegionPin {
 export class HeroAdvancedRegionComponent {
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly dialogData = inject<HeroAdvancedRegionDialogData>(MAT_DIALOG_DATA);
+  private readonly ref = inject<MatDialogRef<HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult | null>>(MatDialogRef);
 
   protected readonly regionId = signal<number>(Number(this.dialogData.id_region ?? 0));
   protected readonly selectedName = signal<string | undefined>(this.dialogData.nom);
@@ -71,7 +72,7 @@ export class HeroAdvancedRegionComponent {
   );
   protected readonly hoveredRegionId = signal<number | null>(null);
 
-  constructor(public readonly ref: MatDialogRef<HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult | null>) {
+  constructor() {
     effect(() => this.selectedRegion());
   }
 

@@ -74,3 +74,6 @@ export interface TurnChoice {
   readonly special?: string | null;
   readonly defenseTotale: boolean;
 }
+
+/** Produit l'identifiant d'un effet à créer, vu la liste déjà là. */
+export type EffectIdGenerator = (effets: readonly CombatEffect[]) => string;

@@ -3,8 +3,8 @@
 Prompts pour regénérer (via ChatGPT) les portraits des **74 créatures** du
 bestiaire (`BolCreatureSeeder.php`) et des **3 démons** (`BolDemonSeeder.php`),
 dans le même style que les bannières des bibliothèques
-(`doc/header-image-prompts.md`, en particulier `header-creatures.png` et
-`header-demons.png`) : illustration peinte et encrée façon BD fantasy des
+(`doc/header-image-prompts.md`, en particulier `header-creatures.webp` et
+`header-demons.webp`) : illustration peinte et encrée façon BD fantasy des
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/pnj-image-prompts.md` (planches de 6 portraits, découpées ensuite).
 
@@ -173,7 +173,7 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 ## Démons
 
 Les démons ont leur propre planche, plus sombre et surnaturelle, dans la
-dominante de `header-demons.png`.
+dominante de `header-demons.webp`.
 
 ### Consignes de planche — démons
 

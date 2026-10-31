@@ -38,7 +38,6 @@ import {
   finalDamage,
   HEROIC_OPTIONS,
   heroicPicksAllowed,
-  HeroicSlug,
   parseDamage,
   rawDamage,
   scaleDamage,
@@ -48,6 +47,7 @@ import {
   toggleHeroicPick,
   vigueurBonus,
 } from '../../combat-resolution.util';
+import {HeroicSlug} from '../../models/combat-resolution.model';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, DamageDie, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';

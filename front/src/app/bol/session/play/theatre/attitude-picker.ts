@@ -3,6 +3,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from './theatre.util';
 
@@ -104,8 +105,8 @@ export class AttitudePickerComponent {
 
   readonly sessionId = input.required<string>();
   readonly card = input.required<TapisCard>();
-  /** L'attitude a été enregistrée : la page recharge la session. */
-  readonly changed = output<void>();
+  /** L'attitude a été enregistrée : la page met la session à jour. */
+  readonly changed = output<TableChange>();
 
   protected readonly options = ATTITUDES;
   private readonly busy = signal(false);
@@ -117,9 +118,9 @@ export class AttitudePickerComponent {
     }
     this.busy.set(true);
     this.fightSessionService.setAttitude(this.sessionId(), card.kind, card.pivotId, card.attitude === value ? null : value).subscribe({
-      next: () => {
+      next: (session) => {
         this.busy.set(false);
-        this.changed.emit();
+        this.changed.emit({session});
       },
       error: (error: unknown) => {
         this.busy.set(false);

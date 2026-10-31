@@ -285,14 +285,23 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 ### Phase 1 : gains rapides (M en tout)
 
-- [ ] Reprendre la réponse du PATCH au lieu de refaire un GET
-- [ ] Route légère pour l'accueil et la bibliothèque des sessions
-- [ ] Convertir les en-têtes en WebP (−7,6 Mo)
-- [ ] Vérifier puis supprimer les 20 cartes sans référence (−13 Mo)
-- [ ] Retirer Inter et Roboto
-- [ ] `loading="lazy"` dans les grilles
-- [ ] Corriger le reste de `CLAUDE.md` (section 6.3)
-- [ ] Petits écarts : `standalone`, constructeur, types hors `models/`, style en ligne, `size="small"`
+- [x] Reprendre la réponse du PATCH au lieu de refaire un GET
+- [x] Route légère pour l'accueil et la bibliothèque des sessions
+- [x] Convertir les en-têtes en WebP (−7,9 Mo)
+- [x] Vérifier puis supprimer les 20 cartes sans référence (−13 Mo)
+- [x] Retirer Inter et Roboto
+- [x] `loading="lazy"` dans les grilles
+- [x] Corriger le reste de `CLAUDE.md` (section 6.3)
+- [x] Petits écarts : `standalone`, constructeur, types hors `models/`, style en ligne, `size="small"`
+
+**Fait le 2026-10-31. Ce qu'il faut savoir :**
+
+- **File d'appels :** `BolFightSessionService` envoie les appels d'une table un par un. Apache traite les requêtes en parallèle : sans cette file, la réponse d'une écriture doublée par une autre pourrait remplacer la session par un état sans cette autre écriture.
+- **GET conservés :** chargement de la page, changement de scène, ajout depuis la réserve, changement d'équipement, relèves et saignements de héros, où plusieurs écritures se suivent. Ces cas sont rares ou leur PATCH ne renvoie pas de session.
+- **Encore lourd :** chaque action transfère encore la session une fois, portraits compris. Seule la phase 6 règle ce point.
+- **`GET /bol/fight-session` :** la route existante renvoie maintenant `id`, `titre`, `statut`, `heros_count` et `adversaires_count`. La table complète n'est plus disponible que session par session.
+- **Cartes :** recherche faite dans le dépôt, les scénarios et la base de ce poste. Une autre base qui les référencerait les retrouverait dans l'historique git.
+- **À traiter :** `start-combat-page.scss` dépasse le seuil d'avertissement de style (20,19 ko pour 16 ko).
 
 ### Phase 2 : les outils de contrôle (M)
 

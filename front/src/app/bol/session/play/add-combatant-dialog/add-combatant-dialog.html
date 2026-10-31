@@ -42,7 +42,7 @@
   <div class="acd-grid">
     @for (entry of filteredCatalog(); track entry.catalogId) {
       <div class="acd-card">
-        <img dwAvatarFallback [src]="entry.avatar" [alt]="entry.nom" class="acd-avatar" />
+        <img dwAvatarFallback loading="lazy" [src]="entry.avatar" [alt]="entry.nom" class="acd-avatar" />
         <div class="acd-info">
           <p class="acd-name">
             @if (kindIconIsSvg(entry.kind)) {

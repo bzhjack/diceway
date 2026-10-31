@@ -5,14 +5,14 @@ type EtatUpdate = (etat: EtatCombat) => EtatCombat;
 
 /** Enregistre l'état du combat en série. Les actions de l'utilisateur (`ignoreIfBusy`) sont ignorées pendant un enregistrement : un double clic
  * ne termine pas deux tours. Les mises à jour automatiques (jet fait…) sont mises en file et appliquées dans l'ordre, chacune sur l'état
- * rechargé, pour qu'aucune ne parte d'un état périmé ni ne se perde. */
+ * à jour, pour qu'aucune ne parte d'un état périmé ni ne se perde. */
 export class EtatSaver {
   private readonly queue: EtatUpdate[] = [];
   private busy = false;
 
   constructor(
     private readonly read: () => EtatCombat,
-    /** Enregistre puis recharge la session ; complète quand l'état lu par `read` est à jour. */
+    /** Enregistre et met la session à jour ; complète quand l'état lu par `read` est à jour. */
     private readonly persist: (etat: EtatCombat) => Observable<unknown>,
     private readonly onError: (error: unknown) => void,
   ) {}

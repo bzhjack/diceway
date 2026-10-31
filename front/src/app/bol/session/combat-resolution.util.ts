@@ -1,12 +1,9 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {DamageDie, DamageSpec, ResolvedCombatStats} from './models/combat-attack.model';
+import {HeroicSlug} from './models/combat-resolution.model';
 
 /** Seuil de réussite d'un jet d'attaque BoL (02-actions-combat.md). */
 export const ATTACK_THRESHOLD = 9;
-
-/** Option de succès héroïque en combat (02-actions-combat.md) : un succès héroïque en donne une, un succès légendaire deux — la même
- * deux fois si on veut. */
-export type HeroicSlug = 'carnage' | 'devastateur' | 'precis' | 'desarmement' | 'pietaille' | 'renversement';
 
 interface HeroicOption {
   readonly slug: HeroicSlug;

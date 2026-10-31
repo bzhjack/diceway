@@ -3,12 +3,13 @@ import {ChangeDetectionStrategy, Component, computed, inject, input, output, sig
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {heroismeGems} from '../../heroisme-spend.util';
+import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {ReservePlacementService} from '../../reserve-placement.service';
 import {isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
@@ -33,7 +34,7 @@ interface Plaque {
  * chaque pas enregistré tout de suite ; un dé en haut à droite ouvre sa carte et son jet d'action), puis une carte par allié, sans
  * chevauchement : chaque rangée défile avec ses chevrons quand la place manque. Un pas impossible ou en cours
  * marque son bouton `aria-disabled` sans le désactiver : le focus clavier reste dessus. C'est la zone de dépôt
- * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
+ * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle mette la session à jour. */
 @Component({
   selector: 'bol-compagnie',
   imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, DwScrollerComponent, MatIconModule, MatTooltipModule, ActeurComponent],
@@ -53,8 +54,8 @@ export class CompagnieComponent {
   readonly cardToggled = output<TapisCard>();
   readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
-  /** Une vitalité ou un héroïsme a été enregistré : la page recharge la session. */
-  readonly changed = output<void>();
+  /** Une vitalité ou un héroïsme a été enregistré : la page met la session à jour. */
+  readonly changed = output<TableChange>();
 
   /** Portraits qui n'ont pas pu se charger : repli sur l'initiale. */
   private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
@@ -98,7 +99,7 @@ export class CompagnieComponent {
     if (delta > 0 && card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax) {
       return;
     }
-    this.save(`${card.key}:vitalite`, () => this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta), 'Impossible de mettre à jour la vitalité.');
+    this.save(`${card.key}:vitalite`, () => this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta).pipe(map((session) => ({session}))), 'Impossible de mettre à jour la vitalité.');
   }
 
   protected stepHeroisme(card: TapisCard, delta: number): void {
@@ -106,12 +107,12 @@ export class CompagnieComponent {
       return;
     }
     const herosId = card.sourceId;
-    this.save(`${card.key}:heroisme`, () => this.herosService.adjustHeroisme(herosId, delta), "Impossible de mettre à jour l'héroïsme.");
+    this.save(`${card.key}:heroisme`, () => this.herosService.adjustHeroisme(herosId, delta).pipe(map((hero) => ({herosId, heroisme: hero.ressources.heroisme}))), "Impossible de mettre à jour l'héroïsme.");
   }
 
   /** Enregistre un pas ; un autre pas sur la même ressource est ignoré (sa requête n'est même pas construite) tant que
    * celui-ci n'est pas revenu. */
-  private save(key: string, request: () => Observable<unknown>, errorMessage: string): void {
+  private save(key: string, request: () => Observable<TableChange>, errorMessage: string): void {
     if (this.pending().has(key)) {
       return;
     }
@@ -123,9 +124,9 @@ export class CompagnieComponent {
         return next;
       });
     request().subscribe({
-      next: () => {
+      next: (change) => {
         done();
-        this.changed.emit();
+        this.changed.emit(change);
       },
       error: (error: unknown) => {
         done();

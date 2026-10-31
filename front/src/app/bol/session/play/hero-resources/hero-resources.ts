@@ -9,6 +9,7 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {heroismeGems} from '../../heroisme-spend.util';
 import {ValueTracker} from '../../value-tracker';
 import {HeroResourcesData} from '../../models/hero-resources.model';
+import {TableChange} from '../../models/table-change.model';
 
 /** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
  * une rangée de gemmes pour l'héroïsme. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
@@ -159,8 +160,8 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
 export class HeroResourcesComponent implements OnInit {
   readonly data = input.required<HeroResourcesData>();
   readonly heroisme = model.required<number>();
-  /** Une valeur a été persistée : le parent recharge la session. */
-  readonly changed = output<void>();
+  /** Une valeur a été persistée : le parent met la session à jour. */
+  readonly changed = output<TableChange>();
 
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
@@ -206,10 +207,8 @@ export class HeroResourcesComponent implements OnInit {
     this.vitalite.set(value);
     const data = this.data();
     this.fightSessionService.applyDamage(data.sessionId, 'hero', data.pivotId, delta).subscribe({
-      next: () => {
-        // Un ajustement à la main ne propose jamais « Défier la mort » : seuls les dégâts reçus au combat le font.
-        this.changed.emit();
-      },
+      // Un ajustement à la main ne propose jamais « Défier la mort » : seuls les dégâts reçus au combat le font.
+      next: (session) => this.changed.emit({session}),
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
           duration: 5000,
@@ -228,8 +227,9 @@ export class HeroResourcesComponent implements OnInit {
     }
 
     this.heroisme.set(value);
-    this.herosService.adjustHeroisme(this.data().herosId, value - previous).subscribe({
-      next: () => this.changed.emit(),
+    const herosId = this.data().herosId;
+    this.herosService.adjustHeroisme(herosId, value - previous).subscribe({
+      next: (hero) => this.changed.emit({herosId, heroisme: hero.ressources.heroisme}),
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
           duration: 5000,

@@ -6,7 +6,7 @@
       title="Armures et boucliers"
       description="Catalogue défensif de la table, initialisé sur BoL et éditable depuis l'intendance."
       color="sky"
-      image="/assets/bol/header-armures.png"
+      image="/assets/bol/header-armures.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalArmorCount() }} entrées</dw-tag>
@@ -18,18 +18,17 @@
         <div class="flex flex-wrap gap-1.5">
           <button
             mat-flat-button
-            size="small"
             [disabled]="formVisible() && !editingArmorId()"
             (click)="startCreate()"
           >
             <mat-icon>add</mat-icon>
             {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/weapons">
+          <button mat-stroked-button routerLink="/library/weapons">
             <mat-icon svgIcon="gi-demon" /> Voir l'arsenal
           </button>
         </div>
-        <button mat-stroked-button size="small" routerLink="/intendance">
+        <button mat-stroked-button routerLink="/intendance">
           <mat-icon svgIcon="gi-return" /> Retour à l'intendance
         </button>
       </ng-container>
@@ -49,10 +48,10 @@
               </div>
 
               <div class="flex flex-wrap gap-2">
-                <button mat-stroked-button size="small" (click)="cancelForm()">
+                <button mat-stroked-button (click)="cancelForm()">
                   <mat-icon>close</mat-icon> Annuler
                 </button>
-                <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
+                <button mat-flat-button [disabled]="submitting()" (click)="submitForm()">
                   <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
                 </button>
               </div>

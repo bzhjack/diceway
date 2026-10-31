@@ -13,7 +13,7 @@
     </mat-select>
   </mat-form-field>
 
-  <button mat-stroked-button size="small" type="button" class="scl-new-scenario" [disabled]="busy()" (click)="newScenario()">
+  <button mat-stroked-button type="button" class="scl-new-scenario" [disabled]="busy()" (click)="newScenario()">
     <mat-icon>add</mat-icon> Nouveau scénario
   </button>
 
@@ -35,16 +35,16 @@
           <p class="scl-summary">{{ summary(scene) }}</p>
 
           <div class="scl-actions">
-            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="prepare(scene)">
+            <button mat-stroked-button type="button" [disabled]="busy()" (click)="prepare(scene)">
               <mat-icon>edit_note</mat-icon> Préparer la scène
             </button>
-            <button mat-flat-button size="small" type="button" [disabled]="busy()" (click)="load(scene)">
+            <button mat-flat-button type="button" [disabled]="busy()" (click)="load(scene)">
               <mat-icon>play_arrow</mat-icon> Charger
             </button>
-            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="rename(scene)">
+            <button mat-stroked-button type="button" [disabled]="busy()" (click)="rename(scene)">
               Renommer
             </button>
-            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="updateFromTable(scene)">
+            <button mat-stroked-button type="button" [disabled]="busy()" (click)="updateFromTable(scene)">
               Mettre à jour avec la table
             </button>
             <button
@@ -89,7 +89,7 @@
     }
   </div>
 
-  <button mat-flat-button size="small" type="button" class="scl-save" [disabled]="busy() || loading()" (click)="saveTable()">
+  <button mat-flat-button type="button" class="scl-save" [disabled]="busy() || loading()" (click)="saveTable()">
     <mat-icon>save</mat-icon> Enregistrer la table comme scène
   </button>
 </div>

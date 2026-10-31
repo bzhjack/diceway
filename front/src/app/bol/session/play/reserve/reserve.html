@@ -66,7 +66,7 @@
             <!-- L'avatar ouvre le statbloc ; un double-clic pose le personnage, comme partout sur la ligne -->
             <button type="button" class="rsv-avatar" [attr.aria-label]="'Voir la fiche de ' + row.entry.nom" matTooltip="Voir la fiche" (click)="openStatblock(row)">
               @if (hasAvatar(row.entry)) {
-                <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" (error)="onAvatarError(row.entry)" />
+                <img class="rsv-avatar-img" loading="lazy" [src]="row.entry.avatar" alt="" draggable="false" (error)="onAvatarError(row.entry)" />
               } @else {
                 {{ initial(row.entry) }}
               }
@@ -117,10 +117,10 @@
     <p class="rsv-hint">Glisse un personnage sur la scène, ou double-clique pour le poser.</p>
 
     <div class="rsv-links">
-      <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">
+      <a mat-flat-button [routerLink]="activeTab().createLink" [state]="navState()">
         <mat-icon>add</mat-icon> {{ activeTab().createLabel }}
       </a>
-      <a mat-stroked-button size="small" [routerLink]="activeTab().libraryLink" [state]="navState()">
+      <a mat-stroked-button [routerLink]="activeTab().libraryLink" [state]="navState()">
         <mat-icon>library_books</mat-icon> Gérer la bibliothèque
       </a>
     </div>

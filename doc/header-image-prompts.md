@@ -2,13 +2,13 @@
 
 Prompts utilisés pour générer (via ChatGPT) les bannières des headers des
 pages bibliothèque (`dw-library-header`, input `image`), dans le même style
-que `dashboard-header.png` (workspace). Générées en une seule image
+que `dashboard-header.webp` (workspace). Générées en une seule image
 (`headers.png`, 1915×821, une bande par type), puis découpées en :
 
-- `header-heros.png`
-- `header-pnj.png`
-- `header-creatures.png`
-- `header-demons.png`
+- `header-heros.webp`
+- `header-pnj.webp`
+- `header-creatures.webp`
+- `header-demons.webp`
 
 Encore manquantes (à générer et découper de la même façon) : intendance,
 armes, armures — voir prompts plus bas.
@@ -75,5 +75,5 @@ attendus dans `front/src/assets/bol/` : `herbe.jpg` (déjà en place),
 | Bannière | Fichier | Date |
 | --- | --- | --- |
 | Héros, PNJ, créatures, démons, intendance, armes, armures | `header-*.png` | 2026-07-17 |
-| Combat | `header-combat.png` | 2026-10-02 |
+| Combat | `header-combat.webp` | 2026-10-02 |
 | Fond de battlemap | — | sans objet (battlemap retirée, textures supprimées) |

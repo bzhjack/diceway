@@ -1,12 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
 import {
   BolFightSessionAddCombatantPayload,
   BolFightSessionCreatePayload,
   BolFightSessionHerosModel,
   BolFightSessionModel,
+  BolFightSessionSummaryModel,
   CombatantAttitude,
   CombatCamp,
   EtatCombatDto,
@@ -18,13 +19,39 @@ import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 export class BolFightSessionService {
   private readonly http = inject(HttpClient);
   private readonly base = apiUrl('bol/fight-session');
+  private readonly calls = new Subject<Observable<unknown>>();
 
-  fightSessions(): Observable<BolFightSessionModel[]> {
-    return this.http.get<BolFightSessionModel[]>(this.base);
+  constructor() {
+    // L'échec d'un appel regarde son appelant : le suivant part quand même.
+    this.calls.pipe(concatMap((call) => call.pipe(catchError(() => EMPTY)))).subscribe();
+  }
+
+  /** Les appels sur une table partent un à un : l'API les traite en parallèle, et une écriture doublée par une autre renverrait
+   * une table sans elle. Chaque réponse porte ainsi tout ce qui la précède et peut remplacer la session sans autre requête. */
+  private inOrder<T>(call: Observable<T>): Observable<T> {
+    return defer(() => {
+      const result = new AsyncSubject<T>();
+      // Pas `tap(result)` : `tap` appellerait aussi `subscribe` sur le sujet, et son erreur partirait sans personne pour la recevoir.
+      this.calls.next(
+        call.pipe(
+          tap({
+            next: (value) => result.next(value),
+            error: (error: unknown) => result.error(error),
+            complete: () => result.complete(),
+          }),
+        ),
+      );
+      return result;
+    });
+  }
+
+  /** Les sessions du compte, sans leur table : de quoi les lister et trouver celle à rouvrir. */
+  fightSessions(): Observable<BolFightSessionSummaryModel[]> {
+    return this.http.get<BolFightSessionSummaryModel[]>(this.base);
   }
 
   fightSession(id: string): Observable<BolFightSessionModel> {
-    return this.http.get<BolFightSessionModel>(`${this.base}/${id}`);
+    return this.inOrder(this.http.get<BolFightSessionModel>(`${this.base}/${id}`));
   }
 
   create(payload: BolFightSessionCreatePayload): Observable<BolFightSessionModel> {
@@ -36,7 +63,7 @@ export class BolFightSessionService {
   }
 
   addCombatant(sessionId: string, payload: BolFightSessionAddCombatantPayload): Observable<BolFightSessionModel> {
-    return this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/combatant`, payload);
+    return this.inOrder(this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/combatant`, payload));
   }
 
   removeCombatant(
@@ -44,7 +71,7 @@ export class BolFightSessionService {
     kind: BolFightSessionAddCombatantPayload['kind'],
     pivotId: number,
   ): Observable<BolFightSessionModel> {
-    return this.http.delete<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}`);
+    return this.inOrder(this.http.delete<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}`));
   }
 
   /** Passe un PNJ, une créature ou un démon du côté des héros (allié) ou le remet avec les présents. */
@@ -54,7 +81,7 @@ export class BolFightSessionService {
     pivotId: number,
     camp: CombatCamp,
   ): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/camp`, {camp});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/camp`, {camp}));
   }
 
   /** Attitude d'un PNJ, d'une créature ou d'un démon envers les héros (`null` : aucune). */
@@ -64,47 +91,47 @@ export class BolFightSessionService {
     pivotId: number,
     attitude: CombatantAttitude | null,
   ): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/attitude`, {attitude});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/attitude`, {attitude}));
   }
 
   /** Dépense (négatif) ou rend des points de vilénie à un PNJ rival de la table. */
   adjustVilenie(sessionId: string, pivotId: number, delta: number): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/vilenie`, {delta});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/vilenie`, {delta}));
   }
 
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre}));
   }
 
   updatePositions(
     sessionId: string,
     positions: Readonly<Record<string, {x: number; y: number}>>,
   ): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/positions`, {positions});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/positions`, {positions}));
   }
 
   /** Démarre le combat. `exclus` : clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat. */
   startCombat(sessionId: string, exclus: readonly string[] = []): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {exclus});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {exclus}));
   }
 
   endCombat(sessionId: string): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {}));
   }
 
   /** Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). */
   updateCombatState(sessionId: string, etat: EtatCombatDto): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/etat-combat`, etat);
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/etat-combat`, etat));
   }
 
   /** Charge une scène sur la table (opération serveur unique) — cf. `BolSceneService` côté backend. */
   loadScene(sessionId: string, sceneId: string, mode: SceneLoadMode): Observable<BolSceneLoadResult> {
-    return this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/load-scene`, {scene_id: sceneId, mode});
+    return this.inOrder(this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/load-scene`, {scene_id: sceneId, mode}));
   }
 
   /** Vide la table : les PNJ, créatures et démons quittent la session, qui n'a plus de scène en cours ; les héros restent. */
   clearTable(sessionId: string): Observable<BolFightSessionModel> {
-    return this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/clear-table`, {});
+    return this.inOrder(this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/clear-table`, {}));
   }
 
   /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */
@@ -113,9 +140,9 @@ export class BolFightSessionService {
     herosPivotId: number,
     resultat: InitiativeResultat | null,
   ): Observable<BolFightSessionHerosModel> {
-    return this.http.patch<BolFightSessionHerosModel>(`${this.base}/${sessionId}/heros/${herosPivotId}/initiative`, {
+    return this.inOrder(this.http.patch<BolFightSessionHerosModel>(`${this.base}/${sessionId}/heros/${herosPivotId}/initiative`, {
       resultat,
-    });
+    }));
   }
 
   /**
@@ -127,6 +154,6 @@ export class BolFightSessionService {
     pivotId: number,
     delta: number,
   ): Observable<BolFightSessionModel> {
-    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/damage`, {delta});
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/damage`, {delta}));
   }
 }

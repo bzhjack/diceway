@@ -22,7 +22,7 @@
         }
       </div>
       @if (hero(); as h) {
-        <bol-hero-resources [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit()" />
+        <bol-hero-resources [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit($event)" />
         <dl class="exc-tiles exc-hb-tiles" aria-label="Statistiques de combat">
           @for (stat of h.stats; track stat.label) {
             <div class="exc-tile" [class.exc-tile--hot]="stat.label.startsWith('Dég')">
@@ -86,13 +86,13 @@
           [value]="card().vitaliteCourante ?? 0"
           [max]="card().vitaliteMax"
           [nom]="card().nom"
-          (changed)="changed.emit()"
+          (changed)="changed.emit($event)"
         />
         @if (card().vilenie !== null) {
-          <bol-card-vilenie sheetSide class="exc-entry-vilenie" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit()" />
+          <bol-card-vilenie sheetSide class="exc-entry-vilenie" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit($event)" />
         }
         @if (card().camp === 'adversaires') {
-          <bol-attitude-picker sheetSide class="exc-entry-attitude" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit()" />
+          <bol-attitude-picker sheetSide class="exc-entry-attitude" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit($event)" />
         }
         <button
           sheetActions

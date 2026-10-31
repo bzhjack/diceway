@@ -41,11 +41,11 @@
 
     <div class="bs-actions">
       @if (data().editRoute) {
-        <a mat-stroked-button size="small" class="bs-edit" [routerLink]="data().editRoute" [state]="navigationState()">
+        <a mat-stroked-button class="bs-edit" [routerLink]="data().editRoute" [state]="navigationState()">
           <mat-icon svgIcon="gi-quill" /> Modifier la fiche
         </a>
         @if (data().advancedEditRoute) {
-          <a mat-stroked-button size="small" class="bs-edit" [routerLink]="data().advancedEditRoute" [state]="navigationState()">
+          <a mat-stroked-button class="bs-edit" [routerLink]="data().advancedEditRoute" [state]="navigationState()">
             <mat-icon svgIcon="gi-tune" /> Édition avancée
           </a>
         }

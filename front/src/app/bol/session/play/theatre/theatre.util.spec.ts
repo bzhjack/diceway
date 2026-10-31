@@ -48,7 +48,7 @@ describe('sceneDecor', () => {
   });
 
   it("sans illustration, l'image par défaut de la maquette, quelle que soit la région", () => {
-    const parDefaut = '/assets/bol/dashboard-header.png';
+    const parDefaut = '/assets/bol/dashboard-header.webp';
     expect(sceneDecor(scene('s', 0, {image: '  ', region_id: 5}))).toBe(parDefaut);
     expect(sceneDecor(scene('s', 0))).toBe(parDefaut);
     expect(sceneDecor(null)).toBe(parDefaut);

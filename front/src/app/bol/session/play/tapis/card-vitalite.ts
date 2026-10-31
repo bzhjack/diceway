@@ -6,6 +6,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {ValueTracker} from '../../value-tracker';
+import {TableChange} from '../../models/table-change.model';
 import {TapisKind} from '../../models/tapis.model';
 
 /** Vitalité d'un PNJ, d'une créature ou d'un démon, ajustable par stepper et persistée à chaque pas. La
@@ -57,8 +58,8 @@ export class CardVitaliteComponent {
   readonly value = input.required<number>();
   readonly max = input.required<number | null>();
   readonly nom = input.required<string>();
-  /** Une valeur a été persistée : le parent recharge la session. */
-  readonly changed = output<void>();
+  /** Une valeur a été persistée : le parent met la session à jour. */
+  readonly changed = output<TableChange>();
 
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly snackBar = inject(MatSnackBar);
@@ -88,7 +89,7 @@ export class CardVitaliteComponent {
     this.fightSessionService
       .applyDamage(this.sessionId(), this.kind(), this.pivotId(), delta)
       .subscribe({
-        next: () => this.changed.emit(),
+        next: (session) => this.changed.emit({session}),
         error: (error: unknown) => {
           this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
             duration: 5000,

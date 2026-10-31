@@ -18,7 +18,7 @@ class BolFightSessionController extends Controller
 
     public function getAll()
     {
-        return response()->json($this->fightSessionService->getSessionsWithRelations(Auth::id()));
+        return response()->json($this->fightSessionService->getSessionSummaries(Auth::id()));
     }
 
     public function getOne(string $id)

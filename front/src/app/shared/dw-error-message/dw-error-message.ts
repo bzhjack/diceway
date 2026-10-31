@@ -31,7 +31,6 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true
 })
 export class DwErrorMessageComponent {
   messages = input<string[]>([]);

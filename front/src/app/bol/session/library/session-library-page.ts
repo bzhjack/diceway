@@ -14,15 +14,8 @@ import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-lib
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {BolFightSessionModel} from '../../models/bol-fight-session.model';
+import {BolFightSessionSummaryModel} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
-import {buildPlayBoard} from '../combat-play.util';
-
-interface CombatSummary {
-  readonly session: BolFightSessionModel;
-  readonly heroesCount: number;
-  readonly adversairesCount: number;
-}
 
 /** Liste des combats lancés par l'utilisateur, avec accès pour reprendre ou supprimer chacun. */
 @Component({
@@ -50,29 +43,14 @@ export class SessionLibraryPageComponent {
 
   protected readonly searchTerm = signal('');
 
-  protected readonly summaries = computed<CombatSummary[]>(() =>
-    this.sessions.data().map((session) => {
-      const board = buildPlayBoard(session);
-      return {
-        session,
-        heroesCount: board.tokens.filter((token) => token.camp === 'heros').length,
-        adversairesCount: board.tokens.filter((token) => token.camp === 'adversaires').length,
-      };
-    }),
-  );
-
-  protected readonly filteredSummaries = computed(() =>
-    this.summaries().filter((item) => matchesTerm(this.searchTerm(), item.session.titre)),
+  protected readonly filteredSessions = computed(() =>
+    this.sessions.data().filter((session) => matchesTerm(this.searchTerm(), session.titre)),
   );
 
   protected readonly totalCount = computed(() => this.sessions.data().length);
-  protected readonly visibleCount = computed(() => this.filteredSummaries().length);
+  protected readonly visibleCount = computed(() => this.filteredSessions().length);
 
-  protected askDelete(session: BolFightSessionModel): void {
-    if (!session.id) {
-      return;
-    }
-
+  protected askDelete(session: BolFightSessionSummaryModel): void {
     confirmDialog(
       this.dialog,
       {
@@ -83,7 +61,7 @@ export class SessionLibraryPageComponent {
       {width: '380px'},
     ).subscribe((confirmed) => {
       if (confirmed) {
-        this.deleteSession(session.id!);
+        this.deleteSession(session.id);
       }
     });
   }

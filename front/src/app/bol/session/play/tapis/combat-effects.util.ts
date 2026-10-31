@@ -1,4 +1,4 @@
-import {CombatEffect, EffectDuration, EffectEvent, EffectStat, EffectWhen, ModifierTerm, NewEffect, RollContext, TurnChoice} from '../../models/combat-effect.model';
+import {CombatEffect, EffectDuration, EffectEvent, EffectIdGenerator, EffectStat, EffectWhen, ModifierTerm, NewEffect, RollContext, TurnChoice} from '../../models/combat-effect.model';
 
 /** Effet d'une posture sur la défense de son porteur (le bonus d'attaque vient du référentiel de combat). */
 export const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, offensive: -1, intrepid: -2, 'dual-parry': 1};
@@ -60,9 +60,6 @@ export function nextEffectId(effets: readonly CombatEffect[]): string {
   }, 0);
   return `e-${max + 1}`;
 }
-
-/** Produit l'identifiant d'un effet à créer, vu la liste déjà là. */
-export type EffectIdGenerator = (effets: readonly CombatEffect[]) => string;
 
 /** Identifiant jamais réutilisé, même quand l'effet qui portait le plus grand numéro a été consommé ou retiré : une croix restée à l'écran
  * ne peut alors pas retirer un autre effet. */

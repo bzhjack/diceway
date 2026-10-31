@@ -23,6 +23,7 @@ import {HeroResourcesComponent} from '../hero-resources/hero-resources';
 import {CardVilenieComponent} from './card-vilenie';
 import {CardVitaliteComponent} from './card-vitalite';
 import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
+import {TableChange} from '../../models/table-change.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
@@ -67,7 +68,7 @@ export class ExpandedCardComponent {
   readonly returnUrl = input<string | null>(null);
 
   readonly closed = output<void>();
-  readonly changed = output<void>();
+  readonly changed = output<TableChange>();
   readonly removeRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();

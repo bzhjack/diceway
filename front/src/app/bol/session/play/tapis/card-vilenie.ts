@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, input, output, sig
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {PointsStepperComponent} from './points-stepper';
 
@@ -37,8 +38,8 @@ export class CardVilenieComponent {
   readonly sessionId = input.required<string>();
   /** La carte d'un PNJ rival (sa vilénie n'est pas nulle). */
   readonly card = input.required<TapisCard>();
-  /** Un pas a été enregistré : le parent recharge la session. */
-  readonly changed = output<void>();
+  /** Un pas a été enregistré : le parent met la session à jour. */
+  readonly changed = output<TableChange>();
 
   private readonly busy = signal(false);
   protected readonly points = computed(() => this.card().vilenie ?? 0);
@@ -49,9 +50,9 @@ export class CardVilenieComponent {
     }
     this.busy.set(true);
     this.fightSessionService.adjustVilenie(this.sessionId(), this.card().pivotId, delta).subscribe({
-      next: () => {
+      next: (session) => {
         this.busy.set(false);
-        this.changed.emit();
+        this.changed.emit({session});
       },
       error: (error: unknown) => {
         this.busy.set(false);

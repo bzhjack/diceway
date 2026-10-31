@@ -6,7 +6,7 @@
       title="Galerie des héros"
       description="Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits."
       color="emerald"
-      image="/assets/bol/header-heros.png"
+      image="/assets/bol/header-heros.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
@@ -18,7 +18,6 @@
         <div class="flex flex-wrap gap-1.5">
           <button
             mat-flat-button
-            size="small"
             routerLink="/create/hero"
             [state]="{ returnUrl: '/library/heroes' }"
           >
@@ -26,20 +25,19 @@
           </button>
           <button
             mat-stroked-button
-            size="small"
             routerLink="/create/hero-advanced"
             [state]="{ returnUrl: '/library/heroes' }"
           >
             <mat-icon svgIcon="gi-laurels" /> Création avancée
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+          <button mat-stroked-button routerLink="/library/pnjs">
             <mat-icon svgIcon="gi-masks" /> Voir les PNJ
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/creatures">
+          <button mat-stroked-button routerLink="/library/creatures">
             <mat-icon svgIcon="gi-paw" /> Voir le bestiaire
           </button>
         </div>
-        <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
+        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
         </button>
       </ng-container>

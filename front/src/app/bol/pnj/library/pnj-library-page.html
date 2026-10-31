@@ -6,7 +6,7 @@
       title="Galerie des PNJ"
       description="Tous les personnages non joueurs disponibles pour préparer une scène, une faction ou une rencontre."
       color="emerald"
-      image="/assets/bol/header-pnj.png"
+      image="/assets/bol/header-pnj.webp"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalPnjCount() }} PNJ</dw-tag>
@@ -18,20 +18,19 @@
         <div class="flex flex-wrap gap-1.5">
           <button
             mat-flat-button
-            size="small"
             routerLink="/create/pnj"
             [state]="{ returnUrl: '/library/pnjs' }"
           >
             <mat-icon>add</mat-icon> Créer un PNJ
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/creatures">
+          <button mat-stroked-button routerLink="/library/creatures">
             <mat-icon svgIcon="gi-paw" /> Voir les créatures
           </button>
-          <button mat-stroked-button size="small" routerLink="/library/demons">
+          <button mat-stroked-button routerLink="/library/demons">
             <mat-icon svgIcon="gi-demon" /> Voir les démons
           </button>
         </div>
-        <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
+        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
         </button>
       </ng-container>
