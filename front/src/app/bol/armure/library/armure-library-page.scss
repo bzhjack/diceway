@@ -64,14 +64,14 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: #7dd3fc;
+  color: var(--dw-forge-gold);
 }
 
 .arlp-form-title {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--dw-surface-800);
+  color: var(--dw-forge-name);
 }
 
 .arlp-error {

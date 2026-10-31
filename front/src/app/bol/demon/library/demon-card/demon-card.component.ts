@@ -46,7 +46,7 @@ export class DemonCardComponent {
     }
 
     return [
-      {icon: 'edit', tooltip: 'Modifier', routerLink: ['/create/demon', this.demon().id], state: {returnUrl: '/library/demons'}},
+      {icon: 'gi-quill', tooltip: 'Modifier', routerLink: ['/create/demon', this.demon().id], state: {returnUrl: '/library/demons'}},
     ];
   }
 
@@ -55,10 +55,10 @@ export class DemonCardComponent {
   }
 
   protected gauges(): readonly EntityCardGauge[] {
-    return [{icon: 'favorite', value: this.demon().vitalite, label: 'Vitalité', accent: 'pv'}];
+    return [{icon: 'gi-heart', value: this.demon().vitalite, label: 'Vitalité', accent: 'pv'}];
   }
 
   protected chips(): readonly EntityCardChip[] {
-    return [{icon: 'auto_awesome', value: this.demon().pouvoirs.length, tooltip: 'Pouvoirs infernaux'}];
+    return [{icon: 'gi-sparkles', value: this.demon().pouvoirs.length, tooltip: 'Pouvoirs infernaux'}];
   }
 }

@@ -69,16 +69,6 @@ dw-tag {
   color: #fecdd3;
 }
 
-.pfp-credit {
-  margin: 0;
-  color: var(--dw-forge-stud-text);
-  font-size: 0.68rem;
-
-  a {
-    color: inherit;
-  }
-}
-
 // Modificateurs de mise en page sur .dw-section--form (global, partagé entre
 // hero-form/creature-form/demon-form/pnj-form) : positionnement propre à cette
 // page uniquement, on n'étend pas la classe globale.

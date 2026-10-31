@@ -1,4 +1,4 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-forge-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
@@ -25,14 +25,14 @@
             <mat-icon>add</mat-icon> Créer un PNJ
           </button>
           <button mat-stroked-button size="small" routerLink="/library/creatures">
-            <mat-icon>menu_book</mat-icon> Voir les créatures
+            <mat-icon svgIcon="gi-paw" /> Voir les créatures
           </button>
           <button mat-stroked-button size="small" routerLink="/library/demons">
-            <mat-icon>bolt</mat-icon> Voir les démons
+            <mat-icon svgIcon="gi-demon" /> Voir les démons
           </button>
         </div>
         <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
-          <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
+          <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la session' : 'Retour à la table' }}
         </button>
       </ng-container>
     </dw-library-header>
@@ -77,5 +77,11 @@
       </div>
     </mat-card>
 
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
   </div>
 </section>

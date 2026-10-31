@@ -1,9 +1,16 @@
-// La forge sur une page de formulaire (`dw-page dw-forge-form`) : de la suie, des plaques de fer rivetées pour les sections, des creux pour ce
-// qui se saisit, des clous de bronze pour les boutons ronds. La disposition ne change pas. Ces composants sont partagés avec des pages qui
-// gardent l'ancien style : tout passe par cette classe, et deux classes de tête pour l'emporter sur les styles des composants (chargés après).
-.dw-page.dw-forge-form {
+// La forge sur une fiche à modifier ou une bibliothèque (`dw-page dw-forge-page`) : de la suie, des plaques de fer pour les sections et les
+// cartes, des creux pour ce qui se saisit, des clous de bronze pour les boutons ronds. La disposition ne change pas. Ces composants sont
+// partagés avec des pages qui gardent l'ancien style : tout passe par cette classe, et deux classes de tête pour l'emporter sur les styles des
+// composants (chargés après).
+.dw-page.dw-forge-page {
   --dw-border: var(--dw-forge-bronze-edge);
   --dw-color-legendary: var(--dw-forge-gold);
+  --mat-sys-error: var(--dw-forge-verdict-echec);
+  // Les textes atténués des composants partagés
+  --dw-surface-500: var(--dw-forge-stud-text);
+  --dw-surface-600: var(--dw-forge-stud-text);
+  --dw-surface-700: var(--dw-forge-bone);
+  --dw-surface-800: var(--dw-forge-bone);
 
   --mat-card-outlined-container-color: transparent;
   --mat-card-outlined-container-shape: 7px;
@@ -16,17 +23,24 @@
   --mat-form-field-outlined-hover-label-text-color: var(--dw-forge-bronze-text);
   --mat-form-field-outlined-focus-label-text-color: var(--dw-forge-hot-text);
   --mat-form-field-outlined-input-text-color: var(--dw-forge-bone);
+  --mat-form-field-outlined-input-text-placeholder-color: var(--dw-forge-stud-text);
+  --mat-form-field-leading-icon-color: var(--dw-forge-bronze-text);
   --mat-select-enabled-trigger-text-color: var(--dw-forge-bone);
   --mat-select-enabled-arrow-color: var(--dw-forge-bronze-text);
 
   --mat-button-outlined-outline-color: var(--dw-forge-bronze);
   --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
 
+  --mat-checkbox-label-text-color: var(--dw-forge-bone);
+  --mat-checkbox-unselected-icon-color: var(--dw-forge-bronze-text);
+  --mat-checkbox-unselected-hover-icon-color: var(--dw-forge-hot-text);
+  --mat-checkbox-unselected-focus-icon-color: var(--dw-forge-hot-text);
   --mat-checkbox-disabled-selected-icon-color: var(--dw-forge-bronze-dim);
   --mat-checkbox-disabled-selected-checkmark-color: var(--dw-forge-bone);
 
   --p-tag-contrast-background: var(--dw-forge-recess);
   --p-tag-contrast-color: var(--dw-forge-bronze-text);
+  --p-tag-font-size: 0.7rem;
   --p-tag-font-weight: 700;
   --p-tag-padding: 0.1rem 0.5rem;
   --p-tag-border-radius: var(--dw-radius-pill);
@@ -67,7 +81,8 @@
     background: transparent;
   }
 
-  .dw-row-chevron {
+  .dw-row-chevron,
+  .cl-capacite-icon {
     color: var(--dw-forge-bronze-text);
   }
 
@@ -119,9 +134,123 @@
     }
   }
 
+  // L'en-tête d'une bibliothèque : l'illustration, encadrée de bronze et voilée à gauche sous le texte. Les boutons en contour gardent un fond
+  // sombre, pour rester lisibles dessus.
+  .dw-lh-card--image .mat-mdc-card-content {
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.78) 48%, rgba(15, 10, 6, 0.15) 78%);
+  }
+
+  .dw-lh-eyebrow {
+    color: var(--dw-forge-gold);
+    text-shadow: 0 1px 2px #000;
+  }
+
+  .dw-lh-title {
+    color: var(--dw-forge-name);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  }
+
+  .dw-lh-description {
+    color: var(--dw-forge-bone);
+    text-shadow: 0 1px 3px #000;
+  }
+
+  .dw-lh-card .mat-mdc-outlined-button {
+    background-color: rgba(0, 0, 0, 0.55);
+  }
+
+  // La barre de recherche : une bande de fer au-dessus de la liste.
+  dw-library-toolbar {
+    --dw-lt-border: var(--dw-forge-bronze-edge);
+  }
+
+  .dw-lt-toolbar,
+  .cl-toolbar {
+    border-bottom-color: var(--dw-forge-bronze);
+    background: var(--dw-forge-plate);
+  }
+
+  .dw-lt-filter-chip {
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+  }
+
+  // Les cartes et les lignes d'une liste : des plaques de fer sur la suie. Ce que le joueur a créé lui-même est chauffé par la braise.
+  .entity-card,
+  .cl-row {
+    border-color: var(--dw-forge-bronze-edge);
+    border-radius: 7px;
+    background: var(--dw-forge-plate);
+    box-shadow: var(--dw-forge-plate-shadow);
+  }
+
+  .entity-card.entity-card--own {
+    border-color: var(--dw-forge-bronze);
+    background: linear-gradient(135deg, rgba(232, 135, 58, 0.2), transparent 60%), var(--dw-forge-plate);
+
+    &:hover {
+      border-color: var(--dw-forge-hot);
+    }
+  }
+
+  .entity-card__name,
+  .cl-row-title {
+    color: var(--dw-forge-name);
+    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    text-shadow: 0 1px 3px #000;
+  }
+
+  .entity-gauge,
+  .entity-count-chip {
+    border-color: var(--dw-forge-bronze-dim);
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+    color: var(--dw-forge-bone);
+  }
+
+  .entity-count-chip .mat-icon {
+    color: var(--dw-forge-bronze-text);
+  }
+
+  .entity-gauge--pv .mat-icon {
+    color: #e5413a;
+  }
+
+  // Le portrait par défaut est clair : il s'éteint pour ne pas éclairer toute la liste.
+  .entity-card__img[src*='empty-avatar'] {
+    filter: sepia(0.6) brightness(0.45);
+  }
+
+  // Les tableaux des armes et des armures : l'en-tête en or, opaque pour rester lisible quand on fait défiler les lignes.
+  .bol-weapon-table,
+  .bol-armor-table {
+    --dw-surface-0: #1c130b;
+    --dw-surface-50: rgba(255, 201, 106, 0.07);
+    --dw-surface-100: var(--dw-forge-bronze-edge);
+    --dw-surface-500: var(--dw-forge-gold);
+    --dw-surface-600: var(--dw-forge-stud-text);
+  }
+
+  .dw-forge-credit {
+    margin: 0;
+    color: var(--dw-forge-stud-text);
+    font-size: 0.68rem;
+
+    a {
+      color: inherit;
+    }
+  }
+
   // Les boutons ronds : des clous de bronze, qui rougeoient au survol.
   .vs__btn,
-  .dw-add-trigger {
+  .dw-add-trigger,
+  .entity-card__action-btn,
+  .weapon-action-btn,
+  .armor-action-btn,
+  .cl-row-actions .mat-mdc-icon-button {
     border: 1px solid var(--dw-forge-bronze-dim);
     background: var(--dw-forge-stud);
     box-shadow: var(--dw-forge-stud-shadow);
@@ -139,6 +268,22 @@
     }
   }
 
+  .weapon-action-btn,
+  .armor-action-btn,
+  .cl-row-actions .mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 2rem;
+    --mat-icon-button-icon-size: 1.1rem;
+    padding: 0;
+  }
+
+  // Un clou qui supprime : l'icône en rouge, sur le bronze.
+  .entity-card .entity-card__action-btn.entity-card__action-btn--danger,
+  .weapon-btn-danger,
+  .armor-btn-danger,
+  .cl-row-actions .mat-mdc-icon-button {
+    color: var(--dw-forge-verdict-echec);
+  }
+
   .dw-add-trigger .mat-icon {
     width: 16px;
     height: 16px;
@@ -148,7 +293,7 @@
 }
 
 // Les menus d'ajout s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à l'écran.
-body:has(.dw-forge-form) .cdk-overlay-container {
+body:has(.dw-forge-page) .cdk-overlay-container {
   --mat-form-field-outlined-outline-color: var(--dw-forge-bronze-dim);
   --mat-form-field-outlined-hover-outline-color: var(--dw-forge-bronze);
   --mat-form-field-outlined-focus-outline-color: var(--dw-forge-hot);

@@ -35,10 +35,11 @@
                 mat-icon-button
                 class="entity-card__action-btn"
                 [matTooltip]="action.tooltip"
+                [attr.aria-label]="action.tooltip + ' : ' + name()"
                 [routerLink]="action.routerLink"
                 [state]="action.state"
               >
-                <mat-icon>{{ action.icon }}</mat-icon>
+                <mat-icon [svgIcon]="action.icon" />
               </button>
             }
             @if (showDelete()) {
@@ -46,9 +47,10 @@
                 mat-icon-button
                 class="entity-card__action-btn entity-card__action-btn--danger"
                 matTooltip="Supprimer"
+                [attr.aria-label]="'Supprimer : ' + name()"
                 (click)="deleteRequested.emit()"
               >
-                <mat-icon>delete</mat-icon>
+                <mat-icon svgIcon="gi-trash" />
               </button>
             }
           </div>
@@ -69,7 +71,7 @@
             [matTooltip]="gauge.label + ' : ' + gauge.value"
             [attr.aria-label]="gauge.label + ' : ' + gauge.value"
           >
-            <mat-icon aria-hidden="true">{{ gauge.icon }}</mat-icon>{{ gauge.value }}
+            <mat-icon aria-hidden="true" [svgIcon]="gauge.icon" />{{ gauge.value }}
           </span>
         }
       </div>
@@ -79,7 +81,7 @@
       <div class="entity-card__summary">
         @for (chip of chips(); track chip.tooltip) {
           <span class="entity-count-chip" [matTooltip]="chip.tooltip">
-            <mat-icon>{{ chip.icon }}</mat-icon>{{ chip.value }}
+            <mat-icon [svgIcon]="chip.icon" />{{ chip.value }}
           </span>
         }
       </div>

@@ -5,12 +5,12 @@
 .cfp-section-eyebrow {
   margin: 0;
   margin-bottom: 0.5rem;
-  font-size: 0.72rem;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-weight: 400;
+  font-size: 0.66rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px #000;
 }
 
 .cfp-avatar {
@@ -22,13 +22,14 @@
   width: 100%;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: var(--dw-surface-50);
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: rgba(252, 211, 77, 0.7);
+    border-color: var(--dw-forge-hot);
   }
 
   &:hover .cfp-avatar-overlay {
@@ -41,12 +42,12 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-forge-stud-text);
 }
 
 .cfp-avatar-hint {
   font-size: 0.68rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-forge-stud-text);
 }
 
 .cfp-avatar-overlay {
@@ -78,5 +79,5 @@
   margin: 0;
   margin-top: 0.75rem;
   font-size: 0.875rem;
-  color: #fcd34d;
+  color: var(--dw-forge-hot-text);
 }

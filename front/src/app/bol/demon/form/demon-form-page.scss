@@ -8,10 +8,17 @@
   justify-content: center;
   width: 3.5rem;
   height: 3.5rem;
-  border: 1px solid #52414b;
-  background: #b91c1c;
-  font-size: 1.5rem;
-  color: #fff;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-hot-text);
+
+  .mat-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+  }
 }
 
 .dfp-eyebrow {
@@ -28,22 +35,18 @@
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .dfp-section-eyebrow {
   margin: 0;
-  font-size: 0.72rem;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-weight: 400;
+  font-size: 0.66rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--dw-color-legendary);
-}
-
-.dfp-loading-box {
-  padding: 1.25rem;
-  border: 1px solid #52414b;
-  background: rgba(21, 14, 9, 0.8);
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px #000;
 }
 
 .dfp-loading-detail {
@@ -51,15 +54,7 @@
   margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.75rem;
-  color: var(--dw-surface-700);
-}
-
-// Carte de section — équivalent de .dw-section--form (global) mais avec la
-// palette zinc propre au thème démon (cf. demon-library-page.scss).
-.dfp-section-card {
-  padding: 1.25rem;
-  border: 1px solid #52414b;
-  background: rgba(42, 28, 18, 0.75);
+  color: var(--dw-forge-stud-text);
 }
 
 .dfp-error-box {
@@ -77,5 +72,6 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--dw-color-legendary);
+  // Sombre : elle est posée sur l'or du bouton.
+  background: #1c1200;
 }

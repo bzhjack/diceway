@@ -1,4 +1,4 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-forge-page xl:px-8">
   <div class="mx-auto flex max-w-[1000px] flex-col gap-4">
 
     <!-- Header card -->
@@ -20,7 +20,7 @@
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/">
-          <mat-icon>arrow_back</mat-icon> Retour à la table
+          <mat-icon svgIcon="gi-return" /> Retour à la table
         </button>
       </ng-container>
     </dw-library-header>
@@ -29,7 +29,7 @@
     <mat-card appearance="outlined" class="cl-content-card">
       <div class="cl-toolbar">
         <mat-form-field subscriptSizing="dynamic" class="cl-search-field">
-          <mat-icon matPrefix>search</mat-icon>
+          <mat-icon matPrefix svgIcon="gi-search" />
           <input
             matInput
             type="text"
@@ -57,7 +57,7 @@
                 (click)="askDelete(item.session)"
                 [attr.aria-label]="'Supprimer ' + (item.session.titre || 'cette session')"
               >
-                <mat-icon>delete</mat-icon>
+                <mat-icon svgIcon="gi-trash" />
               </button>
             </div>
           </div>
@@ -73,5 +73,11 @@
       </div>
     </mat-card>
 
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
   </div>
 </section>

@@ -83,7 +83,7 @@ export class PnjCardComponent {
       return [];
     }
 
-    return [{icon: 'edit', tooltip: 'Modifier', routerLink: ['/create/pnj', this.pnj().id], state: {returnUrl: '/library/pnjs'}}];
+    return [{icon: 'gi-quill', tooltip: 'Modifier', routerLink: ['/create/pnj', this.pnj().id], state: {returnUrl: '/library/pnjs'}}];
   }
 
   protected showDelete(): boolean {
@@ -92,10 +92,10 @@ export class PnjCardComponent {
 
   protected gauges(): readonly EntityCardGauge[] {
     const pnj = this.pnj();
-    const gauges: EntityCardGauge[] = [{icon: 'favorite', value: pnj.ressources.vitalite, label: 'Vitalité', accent: 'pv'}];
+    const gauges: EntityCardGauge[] = [{icon: 'gi-heart', value: pnj.ressources.vitalite, label: 'Vitalité', accent: 'pv'}];
 
     if (pnj.ressources.heroisme > 0) {
-      gauges.push({icon: 'star', value: pnj.ressources.heroisme, label: 'Héroïsme', accent: 'ph'});
+      gauges.push({icon: 'gi-laurels', value: pnj.ressources.heroisme, label: 'Héroïsme', accent: 'ph'});
     }
 
     return gauges;
@@ -103,10 +103,10 @@ export class PnjCardComponent {
 
   protected chips(): readonly EntityCardChip[] {
     return [
-      {icon: 'work', value: this.careerEntries().length, tooltip: 'Carrières'},
-      {icon: 'auto_awesome', value: this.traitCount(), tooltip: 'Traits'},
-      {icon: 'shield', value: this.armorCount(), tooltip: 'Armures'},
-      {icon: 'gavel', value: this.weaponCount(), tooltip: 'Armes'},
+      {icon: 'gi-medal', value: this.careerEntries().length, tooltip: 'Carrières'},
+      {icon: 'gi-sparkles', value: this.traitCount(), tooltip: 'Traits'},
+      {icon: 'gi-shield', value: this.armorCount(), tooltip: 'Armures'},
+      {icon: 'gi-sword', value: this.weaponCount(), tooltip: 'Armes'},
     ];
   }
 

@@ -1,4 +1,4 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-forge-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
@@ -22,11 +22,11 @@
             {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
           </button>
           <button mat-stroked-button size="small" routerLink="/library/armors">
-            <mat-icon>shield</mat-icon> Voir les armures
+            <mat-icon svgIcon="gi-shield" /> Voir les armures
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/intendance">
-          <mat-icon>arrow_back</mat-icon> Retour à l'intendance
+          <mat-icon svgIcon="gi-return" /> Retour à l'intendance
         </button>
       </ng-container>
     </dw-library-header>
@@ -49,7 +49,7 @@
                   <mat-icon>close</mat-icon> Annuler
                 </button>
                 <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
-                  <mat-icon>check</mat-icon> {{ submitLabel() }}
+                  <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
                 </button>
               </div>
             </div>
@@ -157,17 +157,19 @@
                         mat-icon-button
                         class="weapon-action-btn"
                         matTooltip="Modifier"
+                        [attr.aria-label]="'Modifier : ' + weapon.arme"
                         (click)="startEdit(weapon)"
                       >
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon svgIcon="gi-quill" />
                       </button>
                       <button
                         mat-icon-button
                         class="weapon-action-btn weapon-btn-danger"
                         matTooltip="Supprimer"
+                        [attr.aria-label]="'Supprimer : ' + weapon.arme"
                         (click)="askDelete(weapon)"
                       >
-                        <mat-icon>delete</mat-icon>
+                        <mat-icon svgIcon="gi-trash" />
                       </button>
                     </div>
                   }
@@ -179,5 +181,11 @@
       </div>
     </mat-card>
 
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
   </div>
 </section>
