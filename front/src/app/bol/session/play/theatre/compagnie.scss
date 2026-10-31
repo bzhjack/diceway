@@ -3,10 +3,13 @@
   min-width: 0;
 }
 
-// Le pied du plateau : une bande de suie, bordée de bronze et léchée par la braise, qui porte les plaques des héros.
+// Le pied du plateau : une bande de suie, bordée de bronze et léchée par la braise, qui porte les cartes des héros et des alliés, debout.
+// Sa hauteur ne dépend pas du nombre de cartes ; elle cède un peu sur une petite fenêtre, pour laisser de la place à la scène.
 .cmp {
+  --cmp-h: clamp(12rem, 30dvh, 15rem);
+
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 1rem;
   padding: 0.7rem 1rem;
   border: 2px dashed transparent;
@@ -34,30 +37,29 @@
   flex: 1;
   min-width: 0;
   display: grid;
-  // Les tailles des plaques sont en em : `--cmp-k`, réglé selon le nombre de héros, les grandit quand ils sont peu nombreux et
-  // les resserre quand la compagnie est grande, pour qu'elle tienne le plus souvent sur une ligne.
-  font-size: calc(1rem * var(--cmp-k, 1));
-  // 16em : le portrait carré (4,8em) puis le nom, la vie et l'héroïsme, sans rogner le cœur.
-  grid-template-columns: repeat(auto-fill, minmax(min(16em, 100%), 1fr));
-  gap: 0.5em;
-  margin: 0;
-  padding: 0;
+  // Une seule rangée : les cartes se resserrent, puis la rangée défile. 10,5em : assez pour le cœur, la vie et ses boutons.
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(10.5em, 12em);
+  justify-content: start;
+  gap: 0.6em;
+  // Le contour d'une carte sélectionnée dépasse : la marge négative rend la place prise par ce retrait.
+  margin: -0.3rem;
+  padding: 0.3rem;
+  overflow-x: auto;
   list-style: none;
+  scrollbar-width: thin;
 }
 
+// Une carte de fer debout : le portrait en haut, le nom, la vie et l'héroïsme en bas.
 .cmp-plaque {
   position: relative;
   display: flex;
-  align-items: center;
-  gap: 0.5em;
+  flex-direction: column;
+  height: var(--cmp-h);
   min-width: 0;
-  padding: 0.35em 0.45em 0.35em 0.35em;
-  // Une plaque de fer, comme les lignes du jet de réaction. Un seul rivet, en bas : le dé fait celui du haut.
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 7px;
-  background:
-    var(--dw-forge-rivet) calc(100% - 6px) calc(100% - 6px) / 9px 9px no-repeat,
-    var(--dw-forge-plate);
+  background: var(--dw-forge-plate);
   box-shadow: var(--dw-forge-plate-shadow);
 }
 
@@ -66,26 +68,25 @@
   outline-offset: 1px;
 }
 
-// Le portrait : un carré collé au bord gauche de la plaque (marges négatives : il reprend le retrait de la plaque), dont il fixe la hauteur ;
-// ses coins gauches épousent ceux de la plaque (7px moins le liseré) ; il se fond vers la droite dans le fond.
+// Le portrait prend ce que le nom et les compteurs laissent, et se fond vers le bas dans la plaque.
 .cmp-portrait {
-  flex: none;
-  width: 4.8em;
-  height: 4.8em;
-  margin: -0.35em 0 -0.35em -0.35em;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
   padding: 0;
   overflow: hidden;
   border: 0;
-  border-radius: 6px 0 0 6px;
-  background: linear-gradient(90deg, #120c07, transparent);
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(#120c07, transparent);
   cursor: pointer;
 
   img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    mask-image: linear-gradient(90deg, #000 72%, transparent);
+    mask-image: linear-gradient(#000 78%, transparent);
   }
 
   &:hover {
@@ -105,21 +106,19 @@
   height: 100%;
   color: var(--dw-forge-gold);
   font-family: 'Muse Display Harmony', serif;
-  font-size: 1.25em;
+  font-size: 2.6em;
 }
 
 .cmp-corps {
-  flex: 1;
-  min-width: 0;
+  flex: none;
   display: flex;
   flex-direction: column;
-  gap: 0.2em;
+  gap: 0.3em;
+  padding: 0.15em 0.5em 0.5em;
 }
 
 .cmp-nom {
   margin: 0;
-  padding-right: 1.6em; // la place du dé
-
   overflow: hidden;
   color: var(--dw-forge-name);
   // Police de texte : la police d'affichage, étroite, se lit mal à cette taille (cf. `.act-nom`).
@@ -249,8 +248,10 @@
 }
 
 .cmp-gemmes {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.2em;
 }
 
@@ -277,8 +278,9 @@
   align-items: flex-end;
   gap: 0.5rem;
   max-width: 45%;
-  margin: 0;
-  padding: 0 0 0 1rem;
+  // Une carte survolée monte de 4 px : la marge négative rend la place prise par ce retrait.
+  margin: -0.3rem 0 0;
+  padding: 0.3rem 0 0 1rem;
   overflow-x: auto;
   border-left: 1px dashed var(--dw-forge-bronze-edge);
   list-style: none;
@@ -308,8 +310,8 @@
   justify-content: flex-end;
   gap: 0.3rem;
   width: calc(2.1rem * var(--thr-k, 1));
-  // La hauteur de la plaque de l'allié qu'elle suit (`.act--plaque`).
-  height: calc(4.4rem * var(--thr-k, 1));
+  // La hauteur de la carte de l'allié qu'elle suit.
+  height: var(--cmp-h);
   // Collée à la précédente sans la recouvrir : chaque tranche garde toute sa surface de clic.
   margin-left: 0;
   padding: 0 0.35rem 0.45rem 0.45rem;

@@ -5,7 +5,7 @@
   [class.cmp--droppable]="droppable()"
   [class.cmp--hot]="hot()"
 >
-  <ul class="cmp-plaques" role="list" [style.--cmp-k]="scale()">
+  <ul class="cmp-plaques" role="list">
     @for (plaque of plaques(); track plaque.card.key) {
       <li class="cmp-plaque" [class.cmp-plaque--selected]="selectedKeys().has(plaque.card.key)">
         <button
@@ -130,7 +130,6 @@
             <bol-acteur
               [card]="groupe.lead"
               taille="allie"
-              forme="plaque"
               [selected]="selectedKeys().has(groupe.lead.key)"
               (toggled)="onFaceClick(groupe.lead, $event)"
             />

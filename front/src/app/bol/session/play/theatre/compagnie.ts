@@ -111,12 +111,6 @@ export class CompagnieComponent {
     })),
   );
 
-  /** L'échelle des plaques selon la taille de la compagnie : plus grandes à deux ou trois, resserrées au-delà de six. */
-  protected readonly scale = computed(() => {
-    const count = this.plaques().length;
-    return count <= 3 ? 1.25 : count === 4 ? 1.12 : count <= 6 ? 1 : 0.9;
-  });
-
   protected readonly droppable = computed(() => this.placement.dragging() && this.placement.originCamp() !== 'heros');
   protected readonly hot = computed(() => this.placement.hoverCamp() === 'heros');
   protected readonly rejectDrop = (): boolean => false;

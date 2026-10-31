@@ -51,9 +51,11 @@
   --h: 10rem;
 }
 
+// Un allié, au pied du plateau : à la hauteur des cartes des héros (`--cmp-h`, posé par la compagnie). Le pied ne suit pas l'échelle du plateau
+// (`--thr-k`) : on la neutralise ici.
 .act--allie {
-  --w: 6.4rem;
-  --h: 8.8rem;
+  --w: calc(9rem / var(--thr-k, 1));
+  --h: calc(var(--cmp-h, 12.6rem) / var(--thr-k, 1));
 }
 
 .act--creature {
@@ -231,65 +233,6 @@
 
   .act-vit--bas {
     background: var(--dw-color-echec);
-  }
-}
-
-// La plaque : une ligne, comme celles des héros de la compagnie. Le portrait est un carré collé au bord gauche (la hauteur de la plaque moins
-// son liseré), ses coins gauches épousant ceux de la plaque, fondu vers la droite ; le nom et la vie à côté, le type en coin.
-.act.act--plaque {
-  --w: 12.5rem;
-  --h: 4.4rem;
-
-  display: flex;
-  align-items: stretch;
-  border-width: 1px;
-  background: var(--dw-forge-plate);
-  box-shadow: var(--dw-forge-plate-shadow);
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  .act-art {
-    position: relative;
-    inset: auto;
-    flex: none;
-    width: calc(var(--h) * var(--thr-k, 1) - 2px);
-    border-radius: 6px 0 0 6px;
-    overflow: hidden;
-    background: linear-gradient(90deg, #120c07, transparent);
-  }
-
-  .act-portrait {
-    mask-image: linear-gradient(90deg, #000 72%, transparent);
-  }
-
-  .act-repli {
-    width: 1.8rem;
-    height: 1.8rem;
-    font-size: 1.8rem;
-  }
-
-  .act-haut {
-    left: auto;
-  }
-
-  .act-rang {
-    display: none;
-  }
-
-  .act-bas {
-    position: relative;
-    flex: 1;
-    justify-content: center;
-    min-width: 0;
-    padding: 0.4rem 2rem 0.45rem 0.55rem;
-    background: none;
-  }
-
-  .act-nom {
-    font-size: calc(0.9rem * var(--thr-k, 1));
-    text-shadow: none;
   }
 }
 
