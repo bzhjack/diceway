@@ -1,4 +1,4 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-forge-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
@@ -9,7 +9,7 @@
             <div class="space-y-3">
               <div class="flex items-center gap-3">
                 <div class="ip-icon flex h-14 w-14 items-center justify-center">
-                  <mat-icon>work</mat-icon>
+                  <mat-icon svgIcon="gi-medal" />
                 </div>
                 <div class="flex min-w-0 flex-1 flex-col gap-2">
                   <p class="ip-eyebrow m-0">
@@ -37,10 +37,10 @@
 
           <div class="library-header-actions flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <button mat-flat-button size="small" routerLink="/library/heroes">
-              <mat-icon>group</mat-icon> Ouvrir la bibliothèque des héros
+              <mat-icon svgIcon="gi-group" /> Ouvrir la bibliothèque des héros
             </button>
             <button mat-stroked-button size="small" routerLink="/">
-              <mat-icon>arrow_back</mat-icon> Retour à la table
+              <mat-icon svgIcon="gi-return" /> Retour à la table
             </button>
           </div>
         </div>
@@ -50,7 +50,7 @@
     <!-- Library entry cards -->
     <div class="grid gap-4 lg:grid-cols-2">
       @for (entry of libraryEntries(); track entry.route) {
-        <mat-card appearance="outlined">
+        <mat-card appearance="outlined" class="ip-entry-card">
           <mat-card-content>
             <article class="flex h-full flex-col gap-5">
               <div class="flex items-start justify-between gap-3">
@@ -58,13 +58,8 @@
                   <div class="flex items-center gap-3">
                     <div
                       class="ip-entry-icon flex h-12 w-12 items-center justify-center"
-                      [class]="'ip-entry-icon--' + entry.accent"
                     >
-                      @if (entry.svgIcon) {
-                        <mat-icon [svgIcon]="entry.icon" />
-                      } @else {
-                        <mat-icon>{{ entry.icon }}</mat-icon>
-                      }
+                      <mat-icon [svgIcon]="entry.icon" />
                     </div>
                     <div class="space-y-1">
                       <p class="ip-entry-kicker m-0">
@@ -94,5 +89,11 @@
       }
     </div>
 
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
   </div>
 </section>

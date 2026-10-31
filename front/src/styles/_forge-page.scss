@@ -1,3 +1,22 @@
+// Un bouton rond : un clou de bronze, qui rougeoie au survol.
+@mixin forge-stud {
+  border: 1px solid var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 1px;
+  }
+}
+
 // La forge sur une fiche à modifier ou une bibliothèque (`dw-page dw-forge-page`) : de la suie, des plaques de fer pour les sections et les
 // cartes, des creux pour ce qui se saisit, des clous de bronze pour les boutons ronds. La disposition ne change pas. Ces composants sont
 // partagés avec des pages qui gardent l'ancien style : tout passe par cette classe, et deux classes de tête pour l'emporter sur les styles des
@@ -156,7 +175,8 @@
     text-shadow: 0 1px 3px #000;
   }
 
-  .dw-lh-card .mat-mdc-outlined-button {
+  .dw-lh-card .mat-mdc-outlined-button,
+  .ip-header-card .mat-mdc-outlined-button {
     background-color: rgba(0, 0, 0, 0.55);
   }
 
@@ -251,21 +271,7 @@
   .weapon-action-btn,
   .armor-action-btn,
   .cl-row-actions .mat-mdc-icon-button {
-    border: 1px solid var(--dw-forge-bronze-dim);
-    background: var(--dw-forge-stud);
-    box-shadow: var(--dw-forge-stud-shadow);
-    color: var(--dw-forge-stud-text);
-
-    &:hover:not(:disabled) {
-      border-color: var(--dw-forge-hot);
-      box-shadow: var(--dw-forge-stud-glow);
-      color: var(--dw-forge-hot-text);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--dw-forge-hot);
-      outline-offset: 1px;
-    }
+    @include forge-stud;
   }
 
   .weapon-action-btn,
@@ -292,7 +298,8 @@
   }
 }
 
-// Les menus d'ajout s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à l'écran.
+// Les menus d'ajout et les dialogues s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à
+// l'écran. Le statbloc garde sa propre fiche.
 body:has(.dw-forge-page) .cdk-overlay-container {
   --mat-form-field-outlined-outline-color: var(--dw-forge-bronze-dim);
   --mat-form-field-outlined-hover-outline-color: var(--dw-forge-bronze);
@@ -304,6 +311,18 @@ body:has(.dw-forge-page) .cdk-overlay-container {
   --mat-select-enabled-trigger-text-color: var(--dw-forge-bone);
   --mat-select-enabled-arrow-color: var(--dw-forge-bronze-text);
   --mat-select-panel-background-color: #171009;
+  --mat-dialog-container-color: #171009;
+  --mat-dialog-subhead-color: var(--dw-forge-name);
+  --mat-dialog-supporting-text-color: var(--dw-forge-bone);
+  --mat-button-outlined-outline-color: var(--dw-forge-bronze);
+  --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
+  --dw-border: var(--dw-forge-bronze-edge);
+  --dw-color-legendary: var(--dw-forge-gold);
+  --dw-surface-100: #171009;
+  --dw-surface-500: var(--dw-forge-stud-text);
+  --dw-surface-600: var(--dw-forge-stud-text);
+  --dw-surface-700: var(--dw-forge-bone);
+  --dw-surface-800: var(--dw-forge-bone);
 
   .mat-mdc-menu-panel {
     border-color: var(--dw-forge-bronze);
@@ -317,5 +336,23 @@ body:has(.dw-forge-page) .cdk-overlay-container {
 
   .mat-mdc-select-panel {
     border: 1px solid var(--dw-forge-bronze);
+  }
+
+  .cdk-overlay-pane:not(.dw-statblock-dialog) .mat-mdc-dialog-surface {
+    border: 1px solid var(--dw-forge-bronze);
+    border-radius: 7px;
+  }
+
+  .cdk-overlay-pane:not(.dw-statblock-dialog) .mat-mdc-dialog-title {
+    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  }
+
+  .mat-mdc-dialog-surface .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+    background: var(--dw-forge-recess);
+    box-shadow: var(--dw-forge-recess-shadow);
+  }
+
+  .dw-add-trigger {
+    @include forge-stud;
   }
 }

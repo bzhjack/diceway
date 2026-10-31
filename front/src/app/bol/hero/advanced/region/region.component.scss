@@ -7,8 +7,8 @@
 }
 
 .hrg-map-wrap {
-  border: 1px solid var(--dw-border);
-  background: rgba(21, 14, 9, 0.8);
+  border: 1px solid var(--dw-forge-bronze);
+  background: var(--dw-forge-recess);
   overflow: hidden;
 }
 
@@ -60,12 +60,14 @@
 .hrg-selected-region {
   font-family: 'Muse Display Harmony';
   font-size: 1.35rem;
-  color: var(--dw-surface-800);
+  color: var(--dw-forge-name);
 }
 
 .hrg-region-panel {
-  border: 1px solid var(--dw-border);
-  background: rgba(42, 28, 18, 0.55);
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
 }
 
 .hrg-region-scroll {
@@ -74,8 +76,8 @@
 }
 
 .hrg-region-row {
-  border: 1px solid var(--dw-border);
-  background: rgba(21, 14, 9, 0.4);
+  border: 1px solid var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-recess);
   border-radius: 999px;
   padding: 0.3rem 0.75rem;
   text-align: left;
@@ -85,23 +87,23 @@
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 
   &:hover {
-    background: rgba(21, 14, 9, 0.7);
-    border-color: var(--dw-surface-400);
+    background: var(--dw-forge-recess);
+    border-color: var(--dw-forge-hot);
   }
 }
 
 .hrg-region-row--hovered {
-  border-color: #fde68a;
+  border-color: var(--dw-forge-hot);
 }
 
 .hrg-region-row--active {
-  background: #059669;
-  border-color: #059669;
-  color: #fff;
+  background: var(--dw-color-legendary);
+  border-color: var(--dw-color-legendary);
+  color: #1c1200;
   font-weight: 700;
 
   &:hover {
-    background: #059669;
+    background: var(--dw-color-legendary);
   }
 }
 
@@ -110,7 +112,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-gold);
 }
 
 .hrg-eyebrow--muted {
@@ -118,17 +120,17 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--dw-surface-500);
+  color: var(--dw-forge-gold);
 }
 
 .hrg-tag--active {
-  background: #059669 !important;
-  color: #fff !important;
+  background: var(--dw-color-legendary) !important;
+  color: #1c1200 !important;
 }
 
 .hrg-empty-region {
-  border: 1px dashed var(--dw-border);
-  background: rgba(21, 14, 9, 0.6);
+  border: 1px dashed var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-recess);
   color: var(--dw-surface-500);
 }
 
@@ -140,8 +142,8 @@
 }
 
 .hrg-neutral-box {
-  border: 1px solid rgba(100, 116, 139, 0.25);
-  background: rgba(21, 14, 9, 0.3);
+  border: 1px solid var(--dw-forge-bronze-edge);
+  background: var(--dw-forge-recess);
   font-size: 0.875rem;
   color: var(--dw-surface-600);
 }

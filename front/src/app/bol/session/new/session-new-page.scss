@@ -10,23 +10,30 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
+  border: 1px solid var(--dw-forge-bronze);
   border-radius: 50%;
-  border: 2px solid var(--bar-bronze, var(--dw-border));
-  background: var(--dw-surface-200);
-  color: var(--dw-color-legendary);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-hot-text);
 }
 
 .snp-eyebrow {
   margin: 0;
-  font-size: 0.8rem;
-  color: var(--dw-surface-600);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--dw-forge-gold);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.14em;
 }
 
 .snp-title {
   margin: 0;
-  font-size: 1.3rem;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .snp-heroes-head {
@@ -37,15 +44,19 @@
 
   h2 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dw-forge-gold);
   }
 }
 
 .snp-heroes-total {
   border-radius: 999px;
-  border: 1px solid var(--bar-bronze, var(--dw-border));
-  background: var(--dw-surface-200);
-  color: var(--dw-color-legendary);
+  border: 1px solid var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-recess);
+  color: var(--dw-forge-bone);
   padding: 0.1rem 0.6rem;
   font-size: 0.85rem;
 }
@@ -66,8 +77,10 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: 1px solid var(--dw-border);
-  background: var(--dw-surface-800);
+  border: 1px solid var(--dw-forge-bronze-dim);
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+  color: var(--dw-forge-bone);
   border-radius: 999px;
   padding: 0.25rem 0.5rem 0.25rem 0.25rem;
 
@@ -87,12 +100,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  border: none;
-  background: transparent;
-  color: inherit;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 50%;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-stud-text);
   cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+    box-shadow: var(--dw-forge-stud-glow);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 1px;
+  }
 
   mat-icon {
     font-size: 1rem;
@@ -105,14 +131,20 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  border: 1px dashed var(--dw-border);
-  background: transparent;
-  color: inherit;
-  border-radius: 0.5rem;
+  border: 1px dashed var(--dw-forge-bronze);
+  background: var(--dw-forge-recess);
+  color: var(--dw-forge-bronze-text);
+  border-radius: var(--dw-radius-pill);
   padding: 0.5rem 0.75rem;
   cursor: pointer;
 
   &:hover {
-    background: var(--dw-surface-800);
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
   }
 }

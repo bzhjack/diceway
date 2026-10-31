@@ -1,4 +1,4 @@
-<section class="dw-page">
+<section class="dw-page dw-forge-page">
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <mat-card appearance="outlined">
       <mat-card-content>
@@ -8,7 +8,7 @@
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
                 <div class="hap-icon">
-                  <mat-icon>auto_fix_high</mat-icon>
+                  <mat-icon svgIcon="gi-sparkles" />
                 </div>
                 <div class="space-y-1">
                   <p class="hap-eyebrow">
@@ -22,7 +22,7 @@
 
               <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
                 <button mat-stroked-button type="button" (click)="goBack()">
-                  <mat-icon>arrow_back</mat-icon> Retour
+                  <mat-icon svgIcon="gi-return" /> Retour
                 </button>
               </div>
             </div>
@@ -68,7 +68,7 @@
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
                 <div class="hap-icon">
-                  <mat-icon>auto_fix_high</mat-icon>
+                  <mat-icon svgIcon="gi-sparkles" />
                 </div>
                 <div class="space-y-1">
                   <p class="hap-eyebrow">
@@ -87,11 +87,11 @@
 
               <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
                 <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
-                  <mat-icon>arrow_back</mat-icon> Retour
+                  <mat-icon svgIcon="gi-return" /> Retour
                 </button>
 
                 <button mat-flat-button type="submit" [disabled]="submitDisabled()">
-                  <mat-icon>save</mat-icon> {{ submitLabel() }}
+                  <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
                   @if (formDirty()) {
                     <span class="hap-dirty-dot" aria-label="Modifications non enregistrées"></span>
                   }
@@ -101,11 +101,10 @@
                   <button
                     mat-flat-button
                     type="button"
-                    class="hap-activate-btn"
                     [disabled]="activateDisabled()"
                     (click)="confirmActivation()"
                   >
-                    <mat-icon>check</mat-icon> Activer le héros
+                    <mat-icon svgIcon="gi-laurels" /> Activer le héros
                   </button>
                 }
               </div>
@@ -265,5 +264,12 @@
         }
       </mat-card-content>
     </mat-card>
+
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
   </div>
 </section>

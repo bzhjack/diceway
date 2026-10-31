@@ -5,7 +5,7 @@
 .ip-header-card {
   background-color: #12100a;
   background-image:
-    linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%),
+    linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.78) 48%, rgba(15, 10, 6, 0.15) 78%),
     linear-gradient(to top, rgba(12, 10, 6, 0.75) 0%, rgba(12, 10, 6, 0) 35%),
     url('/assets/bol/header-intendance.png');
   background-repeat: no-repeat;
@@ -14,10 +14,17 @@
 }
 
 .ip-icon {
-  border: 1px solid var(--dw-border);
-  background: #b45309;
-  font-size: 1.5rem;
-  color: #fff;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-hot-text);
+
+  .mat-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+  }
 }
 
 .ip-eyebrow {
@@ -32,6 +39,8 @@
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 
   @media (min-width: 768px) {
     font-size: 2.8rem;
@@ -41,25 +50,25 @@
 .ip-description {
   font-size: 0.875rem;
   line-height: 1.75rem;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 3px #000;
 
   @media (min-width: 768px) {
     font-size: 0.95rem;
   }
 }
 
+.ip-entry-card {
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+}
+
 .ip-entry-icon {
-  border: 1px solid var(--dw-border);
-  font-size: 1.125rem;
-  color: #fff;
-}
-
-.ip-entry-icon--amber {
-  background: rgba(180, 83, 9, 0.9);
-}
-
-.ip-entry-icon--sky {
-  background: rgba(3, 105, 161, 0.9);
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-hot-text);
 }
 
 .ip-entry-kicker {
@@ -67,14 +76,15 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--dw-surface-500);
+  color: var(--dw-forge-gold);
 }
 
 .ip-entry-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.6rem;
+  font-weight: 400;
   line-height: 1;
-  color: var(--dw-surface-800);
+  color: var(--dw-forge-name);
 }
 
 .ip-entry-description {
