@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
+use App\Http\Services\Bol\BolCache;
 use App\Models\Bol\BolArme;
 use App\Models\Bol\BolHerosArme;
 use Illuminate\Http\Request;
@@ -12,12 +14,12 @@ use Illuminate\Validation\Rule;
 
 class BolArmeController extends Controller
 {
-    private const CACHE_KEY = 'bol_armes_all';
+    use ProtectsHeros;
 
     public function getAll()
     {
-        $cacheDuration = 60 * 24; // 60 minutes
-        $cacheKey = self::CACHE_KEY . '_' . Auth::id();
+        $cacheDuration = BolCache::TTL;
+        $cacheKey = BolCache::armes(Auth::id());
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolArme::query()
                 ->where(function ($query) {
@@ -99,7 +101,13 @@ class BolArmeController extends Controller
 
     public function create(Request $request, $herosId)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $newArme = $request->input();
+        if (!BolArme::accessibleTo(Auth::id())->whereKey($newArme['arme_id'] ?? null)->exists()) {
+            return response()->json(['message' => 'Arme non trouvée'], 404);
+        }
         $arme = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $newArme['arme_id'])->first();
         if ($arme) {
             return response()->json(['message' => 'Arme déjà existante'], 403);
@@ -116,6 +124,9 @@ class BolArmeController extends Controller
      * peuvent être équipées (combat à deux armes). */
     public function equip($herosId, $id)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $pivot = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();
         if (!$pivot) {
             return response()->json(['message' => 'Arme non trouvée'], 404);
@@ -128,8 +139,11 @@ class BolArmeController extends Controller
         return response()->json(['success' => true, 'equipee' => $pivot->equipee]);
     }
 
-    public static function delete($herosId, $id)
+    public function delete($herosId, $id)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $armure = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();
         if (!$armure) {
             return response()->json(['message' => 'Arme non trouvée'], 404);
@@ -163,7 +177,7 @@ class BolArmeController extends Controller
 
     private function flushCache(): void
     {
-        Cache::forget(self::CACHE_KEY . '_' . Auth::id());
+        Cache::forget(BolCache::armes(Auth::id()));
     }
 
 }

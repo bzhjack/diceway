@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCache;
 use App\Models\Bol\BolRegion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,7 +17,7 @@ class BolRegionController extends Controller
     {
 
         $cacheKey = 'bol_regions_all';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolRegion::with('avantages', 'desavantages', 'noms', 'langueNative', 'premiereCarriere')->get();
         });

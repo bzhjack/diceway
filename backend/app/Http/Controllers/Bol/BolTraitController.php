@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
+use App\Http\Services\Bol\BolCache;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHerosTrait;
@@ -12,10 +14,12 @@ use Illuminate\Support\Facades\Cache;
 
 class BolTraitController extends Controller
 {
+    use ProtectsHeros;
+
     public function getAllAvantages()
     {
         $cacheKey = 'bol_avantages_all';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolAvantage::all();
         });
@@ -27,7 +31,7 @@ class BolTraitController extends Controller
     {
 
         $cacheKey = 'bol_desavantages_all';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolDesavantage::all();
         });
@@ -43,6 +47,9 @@ class BolTraitController extends Controller
      */
     public function delete($herosId, $id): \Illuminate\Http\JsonResponse
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $trait = BolHerosTrait::where('heros_id', $herosId)->where('id', $id)->first();
         if (!$trait) {
             return response()->json(['message' => 'Trait non trouvé'], 404);
@@ -53,6 +60,9 @@ class BolTraitController extends Controller
 
     public function create(Request $request, $herosId)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $newTrait = $request->input();
         $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->where('type', $newTrait['type'])->first();
         if ($trait) {

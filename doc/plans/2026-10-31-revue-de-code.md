@@ -24,6 +24,16 @@ Le code est sain sur le fond. Les conventions Angular sont presque toutes respec
 
 Ces deux points sortent de la demande, mais ils passent avant le reste. Ils viennent de la lecture du code : je n'ai pas tenté d'attaque sur un serveur.
 
+**Corrigé le 2026-10-31 (phase 0).** Les sections 2.1 et 2.2 décrivent l'état d'avant la correction, et leurs numéros de ligne aussi.
+
+- **Propriété :** `app/Policies/Bol/` couvre héros, PNJ, créatures, démons, scénarios et sessions. Une fiche d'un autre compte répond 404. Le catalogue se lit par tous et ne se modifie par personne.
+- **Références :** un compte ne peut poser dans une session ou un scénario, ni rattacher à une fiche, que ses données ou celles du catalogue (`accessibleTo`).
+- **Propriétaire :** `user_id` envoyé par le client est ignoré à la création et à la mise à jour, et `id` aussi pour les créatures et les démons.
+- **Cache :** les clés et la durée, une heure, sont dans `BolCache`. Un import vide les listes du compte importé.
+- **Tests :** `tests/Feature/BolAccessTest.php`, 25 tests sur SQLite en mémoire. `tests/TestCase.php` refuse de lancer un test qui viderait une autre base.
+
+**Reste à retirer, sans risque d'accès :** la route `DELETE /bol/heros/traits/delete/{id}`, qui répond 500 car la méthode attend deux paramètres, et `BolCarriereController::update`, statique et sans route.
+
 ### 2.1 Pas de contrôle de propriété sur plusieurs routes
 
 Il n'y a aucune policy (`app/Policies` n'existe pas). Chaque méthode doit donc filtrer sur `Auth::id()`, et plusieurs ne le font pas.
@@ -269,9 +279,9 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 ### Phase 0 : sécurité et cache (M à L)
 
-- [ ] Policies et filtres de propriété sur les routes de la section 2.1, catalogue protégé
-- [ ] Tests d'accès : le compte B ne touche pas aux données du compte A
-- [ ] Clés de cache par compte pour créatures et démons, durée en constante unique
+- [x] Policies et filtres de propriété sur les routes de la section 2.1, catalogue protégé
+- [x] Tests d'accès : le compte B ne touche pas aux données du compte A
+- [x] Clés de cache par compte pour créatures et démons, durée en constante unique
 
 ### Phase 1 : gains rapides (M en tout)
 

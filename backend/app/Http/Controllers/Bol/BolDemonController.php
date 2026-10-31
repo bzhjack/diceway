@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCache;
 use App\Http\Services\Bol\BolDemonService;
 use App\Models\Bol\BolCategorie;
 use App\Models\Bol\BolDemon;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class BolDemonController extends Controller
 {
@@ -25,8 +27,8 @@ class BolDemonController extends Controller
 
     public function getAll()
     {
-        $cacheKey = 'bol_demons';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheKey = BolCache::demons(Auth::id());
+        $cacheDuration = BolCache::TTL;
         $demon = Cache::remember($cacheKey, $cacheDuration, function () {
             return $this->bolDemonService->getDemonsWithRelations();
         });
@@ -40,7 +42,7 @@ class BolDemonController extends Controller
     {
         $id = $request->route('id');
         $Demon = $this->bolDemonService->getDemonWithRelations($id);
-        if ($Demon === null) {
+        if ($Demon === null || Gate::denies('view', $Demon)) {
             return response()->json(['error' => 'Demon not found'], 404);
         }
         return response($Demon);
@@ -49,7 +51,7 @@ class BolDemonController extends Controller
     public function getAllCategories()
     {
         $cacheKey = 'bol_demons_categories';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $categorie = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolCategorie::orderBy('id', 'asc')->get();
         });
@@ -59,7 +61,7 @@ class BolDemonController extends Controller
     public function getAllPouvoirs()
     {
         $cacheKey = 'bol_demon_pouvoirs';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $pouvoirs = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolPouvoir::orderBy('id', 'asc')->get();
         });
@@ -68,8 +70,8 @@ class BolDemonController extends Controller
 
     public function create(Request $request)
     {
-        Cache::forget('bol_demons');
-        $demon = $request->input();
+        Cache::forget(BolCache::demons(Auth::id()));
+        $demon = $request->except(['id']);
         $demon['user_id'] = Auth::id();
         $demon = BolDemon::create($demon);
         $pouvoirs = $request->input('pouvoirs');
@@ -87,9 +89,9 @@ class BolDemonController extends Controller
 
     public function update(Request $request)
     {
-        Cache::forget('bol_demons');
+        Cache::forget(BolCache::demons(Auth::id()));
         $demonId = $request->input('id');
-        $updatedDemon = $request->except(['pouvoirs']);
+        $updatedDemon = $request->except(['pouvoirs', 'id', 'user_id']);
         $demon = BolDemon::with('categorie', 'pouvoirs')
             ->where('user_id', Auth::id())
             ->where('id', $demonId)->get()->first();
@@ -128,10 +130,10 @@ class BolDemonController extends Controller
 
     public function delete($id): \Illuminate\Http\JsonResponse
     {
-        Cache::forget('bol_demons');
+        Cache::forget(BolCache::demons(Auth::id()));
         $bolDemon = BolDemon::find($id);
         // Check if the resource exists
-        if (!$bolDemon) {
+        if (!$bolDemon || Gate::denies('delete', $bolDemon)) {
             return response()->json(['message' => 'Demon not found'], Response::HTTP_NOT_FOUND);
         }
         // Delete the resource

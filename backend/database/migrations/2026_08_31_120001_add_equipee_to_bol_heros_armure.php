@@ -13,6 +13,11 @@ return new class extends Migration
             $table->boolean('equipee')->default(false)->after('armure_id');
         });
 
+        // UPDATE … JOIN n'existe qu'en MySQL ; une base neuve (tests en SQLite) n'a rien à reprendre.
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Préserve le comportement actuel ("premier élément de la liste compte") comme état de
         // départ : marque équipé le pivot le plus ancien par héros et par catégorie d'armure.
         DB::statement(<<<'SQL'

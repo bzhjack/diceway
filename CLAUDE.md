@@ -37,6 +37,8 @@ npm run docker:exec            # Shell into container
 
 > `backend/package.json` is only for Vite asset bundling on the Laravel side, not a Node app.
 
+> `php artisan test` runs on in-memory SQLite, forced by `phpunit.xml` and enforced by `tests/TestCase.php`: `RefreshDatabase` wipes the database it runs on, so it must never reach the real MySQL. The container only mounts `app/` and `database/`: after changing `tests/` or `phpunit.xml`, `docker cp` them into `/var/www/html/` before running the tests there.
+
 ### Scenario import
 
 Scenarios live in each machine's database, not in git: after a pull that brings new JSON files under `doc/scenarios/<saga>/app/`, import them on this machine (the container only mounts `app/`, so copy the file first). Full format and behaviour: `doc/scenarios/format-import.md`.

@@ -14,6 +14,7 @@ use App\Models\Bol\BolScenarioPj;
 use App\Models\Bol\BolScenarioPnj;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class BolScenarioController extends Controller
 {
@@ -27,7 +28,7 @@ class BolScenarioController extends Controller
     public function getOne(string $id)
     {
         $scenario = $this->scenarioService->getScenarioWithRelations($id);
-        if (!$scenario) {
+        if (!$scenario || Gate::denies('view', $scenario)) {
             return response()->json(['error' => 'Not found'], 404);
         }
         return response()->json($scenario);
@@ -82,7 +83,7 @@ class BolScenarioController extends Controller
     {
         BolScenarioCreature::where('scenario_id', $scenarioId)->delete();
         foreach ($creatureList as $item) {
-            $creature = BolCreature::with('capacites.capacite')->find($item['creatureId']);
+            $creature = BolCreature::accessibleTo(Auth::id())->with('capacites.capacite')->find($item['creatureId']);
             if (!$creature) {
                 continue;
             }
@@ -119,7 +120,7 @@ class BolScenarioController extends Controller
     {
         BolScenarioDemon::where('scenario_id', $scenarioId)->delete();
         foreach ($demonList as $item) {
-            $demon = BolDemon::with('pouvoirs.pouvoir')->find($item['demonId']);
+            $demon = BolDemon::accessibleTo(Auth::id())->with('pouvoirs.pouvoir')->find($item['demonId']);
             if (!$demon) {
                 continue;
             }
@@ -154,7 +155,7 @@ class BolScenarioController extends Controller
     {
         BolScenarioPnj::where('scenario_id', $scenarioId)->delete();
         foreach ($pnjList as $item) {
-            $pnj = BolHeros::find($item['pnjId']);
+            $pnj = BolHeros::accessibleTo(Auth::id())->find($item['pnjId']);
             if (!$pnj) {
                 continue;
             }
@@ -189,6 +190,9 @@ class BolScenarioController extends Controller
     {
         BolScenarioPj::where('scenario_id', $scenarioId)->delete();
         foreach ($pjList as $pj) {
+            if (!BolHeros::accessibleTo(Auth::id())->whereKey($pj['heroId'])->exists()) {
+                continue;
+            }
             BolScenarioPj::create([
                 'scenario_id' => $scenarioId,
                 'heros_id'    => $pj['heroId'],

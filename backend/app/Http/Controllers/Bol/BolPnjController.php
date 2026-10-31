@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Bol;
 
+use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolArme;
+use App\Models\Bol\BolArmure;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
@@ -14,10 +17,13 @@ use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class BolPnjController extends Controller
 {
+    use ProtectsHeros;
+
     /**
      * Récupère tout les pnj
      */
@@ -57,7 +63,7 @@ class BolPnjController extends Controller
         $pnj['user_id'] = Auth::id();
         $pnj['active'] = true;
         $pnj = BolHeros::create($pnj);
-        $armes = $request->input('armes');
+        $armes = $this->keepAccessible(BolArme::class, $request->input('armes'), fn ($item) => $item['id']);
         foreach ($armes as $arme) {
             $newarme['heros_id'] = $pnj['id'];
             $newarme['arme_id'] = $arme['id'];
@@ -65,7 +71,7 @@ class BolPnjController extends Controller
             $newarme['equipee'] = true;
             BolHerosArme::create($newarme);
         }
-        $armures = $request->input('armures');
+        $armures = $this->keepAccessible(BolArmure::class, $request->input('armures'), fn ($item) => $item['id']);
         foreach ($armures as $armure) {
             BolHerosArmure::create([
                 'heros_id' => $pnj['id'],
@@ -108,8 +114,11 @@ class BolPnjController extends Controller
     public function update(Request $request)
     {
         $pnjId = $request->input('id');
-        $updatedPnj = $request->except(['armes', 'armures', 'carrieres', 'langues']);
+        $updatedPnj = $request->except(['armes', 'armures', 'carrieres', 'langues', 'user_id']);
         $pnj = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
+        if ($pnj === null) {
+            return response()->json(['error' => 'Pnj not found'], 404);
+        }
 
         $carrieres = $request->input('carrieres');
         $ids_carrieres = array_column($carrieres, 'id');
@@ -118,7 +127,7 @@ class BolPnjController extends Controller
             BolHerosCarriere::updateOrCreate(['heros_id' => $pnjId, 'carriere_id' => $item['id']], ['value' => $item['value']]);
         }
 
-        $armes = $request->input('armes');
+        $armes = $this->keepAccessible(BolArme::class, $request->input('armes'), fn ($item) => $item['id']);
         $ids_armes = array_column($armes, 'id');
         BolHerosArme::whereNotIn('arme_id', $ids_armes)->where('heros_id', $pnjId)->delete();
         foreach ($armes as $item) {
@@ -135,7 +144,7 @@ class BolPnjController extends Controller
             }
         }
 
-        $armures = $request->input('armures');
+        $armures = $this->keepAccessible(BolArmure::class, $request->input('armures'), fn ($item) => $item['id']);
         $ids_armures = array_column($armures, 'id');
         BolHerosArmure::whereNotIn('armure_id', $ids_armures)->where('heros_id', $pnjId)->delete();
         foreach ($armures as $item) {
@@ -180,7 +189,7 @@ class BolPnjController extends Controller
     public function delete($id): JsonResponse
     {
         $bolPnj = BolHeros::find($id);
-        if (!$bolPnj) {
+        if (!$bolPnj || Gate::denies('delete', $bolPnj)) {
             return response()->json(['message' => 'Pnj not found'], Response::HTTP_NOT_FOUND);
         }
         $bolPnj->delete();

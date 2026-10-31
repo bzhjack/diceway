@@ -2,6 +2,7 @@
 
 namespace App\Models\Bol;
 
+use App\Traits\AccessibleToUser;
 use App\Http\Services\Bol\BolEquipmentEffectService;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolHeros extends Model
 {
-    use HasFactory, Uuids;
+    use HasFactory, Uuids, AccessibleToUser;
 
     protected $table = 'bol_heros';
     public $incrementing = false;

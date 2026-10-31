@@ -2,6 +2,7 @@
 
 namespace App\Models\Bol;
 
+use App\Traits\AccessibleToUser;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolDemon extends Model
 {
-    use HasFactory, Uuids;
+    use HasFactory, Uuids, AccessibleToUser;
 
     protected $table = 'bol_demon';
     public $incrementing = false;

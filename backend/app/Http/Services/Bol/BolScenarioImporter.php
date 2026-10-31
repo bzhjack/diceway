@@ -77,8 +77,10 @@ final class BolScenarioImporter
 
             $this->scenes($plan, $userId, (string) $scenario->id, $ids);
 
-            Cache::forget('bol_creatures');
-            Cache::forget('bol_demons');
+            Cache::forget(BolCache::creatures($userId));
+            Cache::forget(BolCache::demons($userId));
+            Cache::forget(BolCache::armes($userId));
+            Cache::forget(BolCache::armures($userId));
 
             return $this->report;
         });

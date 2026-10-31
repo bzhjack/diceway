@@ -17,6 +17,11 @@ class BolFightSessionService
 {
     public function createSession(string $userId, array $data): ?BolFightSession
     {
+        $data['heros'] = $this->accessibles($userId, BolHeros::class, $data['heros'] ?? [], 'heroId');
+        $data['creatures'] = $this->accessibles($userId, BolCreature::class, $data['creatures'] ?? [], 'creatureId');
+        $data['demons'] = $this->accessibles($userId, BolDemon::class, $data['demons'] ?? [], 'demonId');
+        $data['pnjs'] = $this->accessibles($userId, BolHeros::class, $data['pnjs'] ?? [], 'pnjId');
+
         $session = BolFightSession::create([
             'user_id' => $userId,
             'titre'   => $data['titre'] ?? null,
@@ -29,6 +34,18 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /**
+     * Ne garde d'une liste envoyée par le client que ce que ce compte peut poser sur sa table : ses fiches et celles du catalogue.
+     *
+     * @param class-string<\Illuminate\Database\Eloquent\Model> $model
+     */
+    private function accessibles(string $userId, string $model, array $list, string $cle): array
+    {
+        $ids = $model::accessibleTo($userId)->whereIn('id', array_column($list, $cle))->pluck('id')->map(fn ($id) => (string) $id)->all();
+
+        return array_values(array_filter($list, fn ($item) => in_array((string) ($item[$cle] ?? ''), $ids, true)));
     }
 
     /** Une session créée sans adversaire démarre "libre" (héros seuls, hors combat) ; sinon "combat". */
@@ -220,6 +237,11 @@ class BolFightSessionService
     ): ?BolFightSession {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session) {
+            return null;
+        }
+
+        $source = ['hero' => BolHeros::class, 'pnj' => BolHeros::class, 'creature' => BolCreature::class, 'demon' => BolDemon::class][$kind] ?? null;
+        if ($source !== null && !$source::accessibleTo($userId)->whereKey($sourceId)->exists()) {
             return null;
         }
 

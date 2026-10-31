@@ -9,6 +9,7 @@ use App\Http\Services\Bol\BolFightSessionService;
 use App\Http\Services\Bol\BolSceneDistribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class BolFightSessionController extends Controller
@@ -23,7 +24,7 @@ class BolFightSessionController extends Controller
     public function getOne(string $id)
     {
         $session = $this->fightSessionService->getSessionWithRelations($id);
-        if (!$session) {
+        if (!$session || Gate::denies('view', $session)) {
             return response()->json(['error' => 'Not found'], 404);
         }
         return response()->json($session);

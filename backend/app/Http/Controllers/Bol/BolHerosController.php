@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Bol;
 
+use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolArme;
+use App\Models\Bol\BolArmure;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
@@ -17,10 +20,12 @@ use App\Http\Services\Bol\BolHerosService;
 use App\Http\Requests\Bol\BolHerosRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class BolHerosController extends Controller
 {
+    use ProtectsHeros;
 
     protected $bolHerosService;
 
@@ -45,7 +50,7 @@ class BolHerosController extends Controller
     {
         $id = $request->route('id');
         $hero = $this->bolHerosService->getHeroWithRelations($id);
-        if ($hero === null) {
+        if ($hero === null || Gate::denies('view', $hero)) {
             return response()->json(['error' => 'Hero not found'], 404);
         }
         return response($hero);
@@ -137,7 +142,7 @@ class BolHerosController extends Controller
     {
         $bolHeros = BolHeros::find($id);
         // Check if the resource exists
-        if (!$bolHeros) {
+        if (!$bolHeros || Gate::denies('delete', $bolHeros)) {
             return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
         }
         // Delete the resource
@@ -151,7 +156,7 @@ class BolHerosController extends Controller
     {
         $bolHeros = BolHeros::find($herosId);
         // Check if the resource exists
-        if (!$bolHeros) {
+        if (!$bolHeros || Gate::denies('update', $bolHeros)) {
             return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
         }
         $bolHeros['avatar'] = $request->input('avatar');
@@ -229,6 +234,7 @@ class BolHerosController extends Controller
 
         $armes = $request->input('armes', []);
         $armes = is_array($armes) ? $armes : [];
+        $armes = $this->keepAccessible(BolArme::class, $armes, fn ($item) => $extractRelationId($item, 'arme_id'));
         $armeIds = array_values(array_map(
             fn ($item) => $extractRelationId($item, 'arme_id'),
             $armes
@@ -253,6 +259,7 @@ class BolHerosController extends Controller
 
         $armures = $request->input('armures', []);
         $armures = is_array($armures) ? $armures : [];
+        $armures = $this->keepAccessible(BolArmure::class, $armures, fn ($item) => $extractRelationId($item, 'armure_id'));
         $armureIds = array_values(array_map(
             fn ($item) => $extractRelationId($item, 'armure_id'),
             $armures

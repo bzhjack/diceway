@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bol;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCache;
 use App\Http\Services\Bol\BolCreatureService;
 use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCreature;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 
 class BolCreatureController extends Controller
 {
@@ -27,8 +29,8 @@ class BolCreatureController extends Controller
 
     public function getAll()
     {
-        $cacheKey = 'bol_creatures';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheKey = BolCache::creatures(Auth::id());
+        $cacheDuration = BolCache::TTL;
         $creatures = Cache::remember($cacheKey, $cacheDuration, function () {
             return $this->bolCreatureService->getCreaturesWithRelations();
         });
@@ -42,7 +44,7 @@ class BolCreatureController extends Controller
     {
         $id = $request->route('id');
         $creature = $this->bolCreatureService->getCreatureWithRelations($id);
-        if ($creature === null) {
+        if ($creature === null || Gate::denies('view', $creature)) {
             return response()->json(['error' => 'Créature not found'], 404);
         }
         return response($creature);
@@ -51,7 +53,7 @@ class BolCreatureController extends Controller
     public function getAllTailles()
     {
         $cacheKey = 'bol_creatures_tailles';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $tailles = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolTaille::orderBy('id', 'asc')->get();
         });
@@ -61,7 +63,7 @@ class BolCreatureController extends Controller
     public function getAllCapacites()
     {
         $cacheKey = 'bol_creatures_capacites';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $capacites = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolCapacite::orderBy('id', 'asc')->get();
         });
@@ -70,8 +72,8 @@ class BolCreatureController extends Controller
 
     public function create(Request $request)
     {
-        Cache::forget('bol_creatures');
-        $creature = $request->input();
+        Cache::forget(BolCache::creatures(Auth::id()));
+        $creature = $request->except(['id']);
         $creature['user_id'] = Auth::id();
         $creature = BolCreature::create($creature);
         $capacites = $request->input('capacites');
@@ -89,9 +91,9 @@ class BolCreatureController extends Controller
 
     public function update(Request $request)
     {
-        Cache::forget('bol_creatures');
+        Cache::forget(BolCache::creatures(Auth::id()));
         $creatureId = $request->input('id');
-        $updatedCreature = $request->except(['capacites']);
+        $updatedCreature = $request->except(['capacites', 'id', 'user_id']);
         $creature = BolCreature::with('taille', 'capacites')
             ->where('user_id', Auth::id())
             ->where('id', $creatureId)->get()->first();
@@ -130,10 +132,10 @@ class BolCreatureController extends Controller
 
     public function delete($id): JsonResponse
     {
-        Cache::forget('bol_creatures');
+        Cache::forget(BolCache::creatures(Auth::id()));
         $bolCreature = BolCreature::find($id);
         // Check if the resource exists
-        if (!$bolCreature) {
+        if (!$bolCreature || Gate::denies('delete', $bolCreature)) {
             return response()->json(['message' => 'Creature not found'], Response::HTTP_NOT_FOUND);
         }
         // Delete the resource

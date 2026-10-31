@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
+use App\Http\Services\Bol\BolCache;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolLangue;
 use Illuminate\Http\Request;
@@ -10,21 +12,26 @@ use Illuminate\Support\Facades\Cache;
 
 class BolLangueController extends Controller
 {
+    use ProtectsHeros;
+
     /**
      * Récupère toutes les régions
      */
     public function getAll()
     {
         $cacheKey = 'bol_langues_all';
-        $cacheDuration = 60 * 24; // 60 minutes
+        $cacheDuration = BolCache::TTL;
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolLangue::all();
         });
         return response()->json($donnees);
     }
 
-    public static function delete($herosId, $id)
+    public function delete($herosId, $id)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $langue = BolHerosLangue::where('heros_id', $herosId)->where('langue_id', $id)->first();
         if (!$langue) {
             return response()->json(['message' => 'Langue non trouvée'], 404);
@@ -35,6 +42,9 @@ class BolLangueController extends Controller
 
     public function create(Request $request, $herosId)
     {
+        if (!$this->canEditHeros($herosId)) {
+            return $this->herosNotFound();
+        }
         $newLangue = $request->input();
         $langue = BolHerosLangue::where('heros_id', $herosId)->where('langue_id', $newLangue['langue_id'])->first();
         if ($langue) {

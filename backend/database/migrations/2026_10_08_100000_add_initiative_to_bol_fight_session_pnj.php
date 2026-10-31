@@ -13,6 +13,11 @@ return new class extends Migration {
             $table->tinyInteger('initiative')->default(0)->after('defense');
         });
 
+        // UPDATE … JOIN n'existe qu'en MySQL ; une base neuve (tests en SQLite) n'a rien à reprendre.
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement(
             'UPDATE bol_fight_session_pnj p JOIN bol_heros h ON h.id = p.pnj_id SET p.initiative = h.initiative'
         );
