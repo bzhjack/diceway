@@ -196,33 +196,27 @@
   gap: 0.2rem;
 }
 
-// Le dé, et ce qu'il fait : + ou − (trois classes : plus fort que les options, déclarées plus bas).
+// Le dé seul : vert pour le bonus, rouge pour le malus (trois classes : plus fort que les options, déclarées plus bas).
 .tas-head .tas-chip.tas-chip--de {
   display: inline-flex;
   align-items: center;
-  gap: 0.05rem;
-  min-height: 1.45rem;
-  padding: 0 0.2rem;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
 
   .mat-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-    font-size: 0.95rem;
-  }
-
-  i {
-    font-size: 0.82rem;
-    font-style: normal;
-    font-weight: 800;
-    line-height: 1;
+    width: 1.05rem;
+    height: 1.05rem;
+    font-size: 1.05rem;
   }
 }
 
-.tas-chip--bonus:not([aria-pressed='true']) i {
+.tas-chip--bonus:not([aria-pressed='true']) .mat-icon {
   color: var(--dw-forge-verdict-reussite);
 }
 
-.tas-chip--malus:not([aria-pressed='true']) i {
+.tas-chip--malus:not([aria-pressed='true']) .mat-icon {
   color: var(--dw-forge-verdict-echec);
 }
 

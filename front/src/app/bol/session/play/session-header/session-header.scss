@@ -45,8 +45,9 @@
 }
 
 .cp-header-title {
-  // En combat, le titre laisse la place à l'ordre d'action : il se coupe, et se lit en entier au survol.
-  flex: 0 1 15rem;
+  // En combat, le titre prend toute la place à côté des boutons (l'ordre d'action est sur la rangée du dessous) : il ne se coupe, et ne se lit
+  // en entier au survol, que si elle manque. Une base de 0, pour qu'un titre long ne repousse pas les boutons à la ligne.
+  flex: 1 1 0;
   min-width: 7rem;
 
   h1 {
@@ -78,6 +79,11 @@
 .cp-header-center {
   flex: 1;
   min-width: 0;
+}
+
+// En combat, rien n'y est projeté : il ne prend pas de place au titre.
+.cp-header--combat .cp-header-center {
+  display: none;
 }
 
 // Boutons à la taille de ceux de la maquette (2,1rem pour les ronds, 2,25rem pour les autres, tous plats) : la barre

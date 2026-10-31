@@ -37,10 +37,10 @@
         <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="played() || defenseTotale()" [attr.inert]="played() || defenseTotale() ? '' : null">
           <div class="tas-mj-row">
             <button type="button" class="tas-chip tas-chip--de tas-chip--bonus" [attr.aria-pressed]="gmDie() === 'bonus'" aria-label="Dé de bonus du MJ" matTooltip="Dé de bonus, quand les circonstances aident : 3d6 à l'attaque, on garde les deux meilleurs" (click)="toggleGmDie('bonus')">
-              <mat-icon svgIcon="gi-dice" aria-hidden="true" /><i aria-hidden="true">+</i>
+              <mat-icon svgIcon="gi-dice" aria-hidden="true" />
             </button>
             <button type="button" class="tas-chip tas-chip--de tas-chip--malus" [attr.aria-pressed]="gmDie() === 'malus'" aria-label="Dé de malus du MJ" matTooltip="Dé de malus, quand les circonstances gênent (ivresse, obscurité…) : 3d6 à l'attaque, on garde les deux moins bons" (click)="toggleGmDie('malus')">
-              <mat-icon svgIcon="gi-dice" aria-hidden="true" /><i aria-hidden="true">−</i>
+              <mat-icon svgIcon="gi-dice" aria-hidden="true" />
             </button>
             <dw-value-stepper [formControl]="modifierControl" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
           </div>

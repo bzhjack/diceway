@@ -10,7 +10,7 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   skull: '/assets/icons/skull.svg',
   crown: '/assets/icons/crown.svg',
   // game-icons.net, CC BY 3.0 : crédit à afficher (voir assets/icons/game-icons/README.md).
-  'gi-dice': '/assets/icons/game-icons/perspective-dice-six-faces-three.svg',
+  'gi-dice': '/assets/icons/game-icons/dice-six-faces-five.svg',
   'gi-tune': '/assets/icons/game-icons/settings-knobs.svg',
   'gi-sheet': '/assets/icons/game-icons/scroll-unfurled.svg',
   'gi-exit': '/assets/icons/game-icons/exit-door.svg',
