@@ -80,6 +80,12 @@ interface HeroRow {
   readonly vitaliteMax: number | null;
 }
 
+/** Une origine de ses dés de bonus ou de malus, écrite dans sa couleur. */
+interface DiceSource {
+  readonly label: string;
+  readonly tone: 'plus' | 'minus';
+}
+
 /** La carte d'un héros, prête à afficher : ce qu'il lui faut aux dés, ses chances, son jet et son verdict. */
 interface HeroCard {
   readonly hero: HeroRow;
@@ -99,6 +105,10 @@ interface HeroCard {
   readonly diceNet: number;
   /** Ces dés en clair, sous ce qu'il lui faut (« dé de malus », « 2 dés de bonus ») ; `null` sans. */
   readonly diceLabel: string | null;
+  /** D'où viennent ces dés : son trait, le MJ pour lui, le MJ pour tous. */
+  readonly diceSources: readonly DiceSource[];
+  /** La même chose pour un lecteur d'écran, à la suite de ce qu'il lui faut ; vide sans. */
+  readonly diceWhyLabel: string;
   /** Le dé de bonus (1) ou de malus (−1) accordé par le MJ pour ce jet, en plus de celui du trait ; `null` sans. */
   readonly gmDie: 1 | -1 | null;
   /** Le nom du bouton « Modificateurs », avec ce que le MJ a accordé (dé du MJ, carrière), que le bouton marque à ses coins. */
@@ -243,6 +253,8 @@ export class StartCombatPageComponent {
       // Sans point d'héroïsme, ni le succès légendaire ni le succès héroïque ne sont proposés ; une fois choisis ils restent affichés,
       // pour pouvoir y renoncer. Un double 6 qui était le seul moyen de réussir n'est qu'une réussite : il peut, lui, devenir héroïque.
       const base = dice === null ? null : reactionResult(dice, modifier);
+      const diceLabel = net === 0 ? null : `${Math.abs(net) > 1 ? '2 dés' : 'dé'} de ${net > 0 ? 'bonus' : 'malus'}`;
+      const diceSources = this.diceSourcesFor(hero);
       const legendary = dice === 12 && base === 'heroique' && (optionChosen || heroisme > 0);
       const heroic = base === 'reussite' && (upgraded || heroisme > 0);
       return {
@@ -254,7 +266,9 @@ export class StartCombatPageComponent {
         faces: this.facesFor(hero, dice),
         diceCount: 2 + Math.abs(net),
         diceNet: net,
-        diceLabel: net === 0 ? null : `${Math.abs(net) > 1 ? '2 dés' : 'dé'} de ${net > 0 ? 'bonus' : 'malus'}`,
+        diceLabel,
+        diceSources,
+        diceWhyLabel: diceSources.length > 0 ? ` ${diceLabel ? diceLabel[0].toUpperCase() + diceLabel.slice(1) : 'Dés annulés'} : ${diceSources.map((source) => source.label).join(', ')}.` : '',
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
         modsLabel: this.modsLabel(hero, parts.carriere ?? null),
         traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
@@ -613,6 +627,18 @@ export class StartCombatPageComponent {
    * pour tous ; deux au plus. */
   private diceNetFor(hero: HeroRow): number {
     return Math.max(-2, Math.min(2, hero.diceNet + (this.gmDieByPivot().get(hero.pivotId) ?? 0) + (this.globalGmDie() ?? 0)));
+  }
+
+  /** D'où viennent les dés de bonus et de malus d'un héros, pour dire pourquoi à côté de ses chances : son trait, puis le MJ, ses deux dés
+   * réunis (ils s'annulent ou se cumulent), en mots courts pour tenir dans la colonne. */
+  private diceSourcesFor(hero: HeroRow): readonly DiceSource[] {
+    const tone = (die: number): DiceSource['tone'] => (die > 0 ? 'plus' : 'minus');
+    const gm = this.gmDieByPivot().get(hero.pivotId) ?? 0;
+    const mj = gm + (this.globalGmDie() ?? 0);
+    return [
+      ...(hero.diceNet !== 0 ? [{label: hero.diceNet > 0 ? 'Vigilant' : 'Lent à la détente', tone: tone(hero.diceNet)}] : []),
+      ...(mj !== 0 ? [{label: Math.abs(mj) > 1 ? 'MJ ×2' : gm !== 0 ? 'MJ' : 'MJ tous', tone: tone(mj)}] : []),
+    ];
   }
 
   /** Le dé du MJ pour tous les héros : bonus (1), malus (−1) ou aucun (`null`). Les totaux tapés restent ; les faces des lancers à

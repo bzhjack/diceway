@@ -620,6 +620,12 @@ bol-start-combat-page {
   align-self: start;
 }
 
+.scd-row > .scd-dice-why {
+  grid-column: 3;
+  grid-row: 3;
+  align-self: start;
+}
+
 .scd-row > .scd-entry {
   grid-column: 4;
 }
@@ -924,6 +930,28 @@ bol-start-combat-page {
 }
 
 .scd-chance .scd-dice-note--minus {
+  color: var(--dw-color-echec);
+}
+
+// Pourquoi ces dés, sous les chances : le trait ou le MJ, dans la couleur de ce qu'ils donnent.
+.scd-dice-why {
+  display: flex;
+  gap: 0.4rem;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.scd-dice-why--plus,
+.scd-pop-note--plus {
+  color: var(--dw-color-reussite);
+}
+
+.scd-dice-why--minus,
+.scd-pop-note--minus {
   color: var(--dw-color-echec);
 }
 
@@ -1301,8 +1329,8 @@ bol-start-combat-page {
 
 .scd-pop-note {
   margin: -0.4rem 0 0;
-  color: var(--dw-surface-600);
   font-size: 0.8rem;
+  font-weight: 700;
 }
 
 // Le dé du MJ choisi prend la couleur de son effet : vert pour un dé de bonus, rouge pour un dé de malus.

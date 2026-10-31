@@ -271,7 +271,7 @@
                   <span
                     class="scd-need"
                     role="img"
-                    [attr.aria-label]="'Il te faut ' + card.target.big + ' ' + card.target.small + ', ' + card.chance + ' % de chances.'"
+                    [attr.aria-label]="'Il te faut ' + card.target.big + ' ' + card.target.small + ', ' + card.chance + ' % de chances.' + card.diceWhyLabel"
                   >
                     <b aria-hidden="true">{{ card.target.big }}</b>
                   </span>
@@ -297,6 +297,14 @@
                       <small>{{ card.target.small }}</small>
                     }
                   </span>
+                  <!-- Pourquoi ces dés : le trait ou le MJ, en vert pour un bonus, en rouge pour un malus -->
+                  @if (card.diceSources.length > 0) {
+                    <span class="scd-dice-why" aria-hidden="true">
+                      @for (source of card.diceSources; track source.label) {
+                        <small [class]="'scd-dice-why--' + source.tone">{{ source.label }}</small>
+                      }
+                    </span>
+                  }
 
                   <!-- La case du total (tapé à table, ou lancé à l'écran par le bouton) -->
                   <span class="scd-entry">
@@ -471,7 +479,7 @@
                       >
                         <p class="scd-pop-title">Modificateurs du jet de {{ card.hero.nom }}</p>
                         @if (card.traitNote; as trait) {
-                          <p class="scd-pop-note">{{ trait }}</p>
+                          <p class="scd-pop-note" [class.scd-pop-note--plus]="card.hero.diceNet > 0" [class.scd-pop-note--minus]="card.hero.diceNet < 0">{{ trait }}</p>
                         }
                         <div class="scd-pop-group" role="group" [attr.aria-label]="'Dé du MJ'">
                           <span class="scd-label">Dé du MJ</span>
