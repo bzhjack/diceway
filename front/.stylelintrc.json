@@ -1,0 +1,73 @@
+{
+  "extends": [
+    "stylelint-config-recommended-scss"
+  ],
+  "ignoreFiles": [
+    "dist/**",
+    ".angular/**",
+    "public/**",
+    "src/assets/**"
+  ],
+  "rules": {
+    "declaration-property-value-disallowed-list": {
+      "cursor": [
+        "help"
+      ],
+      "/.*/": [
+        "/var\\(--p-/"
+      ]
+    },
+    "property-disallowed-list": [
+      "/^--p-/"
+    ],
+    "selector-pseudo-element-disallowed-list": [
+      [
+        "ng-deep"
+      ],
+      {
+        "message": "::ng-deep est déprécié : passer par un jeton ou par la feuille de la forge."
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": [
+          "ng-deep"
+        ]
+      }
+    ],
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignore": [
+          "custom-elements"
+        ],
+        "ignoreTypes": [
+          "/^mat-/",
+          "/^dw-/",
+          "/^bol-/",
+          "/^app-/",
+          "/^mdc-/",
+          "/^cdk-/"
+        ]
+      }
+    ],
+    "color-no-hex": [
+      true,
+      {
+        "message": "Une couleur passe par un jeton de src/styles/_tokens.scss."
+      }
+    ],
+    "at-rule-descriptor-value-no-unknown": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/styles/_tokens.scss"
+      ],
+      "rules": {
+        "color-no-hex": null
+      }
+    }
+  ]
+}

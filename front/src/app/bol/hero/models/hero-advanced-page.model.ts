@@ -1,4 +1,3 @@
-import {BolHerosModel} from '../../models/bol-heros.model';
 import {ArmeDraft, ArmureDraft, IdDraft, RankedDraft} from '../../shared/models/form-selection.model';
 
 /** Brouillon de trait dans le modèle : `id` est l'id du lien héros/trait côté serveur. */

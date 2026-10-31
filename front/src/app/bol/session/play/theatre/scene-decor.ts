@@ -44,10 +44,7 @@ export class SceneDecorComponent {
   readonly scene = input<BolSceneModel | null>(null);
 
   /** L'illustration a échoué au chargement ; remis à faux quand l'adresse change. */
-  protected readonly imageFailed = linkedSignal(() => {
-    this.scene()?.image;
-    return false;
-  });
+  protected readonly imageFailed = linkedSignal({source: () => this.scene()?.image, computation: () => false});
   protected readonly image = computed(() => {
     const scene = this.scene();
     return sceneDecor(this.imageFailed() && scene ? {...scene, image: null} : scene);

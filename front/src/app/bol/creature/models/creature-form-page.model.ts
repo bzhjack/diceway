@@ -1,4 +1,3 @@
-import {BolCreatureModel} from '../../models/bol-creature.model';
 import {DetailDraft} from '../../shared/models/form-selection.model';
 
 /** Modèle de brouillon du formulaire créature (distinct de {@link BolCreatureModel}, la forme persistée par l'API). */

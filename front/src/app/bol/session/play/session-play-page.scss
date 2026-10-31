@@ -42,6 +42,20 @@
   }
 }
 
+// Le pied garde 30 % de la hauteur : sur une fenêtre basse, ce sont les cartes du plateau qui cèdent, pour que la scène ne défile pas.
+@media (max-height: 46rem) {
+  .cp-page {
+    --thr-k: 0.72;
+  }
+}
+
+// Plus bas, le texte des cartes deviendrait illisible : le plateau resserre ses marges (`theatre.scss`, `troupe.scss`).
+@media (max-height: 43.5rem) {
+  .cp-page {
+    --thr-k: 0.64;
+  }
+}
+
 .cp-table {
   flex: 1;
   min-height: 0;

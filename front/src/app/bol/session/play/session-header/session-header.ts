@@ -30,7 +30,7 @@ export class SessionHeaderComponent {
   readonly startCombat = output<void>();
   readonly endCombat = output<void>();
   /** Ouvre la barre de commande (même effet que les raccourcis `/` et `Ctrl+K`). */
-  readonly search = output<void>();
+  readonly searchRequested = output<void>();
   /** Ouvre ou ferme les coulisses. */
   readonly coulissesToggled = output<void>();
   /** En combat : un héros qui a retardé son action interrompt (clé de sa carte). */

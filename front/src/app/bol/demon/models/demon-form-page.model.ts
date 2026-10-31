@@ -1,4 +1,3 @@
-import {BolDemonModel} from '../../models/bol-demon.model';
 import {DetailDraft} from '../../shared/models/form-selection.model';
 
 /** Modèle de brouillon du formulaire démon (distinct de {@link BolDemonModel}, la forme persistée par l'API). */

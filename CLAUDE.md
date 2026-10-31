@@ -19,8 +19,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm start          # Dev server on localhost:4200 (proxies API to localhost:8080)
 npm run build      # Production build — run this to validate any frontend change
 npm test           # Unit tests with Vitest
+npm run lint       # ESLint and Stylelint — run this too after any frontend change
+npm run lint:prune # After fixing a listed debt: lowers the counts in the suppression files
 npm run watch      # Incremental dev build
 ```
+
+> `eslint-suppressions.json` and `stylelint-suppressions.json` count the existing debts: never add to them to get past the lint, fix the new violation. CI (`.github/workflows/ci.yml`) runs lint, build and both test suites on every push to `develop` and on pull requests.
 
 ### Backend (`backend/`)
 

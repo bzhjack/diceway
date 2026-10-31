@@ -17,6 +17,12 @@
     box-shadow 0.12s ease-out;
 }
 
+@media (max-height: 43.5rem) {
+  .trp {
+    padding-block-end: 1rem;
+  }
+}
+
 // Pendant un glisser : la rampe devient une zone de dépôt, et s'allume quand on la vise.
 .trp--droppable {
   border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);

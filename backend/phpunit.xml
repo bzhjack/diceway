@@ -19,6 +19,8 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <!-- Clé réservée aux tests, sur une base jetable : la CI n'a pas de .env. -->
+        <env name="APP_KEY" value="base64:UF7kn2Lky8vN3K58vpJ/QJ7lZyqiWO8bOD5FRqpZ/Nc=" force="true"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array" force="true"/>
         <env name="DB_CONNECTION" value="sqlite" force="true"/>

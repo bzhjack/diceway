@@ -133,7 +133,9 @@ export class AuthService {
     this.clearSession();
     try {
       this.oauth.logOut();
-    } catch {}
+    } catch {
+      // La session locale est déjà effacée : un échec côté Google ne doit pas bloquer la déconnexion.
+    }
     void this.router.navigateByUrl('/login');
   }
 

@@ -33,5 +33,5 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwErrorMessageComponent {
-  messages = input<string[]>([]);
+  readonly messages = input<string[]>([]);
 }

@@ -21,13 +21,13 @@ import {HeroCreationWarning, AttributModifier} from '../models/bol-heros-state.m
 })
 export class BolHerosStateService {
   #catalog = inject(BolCatalogService);
-  langueList = toSignal(this.#catalog.langues());
-  regionList = toSignal(this.#catalog.regions());
-  carriereList = toSignal(this.#catalog.carrieres());
-  currentHeros = signal<BolHerosModel | null>(null);
-  avantagesList = toSignal(this.#catalog.avantages());
-  desavantagesList = toSignal(this.#catalog.desavantages());
-  currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
+  readonly langueList = toSignal(this.#catalog.langues());
+  readonly regionList = toSignal(this.#catalog.regions());
+  readonly carriereList = toSignal(this.#catalog.carrieres());
+  readonly currentHeros = signal<BolHerosModel | null>(null);
+  readonly avantagesList = toSignal(this.#catalog.avantages());
+  readonly desavantagesList = toSignal(this.#catalog.desavantages());
+  readonly currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
 
   /**
    * Armes/armures sont éditables depuis l'intendance (bol-catalog-service.armes/armures ne cache rien) :
@@ -35,8 +35,8 @@ export class BolHerosStateService {
    * ces deux listes doivent être rechargées à chaque formulaire héros/PNJ plutôt que figées une fois pour
    * toutes à la création du singleton — d'où un signal réinscriptible + `refreshEquipmentCatalog()`.
    */
-  armeList = signal<BolArmeModel[] | undefined>(undefined);
-  armureList = signal<BolArmureModel[] | undefined>(undefined);
+  readonly armeList = signal<BolArmeModel[] | undefined>(undefined);
+  readonly armureList = signal<BolArmureModel[] | undefined>(undefined);
 
   refreshEquipmentCatalog(): void {
     this.#catalog.armes().subscribe((list) => this.armeList.set(list));
@@ -44,16 +44,16 @@ export class BolHerosStateService {
   }
 
   // E11: Non-combattant modifie les budgets combat et carrières
-  isNonCombattant = computed(() =>
+  readonly isNonCombattant = computed(() =>
     this.currentHeros()?.traits?.some(
       (t) => t.type === 'D' && t.carriere === false && t.traitable_id === DESAVANTAGE_NON_COMBATTANT_ID,
     ) ?? false,
   );
-  combatBudget = computed(() => (this.isNonCombattant() ? 2 : 4));
-  carriereBudget = computed(() => (this.isNonCombattant() ? 6 : 4));
+  readonly combatBudget = computed(() => (this.isNonCombattant() ? 2 : 4));
+  readonly carriereBudget = computed(() => (this.isNonCombattant() ? 6 : 4));
 
   // E12: avantages spéciaux exigeant un désavantage supplémentaire
-  specialAvantageDesavantageRequired = computed(() => {
+  readonly specialAvantageDesavantageRequired = computed(() => {
     const ids = this.currentHeroAvantages().map((t) => t.traitable_id);
     return (
       (ids.includes(AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID) ? 1 : 0) +
@@ -61,7 +61,7 @@ export class BolHerosStateService {
     );
   });
 
-  carriereDesavantageCount = computed(() => {
+  readonly carriereDesavantageCount = computed(() => {
     let countDesavantage = 0;
     this.currentHerosCarrieres().forEach((carriere) => {
       switch (carriere.carriere_id) {
@@ -78,38 +78,38 @@ export class BolHerosStateService {
     return Math.max(countDesavantage - this.currentHeroCarriereDesvantages().length, 0);
   });
 
-  currentHerosRegion = computed(() =>
+  readonly currentHerosRegion = computed(() =>
     this.regionList()?.find(
       (region) =>
         this.currentHeros()?.origines.region_id === region.id
     )
   );
 
-  protected currentHeroAvantages = computed(
+  protected readonly currentHeroAvantages = computed(
     () => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? []
   );
-  protected currentHeroDesavantages = computed(
+  protected readonly currentHeroDesavantages = computed(
     () =>
       this.currentHeros()?.traits?.filter(
         (item) => item.type === 'D' && item.carriere === false
       ) ?? []
   );
-  protected currentHeroRegionalDesavantages = computed(
+  protected readonly currentHeroRegionalDesavantages = computed(
     () => this.currentHeroDesavantages().filter((item) => (item.region_id ?? 0) > 0) ?? []
   );
-  protected currentHeroGeneralDesavantages = computed(
+  protected readonly currentHeroGeneralDesavantages = computed(
     () => this.currentHeroDesavantages().filter((item) => (item.region_id ?? 0) <= 0) ?? []
   );
-  protected currentHeroCarriereDesvantages = computed(
+  protected readonly currentHeroCarriereDesvantages = computed(
     () =>
       this.currentHeros()?.traits?.filter(
         (item) => item.type === 'D' && item.carriere === true
       ) ?? []
   );
-  allHerosDesavantages = computed(
+  readonly allHerosDesavantages = computed(
     () => this.currentHeros()?.traits?.filter((item) => item.type === 'D') ?? []
   );
-  heroismCost = computed(() => {
+  readonly heroismCost = computed(() => {
     const advantageCount = this.currentHeroAvantages().length;
     const regionalDisadvantageCount = this.currentHeroRegionalDesavantages().length;
     const generalDisadvantageCount = this.currentHeroGeneralDesavantages().length;
@@ -127,7 +127,7 @@ export class BolHerosStateService {
     return cost;
   });
 
-  regionalAvantages = computed(
+  readonly regionalAvantages = computed(
     () =>
       this.currentHerosRegion()?.avantages?.map((item) => {
         return {
@@ -140,7 +140,7 @@ export class BolHerosStateService {
         };
       }) ?? []
   );
-  regionalDesavantages = computed(
+  readonly regionalDesavantages = computed(
     () =>
       this.currentHerosRegion()?.desavantages?.map((item) => {
         return {
@@ -154,7 +154,7 @@ export class BolHerosStateService {
       }) ?? []
   );
 
-  traitsModifiers = computed(() => {
+  readonly traitsModifiers = computed(() => {
     const modifiers: AttributModifier[] = [];
     this.currentHeroAvantages().forEach((trait) => {
         const trt = this.avantagesList()?.filter((item) => item.attribut !== null)?.find((item) => item.id === trait.traitable_id);
@@ -198,13 +198,13 @@ export class BolHerosStateService {
     return modifiers;
   });
 
-  warnTraits = signal<HeroCreationWarning[]>([]);
-  warnAttrs = signal<HeroCreationWarning[]>([]);
-  warnCombat = signal<HeroCreationWarning[]>([]);
-  warnCarrieres = signal<HeroCreationWarning[]>([]);
-  warnOrigines = signal<HeroCreationWarning[]>([]);
-  warnLangues = signal<HeroCreationWarning[]>([]);
-  warnCount = computed(() =>
+  readonly warnTraits = signal<HeroCreationWarning[]>([]);
+  readonly warnAttrs = signal<HeroCreationWarning[]>([]);
+  readonly warnCombat = signal<HeroCreationWarning[]>([]);
+  readonly warnCarrieres = signal<HeroCreationWarning[]>([]);
+  readonly warnOrigines = signal<HeroCreationWarning[]>([]);
+  readonly warnLangues = signal<HeroCreationWarning[]>([]);
+  readonly warnCount = computed(() =>
     this.warnTraits().length +
     this.warnAttrs().length +
     this.warnCombat().length +

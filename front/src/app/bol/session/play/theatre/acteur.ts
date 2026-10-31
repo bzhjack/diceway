@@ -29,10 +29,7 @@ export class ActeurComponent {
   readonly toggled = output<MouseEvent>();
 
   /** L'avatar a échoué au chargement : repli sur l'icône du type, jusqu'au prochain changement d'avatar. */
-  private readonly avatarFailed = linkedSignal(() => {
-    this.card().avatar;
-    return false;
-  });
+  private readonly avatarFailed = linkedSignal({source: () => this.card().avatar, computation: () => false});
   protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !!this.card().avatar && !this.avatarFailed());
   protected readonly kindIcon = computed(() => KIND_ICONS[this.card().kind]);
   /** Attitude envers les héros, montrée pour un personnage du camp d'en face. */

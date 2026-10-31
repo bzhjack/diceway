@@ -305,8 +305,25 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 ### Phase 2 : les outils de contrôle (M)
 
-- [ ] ESLint avec `angular-eslint`, et Stylelint
-- [ ] Intégration continue : build, tests Vitest, tests PHPUnit
+- [x] ESLint avec `angular-eslint`, et Stylelint
+- [x] Intégration continue : build, tests Vitest, tests PHPUnit
+
+**Fait le 2026-10-31.** `npm run lint` vérifie les conventions de `CLAUDE.md`, et `.github/workflows/ci.yml` lance le lint, le build et les deux suites de tests à chaque push sur `develop` et à chaque pull request.
+
+**Les écarts existants sont notés, pas corrigés.** `eslint-suppressions.json` et `stylelint-suppressions.json` les comptent par fichier : ils passent, et tout nouvel écart bloque. Une fois un écart corrigé, `npm run lint:prune` baisse le compte. ESLint l'exige ; Stylelint ne le signale pas.
+
+| Dette notée | Nombre | Phase qui s'en charge |
+|---|---|---|
+| Couleurs hexadécimales hors de `_tokens.scss` | 369 dans 58 feuilles | 3 (M1, M2) |
+| `::ng-deep` | 17 dans 10 feuilles | 3 |
+| Clic sans clavier (`click-events-have-key-events`) | 10 | 4 pour les 4 avatars (M4) ; les 6 autres sont à relire |
+| Élément cliquable sans focus (`interactive-supports-focus`) | 9 | Idem |
+| `$any()` dans les gabarits | 7 | Pas encore planifiée |
+| Image statique sans `NgOptimizedImage` | 1 | Pas encore planifiée |
+
+**Ce que le lint ne vérifie pas :** les utilitaires Tailwind mêlés à une classe maison, la forme des boutons, un seul bouton plein par zone, et les `styles` écrits dans les fichiers `.ts`. Le contraste et le reste d'AXE ne sont pas contrôlés non plus : le lint ne voit que les gabarits.
+
+**Limite de la vérification :** les étapes ont été rejouées sur une copie propre des fichiers suivis (`npm ci`, lint, build, Vitest ; PHPUnit sans `.env` ni réseau). `composer install` et le fichier de CI lui-même n'ont pas tourné : le premier passage sur GitHub les validera.
 
 ### Phase 3 : le socle du style (M)
 

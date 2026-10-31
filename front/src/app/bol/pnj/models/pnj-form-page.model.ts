@@ -1,4 +1,3 @@
-import {BolHerosModel} from '../../models/bol-heros.model';
 import {ArmeDraft, ArmureDraft, IdDraft, RankedDraft} from '../../shared/models/form-selection.model';
 import {TraitDraft} from '../../shared/models/trait-entry.model';
 

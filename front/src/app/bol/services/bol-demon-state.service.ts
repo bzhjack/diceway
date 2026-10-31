@@ -7,6 +7,6 @@ import {BolDemonsService} from "./bol-demons.service";
 })
 export class BolDemonStateService {
   #bds = inject(BolDemonsService)
-  categorieList = toSignal(this.#bds.categories());
-  pouvoirList = toSignal(this.#bds.pouvoirs());
+  readonly categorieList = toSignal(this.#bds.categories());
+  readonly pouvoirList = toSignal(this.#bds.pouvoirs());
 }

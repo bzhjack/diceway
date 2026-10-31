@@ -1,0 +1,310 @@
+{
+  "src/styles/_barbare.scss": {
+    "color-no-hex": {
+      "count": 78
+    }
+  },
+  "src/styles/_diceway.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/styles/_forge-page.scss": {
+    "color-no-hex": {
+      "count": 8
+    }
+  },
+  "src/styles/_reset.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/intendance/intendance-page.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/shared/dice-row/dice-row.scss": {
+    "color-no-hex": {
+      "count": 4
+    }
+  },
+  "src/app/shared/die-face/die-face.scss": {
+    "color-no-hex": {
+      "count": 4
+    }
+  },
+  "src/app/shared/dw-collapsible-row/dw-collapsible-row.scss": {
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/shared/dw-library-header/dw-library-header.scss": {
+    "color-no-hex": {
+      "count": 6
+    }
+  },
+  "src/app/shared/value-stepper/value-stepper.scss": {
+    "color-no-hex": {
+      "count": 8
+    }
+  },
+  "src/app/bol/arme/library/arme-library-page.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/armure/library/armure-library-page.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/creature/form/creature-form-page.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/demon/form/demon-form-page.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/hero/advanced/hero-advanced-page.scss": {
+    "color-no-hex": {
+      "count": 5
+    }
+  },
+  "src/app/bol/hero/form/hero-form-page.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/pnj/form/pnj-form-page.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/session/ordre-frise/ordre-frise.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/session/play/session-play-page.scss": {
+    "color-no-hex": {
+      "count": 6
+    }
+  },
+  "src/app/bol/session/start-combat/start-combat-page.scss": {
+    "color-no-hex": {
+      "count": 36
+    }
+  },
+  "src/app/bol/shared/add-menu/add-menu.component.scss": {
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/entity-card/entity-card.component.scss": {
+    "color-no-hex": {
+      "count": 19
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/statblock/bol-statblock.component.scss": {
+    "color-no-hex": {
+      "count": 22
+    }
+  },
+  "src/app/bol/shared/stats-grid/stats-grid.component.scss": {
+    "selector-pseudo-element-disallowed-list": {
+      "count": 2
+    }
+  },
+  "src/app/bol/creature/form/capacites/creature-capacites.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/creature/form/general/creature-general.component.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/demon/form/general/demon-general.component.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/demon/form/pouvoirs/demon-pouvoirs.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/hero/advanced/armes-panel/armes-panel.component.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/hero/advanced/armures-panel/armures-panel.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/hero/advanced/carrieres-panel/carrieres-panel.component.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/hero/advanced/identite/identite.component.scss": {
+    "color-no-hex": {
+      "count": 3
+    }
+  },
+  "src/app/bol/hero/advanced/region/region.component.scss": {
+    "color-no-hex": {
+      "count": 7
+    }
+  },
+  "src/app/bol/hero/advanced/ressources-panel/ressources-panel.component.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/hero/advanced/stats-panel/stats-panel.component.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  },
+  "src/app/bol/hero/form/general/general.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/hero/form/summary-rail/summary-rail.component.scss": {
+    "color-no-hex": {
+      "count": 10
+    }
+  },
+  "src/app/bol/pnj/form/general/pnj-general.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/pnj/form/summary-rail/pnj-summary-rail.component.scss": {
+    "color-no-hex": {
+      "count": 8
+    }
+  },
+  "src/app/bol/session/play/action-roll-panel/action-roll-panel.scss": {
+    "color-no-hex": {
+      "count": 22
+    }
+  },
+  "src/app/bol/session/play/after-combat-dialog/after-combat-dialog.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/combat-board/combat-board.scss": {
+    "color-no-hex": {
+      "count": 2
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/rescue-dialog/rescue-dialog.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/reserve/reserve.scss": {
+    "color-no-hex": {
+      "count": 13
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 5
+    }
+  },
+  "src/app/bol/session/play/session-header/session-header.scss": {
+    "color-no-hex": {
+      "count": 4
+    }
+  },
+  "src/app/bol/session/play/tapis/combattant-carte.scss": {
+    "color-no-hex": {
+      "count": 7
+    }
+  },
+  "src/app/bol/session/play/tapis/expanded-card.scss": {
+    "color-no-hex": {
+      "count": 13
+    }
+  },
+  "src/app/bol/session/play/tapis/hero-details.scss": {
+    "color-no-hex": {
+      "count": 3
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/tapis/turn-assistant-attaquant.scss": {
+    "color-no-hex": {
+      "count": 10
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 3
+    }
+  },
+  "src/app/bol/session/play/tapis/turn-assistant-colonnes.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/tapis/turn-assistant.scss": {
+    "color-no-hex": {
+      "count": 16
+    }
+  },
+  "src/app/bol/session/play/theatre/acteur.scss": {
+    "color-no-hex": {
+      "count": 4
+    }
+  },
+  "src/app/bol/session/play/theatre/compagnie.scss": {
+    "color-no-hex": {
+      "count": 3
+    },
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/theatre/scene-lecture.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/arme/list/arme-list.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/trait/add-menu/trait-add-menu.component.scss": {
+    "selector-pseudo-element-disallowed-list": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/trait/list/trait-list.component.scss": {
+    "color-no-hex": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/theatre/scene-editor-dialog/scene-editor-dialog.scss": {
+    "color-no-hex": {
+      "count": 2
+    }
+  }
+}

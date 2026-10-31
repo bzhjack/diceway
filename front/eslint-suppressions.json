@@ -1,0 +1,100 @@
+{
+  "src/app/bol/creature/form/general/creature-general.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/demon/form/general/demon-general.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/hero/advanced/region/region.component.html": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/app/bol/hero/form/summary-rail/summary-rail.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/pnj/form/summary-rail/pnj-summary-rail.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/action-roll-panel/action-roll-panel.html": {
+    "@angular-eslint/template/no-any": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/combat-board/combat-board.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/command-palette/command-palette.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    },
+    "@angular-eslint/template/no-any": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/reserve/reserve.html": {
+    "@angular-eslint/template/no-any": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/play/tapis/expanded-card.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    }
+  },
+  "src/app/bol/session/start-combat/start-combat-page.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/add-menu/add-menu.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    }
+  },
+  "src/app/bol/shared/trait/add-menu/trait-add-menu.component.html": {
+    "@angular-eslint/template/click-events-have-key-events": {
+      "count": 1
+    },
+    "@angular-eslint/template/interactive-supports-focus": {
+      "count": 1
+    },
+    "@angular-eslint/template/no-any": {
+      "count": 4
+    }
+  }
+}
