@@ -1,3 +1,5 @@
+@use 'forge-mixins' as forge;
+
 // Layout commun aux pages BOL
 // ─────────────────────────────────────────────
 
@@ -5,8 +7,6 @@
 .dw-page {
   min-height: 100dvh;
   padding: 1.5rem 1rem;
-  // Le fond (cuir et torches) est celui de `body`, dans `_barbare.scss`.
-  background: transparent;
 
   @media (min-width: 768px) {
     padding-left: 1.5rem;
@@ -16,16 +16,18 @@
 
 // Section de formulaire — fond mid (hero-form, creature-form, demon-form, pnj-form, hero-advanced)
 .dw-section--form {
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: rgb(42 28 18 / 0.55);
+  @include forge.plate;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-rivets), var(--dw-forge-plate);
   padding: 1.25rem;
 }
 
 // Section chargement / placeholder
 .dw-section--loading {
-  border: 1px solid var(--dw-border);
-  background: rgb(21 14 9 / 0.8);
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
   padding: 1.25rem;
 }
 
@@ -36,5 +38,5 @@
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.75rem;
-  color: var(--dw-surface-500);
+  color: var(--dw-forge-stud-text);
 }

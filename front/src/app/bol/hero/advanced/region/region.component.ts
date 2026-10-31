@@ -1,13 +1,11 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {startWith} from 'rxjs';
 import {matchesTerm} from '../../../../shared/list.utils';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
@@ -26,7 +24,7 @@ interface RegionPin {
 @Component({
   selector: 'bol-hero-advanced-region',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
@@ -48,8 +46,8 @@ export class HeroAdvancedRegionComponent {
   protected readonly regionId = signal<number>(Number(this.dialogData.id_region ?? 0));
   protected readonly selectedName = signal<string | undefined>(this.dialogData.nom);
   protected readonly regionList = this.herosStateService.regionList;
-  protected readonly searchCtrl = new FormControl('', {nonNullable: true});
-  private readonly searchTerm = toSignal(this.searchCtrl.valueChanges.pipe(startWith('')), {initialValue: ''});
+  private readonly searchTerm = signal('');
+  protected readonly searchField = form(this.searchTerm);
   protected readonly filteredRegions = computed(() =>
     (this.regionList() ?? []).filter((region) => matchesTerm(this.searchTerm(), region.region)),
   );

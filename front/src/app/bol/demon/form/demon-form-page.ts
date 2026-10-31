@@ -14,9 +14,10 @@ import {availableCatalog, selectedEntries} from '../../shared/form/form-selectio
 import {PouvoirEntry} from '../../shared/models/pouvoir-list.model';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
-import {DemonGeneralComponent} from './general/demon-general.component';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
 import {DemonFormModel} from '../models/demon-form-page.model';
+import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
+import {EntityGeneralComponent} from '../../shared/entity-general/entity-general.component';
 
 function demonFormDefaults(): DemonFormModel {
   return {
@@ -86,11 +87,12 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-demon-form-page',
   imports: [
+    DwFormHeaderComponent,
     MatCard,
     MatCardContent,
     MatButtonModule,
     MatIconModule,
-    DemonGeneralComponent,
+    EntityGeneralComponent,
     DemonPouvoirsComponent,
     StatsGridComponent,
   ],
@@ -106,6 +108,7 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel,
   private readonly demonsService = inject(BolDemonsService);
 
   protected readonly categories = this.demonStateService.categorieList;
+  protected readonly categorieOptions = computed(() => (this.categories() ?? []).map((item) => ({id: item.id, label: item.categorie})));
   protected readonly pouvoirsList = this.demonStateService.pouvoirList;
 
   protected readonly labels = DEMON_FORM_LABELS;

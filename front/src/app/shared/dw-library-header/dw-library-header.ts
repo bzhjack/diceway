@@ -1,21 +1,16 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {DwBadgeColor} from '../models/dw-badge.model';
 
 @Component({
   selector: 'dw-library-header',
   imports: [MatCard, MatCardContent],
   templateUrl: './dw-library-header.html',
   styleUrl: './dw-library-header.scss',
-  host: {
-    '[class]': '"dw-lh-color-" + color()',
-  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwLibraryHeaderComponent {
   readonly title = input.required<string>();
   readonly description = input<string>('');
-  readonly color = input<DwBadgeColor>('amber');
   /** Illustration de bannière optionnelle (même traitement que le header du dashboard). */
   readonly image = input<string | null>(null);
 

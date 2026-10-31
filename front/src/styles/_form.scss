@@ -8,3 +8,92 @@ input[type='number'] {
     margin: 0;
   }
 }
+
+// ── Ce que les fiches se partagent (héros, PNJ, créature, démon) ────────────────
+
+.dw-creation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dw-section-eyebrow {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+.dw-section-eyebrow--spaced {
+  margin-bottom: 0.5rem;
+}
+
+.dw-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-forge-stud-text);
+}
+
+.dw-error-box {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
+  font-size: 0.875rem;
+  color: var(--dw-forge-error-text);
+}
+
+// Puce « modifications non enregistrées » — inline après le libellé (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le
+// texte). Sombre : elle est posée sur l'or du bouton.
+.dw-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-forge-ink);
+}
+
+.dw-field-hint {
+  margin: 0;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--dw-forge-hot-text);
+}
+
+.dw-field-hint--ok {
+  color: var(--dw-forge-verdict-reussite);
+}
+
+.dw-field-error {
+  padding: 0.75rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(69, 10, 10, 0.2);
+  font-size: 0.875rem;
+  color: var(--dw-forge-error-text);
+}
+
+.dw-field-warning {
+  padding: 0.75rem;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(69, 26, 3, 0.15);
+  font-size: 0.875rem;
+  color: var(--dw-forge-warning-text);
+}
+
+// Mise en page des sections d'une fiche à partir de la largeur `xl`.
+.dw-rail-panel {
+  @media (min-width: 1280px) {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.dw-panel--stretch {
+  @media (min-width: 1280px) {
+    height: 100%;
+  }
+}

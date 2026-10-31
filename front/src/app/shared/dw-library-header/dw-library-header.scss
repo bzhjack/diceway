@@ -1,12 +1,6 @@
 :host {
   display: block;
-  --dw-lh-eyebrow-color: #fcd34d; // amber-300 par défaut
 }
-
-:host.dw-lh-color-emerald { --dw-lh-eyebrow-color: #6ee7b7; }
-:host.dw-lh-color-sky     { --dw-lh-eyebrow-color: #7dd3fc; }
-:host.dw-lh-color-rose    { --dw-lh-eyebrow-color: #fda4af; }
-:host.dw-lh-color-neutral { --dw-lh-eyebrow-color: #b59d78; }
 
 // Bannière illustrée optionnelle — même traitement que workspace-header.
 .dw-lh-card--image {
@@ -14,20 +8,31 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
+
+  // L'illustration, voilée à gauche sous le texte.
+  .mat-mdc-card-content {
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.78) 48%, rgba(15, 10, 6, 0.15) 78%);
+  }
 }
 
 .dw-lh-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--dw-lh-eyebrow-color);
+  color: var(--dw-forge-gold);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
 .dw-lh-title {
+  margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-size: 2.25rem;
   line-height: 1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 
   @media (min-width: 768px) {
     font-size: 2.8rem;
@@ -35,11 +40,22 @@
 }
 
 .dw-lh-description {
+  margin: 0;
+  max-width: 48rem;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 3px var(--dw-forge-shade);
 
   @media (min-width: 768px) {
     font-size: 0.95rem;
   }
+}
+
+.library-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+  justify-content: space-between;
 }

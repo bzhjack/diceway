@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -14,7 +14,7 @@ type CatalogFilter = CombatantKind | 'all';
 /** Dialog de sélection d'un combattant à ajouter à la fight-session en préparation. */
 @Component({
   selector: 'bol-combatant-picker-dialog',
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, CatalogCardComponent],
+  imports: [FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, CatalogCardComponent],
   templateUrl: './combatant-picker-dialog.html',
   styleUrl: './combatant-picker-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +27,7 @@ export class CombatantPickerDialogComponent {
   protected readonly lockKind = this.data?.lockKind ?? null;
   protected readonly activeType = signal<CatalogFilter>(this.lockKind ?? 'all');
   protected readonly query = signal('');
+  protected readonly queryField = form(this.query);
 
   protected readonly filteredCatalog = computed(() => {
     const type = this.lockKind ?? this.activeType();

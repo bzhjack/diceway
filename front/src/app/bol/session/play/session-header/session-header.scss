@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
   flex-shrink: 0;
@@ -120,15 +122,12 @@
 // au survol et une fois ouverts (les coulisses).
 .cp-header-actions .cp-head-icon {
   border: 1px solid var(--dw-forge-bronze-dim);
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
 
   &:hover,
   &[aria-expanded='true'] {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 }
 

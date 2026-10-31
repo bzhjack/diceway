@@ -1,6 +1,7 @@
 // Surcharge du style des boutons Material (état disabled visible sur fond sombre).
 // Doc : https://material.angular.dev/components/button/styling
 @use '@angular/material' as mat;
+@use 'forge-mixins' as forge;
 
 // PrimeIcons <i> dans les labels de boutons Material (flat/stroked/text)
 .mdc-button__label {
@@ -60,25 +61,14 @@ html {
   width: 24px;
   height: 24px;
   padding: 0;
-  border: none;
   border-radius: 50%;
-  background: transparent;
-  color: var(--mat-sys-primary);
+  @include forge.stud;
   cursor: pointer;
 
   .mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-  }
-
-  &:hover {
-    background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--mat-sys-primary);
-    outline-offset: 1px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
   }
 }

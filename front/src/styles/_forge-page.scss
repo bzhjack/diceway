@@ -1,27 +1,8 @@
-// Un bouton rond : un clou de bronze, qui rougeoie au survol.
-@mixin forge-stud {
-  border: 1px solid var(--dw-forge-bronze-dim);
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
-  color: var(--dw-forge-stud-text);
+@use 'forge-mixins' as forge;
 
-  &:hover:not(:disabled) {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-forge-hot);
-    outline-offset: 1px;
-  }
-}
-
-// La forge sur une fiche à modifier ou une bibliothèque (`dw-page dw-forge-page`) : de la suie, des plaques de fer pour les sections et les
-// cartes, des creux pour ce qui se saisit, des clous de bronze pour les boutons ronds. La disposition ne change pas. Ces composants sont
-// partagés avec des pages qui gardent l'ancien style : tout passe par cette classe, et deux classes de tête pour l'emporter sur les styles des
-// composants (chargés après).
-.dw-page.dw-forge-page {
+// La forge sur une fiche à modifier ou une bibliothèque : de la suie, et les composants Material et les jetons de ces pages à sa couleur. Le
+// reste (plaques de fer, creux, clous de bronze) est écrit dans les composants, avec `forge-mixins`.
+.dw-page {
   --dw-border: var(--dw-forge-bronze-edge);
   --dw-color-legendary: var(--dw-forge-gold);
   --mat-sys-error: var(--dw-forge-verdict-echec);
@@ -66,234 +47,29 @@
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
   }
 
-  .dw-section--form {
-    border-color: var(--dw-forge-bronze-edge);
-    border-radius: 7px;
-    background: var(--dw-forge-rivets), var(--dw-forge-plate);
-    box-shadow: var(--dw-forge-plate-shadow);
+  .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+    @include forge.recess;
   }
 
-  .dw-section--loading {
-    border-color: var(--dw-forge-bronze-edge);
-    border-radius: 7px;
-    background: var(--dw-forge-recess);
-  }
-
-  // Les champs et les lignes : des creux dans le fer. La teinte d'un trait (vert, rouge) se pose par-dessus le creux.
-  .mat-mdc-text-field-wrapper.mdc-text-field--outlined,
-  .hs-block,
-  .hs-text,
-  dw-collapsible-row {
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
-  }
-
-  .dw-row-toggle,
-  .dw-row-body {
-    background: transparent;
-  }
-
-  .dw-row-chevron,
-  .cl-capacite-icon {
-    color: var(--dw-forge-bronze-text);
-  }
-
-  .dw-row-label,
-  .dw-entry-label {
-    color: var(--dw-forge-bone);
-  }
-
-  .dw-row-stat {
-    color: var(--dw-forge-gold);
-  }
-
-  .dw-entry-meta,
-  .dw-entry-empty {
-    color: var(--dw-forge-stud-text);
-  }
-
-  .dw-entry-detail-title {
-    color: var(--dw-forge-gold);
-  }
-
-  .dw-entry-delete-btn {
-    color: var(--dw-forge-verdict-echec) !important;
-  }
-
-  dw-tag {
-    border: 1px solid var(--dw-forge-bronze-dim);
-    white-space: nowrap;
-  }
-
-  // Les caractéristiques : le titre de chaque bloc en or, les chiffres en os, la case mise en avant chauffée par la braise.
-  .hs-lbl {
-    color: var(--dw-forge-bronze-text);
-  }
-
-  .hs-cell--key {
-    background: color-mix(in srgb, var(--dw-forge-hot) 9%, transparent);
-  }
-
-  .hs-text {
-    color: var(--dw-forge-bone);
-  }
-
-  .vs__value {
-    color: var(--dw-forge-bone);
-
-    &:focus-visible {
-      outline-color: var(--dw-forge-hot);
-    }
-  }
-
-  // L'en-tête d'une bibliothèque : l'illustration, encadrée de bronze et voilée à gauche sous le texte. Les boutons en contour gardent un fond
-  // sombre, pour rester lisibles dessus.
-  .dw-lh-card--image .mat-mdc-card-content {
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.78) 48%, rgba(15, 10, 6, 0.15) 78%);
-  }
-
-  .dw-lh-eyebrow {
-    color: var(--dw-forge-gold);
-    text-shadow: 0 1px 2px #000;
-  }
-
-  .dw-lh-title {
-    color: var(--dw-forge-name);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
-  }
-
-  .dw-lh-description {
-    color: var(--dw-forge-bone);
-    text-shadow: 0 1px 3px #000;
-  }
-
-  .dw-lh-card .mat-mdc-outlined-button,
-  .ip-header-card .mat-mdc-outlined-button {
+  // Les boutons en contour gardent un fond sombre, pour rester lisibles sur l'illustration d'un en-tête.
+  .dw-lh-card .mat-mdc-outlined-button {
     background-color: rgba(0, 0, 0, 0.55);
   }
+}
 
-  // La barre de recherche : une bande de fer au-dessus de la liste.
-  dw-library-toolbar {
-    --dw-lt-border: var(--dw-forge-bronze-edge);
-  }
+.dw-forge-credit {
+  margin: 0;
+  color: var(--dw-forge-stud-text);
+  font-size: 0.68rem;
 
-  .dw-lt-toolbar,
-  .cl-toolbar {
-    border-bottom-color: var(--dw-forge-bronze);
-    background: var(--dw-forge-plate);
-  }
-
-  .dw-lt-filter-chip {
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
-  }
-
-  // Les cartes et les lignes d'une liste : des plaques de fer sur la suie. Ce que le joueur a créé lui-même est chauffé par la braise.
-  .entity-card,
-  .cl-row {
-    border-color: var(--dw-forge-bronze-edge);
-    border-radius: 7px;
-    background: var(--dw-forge-plate);
-    box-shadow: var(--dw-forge-plate-shadow);
-  }
-
-  .entity-card.entity-card--own {
-    border-color: var(--dw-forge-bronze);
-    background: linear-gradient(135deg, rgba(232, 135, 58, 0.2), transparent 60%), var(--dw-forge-plate);
-
-    &:hover {
-      border-color: var(--dw-forge-hot);
-    }
-  }
-
-  .entity-card__name,
-  .cl-row-title {
-    color: var(--dw-forge-name);
-    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-    font-size: 1.15rem;
-    font-weight: 400;
-    text-shadow: 0 1px 3px #000;
-  }
-
-  .entity-gauge,
-  .entity-count-chip {
-    border-color: var(--dw-forge-bronze-dim);
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
-    color: var(--dw-forge-bone);
-  }
-
-  .entity-count-chip .mat-icon {
-    color: var(--dw-forge-bronze-text);
-  }
-
-  .entity-gauge--pv .mat-icon {
-    color: #e5413a;
-  }
-
-  // Le portrait par défaut est clair : il s'éteint pour ne pas éclairer toute la liste.
-  .entity-card__img[src*='empty-avatar'] {
-    filter: sepia(0.6) brightness(0.45);
-  }
-
-  // Les tableaux des armes et des armures : l'en-tête en or, opaque pour rester lisible quand on fait défiler les lignes.
-  .bol-weapon-table,
-  .bol-armor-table {
-    --dw-surface-0: #1c130b;
-    --dw-surface-50: rgba(255, 201, 106, 0.07);
-    --dw-surface-100: var(--dw-forge-bronze-edge);
-    --dw-surface-500: var(--dw-forge-gold);
-    --dw-surface-600: var(--dw-forge-stud-text);
-  }
-
-  .dw-forge-credit {
-    margin: 0;
-    color: var(--dw-forge-stud-text);
-    font-size: 0.68rem;
-
-    a {
-      color: inherit;
-    }
-  }
-
-  // Les boutons ronds : des clous de bronze, qui rougeoient au survol.
-  .vs__btn,
-  .dw-add-trigger,
-  .entity-card__action-btn,
-  .weapon-action-btn,
-  .armor-action-btn,
-  .cl-row-actions .mat-mdc-icon-button {
-    @include forge-stud;
-  }
-
-  .weapon-action-btn,
-  .armor-action-btn,
-  .cl-row-actions .mat-mdc-icon-button {
-    --mat-icon-button-state-layer-size: 2rem;
-    --mat-icon-button-icon-size: 1.1rem;
-    padding: 0;
-  }
-
-  // Un clou qui supprime : l'icône en rouge, sur le bronze.
-  .entity-card .entity-card__action-btn.entity-card__action-btn--danger,
-  .weapon-btn-danger,
-  .armor-btn-danger,
-  .cl-row-actions .mat-mdc-icon-button {
-    color: var(--dw-forge-verdict-echec);
-  }
-
-  .dw-add-trigger .mat-icon {
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
-    line-height: 16px;
+  a {
+    color: inherit;
   }
 }
 
 // Les menus d'ajout et les dialogues s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à
 // l'écran. Le statbloc garde sa propre fiche.
-body:has(.dw-forge-page) .cdk-overlay-container {
+body:has(.dw-page) .cdk-overlay-container {
   --mat-form-field-outlined-outline-color: var(--dw-forge-bronze-dim);
   --mat-form-field-outlined-hover-outline-color: var(--dw-forge-bronze);
   --mat-form-field-outlined-focus-outline-color: var(--dw-forge-hot);
@@ -323,8 +99,7 @@ body:has(.dw-forge-page) .cdk-overlay-container {
   }
 
   .mat-mdc-menu-panel .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
+    @include forge.recess;
   }
 
   .mat-mdc-select-panel {
@@ -341,11 +116,6 @@ body:has(.dw-forge-page) .cdk-overlay-container {
   }
 
   .mat-mdc-dialog-surface .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
-  }
-
-  .dw-add-trigger {
-    @include forge-stud;
+    @include forge.recess;
   }
 }

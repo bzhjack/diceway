@@ -1,11 +1,10 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1000px] flex-col gap-4">
 
     <!-- Header card -->
     <dw-library-header
       title="Mes sessions"
       description="Retrouvez les sessions déjà lancées, en combat ou non, pour reprendre le suivi de l'initiative et des points de vie."
-      color="rose"
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalCount() }} session{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
@@ -27,19 +26,9 @@
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="cl-content-card">
-      <div class="cl-toolbar">
-        <mat-form-field subscriptSizing="dynamic" class="cl-search-field">
-          <mat-icon matPrefix svgIcon="gi-search" />
-          <input
-            matInput
-            type="text"
-            [ngModel]="searchTerm()"
-            (ngModelChange)="searchTerm.set($event ?? '')"
-            placeholder="Rechercher une session"
-          />
-        </mat-form-field>
-        <dw-tag>{{ visibleCount() }} entrées</dw-tag>
-      </div>
+      <dw-library-toolbar placeholder="Rechercher une session" [withFilters]="false" [(searchTerm)]="searchTerm">
+        <dw-tag dwToolbarCount>{{ visibleCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
 
       <div class="cl-list">
         @for (session of filteredSessions(); track session.id) {

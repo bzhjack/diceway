@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 .snp-header {
   display: flex;
   flex-direction: column;
@@ -10,11 +12,7 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid var(--dw-forge-bronze);
-  border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
-  color: var(--dw-forge-hot-text);
+  @include forge.medallion;
 }
 
 .snp-eyebrow {
@@ -78,8 +76,7 @@
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--dw-forge-bronze-dim);
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: var(--dw-forge-bone);
   border-radius: 999px;
   padding: 0.25rem 0.5rem 0.25rem 0.25rem;
@@ -104,15 +101,12 @@
   height: 1.5rem;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   &:hover {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:focus-visible {

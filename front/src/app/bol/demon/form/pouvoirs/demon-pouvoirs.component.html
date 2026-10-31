@@ -1,20 +1,14 @@
-<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-  <div class="flex items-center gap-2">
-    <p class="dfp-section-eyebrow">
-      Pouvoirs infernaux
-    </p>
-    <dw-tag>{{ pouvoirs().length }} sélectionné(s)</dw-tag>
-  </div>
-
-  <bol-add-menu
-    [options]="pouvoirOptions()"
-    label="Pouvoir"
-    triggerLabel="Ajouter un pouvoir"
-    addLabel="Ajouter le pouvoir"
-    emptyLabel="— Aucun —"
-    [withDetail]="true"
-    (added)="added.emit($event)"
-  />
-</div>
-
-<bol-pouvoir-list [pouvoirs]="pouvoirs()" (removed)="removed.emit($event)" />
+<bol-list-panel
+  title="Pouvoirs infernaux"
+  [count]="pouvoirs().length"
+  countLabel="sélectionné(s)"
+  [options]="pouvoirOptions()"
+  label="Pouvoir"
+  triggerLabel="Ajouter un pouvoir"
+  addLabel="Ajouter le pouvoir"
+  emptyLabel="— Aucun —"
+  [withDetail]="true"
+  (added)="added.emit($event)"
+>
+  <bol-pouvoir-list [pouvoirs]="pouvoirs()" (removed)="removed.emit($event)" />
+</bol-list-panel>

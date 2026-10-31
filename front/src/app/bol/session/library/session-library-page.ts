@@ -1,12 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
@@ -16,20 +13,19 @@ import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
 import {BolFightSessionSummaryModel} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 
 /** Liste des combats lancés par l'utilisateur, avec accès pour reprendre ou supprimer chacun. */
 @Component({
   selector: 'bol-session-library-page',
   imports: [
-    FormsModule,
     RouterLink,
     MatButtonModule,
     MatCard,
-    MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
     DwLibraryHeaderComponent,
     DwTagComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './session-library-page.html',
   styleUrl: './session-library-page.scss',

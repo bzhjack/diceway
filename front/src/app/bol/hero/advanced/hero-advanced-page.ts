@@ -32,7 +32,7 @@ import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
 import {TraitEntry} from '../../shared/models/trait-list.model';
 import {traitDetails} from '../../shared/trait/trait-entry.utils';
 import {traitIconType} from '../../shared/trait-icon';
-import {HeroSummaryRailComponent} from '../form/summary-rail/summary-rail.component';
+import {SummaryRailComponent} from '../../shared/summary-rail/summary-rail.component';
 import {HeroAdvancedArmesPanelComponent} from './armes-panel/armes-panel.component';
 import {HeroAdvancedArmuresPanelComponent} from './armures-panel/armures-panel.component';
 import {HeroAdvancedCarrieresPanelComponent} from './carrieres-panel/carrieres-panel.component';
@@ -54,6 +54,7 @@ import {ResourceEntry} from '../models/ressources-panel.model';
 import {SectionMessage} from '../models/section-message.model';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
 import {AdvancedTraitDraft, HeroAdvancedFormModel} from '../models/hero-advanced-page.model';
+import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 
 function heroAdvancedFormDefaults(): HeroAdvancedFormModel {
   return {
@@ -139,6 +140,7 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-hero-advanced-page',
   imports: [
+    DwFormHeaderComponent,
     FormField,
     MatButtonModule,
     MatCard,
@@ -146,7 +148,7 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    HeroSummaryRailComponent,
+    SummaryRailComponent,
     HeroAdvancedIdentiteComponent,
     HeroAdvancedCarrieresPanelComponent,
     HeroAdvancedStatsPanelComponent,

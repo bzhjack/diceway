@@ -16,8 +16,9 @@ import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
 import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
-import {CreatureGeneralComponent} from './general/creature-general.component';
 import {CreatureFormModel} from '../models/creature-form-page.model';
+import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
+import {EntityGeneralComponent} from '../../shared/entity-general/entity-general.component';
 
 function creatureFormDefaults(): CreatureFormModel {
   return {
@@ -85,11 +86,12 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-creature-form-page',
   imports: [
+    DwFormHeaderComponent,
     MatCard,
     MatCardContent,
     MatButtonModule,
     MatIconModule,
-    CreatureGeneralComponent,
+    EntityGeneralComponent,
     CreatureCapacitesComponent,
     StatsGridComponent,
   ],
@@ -105,6 +107,7 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
   private readonly creaturesService = inject(BolCreaturesService);
 
   protected readonly tailles = this.creatureStateService.tailleList;
+  protected readonly tailleOptions = computed(() => (this.tailles() ?? []).map((item) => ({id: item.id, label: item.taille})));
   protected readonly capacitesList = this.creatureStateService.capaciteList;
 
   protected readonly labels = CREATURE_FORM_LABELS;

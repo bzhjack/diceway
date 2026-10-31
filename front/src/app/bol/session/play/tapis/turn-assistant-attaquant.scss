@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // La ligne de qui joue, en forge : son nom et sa vie (`combattant-carte`, en ligne), puis ses zones. Chaque zone prend sa place dans la grille de
 // la carte ; un filet pointillé les sépare.
 .tas-head {
@@ -233,8 +235,7 @@
   padding: 0.12rem 0.25rem 0.18rem;
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
@@ -313,8 +314,7 @@
   width: 1.3rem;
   height: 1.3rem;
   border-color: var(--dw-forge-bronze-dim);
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-bronze-text);
 }
 
@@ -338,15 +338,12 @@
 .tas-head .tas-ib,
 .tas-target .tas-ib {
   border-color: var(--dw-forge-bronze-dim);
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
 
   &:hover,
   &[aria-expanded='true'] {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 }
 
@@ -355,8 +352,7 @@
   flex: none;
   width: fit-content;
   border-color: var(--dw-forge-bronze-edge);
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
 }
 
 .tas-head .tas-seg {
@@ -414,8 +410,7 @@
   min-height: 1.45rem;
   padding: 0.05rem 0.42rem;
   border-color: var(--dw-forge-bronze-edge);
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: var(--dw-surface-800);
   font-size: 0.74rem;
 
@@ -474,8 +469,7 @@
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: var(--dw-radius-toggle);
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: var(--dw-surface-700);
   font: inherit;
   cursor: pointer;

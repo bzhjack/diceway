@@ -7,30 +7,21 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {etoilesArmeFavorite} from '../../shared/arme/arme-favorite.util';
-import {AVANTAGE_ARME_FAVORITE_ID} from '../../bol-rules.constants';
-import {ArmeEntry} from '../../shared/models/arme-list.model';
 import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {CarriereEntry} from '../../shared/models/carriere-list.model';
-import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {BolCharacterFormPageBase} from '../../shared/form/character-form-page.base';
 import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
-import {availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/models/langue-list.model';
+import {referencedIds} from '../../shared/form/form-selection';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
-import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
-import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {PnjGeneralComponent} from './general/pnj-general.component';
 import {PnjTypeOption} from '../models/pnj-general.model';
-import {PnjSummaryRailComponent} from './summary-rail/pnj-summary-rail.component';
+import {SummaryRailComponent} from '../../shared/summary-rail/summary-rail.component';
 import {PnjFormModel} from '../models/pnj-form-page.model';
+import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
+import {ListPanelComponent} from '../../shared/list-panel/list-panel.component';
 
 function pnjFormDefaults(): PnjFormModel {
   return {
@@ -122,18 +113,18 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-pnj-form-page',
   imports: [
+    ListPanelComponent,
+    DwFormHeaderComponent,
     MatButtonModule,
     MatCard,
     MatCardContent,
     MatIconModule,
-    DwTagComponent,
-    AddMenuComponent,
     ArmeListComponent,
     ArmureListComponent,
     CarriereListComponent,
     PnjGeneralComponent,
     StatsGridComponent,
-    PnjSummaryRailComponent,
+    SummaryRailComponent,
   ],
   templateUrl: './pnj-form-page.html',
   styleUrl: './pnj-form-page.scss',
@@ -142,26 +133,13 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, PnjFormModel> {
+export class PnjFormPageComponent extends BolCharacterFormPageBase<PnjFormModel> {
   private readonly pnjService = inject(BolPnjService);
-  private readonly herosStateService = inject(BolHerosStateService);
-
-  constructor() {
-    super();
-    // Armes/armures sont éditables depuis l'intendance : recharger à chaque ouverture du formulaire.
-    this.herosStateService.refreshEquipmentCatalog();
-  }
-
-  protected readonly armesList = this.herosStateService.armeList;
-  protected readonly armuresList = this.herosStateService.armureList;
-  protected readonly carrieresList = this.herosStateService.carriereList;
-  protected readonly languesList = this.herosStateService.langueList;
-  protected readonly avantagesList = this.herosStateService.avantagesList;
-  protected readonly desavantagesList = this.herosStateService.desavantagesList;
-
   protected readonly labels = PNJ_FORM_LABELS;
   protected readonly typeOptions = PNJ_TYPE_OPTIONS;
   protected readonly pnjStatGroups = PNJ_STAT_GROUPS;
+  // Un PNJ porte tout ce qu'il possède.
+  protected readonly newArmureEquipped = true;
 
   protected readonly model = signal<PnjFormModel>(pnjFormDefaults());
   protected readonly pnjForm = form(this.model, (fieldPath) => {
@@ -199,165 +177,21 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
     return this.pnjForm;
   }
 
+  protected carriereRank(index: number) {
+    return this.pnjForm.carrieres[index].value;
+  }
+
   /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
   protected readonly statsForm = this.pnjForm as unknown as FieldTree<Record<string, number>>;
 
-  protected readonly avatarPreview = computed(() => this.model().avatar);
   protected readonly pnjNom = computed(() => this.model().nom);
   protected readonly pnjType = computed(() => this.model().type);
   protected readonly pnjVitalite = computed(() => this.model().vitalite);
   protected readonly pnjTypeLabel = computed(() => PNJ_TYPE_LABELS[this.pnjType() ?? 'P']);
 
-  protected readonly selectedArmesDraft = computed(() => this.model().armes);
-  protected readonly selectedArmuresDraft = computed(() => this.model().armures);
-  protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
-  protected readonly selectedLanguesDraft = computed(() => this.model().langues);
-  protected readonly selectedTraitsDraft = computed(() => this.model().traits);
-  /** Les étoiles « arme favorite » de la liste d'armes, si le PNJ a l'avantage. Un PNJ n'a pas de région : aucune arme interdite. */
-  protected readonly etoilesArmes = computed(() => {
-    const trait = this.model().traits.find((t) => t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID);
-    return etoilesArmeFavorite(this.selectedArmes(), trait ? {arme: trait.detail ?? null, regionId: null} : null, null);
-  });
-
-  /** L'étoile d'une arme : elle devient l'arme favorite (ou ne l'est plus) ; enregistré avec la fiche. */
-  protected toggleArmeFavorite(index: number): void {
-    const entry = this.selectedArmes()[index];
-    const etoile = this.etoilesArmes()?.[index];
-    if (!entry || !etoile || etoile.raison) {
-      return;
-    }
-    const arme = etoile.active ? null : entry.label;
-    this.model.update((current) => ({
-      ...current,
-      traits: current.traits.map((t) => (t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID ? {...t, detail: arme} : t)),
-    }));
-  }
-
-  protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
-  protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
-  protected readonly filteredCarrieres = availableCatalog(this.carrieresList, this.selectedCarrieresDraft);
-  protected readonly filteredLangues = availableCatalog(this.languesList, this.selectedLanguesDraft);
-  protected readonly filteredAvantages = availableCatalog(this.avantagesList, () =>
-    this.selectedTraitsDraft().filter((trait) => trait.type === 'A'),
-  );
-  protected readonly filteredDesavantages = availableCatalog(this.desavantagesList, () =>
-    this.selectedTraitsDraft().filter((trait) => trait.type === 'D'),
-  );
-
-  protected readonly armeOptions = addMenuOptions(
-    this.filteredArmes,
-    (arme) => arme.arme,
-    (arme) => (arme.degats ? `· Dégâts ${arme.degats}` : null),
-  );
-  protected readonly armureOptions = addMenuOptions(
-    this.filteredArmures,
-    (armure) => armure.armure,
-    (armure) => (armure.protection ? `· Protection ${armure.protection}` : null),
-  );
-  protected readonly carriereOptions = addMenuOptions(this.filteredCarrieres, (carriere) => carriere.carriere);
-
-  protected readonly selectedArmes = selectedEntries(
-    this.selectedArmesDraft,
-    this.armesList,
-    (arme, entry): ArmeEntry => ({
-      id: entry.id,
-      label: arme.arme,
-      degats: arme.degats,
-      portee: arme.portee,
-      notes: arme.notes,
-      equipee: entry.equipee,
-    }),
-  );
-  protected readonly selectedArmures = selectedEntries(
-    this.selectedArmuresDraft,
-    this.armuresList,
-    (armure, entry): ArmureEntry => ({
-      id: entry.id,
-      label: armure.armure,
-      protection: armure.protection,
-      malus: armure.malus,
-      ptsDePouvoir: armure.pts_de_pouvoir,
-      categorie: armure.categorie,
-      equipee: entry.equipee,
-      malusAgilite: armure.malus_agilite,
-      malusInitiative: armure.malus_initiative,
-    }),
-  );
-  protected readonly selectedCarrieres = selectedEntries(
-    this.selectedCarrieresDraft,
-    this.carrieresList,
-    (definition, entry, index): CarriereEntry => ({
-      id: entry.id,
-      label: definition.carriere,
-      description: definition.description || null,
-      rank: this.pnjForm.carrieres[index].value,
-    }),
-  );
-  protected readonly selectedLangues = selectedEntries(
-    this.selectedLanguesDraft,
-    this.languesList,
-    (langue, entry): LangueEntry => ({
-      id: entry.id,
-      label: langue.langue,
-      description: langue.description || null,
-      estLemurienne: Boolean(langue.est_lemurienne),
-    }),
-  );
-  protected readonly selectedTraitEntries = traitEntriesSignal(
-    this.selectedTraitsDraft,
-    this.avantagesList,
-    this.desavantagesList,
-  );
-
   protected readonly showGeneralHint = computed(
     () => this.fieldError(this.pnjForm.nom) || this.fieldError(this.pnjForm.type),
   );
-
-  protected onFormSubmit(event: Event): void {
-    event.preventDefault();
-    this.save();
-  }
-
-  protected addArmeEntry(id: number): void {
-    this.model.update((current) => ({...current, armes: [...current.armes, {id, equipee: true}]}));
-  }
-
-  protected removeArme(index: number): void {
-    this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
-  }
-
-  protected addArmureEntry(id: number): void {
-    // Un PNJ porte tout ce qu'il possède.
-    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: true}]}));
-  }
-
-  protected removeArmure(index: number): void {
-    this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
-  }
-
-  protected addLangueEntry(id: number): void {
-    this.model.update((current) => ({...current, langues: [...current.langues, {id}]}));
-  }
-
-  protected removeLangue(index: number): void {
-    this.model.update((current) => ({...current, langues: current.langues.filter((_, i) => i !== index)}));
-  }
-
-  protected addCarriereEntry(id: number): void {
-    this.model.update((current) => ({...current, carrieres: [...current.carrieres, {id, value: 0}]}));
-  }
-
-  protected removeCarriere(index: number): void {
-    this.model.update((current) => ({...current, carrieres: current.carrieres.filter((_, i) => i !== index)}));
-  }
-
-  protected addTraitEntry(entry: TraitAddEvent): void {
-    this.model.update((current) => ({...current, traits: [...current.traits, {id: entry.id, type: entry.type}]}));
-  }
-
-  protected removeTrait(index: number): void {
-    this.model.update((current) => ({...current, traits: current.traits.filter((_, i) => i !== index)}));
-  }
 
   protected loadEntity(id: string): Observable<BolHerosModel> {
     return this.pnjService.pnj(id);

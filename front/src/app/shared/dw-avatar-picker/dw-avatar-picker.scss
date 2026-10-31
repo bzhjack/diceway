@@ -1,43 +1,43 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
 
-.dfp-section-eyebrow {
-  margin: 0;
-  margin-bottom: 0.5rem;
-  font-size: 0.66rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--dw-forge-gold);
-  text-shadow: 0 1px 2px #000;
-}
-
-.dfp-avatar {
+.dw-ap {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
   width: 100%;
+  padding: 0;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  color: inherit;
+  font: inherit;
+  @include forge.recess;
   transition: border-color 0.15s ease;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     border-color: var(--dw-forge-hot);
   }
 
-  &:hover .dfp-avatar-overlay {
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+
+  &:hover .dw-ap-overlay,
+  &:focus-visible .dw-ap-overlay {
     opacity: 1;
   }
 }
 
-.dfp-avatar-placeholder {
+.dw-ap-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,12 +45,12 @@
   color: var(--dw-forge-stud-text);
 }
 
-.dfp-avatar-hint {
+.dw-ap-hint {
   font-size: 0.68rem;
   color: var(--dw-forge-stud-text);
 }
 
-.dfp-avatar-overlay {
+.dw-ap-overlay {
   position: absolute;
   inset: 0;
   display: flex;
@@ -62,7 +62,7 @@
   transition: opacity 0.15s ease;
 }
 
-.dfp-avatar-overlay-label {
+.dw-ap-overlay-label {
   margin-bottom: 0.75rem;
   padding: 0.25rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -72,12 +72,5 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: #fff;
-}
-
-.dfp-field-hint {
-  margin: 0;
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--dw-forge-hot-text);
+  color: var(--dw-forge-white);
 }

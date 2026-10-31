@@ -8,5 +8,7 @@ export interface BolAvantageModel {
   de_bonus: boolean | null;
   de_bonus_domaine: string | null;
   description: string | null;
+  /** Trait régional : la région qui l'accorde. */
+  region_id?: number | null;
   pivot: { detail: string, avantage_id: number, region_id: number };
 }

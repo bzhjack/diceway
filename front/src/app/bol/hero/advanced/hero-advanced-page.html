@@ -1,31 +1,15 @@
-<section class="dw-page dw-forge-page">
+<section class="dw-page">
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <mat-card appearance="outlined">
       <mat-card-content>
         @if (!editMode()) {
           <!-- ===== BROUILLON (étape 1) ===== -->
-          <form class="dw-creation-form flex flex-col gap-6" (submit)="onDraftSubmit($event)">
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div class="flex items-center gap-3">
-                <div class="hap-icon">
-                  <mat-icon svgIcon="gi-sparkles" />
-                </div>
-                <div class="space-y-1">
-                  <p class="hap-eyebrow">
-                    {{ pageEyebrow() }}
-                  </p>
-                  <h1 class="hap-title">
-                    {{ pageTitle() }}
-                  </h1>
-                </div>
-              </div>
-
-              <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-                <button mat-stroked-button type="button" (click)="goBack()">
-                  <mat-icon svgIcon="gi-return" /> Retour
-                </button>
-              </div>
-            </div>
+          <form class="dw-creation-form" (submit)="onDraftSubmit($event)">
+            <dw-form-header icon="gi-sparkles" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
+              <button mat-stroked-button type="button" (click)="goBack()">
+                <mat-icon svgIcon="gi-return" /> Retour
+              </button>
+            </dw-form-header>
 
             <div class="mx-auto flex w-full max-w-3xl flex-col gap-5">
               <div class="space-y-2">
@@ -56,68 +40,50 @@
             </div>
 
             @if (errorMessage()) {
-              <div class="hap-error-box">
+              <div class="dw-error-box">
                 {{ errorMessage() }}
               </div>
             }
           </form>
           <!-- ===== FIN BROUILLON ===== -->
         } @else {
-          <form class="dw-creation-form flex flex-col gap-6" (submit)="onFormSubmit($event)">
+          <form class="dw-creation-form" (submit)="onFormSubmit($event)">
             <!-- ===== EN-TÊTE ===== -->
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div class="flex items-center gap-3">
-                <div class="hap-icon">
-                  <mat-icon svgIcon="gi-sparkles" />
-                </div>
-                <div class="space-y-1">
-                  <p class="hap-eyebrow">
-                    {{ pageEyebrow() }}
-                  </p>
-                  <h1 class="hap-title">
-                    {{ pageTitle() }}
-                  </h1>
-                  @if (warnCount() > 0) {
-                    <p class="hap-warn-badge">
-                      {{ warnCount() }} avertissement(s) à traiter avant activation
-                    </p>
-                  }
-                </div>
-              </div>
+            <dw-form-header icon="gi-sparkles" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
+              @if (warnCount() > 0) {
+                <p dwFormHeaderNote class="hap-warn-badge">{{ warnCount() }} avertissement(s) à traiter avant activation</p>
+              }
+              <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
+                <mat-icon svgIcon="gi-return" /> Retour
+              </button>
 
-              <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-                <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
-                  <mat-icon svgIcon="gi-return" /> Retour
-                </button>
-
-                <button mat-flat-button type="submit" [disabled]="submitDisabled()">
-                  <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
-                  @if (formDirty()) {
-                    <span class="hap-dirty-dot" aria-label="Modifications non enregistrées"></span>
-                  }
-                </button>
-
-                @if (!activeValue()) {
-                  <button
-                    mat-flat-button
-                    type="button"
-                    [disabled]="activateDisabled()"
-                    (click)="confirmActivation()"
-                  >
-                    <mat-icon svgIcon="gi-laurels" /> Activer le héros
-                  </button>
+              <button mat-flat-button type="submit" [disabled]="submitDisabled()">
+                <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+                @if (formDirty()) {
+                  <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
                 }
-              </div>
-            </div>
+              </button>
+
+              @if (!activeValue()) {
+                <button
+                  mat-flat-button
+                  type="button"
+                  [disabled]="activateDisabled()"
+                  (click)="confirmActivation()"
+                >
+                  <mat-icon svgIcon="gi-laurels" /> Activer le héros
+                </button>
+              }
+            </dw-form-header>
             <!-- ===== FIN EN-TÊTE ===== -->
 
             <div class="grid gap-4">
               @if (loading()) {
                 <div class="dw-section--loading">
-                  <p class="hap-section-eyebrow">
+                  <p class="dw-section-eyebrow">
                     Chargement
                   </p>
-                  <p class="hap-loading-detail">
+                  <p class="dw-loading-detail">
                     Récupération du héros avancé.
                   </p>
                 </div>
@@ -125,13 +91,16 @@
 
               <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
                 <!-- ===== RAIL (avatar, traits, langues) ===== -->
-                <div class="dw-section--form hap-rail-panel">
-                  <bol-hero-summary-rail
+                <div class="dw-section--form dw-rail-panel">
+                  <bol-summary-rail
                     [avatarPreview]="avatarPreview()"
-                    [heroName]="heroNom()"
+                    avatarLabel="Changer le portrait du héros"
+                    [name]="heroNom()"
+                    emptyName="Nouveau héros"
                     [playerName]="heroJoueur()"
-                    [region]="selectedRegion()"
+                    [tag]="selectedRegion()?.region ?? null"
                     [vitalite]="railVitalite()"
+                    [withHeroisme]="true"
                     [heroisme]="railHeroisme()"
                     [traits]="selectedTraitEntries()"
                     [avantagesDisponibles]="availableAvantages()"
@@ -148,7 +117,7 @@
                   />
 
                   @if (traitWarns().length) {
-                    <div class="dw-field-warning mt-4 p-3">
+                    <div class="dw-field-warning mt-4">
                       @for (warning of traitWarns(); track warning.warn) {
                         <p class="m-0">{{ warning.warn }}</p>
                       }
@@ -156,7 +125,7 @@
                   }
 
                   @if (langueErrors().length) {
-                    <div class="dw-field-error mt-4 p-3">
+                    <div class="dw-field-error mt-4">
                       @for (error of langueErrors(); track error.error) {
                         <p class="m-0">{{ error.error }}</p>
                       }
@@ -168,7 +137,7 @@
                 <div class="flex min-w-0 flex-col gap-4">
                   <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
                     <!-- ===== IDENTITÉ ===== -->
-                    <div class="dw-section--form hap-panel--stretch">
+                    <div class="dw-section--form dw-panel--stretch">
                       <bol-hero-advanced-identite
                         [form]="heroForm"
                         [region]="selectedRegion()"
@@ -181,7 +150,7 @@
                     <!-- ===== FIN IDENTITÉ ===== -->
 
                     <!-- ===== CARRIÈRES ===== -->
-                    <div class="dw-section--form hap-panel--stretch">
+                    <div class="dw-section--form dw-panel--stretch">
                       <bol-hero-advanced-carrieres-panel
                         [carrieres]="selectedCarrieres()"
                         [carriereOptions]="carriereOptions()"
@@ -254,7 +223,7 @@
               </div>
 
               @if (errorMessage()) {
-                <div class="hap-error-box">
+                <div class="dw-error-box">
                   {{ errorMessage() }}
                 </div>
               }

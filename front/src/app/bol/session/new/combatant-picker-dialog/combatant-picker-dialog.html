@@ -24,7 +24,7 @@
 
     <mat-form-field subscriptSizing="dynamic" class="cpd-search">
       <mat-label>Rechercher</mat-label>
-      <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nom du combattant…" />
+      <input matInput [formField]="queryField" placeholder="Nom du combattant…" />
     </mat-form-field>
   </div>
 

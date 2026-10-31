@@ -13,7 +13,9 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
       font-size: 0.7rem;
       font-weight: 700;
       padding: 0.1rem 0.5rem;
+      border: 1px solid var(--dw-forge-bronze-dim);
       border-radius: var(--dw-radius-pill);
+      white-space: nowrap;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

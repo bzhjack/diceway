@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc porté par l'élément de la page ou par des classes
 // `scd-*` qui lui sont propres. Les dés roulent en couche de fond sur toute la page (même pattern que le jet d'action).
 
@@ -781,8 +783,7 @@ bol-start-combat-page {
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
@@ -793,9 +794,7 @@ bol-start-combat-page {
   }
 
   &:hover {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 }
 
@@ -982,8 +981,7 @@ bol-start-combat-page {
   padding: 0;
   border: 2px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: #ffe9bd;
   font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   text-align: center;
@@ -1021,8 +1019,7 @@ bol-start-combat-page {
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
@@ -1033,9 +1030,7 @@ bol-start-combat-page {
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:disabled {

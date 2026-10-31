@@ -1,11 +1,10 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
     <dw-library-header
       title="Galerie des héros"
       description="Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits."
-      color="emerald"
       image="/assets/bol/header-heros.webp"
     >
       <ng-container dwHeaderTags>
@@ -58,19 +57,15 @@
       </dw-library-toolbar>
 
       <!-- Grille de cartes -->
-      <div class="hero-grid-scroll">
-        <div class="hero-grid">
-          @for (hero of filteredHeroes(); track hero.id) {
-            <bol-hero-card
-              [hero]="hero"
-              (deleteRequested)="askDelete(hero)"
-              (statblockRequested)="openStatblock(hero)"
-            />
-          } @empty {
-            <p class="hero-grid__empty">Aucun héros ne correspond à cette recherche.</p>
-          }
-        </div>
-      </div>
+      <dw-library-grid [empty]="filteredHeroes().length === 0" emptyMessage="Aucun héros ne correspond à cette recherche.">
+        @for (hero of filteredHeroes(); track hero.id) {
+          <bol-hero-card
+            [hero]="hero"
+            (deleteRequested)="askDelete(hero)"
+            (statblockRequested)="openStatblock(hero)"
+          />
+        }
+      </dw-library-grid>
     </mat-card>
 
     <p class="dw-forge-credit">

@@ -8,5 +8,7 @@ export interface BolDesavantageModel {
   de_malus: boolean | null;
   de_malus_domaine: string| null;
   description: string | null;
+  /** Trait régional : la région qui l'accorde. */
+  region_id?: number | null;
   pivot: { detail: string, desavantage_id: number, region_id: number };
 }

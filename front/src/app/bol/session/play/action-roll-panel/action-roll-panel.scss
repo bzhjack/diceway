@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // Encapsulation désactivée sur le composant (voir .ts) : la couche de dés 3D embarque `dw-dice-box-host`, lui aussi sans encapsulation,
 // dont il faut neutraliser le cadre. Tout ici est donc global, mais les classes `ard-*` sont propres à ce composant.
 
@@ -174,8 +176,7 @@ bol-action-roll-panel {
   padding: 0.35rem 0.85rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: var(--dw-radius-toggle);
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: var(--dw-surface-700);
   font: inherit;
   font-size: 0.95rem;
@@ -653,8 +654,7 @@ bol-action-roll-panel {
   // Un creux dans le fer, cerclé de bronze, comme la case du total du jet de réaction.
   border: 2px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: #ffe9bd;
   font: inherit;
   font-size: 1.1rem;
@@ -675,8 +675,7 @@ bol-action-roll-panel {
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
@@ -687,9 +686,7 @@ bol-action-roll-panel {
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:disabled {
@@ -718,8 +715,7 @@ bol-action-roll-panel {
     border: 1px solid var(--dw-forge-bronze-edge);
     border-left: 4px solid var(--ard-tone);
     border-radius: var(--dw-radius-toggle);
-    background: var(--dw-forge-recess);
-    box-shadow: var(--dw-forge-recess-shadow);
+    @include forge.recess;
     color: var(--dw-surface-700);
     font: inherit;
     font-size: 0.88rem;
@@ -797,8 +793,7 @@ bol-action-roll-panel {
     padding: 0;
     border: 1px solid var(--dw-forge-bronze-dim);
     border-radius: 50%;
-    background: var(--dw-forge-stud);
-    box-shadow: var(--dw-forge-stud-shadow);
+    @include forge.stud-face;
     color: var(--dw-forge-bronze-text);
     font: inherit;
     font-size: 1rem;
@@ -806,9 +801,7 @@ bol-action-roll-panel {
     cursor: pointer;
 
     &:hover {
-      border-color: var(--dw-forge-hot);
-      box-shadow: var(--dw-forge-stud-glow);
-      color: var(--dw-forge-hot-text);
+      @include forge.stud-hot;
     }
   }
 

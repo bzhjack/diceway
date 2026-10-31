@@ -1,11 +1,10 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
     <dw-library-header
       title="Bestiaire des créatures"
       description="Accès rapide à toutes les créatures actuellement disponibles dans la bibliothèque Barbarians of Lemuria."
-      color="amber"
       image="/assets/bol/header-creatures.webp"
     >
       <ng-container dwHeaderTags>
@@ -44,7 +43,7 @@
       >
         <mat-form-field dwToolbarFilter class="creature-taille-field" subscriptSizing="dynamic">
           <mat-icon matPrefix>filter_list</mat-icon>
-          <mat-select [ngModel]="searchTaille()" (ngModelChange)="searchTaille.set($event)">
+          <mat-select [formField]="tailleField">
             <mat-option value="">Toutes les tailles</mat-option>
             @for (taille of tailles() ?? []; track taille.id) {
               <mat-option [value]="taille.id">{{ taille.taille }}</mat-option>
@@ -55,19 +54,15 @@
       </dw-library-toolbar>
 
       <!-- Grille de cartes -->
-      <div class="creature-grid-scroll">
-        <div class="creature-grid">
-          @for (creature of filteredCreatures(); track creature.id) {
-            <bol-creature-card
-              [creature]="creature"
-              (deleteRequested)="askDelete(creature)"
-              (statblockRequested)="openStatblock(creature)"
-            />
-          } @empty {
-            <p class="creature-grid__empty">Aucune créature ne correspond à cette recherche.</p>
-          }
-        </div>
-      </div>
+      <dw-library-grid [empty]="filteredCreatures().length === 0" emptyMessage="Aucune créature ne correspond à cette recherche.">
+        @for (creature of filteredCreatures(); track creature.id) {
+          <bol-creature-card
+            [creature]="creature"
+            (deleteRequested)="askDelete(creature)"
+            (statblockRequested)="openStatblock(creature)"
+          />
+        }
+      </dw-library-grid>
     </mat-card>
 
     <p class="dw-forge-credit">

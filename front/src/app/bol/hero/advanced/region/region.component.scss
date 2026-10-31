@@ -1,4 +1,16 @@
+@use 'styles/forge-mixins' as forge;
+
 .hrg-map-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+
+  @media (min-width: 64rem) {
+    flex-shrink: 0;
+    width: 420px;
+  }
+
   @media (min-width: 1024px) {
     position: sticky;
     top: 0;
@@ -7,16 +19,20 @@
 }
 
 .hrg-map-wrap {
+  position: relative;
   border: 1px solid var(--dw-forge-bronze);
   background: var(--dw-forge-recess);
   overflow: hidden;
 }
 
 .hrg-map-img {
+  display: block;
+  width: 100%;
   height: auto;
 }
 
 .hrg-map-hint {
+  margin: 0;
   font-size: 0.75rem;
   color: var(--dw-surface-500);
 }
@@ -58,19 +74,27 @@
 }
 
 .hrg-selected-region {
+  margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-size: 1.35rem;
   color: var(--dw-forge-name);
 }
 
 .hrg-region-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 7px;
-  background: var(--dw-forge-plate);
-  box-shadow: var(--dw-forge-plate-shadow);
+  @include forge.plate;
 }
 
 .hrg-region-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding-right: 0.25rem;
   max-height: 12rem;
   overflow-y: auto;
 }
@@ -108,6 +132,7 @@
 }
 
 .hrg-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -116,6 +141,7 @@
 }
 
 .hrg-eyebrow--muted {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -129,12 +155,20 @@
 }
 
 .hrg-empty-region {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  padding: 1.5rem;
+  text-align: center;
   border: 1px dashed var(--dw-forge-bronze-dim);
   background: var(--dw-forge-recess);
   color: var(--dw-surface-500);
 }
 
 .hrg-warn-box {
+  margin: 0;
+  padding: 0.75rem;
   border: 1px solid rgba(251, 191, 36, 0.3);
   background: rgba(69, 26, 3, 0.15);
   font-size: 0.875rem;
@@ -142,6 +176,8 @@
 }
 
 .hrg-neutral-box {
+  margin: 0;
+  padding: 0.75rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   background: var(--dw-forge-recess);
   font-size: 0.875rem;
@@ -149,6 +185,7 @@
 }
 
 .dw-empty-state {
+  margin: 0;
   font-size: 0.875rem;
   color: var(--dw-surface-500);
 }

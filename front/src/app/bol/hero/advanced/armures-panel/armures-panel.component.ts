@@ -1,14 +1,13 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {AddMenuComponent} from '../../../shared/add-menu/add-menu.component';
 import {AddMenuOption} from '../../../shared/models/add-menu.model';
 import {ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
 import {ArmureEntry} from '../../../shared/models/armure-list.model';
-import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
+import {ListPanelComponent} from '../../../shared/list-panel/list-panel.component';
 
 /** Panneau Armures de la création avancée. */
 @Component({
   selector: 'bol-hero-advanced-armures-panel',
-  imports: [DwTagComponent, AddMenuComponent, ArmureListComponent],
+  imports: [ListPanelComponent, ArmureListComponent],
   templateUrl: './armures-panel.component.html',
   styleUrl: './armures-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

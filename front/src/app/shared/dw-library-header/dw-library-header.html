@@ -8,15 +8,15 @@
     <div class="flex flex-col gap-4">
       <div class="space-y-2.5">
         <div class="space-y-1.5">
-          <p class="dw-lh-eyebrow m-0">
+          <p class="dw-lh-eyebrow">
             Bibliothèque BOL
           </p>
-          <h1 class="dw-lh-title m-0">
+          <h1 class="dw-lh-title">
             {{ title() }}
           </h1>
         </div>
         @if (description()) {
-          <p class="dw-lh-description m-0 max-w-3xl">
+          <p class="dw-lh-description">
             {{ description() }}
           </p>
         }
@@ -24,7 +24,7 @@
           <ng-content select="[dwHeaderTags]" />
         </div>
       </div>
-      <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+      <div class="library-header-actions">
         <ng-content select="[dwHeaderActions]" />
       </div>
     </div>

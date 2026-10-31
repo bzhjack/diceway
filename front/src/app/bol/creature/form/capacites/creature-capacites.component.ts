@@ -1,14 +1,14 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {BolCreatureCapaciteModel} from '../../../models/bol-creature.model';
-import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
-import {AddMenuComponent, addMenuOptions} from '../../../shared/add-menu/add-menu.component';
 import {AddMenuEvent} from '../../../shared/models/add-menu.model';
 import {CapaciteListComponent} from '../../../shared/capacite/list/capacite-list.component';
 import {CapaciteEntry} from '../../../shared/models/capacite-list.model';
+import {ListPanelComponent} from '../../../shared/list-panel/list-panel.component';
+import {addMenuOptions} from '../../../shared/add-menu/add-menu.component';
 
 @Component({
   selector: 'bol-creature-capacites',
-  imports: [DwTagComponent, AddMenuComponent, CapaciteListComponent],
+  imports: [ListPanelComponent, CapaciteListComponent],
   templateUrl: './creature-capacites.component.html',
   styleUrl: './creature-capacites.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

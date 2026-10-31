@@ -59,12 +59,14 @@ image-cropper {
 }
 
 .picture-dropzone-text {
+  padding-top: 1rem;
   text-align: center;
   font-size: 0.875rem;
   line-height: 1.75rem;
 }
 
 .picture-dropzone-link {
+  margin-left: 0.25rem;
   color: var(--dw-color-creature);
   text-decoration: underline;
 }

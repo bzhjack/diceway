@@ -11,7 +11,7 @@
   },
   "src/styles/_forge-page.scss": {
     "color-no-hex": {
-      "count": 8
+      "count": 3
     }
   },
   "src/styles/_reset.scss": {
@@ -41,7 +41,7 @@
   },
   "src/app/shared/dw-library-header/dw-library-header.scss": {
     "color-no-hex": {
-      "count": 6
+      "count": 1
     }
   },
   "src/app/shared/value-stepper/value-stepper.scss": {
@@ -106,7 +106,7 @@
   },
   "src/app/bol/shared/entity-card/entity-card.component.scss": {
     "color-no-hex": {
-      "count": 19
+      "count": 16
     },
     "selector-pseudo-element-disallowed-list": {
       "count": 1

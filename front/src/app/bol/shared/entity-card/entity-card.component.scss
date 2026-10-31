@@ -1,12 +1,14 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: contents;
 }
 
 .entity-card {
   display: flex;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: rgb(42 28 18 / 0.35);
+  @include forge.plate;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
   overflow: hidden;
   transition: border-color 0.15s ease;
 }
@@ -23,22 +25,14 @@
   border-color: rgba(251, 113, 133, 0.45);
 }
 
-.entity-card--dark {
-  background: rgba(29, 21, 15, 0.82);
-  border-color: #4f3b27;
-}
-
 .entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(42 28 18 / 0.35) 60%);
-  border-color: rgba(167, 139, 250, 0.4);
+  // Ce que le joueur a créé lui-même est chauffé par la braise.
+  background: linear-gradient(135deg, rgba(232, 135, 58, 0.2), transparent 60%), var(--dw-forge-plate);
+  border-color: var(--dw-forge-bronze);
 
   &:hover {
-    border-color: rgba(167, 139, 250, 0.65);
+    border-color: var(--dw-forge-hot);
   }
-}
-
-.entity-card--dark.entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.18), rgba(29, 21, 15, 0.82) 60%);
 }
 
 .entity-card__portrait {
@@ -72,14 +66,6 @@
   }
 }
 
-.entity-card--dark .entity-card__portrait {
-  background: linear-gradient(180deg, rgba(11, 7, 5, 0.96), rgba(42, 28, 18, 0.94));
-
-  &::after {
-    background: linear-gradient(to right, transparent 55%, rgba(11, 7, 5, 0.92) 100%);
-  }
-}
-
 .entity-card__img {
   display: block;
   position: absolute;
@@ -87,6 +73,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+  // Le portrait par défaut est clair : il s'éteint pour ne pas éclairer toute la liste.
+  &[src*='empty-avatar'] {
+    filter: sepia(0.6) brightness(0.45);
+  }
 }
 
 .entity-card__badge {
@@ -118,10 +109,6 @@
   }
 }
 
-.entity-card--dark .entity-card__badge {
-  background: rgba(11, 7, 5, 0.9);
-}
-
 .entity-card__body {
   flex: 1;
   min-width: 0;
@@ -151,10 +138,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.9rem;
-  font-weight: 800;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
   line-height: 1.2;
-  color: var(--dw-surface-800);
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 3px var(--dw-forge-shade);
 }
 
 .entity-card__meta {
@@ -179,7 +168,7 @@
   width: 26px;
   height: 26px;
   padding: 0;
-  color: var(--dw-surface-700);
+  @include forge.stud;
 
   ::ng-deep .mat-mdc-button-touch-target {
     width: 26px;
@@ -194,12 +183,10 @@
   }
 }
 
-.entity-card__action-btn--danger {
-  color: var(--dw-color-echec);
-}
-
-.entity-card--dark .entity-card__action-btn--danger {
-  color: var(--mat-sys-error);
+// Un clou qui supprime : l'icône reste rouge, même au survol.
+.entity-card__action-btn--danger,
+.entity-card__action-btn--danger:hover:not(:disabled) {
+  color: var(--dw-forge-verdict-echec);
 }
 
 .entity-card__gauges {
@@ -216,11 +203,11 @@
   gap: 0.25rem;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-bone);
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
-  background: rgba(21, 14, 9, 0.5);
-  border: 1px solid var(--dw-border);
+  @include forge.recess;
+  border: 1px solid var(--dw-forge-bronze-dim);
   font-variant-numeric: tabular-nums;
 
   .mat-icon {
@@ -231,13 +218,8 @@
   }
 }
 
-.entity-card--dark .entity-gauge {
-  background: rgba(11, 7, 5, 0.5);
-  border-color: #4f3b27;
-}
-
 .entity-gauge--pv .mat-icon {
-  color: #f43f5e;
+  color: #e5413a;
 }
 
 .entity-gauge--ph .mat-icon {
@@ -256,24 +238,19 @@
   gap: 0.25rem;
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-bone);
   padding: 0.18rem 0.45rem;
   border-radius: 999px;
-  background: rgba(21, 14, 9, 0.5);
-  border: 1px solid var(--dw-border);
+  @include forge.recess;
+  border: 1px solid var(--dw-forge-bronze-dim);
 
   .mat-icon {
     font-size: 13px;
     width: 13px;
     height: 13px;
     line-height: 13px;
-    color: var(--dw-surface-500);
+    color: var(--dw-forge-bronze-text);
   }
-}
-
-.entity-card--dark .entity-count-chip {
-  background: rgba(11, 7, 5, 0.5);
-  border-color: #4f3b27;
 }
 
 // ── Portrait en médaillon ──────────────────────────────────────────────────────────────────────────
@@ -316,12 +293,6 @@
   &::after {
     display: none;
   }
-}
-
-.entity-card--dark .entity-card__portrait {
-  background:
-    radial-gradient(90% 80% at 50% 25%, var(--dw-surface-200), var(--dw-surface-0)) padding-box,
-    conic-gradient(from 210deg, var(--ec-metal-1), var(--ec-metal-2), var(--ec-metal-3), var(--ec-metal-2), var(--ec-metal-1)) border-box;
 }
 
 .entity-card__img {

@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Signal, computed, input, output} from '@angular/core';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, Signal, computed, input, output, signal} from '@angular/core';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -31,7 +31,7 @@ export function addMenuOptions<T extends {id?: number | string | null}>(
 @Component({
   selector: 'bol-add-menu',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
@@ -58,21 +58,23 @@ export class AddMenuComponent {
 
   readonly added = output<AddMenuEvent>();
 
-  protected readonly selectedId = new FormControl<number | null>(null);
-  protected readonly detailControl = new FormControl<string>('', {nonNullable: true});
+  protected readonly selectedId = signal<number | null>(null);
+  protected readonly selectedField = form(this.selectedId);
+  protected readonly detail = signal('');
+  protected readonly detailField = form(this.detail);
 
   protected reset(): void {
-    this.selectedId.setValue(null);
-    this.detailControl.setValue('');
+    this.selectedId.set(null);
+    this.detail.set('');
   }
 
   protected add(): void {
-    const id = this.selectedId.value;
+    const id = this.selectedId();
     if (!id) {
       return;
     }
 
-    this.added.emit({id: Number(id), detail: this.detailControl.value || null});
+    this.added.emit({id: Number(id), detail: this.detail() || null});
     this.reset();
   }
 }

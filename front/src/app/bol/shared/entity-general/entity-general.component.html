@@ -1,0 +1,40 @@
+<p class="dw-section-eyebrow dw-section-eyebrow--spaced">
+  Général
+</p>
+
+<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
+  <dw-avatar-picker [src]="avatarPreview()" [label]="avatarLabel()" (picked)="avatarClick.emit()" />
+
+  <div class="grid gap-3 md:grid-cols-2">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>{{ nomLabel() }}</mat-label>
+      <input matInput id="nom" [formField]="nom()" />
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>{{ classementLabel() }}</mat-label>
+      <mat-select [formField]="classement()" [compareWith]="compareById()">
+        @for (option of options(); track option.id) {
+          <mat-option [value]="option.id">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="md:col-span-2">
+      <mat-form-field subscriptSizing="dynamic" class="w-full">
+        <mat-label>Commentaire</mat-label>
+        <textarea
+          matInput
+          id="commentaire"
+          [formField]="commentaire()"
+          rows="2"
+          class="resize-none"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+@if (showValidationHint()) {
+  <p class="dw-field-hint">{{ validationHint() }}</p>
+}

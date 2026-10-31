@@ -5,23 +5,24 @@
       <input
         matInput
         type="text"
-        [ngModel]="searchTerm()"
-        (ngModelChange)="searchTerm.set($event ?? '')"
+        [formField]="searchField"
         [placeholder]="placeholder()"
       />
     </mat-form-field>
 
     <ng-content select="[dwToolbarFilter]" />
 
-    <div class="dw-lt-filter-chip">
-      <mat-checkbox [ngModel]="checked()" (ngModelChange)="checked.set($event)">
-        {{ checkboxLabel() }}
-      </mat-checkbox>
-    </div>
+    @if (withFilters()) {
+      <div class="dw-lt-filter-chip">
+        <mat-checkbox [formField]="checkedField">
+          {{ checkboxLabel() }}
+        </mat-checkbox>
+      </div>
 
-    <button mat-stroked-button (click)="clear()">
-      <mat-icon>filter_alt_off</mat-icon> Effacer
-    </button>
+      <button mat-stroked-button (click)="clear()">
+        <mat-icon>filter_alt_off</mat-icon> Effacer
+      </button>
+    }
   </div>
 
   <ng-content select="[dwToolbarCount]" />

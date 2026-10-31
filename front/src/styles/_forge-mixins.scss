@@ -1,0 +1,50 @@
+// Les matières de la forge, définies par les jetons `--dw-forge-*` (`_tokens.scss`). Ce module n'écrit aucun CSS tant qu'on n'inclut rien.
+
+// Une plaque de fer : les cartes, les bandes d'en-tête.
+@mixin plate {
+  background: var(--dw-forge-plate);
+  box-shadow: var(--dw-forge-plate-shadow);
+}
+
+// Un creux dans le fer : ce qui se saisit, les lignes d'une liste.
+@mixin recess {
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+}
+
+// La tête d'un clou de bronze, sans ses états : à compléter, ou `stud` pour un bouton.
+@mixin stud-face {
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+}
+
+// Le clou qui rougeoie, sous la souris.
+@mixin stud-hot {
+  border-color: var(--dw-forge-hot);
+  box-shadow: var(--dw-forge-stud-glow);
+  color: var(--dw-forge-hot-text);
+}
+
+// Un bouton rond : un clou de bronze, qui rougeoie au survol.
+@mixin stud {
+  @include stud-face;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  color: var(--dw-forge-stud-text);
+
+  &:hover:not(:disabled) {
+    @include stud-hot;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 1px;
+  }
+}
+
+// L'icône d'un en-tête : un clou de bronze, chauffé, qui ne se clique pas.
+@mixin medallion {
+  @include stud-face;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  color: var(--dw-forge-hot-text);
+}

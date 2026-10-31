@@ -1,6 +1,8 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
-  --dw-lt-border: var(--dw-surface-200);
+  --dw-lt-border: var(--dw-forge-bronze-edge);
 }
 
 .dw-lt-toolbar {
@@ -10,7 +12,8 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--dw-lt-border);
+  border-bottom: 1px solid var(--dw-forge-bronze);
+  background: var(--dw-forge-plate);
 }
 
 .dw-lt-controls {
@@ -30,4 +33,5 @@
   padding: 0.25rem 1rem;
   border-radius: 999px;
   border: 1px solid var(--dw-lt-border);
+  @include forge.recess;
 }

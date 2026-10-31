@@ -14,7 +14,7 @@
   <div class="dw-add-menu-content" (click)="$event.stopPropagation()">
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>{{ label() }}</mat-label>
-      <mat-select [formControl]="selectedId">
+      <mat-select [formField]="selectedField">
         <mat-option [value]="null">{{ emptyLabel() }}</mat-option>
         @for (option of options(); track option.id) {
           <mat-option [value]="option.id">
@@ -30,11 +30,11 @@
     @if (withDetail()) {
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Détail (optionnel)</mat-label>
-        <input matInput [formControl]="detailControl" />
+        <input matInput [formField]="detailField" />
       </mat-form-field>
     }
 
-    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+    <button mat-flat-button type="button" [disabled]="!selectedId()" (click)="add(); trigger.closeMenu()">
       <mat-icon>add</mat-icon> {{ addLabel() }}
     </button>
   </div>

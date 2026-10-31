@@ -1,15 +1,14 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {AddMenuComponent} from '../../../shared/add-menu/add-menu.component';
 import {AddMenuOption} from '../../../shared/models/add-menu.model';
 import {ArmeListComponent} from '../../../shared/arme/list/arme-list.component';
 import {EtoileArme} from '../../../shared/models/arme-favorite.model';
 import {ArmeEntry} from '../../../shared/models/arme-list.model';
-import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
+import {ListPanelComponent} from '../../../shared/list-panel/list-panel.component';
 
 /** Panneau Armes de la création avancée : sélection + avertissement arme lourde (E13). */
 @Component({
   selector: 'bol-hero-advanced-armes-panel',
-  imports: [DwTagComponent, AddMenuComponent, ArmeListComponent],
+  imports: [ListPanelComponent, ArmeListComponent],
   templateUrl: './armes-panel.component.html',
   styleUrl: './armes-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

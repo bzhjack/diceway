@@ -20,7 +20,6 @@ export class EntityCardComponent {
   readonly meta = input('');
   readonly badge = input<EntityCardBadge | null>(null);
   readonly own = input(false);
-  readonly dark = input(false);
   readonly accent = input<EntityCardAccent>('emerald');
   readonly clickablePortrait = input(false);
   readonly actions = input<readonly EntityCardAction[]>([]);

@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // Couleur du métal (anneau du médaillon, pastilles), selon le type du personnage. La fiche elle-même est de la forge : de la suie,
 // et la lueur de la braise qui descend du bandeau.
 :host {
@@ -298,8 +300,7 @@
   // Un creux dans le fer, cerclé de bronze.
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
 
   dd {
     margin: 0;

@@ -1,23 +1,11 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
 
 .cl-content-card {
   overflow: hidden;
-}
-
-.cl-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--dw-surface-200);
-}
-
-.cl-search-field {
-  width: 18rem;
 }
 
 .cl-list {
@@ -35,9 +23,9 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.7rem 0.9rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--dw-surface-50) 55%, transparent);
+  @include forge.plate;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
 }
 
 .cl-row-main {
@@ -46,9 +34,11 @@
 
 .cl-row-title {
   margin: 0;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 3px var(--dw-forge-shade);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -72,4 +62,13 @@
   text-align: center;
   font-size: 0.875rem;
   color: var(--dw-surface-500);
+}
+
+// Supprimer : un clou de bronze, l'icône en rouge.
+.cl-row-actions .mat-mdc-icon-button {
+  --mat-icon-button-state-layer-size: 2rem;
+  --mat-icon-button-icon-size: 1.1rem;
+  padding: 0;
+  @include forge.stud;
+  color: var(--dw-forge-verdict-echec);
 }

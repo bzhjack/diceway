@@ -1,4 +1,4 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
@@ -6,7 +6,6 @@
       class="demon-header-card"
       title="Bestiaire des démons"
       description="Accès rapide à tous les démons disponibles dans la bibliothèque Barbarians of Lemuria."
-      color="rose"
       image="/assets/bol/header-demons.webp"
     >
       <ng-container dwHeaderTags>
@@ -45,7 +44,7 @@
       >
         <mat-form-field dwToolbarFilter class="demon-categorie-field" subscriptSizing="dynamic">
           <mat-icon matPrefix>filter_list</mat-icon>
-          <mat-select [ngModel]="searchCategorie()" (ngModelChange)="searchCategorie.set($event)">
+          <mat-select [formField]="categorieField">
             <mat-option value="">Toutes les catégories</mat-option>
             @for (categorie of categories() ?? []; track categorie.id) {
               <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
@@ -56,19 +55,15 @@
       </dw-library-toolbar>
 
       <!-- Grille de cartes -->
-      <div class="demon-grid-scroll">
-        <div class="demon-grid">
-          @for (demon of filteredDemons(); track demon.id) {
-            <bol-demon-card
-              [demon]="demon"
-              (deleteRequested)="askDelete(demon)"
-              (statblockRequested)="openStatblock(demon)"
-            />
-          } @empty {
-            <p class="demon-grid__empty">Aucun démon ne correspond à cette recherche.</p>
-          }
-        </div>
-      </div>
+      <dw-library-grid [empty]="filteredDemons().length === 0" emptyMessage="Aucun démon ne correspond à cette recherche.">
+        @for (demon of filteredDemons(); track demon.id) {
+          <bol-demon-card
+            [demon]="demon"
+            (deleteRequested)="askDelete(demon)"
+            (statblockRequested)="openStatblock(demon)"
+          />
+        }
+      </dw-library-grid>
     </mat-card>
 
     <p class="dw-forge-credit">

@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 .vs {
   display: inline-flex;
   align-items: center;
@@ -89,6 +91,21 @@
         color: #fff;
         text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
       }
+    }
+  }
+}
+
+// Sur une fiche ou une bibliothèque : des clous de bronze. La table et le combat habillent eux-mêmes leurs compteurs.
+:host-context(.dw-page) {
+  .vs__btn {
+    @include forge.stud;
+  }
+
+  .vs__value {
+    color: var(--dw-forge-bone);
+
+    &:focus-visible {
+      outline-color: var(--dw-forge-hot);
     }
   }
 }

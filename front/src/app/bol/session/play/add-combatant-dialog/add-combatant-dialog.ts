@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,7 +29,7 @@ export function resolveAddCombatantCamp(kind: CombatantKind, toggleCamp: CombatC
 /** Dialog d'ajout d'un combattant à une session déjà lancée (contrairement au picker de préparation, chaque clic ajoute immédiatement côté backend). */
 @Component({
   selector: 'bol-add-combatant-dialog',
-  imports: [AvatarFallbackDirective, FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [AvatarFallbackDirective, FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
   templateUrl: './add-combatant-dialog.html',
   styleUrl: './add-combatant-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +44,7 @@ export class AddCombatantDialogComponent {
   protected readonly lockKind = this.data.lockKind ?? null;
   protected readonly activeType = signal<CatalogFilter>(this.lockKind ?? 'all');
   protected readonly query = signal('');
+  protected readonly queryField = form(this.query);
   protected readonly camp = signal<CombatCamp>(this.lockKind === 'hero' ? 'heros' : 'adversaires');
   protected readonly addedCount = signal(0);
   protected readonly pendingCatalogId = signal<string | null>(null);

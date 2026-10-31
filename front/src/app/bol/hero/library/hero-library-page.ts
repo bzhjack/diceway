@@ -1,11 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {readReturnUrl} from '../../../core/return-url.util';
-import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
@@ -23,11 +17,14 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {heroStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {HeroCardComponent, heroImage, heroLanguagesText} from './hero-card/hero-card.component';
+import {Observable} from 'rxjs';
+import {DwLibraryGridComponent} from '../../../shared/dw-library-grid/dw-library-grid';
+import {BolLibraryPageBase} from '../../shared/library/library-page.base';
+import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 
 @Component({
   selector: 'bol-hero-library-page',
   imports: [
-    FormsModule,
     RouterLink,
     MatButtonModule,
     MatCheckboxModule,
@@ -38,22 +35,23 @@ import {HeroCardComponent, heroImage, heroLanguagesText} from './hero-card/hero-
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwLibraryGridComponent,
     HeroCardComponent,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroLibraryPageComponent {
+export class HeroLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> {
   private readonly herosService = inject(BolHerosService);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
   private readonly heroes = refreshableResource(() => this.herosService.heroes());
+  protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
+    title: 'Supprimer le héros',
+    name: (item) => item.origines.nom ?? 'ce héros',
+    error: 'La suppression du héros a échoué.',
+  };
 
-  protected readonly searchTerm = signal('');
   protected readonly onlyPending = signal(false);
-  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
-  protected readonly returnUrl = signal(readReturnUrl());
 
   protected readonly filteredHeroes = computed(() =>
     [...this.heroes.data()]
@@ -79,22 +77,6 @@ export class HeroLibraryPageComponent {
   protected readonly heroCount = computed(() => this.filteredHeroes().length);
   protected readonly totalHeroCount = computed(() => this.heroes.data().length);
 
-  protected askDelete(hero: BolHerosModel): void {
-    confirmDialog(
-      this.dialog,
-      {
-        title: 'Supprimer le héros',
-        message: `Voulez-vous supprimer "${hero.origines.nom ?? 'ce héros'}" ?`,
-        confirmLabel: 'Supprimer',
-      },
-      {width: '380px'},
-    ).subscribe((confirmed) => {
-      if (confirmed) {
-        this.deleteHero(hero);
-      }
-    });
-  }
-
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.onlyPending.set(false);
@@ -108,20 +90,11 @@ export class HeroLibraryPageComponent {
     });
   }
 
-  private deleteHero(hero: BolHerosModel): void {
-    if (!hero.id) {
-      return;
-    }
+  protected deleteItem(id: NonNullable<BolHerosModel['id']>): Observable<unknown> {
+    return this.herosService.deleteHeros(id);
+  }
 
-    this.herosService.deleteHeros(hero.id).subscribe({
-      next: () => this.heroes.refresh(),
-      error: (error: unknown) => {
-        this.snackBar.open(
-          extractApiErrorMessage(error, 'La suppression du héros a échoué.'),
-          'Fermer',
-          {duration: 5000},
-        );
-      },
-    });
+  protected refreshItems(): void {
+    this.heroes.refresh();
   }
 }

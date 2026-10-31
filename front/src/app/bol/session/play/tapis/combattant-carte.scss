@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // Une plaque de fer liserée de la couleur du camp (rouge en face, vert dans le camp des héros).
 :host {
   --cc-camp: var(--dw-color-echec-forte);
@@ -156,8 +158,7 @@
   overflow: hidden;
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 6px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: color-mix(in srgb, var(--cc-camp) 70%, var(--dw-surface-700));
 
   img {

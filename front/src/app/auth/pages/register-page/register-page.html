@@ -1,61 +1,39 @@
-<section class="auth-mat-page">
-  <mat-card class="auth-mat-card" appearance="outlined">
-    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+<app-auth-card title="Nouveau compte" subtitle="Créez votre compte pour rejoindre l'aventure">
+  <form class="auth-mat-form" (submit)="onSubmit($event)">
+    <mat-form-field>
+      <mat-label>Pseudonyme</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
+      <input matInput [formField]="registerForm.name" autocomplete="nickname" />
+      <mat-error>{{ registerForm.name().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-    <mat-card-header>
-      <mat-card-title>Nouveau compte</mat-card-title>
-      <mat-card-subtitle>Créez votre compte pour rejoindre l'aventure</mat-card-subtitle>
-    </mat-card-header>
+    <mat-form-field>
+      <mat-label>Adresse mail</mat-label>
+      <mat-icon matPrefix>mail</mat-icon>
+      <input matInput type="email" [formField]="registerForm.email" autocomplete="username" />
+      <mat-error>{{ registerForm.email().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-    <mat-card-content>
-      <form class="auth-mat-form" (submit)="onSubmit($event)">
-        <mat-form-field>
-          <mat-label>Pseudonyme</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <input matInput [formField]="registerForm.name" autocomplete="nickname" />
-          <mat-error>{{ registerForm.name().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-label>Mot de passe</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput type="password" [formField]="registerForm.password" autocomplete="new-password" />
+      <mat-error>{{ registerForm.password().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Adresse mail</mat-label>
-          <mat-icon matPrefix>mail</mat-icon>
-          <input matInput type="email" [formField]="registerForm.email" autocomplete="username" />
-          <mat-error>{{ registerForm.email().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <mat-form-field>
+      <mat-label>Confirmer le mot de passe</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput type="password" [formField]="registerForm.password_confirmation" autocomplete="new-password" />
+      <mat-error>{{ registerForm.password_confirmation().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Mot de passe</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput type="password" [formField]="registerForm.password" autocomplete="new-password" />
-          <mat-error>{{ registerForm.password().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <dw-error-message [messages]="messages()" />
 
-        <mat-form-field>
-          <mat-label>Confirmer le mot de passe</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput type="password" [formField]="registerForm.password_confirmation" autocomplete="new-password" />
-          <mat-error>{{ registerForm.password_confirmation().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <app-auth-actions [pending]="pending()" [invalid]="registerForm().invalid()" submitLabel="Créer le compte" />
+  </form>
 
-        <dw-error-message [messages]="messages()" />
-
-        <div class="auth-mat-actions auth-mat-actions--end">
-          <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending()">Retour</button>
-          <button mat-flat-button type="submit" [disabled]="pending() || registerForm().invalid()">
-            @if (pending()) {
-              <mat-progress-spinner mode="indeterminate" diameter="18" />
-            } @else {
-              Créer le compte
-            }
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-
-    <mat-card-actions>
-      <span class="auth-mat-footer">
-        Déjà un compte ? <a routerLink="/login">Se connecter</a>
-      </span>
-    </mat-card-actions>
-  </mat-card>
-</section>
+  <ng-container authFooter>
+    Déjà un compte ? <a routerLink="/login">Se connecter</a>
+  </ng-container>
+</app-auth-card>

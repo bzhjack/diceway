@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
@@ -12,13 +14,6 @@
   text-shadow: 0 1px 2px #000;
 }
 
-.dw-field-warning {
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  background: rgba(69, 26, 3, 0.15);
-  font-size: 0.875rem;
-  color: #fde68a;
-}
-
 .hap-resource-row {
   display: flex;
   align-items: center;
@@ -26,8 +21,7 @@
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 6px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
 }
 
 .hap-resource-label {
@@ -44,6 +38,8 @@
 }
 
 .hap-table {
+  margin-top: 0.5rem;
+  width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 

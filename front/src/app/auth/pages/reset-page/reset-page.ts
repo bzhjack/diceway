@@ -1,44 +1,26 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {email, form, FormField, minLength, required, validate} from '@angular/forms/signals';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/api-error.utils';
 import {AuthService} from '../../../core/auth/auth.service';
-import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {DwErrorMessageComponent} from '../../../shared/dw-error-message/dw-error-message';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardHeader,
-  MatCardImage,
-  MatCardSubtitle,
-  MatCardTitle,
-} from '@angular/material/card';
+import {AuthActionsComponent} from '../../auth-card/auth-actions';
+import {AuthCardComponent} from '../../auth-card/auth-card';
 
 @Component({
   selector: 'app-reset-page',
   imports: [
     FormField,
     RouterLink,
-    NgOptimizedImage,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
-    MatCard,
-    MatCardImage,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardContent,
-    MatCardActions,
     DwErrorMessageComponent,
+    AuthCardComponent,
+    AuthActionsComponent,
   ],
   templateUrl: './reset-page.html',
   styleUrl: './reset-page.scss',

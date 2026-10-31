@@ -1,14 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {readReturnUrl} from '../../../core/return-url.util';
-import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
@@ -25,11 +20,15 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {demonStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {DemonCardComponent, demonImage} from './demon-card/demon-card.component';
+import {Observable} from 'rxjs';
+import {DwLibraryGridComponent} from '../../../shared/dw-library-grid/dw-library-grid';
+import {BolLibraryPageBase} from '../../shared/library/library-page.base';
+import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 
 @Component({
   selector: 'bol-demon-library-page',
   imports: [
-    FormsModule,
+    FormField,
     RouterLink,
     MatButtonModule,
     MatCheckboxModule,
@@ -41,24 +40,26 @@ import {DemonCardComponent, demonImage} from './demon-card/demon-card.component'
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwLibraryGridComponent,
     DemonCardComponent,
   ],
   templateUrl: './demon-library-page.html',
   styleUrl: './demon-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemonLibraryPageComponent {
+export class DemonLibraryPageComponent extends BolLibraryPageBase<BolDemonModel> {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
   private readonly demons = refreshableResource(() => this.demonsService.demons());
+  protected readonly deleteTexts: LibraryDeleteTexts<BolDemonModel> = {
+    title: 'Supprimer le démon',
+    name: (item) => item.nom,
+    error: 'La suppression du démon a échoué.',
+  };
 
   protected readonly categories = this.demonStateService.categorieList;
-  protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
-  protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchCategorie = signal<number | ''>('');
+  protected readonly categorieField = form(this.searchCategorie);
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredDemons = computed(() =>
@@ -75,22 +76,6 @@ export class DemonLibraryPageComponent {
   protected readonly demonCount = computed(() => this.filteredDemons().length);
   protected readonly totalDemonCount = computed(() => this.demons.data().length);
 
-  protected askDelete(demon: BolDemonModel): void {
-    confirmDialog(
-      this.dialog,
-      {
-        title: 'Supprimer le démon',
-        message: `Voulez-vous supprimer "${demon.nom}" ?`,
-        confirmLabel: 'Supprimer',
-      },
-      {width: '380px'},
-    ).subscribe((confirmed) => {
-      if (confirmed) {
-        this.deleteDemon(demon);
-      }
-    });
-  }
-
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.searchCategorie.set('');
@@ -104,20 +89,11 @@ export class DemonLibraryPageComponent {
     });
   }
 
-  private deleteDemon(demon: BolDemonModel): void {
-    if (!demon.id) {
-      return;
-    }
+  protected deleteItem(id: NonNullable<BolDemonModel['id']>): Observable<unknown> {
+    return this.demonsService.deleteDemon(id);
+  }
 
-    this.demonsService.deleteDemon(demon.id).subscribe({
-      next: () => this.demons.refresh(),
-      error: (error: unknown) => {
-        this.snackBar.open(
-          extractApiErrorMessage(error, 'La suppression du démon a échoué.'),
-          'Fermer',
-          {duration: 5000},
-        );
-      },
-    });
+  protected refreshItems(): void {
+    this.demons.refresh();
   }
 }

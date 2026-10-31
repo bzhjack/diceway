@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
@@ -9,6 +11,7 @@
 }
 
 .hs-block {
+  @include forge.recess;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--dw-border);
@@ -84,7 +87,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-bronze-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,7 +115,7 @@
 
 // Vitalité / Héroïsme : les deux ressources d'action courante, mises en avant
 .hs-cell--key {
-  background: rgba(147, 197, 253, 0.12);
+  background: color-mix(in srgb, var(--dw-forge-hot) 9%, transparent);
 }
 
 // Case texte (dégâts : « d6B », « d6M »…) : même place qu'un stepper, valeur centrée.
@@ -121,8 +124,8 @@
   height: 1.7rem;
   border: 1px solid var(--dw-border);
   border-radius: 6px;
-  background: var(--dw-surface-0);
-  color: var(--dw-color-legendary);
+  @include forge.recess;
+  color: var(--dw-forge-bone);
   font: inherit;
   font-size: 1rem;
   font-weight: 800;

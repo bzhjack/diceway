@@ -1,4 +1,4 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
@@ -8,15 +8,15 @@
           <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
-                <div class="ip-icon flex h-14 w-14 items-center justify-center">
+                <div class="ip-icon">
                   <mat-icon svgIcon="gi-medal" />
                 </div>
                 <div class="flex min-w-0 flex-1 flex-col gap-2">
-                  <p class="ip-eyebrow m-0">
+                  <p class="ip-eyebrow">
                     Outils MJ
                   </p>
                   <div class="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-                    <h1 class="ip-title m-0">
+                    <h1 class="ip-title">
                       Intendance
                     </h1>
                     <div class="flex flex-wrap gap-2 xl:justify-end">
@@ -27,7 +27,7 @@
                 </div>
               </div>
 
-              <p class="ip-description m-0">
+              <p class="ip-description">
                 L'intendance devient l'espace du meneur pour cadrer l'équipement de la table. Tu y
                 pilotes les catalogues d'armes et d'armures qui servent à préparer les héros, les
                 PNJ, les adversaires et les scènes où le matériel doit rester lisible et cohérent.
@@ -35,7 +35,7 @@
             </div>
           </div>
 
-          <div class="library-header-actions flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="library-header-actions">
             <button mat-flat-button routerLink="/library/heroes">
               <mat-icon svgIcon="gi-group" /> Ouvrir la bibliothèque des héros
             </button>
@@ -57,18 +57,18 @@
                 <div class="space-y-3">
                   <div class="flex items-center gap-3">
                     <div
-                      class="ip-entry-icon flex h-12 w-12 items-center justify-center"
+                      class="ip-entry-icon"
                     >
                       <mat-icon [svgIcon]="entry.icon" />
                     </div>
                     <div class="space-y-1">
-                      <p class="ip-entry-kicker m-0">
+                      <p class="ip-entry-kicker">
                         {{ entry.kicker }}
                       </p>
-                      <h2 class="ip-entry-title m-0">{{ entry.title }}</h2>
+                      <h2 class="ip-entry-title">{{ entry.title }}</h2>
                     </div>
                   </div>
-                  <p class="ip-entry-description m-0">{{ entry.description }}</p>
+                  <p class="ip-entry-description">{{ entry.description }}</p>
                 </div>
               </div>
 

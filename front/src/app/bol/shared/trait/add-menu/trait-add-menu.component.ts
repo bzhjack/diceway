@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, input, output, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -15,7 +14,7 @@ import {TraitAddEvent} from '../../models/trait-add-menu.model';
 @Component({
   selector: 'bol-trait-add-menu',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatButtonToggleModule,
     MatFormFieldModule,
@@ -34,28 +33,28 @@ export class TraitAddMenuComponent {
   readonly added = output<TraitAddEvent>();
 
   protected readonly menuType = signal<'A' | 'D'>('A');
-  protected readonly selectedId = new FormControl<number | null>(null);
-  private readonly selectedIdValue = toSignal(this.selectedId.valueChanges, {initialValue: null});
+  protected readonly selectedId = signal<number | null>(null);
+  protected readonly selectedField = form(this.selectedId);
   /** Option courante, pour afficher le badge régional dans le trigger fermé du select. */
   protected readonly selectedAvantage = computed(
-    () => this.avantages().find((avantage) => avantage.id === this.selectedIdValue()) ?? null,
+    () => this.avantages().find((avantage) => avantage.id === this.selectedId()) ?? null,
   );
   protected readonly selectedDesavantage = computed(
-    () => this.desavantages().find((desavantage) => desavantage.id === this.selectedIdValue()) ?? null,
+    () => this.desavantages().find((desavantage) => desavantage.id === this.selectedId()) ?? null,
   );
 
   protected reset(): void {
     this.menuType.set('A');
-    this.selectedId.setValue(null);
+    this.selectedId.set(null);
   }
 
   protected add(): void {
-    const id = this.selectedId.value;
+    const id = this.selectedId();
     if (!id) {
       return;
     }
 
     this.added.emit({id: Number(id), type: this.menuType()});
-    this.selectedId.setValue(null);
+    this.selectedId.set(null);
   }
 }

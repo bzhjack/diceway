@@ -7,32 +7,24 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {isArmeEquipee} from '../../shared/arme/arme-equipee';
-import {etoilesArmeFavorite} from '../../shared/arme/arme-favorite.util';
-import {AVANTAGE_ARME_FAVORITE_ID} from '../../bol-rules.constants';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
-import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmeEntry} from '../../shared/models/arme-list.model';
 import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {CarriereEntry} from '../../shared/models/carriere-list.model';
-import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {TraitDraft} from '../../shared/models/trait-entry.model';
+import {BolCharacterFormPageBase} from '../../shared/form/character-form-page.base';
 import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
-import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/models/langue-list.model';
+import {applyArmureEquipToggle, referencedIds, toggleEquipee} from '../../shared/form/form-selection';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
-import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
-import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {HeroGeneralComponent} from './general/general.component';
-import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
+import {SummaryRailComponent} from '../../shared/summary-rail/summary-rail.component';
 import {HeroFormModel} from '../models/hero-form-page.model';
+import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
+import {ListPanelComponent} from '../../shared/list-panel/list-panel.component';
 
 function heroFormDefaults(): HeroFormModel {
   return {
@@ -121,18 +113,18 @@ const HERO_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-hero-form-page',
   imports: [
+    ListPanelComponent,
+    DwFormHeaderComponent,
     MatButtonModule,
     MatCard,
     MatCardContent,
     MatIconModule,
-    DwTagComponent,
-    AddMenuComponent,
     ArmeListComponent,
     ArmureListComponent,
     CarriereListComponent,
     HeroGeneralComponent,
     StatsGridComponent,
-    HeroSummaryRailComponent,
+    SummaryRailComponent,
   ],
   templateUrl: './hero-form-page.html',
   styleUrl: './hero-form-page.scss',
@@ -141,26 +133,13 @@ const HERO_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, HeroFormModel> {
+export class HeroFormPageComponent extends BolCharacterFormPageBase<HeroFormModel> {
   private readonly herosService = inject(BolHerosService);
-  private readonly herosStateService = inject(BolHerosStateService);
-
-  constructor() {
-    super();
-    // Armes/armures sont éditables depuis l'intendance : recharger à chaque ouverture du formulaire.
-    this.herosStateService.refreshEquipmentCatalog();
-  }
-
-  protected readonly armesList = this.herosStateService.armeList;
-  protected readonly armuresList = this.herosStateService.armureList;
-  protected readonly carrieresList = this.herosStateService.carriereList;
-  protected readonly languesList = this.herosStateService.langueList;
-  protected readonly avantagesList = this.herosStateService.avantagesList;
-  protected readonly desavantagesList = this.herosStateService.desavantagesList;
   protected readonly regionList = this.herosStateService.regionList;
 
   protected readonly labels = HERO_FORM_LABELS;
   protected readonly heroStatGroups = HERO_STAT_GROUPS;
+  protected readonly newArmureEquipped = false;
 
   protected readonly model = signal<HeroFormModel>(heroFormDefaults());
   protected readonly heroForm = form(this.model, (fieldPath) => {
@@ -199,6 +178,18 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     return this.heroForm;
   }
 
+  protected carriereRank(index: number) {
+    return this.heroForm.carrieres[index].value;
+  }
+
+  protected override armeFavoriteRegion(trait: TraitDraft): number | null {
+    return trait.region_id ?? null;
+  }
+
+  protected override characterRegion(): number | null {
+    return this.model().region_id ?? null;
+  }
+
   /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
   protected readonly statsForm = this.heroForm as unknown as FieldTree<Record<string, number>>;
 
@@ -206,74 +197,10 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     () => this.pending() || this.loading() || this.heroForm().invalid() || this.model().active,
   );
 
-  protected readonly avatarPreview = computed(() => this.model().avatar);
   protected readonly heroNom = computed(() => this.model().nom);
   protected readonly heroJoueur = computed(() => this.model().joueur);
   protected readonly heroVitalite = computed(() => this.model().vitalite);
   protected readonly heroHeroisme = computed(() => this.model().heroisme);
-
-  protected readonly selectedArmesDraft = computed(() => this.model().armes);
-  protected readonly selectedArmuresDraft = computed(() => this.model().armures);
-  protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
-  protected readonly selectedLanguesDraft = computed(() => this.model().langues);
-  protected readonly selectedTraitsDraft = computed(() => this.model().traits);
-  /** Les étoiles « arme favorite » de la liste d'armes : l'avantage « Arme favorite » du héros, s'il l'a, et sa région. */
-  protected readonly etoilesArmes = computed(() => {
-    const trait = this.model().traits.find((t) => t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID);
-    const favorite = trait ? {arme: trait.detail ?? null, regionId: trait.region_id ?? null} : null;
-    return etoilesArmeFavorite(this.selectedArmes(), favorite, this.model().region_id ?? null);
-  });
-
-  protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
-  protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
-  protected readonly filteredCarrieres = availableCatalog(this.carrieresList, this.selectedCarrieresDraft);
-  protected readonly filteredLangues = availableCatalog(this.languesList, this.selectedLanguesDraft);
-  protected readonly filteredAvantages = availableCatalog(this.avantagesList, () =>
-    this.selectedTraitsDraft().filter((trait) => trait.type === 'A'),
-  );
-  protected readonly filteredDesavantages = availableCatalog(this.desavantagesList, () =>
-    this.selectedTraitsDraft().filter((trait) => trait.type === 'D'),
-  );
-
-  protected readonly armeOptions = addMenuOptions(
-    this.filteredArmes,
-    (arme) => arme.arme,
-    (arme) => (arme.degats ? `· Dégâts ${arme.degats}` : null),
-  );
-  protected readonly armureOptions = addMenuOptions(
-    this.filteredArmures,
-    (armure) => armure.armure,
-    (armure) => (armure.protection ? `· Protection ${armure.protection}` : null),
-  );
-  protected readonly carriereOptions = addMenuOptions(this.filteredCarrieres, (carriere) => carriere.carriere);
-
-  protected readonly selectedArmes = selectedEntries(
-    this.selectedArmesDraft,
-    this.armesList,
-    (arme, entry): ArmeEntry => ({
-      id: entry.id,
-      label: arme.arme,
-      degats: arme.degats,
-      portee: arme.portee,
-      notes: arme.notes,
-      equipee: entry.equipee,
-    }),
-  );
-  protected readonly selectedArmures = selectedEntries(
-    this.selectedArmuresDraft,
-    this.armuresList,
-    (armure, entry): ArmureEntry => ({
-      id: entry.id,
-      label: armure.armure,
-      protection: armure.protection,
-      malus: armure.malus,
-      ptsDePouvoir: armure.pts_de_pouvoir,
-      categorie: armure.categorie,
-      equipee: entry.equipee,
-      malusAgilite: armure.malus_agilite,
-      malusInitiative: armure.malus_initiative,
-    }),
-  );
 
   protected readonly agiliteMalusTotal = computed(() =>
     this.selectedArmures()
@@ -285,32 +212,6 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     this.selectedArmures()
       .filter((armure) => armure.equipee)
       .reduce((sum, armure) => sum + armure.malusInitiative, 0),
-  );
-
-  protected readonly selectedCarrieres = selectedEntries(
-    this.selectedCarrieresDraft,
-    this.carrieresList,
-    (definition, entry, index): CarriereEntry => ({
-      id: entry.id,
-      label: definition.carriere,
-      description: definition.description || null,
-      rank: this.heroForm.carrieres[index].value,
-    }),
-  );
-  protected readonly selectedLangues = selectedEntries(
-    this.selectedLanguesDraft,
-    this.languesList,
-    (langue, entry): LangueEntry => ({
-      id: entry.id,
-      label: langue.langue,
-      description: langue.description || null,
-      estLemurienne: Boolean(langue.est_lemurienne),
-    }),
-  );
-  protected readonly selectedTraitEntries = traitEntriesSignal(
-    this.selectedTraitsDraft,
-    this.avantagesList,
-    this.desavantagesList,
   );
 
   protected readonly selectedRegion = computed(() => {
@@ -329,75 +230,15 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       this.fieldError(this.heroForm.region_id),
   );
 
-  protected onFormSubmit(event: Event): void {
-    event.preventDefault();
-    this.save();
-  }
-
-  protected addArmeEntry(id: number): void {
-    this.model.update((current) => ({...current, armes: [...current.armes, {id, equipee: true}]}));
-  }
-
-  protected removeArme(index: number): void {
-    this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
-  }
-
-  /** L'étoile d'une arme : elle devient l'arme favorite (ou ne l'est plus) ; enregistré avec la fiche. */
-  protected toggleArmeFavorite(index: number): void {
-    const entry = this.selectedArmes()[index];
-    const etoile = this.etoilesArmes()?.[index];
-    if (!entry || !etoile || etoile.raison) {
-      return;
-    }
-    const arme = etoile.active ? null : entry.label;
-    this.model.update((current) => ({
-      ...current,
-      traits: current.traits.map((t) => (t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID ? {...t, detail: arme} : t)),
-    }));
-  }
-
   protected toggleArmeEquipped(index: number): void {
-    this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)}));
-  }
-
-  protected addArmureEntry(id: number): void {
-    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: false}]}));
-  }
-
-  protected removeArmure(index: number): void {
-    this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
+    this.patchDraft({armes: toggleEquipee(this.model().armes, index)});
   }
 
   protected toggleArmureEquipped(index: number): void {
     const catalog = this.armuresList() ?? [];
-    this.model.update((current) => ({
-      ...current,
-      armures: applyArmureEquipToggle(current.armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
-    }));
-  }
-
-  protected addLangueEntry(id: number): void {
-    this.model.update((current) => ({...current, langues: [...current.langues, {id}]}));
-  }
-
-  protected removeLangue(index: number): void {
-    this.model.update((current) => ({...current, langues: current.langues.filter((_, i) => i !== index)}));
-  }
-
-  protected addCarriereEntry(id: number): void {
-    this.model.update((current) => ({...current, carrieres: [...current.carrieres, {id, value: 0}]}));
-  }
-
-  protected removeCarriere(index: number): void {
-    this.model.update((current) => ({...current, carrieres: current.carrieres.filter((_, i) => i !== index)}));
-  }
-
-  protected addTraitEntry(entry: TraitAddEvent): void {
-    this.model.update((current) => ({...current, traits: [...current.traits, {id: entry.id, type: entry.type}]}));
-  }
-
-  protected removeTrait(index: number): void {
-    this.model.update((current) => ({...current, traits: current.traits.filter((_, i) => i !== index)}));
+    this.patchDraft({
+      armures: applyArmureEquipToggle(this.model().armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
+    });
   }
 
   protected override save(): void {

@@ -1,25 +1,24 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
     <dw-library-header
       title="Arsenal"
       description="Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis l'intendance."
-      color="amber"
       image="/assets/bol/header-armes.webp"
     >
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
-        <dw-tag>{{ canonicalWeaponCount() }} canon</dw-tag>
-        <dw-tag>{{ customWeaponCount() }} créations</dw-tag>
+        <dw-tag>{{ totalCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalCount() }} canon</dw-tag>
+        <dw-tag>{{ customCount() }} créations</dw-tag>
         <dw-tag>{{ meleeCount() }} mêlée</dw-tag>
         <dw-tag>{{ rangedCount() }} tir</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
+          <button mat-flat-button [disabled]="formVisible() && !editingId()" (click)="startCreate()">
             <mat-icon>add</mat-icon>
-            {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
+            {{ formVisible() && !editingId() ? 'Création en cours' : 'Nouvelle arme' }}
           </button>
           <button mat-stroked-button routerLink="/library/armors">
             <mat-icon svgIcon="gi-shield" /> Voir les armures
@@ -33,70 +32,51 @@
 
     <!-- Form card -->
     @if (formVisible()) {
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div class="space-y-4">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div class="space-y-1">
-                <p class="alp-eyebrow m-0">
-                  Intendance
-                </p>
-                <h2 class="alp-form-title m-0">{{ formTitle() }}</h2>
-              </div>
+      <bol-equipment-form-panel
+        [title]="formTitle()"
+        [submitLabel]="submitLabel()"
+        [submitting]="submitting()"
+        [error]="errorMessage()"
+        (cancelled)="cancelForm()"
+        (submitted)="submitForm()"
+      >
+        <form class="grid gap-4 md:grid-cols-2">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Nom de l'arme</mat-label>
+          <input matInput [formField]="itemForm.arme" />
+          @if (fieldError(itemForm.arme)) {
+            <mat-error>Nom requis (255 caractères max)</mat-error>
+          }
+        </mat-form-field>
 
-              <div class="flex flex-wrap gap-2">
-                <button mat-stroked-button (click)="cancelForm()">
-                  <mat-icon>close</mat-icon> Annuler
-                </button>
-                <button mat-flat-button [disabled]="submitting()" (click)="submitForm()">
-                  <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
-                </button>
-              </div>
-            </div>
-
-            <form [formGroup]="weaponForm" class="grid gap-4 md:grid-cols-2">
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Nom de l'arme</mat-label>
-                <input matInput formControlName="arme" />
-                @if (onError('arme')) {
-                  <mat-error>Nom requis (255 caractères max)</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Type</mat-label>
-                <mat-select formControlName="type">
-                  @for (opt of weaponTypeOptions; track opt.value) {
-                    <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Dégâts</mat-label>
-                <input matInput formControlName="degats" />
-                @if (onError('degats')) {
-                  <mat-error>Dégâts requis (50 caractères max)</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Portée</mat-label>
-                <input matInput formControlName="portee" />
-              </mat-form-field>
-
-              <mat-form-field class="md:col-span-2" subscriptSizing="dynamic">
-                <mat-label>Notes</mat-label>
-                <textarea matInput formControlName="notes" rows="4" class="resize-none"></textarea>
-              </mat-form-field>
-            </form>
-
-            @if (errorMessage()) {
-              <p class="alp-error m-0">{{ errorMessage() }}</p>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Type</mat-label>
+          <mat-select [formField]="itemForm.type">
+            @for (opt of weaponTypeOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
             }
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Dégâts</mat-label>
+          <input matInput [formField]="itemForm.degats" />
+          @if (fieldError(itemForm.degats)) {
+            <mat-error>Dégâts requis (50 caractères max)</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Portée</mat-label>
+          <input matInput [formField]="itemForm.portee" />
+        </mat-form-field>
+
+        <mat-form-field class="md:col-span-2" subscriptSizing="dynamic">
+          <mat-label>Notes</mat-label>
+          <textarea matInput [formField]="itemForm.notes" rows="4" class="resize-none"></textarea>
+        </mat-form-field>
+        </form>
+      </bol-equipment-form-panel>
     }
 
     <!-- Content card -->
@@ -113,16 +93,16 @@
       </dw-library-toolbar>
 
       <!-- Table -->
-      <div class="weapon-table-scroll">
-        <table class="bol-weapon-table">
+      <div class="eq-table-scroll">
+        <table class="eq-table">
           <thead>
             <tr>
               <th>Arme</th>
-              <th class="weapon-col-compact">Type</th>
-              <th class="weapon-col-compact">Dégâts</th>
-              <th class="weapon-col-range">Portée</th>
+              <th class="eq-col-compact">Type</th>
+              <th class="eq-col-compact">Dégâts</th>
+              <th class="eq-col-range">Portée</th>
               <th>Notes</th>
-              <th class="weapon-col-compact">Actions</th>
+              <th class="eq-col-compact">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -130,32 +110,32 @@
               <tr>
                 <td>
                   <div class="flex items-center gap-2">
-                    <span class="alp-strong">{{ weapon.arme }}</span>
+                    <span class="eq-strong">{{ weapon.arme }}</span>
                     @if (weapon.user_id) {
                       <dw-badge color="amber">Création</dw-badge>
                     }
                   </div>
                 </td>
-                <td class="weapon-col-compact">
+                <td class="eq-col-compact">
                   <dw-badge [color]="weapon.type === 'M' ? 'amber' : 'sky'">
                     {{ weaponTypeLabel(weapon.type) }}
                   </dw-badge>
                 </td>
-                <td class="weapon-col-compact">
-                  <span class="alp-strong">{{ weapon.degats || '-' }}</span>
+                <td class="eq-col-compact">
+                  <span class="eq-strong">{{ weapon.degats || '-' }}</span>
                 </td>
-                <td class="weapon-col-range alp-muted-cell">
+                <td class="eq-col-range">
                   {{ weapon.portee || '-' }}
                 </td>
-                <td class="alp-muted-cell">
+                <td>
                   {{ weapon.notes || '-' }}
                 </td>
-                <td class="weapon-col-compact">
+                <td class="eq-col-compact">
                   @if (canManage(weapon)) {
                     <div class="flex justify-end gap-0.5">
                       <button
                         mat-icon-button
-                        class="weapon-action-btn"
+                        class="eq-action-btn"
                         matTooltip="Modifier"
                         [attr.aria-label]="'Modifier : ' + weapon.arme"
                         (click)="startEdit(weapon)"
@@ -164,7 +144,7 @@
                       </button>
                       <button
                         mat-icon-button
-                        class="weapon-action-btn weapon-btn-danger"
+                        class="eq-action-btn eq-btn-danger"
                         matTooltip="Supprimer"
                         [attr.aria-label]="'Supprimer : ' + weapon.arme"
                         (click)="askDelete(weapon)"

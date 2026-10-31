@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
   min-width: 0;
@@ -78,8 +80,7 @@
   height: var(--cmp-h);
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 7px;
-  background: var(--dw-forge-plate);
-  box-shadow: var(--dw-forge-plate-shadow);
+  @include forge.plate;
 }
 
 .cmp-plaque--selected {
@@ -170,8 +171,7 @@
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
@@ -182,9 +182,7 @@
   }
 
   &:hover {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:focus-visible {
@@ -224,8 +222,7 @@
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-bronze-text);
   font: inherit;
   font-weight: 700;
@@ -233,9 +230,7 @@
   cursor: pointer;
 
   &:hover:not([aria-disabled='true']) {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:focus-visible {

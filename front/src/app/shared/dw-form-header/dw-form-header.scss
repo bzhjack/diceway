@@ -1,0 +1,38 @@
+@use 'styles/forge-mixins' as forge;
+
+:host {
+  display: block;
+}
+
+.dw-fh-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  @include forge.medallion;
+
+  .mat-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+  }
+}
+
+.dw-fh-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--dw-color-legendary);
+}
+
+.dw-fh-title {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}

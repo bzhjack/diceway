@@ -1,0 +1,78 @@
+@use 'styles/forge-mixins' as forge;
+
+:host {
+  display: block;
+}
+
+.eq-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+.eq-table {
+  // L'en-tête en or, opaque pour rester lisible quand on fait défiler les lignes.
+  --dw-surface-0: var(--dw-forge-table-head);
+  --dw-surface-50: rgba(255, 201, 106, 0.07);
+  --dw-surface-100: var(--dw-forge-bronze-edge);
+  --dw-surface-500: var(--dw-forge-gold);
+  --dw-surface-600: var(--dw-forge-stud-text);
+
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.875rem;
+    color: var(--dw-surface-700);
+    border-bottom: 1px solid var(--dw-surface-100);
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--dw-surface-0);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-surface-100);
+  }
+
+  tbody tr:hover {
+    background-color: var(--dw-surface-50);
+  }
+
+  .eq-col-compact {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .eq-strong {
+    font-weight: 600;
+    color: var(--dw-surface-800);
+  }
+
+  .eq-muted-cell {
+    color: var(--dw-surface-600);
+  }
+}
+
+.eq-action-btn {
+  --mat-icon-button-state-layer-size: 2rem;
+  --mat-icon-button-icon-size: 1.1rem;
+  margin-block: -8px;
+  padding: 0;
+  @include forge.stud;
+}
+
+// Un clou qui supprime : l'icône en rouge, sur le bronze.
+.eq-btn-danger {
+  color: var(--dw-forge-verdict-echec);
+}

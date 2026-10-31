@@ -1,47 +1,25 @@
-<section class="auth-mat-page">
-  <mat-card class="auth-mat-card" appearance="outlined">
-    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+<app-auth-card title="Nouveau mot de passe" subtitle="Choisissez un nouveau mot de passe pour votre compte.">
+  <form class="auth-mat-form" (submit)="onSubmit($event)">
+    <mat-form-field>
+      <mat-label>Mot de passe</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput type="password" [formField]="resetForm.password" autocomplete="new-password" />
+      <mat-error>{{ resetForm.password().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-    <mat-card-header>
-      <mat-card-title>Nouveau mot de passe</mat-card-title>
-      <mat-card-subtitle>Choisissez un nouveau mot de passe pour votre compte.</mat-card-subtitle>
-    </mat-card-header>
+    <mat-form-field>
+      <mat-label>Confirmer le mot de passe</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input matInput type="password" [formField]="resetForm.password_confirmation" autocomplete="new-password" />
+      <mat-error>{{ resetForm.password_confirmation().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-    <mat-card-content>
-      <form class="auth-mat-form" (submit)="onSubmit($event)">
-        <mat-form-field>
-          <mat-label>Mot de passe</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput type="password" [formField]="resetForm.password" autocomplete="new-password" />
-          <mat-error>{{ resetForm.password().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <dw-error-message [messages]="messages()" />
 
-        <mat-form-field>
-          <mat-label>Confirmer le mot de passe</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
-          <input matInput type="password" [formField]="resetForm.password_confirmation" autocomplete="new-password" />
-          <mat-error>{{ resetForm.password_confirmation().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    <app-auth-actions [pending]="pending()" [invalid]="resetForm().invalid()" submitLabel="Valider" />
+  </form>
 
-        <dw-error-message [messages]="messages()" />
-
-        <div class="auth-mat-actions auth-mat-actions--end">
-          <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending()">Retour</button>
-          <button mat-flat-button type="submit" [disabled]="pending() || resetForm().invalid()">
-            @if (pending()) {
-              <mat-progress-spinner mode="indeterminate" diameter="18" />
-            } @else {
-              Valider
-            }
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-
-    <mat-card-actions>
-      <span class="auth-mat-footer">
-        Vous vous souvenez de votre mot de passe ? <a routerLink="/login">Se connecter</a>
-      </span>
-    </mat-card-actions>
-  </mat-card>
-</section>
+  <ng-container authFooter>
+    Vous vous souvenez de votre mot de passe ? <a routerLink="/login">Se connecter</a>
+  </ng-container>
+</app-auth-card>

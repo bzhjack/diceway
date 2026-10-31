@@ -1,19 +1,12 @@
-<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-  <div class="flex items-center gap-2">
-    <p class="cfp-section-eyebrow">
-      Capacités
-    </p>
-    <dw-tag>{{ capacites().length }} sélectionnée(s)</dw-tag>
-  </div>
-
-  <bol-add-menu
-    [options]="capaciteOptions()"
-    label="Capacité"
-    triggerLabel="Ajouter une capacité"
-    addLabel="Ajouter la capacité"
-    [withDetail]="true"
-    (added)="added.emit($event)"
-  />
-</div>
-
-<bol-capacite-list [capacites]="capacites()" (removed)="removed.emit($event)" />
+<bol-list-panel
+  title="Capacités"
+  [count]="capacites().length"
+  [options]="capaciteOptions()"
+  label="Capacité"
+  triggerLabel="Ajouter une capacité"
+  addLabel="Ajouter la capacité"
+  [withDetail]="true"
+  (added)="added.emit($event)"
+>
+  <bol-capacite-list [capacites]="capacites()" (removed)="removed.emit($event)" />
+</bol-list-panel>

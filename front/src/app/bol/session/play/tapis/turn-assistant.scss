@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: flex;
   flex-direction: column;
@@ -524,8 +526,7 @@
   padding: 0;
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 8px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   color: var(--dw-forge-bone);
   font: 400 1.9rem/1 'Muse Display Harmony', 'Muse Sans', serif;
   text-align: center;
@@ -553,15 +554,12 @@
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-stud-text);
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    border-color: var(--dw-forge-hot);
-    box-shadow: var(--dw-forge-stud-glow);
-    color: var(--dw-forge-hot-text);
+    @include forge.stud-hot;
   }
 
   &:disabled {
@@ -796,8 +794,7 @@
   padding: 0 0.6rem;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: var(--dw-radius-pill);
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
+  @include forge.stud-face;
   color: var(--dw-forge-bronze-text);
   font-size: 0.86rem;
   font-weight: 700;

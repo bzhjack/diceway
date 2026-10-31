@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 // Les trois colonnes sous la ligne de qui joue : la cible, l'attaque, les dégâts. Leur hauteur est fixe, celle du contenu le plus chargé (un
 // succès héroïque avec toutes ses options) : un résultat ne fait rien bouger.
 .tas-trois {
@@ -189,8 +191,7 @@
   gap: 0.4rem 0.6rem;
   padding: 0.3rem 0.6rem 0.35rem;
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
 }
 
 // Les effets qu'elle porte, à côté de ses chiffres : plus petits, ils tiennent dans la colonne étroite.

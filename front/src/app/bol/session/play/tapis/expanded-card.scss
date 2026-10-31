@@ -1,3 +1,5 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
@@ -259,8 +261,7 @@
   // Un creux dans le fer, cerclé de bronze.
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-recess-shadow);
+  @include forge.recess;
   text-align: center;
 
   dd {

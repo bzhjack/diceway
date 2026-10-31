@@ -1,24 +1,11 @@
-<div class="sr-avatar" (click)="avatarClick.emit()">
-  @if (avatarPreview()) {
-    <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
-  } @else {
-    <div class="sr-avatar-placeholder">
-      <mat-icon class="!text-3xl">image</mat-icon>
-      <span class="sr-avatar-hint">Cliquer pour modifier</span>
-    </div>
-  }
+<dw-avatar-picker [src]="avatarPreview()" [label]="avatarLabel()" (picked)="avatarClick.emit()" />
 
-  <div class="sr-avatar-overlay">
-    <span class="sr-avatar-overlay-label">Modifier</span>
-  </div>
-</div>
-
-<p class="sr-name">{{ heroName() || 'Nouveau héros' }}</p>
+<p class="sr-name">{{ name() || emptyName() }}</p>
 @if (playerName()) {
   <p class="sr-player">joué par {{ playerName() }}</p>
 }
-@if (region(); as currentRegion) {
-  <span class="sr-region">{{ currentRegion.region }}</span>
+@if (tag(); as currentTag) {
+  <span class="sr-region">{{ currentTag }}</span>
 }
 
 <div class="sr-lifes">
@@ -30,13 +17,15 @@
     <span class="sr-life-label">Vitalité</span>
   </div>
 
-  <div class="sr-life" [attr.aria-label]="'Points d\'héroïsme : ' + (heroisme() ?? 0)">
-    <div class="sr-life-icon sr-life-icon--ph">
-      <mat-icon>star</mat-icon>
-      <span class="sr-life-value sr-life-value--dark">{{ heroisme() ?? 0 }}</span>
+  @if (withHeroisme()) {
+    <div class="sr-life" [attr.aria-label]="'Points d\'héroïsme : ' + (heroisme() ?? 0)">
+      <div class="sr-life-icon sr-life-icon--ph">
+        <mat-icon>star</mat-icon>
+        <span class="sr-life-value sr-life-value--dark">{{ heroisme() ?? 0 }}</span>
+      </div>
+      <span class="sr-life-label">Héroïsme</span>
     </div>
-    <span class="sr-life-label">Héroïsme</span>
-  </div>
+  }
 </div>
 
 <div class="sr-traits">

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, input, model, output} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -8,7 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'dw-library-toolbar',
-  imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [FormField, MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule],
   templateUrl: './dw-library-toolbar.html',
   styleUrl: './dw-library-toolbar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +18,12 @@ export class DwLibraryToolbarComponent {
   readonly checked = model<boolean>(false);
   readonly placeholder = input<string>('Rechercher');
   readonly checkboxLabel = input<string>('Mes créations');
+  /** Sans filtre, la barre se réduit à la recherche et au compteur (bibliothèque des sessions). */
+  readonly withFilters = input(true);
   readonly cleared = output<void>();
+
+  protected readonly searchField = form(this.searchTerm);
+  protected readonly checkedField = form(this.checked);
 
   protected clear(): void {
     this.searchTerm.set('');

@@ -2,43 +2,6 @@
   display: block;
 }
 
-.hap-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border: 1px solid var(--dw-forge-bronze);
-  border-radius: 50%;
-  background: var(--dw-forge-stud);
-  box-shadow: var(--dw-forge-stud-shadow);
-  color: var(--dw-forge-hot-text);
-
-  .mat-icon {
-    width: 2rem;
-    height: 2rem;
-    font-size: 2rem;
-  }
-}
-
-.hap-eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--dw-color-legendary);
-}
-
-.hap-title {
-  margin: 0;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 2.25rem;
-  line-height: 1;
-  color: var(--dw-forge-name);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
-}
-
 .hap-warn-badge {
   margin: 0;
   font-size: 0.75rem;
@@ -70,69 +33,4 @@
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-600);
-}
-
-.hap-section-eyebrow {
-  margin: 0;
-  font-size: 0.66rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--dw-forge-gold);
-  text-shadow: 0 1px 2px #000;
-}
-
-.hap-loading-detail {
-  margin: 0;
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-700);
-}
-
-.hap-error-box {
-  padding: 0.75rem 1rem;
-  border: 1px solid rgba(244, 63, 94, 0.4);
-  background: rgba(244, 63, 94, 0.1);
-  font-size: 0.875rem;
-  color: #fecdd3;
-}
-
-.dw-field-error {
-  border: 1px solid rgba(248, 113, 113, 0.35);
-  background: rgba(69, 10, 10, 0.2);
-  font-size: 0.875rem;
-  color: #fecaca;
-}
-
-.dw-field-warning {
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  background: rgba(69, 26, 3, 0.15);
-  font-size: 0.875rem;
-  color: #fde68a;
-}
-
-// Modificateurs de mise en page sur .dw-section--form (classe globale partagée) :
-// positionnement propre à cette page uniquement.
-.hap-rail-panel {
-  @media (min-width: 1280px) {
-    position: sticky;
-    top: 1rem;
-  }
-}
-
-.hap-panel--stretch {
-  @media (min-width: 1280px) {
-    height: 100%;
-  }
-}
-
-// Puce « modifications non enregistrées » — inline après le libellé.
-.hap-dirty-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  // Sombre : elle est posée sur l'or du bouton.
-  background: #1c1200;
 }

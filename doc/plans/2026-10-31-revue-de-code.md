@@ -327,9 +327,17 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 ### Phase 3 : le socle du style (M)
 
-- [ ] M1 : la forge par défaut, suppression du scope et des styles morts
-- [ ] M2 : mixins de la forge
-- [ ] `dw-tag` sans variables `--p-tag-*`
+- [x] M1 : la forge par défaut, suppression du scope et des styles morts
+- [x] M2 : mixins de la forge
+- [x] `dw-tag` sans variables `--p-tag-*` (fait en phase 1)
+
+**Fait le 2026-10-31.** Vérifié pixel par pixel sur 65 captures (16 pages en trois largeurs, table, combat, démarrage, authentification). Trois différences voulues :
+
+- **Démons :** leurs jauges et leur étiquette avaient une teinte à part ; elles prennent celle des autres fiches.
+- **Intendance :** ses cartes retrouvent l'ombre qu'elles déclaraient.
+- **`dw-collapsible-row` :** le creux de la forge s'applique aussi à la liste des scènes.
+
+`value-stepper` garde une variante `:host-context(.dw-page)` : la table et le combat habillent eux-mêmes leurs compteurs. Les `styles` écrits dans les `.ts` (6 composants) n'utilisent pas encore les mixins.
 
 ### Phase 4 : fiches et bibliothèques (L)
 

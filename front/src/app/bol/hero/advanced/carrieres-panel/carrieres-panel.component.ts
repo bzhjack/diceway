@@ -4,13 +4,13 @@ import {AddMenuComponent} from '../../../shared/add-menu/add-menu.component';
 import {AddMenuOption} from '../../../shared/models/add-menu.model';
 import {CarriereListComponent} from '../../../shared/carriere/list/carriere-list.component';
 import {CarriereEntry} from '../../../shared/models/carriere-list.model';
-import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 import {SectionMessage} from '../../models/section-message.model';
+import {ListPanelComponent} from '../../../shared/list-panel/list-panel.component';
 
 /** Panneau Carrières de la création avancée : sélection, désavantage de carrière requis, budget. */
 @Component({
   selector: 'bol-hero-advanced-carrieres-panel',
-  imports: [DwTagComponent, AddMenuComponent, CarriereListComponent],
+  imports: [ListPanelComponent, AddMenuComponent, CarriereListComponent],
   templateUrl: './carrieres-panel.component.html',
   styleUrl: './carrieres-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

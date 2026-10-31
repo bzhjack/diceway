@@ -1,28 +1,27 @@
-<section class="dw-page dw-forge-page xl:px-8">
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
     <dw-library-header
       title="Armures et boucliers"
       description="Catalogue défensif de la table, initialisé sur BoL et éditable depuis l'intendance."
-      color="sky"
       image="/assets/bol/header-armures.webp"
     >
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalArmorCount() }} entrées</dw-tag>
-        <dw-tag>{{ canonicalArmorCount() }} canon</dw-tag>
-        <dw-tag>{{ customArmorCount() }} créations</dw-tag>
+        <dw-tag>{{ totalCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalCount() }} canon</dw-tag>
+        <dw-tag>{{ customCount() }} créations</dw-tag>
         <dw-tag>{{ shieldCount() }} boucliers</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
           <button
             mat-flat-button
-            [disabled]="formVisible() && !editingArmorId()"
+            [disabled]="formVisible() && !editingId()"
             (click)="startCreate()"
           >
             <mat-icon>add</mat-icon>
-            {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
+            {{ formVisible() && !editingId() ? 'Création en cours' : 'Nouvelle armure' }}
           </button>
           <button mat-stroked-button routerLink="/library/weapons">
             <mat-icon svgIcon="gi-demon" /> Voir l'arsenal
@@ -36,94 +35,75 @@
 
     <!-- Form card -->
     @if (formVisible()) {
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div class="space-y-4">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div class="space-y-1">
-                <p class="arlp-eyebrow m-0">
-                  Intendance
-                </p>
-                <h2 class="arlp-form-title m-0">{{ formTitle() }}</h2>
-              </div>
+      <bol-equipment-form-panel
+        [title]="formTitle()"
+        [submitLabel]="submitLabel()"
+        [submitting]="submitting()"
+        [error]="errorMessage()"
+        (cancelled)="cancelForm()"
+        (submitted)="submitForm()"
+      >
+        <form class="grid gap-4 md:grid-cols-2">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Nom de l'armure</mat-label>
+          <input matInput [formField]="itemForm.armure" />
+          @if (fieldError(itemForm.armure)) {
+            <mat-error>Nom requis (255 caractères max)</mat-error>
+          }
+        </mat-form-field>
 
-              <div class="flex flex-wrap gap-2">
-                <button mat-stroked-button (click)="cancelForm()">
-                  <mat-icon>close</mat-icon> Annuler
-                </button>
-                <button mat-flat-button [disabled]="submitting()" (click)="submitForm()">
-                  <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
-                </button>
-              </div>
-            </div>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Protection</mat-label>
+          <input matInput [formField]="itemForm.protection" />
+          @if (fieldError(itemForm.protection)) {
+            <mat-error>Protection requise (255 caractères max)</mat-error>
+          }
+        </mat-form-field>
 
-            <form [formGroup]="armorForm" class="grid gap-4 md:grid-cols-2">
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Nom de l'armure</mat-label>
-                <input matInput formControlName="armure" />
-                @if (onError('armure')) {
-                  <mat-error>Nom requis (255 caractères max)</mat-error>
-                }
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Malus</mat-label>
+          <input matInput [formField]="itemForm.malus" />
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Protection</mat-label>
-                <input matInput formControlName="protection" />
-                @if (onError('protection')) {
-                  <mat-error>Protection requise (255 caractères max)</mat-error>
-                }
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Catégorie</mat-label>
+          <mat-select [formField]="itemForm.categorie">
+            <mat-option value="armure">Armure</mat-option>
+            <mat-option value="bouclier">Bouclier</mat-option>
+            <mat-option value="casque">Casque</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Malus</mat-label>
-                <input matInput formControlName="malus" />
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Malus Agilité</mat-label>
+          <input matInput type="number" [formField]="itemForm.malus_agilite" />
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Catégorie</mat-label>
-                <mat-select formControlName="categorie">
-                  <mat-option value="armure">Armure</mat-option>
-                  <mat-option value="bouclier">Bouclier</mat-option>
-                  <mat-option value="casque">Casque</mat-option>
-                </mat-select>
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Malus Initiative</mat-label>
+          <input matInput type="number" [formField]="itemForm.malus_initiative" />
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Malus Agilité</mat-label>
-                <input matInput type="number" min="0" formControlName="malus_agilite" />
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Malus attaque subie</mat-label>
+          <input matInput type="number" [formField]="itemForm.malus_attaque_subie" />
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Malus Initiative</mat-label>
-                <input matInput type="number" min="0" formControlName="malus_initiative" />
-              </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Portée du malus (bouclier)</mat-label>
+          <mat-select [formField]="itemForm.malus_attaque_subie_portee">
+            <mat-option [value]="null">Aucune</mat-option>
+            <mat-option value="une">Une attaque par round</mat-option>
+            <mat-option value="toutes">Toutes les attaques du round</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Malus attaque subie</mat-label>
-                <input matInput type="number" min="0" formControlName="malus_attaque_subie" />
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Portée du malus (bouclier)</mat-label>
-                <mat-select formControlName="malus_attaque_subie_portee">
-                  <mat-option [value]="null">Aucune</mat-option>
-                  <mat-option value="une">Une attaque par round</mat-option>
-                  <mat-option value="toutes">Toutes les attaques du round</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Pts de pouvoir</mat-label>
-                <input matInput formControlName="pts_de_pouvoir" />
-              </mat-form-field>
-            </form>
-
-            @if (errorMessage()) {
-              <p class="arlp-error m-0">{{ errorMessage() }}</p>
-            }
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Pts de pouvoir</mat-label>
+          <input matInput [formField]="itemForm.pts_de_pouvoir" />
+        </mat-form-field>
+        </form>
+      </bol-equipment-form-panel>
     }
 
     <!-- Content card -->
@@ -140,16 +120,16 @@
       </dw-library-toolbar>
 
       <!-- Table -->
-      <div class="armor-table-scroll">
-        <table class="bol-armor-table">
+      <div class="eq-table-scroll">
+        <table class="eq-table">
           <thead>
             <tr>
               <th>Équipement</th>
               <th>Catégorie</th>
               <th>Protection</th>
               <th>Malus</th>
-              <th class="armor-col-compact">Pts de pouvoir</th>
-              <th class="armor-col-compact">Actions</th>
+              <th class="eq-col-compact">Pts de pouvoir</th>
+              <th class="eq-col-compact">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -157,22 +137,22 @@
               <tr>
                 <td>
                   <div class="flex items-center gap-2">
-                    <span class="arlp-strong">{{ armor.armure }}</span>
+                    <span class="eq-strong">{{ armor.armure }}</span>
                     @if (armor.user_id) {
                       <dw-badge color="sky">Création</dw-badge>
                     }
                   </div>
                 </td>
-                <td class="arlp-muted-cell">{{ categorieLabel(armor.categorie) }}</td>
-                <td class="arlp-muted-cell">{{ armor.protection || '-' }}</td>
-                <td class="arlp-muted-cell">{{ armor.malus || '-' }}</td>
-                <td class="armor-col-compact arlp-muted-cell">{{ armor.pts_de_pouvoir || '-' }}</td>
-                <td class="armor-col-compact">
+                <td>{{ categorieLabel(armor.categorie) }}</td>
+                <td>{{ armor.protection || '-' }}</td>
+                <td>{{ armor.malus || '-' }}</td>
+                <td class="eq-col-compact">{{ armor.pts_de_pouvoir || '-' }}</td>
+                <td class="eq-col-compact">
                   @if (canManage(armor)) {
                     <div class="flex justify-end gap-0.5">
                       <button
                         mat-icon-button
-                        class="armor-action-btn"
+                        class="eq-action-btn"
                         matTooltip="Modifier"
                         [attr.aria-label]="'Modifier : ' + armor.armure"
                         (click)="startEdit(armor)"
@@ -181,7 +161,7 @@
                       </button>
                       <button
                         mat-icon-button
-                        class="armor-action-btn armor-btn-danger"
+                        class="eq-action-btn eq-btn-danger"
                         matTooltip="Supprimer"
                         [attr.aria-label]="'Supprimer : ' + armor.armure"
                         (click)="askDelete(armor)"
@@ -201,7 +181,7 @@
     <!-- Note card -->
     <mat-card appearance="outlined">
       <mat-card-content>
-        <p class="arlp-note m-0">
+        <p class="arlp-note">
           Le baudrier de guerre n'apparaît pas ici, car il est traité comme avantage et non comme une
           armure standard du catalogue.
         </p>

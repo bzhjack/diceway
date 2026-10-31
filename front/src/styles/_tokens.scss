@@ -42,6 +42,12 @@
   --dw-forge-bone:         #f5e8cf; // valeurs fortes
   --dw-forge-name:         #f6d98f; // nom d'un héros
   --dw-forge-recess:       #0a0604; // fond d'un creux
+  --dw-forge-white:        #fff; // texte sur un voile sombre
+  --dw-forge-ink:          #1c1200; // ce qui se pose sur l'or d'un bouton
+  --dw-forge-error-text:   #fecaca;
+  --dw-forge-warning-text: #fde68a;
+  --dw-forge-shade:        #000; // ombre sous un texte posé sur le fer
+  --dw-forge-table-head:   #1c130b; // en-tête opaque d'un tableau qui défile
   --dw-forge-iron:         url('/assets/bol/forge/fer.webp');
   --dw-forge-soot:         url('/assets/bol/forge/suie.webp') center / 900px 560px, #0f0a07;
   --dw-forge-plate:        linear-gradient(180deg, rgba(255, 210, 150, 0.075), transparent 28%, rgba(0, 0, 0, 0.3)), var(--dw-forge-iron) 0 0 / 420px, #1c1510;

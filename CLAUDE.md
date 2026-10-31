@@ -129,13 +129,13 @@ When a task touches game rules, character creation, equipment, careers, language
 - Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
 - `MatFormField` app-wide defaults (`appearance: 'outline'`, `floatLabel: 'always'`) are set via `MAT_FORM_FIELD_DEFAULT_OPTIONS` in `front/src/app/app.config.ts` — don't re-set `appearance="outline"` on individual `<mat-form-field>` elements.
 - Visual/dark-fantasy tokens (`--dw-surface-0` … `--dw-surface-900`, `--dw-border`, `--dw-color-reussite`/`echec`/`echec-forte`/`legendary`/`pnj`/`creature`/`demon`, and the forge look `--dw-forge-*`) are defined in `front/src/styles/_tokens.scss` — single fixed dark palette, no light/dark toggle.
-- The forge is the look of every page: `dw-page` goes with `dw-forge-page` (`front/src/styles/_forge-page.scss`), which also restyles the Material components and overlays on those pages. Display font `'Muse Display Harmony'` and body font `'Muse Sans'` are self-hosted (`front/src/styles/_fonts.scss`, files in `front/src/assets/fonts/`).
+- The forge is the look of every page. `front/src/styles/_forge-page.scss` sets the tokens of `dw-page` and of its overlays; components write their own materials with `front/src/styles/_forge-mixins.scss` (`@use 'styles/forge-mixins' as forge;`, then `forge.plate`, `forge.recess`, `forge.stud`, `forge.medallion`). Display font `'Muse Display Harmony'` and body font `'Muse Sans'` are self-hosted (`front/src/styles/_fonts.scss`, files in `front/src/assets/fonts/`).
 
 ### Library pages
 
 Every library page (list of entities) follows this structure:
 
-1. **Header** — `<dw-library-header [title]="…" [description]="…" [color]="…" [image]="…">`:
+1. **Header** — `<dw-library-header [title]="…" [description]="…" [image]="…">`:
    - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
    - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button`; right side — `<button mat-stroked-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à la table</button>` (`/` redirige vers la session ouverte, ou affiche le seuil s'il n'y en a pas).
 

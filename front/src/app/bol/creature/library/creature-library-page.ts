@@ -1,14 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {readReturnUrl} from '../../../core/return-url.util';
-import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
@@ -25,11 +20,15 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {creatureStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {CreatureCardComponent, creatureImage} from './creature-card/creature-card.component';
+import {Observable} from 'rxjs';
+import {DwLibraryGridComponent} from '../../../shared/dw-library-grid/dw-library-grid';
+import {BolLibraryPageBase} from '../../shared/library/library-page.base';
+import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 
 @Component({
   selector: 'bol-creature-library-page',
   imports: [
-    FormsModule,
+    FormField,
     RouterLink,
     MatButtonModule,
     MatCheckboxModule,
@@ -41,24 +40,26 @@ import {CreatureCardComponent, creatureImage} from './creature-card/creature-car
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwLibraryGridComponent,
     CreatureCardComponent,
   ],
   templateUrl: './creature-library-page.html',
   styleUrl: './creature-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatureLibraryPageComponent {
+export class CreatureLibraryPageComponent extends BolLibraryPageBase<BolCreatureModel> {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
   private readonly creatures = refreshableResource(() => this.creaturesService.creatures());
+  protected readonly deleteTexts: LibraryDeleteTexts<BolCreatureModel> = {
+    title: 'Supprimer la créature',
+    name: (item) => item.nom,
+    error: 'La suppression de la créature a échoué.',
+  };
 
   protected readonly tailles = this.creatureStateService.tailleList;
-  protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
-  protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchTaille = signal<number | ''>('');
+  protected readonly tailleField = form(this.searchTaille);
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredCreatures = computed(() =>
@@ -75,22 +76,6 @@ export class CreatureLibraryPageComponent {
   protected readonly creatureCount = computed(() => this.filteredCreatures().length);
   protected readonly totalCreatureCount = computed(() => this.creatures.data().length);
 
-  protected askDelete(creature: BolCreatureModel): void {
-    confirmDialog(
-      this.dialog,
-      {
-        title: 'Supprimer la créature',
-        message: `Voulez-vous supprimer "${creature.nom}" ?`,
-        confirmLabel: 'Supprimer',
-      },
-      {width: '380px'},
-    ).subscribe((confirmed) => {
-      if (confirmed) {
-        this.deleteCreature(creature);
-      }
-    });
-  }
-
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.searchTaille.set('');
@@ -104,20 +89,11 @@ export class CreatureLibraryPageComponent {
     });
   }
 
-  private deleteCreature(creature: BolCreatureModel): void {
-    if (!creature.id) {
-      return;
-    }
+  protected deleteItem(id: NonNullable<BolCreatureModel['id']>): Observable<unknown> {
+    return this.creaturesService.deleteCreature(id);
+  }
 
-    this.creaturesService.deleteCreature(creature.id).subscribe({
-      next: () => this.creatures.refresh(),
-      error: (error: unknown) => {
-        this.snackBar.open(
-          extractApiErrorMessage(error, 'La suppression de la créature a échoué.'),
-          'Fermer',
-          {duration: 5000},
-        );
-      },
-    });
+  protected refreshItems(): void {
+    this.creatures.refresh();
   }
 }

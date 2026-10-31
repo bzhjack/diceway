@@ -14,7 +14,7 @@ export default defineConfig([
     extends: [eslint.configs.recommended, tseslint.configs.recommended, angular.configs.tsRecommended],
     processor: angular.processInlineTemplates,
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', {ignoreRestSiblings: true}],
+      '@typescript-eslint/no-unused-vars': ['error', {ignoreRestSiblings: true, argsIgnorePattern: '^_'}],
       '@angular-eslint/component-selector': ['error', {type: 'element', prefix: ['bol', 'dw', 'app'], style: 'kebab-case'}],
       '@angular-eslint/directive-selector': ['error', {type: 'attribute', prefix: ['bol', 'dw', 'app'], style: 'camelCase'}],
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',

@@ -1,47 +1,22 @@
-<section class="auth-mat-page">
-  <mat-card class="auth-mat-card" appearance="outlined">
-    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+<app-auth-card [title]="title" [titleDanger]="forbidden" subtitle="Cliquez sur le lien de confirmation reçu par email lors de votre inscription. Si vous ne le retrouvez pas, entrez votre adresse ci-dessous pour en recevoir un nouveau.">
+  <form class="auth-mat-form" (submit)="onSubmit($event)">
+    <mat-form-field>
+      <mat-label>Adresse mail</mat-label>
+      <mat-icon matPrefix>mail</mat-icon>
+      <input matInput type="email" [formField]="resendForm.email" autocomplete="username" />
+      <mat-error>{{ resendForm.email().errors()[0]?.message }}</mat-error>
+    </mat-form-field>
 
-    <mat-card-header>
-      <mat-card-title [class.resend-title--forbidden]="forbidden">{{ title }}</mat-card-title>
-      <mat-card-subtitle>
-        Cliquez sur le lien de confirmation reçu par email lors de votre inscription. Si vous ne le retrouvez pas,
-        entrez votre adresse ci-dessous pour en recevoir un nouveau.
-      </mat-card-subtitle>
-    </mat-card-header>
+    <dw-error-message [messages]="messages()" />
 
-    <mat-card-content>
-      <form class="auth-mat-form" (submit)="onSubmit($event)">
-        <mat-form-field>
-          <mat-label>Adresse mail</mat-label>
-          <mat-icon matPrefix>mail</mat-icon>
-          <input matInput type="email" [formField]="resendForm.email" autocomplete="username" />
-          <mat-error>{{ resendForm.email().errors()[0]?.message }}</mat-error>
-        </mat-form-field>
+    @if (successMessage()) {
+      <div class="auth-mat-success" role="status">{{ successMessage() }}</div>
+    }
 
-        <dw-error-message [messages]="messages()" />
+    <app-auth-actions [pending]="pending()" submitLabel="Envoyer" />
+  </form>
 
-        @if (successMessage()) {
-          <div class="auth-mat-success" role="status">{{ successMessage() }}</div>
-        }
-
-        <div class="auth-mat-actions auth-mat-actions--end">
-          <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending()">Retour</button>
-          <button mat-flat-button type="submit" [disabled]="pending()">
-            @if (pending()) {
-              <mat-progress-spinner mode="indeterminate" diameter="18" />
-            } @else {
-              Envoyer
-            }
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-
-    <mat-card-actions>
-      <span class="auth-mat-footer">
-        Vous vous souvenez de votre mot de passe ? <a routerLink="/login">Se connecter</a>
-      </span>
-    </mat-card-actions>
-  </mat-card>
-</section>
+  <ng-container authFooter>
+    Vous vous souvenez de votre mot de passe ? <a routerLink="/login">Se connecter</a>
+  </ng-container>
+</app-auth-card>

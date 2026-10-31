@@ -1,13 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolPnjService} from '../../services/bol-pnj.service';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {readReturnUrl} from '../../../core/return-url.util';
-import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
@@ -24,6 +19,10 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {pnjStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {PnjCardComponent, pnjImage, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
+import {Observable} from 'rxjs';
+import {DwLibraryGridComponent} from '../../../shared/dw-library-grid/dw-library-grid';
+import {BolLibraryPageBase} from '../../shared/library/library-page.base';
+import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 
 type PnjType = 'P' | 'C' | 'R';
 
@@ -35,7 +34,7 @@ interface PnjTypeOption {
 @Component({
   selector: 'bol-pnj-library-page',
   imports: [
-    FormsModule,
+    FormField,
     RouterLink,
     MatButtonModule,
     MatCheckboxModule,
@@ -47,17 +46,21 @@ interface PnjTypeOption {
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwLibraryGridComponent,
     PnjCardComponent,
   ],
   templateUrl: './pnj-library-page.html',
   styleUrl: './pnj-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjLibraryPageComponent {
+export class PnjLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> {
   private readonly pnjService = inject(BolPnjService);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
   private readonly pnjs = refreshableResource(() => this.pnjService.pnjs());
+  protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
+    title: 'Supprimer le PNJ',
+    name: (item) => item.origines.nom ?? 'ce PNJ',
+    error: 'La suppression du PNJ a échoué.',
+  };
 
   protected readonly typeOptions: PnjTypeOption[] = [
     {label: 'Tous les profils', value: ''},
@@ -65,10 +68,8 @@ export class PnjLibraryPageComponent {
     {label: 'Rivaux', value: 'R'},
     {label: 'Pietaille', value: 'P'},
   ];
-  protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
-  protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchType = signal<PnjType | ''>('');
+  protected readonly typeField = form(this.searchType);
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredPnjs = computed(() =>
@@ -90,22 +91,6 @@ export class PnjLibraryPageComponent {
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
   protected readonly totalPnjCount = computed(() => this.pnjs.data().length);
 
-  protected askDelete(pnj: BolHerosModel): void {
-    confirmDialog(
-      this.dialog,
-      {
-        title: 'Supprimer le PNJ',
-        message: `Voulez-vous supprimer "${pnj.origines.nom ?? 'ce PNJ'}" ?`,
-        confirmLabel: 'Supprimer',
-      },
-      {width: '380px'},
-    ).subscribe((confirmed) => {
-      if (confirmed) {
-        this.deletePnj(pnj);
-      }
-    });
-  }
-
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.searchType.set('');
@@ -119,20 +104,11 @@ export class PnjLibraryPageComponent {
     });
   }
 
-  private deletePnj(pnj: BolHerosModel): void {
-    if (!pnj.id) {
-      return;
-    }
+  protected deleteItem(id: NonNullable<BolHerosModel['id']>): Observable<unknown> {
+    return this.pnjService.deletePnj(id);
+  }
 
-    this.pnjService.deletePnj(pnj.id).subscribe({
-      next: () => this.pnjs.refresh(),
-      error: (error: unknown) => {
-        this.snackBar.open(
-          extractApiErrorMessage(error, 'La suppression du PNJ a échoué.'),
-          'Fermer',
-          {duration: 5000},
-        );
-      },
-    });
+  protected refreshItems(): void {
+    this.pnjs.refresh();
   }
 }
