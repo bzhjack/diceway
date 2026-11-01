@@ -12,8 +12,8 @@ bol-tas-attaquant {
   display: contents;
 }
 
-// Sans encapsulation : la portée, c'est l'assistant, et l'overlay où s'ouvrent ses popovers.
-:is(bol-turn-assistant, .cdk-overlay-container) {
+// Sans encapsulation : la portée, c'est `.tas-scope`, sur l'assistant et sur le panneau de son popover.
+.tas-scope {
   // ── Le registre du tour : un bandeau pour qui attaque, puis une ligne par étape ────────────────────────────────────────────────
   // Le camp de l'attaquant (vert pour un héros ou un allié, rouge pour un adversaire) colore son liseré, son médaillon, son nom et sa pastille.
   .tas {

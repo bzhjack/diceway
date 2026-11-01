@@ -2,12 +2,14 @@
 
 namespace App\Http\Services\Bol;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /**
  * Les portraits des fiches sont des fichiers nommés par l'empreinte de leur contenu, qu'un navigateur garde en cache sans limite. Une fiche
  * n'en retient que l'adresse relative (`/api/bol/portraits/<empreinte>.<extension>`). Une image ne s'écrit qu'une fois, même portée par
- * plusieurs fiches ; rien ne l'efface quand une fiche disparaît ou change de portrait.
+ * plusieurs fiches. Il ne s'efface pas quand une fiche disparaît ou change de portrait, puisqu'une autre le porte peut-être :
+ * `bol:prune-portraits` retire ceux que plus personne ne porte.
  */
 final class BolPortraits
 {
@@ -16,7 +18,13 @@ final class BolPortraits
     /** Le nom d'un fichier, pour la route. */
     public const FILE_PATTERN = '[0-9a-f]{64}\.(?:png|jpg|webp|gif)';
 
+    /** Les tables dont les fiches ont un portrait. */
+    public const TABLES = ['bol_heros', 'bol_creature', 'bol_demon'];
+
     private const DIRECTORY = 'portraits/';
+
+    /** Un fichier plus jeune n'est pas orphelin : il attend peut-être que sa fiche s'enregistre. */
+    private const ORPHAN_AFTER_HOURS = 24;
 
     private const TYPES = [
         IMAGETYPE_PNG => ['png', 'image/png'],
@@ -86,6 +94,38 @@ final class BolPortraits
         }
 
         return null;
+    }
+
+    /**
+     * Les fichiers de portraits qu'aucune fiche ne porte plus.
+     *
+     * @return list<array{path: string, size: int}>
+     */
+    public static function orphans(): array
+    {
+        $used = [];
+        foreach (self::TABLES as $table) {
+            foreach (DB::table($table)->where('avatar', 'like', self::ROUTE . '%')->pluck('avatar') as $url) {
+                $used[basename($url)] = true;
+            }
+        }
+
+        $disk = Storage::disk('public');
+        $before = now()->subHours(self::ORPHAN_AFTER_HOURS)->getTimestamp();
+        $orphans = [];
+        foreach ($disk->files(rtrim(self::DIRECTORY, '/')) as $path) {
+            $file = basename($path);
+            if (preg_match('/^' . self::FILE_PATTERN . '$/', $file) && ! isset($used[$file]) && $disk->lastModified($path) < $before) {
+                $orphans[] = ['path' => $path, 'size' => $disk->size($path)];
+            }
+        }
+
+        return $orphans;
+    }
+
+    public static function delete(string $path): void
+    {
+        Storage::disk('public')->delete($path);
     }
 
     /** @return array{bytes: string, file: string}|null */

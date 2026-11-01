@@ -4,7 +4,10 @@ import {DwRollSumComponent} from '../../../../shared/roll-sum/roll-sum';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {TurnAssistantStore} from './turn-assistant.store';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnAttackStore} from './turn-attack.store';
+import {TurnFlowStore} from './turn-flow.store';
 
 /** L'attaque : ce qu'il faut et les chances, la case du total et les dés, la formule, le verdict, et ce que l'attaquant peut payer de ses points. */
 @Component({
@@ -14,10 +17,13 @@ import {TurnAssistantStore} from './turn-assistant.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasAttaqueComponent {
-  protected readonly store = inject(TurnAssistantStore);
+  protected readonly turn = inject(TurnContextStore);
+  protected readonly loadout = inject(TurnLoadoutStore);
+  protected readonly attack = inject(TurnAttackStore);
+  protected readonly flow = inject(TurnFlowStore);
   private readonly attackInputRef = viewChild<ElementRef<HTMLInputElement>>('attackInput');
 
   constructor() {
-    effect(() => this.store.attackInput.set(this.attackInputRef()));
+    effect(() => this.turn.attackInput.set(this.attackInputRef()));
   }
 }

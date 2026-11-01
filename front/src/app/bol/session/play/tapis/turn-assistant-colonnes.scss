@@ -1,7 +1,7 @@
 @use 'styles/forge-mixins' as forge;
 
-// Sans encapsulation : la portée, c'est l'assistant, et l'overlay où s'ouvrent ses popovers.
-:is(bol-turn-assistant, .cdk-overlay-container) {
+// Sans encapsulation : la portée, c'est `.tas-scope`, sur l'assistant et sur le panneau de son popover.
+.tas-scope {
   // Les trois colonnes sous la ligne de qui joue : la cible, l'attaque, les dégâts. Leur hauteur est fixe, celle du contenu le plus chargé (un
   // succès héroïque avec toutes ses options) : un résultat ne fait rien bouger.
   .tas-trois {

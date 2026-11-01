@@ -10,7 +10,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PointsStepperComponent} from './points-stepper';
-import {TurnAssistantStore} from './turn-assistant.store';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnAttackStore} from './turn-attack.store';
+import {TurnCibleStore} from './turn-cible.store';
+import {TurnFlowStore} from './turn-flow.store';
 
 /** Qui joue : une ligne lue de gauche à droite, sans popover pour préparer le coup — sa vie et ses points, ses chiffres, ce que dit le MJ, sa posture, ses armes, puis ce qu'il peut faire au lieu d'attaquer et la fin de son tour. */
 @Component({
@@ -20,5 +24,9 @@ import {TurnAssistantStore} from './turn-assistant.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasAttaquantComponent {
-  protected readonly store = inject(TurnAssistantStore);
+  protected readonly turn = inject(TurnContextStore);
+  protected readonly loadout = inject(TurnLoadoutStore);
+  protected readonly attack = inject(TurnAttackStore);
+  protected readonly cible = inject(TurnCibleStore);
+  protected readonly flow = inject(TurnFlowStore);
 }

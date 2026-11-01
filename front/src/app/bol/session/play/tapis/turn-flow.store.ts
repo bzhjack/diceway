@@ -1,0 +1,426 @@
+import {computed, effect, inject, Injectable, linkedSignal, untracked} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
+import {aDejaFeinte, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, sansTerme} from './combat-effects.util';
+import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
+import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
+import {egratignure} from '../../heroisme-spend.util';
+import {HEROIC_OPTIONS} from '../../combat-resolution.util';
+import {AppliedHit} from '../../models/combat-attack.model';
+import {TapisCard} from '../../models/tapis.model';
+import {StationState, PlayedAttack} from '../../models/turn-assistant.model';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnAttackStore} from './turn-attack.store';
+import {TurnDamageStore} from './turn-damage.store';
+import {TurnCibleStore} from './turn-cible.store';
+
+/** Le déroulé du coup, de bout en bout : ce qui fait passer d'une étape à l'autre (le jet, l'application, la parade, la fin du tour), le coup joué qui reste écrit, et les cases allumées. */
+@Injectable()
+export class TurnFlowStore {
+  private readonly turn = inject(TurnContextStore);
+  private readonly loadout = inject(TurnLoadoutStore);
+  private readonly attack = inject(TurnAttackStore);
+  private readonly damage = inject(TurnDamageStore);
+  private readonly cible = inject(TurnCibleStore);
+
+  private readonly dialog = inject(MatDialog);
+
+  /** L'attaque est lancée ou jouée : il est trop tard pour retarder, secourir ou se mettre en défense totale. */
+  readonly attaqueEngagee = computed(() => this.attack.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null);
+
+  /** Il reste à choisir qui viser : les cartes des cibles prennent toute la largeur, l'attaque et les dégâts attendent. */
+  readonly choixCible = computed(
+    () => !this.played() && !this.turn.target() && this.turn.targets().length > 0 && !this.loadout.defenseTotale() && !this.turn.actionPerdue(),
+  );
+
+  /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
+  private readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.turn.cardKey(), computation: () => null});
+
+  /** Le coup joué, figé quand il se conclut (cf. `PlayedAttack`). */
+  private readonly playedAttack = linkedSignal<string, PlayedAttack | null>({source: () => this.turn.cardKey(), computation: () => null});
+
+  /** Le coup joué à montrer : pas quand un Carnage donne une nouvelle attaque, ni une fois une autre attaque commencée. */
+  readonly played = computed(() => (this.attack.carnageOwed() === 0 && this.attack.attackVerdict() === null ? this.playedAttack() : null));
+
+  /** La cible du coup joué n'est plus à viser : tombée, ou sortie du combat. */
+  readonly playedTargetOut = computed(() => {
+    const played = this.played();
+    return played !== null && !this.turn.targets().some((card) => card.key === played.target.key);
+  });
+
+  /** La couleur de la ligne de l'attaque : celle du jet en cours, ou du coup joué. */
+  readonly attackTone = computed(() => (this.attack.attackVerdict() ?? this.played()?.verdict)?.tone ?? null);
+
+  /** « Fin du tour » est le bouton or de la ligne des dégâts (coup raté, désarmement, coup joué) : celui du bandeau s'efface alors. */
+  readonly endTurnInLine = computed(() => {
+    if (this.damage.hasDamageStep() || this.turn.actionPerdue()) {
+      return false;
+    }
+    const verdict = this.attack.attackVerdict();
+    if (verdict) {
+      return verdict.tone === 'echec' || !this.attack.carnagePicked();
+    }
+    return this.hitSummary() !== null && this.attack.carnageOwed() === 0;
+  });
+
+  /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Quand il ne reste qu'à finir le tour, c'est
+   * la case des dégâts, qui porte « Fin du tour » ; après le coup joué, les cases 1 et 2 le gardent, figé (« Autre attaque » les rouvre). */
+  readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
+    // Action perdue : seule la case d'attaque, qui le dit, est allumée.
+    if (this.turn.actionPerdue()) {
+      return ['todo', 'cur', 'todo'];
+    }
+    // Défense totale : pas de jet, tout se joue sur « Fin du tour », en or sur la ligne de l'attaquant.
+    if (this.loadout.defenseTotale()) {
+      return ['todo', 'todo', 'todo'];
+    }
+    const aimed = this.turn.target() !== null;
+    const rolled = this.attack.attackVerdict() !== null;
+    // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée,
+    // même quand la cible, tombée sous le coup, n'est plus à viser.
+    const endsHere = (aimed && rolled && !this.damage.hasDamageStep()) || (!rolled && this.lastHit() !== null && this.attack.carnageOwed() === 0);
+    return [
+      aimed || endsHere ? 'done' : 'cur',
+      endsHere || (aimed && rolled) ? 'done' : aimed ? 'cur' : 'todo',
+      this.damage.hasDamageStep() || endsHere ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo',
+    ];
+  });
+
+  /** « Juste une égratignure » : juste après des dégâts appliqués à un héros ou à un rival, une fois par coup. */
+  readonly canScratch = computed(() => {
+    const hit = this.lastHit();
+    return !!hit && hit.target.key === this.turn.target()?.key && hit.damage > 0 && !hit.parried && !hit.scratch && this.cible.targetHeroisme() > 0;
+  });
+
+  /** Ce que dit le rappel du dernier coup : les dégâts, ou la parade ; puis l'égratignure, s'il y en a eu une. */
+  readonly hitSummary = computed(() => {
+    const hit = this.lastHit();
+    if (!hit) {
+      return null;
+    }
+    const title = hit.parried === 'sbire' ? 'Bouclier humain' : hit.parried ? 'Paré' : `${hit.damage} ${hit.damage > 1 ? 'dégâts' : 'dégât'}`;
+    const detail =
+      hit.parried === 'sbire'
+        ? `${hit.sbire} s’interpose et encaisse le coup à la place de ${hit.target.nom}.`
+        : hit.parried
+          ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
+          : `appliqués à ${hit.target.nom}.`;
+    const scratch = hit.scratch
+      ? `Juste une égratignure : ${hit.scratch.die} au d6B, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
+      : '';
+    return {title, detail, scratch};
+  });
+
+  /** « Juste une égratignure » ouverte : son d6B attend, lancé à table (le dé gardé, saisi) ou à l'écran. Refermée à chaque nouveau
+   * coup. */
+  readonly scratching = linkedSignal<AppliedHit | null, boolean>({source: () => this.lastHit(), computation: () => false});
+
+  constructor() {
+    // Un autre attaquant, une autre cible, un autre choix ou un dé du MJ accordé ou retiré : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
+    // rechargée (enregistrement de l'état du combat) en refait un objet identique, qui ne doit pas effacer le jet en cours.
+    effect(() => {
+      this.turn.cardKey();
+      this.turn.targetKey();
+      this.loadout.choiceKey();
+      this.loadout.gmDie();
+      this.loadout.deMjPourTous();
+      this.loadout.brawl();
+      untracked(() => this.resetRoll());
+    });
+
+    // Une autre cible désignée sur le plateau après le coup joué : c'est une autre attaque, le coup joué s'efface. Une cible tombée, elle,
+    // laisse le coup joué à l'écran.
+    effect(() => {
+      const key = this.turn.targetKey();
+      untracked(() => {
+        const played = this.playedAttack();
+        if (played && key !== null && key !== played.target.key) {
+          this.playedAttack.set(null);
+        }
+      });
+    });
+  }
+
+  async roll(): Promise<void> {
+    if (this.turn.rolling()) {
+      return;
+    }
+    this.attack.manualTotal.set(null);
+    this.attack.clearHeroism(true);
+    this.damage.damageValues.set(null);
+    this.attack.dice.set(null);
+    this.lastHit.set(null);
+    this.playedAttack.set(null);
+    this.markAttacked();
+    const net = this.loadout.netDice();
+    const count = this.loadout.diceCount();
+    const values = await this.turn.throwDice(`${count}d6`, count);
+    this.attack.rolledDice.set(count > 2 ? values : null);
+    this.attack.dice.set(keepBestOrWorstTwo(values, net));
+    this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
+  }
+
+  /** Saisie du total des deux dés lancés à table. De 2 à 9 un chiffre suffit : le jet est pris tout de suite, et la main passe au dé de
+   * dégâts s'il touche, à « Fin du tour » sinon. Une case vidée efface le jet. */
+  onAttackInput(raw: string): void {
+    if (raw.trim() === '') {
+      if (this.attack.diceSum() !== null) {
+        this.attack.dice.set(null);
+        this.attack.manualTotal.set(null);
+        this.attack.clearHeroism(true);
+        this.damage.damageValues.set(null);
+      }
+      return;
+    }
+    const total = parseDiceTotal(raw);
+    if (total === null) {
+      return;
+    }
+    this.attack.dice.set(null);
+    this.attack.rolledDice.set(null);
+    this.attack.clearHeroism(true);
+    this.damage.damageValues.set(null);
+    this.lastHit.set(null);
+    this.playedAttack.set(null);
+    this.attack.manualTotal.set(total);
+    this.markAttacked();
+    this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
+  }
+
+  /** Le MJ retire un effet : le registre l'oublie, et le jet déjà fait (modificateurs figés) perd sa puce et recalcule son total. */
+  removeEffect(id: string): void {
+    this.attack.frozenTerms.update((termes) => (termes ? sansTerme(termes, id) : termes));
+    this.damage.frozenDamageTerms.update((termes) => (termes ? sansTerme(termes, id) : termes));
+    this.turn.effectRemoved.emit(id);
+  }
+
+  /** Premier jet contre cette cible : fige les modificateurs et signale l'attaque au registre. */
+  private markAttacked(): void {
+    const target = this.turn.target();
+    if (!target || this.attack.frozenTerms() !== null) {
+      return;
+    }
+    this.attack.frozenTerms.set(this.attack.liveTerms());
+    this.damage.frozenDamageTerms.set(this.damage.liveDamageTerms());
+    // Une feinte tentée se note sur la cible : retentée contre elle, elle sera signalée.
+    const career = this.loadout.career();
+    if (career && !aDejaFeinte(this.turn.effets(), target.key, this.turn.card().key)) {
+      this.attack.feintNoted.set(true);
+      this.turn.effectAdded.emit(effetFeinte(target.key, this.turn.card().key, career.label));
+    }
+    this.turn.attackRolled.emit(target);
+  }
+
+  /** Faveur divine : 1 point d'héroïsme, et tous les dés du jet d'attaque se relancent — à table ou à l'écran. Le second jet est gardé. */
+  divineFavor(): void {
+    if (!this.attack.canFavor()) {
+      return;
+    }
+    this.turn.heroismeAdjusted.emit(-1);
+    this.attack.dice.set(null);
+    this.attack.rolledDice.set(null);
+    this.attack.manualTotal.set(null);
+    this.damage.damageValues.set(null);
+    this.turn.focusAfterRender(() => this.turn.attackInput());
+  }
+
+  /** Le coup est conclu : ses options héroïques laissent leurs effets sur la cible (dé de malus du coup précis, du renversement), et
+   * un Carnage donne une attaque de plus. */
+  private conclude(target: TapisCard, withEffects = true): void {
+    const picks = new Set(withEffects ? this.attack.picks() : []);
+    if (picks.has('precis')) {
+      this.turn.effectAdded.emit(effetCoupPrecis(target.key));
+    }
+    if (picks.has('renversement')) {
+      this.turn.effectAdded.emit(effetRenversement(target.key));
+    }
+    const carnages = this.attack.pickCounts().carnage ?? 0;
+    this.attack.carnageOwed.update((owed) => Math.max(0, owed - 1) + carnages);
+    if (carnages > 0) {
+      this.attack.carnageUsed.set(true);
+    }
+  }
+
+  apply(): void {
+    const target = this.turn.target();
+    const damage = this.damage.damage();
+    if (!target || damage === null) {
+      return;
+    }
+    this.freezePlayed(target);
+    this.conclude(target);
+    const hit = {target, damage, unarmed: this.loadout.unarmed()};
+    this.turn.damageApplied.emit(hit);
+    this.resetRoll();
+    this.lastHit.set(hit);
+    this.turn.focusAfterRender(() => (this.attack.carnageOwed() > 0 ? this.turn.attackInput() : this.turn.endButton()));
+  }
+
+  /** Fige le coup qui se conclut, avant que le jet s'efface (cf. `PlayedAttack`). */
+  private freezePlayed(target: TapisCard): void {
+    const verdict = this.attack.attackVerdict();
+    if (!verdict) {
+      return;
+    }
+    const counts = this.attack.pickCounts();
+    const picks = HEROIC_OPTIONS.filter((o) => counts[o.slug]).map((o) => ((counts[o.slug] ?? 0) > 1 ? `${o.label} ×${counts[o.slug]}` : o.label));
+    const armed = this.loadout.displayArmes().length > 0;
+    this.playedAttack.set({
+      target,
+      arme: armed ? (this.loadout.effectiveArme()?.arme?.arme ?? null) : null,
+      degats: armed ? this.loadout.degats() : this.turn.card().degats,
+      options: this.loadout.activeOptions(),
+      goal: this.attack.attackGoal(),
+      dice: this.attack.attackRowDice(),
+      total: this.attack.diceSum(),
+      slots: this.loadout.diceCount(),
+      sum: this.attack.attackSum(),
+      verdict,
+      picks: picks.length > 0 ? picks.join(' · ') : null,
+    });
+  }
+
+  /** « Autre attaque », après le coup joué (une créature qui frappe plusieurs fois par round) : les lignes du coup et de l'attaque se
+   * rouvrent ; la main va à la case du jet, ou au choix de la cible si elle est tombée. */
+  newAttack(): void {
+    this.playedAttack.set(null);
+    this.turn.focusAfterRender(() => this.turn.attackInput() ?? this.cible.firstPick());
+  }
+
+  /** Parade in extremis : la cible dépense 1 point d'héroïsme (ou de vilénie) et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
+   * coup ne fait pas de dégâts, et ses options héroïques non plus. Un Carnage garde son attaque de plus. */
+  parry(): void {
+    const target = this.turn.target();
+    if (!target || !this.cible.canParry()) {
+      return;
+    }
+    const stats = this.turn.targetStats();
+    const bouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0 || (stats?.bouclierDefenseToutes ?? 0) > 0;
+    this.turn.targetHeroismeAdjusted.emit({card: target, delta: -1});
+    this.turn.effectAdded.emit(effetParade(target.key, bouclier));
+    this.freezePlayed(target);
+    this.conclude(target, false);
+    this.resetRoll();
+    this.lastHit.set({target, damage: 0, unarmed: false, parried: bouclier ? 'bouclier' : 'arme'});
+    this.turn.focusAfterRender(() => (this.attack.carnageOwed() > 0 ? this.turn.attackInput() : this.turn.endButton()));
+  }
+
+  /** « Bouclier humain » : le rival dépense 1 point de vilénie et pousse un de ses sbires devant le coup. Le sbire encaisse le coup à
+   * sa place : une piétaille tombe au premier coup, il est mis hors de combat (toute sa vitalité restante, sans calcul contre une armure
+   * qui n'est pas la sienne). Le rival ne subit rien, et les options héroïques du coup tombent avec lui. */
+  humanShield(): void {
+    const target = this.turn.target();
+    const sbire = this.cible.sbire();
+    if (!target || !sbire || !this.cible.canHumanShield()) {
+      return;
+    }
+    this.turn.targetHeroismeAdjusted.emit({card: target, delta: -1});
+    this.turn.damageApplied.emit({target: sbire, damage: Math.max(1, sbire.vitaliteCourante ?? 1), unarmed: this.loadout.unarmed()});
+    this.freezePlayed(target);
+    this.conclude(target, false);
+    this.resetRoll();
+    this.lastHit.set({target, damage: 0, unarmed: false, parried: 'sbire', sbire: sbire.nom});
+    this.turn.focusAfterRender(() => (this.attack.carnageOwed() > 0 ? this.turn.attackInput() : this.turn.endButton()));
+  }
+
+  /** Ouvre « Juste une égratignure » : la main passe au champ du dé. Le point n'est dépensé qu'une fois le dé connu. */
+  startScratch(): void {
+    if (!this.canScratch() || this.turn.rolling()) {
+      return;
+    }
+    this.scratching.set(true);
+    this.turn.focusAfterRender(() => this.turn.scratchInput());
+  }
+
+  /** Échap ou « Annuler » : la saisie se referme sans rien dépenser (Échap ne va pas plus loin que ce champ). */
+  cancelScratch(event?: Event): void {
+    event?.preventDefault();
+    this.scratching.set(false);
+  }
+
+  /** Le d6B lancé à table : le dé gardé, un chiffre de 1 à 6, pris tout de suite. */
+  onScratchInput(raw: string): void {
+    const text = raw.trim();
+    if (/^[1-6]$/.test(text)) {
+      this.applyScratch([Number(text)]);
+    }
+  }
+
+  /** Le d6B lancé à l'écran : deux d6, le meilleur compte. */
+  async rollScratch(): Promise<void> {
+    if (!this.canScratch() || this.turn.rolling()) {
+      return;
+    }
+    this.applyScratch(await this.turn.throwDice('2d6', 2));
+  }
+
+  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) pour son d6B ; elle récupère autant de vitalité,
+   * sans dépasser les dégâts du coup, et perd sa prochaine action. */
+  private applyScratch(des: readonly number[]): void {
+    const hit = this.lastHit();
+    if (!hit || !this.canScratch()) {
+      return;
+    }
+    const {die, healed} = egratignure(des, hit.damage);
+    this.turn.targetHeroismeAdjusted.emit({card: hit.target, delta: -1});
+    this.turn.vitaliteAdjusted.emit({card: hit.target, delta: healed});
+    this.turn.effectAdded.emit(effetActionPerdue(hit.target.key));
+    this.lastHit.set({...hit, scratch: {die, healed}});
+  }
+
+  /** Désarmement : pas de dégâts à appliquer. Le coup se conclut, et le tour finit — sauf si un Carnage donne une nouvelle attaque. */
+  concludeWithoutDamage(): void {
+    const target = this.turn.target();
+    if (!target) {
+      return;
+    }
+    this.conclude(target);
+    // Le jet s'efface tout de suite : le bouton disparaît, un second clic ne conclut pas deux fois.
+    this.resetRoll();
+    if (this.attack.carnageOwed() > 0) {
+      this.turn.focusAfterRender(() => this.turn.attackInput());
+    } else {
+      this.turn.endTurnRequested.emit(true);
+    }
+  }
+
+  /** « Fin du tour » (bouton ou touche F). Un coup qui a touché sans être appliqué perdrait ses dégâts et les effets de ses options
+   * héroïques : le MJ choisit d'abord de l'appliquer et finir, de finir sans l'appliquer, ou de rester sur le tour. */
+  requestEndTurn(): void {
+    if (this.loadout.defenseTotale()) {
+      this.turn.totalDefenseRequested.emit(this.loadout.effectiveSpecial()?.slug === 'dual-parry');
+      return;
+    }
+    const target = this.turn.target();
+    if (!target || !this.attack.verdict()?.hit) {
+      this.turn.endTurnRequested.emit(false);
+      return;
+    }
+    const damage = this.damage.hasDamageStep() ? this.damage.damage() : null;
+    this.dialog
+      .open<EndTurnDialogComponent, EndTurnDialogData, EndTurnChoice>(EndTurnDialogComponent, {
+        width: '440px',
+        data: {attackerNom: this.turn.card().nom, targetNom: target.nom, damage, canApply: !this.damage.hasDamageStep() || damage !== null},
+      })
+      .afterClosed()
+      .subscribe((choice) => {
+        if (choice === 'apply') {
+          if (this.damage.hasDamageStep()) {
+            this.apply();
+          } else {
+            this.conclude(target);
+            this.resetRoll();
+          }
+        }
+        if (choice) {
+          this.turn.endTurnRequested.emit(choice === 'apply');
+        }
+      });
+  }
+
+  private resetRoll(): void {
+    this.damage.resetRoll();
+    this.attack.resetRoll();
+  }
+}

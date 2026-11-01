@@ -50,6 +50,26 @@
   --dw-forge-on-star:      #3b2f06; // un chiffre posé sur l'étoile de l'héroïsme
   --dw-forge-shade:        #000; // ombre sous un texte posé sur le fer
   --dw-forge-table-head:   #1c130b; // en-tête opaque d'un tableau qui défile
+  // Le jet de réaction : l'en-tête…
+  --dw-forge-info:          #d9b77c; // le « i » de la règle
+  --dw-forge-info-hot:      #ffd98a; // le même, au survol
+  --dw-forge-alert:         #ffb27a; // une alerte posée sur le fer
+  --dw-forge-chain:         linear-gradient(180deg, #e0bb7c, #6b4a22); // la chaîne de la frise
+  --dw-forge-stud-flat:     radial-gradient(circle at 35% 26%, #4a3418, #1f1408 68%); // un clou sans relief
+  --dw-forge-bronze-off:    #6b4a22; // bord d'un bouton désactivé
+  --dw-forge-bronze-text-off: #c4a877; // son texte
+  // … et le registre
+  --dw-forge-portrait-fade: #33241a; // le portrait qui se fond dans sa ligne
+  --dw-forge-portrait-edge: #a8762a; // son bord
+  --dw-forge-gauge:         #090503; // le fond d'une jauge
+  --dw-forge-bone-dim:      #efe2c8; // ce que change un verdict
+  --dw-forge-caption:       #b8a582; // une légende sous un chiffre
+  --dw-forge-chance-mid:    #e8b04a; // des chances moyennes
+  --dw-forge-total:         #ffe9bd; // la case du total
+  --dw-forge-out-edge:      #b3261e; // le bord du bouton d'un exclu
+  --dw-forge-on-legendaire: #1d0b33; // ce qui se pose sur le violet du légendaire
+  --dw-forge-on-reussite:   #041a0d; // sur le vert d'un dé de bonus
+  --dw-forge-on-echec:      #2a0505; // sur le rouge d'un dé de malus
   --dw-forge-iron:         url('/assets/bol/forge/fer.webp');
   --dw-forge-soot:         url('/assets/bol/forge/suie.webp') center / 900px 560px, #0f0a07;
   --dw-forge-plate:        linear-gradient(180deg, rgba(255, 210, 150, 0.075), transparent 28%, rgba(0, 0, 0, 0.3)), var(--dw-forge-iron) 0 0 / 420px, #1c1510;

@@ -6,7 +6,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NgTemplateOutlet} from '@angular/common';
-import {TurnAssistantStore} from './turn-assistant.store';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnAttackStore} from './turn-attack.store';
+import {TurnDamageStore} from './turn-damage.store';
+import {TurnCibleStore} from './turn-cible.store';
+import {TurnFlowStore} from './turn-flow.store';
 
 /** Les dégâts : la fourchette, la case et le dé, la formule, ce que le coup fera à la cible et ce qu'elle peut y opposer, puis « Appliquer » ou la fin du tour. */
 @Component({
@@ -16,7 +21,12 @@ import {TurnAssistantStore} from './turn-assistant.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasDegatsComponent {
-  protected readonly store = inject(TurnAssistantStore);
+  protected readonly turn = inject(TurnContextStore);
+  protected readonly loadout = inject(TurnLoadoutStore);
+  protected readonly attack = inject(TurnAttackStore);
+  protected readonly damage = inject(TurnDamageStore);
+  protected readonly cible = inject(TurnCibleStore);
+  protected readonly flow = inject(TurnFlowStore);
   private readonly damageInputRef = viewChild<ElementRef<HTMLInputElement>>('damageInput');
   private readonly scratchInputRef = viewChild<ElementRef<HTMLInputElement>>('scratchInput');
   private readonly protectionInputRef = viewChild<ElementRef<HTMLInputElement>>('protectionInput');
@@ -24,10 +34,10 @@ export class TasDegatsComponent {
   private readonly endButtonRef = viewChild('endButton', {read: ElementRef<HTMLButtonElement>});
 
   constructor() {
-    effect(() => this.store.damageInput.set(this.damageInputRef()));
-    effect(() => this.store.scratchInput.set(this.scratchInputRef()));
-    effect(() => this.store.protectionInput.set(this.protectionInputRef()));
-    effect(() => this.store.applyButton.set(this.applyButtonRef()));
-    effect(() => this.store.endButton.set(this.endButtonRef()));
+    effect(() => this.turn.damageInput.set(this.damageInputRef()));
+    effect(() => this.turn.scratchInput.set(this.scratchInputRef()));
+    effect(() => this.turn.protectionInput.set(this.protectionInputRef()));
+    effect(() => this.turn.applyButton.set(this.applyButtonRef()));
+    effect(() => this.turn.endButton.set(this.endButtonRef()));
   }
 }

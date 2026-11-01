@@ -149,7 +149,7 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 ### Combat screens
 
 - `bol/session/play/session-play-page` assembles the table; its state and actions live in page-scoped services under `play/table/` (`TableStore`, `CombatTurnStore`, `CombatStatsStore`, `CombatWoundsService`, `CombatEndService`, `ExpandedCardStore`, `TableCommandsService`). Combat and theatre each load through `@defer`: don't reference their component classes outside `imports`.
-- `play/tapis/turn-assistant` holds its inputs and outputs; state and rules are in `turn-assistant.store.ts`, the screen in the `tas-*` blocks. Its stylesheets have no encapsulation and are scoped to `bol-turn-assistant` and the overlay container.
+- `play/tapis/turn-assistant` holds its inputs and outputs; the screen is in the `tas-*` blocks; state and rules are in six stores, one per step of the turn, each depending only on the earlier ones: `TurnContextStore`, `TurnLoadoutStore`, `TurnAttackStore`, `TurnDamageStore`, `TurnCibleStore`, `TurnFlowStore`. Its stylesheets have no encapsulation and are scoped to `.tas-scope`, set on the assistant and on the panel of its popover: a new overlay needs `cdkConnectedOverlayPanelClass="tas-scope"`.
 
 ## Backend architecture (`backend/`)
 
@@ -158,5 +158,5 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 - **Service layer** — business logic in `app/Http/Services/Bol/`, not in controllers.
 - **Eloquent models** — in `app/Models/Bol/`. Primary entities: `BolHeros` (an NPC is a `BolHeros` whose `type` is not `H`; there is no `BolPnj`), `BolCreature`, `BolDemon`, `BolScenario`, `BolFightSession`.
 - **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
-- **Portraits** — files, not base64: writing `avatar` on a sheet (`HasPortrait`, `BolPortraits`) stores the image and keeps its address, `/api/bol/portraits/<hash>.<ext>`. The address stays relative; `portraitUrlInterceptor` adds `apiBase` in production. On each machine, once: `docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php`, `php artisan migrate`, then `php artisan bol:extract-portraits`; the originals stay in `bol_portrait_backup` (`--restore`, `--forget-originals`).
+- **Portraits** — files, not base64: writing `avatar` on a sheet (`HasPortrait`, `BolPortraits`) stores the image and keeps its address, `/api/bol/portraits/<hash>.<ext>`. The address stays relative; `portraitUrlInterceptor` adds `apiBase` in production. On each machine, once: `docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php`, `php artisan migrate`, then `php artisan bol:extract-portraits`; the originals stay in `bol_portrait_backup` (`--restore`, `--forget-originals`). `php artisan bol:prune-portraits` deletes the files no sheet carries any more; run it by hand.
 - **Note** — `DatabaseSeeder.php` does not call the 21 other seeders; reference data requires manual population.

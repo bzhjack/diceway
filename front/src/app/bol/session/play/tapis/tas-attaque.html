@@ -1,10 +1,10 @@
 <span class="tas-lbl" id="tas-l2">L’attaque</span>
-@if (store.actionPerdue()) {
+@if (turn.actionPerdue()) {
   <!-- « Juste une égratignure » : se remettre du coup lui coûte cette action. Retirer l'effet (ⓘ de l'attaquant) rend le jet. -->
-  <p class="tas-note">{{ store.card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet (ⓘ) pour le laisser agir.</p>
-} @else if (store.defenseTotale()) {
+  <p class="tas-note">{{ turn.card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet (ⓘ) pour le laisser agir.</p>
+} @else if (loadout.defenseTotale()) {
   <p class="tas-note">Pas d’attaque ce round : il esquive et pare. « Fin du tour » applique le +2.</p>
-} @else if (store.played(); as p) {
+} @else if (flow.played(); as p) {
   <!-- Le coup joué, figé jusqu'à la fin du tour : ce qu'il fallait, les dés et la formule, le verdict et les options prises.
        « Autre attaque » le rouvre, pour une créature qui frappe plusieurs fois par round. -->
   @if (p.goal; as goal) {
@@ -24,10 +24,10 @@
       <b [class]="'tas-verdict-title tas-verdict-title--' + p.verdict.tone">{{ p.verdict.title }}</b>
       <span>{{ p.picks ?? p.verdict.detail }}</span>
     </span>
-    <button mat-stroked-button type="button" matTooltip="Pour un combattant qui frappe plusieurs fois par round" (click)="store.newAttack()">Autre attaque</button>
+    <button mat-stroked-button type="button" matTooltip="Pour un combattant qui frappe plusieurs fois par round" (click)="flow.newAttack()">Autre attaque</button>
   </div>
-} @else if (store.attackGoal(); as goal) {
-  <span class="tas-goal" [matTooltip]="store.armeFavoriteNote() ?? ''">
+} @else if (attack.attackGoal(); as goal) {
+  <span class="tas-goal" [matTooltip]="loadout.armeFavoriteNote() ?? ''">
     <b>{{ goal.big }}</b>
     <span>
       <em [class]="'tas-chance tas-chance--' + (goal.chance >= 50 ? 'good' : goal.chance >= 25 ? 'mid' : 'low')">{{ goal.chance }} %</em>
@@ -46,26 +46,26 @@
           maxlength="2"
           autocomplete="off"
           placeholder="total"
-          [attr.aria-label]="store.diceCount() > 2 ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
-          [value]="store.diceSum() ?? ''"
-          [disabled]="store.rolling()"
+          [attr.aria-label]="loadout.diceCount() > 2 ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
+          [value]="attack.diceSum() ?? ''"
+          [disabled]="turn.rolling()"
           (focus)="attackInput.select()"
-          (input)="store.onAttackInput(attackInput.value)"
-          (blur)="store.restoreInput(attackInput, store.diceSum())"
+          (input)="flow.onAttackInput(attackInput.value)"
+          (blur)="turn.restoreInput(attackInput, attack.diceSum())"
         />
-        <button type="button" class="tas-dice-btn" [disabled]="store.rolling()" [attr.aria-label]="'Lancer ' + store.diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + store.diceCount() + 'd6 à l’écran'" (click)="store.roll()">
+        <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" [attr.aria-label]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'" (click)="flow.roll()">
           <mat-icon svgIcon="gi-dice" />
         </button>
       </span>
-      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="store.attackRowDice()" [total]="store.diceSum()" [slots]="store.diceCount()" />
+      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attack.attackRowDice()" [total]="attack.diceSum()" [slots]="loadout.diceCount()" />
     </span>
-    <dw-roll-sum aria-label="Calcul de l’attaque" [pending]="store.total() === null" [terms]="store.attackSum()" (effectRemoved)="store.removeEffect($event)" />
+    <dw-roll-sum aria-label="Calcul de l’attaque" [pending]="attack.total() === null" [terms]="attack.attackSum()" (effectRemoved)="flow.removeEffect($event)" />
   </span>
   <div class="tas-issue">
   <span class="tas-verdict" aria-live="polite">
-    @if (store.rolling()) {
+    @if (turn.rolling()) {
       <span class="tas-wait">Les dés roulent…</span>
-    } @else if (store.attackVerdict(); as v) {
+    } @else if (attack.attackVerdict(); as v) {
       <b [class]="'tas-verdict-title tas-verdict-title--' + v.tone">{{ v.title }}</b>
       <span>{{ v.detail }}</span>
     } @else {
@@ -74,37 +74,37 @@
   </span>
   <!-- L'héroïsme de l'attaquant sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire -->
   <span class="tas-acts">
-    @if (!store.rolling()) {
-      @if (store.canCritique()) {
-        <button type="button" class="tas-act tas-act--critique" [attr.aria-pressed]="store.critique()" matTooltipPosition="above" matTooltip="Échec critique : le joueur décrit une issue franchement défavorable, et gagne 1 point d’héroïsme" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="store.toggleCritique()">
+    @if (!turn.rolling()) {
+      @if (attack.canCritique()) {
+        <button type="button" class="tas-act tas-act--critique" [attr.aria-pressed]="attack.critique()" matTooltipPosition="above" matTooltip="Échec critique : le joueur décrit une issue franchement défavorable, et gagne 1 point d’héroïsme" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="attack.toggleCritique()">
           <mat-icon svgIcon="skull" aria-hidden="true" /> <span class="tas-cost">+1 <span class="tas-gem" aria-hidden="true"></span></span>
         </button>
       }
-      @if (store.canFavor()) {
-        <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + store.unPointAttaquant()" (click)="store.divineFavor()">
+      @if (attack.canFavor()) {
+        <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + turn.unPointAttaquant()" (click)="flow.divineFavor()">
           <mat-icon svgIcon="gi-reroll" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
         </button>
       }
-      @if (store.canLegendary()) {
-        <button type="button" class="tas-act tas-act--legendaire" [attr.aria-pressed]="store.legendary()" matTooltipPosition="above" matTooltip="Succès légendaire : deux options de succès héroïque au lieu d’une" [attr.aria-label]="'Succès légendaire, pour ' + store.unPointAttaquant()" (click)="store.toggleLegendary()">
+      @if (attack.canLegendary()) {
+        <button type="button" class="tas-act tas-act--legendaire" [attr.aria-pressed]="attack.legendary()" matTooltipPosition="above" matTooltip="Succès légendaire : deux options de succès héroïque au lieu d’une" [attr.aria-label]="'Succès légendaire, pour ' + turn.unPointAttaquant()" (click)="attack.toggleLegendary()">
           <mat-icon svgIcon="crown" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
         </button>
       }
-      @if (store.canUpgrade()) {
-        <button type="button" class="tas-act" [attr.aria-pressed]="store.heroicUpgrade()" matTooltipPosition="above" matTooltip="Succès héroïque : le coup devient héroïque, une option au choix" [attr.aria-label]="'Convertir en succès héroïque, pour ' + store.unPointAttaquant()" (click)="store.toggleHeroicUpgrade()">
-          <mat-icon aria-hidden="true">{{ store.heroicUpgrade() ? 'star' : 'star_border' }}</mat-icon> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+      @if (attack.canUpgrade()) {
+        <button type="button" class="tas-act" [attr.aria-pressed]="attack.heroicUpgrade()" matTooltipPosition="above" matTooltip="Succès héroïque : le coup devient héroïque, une option au choix" [attr.aria-label]="'Convertir en succès héroïque, pour ' + turn.unPointAttaquant()" (click)="attack.toggleHeroicUpgrade()">
+          <mat-icon aria-hidden="true">{{ attack.heroicUpgrade() ? 'star' : 'star_border' }}</mat-icon> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
         </button>
       }
     }
   </span>
   </div>
-  @if (store.picksMax() > 0) {
-    <div class="tas-sub tas-heroic" role="group" [attr.aria-label]="store.picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
-      <span class="tas-label" [class.tas-label--gold]="store.picksMax() === 1" [class.tas-label--red]="store.picksMax() > 1">{{ store.picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
+  @if (attack.picksMax() > 0) {
+    <div class="tas-sub tas-heroic" role="group" [attr.aria-label]="attack.picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
+      <span class="tas-label" [class.tas-label--gold]="attack.picksMax() === 1" [class.tas-label--red]="attack.picksMax() > 1">{{ attack.picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
       <div class="tas-chips">
-        @for (o of store.heroicOptions; track o.slug) {
-          @let count = store.pickCounts()[o.slug] ?? 0;
-          <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="count > 0" [matTooltip]="o.effect" (click)="store.pickHeroic(o.slug)">
+        @for (o of attack.heroicOptions; track o.slug) {
+          @let count = attack.pickCounts()[o.slug] ?? 0;
+          <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="count > 0" [matTooltip]="o.effect" (click)="attack.pickHeroic(o.slug)">
             {{ o.label }}
             @if (count > 1) {
               <em>×{{ count }}</em>
@@ -114,7 +114,7 @@
       </div>
     </div>
   }
-} @else if (store.target()) {
+} @else if (turn.target()) {
   <span class="tas-wait">Calcul du jet…</span>
 } @else {
   <span class="tas-wait">Dès que tu sais qui est visé.</span>

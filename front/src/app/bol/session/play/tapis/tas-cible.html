@@ -1,7 +1,7 @@
-@if (store.target(); as t) {
-  <bol-combattant-carte class="tas-target" [card]="t" [chance]="store.odds()[t.key] ?? null" [perte]="store.damage() ?? 0" role="group" [attr.aria-label]="'Cible : ' + t.nom">
+@if (turn.target(); as t) {
+  <bol-combattant-carte class="tas-target" [card]="t" [chance]="cible.odds()[t.key] ?? null" [perte]="damage.damage() ?? 0" role="group" [attr.aria-label]="'Cible : ' + t.nom">
     <div class="tas-tiles tas-tiles--start">
-      @for (tile of store.targetTiles(); track tile.label) {
+      @for (tile of cible.targetTiles(); track tile.label) {
         <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'">
           <b>{{ tile.value }}</b>
           @if (tile.sub) {
@@ -11,94 +11,94 @@
         </div>
       }
     </div>
-    @if (store.targetBadges().length > 0) {
+    @if (cible.targetBadges().length > 0) {
       <ul class="tas-pills" aria-label="Effets sur la cible">
-        @for (badge of store.targetBadges(); track $index) {
+        @for (badge of cible.targetBadges(); track $index) {
           <li class="tas-pill">{{ badge }}</li>
         }
       </ul>
     }
-    @if (store.played() && store.playedTargetOut()) {
+    @if (flow.played() && flow.playedTargetOut()) {
       <span class="tas-pill">hors de combat</span>
     }
     <div ccBas class="tas-cible-regl">
       <div class="tas-vit">
-        <dw-value-stepper [value]="store.targetVitaliteShown()" (valueChange)="store.adjustTargetVitalite($event)" [min]="store.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
+        <dw-value-stepper [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
         <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
       </div>
-      @if (store.pointsCible(); as pts) {
+      @if (cible.pointsCible(); as pts) {
         <div class="tas-vit">
-          <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="store.targetHeroismeAdjusted.emit({card: t, delta: $event})" />
+          <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="turn.targetHeroismeAdjusted.emit({card: t, delta: $event})" />
           <span class="tas-tag">{{ pts.titre }}</span>
         </div>
       }
     </div>
     <div ccActions class="tas-target-actions">
-      <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="store.sheetRequested.emit(t)">
+      <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="turn.sheetRequested.emit(t)">
         <mat-icon svgIcon="gi-sheet" />
       </button>
-      @if (!store.played()) {
-        <button type="button" class="tas-ib" aria-label="Changer d’adversaire" matTooltip="Changer d’adversaire" (click)="store.changeTarget()">
+      @if (!flow.played()) {
+        <button type="button" class="tas-ib" aria-label="Changer d’adversaire" matTooltip="Changer d’adversaire" (click)="cible.changeTarget()">
           <mat-icon>swap_horiz</mat-icon>
         </button>
       }
     </div>
   </bol-combattant-carte>
-} @else if (store.played(); as p) {
+} @else if (flow.played(); as p) {
   <span class="tas-played">
     <b>{{ p.target.nom }}</b>
-    @if (store.playedTargetOut()) {
+    @if (flow.playedTargetOut()) {
       <span class="tas-pill">hors de combat</span>
     }
   </span>
-} @else if (store.targets().length === 0) {
+} @else if (turn.targets().length === 0) {
   <span class="tas-note">Personne à viser.</span>
 }
 
-@if (!store.played() && !store.target() && store.targets().length > 0) {
+@if (!flow.played() && !turn.target() && turn.targets().length > 0) {
   <!-- Pas encore de cible : une carte portrait par cible (celle du Théâtre, en petit), sur une seule ligne, les exemplaires d'une même
        fiche côte à côte ; ses chances dessous ; un clic la choisit. Quand elles débordent, une flèche de chaque côté les fait défiler. -->
   <div class="tas-choix">
   <span class="tas-lbl">Quelle cible ?</span>
   <div class="tas-carousel">
-    @if (store.picksOverflow()) {
+    @if (cible.picksOverflow()) {
       <button
         mat-icon-button
         type="button"
         class="tas-caret"
         aria-label="Cibles précédentes"
-        [disabled]="!store.canScrollPrev()"
-        (click)="store.scrollPicks(-1)"
+        [disabled]="!cible.canScrollPrev()"
+        (click)="cible.scrollPicks(-1)"
       >
         <mat-icon>chevron_left</mat-icon>
       </button>
     }
-    <ul #picks class="tas-cibles" aria-label="Choisir la cible" (scroll)="store.updatePicksScroll()">
-      @for (g of store.targetGroups(); track g.key) {
+    <ul #picks class="tas-cibles" aria-label="Choisir la cible" (scroll)="cible.updatePicksScroll()">
+      @for (g of cible.targetGroups(); track g.key) {
         @for (m of g.members; track m.card.key) {
           <li class="tas-cible">
             <bol-acteur
               [card]="m.card"
               taille="coriace"
-              [detail]="store.odds()[m.card.key] ?? null"
-              [matTooltip]="m.card.nom + (store.targetDetails()[m.card.key] ? ' · ' + store.targetDetails()[m.card.key] : '')"
-              (toggled)="store.selectTarget(m.card)"
+              [detail]="cible.odds()[m.card.key] ?? null"
+              [matTooltip]="m.card.nom + (cible.targetDetails()[m.card.key] ? ' · ' + cible.targetDetails()[m.card.key] : '')"
+              (toggled)="cible.selectTarget(m.card)"
             />
-            @if (store.odds()[m.card.key]; as chance) {
-              <em aria-hidden="true">{{ store.defenseTotale() ? '—' : chance }}</em>
+            @if (cible.odds()[m.card.key]; as chance) {
+              <em aria-hidden="true">{{ loadout.defenseTotale() ? '—' : chance }}</em>
             }
           </li>
         }
       }
     </ul>
-    @if (store.picksOverflow()) {
+    @if (cible.picksOverflow()) {
       <button
         mat-icon-button
         type="button"
         class="tas-caret"
         aria-label="Cibles suivantes"
-        [disabled]="!store.canScrollNext()"
-        (click)="store.scrollPicks(1)"
+        [disabled]="!cible.canScrollNext()"
+        (click)="cible.scrollPicks(1)"
       >
         <mat-icon>chevron_right</mat-icon>
       </button>

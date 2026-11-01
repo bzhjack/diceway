@@ -301,7 +301,7 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 - **Encore lourd :** chaque action transfère encore la session une fois, portraits compris. La phase 6 règle ce point, une fois `bol:extract-portraits` lancé.
 - **`GET /bol/fight-session` :** la route existante renvoie maintenant `id`, `titre`, `statut`, `heros_count` et `adversaires_count`. La table complète n'est plus disponible que session par session.
 - **Cartes :** recherche faite dans le dépôt, les scénarios et la base de ce poste. Une autre base qui les référencerait les retrouverait dans l'historique git.
-- **À traiter :** `start-combat-page.scss` dépasse le seuil d'avertissement de style (20,19 ko pour 16 ko).
+- **Traité en phase 5 :** `start-combat-page.scss` dépassait le seuil d'avertissement de style (20,19 ko pour 16 ko).
 
 ### Phase 2 : les outils de contrôle (M)
 
@@ -367,13 +367,13 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 **Fait le 2026-11-01.** Vérifié par 57 captures du combat au pixel près, identiques à celles d'avant le découpage, 34 contrôles de parcours dans le navigateur et les tests unitaires.
 
-- **`turn-assistant` :** le composant ne garde que ses entrées et ses sorties. L'état et les règles sont dans `turn-assistant.store.ts`, l'écran dans quatre blocs (`tas-attaquant`, `tas-cible`, `tas-attaque`, `tas-degats`). **Limite :** le store fait encore environ 2 100 lignes, déplacées telles quelles. Il reste le plus gros fichier du front, et pourrait être redécoupé par étape du tour.
+- **`turn-assistant` :** le composant ne garde que ses entrées et ses sorties. L'écran est dans quatre blocs (`tas-attaquant`, `tas-cible`, `tas-attaque`, `tas-degats`). L'état et les règles sont dans six stores, un par étape du tour : `turn-context`, `turn-loadout` (les réglages du coup), `turn-attack`, `turn-damage`, `turn-cible`, `turn-flow` (le déroulé). Chacun ne dépend que des précédents ; le plus gros, `turn-loadout`, fait 591 lignes.
 - **`session-play-page` :** de 1 559 à une centaine de lignes. Le reste est dans `play/table/`, un service par domaine : la table, le tour, les statistiques, les blessures, la fin du combat, la carte dépliée, les commandes.
 - **Choix différents de la revue :** M14 et M15 sont des mixins (`forge.roll-entry`, `forge.verdict-tones`) plutôt que des composants : chaque page garde la main sur le focus de ses champs.
 - **Signal Forms :** plus aucun import de `@angular/forms`, et une règle de lint l'interdit. `dw-value-stepper` est un vrai `FormValueControl` ; hors formulaire, on lui donne `[value]` et `(valueChange)`. Dans un formulaire, ses bornes viennent du schéma (`min()`, `max()`), car Angular refuse `[min]` à côté de `[formField]`. `ValueTracker` a disparu : le pas se calcule depuis la valeur affichée.
 - **Changement de comportement :** le cœur de vitalité de `hero-resources` suit maintenant les rechargements de la table. Il ne lisait la valeur qu'à l'ouverture.
 - **Poids :** `session-play-page` passe de 523 ko à 218 ko ; `combat-board` a son paquet (157 ko), chargé seulement en combat, et le théâtre le sien.
-- **À traiter :** `turn-assistant.scss` (18,1 ko) et `start-combat-page.scss` (19,5 ko) dépassent le seuil d'avertissement de style (16 ko).
+- **Seuil de style (16 ko) :** plus aucun avertissement. `turn-assistant.scss` passe de 18,2 à 13,6 ko : le préfixe `:is(bol-turn-assistant, .cdk-overlay-container)` devient `.tas-scope`, posé sur l'assistant et sur le panneau de son popover, et ses trois feuilles perdent 9,6 ko à elles toutes. `start-combat-page.scss` est coupé en deux feuilles chargées dans l'ordre (page, registre), d'environ 7 et 13 ko, et ses 36 couleurs en dur sont devenues des jetons. **Limite :** cette page ne s'allège pas, elle passe même de 19,7 à 20,1 ko au total à cause des jetons, malgré une règle morte en moins. Pour réduire vraiment son poids, il faudrait extraire la ligne d'un héros dans un composant.
 
 ### Phase 6 : portraits et backend (L)
 
@@ -396,7 +396,8 @@ docker exec diceway php artisan bol:extract-portraits
 
 - **Portraits :** une fiche ne garde que l'adresse de son portrait (`/api/bol/portraits/<empreinte>.<ext>`), un fichier servi avec un cache navigateur permanent. Sur une copie de la session réelle, 311 ko deviennent 24 ko (−92 %).
 - **Retour en arrière :** les originaux restent dans `bol_portrait_backup`. `--restore` les remet ; `--forget-originals` les efface, une fois vérifié. Une machine qui n'a pas lancé la commande continue d'afficher ses portraits en base64.
-- **Limites des portraits :** la route est publique, une balise `<img>` n'envoyant pas de jeton (l'adresse est l'empreinte de l'image, elle ne se devine pas). Aucun fichier n'est effacé quand une fiche change de portrait ou disparaît : il n'y a pas encore de nettoyage.
+- **Limite des portraits :** la route est publique, une balise `<img>` n'envoyant pas de jeton (l'adresse est l'empreinte de l'image, elle ne se devine pas).
+- **Nettoyage :** un fichier ne s'efface pas tout seul quand une fiche change de portrait ou disparaît, puisqu'une autre fiche le porte peut-être. `bol:prune-portraits` (`--dry-run` pour compter) retire ceux que plus personne ne porte, à lancer à la main : le conteneur n'a pas de tâche planifiée. Un fichier de moins de 24 heures reste, sa fiche étant peut-être en cours d'enregistrement.
 - **Contrôleurs :** ils valident, vérifient les droits, appellent un service et répondent. Reste le `find` de `ProtectsHeros`, qui sert au contrôle d'accès, et les contrôleurs `Auth`, hors du périmètre. La validation reste dans les contrôleurs. Les synchronisations des héros et des PNJ restent séparées : leurs requêtes n'ont pas la même forme.
 - **Défaut corrigé :** `/bol/heros/update` écrivait par une requête directe qui contournait le modèle ; elle passe désormais par lui. Code mort retiré : `BolCarriereController::update`, sans route.
 - **Règles :** « Vigilant », « Lent à la détente » et la carrière de soins se reconnaissent à leur id. « Se tient à deux mains » est une colonne de `bol_arme`, reprise des notes par la migration et réglable par une case du formulaire. L'intendance compte les boucliers par catégorie.

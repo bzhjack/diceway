@@ -1,4 +1,4 @@
-<div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom" [class.tas--foe]="store.side().foe">
+<div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom" [class.tas--foe]="turn.side().foe">
   <!-- Le registre du tour : la ligne de qui attaque, puis une ligne par étape — l'attaque, les dégâts. Dans chaque ligne, la formule du jet
        reste à l'écran ; les actions sont en bout de ligne ; la ligne où il faut agir s'allume. -->
   <!-- Qui joue : une seule ligne, lue de gauche à droite, sans popover pour préparer le coup. Son nom, sa vie et ses points ; ses chiffres, qui
@@ -7,20 +7,20 @@
   <bol-tas-attaquant />
 
   <!-- Trois colonnes : la cible, l'attaque, les dégâts. Avant de viser, les cartes des cibles prennent toute la largeur. -->
-  <div class="tas-trois" [class.tas-trois--choix]="store.choixCible()">
+  <div class="tas-trois" [class.tas-trois--choix]="flow.choixCible()">
   <!-- La cible : avant de viser, une carte par cible sur une ligne (un clic la choisit) ; choisie, il ne reste que sa carte, portrait à gauche,
        avec ses chiffres, sa vie réglable, ses effets, sa fiche, et « Changer d’adversaire » qui ramène la rangée. Le coup joué reste écrit,
        figé, jusqu'à la fin du tour. -->
-  <section bol-tas-cible class="tas-contre" aria-label="La cible" [class.tas-off]="store.defenseTotale()" [attr.inert]="store.defenseTotale() ? '' : null"></section>
+  <section bol-tas-cible class="tas-contre" aria-label="La cible" [class.tas-off]="loadout.defenseTotale()" [attr.inert]="loadout.defenseTotale() ? '' : null"></section>
 
   <ol class="tas-reg">
     <!-- 1 · L'attaque : ce qu'il faut et les chances ; la case (tapée à table, ou lancée à l'écran) et les dés, la formule dessous ; le
          verdict ; en bout de ligne, ce que l'attaquant peut payer de ses points. Les options d'un succès héroïque passent dessous. -->
-    <li bol-tas-attaque [class]="'tas-line tas-line--' + store.stations()[1] + (store.attackTone() ? ' tas-line--' + store.attackTone() : '')" aria-labelledby="tas-l2"></li>
+    <li bol-tas-attaque [class]="'tas-line tas-line--' + flow.stations()[1] + (flow.attackTone() ? ' tas-line--' + flow.attackTone() : '')" aria-labelledby="tas-l2"></li>
 
     <!-- 2 · Les dégâts : la fourchette ; la case et le dé, la formule dessous ; ce que le coup fera à la cible ; en bout de ligne, ce que la
          cible peut y opposer (de ses points, son portrait sur le bouton) et « Appliquer ». Puis l'égratignure, le Carnage ou la fin du tour. -->
-    <li bol-tas-degats [class]="'tas-line tas-line--' + store.stations()[2]" aria-labelledby="tas-l3"></li>
+    <li bol-tas-degats [class]="'tas-line tas-line--' + flow.stations()[2]" aria-labelledby="tas-l3"></li>
   </ol>
   </div>
 </div>

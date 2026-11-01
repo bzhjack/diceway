@@ -1,14 +1,14 @@
 <span class="tas-lbl" id="tas-l3">Les dégâts</span>
-@if (store.hasDamageStep()) {
+@if (damage.hasDamageStep()) {
   <span class="tas-goal">
-    @if (store.damageSpan(); as span) {
+    @if (damage.damageSpan(); as span) {
       <b>{{ span }}</b>
     }
   </span>
   <span class="tas-stack">
     <span class="tas-r1">
       <!-- Des dégâts fixes n'ont pas de jet : la case n'apparaît que pour un dé, ou pour le total de dégâts spéciaux -->
-      @if (store.fixedDamage() === null) {
+      @if (damage.fixedDamage() === null) {
         <span class="tas-entry">
           <input
             #damageInput
@@ -16,28 +16,28 @@
             type="text"
             inputmode="numeric"
             autocomplete="off"
-            [attr.maxlength]="store.specialDamage() ? 2 : 1"
-            [attr.placeholder]="store.specialDamage() ? 'total' : 'dé'"
-            [attr.aria-label]="store.specialDamage() ? 'Total des dégâts spéciaux' : 'Dé de dégâts lancé à table, de 1 à ' + store.damageMax()"
-            [value]="(store.specialDamage() ? store.raw() : store.face()) ?? ''"
-            [disabled]="store.rolling()"
+            [attr.maxlength]="damage.specialDamage() ? 2 : 1"
+            [attr.placeholder]="damage.specialDamage() ? 'total' : 'dé'"
+            [attr.aria-label]="damage.specialDamage() ? 'Total des dégâts spéciaux' : 'Dé de dégâts lancé à table, de 1 à ' + damage.damageMax()"
+            [value]="(damage.specialDamage() ? damage.raw() : damage.face()) ?? ''"
+            [disabled]="turn.rolling()"
             (focus)="damageInput.select()"
-            (input)="store.onDamageInput(damageInput.value)"
-            (blur)="store.restoreInput(damageInput, store.specialDamage() ? store.raw() : store.face())"
+            (input)="damage.onDamageInput(damageInput.value)"
+            (blur)="turn.restoreInput(damageInput, damage.specialDamage() ? damage.raw() : damage.face())"
           />
-          @if (!store.specialDamage()) {
-            <button type="button" class="tas-dice-btn" [disabled]="store.rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="store.rollDamage()">
+          @if (!damage.specialDamage()) {
+            <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="damage.rollDamage()">
               <mat-icon svgIcon="gi-dice" />
             </button>
           }
         </span>
-        <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="store.damageRowDice()" [total]="store.damageRowTotal()" [slots]="store.damageSlots()" />
+        <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="damage.damageRowDice()" [total]="damage.damageRowTotal()" [slots]="damage.damageSlots()" />
       }
-      <small class="tas-die-note">{{ store.dieNote() }}</small>
+      <small class="tas-die-note">{{ damage.dieNote() }}</small>
     </span>
-    <dw-roll-sum aria-label="Calcul des dégâts" [pending]="store.damage() === null" [terms]="store.damageSum()" (effectRemoved)="store.removeEffect($event)">
+    <dw-roll-sum aria-label="Calcul des dégâts" [pending]="damage.damage() === null" [terms]="damage.damageSum()" (effectRemoved)="flow.removeEffect($event)">
       <ng-template dwRollSumEditable let-term>
-        @if (store.editingProtection()) {
+        @if (damage.editingProtection()) {
             <input
               #protectionInput
               class="tas-sum-input"
@@ -45,23 +45,23 @@
               min="0"
               step="1"
               aria-label="Protection de la cible, valeur numérique"
-              [value]="store.protectionDraft()"
-              (input)="store.protectionDraft.set(protectionInput.value)"
-              (keydown.enter)="store.commitProtection()"
-              (keydown.escape)="store.editingProtection.set(false)"
-              (blur)="store.editingProtection.set(false)"
+              [value]="damage.protectionDraft()"
+              (input)="damage.protectionDraft.set(protectionInput.value)"
+              (keydown.enter)="damage.commitProtection()"
+              (keydown.escape)="damage.editingProtection.set(false)"
+              (blur)="damage.editingProtection.set(false)"
             />
         } @else {
             <!-- La protection, et à côté d'elle son dé et le retour à la valeur fixe -->
             <span class="tas-entry">
-              <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="store.startEditProtection()">{{ term.value }}</button>
-              @if (store.protectionDie()) {
-                <button type="button" class="tas-mini" [disabled]="store.rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="store.rollProtection()">
+              <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="damage.startEditProtection()">{{ term.value }}</button>
+              @if (damage.protectionDie()) {
+                <button type="button" class="tas-mini" [disabled]="turn.rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="damage.rollProtection()">
                   <mat-icon svgIcon="gi-dice" />
                 </button>
               }
-              @if (store.protectionFace() !== null || store.protectionManual() !== null) {
-                <button type="button" class="tas-mini" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="store.resetProtection()">
+              @if (damage.protectionFace() !== null || damage.protectionManual() !== null) {
+                <button type="button" class="tas-mini" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="damage.resetProtection()">
                   <mat-icon>undo</mat-icon>
                 </button>
               }
@@ -72,10 +72,10 @@
   </span>
   <div class="tas-issue">
   <span class="tas-verdict" aria-live="polite">
-    @if (store.damage(); as d) {
+    @if (damage.damage(); as d) {
       <b class="tas-verdict-title">{{ d }} {{ d > 1 ? 'dégâts' : 'dégât' }}</b>
-      <span>{{ store.target()?.nom }} : {{ store.targetLife().current ?? '—' }} → {{ store.targetLife().after ?? '—' }}</span>
-    } @else if (store.damage() === 0) {
+      <span>{{ turn.target()?.nom }} : {{ damage.targetLife().current ?? '—' }} → {{ damage.targetLife().after ?? '—' }}</span>
+    } @else if (damage.damage() === 0) {
       <b class="tas-verdict-title">0 dégât</b>
       <span>La protection absorbe tout.</span>
     } @else {
@@ -83,25 +83,25 @@
     }
   </span>
   <span class="tas-acts">
-    @if (store.canParry()) {
+    @if (cible.canParry()) {
       <button
         type="button"
         class="tas-act tas-act--foe"
-        [matTooltip]="store.target()?.nom + ' : parade in extremis, pour ' + store.unPointCible() + '. Son bouclier ou son arme se brise, il ne subit pas de dégâts.'"
-        [attr.aria-label]="'Parade in extremis de ' + store.target()?.nom + ', pour ' + store.unPointCible()"
-        (click)="store.parry()"
+        [matTooltip]="turn.target()?.nom + ' : parade in extremis, pour ' + turn.unPointCible() + '. Son bouclier ou son arme se brise, il ne subit pas de dégâts.'"
+        [attr.aria-label]="'Parade in extremis de ' + turn.target()?.nom + ', pour ' + turn.unPointCible()"
+        (click)="flow.parry()"
       >
         <ng-container *ngTemplateOutlet="targetFace" />
         <mat-icon svgIcon="gi-shield" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
       </button>
     }
-    @if (store.canHumanShield()) {
+    @if (cible.canHumanShield()) {
       <button
         type="button"
         class="tas-act tas-act--foe"
-        [matTooltip]="store.target()?.nom + ' : bouclier humain, pour ' + store.unPointCible() + '. ' + store.sbire()?.nom + ' s’interpose et encaisse le coup.'"
-        [attr.aria-label]="'Bouclier humain : ' + store.sbire()?.nom + ' encaisse le coup à la place de ' + store.target()?.nom + ', pour ' + store.unPointCible()"
-        (click)="store.humanShield()"
+        [matTooltip]="turn.target()?.nom + ' : bouclier humain, pour ' + turn.unPointCible() + '. ' + cible.sbire()?.nom + ' s’interpose et encaisse le coup.'"
+        [attr.aria-label]="'Bouclier humain : ' + cible.sbire()?.nom + ' encaisse le coup à la place de ' + turn.target()?.nom + ', pour ' + turn.unPointCible()"
+        (click)="flow.humanShield()"
       >
         <ng-container *ngTemplateOutlet="targetFace" />
         <mat-icon svgIcon="gi-group" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
@@ -109,19 +109,19 @@
     }
   </span>
   </div>
-  @if (store.damage() !== null) {
-    <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="store.apply()">Appliquer {{ store.damage() }} à {{ store.target()?.nom }}</button>
+  @if (damage.damage() !== null) {
+    <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="flow.apply()">Appliquer {{ damage.damage() }} à {{ turn.target()?.nom }}</button>
   }
-} @else if (store.attackVerdict(); as v) {
+} @else if (attack.attackVerdict(); as v) {
   <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
   @if (v.tone === 'echec') {
     <span class="tas-wait">Pas de dégâts : le coup est raté.</span>
-    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="store.requestEndTurn()">Fin du tour</button>
+    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.requestEndTurn()">Fin du tour</button>
   } @else {
     <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
-    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="store.concludeWithoutDamage()">{{ store.carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
+    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.concludeWithoutDamage()">{{ attack.carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
   }
-} @else if (store.hitSummary(); as hit) {
+} @else if (flow.hitSummary(); as hit) {
   <div class="tas-issue">
   <span class="tas-verdict" aria-live="polite">
     <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.title }}</b>
@@ -131,8 +131,8 @@
     }
   </span>
   <span class="tas-acts">
-    @if (store.canScratch()) {
-      @if (store.scratching()) {
+    @if (flow.canScratch()) {
+      @if (flow.scratching()) {
         <!-- Le d6B de l'égratignure, comme les autres dés : le dé gardé tapé s'il est lancé à table, ou lancé à l'écran. -->
         <span class="tas-entry">
           <input
@@ -143,25 +143,25 @@
             autocomplete="off"
             maxlength="1"
             placeholder="d6B"
-            [attr.aria-label]="'Dé gardé de l’égratignure lancée à table, le meilleur de deux d6, de 1 à 6, pour ' + store.unPointCible() + ' de ' + store.target()?.nom"
-            [disabled]="store.rolling()"
-            (input)="store.onScratchInput(scratchInput.value)"
-            (keydown.escape)="store.cancelScratch($event)"
+            [attr.aria-label]="'Dé gardé de l’égratignure lancée à table, le meilleur de deux d6, de 1 à 6, pour ' + turn.unPointCible() + ' de ' + turn.target()?.nom"
+            [disabled]="turn.rolling()"
+            (input)="flow.onScratchInput(scratchInput.value)"
+            (keydown.escape)="flow.cancelScratch($event)"
           />
-          <button type="button" class="tas-dice-btn" [disabled]="store.rolling()" aria-label="Lancer le dé de l’égratignure à l’écran" matTooltip="Lancer le dé de l’égratignure à l’écran" (click)="store.rollScratch()">
+          <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" aria-label="Lancer le dé de l’égratignure à l’écran" matTooltip="Lancer le dé de l’égratignure à l’écran" (click)="flow.rollScratch()">
             <mat-icon svgIcon="gi-dice" />
           </button>
         </span>
         <small class="tas-die-note">Juste une égratignure : d6B de vitalité rendue</small>
-        <button type="button" class="tas-act" [disabled]="store.rolling()" (click)="store.cancelScratch()">Annuler l’égratignure</button>
+        <button type="button" class="tas-act" [disabled]="turn.rolling()" (click)="flow.cancelScratch()">Annuler l’égratignure</button>
       } @else {
         <button
           type="button"
           class="tas-act tas-act--foe"
-          [disabled]="store.rolling()"
-          [matTooltip]="store.target()?.nom + ' : juste une égratignure, pour ' + store.unPointCible() + '. d6B de vitalité rendue, sans dépasser les dégâts du coup ; il perd sa prochaine action.'"
-          [attr.aria-label]="'Juste une égratignure pour ' + store.target()?.nom + ', pour ' + store.unPointCible()"
-          (click)="store.startScratch()"
+          [disabled]="turn.rolling()"
+          [matTooltip]="turn.target()?.nom + ' : juste une égratignure, pour ' + turn.unPointCible() + '. d6B de vitalité rendue, sans dépasser les dégâts du coup ; il perd sa prochaine action.'"
+          [attr.aria-label]="'Juste une égratignure pour ' + turn.target()?.nom + ', pour ' + turn.unPointCible()"
+          (click)="flow.startScratch()"
         >
           <ng-container *ngTemplateOutlet="targetFace" />
           <mat-icon aria-hidden="true">healing</mat-icon> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
@@ -170,24 +170,24 @@
     }
   </span>
   </div>
-  @if (store.carnageOwed() > 0) {
+  @if (attack.carnageOwed() > 0) {
     <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
   } @else {
-    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="store.requestEndTurn()">Fin du tour</button>
+    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.requestEndTurn()">Fin du tour</button>
   }
 } @else {
   <!-- Avant le coup, ce que l'arme peut faire à cette cible : la colonne annonce la fourchette. -->
-  @if (store.target() && !store.defenseTotale() && !store.actionPerdue()) {
-    <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="store.damageSum()" />
+  @if (turn.target() && !loadout.defenseTotale() && !turn.actionPerdue()) {
+    <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damage.damageSum()" />
   }
-  <span class="tas-wait">{{ store.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
+  <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
 }
 
 <!-- Le portrait de la cible, sur ses boutons de réaction : c'est elle qui décide, et qui paie de ses points -->
 <ng-template #targetFace>
-  @if (store.target(); as t) {
+  @if (turn.target(); as t) {
     <span class="tas-med tas-med--face" aria-hidden="true">
-      @if (store.targetPortrait(); as portrait) {
+      @if (cible.targetPortrait(); as portrait) {
         <img dwAvatarFallback [src]="portrait" alt="" />
       } @else {
         {{ t.nom.charAt(0).toUpperCase() }}

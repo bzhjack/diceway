@@ -12,7 +12,12 @@ import {TasAttaqueComponent} from './tas-attaque';
 import {TasAttaquantComponent} from './tas-attaquant';
 import {TasCibleComponent} from './tas-cible';
 import {TasDegatsComponent} from './tas-degats';
-import {TurnAssistantStore} from './turn-assistant.store';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnAttackStore} from './turn-attack.store';
+import {TurnDamageStore} from './turn-damage.store';
+import {TurnCibleStore} from './turn-cible.store';
+import {TurnFlowStore} from './turn-flow.store';
 
 /** L'assistant de tour, sous la frise en combat : un registre. Sur une ligne, qui attaque, avec tout ce qui prépare son coup : sa vie, ses
  * points, ses chiffres et ce que dit le MJ ; sa posture et sa manœuvre ; ses armes ; puis ce qu'il peut faire au lieu d'attaquer, et la fin
@@ -25,12 +30,13 @@ import {TurnAssistantStore} from './turn-assistant.store';
 @Component({
   selector: 'bol-turn-assistant',
   imports: [TasAttaquantComponent, TasCibleComponent, TasAttaqueComponent, TasDegatsComponent],
-  // L'état du tour, pour ses quatre blocs.
-  providers: [TurnAssistantStore],
+  // L'état du tour, une instance par assistant : ses quatre blocs le partagent.
+  providers: [TurnContextStore, TurnLoadoutStore, TurnAttackStore, TurnDamageStore, TurnCibleStore, TurnFlowStore],
   templateUrl: './turn-assistant.html',
   styleUrls: ['./turn-assistant.scss', './turn-assistant-colonnes.scss', './turn-assistant-attaquant.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // Une seule feuille pour les quatre blocs : ses classes `tas-*` sont propres à l'assistant.
+  host: {class: 'tas-scope'},
+  // Une seule feuille pour les quatre blocs : ses classes `tas-*` sont propres à l'assistant, sous `.tas-scope`.
   encapsulation: ViewEncapsulation.None,
 })
 export class TurnAssistantComponent {
@@ -90,19 +96,21 @@ export class TurnAssistantComponent {
   /** Points d'héroïsme dépensés par la cible, un héros : parade in extremis, « Juste une égratignure ». */
   readonly targetHeroismeAdjusted = output<HeroismeChange>();
 
-  protected readonly store = inject(TurnAssistantStore);
+  protected readonly turn = inject(TurnContextStore);
+  protected readonly loadout = inject(TurnLoadoutStore);
+  protected readonly flow = inject(TurnFlowStore);
 
   constructor() {
-    this.store.connect(this);
+    this.turn.connect(this);
   }
 
   /** Retire les dés restés sur la table une fois le lancer terminé (un clic n'importe où sur l'écran de combat). */
   dismissDice(): void {
-    this.store.dismissDice();
+    this.turn.dismissDice();
   }
 
   /** « Fin du tour » (bouton ou touche F). */
   requestEndTurn(): void {
-    this.store.requestEndTurn();
+    this.flow.requestEndTurn();
   }
 }

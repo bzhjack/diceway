@@ -161,7 +161,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
   selector: 'bol-start-combat-page',
   imports: [DwRollSumComponent, DwGemmesComponent, DwPopoverDirective, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
-  styleUrl: './start-combat-page.scss',
+  styleUrls: ['./start-combat-page.scss', './start-combat-registre.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

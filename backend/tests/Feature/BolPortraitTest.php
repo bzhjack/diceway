@@ -21,6 +21,8 @@ class BolPortraitTest extends TestCase
 
     private const DATA_URL = 'data:image/png;base64,' . self::PNG;
 
+    private const OTHER_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
     private User $user;
 
     protected function setUp(): void
@@ -197,6 +199,73 @@ class BolPortraitTest extends TestCase
 
         $this->artisan('bol:extract-portraits', ['--forget-originals' => true])->expectsConfirmation('Effacer 1 originaux ? Le retour en arrière ne sera plus possible.', 'yes')->assertSuccessful();
         $this->assertSame(0, DB::table('bol_portrait_backup')->count());
+    }
+
+    public function test_pruning_removes_the_file_of_a_replaced_portrait_and_keeps_the_current_one(): void
+    {
+        $hero = $this->hero(self::DATA_URL);
+        $old = basename($hero->avatar);
+        $hero->update(['avatar' => self::OTHER_DATA_URL]);
+        $this->travel(2)->days();
+
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+
+        Storage::disk('public')->assertMissing('portraits/' . $old);
+        Storage::disk('public')->assertExists('portraits/' . basename($hero->fresh()->avatar));
+    }
+
+    public function test_pruning_removes_the_file_of_a_deleted_sheet_only_once_nobody_carries_it(): void
+    {
+        $first = $this->hero(self::DATA_URL);
+        $second = $this->hero(self::DATA_URL);
+        $file = 'portraits/' . basename($first->avatar);
+        $first->delete();
+        $this->travel(2)->days();
+
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+        Storage::disk('public')->assertExists($file);
+
+        $second->delete();
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+        Storage::disk('public')->assertMissing($file);
+    }
+
+    public function test_pruning_keeps_every_kind_of_sheet(): void
+    {
+        $creature = BolCreature::create(['nom' => 'Bête', 'user_id' => $this->user->id, 'id_taille' => 1, 'avatar' => self::DATA_URL]);
+        $this->travel(2)->days();
+
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+
+        Storage::disk('public')->assertExists('portraits/' . basename($creature->avatar));
+    }
+
+    public function test_pruning_leaves_a_recent_file_and_what_is_not_a_portrait(): void
+    {
+        $recent = $this->hero(self::DATA_URL);
+        $file = 'portraits/' . basename($recent->avatar);
+        $recent->delete();
+        Storage::disk('public')->put('portraits/lisez-moi.txt', 'à garder');
+
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+        Storage::disk('public')->assertExists($file);
+
+        $this->travel(2)->days();
+        $this->artisan('bol:prune-portraits')->assertSuccessful();
+        Storage::disk('public')->assertMissing($file);
+        Storage::disk('public')->assertExists('portraits/lisez-moi.txt');
+    }
+
+    public function test_a_dry_run_of_pruning_deletes_nothing(): void
+    {
+        $hero = $this->hero(self::DATA_URL);
+        $file = 'portraits/' . basename($hero->avatar);
+        $hero->delete();
+        $this->travel(2)->days();
+
+        $this->artisan('bol:prune-portraits', ['--dry-run' => true])->assertSuccessful();
+
+        Storage::disk('public')->assertExists($file);
     }
 
     private function hero(?string $avatar = null): BolHeros

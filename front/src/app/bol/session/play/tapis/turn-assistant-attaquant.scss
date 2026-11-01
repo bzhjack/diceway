@@ -1,7 +1,7 @@
 @use 'styles/forge-mixins' as forge;
 
-// Sans encapsulation : la portée, c'est l'assistant, et l'overlay où s'ouvrent ses popovers.
-:is(bol-turn-assistant, .cdk-overlay-container) {
+// Sans encapsulation : la portée, c'est `.tas-scope`, sur l'assistant et sur le panneau de son popover.
+.tas-scope {
   // La ligne de qui joue, en forge : son nom et sa vie (`combattant-carte`, en ligne), puis ses zones. Chaque zone prend sa place dans la grille de
   // la carte ; un filet pointillé les sépare.
   .tas-head {

@@ -6,7 +6,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PointsStepperComponent} from './points-stepper';
-import {TurnAssistantStore} from './turn-assistant.store';
+import {TurnContextStore} from './turn-context.store';
+import {TurnLoadoutStore} from './turn-loadout.store';
+import {TurnDamageStore} from './turn-damage.store';
+import {TurnCibleStore} from './turn-cible.store';
+import {TurnFlowStore} from './turn-flow.store';
 
 /** La cible : avant de viser, une carte par cible sur une ligne ; choisie, il ne reste que sa carte, avec ses chiffres, sa vie réglable et ses effets. */
 @Component({
@@ -16,10 +20,14 @@ import {TurnAssistantStore} from './turn-assistant.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasCibleComponent {
-  protected readonly store = inject(TurnAssistantStore);
+  protected readonly turn = inject(TurnContextStore);
+  protected readonly loadout = inject(TurnLoadoutStore);
+  protected readonly damage = inject(TurnDamageStore);
+  protected readonly cible = inject(TurnCibleStore);
+  protected readonly flow = inject(TurnFlowStore);
   private readonly picksRef = viewChild<ElementRef<HTMLElement>>('picks');
 
   constructor() {
-    effect(() => this.store.picksList.set(this.picksRef()));
+    effect(() => this.turn.picksList.set(this.picksRef()));
   }
 }

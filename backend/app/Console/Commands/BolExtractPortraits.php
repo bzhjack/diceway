@@ -22,8 +22,6 @@ class BolExtractPortraits extends Command
 
     protected $description = 'Transforme les portraits en base64 des fiches en fichiers servis par une simple adresse';
 
-    private const TABLES = ['bol_heros', 'bol_creature', 'bol_demon'];
-
     public function handle(): int
     {
         if ($this->option('forget-originals')) {
@@ -43,7 +41,7 @@ class BolExtractPortraits extends Command
         $bytes = 0;
         $failed = [];
 
-        foreach (self::TABLES as $table) {
+        foreach (BolPortraits::TABLES as $table) {
             DB::table($table)
                 ->where('avatar', 'like', 'data:image/%')
                 ->select('id', 'avatar')

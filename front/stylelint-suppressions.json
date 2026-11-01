@@ -59,11 +59,6 @@
       "count": 6
     }
   },
-  "src/app/bol/session/start-combat/start-combat-page.scss": {
-    "color-no-hex": {
-      "count": 36
-    }
-  },
   "src/app/bol/shared/add-menu/add-menu.component.scss": {
     "selector-pseudo-element-disallowed-list": {
       "count": 1
