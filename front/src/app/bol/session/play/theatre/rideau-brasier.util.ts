@@ -1,4 +1,4 @@
-import {RideauBraises, RideauBrulure} from '../../models/theatre.model';
+import {RideauBraises, RideauBrulure, RideauSens} from '../../models/theatre.model';
 
 /** Bruit de valeurs lissé : une grille aléatoire dont les cases font `cell` pixels, interpolée entre ses nœuds. */
 function bruit(largeur: number, hauteur: number, cell: number): Float32Array {
@@ -23,8 +23,11 @@ function bruit(largeur: number, hauteur: number, cell: number): Float32Array {
   return sortie;
 }
 
-/** L'ordre de combustion : le bas de la scène brûle d'abord, un bruit à trois échelles déchire le front de flamme. */
-export function champDeBrulure(largeur: number, hauteur: number): Float32Array {
+/** Dans le sens latéral, le poids de la position : la surface est large, un front aussi déchiré qu'en montant y prendrait trop de place. */
+const POIDS_LATERAL = 0.8;
+
+/** L'ordre de combustion : le bas de la scène (ou son bord gauche) brûle d'abord, un bruit à trois échelles déchire le front de flamme. */
+export function champDeBrulure(largeur: number, hauteur: number, sens: RideauSens = 'montant'): Float32Array {
   const n1 = bruit(largeur, hauteur, 76);
   const n2 = bruit(largeur, hauteur, 26);
   const n3 = bruit(largeur, hauteur, 9);
@@ -32,10 +35,16 @@ export function champDeBrulure(largeur: number, hauteur: number): Float32Array {
   for (let y = 0; y < hauteur; y++) {
     for (let x = 0; x < largeur; x++) {
       const i = y * largeur + x;
-      champ[i] = (1 - y / (hauteur - 1)) * 0.62 + (n1[i] * 0.55 + n2[i] * 0.3 + n3[i] * 0.15) * 0.38;
+      const dechirure = n1[i] * 0.55 + n2[i] * 0.3 + n3[i] * 0.15;
+      champ[i] = sens === 'lateral' ? (x / (largeur - 1)) * POIDS_LATERAL + dechirure * (1 - POIDS_LATERAL) : (1 - y / (hauteur - 1)) * 0.62 + dechirure * 0.38;
     }
   }
   return champ;
+}
+
+/** Où est la ligne de feu d'un avancement `seuil`, pour les braises (cf. `RideauBraises.front`). */
+export function frontDeFeu(seuil: number, sens: RideauSens): number {
+  return sens === 'lateral' ? seuil / POIDS_LATERAL : 1 - (seuil - 0.12) / 0.62;
 }
 
 /** Peint la brûlure à l'avancement `seuil` : ce qui est derrière le front est charbon, le front est en flammes, et juste
@@ -93,7 +102,7 @@ export function lancerBraises(canvas: HTMLCanvasElement, largeur: number, hauteu
   canvas.height = Math.round(hauteur * dpr);
   const c = canvas.getContext('2d');
   let actif = true;
-  const braises = {front: 1.05, rate: 150, alpha: 1, stop: () => (actif = false)};
+  const braises = {front: 1.05, lateral: false, rate: 150, alpha: 1, stop: () => (actif = false)};
   if (!c) {
     return braises;
   }
@@ -108,8 +117,10 @@ export function lancerBraises(canvas: HTMLCanvasElement, largeur: number, hauteu
     const dt = Math.min(0.05, (now - dernier) / 1000);
     dernier = now;
     for (let k = 0; k < braises.rate * dt; k++) {
-      const y = Math.min(hauteur, Math.max(0, braises.front * hauteur + entre(-0.06, 0.06) * hauteur));
-      ps.push({x: Math.random() * largeur, y, vx: entre(-15, 15), vy: -entre(40, 150), vie: 0, max: entre(1, 2.6), r: entre(0.7, 2.2), teinte: Math.floor(entre(150, 230))});
+      const surLaLigne = (taille: number): number => Math.min(taille, Math.max(0, braises.front * taille + entre(-0.06, 0.06) * taille));
+      const x = braises.lateral ? surLaLigne(largeur) : Math.random() * largeur;
+      const y = braises.lateral ? Math.random() * hauteur : surLaLigne(hauteur);
+      ps.push({x, y, vx: entre(-15, 15), vy: -entre(40, 150), vie: 0, max: entre(1, 2.6), r: entre(0.7, 2.2), teinte: Math.floor(entre(150, 230))});
     }
     c.clearRect(0, 0, largeur, hauteur);
     c.globalCompositeOperation = 'lighter';

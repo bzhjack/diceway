@@ -1,4 +1,4 @@
-<bol-combattant-carte class="tas-head" [card]="turn.card()" [ligne]="true" role="group" [attr.aria-label]="'Qui joue : ' + turn.card().nom">
+<bol-combattant-carte #tete class="tas-head" [card]="turn.card()" [ligne]="true" role="group" [attr.aria-label]="'Qui joue : ' + turn.card().nom">
   <!-- Sa vitalité sur son cœur et ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici -->
   <div class="tas-zone-vit">
     <div class="tas-vit">
@@ -287,3 +287,6 @@
     }
   </div>
 </bol-combattant-carte>
+
+<!-- La main passe : la carte brûle de gauche à droite, le nom de celui qui joue sort des flammes, la brûlure se lève sur sa carte. -->
+<bol-rideau [etat]="passage()" [carton]="carton()" [rythme]="rythmePassage" sens="lateral" />

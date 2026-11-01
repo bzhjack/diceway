@@ -7,9 +7,32 @@ bol-turn-assistant {
   min-height: 0;
 }
 
-// Le bloc de l'attaquant ne compte pas dans la mise en page : sa carte reste un enfant direct de `.tas`.
+// Le bloc de l'attaquant : sa carte, et le rideau qui la couvre quand la main passe.
 bol-tas-attaquant {
-  display: contents;
+  position: relative;
+  display: block;
+  flex: none;
+  // Le rideau reste dans son bloc, sous les popovers.
+  isolation: isolate;
+
+  bol-rideau {
+    --rdo-titre-taille: clamp(1.6rem, 3.6vw, 2.8rem);
+    --rdo-titre-apparition: 0.3s;
+    --rdo-titre-pose: 0.45s;
+    border-radius: 7px;
+  }
+}
+
+// La carte de celui qui vient de jouer, le temps qu'elle brûle. La plaque est translucide : la nouvelle carte attend dessous, cachée.
+bol-tas-attaquant > .tas-head.tas-head-fantome {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
+  visibility: hidden;
 }
 
 // Sans encapsulation : la portée, c'est `.tas-scope`, sur l'assistant et sur le panneau de son popover.

@@ -250,12 +250,6 @@
   }
 }
 
-@container (max-width: 97rem) {
-  :host(.cc--ligne) .cc-body {
-    min-height: 13.5rem;
-  }
-}
-
 @container (max-width: 82rem) {
   :host(.cc--ligne) .cc-body {
     grid-template-columns: 9rem 16.4rem minmax(0, 1fr) 7.9rem;

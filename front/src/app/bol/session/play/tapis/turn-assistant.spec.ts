@@ -448,6 +448,71 @@ describe('TurnAssistantComponent', () => {
     });
   });
 
+  describe('la main qui passe', () => {
+    const rideau = () => (fixture.nativeElement as HTMLElement).querySelector('bol-tas-attaquant bol-rideau')!;
+    const copie = () => (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.tas-head-fantome');
+
+    it('rien au premier affichage, ni quand la table recharge la même carte', async () => {
+      await rendre();
+      expect(rideau().classList.contains('rdo--ferme')).toBe(false);
+
+      fixture.componentRef.setInput('card', carte());
+      await stable();
+
+      expect(rideau().classList.contains('rdo--ferme')).toBe(false);
+      expect(copie()).toBeNull();
+    });
+
+    it('une autre carte : l’ancienne reste en copie sous les flammes, et le nom du suivant s’annonce', async () => {
+      await rendre();
+      const avant = (fixture.nativeElement as HTMLElement).querySelector('.tas-head')!.textContent;
+
+      fixture.componentRef.setInput('card', cible);
+      await stable();
+
+      expect(rideau().classList.contains('rdo--ferme')).toBe(true);
+      expect(rideau().textContent).toContain(cible.nom);
+      expect(copie()?.textContent).toBe(avant);
+      expect(copie()?.getAttribute('aria-hidden')).toBe('true');
+      expect(copie()?.inert).toBe(true);
+      expect(copie()?.querySelector('[id]')).toBeNull();
+    });
+
+    it('moins d’animations : la carte change d’un coup, sans rideau', async () => {
+      vi.stubGlobal('matchMedia', () => ({matches: true}));
+      try {
+        await rendre();
+
+        fixture.componentRef.setInput('card', cible);
+        await stable();
+
+        expect(rideau().classList.contains('rdo--ferme')).toBe(false);
+        expect(copie()).toBeNull();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
+    it('la carte reprend sa place une fois le passage fini', async () => {
+      await rendre();
+      vi.useFakeTimers();
+      try {
+        fixture.componentRef.setInput('card', cible);
+        TestBed.tick();
+        expect(copie()).not.toBeNull();
+
+        vi.advanceTimersByTime(850);
+        expect(copie()).toBeNull();
+
+        vi.advanceTimersByTime(700);
+        TestBed.tick();
+        expect(rideau().classList.contains('rdo--ferme')).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
+
   describe('la vitalité sur le cœur', () => {
     it('une correction est signalée à la page, d’un pas à la fois', async () => {
       await viser();

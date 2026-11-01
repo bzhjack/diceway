@@ -1,18 +1,14 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, effect, ElementRef, inject, input, signal, untracked, viewChild} from '@angular/core';
-import {RideauBraises, RideauBrulure, RideauEtat, SceneCarton} from '../../models/theatre.model';
-import {animer, champDeBrulure, EASE, lancerBraises, peindreBrulure} from './rideau-brasier.util';
-import {CARTON_RYTHME} from './theatre.util';
+import {RideauBraises, RideauBrulure, RideauEtat, RideauRythme, RideauSens, SceneCarton} from '../../models/theatre.model';
+import {animer, champDeBrulure, EASE, frontDeFeu, lancerBraises, peindreBrulure} from './rideau-brasier.util';
+import {RIDEAU_SCENE} from './theatre.util';
 
 /** Largeur, en pixels, du calque de brûlure : peu, la flamme est étirée à l'écran et reste douce. */
 const BRULURE_LARGEUR = 520;
-/** Le titre s'efface un instant avant que la brûlure ne se lève. */
-const TITRE_EFFACE_MS = 300;
-/** La brûlure se lève, et la fumée avec elle, sur la nouvelle scène. */
-const OUVERTURE_MS = 1700;
 
 const attendre = (ms: number): Promise<void> => new Promise((fini) => setTimeout(fini, ms));
 
-/** Le rideau du plateau, en brasier : pendant un changement de scène, la scène brûle du bas vers le haut sous des
+/** Le rideau du plateau, en brasier : pendant un changement de scène, la scène brûle du bas vers le haut (ou de gauche à droite, `sens`) sous des
  * braises, le titre de la scène qui arrive sort de la forge, puis la brûlure se lève dans la fumée sur la nouvelle
  * scène. Le store garde le rideau fermé jusqu'à la fin du titre (`cartonTenue`). Purement décoratif (`aria-hidden`) : le
  * cartouche annonce la nouvelle scène. */
@@ -87,7 +83,7 @@ const attendre = (ms: number): Promise<void> => new Promise((fini) => setTimeout
       padding: 0 2rem;
       max-width: 52rem;
       font-family: 'Muse Display Harmony', serif;
-      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-size: var(--rdo-titre-taille, clamp(2rem, 5vw, 3.8rem));
       line-height: 1.05;
       text-align: center;
       text-wrap: balance;
@@ -101,9 +97,9 @@ const attendre = (ms: number): Promise<void> => new Promise((fini) => setTimeout
         transform: scale(1.06);
         filter: brightness(2.6) blur(5px) drop-shadow(0 0 18px rgba(255, 140, 40, 0.6));
         transition:
-          opacity 0.7s ease,
-          transform 1s ease,
-          filter 1s ease;
+          opacity var(--rdo-titre-apparition, 0.7s) ease,
+          transform var(--rdo-titre-pose, 1s) ease,
+          filter var(--rdo-titre-pose, 1s) ease;
       }
     }
 
@@ -135,6 +131,8 @@ const attendre = (ms: number): Promise<void> => new Promise((fini) => setTimeout
 export class RideauComponent {
   readonly etat = input.required<RideauEtat>();
   readonly carton = input<SceneCarton | null>(null);
+  readonly rythme = input<RideauRythme>(RIDEAU_SCENE);
+  readonly sens = input<RideauSens>('montant');
 
   private readonly hote = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly fumee = viewChild.required<ElementRef<HTMLElement>>('fumee');
@@ -169,7 +167,7 @@ export class RideauComponent {
     return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  /** La scène brûle de bas en haut (`CARTON_RYTHME.fondu`), puis le titre sort de la forge. */
+  /** La scène brûle dans son sens, puis le titre sort de la forge. */
   private async fermer(annule: () => boolean): Promise<void> {
     this.brule = true;
     this.feu?.stop();
@@ -188,14 +186,15 @@ export class RideauComponent {
       return;
     }
     const feu = lancerBraises(this.braises().nativeElement, this.hote.nativeElement.clientWidth, this.hote.nativeElement.clientHeight);
+    feu.lateral = this.sens() === 'lateral';
     this.feu = feu;
     this.braises().nativeElement.style.opacity = '1';
     await animer(
-      CARTON_RYTHME.fondu,
+      this.rythme().fondu,
       (t) => {
         const seuil = -0.08 + t * 1.2;
         peindreBrulure(brulure, seuil);
-        feu.front = 1 - (seuil - 0.12) / 0.62;
+        feu.front = frontDeFeu(seuil, this.sens());
       },
       EASE.lineaire,
       annule,
@@ -204,6 +203,8 @@ export class RideauComponent {
       return;
     }
     peindreBrulure(brulure, 2);
+    // Tout a brûlé : pendant le titre, les braises montent du bas, sur toute la largeur.
+    feu.lateral = false;
     feu.front = 1;
     feu.rate = 55;
     await attendre(30);
@@ -225,13 +226,13 @@ export class RideauComponent {
       feu?.stop();
       return;
     }
-    await attendre(TITRE_EFFACE_MS);
+    await attendre(this.rythme().effacement);
     if (annule()) {
       return;
     }
     fumee.style.opacity = '1';
     await animer(
-      OUVERTURE_MS,
+      this.rythme().ouverture,
       (t) => {
         const k = 1 - Math.min(1, t * 1.7);
         flamme.style.opacity = String(k);
@@ -264,7 +265,7 @@ export class RideauComponent {
     if (!fc || !lc) {
       return null;
     }
-    const brulure = {champ: champDeBrulure(largeur, hauteur), largeur, hauteur, image: fc.createImageData(largeur, hauteur), flamme: fc, lueur: lc};
+    const brulure = {champ: champDeBrulure(largeur, hauteur, this.sens()), largeur, hauteur, image: fc.createImageData(largeur, hauteur), flamme: fc, lueur: lc};
     peindreBrulure(brulure, -1);
     return brulure;
   }

@@ -1,7 +1,7 @@
 import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneMeteo, SceneMoment} from '../../../models/bol-scene.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {ActeStatut, AmbianceOption, CampCompte, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
+import {ActeStatut, AmbianceOption, CampCompte, RideauRythme, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
 import {scenesOf} from '../scene-list/scene.util';
 
 /** Les moments de la journée, dans l'ordre, avec leur libellé et leur icône. */
@@ -79,6 +79,9 @@ export function lieuTexte(lieu: string | null, region: string | null): string | 
 /** Rythme du rideau en brasier, en millisecondes : la brûlure qui monte du bas de la scène, puis le titre seul. Avec
  * moins d'animations, le noir tombe d'un coup et le titre reste `reduit` ms. */
 export const CARTON_RYTHME = {fondu: 1400, titre: 1300, reduit: 1400} as const;
+
+/** Le rideau d'un changement de scène : il prend son temps. */
+export const RIDEAU_SCENE: RideauRythme = {fondu: CARTON_RYTHME.fondu, effacement: 300, ouverture: 1700};
 
 /** Combien de temps le titre reste affiché une fois la scène brûlée. */
 export function cartonTenue(reduit: boolean): number {

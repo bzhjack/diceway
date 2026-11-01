@@ -22,6 +22,16 @@ export interface AmbianceOption<T> {
 /** Le rideau du plateau : ouvert, ou fermé pendant un changement de scène. */
 export type RideauEtat = 'ouvert' | 'ferme';
 
+/** D'où part la brûlure : du bas, ou du bord gauche pour une surface large et basse. */
+export type RideauSens = 'montant' | 'lateral';
+
+/** Les durées du rideau, en millisecondes : la brûlure, l'effacement du titre, puis la brûlure qui se lève. */
+export interface RideauRythme {
+  readonly fondu: number;
+  readonly effacement: number;
+  readonly ouverture: number;
+}
+
 /** Le carton du rideau, montré rideau fermé : le titre de la scène qui se charge. */
 export interface SceneCarton {
   readonly titre: string;
@@ -53,10 +63,11 @@ export interface RideauBrulure {
   readonly lueur: CanvasRenderingContext2D;
 }
 
-/** Les braises qui montent devant la brûlure : `front` (0 en haut, 1 en bas) est la ligne de feu, `rate` le nombre de
+/** Les braises qui montent devant la brûlure : `front` est la ligne de feu (0 en haut, 1 en bas ; `lateral` : 0 à gauche, 1 à droite), `rate` le nombre de
  * braises par seconde, `alpha` leur opacité. */
 export interface RideauBraises {
   front: number;
+  lateral: boolean;
   rate: number;
   alpha: number;
   stop(): void;
