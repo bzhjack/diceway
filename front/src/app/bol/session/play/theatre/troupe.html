@@ -13,9 +13,8 @@
             [class]="'trp-slot trp-slot--' + acteur.taille"
             cdkDrag
             cdkDragPreviewContainer="parent"
-            (cdkDragStarted)="onDragStarted(acteur.card)"
-            (cdkDragMoved)="onDragMoved($event)"
-            (cdkDragEnded)="onDragEnded($event, acteur.card)"
+            [bolStageDrag]="{kind: acteur.card.kind, camp: acteur.card.camp}"
+            (stageDropped)="onStageDropped($event, acteur.card)"
           >
             <bol-acteur
               [card]="acteur.card"

@@ -341,12 +341,20 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 ### Phase 4 : fiches et bibliothèques (L)
 
-- [ ] M3, M4, M5 : en-tête de formulaire, choix d'avatar, messages
-- [ ] M6, M7, M8, M9 : rail, base des personnages, panneaux de liste, « général »
-- [ ] M10, M11, M12 : grille, catalogue d'équipement, barre d'outils
-- [ ] Formulaire d'authentification commun
-- [ ] Classes maison et Tailwind : les 54 écarts
-- [ ] Signal Forms : `dw-library-toolbar`, les 6 autres gabarits en `ngModel`, puis les formulaires réactifs des fiches et bibliothèques
+- [x] M3, M4, M5 : en-tête de formulaire, choix d'avatar, messages
+- [x] M6, M7, M8, M9 : rail, base des personnages, panneaux de liste, « général »
+- [x] M10, M11, M12 : grille, catalogue d'équipement, barre d'outils
+- [x] Formulaire d'authentification commun
+- [x] Classes maison et Tailwind : les 54 écarts
+- [x] Signal Forms : `dw-library-toolbar`, les 6 autres gabarits en `ngModel`, puis les formulaires réactifs des fiches et bibliothèques
+
+**Fait le 2026-10-31.** Vérifié par la comparaison au pixel et par 98 contrôles dans le navigateur (fiches, bibliothèques, catalogues, AXE).
+
+- **Choix différents de la revue :** M5 reste une paire de classes globales (`dw-field-error`, `dw-field-warning`), plus simple qu'un composant pour un simple bloc de texte. `hero-advanced-page` garde sa propre logique : la reprendre n'était pas dans cette phase.
+- **Défaut corrigé :** ajouter ou retirer de l'équipement sur une fiche de héros ou de PNJ ne marquait pas la fiche comme modifiée. Quitter la page perdait le changement sans alerte.
+- **Accessibilité :** le portrait d'une fiche est un vrai bouton, utilisable au clavier.
+- **Reste en formulaires réactifs :** `scene-editor-dialog` et `dw-prompt-dialog`, hors de cette phase.
+- **Exception à la règle Tailwind :** les marges de page restent sur `dw-field-error` et `dw-field-warning`, comme la règle le permet pour une primitive.
 
 ### Phase 5 : le combat (L)
 

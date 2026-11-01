@@ -10,13 +10,14 @@ import {heroismeGems} from '../../heroisme-spend.util';
 import {ValueTracker} from '../../value-tracker';
 import {HeroResourcesData} from '../../models/hero-resources.model';
 import {TableChange} from '../../models/table-change.model';
+import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
 
 /** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
  * une rangée de gemmes pour l'héroïsme. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
  * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
 @Component({
   selector: 'bol-hero-resources',
-  imports: [ReactiveFormsModule, DwValueStepperComponent],
+  imports: [DwGemmesComponent, ReactiveFormsModule, DwValueStepperComponent],
   template: `
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
@@ -27,11 +28,7 @@ import {TableChange} from '../../models/table-change.model';
       <span class="hrs-label">Héroïsme</span>
       <div class="hrs-heroisme" role="group" aria-label="Héroïsme">
         <button type="button" class="hrs-step" aria-label="Retirer un point d’héroïsme" [disabled]="heroisme() <= 0" (click)="stepHeroisme(-1)">−</button>
-        <span class="hrs-gems" role="img" [attr.aria-label]="heroisme() + ' points d’héroïsme'">
-          @for (lit of gems(); track $index) {
-            <i class="hrs-gem" [class.hrs-gem--on]="lit"></i>
-          }
-        </span>
+        <dw-gemmes class="hrs-gems" role="img" [attr.aria-label]="heroisme() + ' points d’héroïsme'" [gems]="gems()" />
         <button type="button" class="hrs-step" aria-label="Ajouter un point d’héroïsme" (click)="stepHeroisme(1)">+</button>
       </div>
     </div>
@@ -97,21 +94,10 @@ import {TableChange} from '../../models/table-change.model';
     }
 
     .hrs-gems {
-      display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 0.25rem;
-    }
-
-    .hrs-gem {
-      width: 0.85rem;
-      height: 1.1rem;
-      background: var(--dw-forge-gem-off);
-      clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
-    }
-
-    .hrs-gem--on {
-      background: var(--dw-forge-gem);
+      --gem-w: 0.85rem;
+      --gem-h: 1.1rem;
+      --gem-gap: 0.25rem;
     }
 
     .hrs-step {

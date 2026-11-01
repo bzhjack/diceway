@@ -59,9 +59,8 @@
             [attr.aria-label]="rowLabel(row)"
             (dblclick)="add(row)"
             (keydown)="onRowKey($event, row)"
-            (cdkDragStarted)="onDragStarted(row)"
-            (cdkDragMoved)="onDragMoved($event)"
-            (cdkDragEnded)="onDragEnded($event, row)"
+            [bolStageDrag]="{kind: row.entry.kind, camp: null}"
+            (stageDropped)="onStageDropped($event, row)"
           >
             <!-- L'avatar ouvre le statbloc ; un double-clic pose le personnage, comme partout sur la ligne -->
             <button type="button" class="rsv-avatar" [attr.aria-label]="'Voir la fiche de ' + row.entry.nom" matTooltip="Voir la fiche" (click)="openStatblock(row)">

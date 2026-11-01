@@ -145,14 +145,7 @@
         }
       </div>
 
-      <div class="ard-sum" [class.ard-sum--pending]="total() === null">
-        @for (term of sumTerms(); track $index) {
-          <div class="ard-sum-term" [class.ard-sum-term--plus]="term.tone === 'plus'" [class.ard-sum-term--minus]="term.tone === 'minus'" [class.ard-sum-term--total]="term.tone === 'total'">
-            <b>{{ term.value }}</b>
-            <small>{{ term.caption }}</small>
-          </div>
-        }
-      </div>
+      <dw-roll-sum size="large" [pending]="total() === null" [terms]="sumTerms()" />
 
       <!-- Place réservée aux options d'héroïsme, qui apparaissent après le jet : la hauteur du plateau ne bouge pas. -->
       <div class="ard-acts">

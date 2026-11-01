@@ -1,3 +1,5 @@
+import {DwRollSumTerm} from '../../../shared/models/roll-sum.model';
+
 /** Une carrière du héros, proposée comme bonus de son jet d'action. */
 export interface ActionRollCarriere {
   readonly label: string;
@@ -64,11 +66,7 @@ export interface ActionDiceTargetLabel {
 }
 
 /** Un terme de l'addition d'un jet, sur une ligne : sa valeur, son nom dessous, et sa teinte (dés, bonus, malus, total). */
-export interface RollSumTerm {
-  readonly value: string;
-  readonly caption: string;
-  readonly tone: 'dice' | 'plus' | 'minus' | 'total';
-}
+export type RollSumTerm = DwRollSumTerm;
 
 /** Le verdict d'un jet en clair : un titre, et une phrase qui dit de combien c'est réussi ou raté. */
 export interface ActionVerdict {

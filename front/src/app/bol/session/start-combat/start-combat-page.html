@@ -68,13 +68,9 @@
           </button>
           <ng-template
             cdkConnectedOverlay
+            dwPopover="end"
             [cdkConnectedOverlayOrigin]="optionsOrigin"
             [cdkConnectedOverlayOpen]="optionsOpen()"
-            [cdkConnectedOverlayPositions]="popoverPositions"
-            [cdkConnectedOverlayPush]="true"
-            [cdkConnectedOverlayViewportMargin]="12"
-            [cdkConnectedOverlayHasBackdrop]="true"
-            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
             (backdropClick)="closeOptions()"
             (overlayKeydown)="onOptionsKeydown($event)"
             (detach)="optionsOpen.set(false)"
@@ -242,17 +238,14 @@
                   <span class="scd-tags scd-stats">Hors de ce combat</span>
                 } @else {
                   <span class="scd-tags">
-                    <span
+                    <dw-gemmes
                       class="scd-gems"
                       role="img"
                       [attr.aria-label]="
                         card.heroisme + ' point' + (card.heroisme > 1 ? 's' : '') + ' d’héroïsme'
                       "
-                    >
-                      @for (lit of card.gems; track $index) {
-                        <i class="scd-gem" [class.scd-gem--off]="!lit"></i>
-                      }
-                    </span>
+                      [gems]="card.gems"
+                    />
                   </span>
                   <!-- Sa vie : le cœur, la barre et les points -->
                   <span
@@ -421,14 +414,7 @@
                       </span>
                     </span>
                     <span class="scd-consequence" aria-live="polite" [matTooltip]="card.verdict?.detail ?? ''">{{ card.verdict?.detail }}</span>
-                    <span class="scd-sum" [class.scd-sum--pending]="card.dice === null" role="group" [attr.aria-label]="'Calcul du jet de ' + card.hero.nom">
-                      @for (term of card.sum; track $index) {
-                        <span class="scd-sum-term" [class.scd-sum-term--plus]="term.tone === 'plus'" [class.scd-sum-term--minus]="term.tone === 'minus'" [class.scd-sum-term--total]="term.tone === 'total'">
-                          <b>{{ term.value }}</b>
-                          <small>{{ term.caption }}</small>
-                        </span>
-                      }
-                    </span>
+                    <dw-roll-sum size="small" role="group" [attr.aria-label]="'Calcul du jet de ' + card.hero.nom" [pending]="card.dice === null" [terms]="card.sum" />
                   </span>
                 }
 
@@ -459,13 +445,9 @@
                     </button>
                     <ng-template
                       cdkConnectedOverlay
+                      dwPopover="end"
                       [cdkConnectedOverlayOrigin]="modsOrigin"
                       [cdkConnectedOverlayOpen]="modsOpen() === card.hero.pivotId"
-                      [cdkConnectedOverlayPositions]="popoverPositions"
-                      [cdkConnectedOverlayPush]="true"
-                      [cdkConnectedOverlayViewportMargin]="12"
-                      [cdkConnectedOverlayHasBackdrop]="true"
-                      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
                       (backdropClick)="closeMods()"
                       (overlayKeydown)="onModsKeydown($event)"
                       (detach)="modsOpen.set(null)"

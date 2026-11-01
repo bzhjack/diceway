@@ -8,6 +8,7 @@ import {NavigationStart, Router, RouterLink} from '@angular/router';
 import {filter} from 'rxjs';
 import {openImageDialog} from '../../../shared/dw-image-dialog/dw-image-dialog';
 import {BolStatblockData, BolStatblockEntry, BolStatblockTile} from '../models/bol-statblock.model';
+import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
 
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
@@ -27,7 +28,7 @@ interface TileGroup {
  * (`sheetActions`) et un pied (`sheetFooter`). */
 @Component({
   selector: 'bol-statblock',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, RouterLink],
+  imports: [DwGemmesComponent, MatButtonModule, MatIconModule, MatTooltipModule, RouterLink],
   templateUrl: './bol-statblock.component.html',
   styleUrl: './bol-statblock.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

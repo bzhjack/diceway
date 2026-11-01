@@ -23,7 +23,6 @@ import {AuthCardComponent} from '../../auth-card/auth-card';
     AuthActionsComponent,
   ],
   templateUrl: './resend-page.html',
-  styleUrl: './resend-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResendPageComponent {

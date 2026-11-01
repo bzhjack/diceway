@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatantKind} from '../../../models/combat-selection.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TroupeTaille} from '../../models/theatre.model';
@@ -30,7 +30,7 @@ export class ActeurComponent {
 
   /** L'avatar a échoué au chargement : repli sur l'icône du type, jusqu'au prochain changement d'avatar. */
   private readonly avatarFailed = linkedSignal({source: () => this.card().avatar, computation: () => false});
-  protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !!this.card().avatar && !this.avatarFailed());
+  protected readonly hasAvatar = computed(() => usableAvatar(this.card().avatar) !== null && !this.avatarFailed());
   protected readonly kindIcon = computed(() => KIND_ICONS[this.card().kind]);
   /** Attitude envers les héros, montrée pour un personnage du camp d'en face. */
   protected readonly attitude = computed(() => {

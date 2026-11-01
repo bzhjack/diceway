@@ -206,18 +206,8 @@
 // Une gemme par point d'héroïsme, allumée s'il reste à dépenser.
 .bs-gems {
   display: inline-flex;
-  gap: 0.2rem;
-
-  i {
-    width: 0.65rem;
-    height: 0.9rem;
-    background: var(--dw-forge-gem-off);
-    clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
-  }
-
-  .bs-gem--on {
-    background: var(--dw-forge-gem);
-  }
+  --gem-w: 0.65rem;
+  --gem-h: 0.9rem;
 }
 
 .bs-actions {

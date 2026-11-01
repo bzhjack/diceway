@@ -2,11 +2,11 @@ import {AVANTAGE_RECUPERATION_RAPIDE_ID, DESAVANTAGE_SOUFFRETEUX_ID} from '../bo
 import {BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
 import {BolHerosTraitsModel} from '../models/bol-trait.model';
 import {buildInitiativeOrderFrom} from './initiative.util';
+import {EMPTY_AVATAR} from '../../shared/avatar-fallback/avatar.util';
 import {InitiativeSource} from './models/initiative.model';
 import {RecoveryTraits} from './models/after-combat-dialog.model';
 import {PlayCombatStats, PlayToken, PlayBoard} from './models/combat-play.model';
 
-export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
 /** Portrait d'un PNJ posé en session ou en combat : son avatar s'il en a un, sinon le portrait livré dans les assets —
  * qui n'existe que pour les PNJ du catalogue (sans propriétaire, ids 1 à 15). Un PNJ d'utilisateur sans avatar n'en a
@@ -17,6 +17,23 @@ export function pnjAvatar(p: {pnj_id: string | null; pnj?: {user_id?: string | n
   }
 
   return p.pnj && !p.pnj.user_id && p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null;
+}
+
+/** Le portrait d'une carte à la table, selon sa sorte : celui de la fiche, sinon l'image du catalogue, sinon le portrait par défaut. */
+export function heroPortrait(h: {heros?: {origines: {avatar: string | null}}}): string {
+  return h.heros?.origines.avatar || EMPTY_AVATAR;
+}
+
+export function pnjPortrait(p: Parameters<typeof pnjAvatar>[0]): string {
+  return pnjAvatar(p) ?? EMPTY_AVATAR;
+}
+
+export function creaturePortrait(c: {creature_id?: string | number | null; creature?: {avatar?: string | null} | null}): string {
+  return c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR;
+}
+
+export function demonPortrait(d: {demon_id?: string | number | null; demon?: {avatar?: string | null} | null}): string {
+  return d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR;
 }
 
 /** Un pouvoir démoniaque, comparé sans tenir compte de la casse. */
@@ -77,7 +94,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `hero-${h.id}`,
       kind: 'hero',
       nom: h.heros?.origines.nom ?? 'Héros',
-      avatar: h.heros?.origines.avatar || EMPTY_AVATAR,
+      avatar: heroPortrait(h),
       rang: null,
       resultat: h.initiative_resultat,
       agilite: h.heros?.attributs?.agilite ?? null,
@@ -104,7 +121,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `pnj-${p.id}`,
       kind: 'pnj',
       nom: p.surnom ?? p.nom,
-      avatar: pnjAvatar(p) ?? EMPTY_AVATAR,
+      avatar: pnjPortrait(p),
       rang: p.rang,
       resultat: null,
       camp: p.camp,
@@ -132,7 +149,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `creature-${c.id}`,
       kind: 'creature',
       nom: c.surnom ?? c.nom,
-      avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: creaturePortrait(c),
       rang: c.rang,
       resultat: null,
       camp: c.camp,
@@ -160,7 +177,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `demon-${d.id}`,
       kind: 'demon',
       nom: d.surnom ?? d.nom,
-      avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: demonPortrait(d),
       rang: d.rang,
       resultat: null,
       camp: d.camp,

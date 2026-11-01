@@ -644,105 +644,6 @@
   color: var(--dw-forge-verdict-legendaire);
 }
 
-// L'addition d'un jet, sur une ligne : un nombre par terme, son nom dessous ; le total à droite, derrière un filet.
-.tas-sum {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.3rem 0.55rem;
-  max-width: 100%;
-}
-
-.tas-sum-term {
-  position: relative;
-  display: grid;
-  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros.
-  grid-template-rows: 1.75rem auto;
-  place-items: center;
-  min-width: 1.7rem;
-
-  b,
-  .tas-sum-edit {
-    font: 400 1.35rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
-    white-space: nowrap;
-    color: var(--dw-forge-bone);
-  }
-
-  small {
-    max-width: 9rem;
-    font-size: 0.66rem;
-    line-height: 1.2;
-    text-align: center;
-    color: var(--dw-forge-stud-text);
-  }
-}
-
-.tas-sum-term--plus b {
-  color: var(--dw-forge-verdict-reussite);
-}
-
-.tas-sum-term--minus b,
-.tas-sum-term--minus .tas-sum-edit {
-  color: var(--dw-forge-verdict-echec);
-}
-
-.tas-sum-term--total {
-  padding-left: 0.55rem;
-  border-left: 1px solid var(--dw-forge-bronze-dim);
-
-  b {
-    font-size: 1.6rem;
-    color: var(--dw-forge-gold);
-  }
-}
-
-// Avant le jet, l'addition annonce les termes en plus pâle.
-.tas-sum--pending .tas-sum-term:not(.tas-sum-term--total) b {
-  opacity: 0.85;
-}
-
-// La protection se clique pour la saisir : soulignée en pointillés.
-.tas-sum-edit {
-  padding: 0 0.15rem;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.tas-sum-input {
-  width: 3rem;
-  padding: 0.1rem;
-  border: 1px solid var(--dw-color-legendary);
-  border-radius: 6px;
-  background: var(--dw-surface-0);
-  color: var(--dw-surface-900);
-  font: 400 1.2rem 'Muse Display Harmony', 'Muse Sans', serif;
-  text-align: center;
-}
-
-// Croix d'un terme qui vient d'un effet en cours : elle le retire.
-.tas-sum-x {
-  position: absolute;
-  top: -0.35rem;
-  right: -0.55rem;
-  width: 1.05rem;
-  height: 1.05rem;
-  padding: 0;
-  border: 1px solid var(--dw-border);
-  border-radius: 50%;
-  background: var(--dw-surface-0);
-  color: var(--dw-surface-600);
-  font-size: 0.72rem;
-  line-height: 1;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--dw-color-echec);
-    color: var(--dw-color-echec);
-  }
-}
-
 .tas-heroic {
   display: grid;
   justify-items: start;
@@ -894,4 +795,26 @@
 .tas input:focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;
+}
+
+// La protection se clique pour la saisir : soulignée en pointillés.
+.tas-sum-edit {
+  font: 400 1.35rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+  white-space: nowrap;
+  color: var(--dw-forge-verdict-echec);
+  padding: 0 0.15rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.tas-sum-input {
+  width: 3rem;
+  padding: 0.1rem;
+  border: 1px solid var(--dw-color-legendary);
+  border-radius: 6px;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-900);
+  font: 400 1.2rem 'Muse Display Harmony', 'Muse Sans', serif;
+  text-align: center;
 }

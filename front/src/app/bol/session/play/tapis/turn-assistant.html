@@ -269,13 +269,9 @@
         </button>
         <ng-template
           cdkConnectedOverlay
+          dwPopover="start"
           [cdkConnectedOverlayOrigin]="effetsOrigin"
           [cdkConnectedOverlayOpen]="openPop() === 'effets'"
-          [cdkConnectedOverlayPositions]="popoverPositions"
-          [cdkConnectedOverlayPush]="true"
-          [cdkConnectedOverlayViewportMargin]="12"
-          [cdkConnectedOverlayHasBackdrop]="true"
-          cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
           (backdropClick)="closePop()"
           (overlayKeydown)="onPopKeydown($event)"
           (detach)="openPop.set(null)"
@@ -436,14 +432,7 @@
           <span class="tas-r1">
             <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="p.dice" [total]="p.total" [slots]="p.slots" />
           </span>
-          <span class="tas-sum" aria-label="Calcul de l’attaque">
-            @for (term of p.sum; track $index) {
-              <span class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
-                <b>{{ term.value }}</b>
-                <small>{{ term.caption }}</small>
-              </span>
-            }
-          </span>
+          <dw-roll-sum aria-label="Calcul de l’attaque" [terms]="p.sum" />
         </span>
         <div class="tas-issue">
           <span class="tas-verdict">
@@ -485,17 +474,7 @@
             </span>
             <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
           </span>
-          <span class="tas-sum" [class.tas-sum--pending]="total() === null" aria-label="Calcul de l’attaque">
-            @for (term of attackSum(); track $index) {
-              <span class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
-                <b>{{ term.value }}</b>
-                <small>{{ term.caption }}</small>
-                @if (term.effetId; as id) {
-                  <button type="button" class="tas-sum-x" [attr.aria-label]="'Retirer l’effet ' + term.caption" matTooltip="Retirer cet effet" (click)="removeEffect(id)">×</button>
-                }
-              </span>
-            }
-          </span>
+          <dw-roll-sum aria-label="Calcul de l’attaque" [pending]="total() === null" [terms]="attackSum()" (effectRemoved)="removeEffect($event)" />
         </span>
         <div class="tas-issue">
         <span class="tas-verdict" aria-live="polite">
@@ -597,10 +576,9 @@
             }
             <small class="tas-die-note">{{ dieNote() }}</small>
           </span>
-          <span class="tas-sum" [class.tas-sum--pending]="damage() === null" aria-label="Calcul des dégâts">
-            @for (term of damageSum(); track $index) {
-              <span class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
-                @if (term.editable && editingProtection()) {
+          <dw-roll-sum aria-label="Calcul des dégâts" [pending]="damage() === null" [terms]="damageSum()" (effectRemoved)="removeEffect($event)">
+            <ng-template dwRollSumEditable>
+              @if (editingProtection()) {
                   <input
                     #protectionInput
                     class="tas-sum-input"
@@ -614,7 +592,7 @@
                     (keydown.escape)="editingProtection.set(false)"
                     (blur)="editingProtection.set(false)"
                   />
-                } @else if (term.editable) {
+              } @else {
                   <!-- La protection, et à côté d'elle son dé et le retour à la valeur fixe -->
                   <span class="tas-entry">
                     <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.value }}</button>
@@ -629,16 +607,9 @@
                       </button>
                     }
                   </span>
-                } @else {
-                  <b>{{ term.value }}</b>
-                }
-                <small>{{ term.caption }}</small>
-                @if (term.effetId; as id) {
-                  <button type="button" class="tas-sum-x" [attr.aria-label]="'Retirer l’effet ' + term.caption" matTooltip="Retirer cet effet" (click)="removeEffect(id)">×</button>
-                }
-              </span>
-            }
-          </span>
+              }
+            </ng-template>
+          </dw-roll-sum>
         </span>
         <div class="tas-issue">
         <span class="tas-verdict" aria-live="polite">
@@ -748,14 +719,7 @@
       } @else {
         <!-- Avant le coup, ce que l'arme peut faire à cette cible : la colonne annonce la fourchette. -->
         @if (target() && !defenseTotale() && !actionPerdue()) {
-          <span class="tas-sum tas-sum--pending" aria-label="Calcul des dégâts à venir">
-            @for (term of damageSum(); track $index) {
-              <span class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
-                <b>{{ term.value }}</b>
-                <small>{{ term.caption }}</small>
-              </span>
-            }
-          </span>
+          <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damageSum()" />
         }
         <span class="tas-wait">{{ defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
       }

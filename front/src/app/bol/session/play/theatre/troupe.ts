@@ -1,4 +1,4 @@
-import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -8,6 +8,8 @@ import {ReservePlacementService} from '../../reserve-placement.service';
 import {ActeurComponent} from './acteur';
 import {troupe} from './theatre.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {StageDragDirective} from '../reserve/stage-drag.directive';
+import {CombatCamp} from '../../../models/bol-fight-session.model';
 
 /** La troupe en scène, posée sur la rampe du plateau : les personnages du camp des adversaires, rangés par
  * rang, sur des cartes dont la taille dit le rang. C'est la zone de dépôt `adversaires` : un personnage glissé
@@ -15,7 +17,7 @@ import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar
  * hormis l'état du glisser (`ReservePlacementService`). */
 @Component({
   selector: 'bol-troupe',
-  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatButtonModule, MatIconModule, DwScrollerComponent, ActeurComponent],
+  imports: [StageDragDirective, AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatButtonModule, MatIconModule, DwScrollerComponent, ActeurComponent],
   templateUrl: './troupe.html',
   styleUrl: './troupe.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,19 +52,8 @@ export class TroupeComponent {
     }
   }
 
-  protected onDragStarted(card: TapisCard): void {
-    this.placement.startDrag([card.kind], card.camp);
-  }
-
-  protected onDragMoved(event: CdkDragMove): void {
-    this.placement.hoverCamp.set(this.placement.campAt(event.pointerPosition.x, event.pointerPosition.y));
-  }
-
   /** Déposée sur la compagnie, la carte passe du côté des héros. */
-  protected onDragEnded(event: CdkDragEnd, card: TapisCard): void {
-    const camp = this.placement.campAt(event.dropPoint.x, event.dropPoint.y);
-    this.placement.endDrag();
-    event.source.reset();
+  protected onStageDropped(camp: CombatCamp | null, card: TapisCard): void {
     if (camp !== null && camp !== card.camp) {
       this.campToggleRequested.emit(card);
     }

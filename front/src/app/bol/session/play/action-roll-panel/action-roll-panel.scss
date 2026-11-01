@@ -465,59 +465,6 @@ bol-action-roll-panel {
   }
 }
 
-// L'addition du jet, en grand sur une ligne (elle passe à la ligne s'il y a trop de termes) : un nombre par terme, son nom dessous ;
-// le total à droite, derrière un filet. Alignée par le bas pour que les noms restent sur une même ligne malgré le total plus grand.
-.ard-sum {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem 1.1rem;
-  max-width: 100%;
-}
-
-.ard-sum-term {
-  display: grid;
-  justify-items: center;
-  min-width: 2.6rem;
-
-  b {
-    font: 400 2.6rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-forge-bone);
-    white-space: nowrap;
-  }
-
-  small {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--dw-surface-600);
-    white-space: nowrap;
-  }
-}
-
-.ard-sum-term--plus b {
-  color: var(--dw-color-reussite);
-}
-
-.ard-sum-term--minus b {
-  color: var(--dw-color-danger-muted);
-}
-
-.ard-sum-term--total {
-  padding-left: 1.1rem;
-  border-left: 1px solid var(--dw-forge-bronze-edge);
-
-  b {
-    font-size: 3.2rem;
-    color: var(--dw-forge-gold);
-  }
-}
-
-// Avant le jet, l'addition annonce les termes en plus pâle.
-.ard-sum--pending .ard-sum-term b {
-  opacity: 0.7;
-}
-
 // Options d'héroïsme : la gemme dit qu'un point d'héroïsme est en jeu. La place est réservée, vide avant le jet.
 .ard-acts {
   display: flex;

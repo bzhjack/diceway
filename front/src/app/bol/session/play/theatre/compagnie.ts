@@ -1,4 +1,4 @@
-import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -7,7 +7,7 @@ import {map, Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {heroismeGems} from '../../heroisme-spend.util';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
@@ -17,6 +17,9 @@ import {ActeurComponent} from './acteur';
 import {compagnie} from './theatre.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
+import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
+import {StageDragDirective} from '../reserve/stage-drag.directive';
+import {CombatCamp} from '../../../models/bol-fight-session.model';
 
 /** La plaque d'un héros, avec ses valeurs déjà calculées. */
 interface Plaque {
@@ -37,7 +40,7 @@ interface Plaque {
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle mette la session à jour. */
 @Component({
   selector: 'bol-compagnie',
-  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, DwScrollerComponent, MatIconModule, MatTooltipModule, ActeurComponent],
+  imports: [StageDragDirective, DwGemmesComponent, AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, DwScrollerComponent, MatIconModule, MatTooltipModule, ActeurComponent],
   templateUrl: './compagnie.html',
   styleUrl: './compagnie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,7 +72,7 @@ export class CompagnieComponent {
   protected readonly plaques = computed<readonly Plaque[]>(() =>
     this.groupes().heros.map((card) => ({
       card,
-      avatar: card.avatar && card.avatar !== EMPTY_AVATAR && !this.brokenAvatars().has(card.key) ? card.avatar : null,
+      avatar: this.brokenAvatars().has(card.key) ? null : usableAvatar(card.avatar),
       percent: vitalitePercent(card.vitaliteCourante, card.vitaliteMax),
       low: isLowVitalite(card.vitaliteCourante, card.vitaliteMax),
       vitalite: vitaliteText(card),
@@ -135,19 +138,8 @@ export class CompagnieComponent {
     });
   }
 
-  protected onDragStarted(card: TapisCard): void {
-    this.placement.startDrag([card.kind], card.camp);
-  }
-
-  protected onDragMoved(event: CdkDragMove): void {
-    this.placement.hoverCamp.set(this.placement.campAt(event.pointerPosition.x, event.pointerPosition.y));
-  }
-
   /** Un allié déposé sur la troupe retourne avec les présents. */
-  protected onDragEnded(event: CdkDragEnd, card: TapisCard): void {
-    const camp = this.placement.campAt(event.dropPoint.x, event.dropPoint.y);
-    this.placement.endDrag();
-    event.source.reset();
+  protected onStageDropped(camp: CombatCamp | null, card: TapisCard): void {
     if (camp !== null && camp !== card.camp) {
       this.campToggleRequested.emit(card);
     }

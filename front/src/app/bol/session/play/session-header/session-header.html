@@ -34,13 +34,9 @@
       </button>
       <ng-template
         cdkConnectedOverlay
+        dwPopover="end"
         [cdkConnectedOverlayOrigin]="optionsOrigin"
         [cdkConnectedOverlayOpen]="optionsOpen()"
-        [cdkConnectedOverlayPositions]="optionsPositions"
-        [cdkConnectedOverlayPush]="true"
-        [cdkConnectedOverlayViewportMargin]="12"
-        [cdkConnectedOverlayHasBackdrop]="true"
-        cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
         (backdropClick)="closeOptions()"
         (overlayKeydown)="onOptionsKeydown($event)"
         (detach)="optionsOpen.set(false)"

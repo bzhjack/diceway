@@ -16,7 +16,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
 import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
@@ -103,7 +103,7 @@ export class ExpandedCardComponent {
 
   /** Portrait carré du bandeau : l'avatar de la carte, ou l'icône du type s'il manque ou ne charge pas. */
   private readonly avatarFailed = signal(false);
-  protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
+  protected readonly hasAvatar = computed(() => usableAvatar(this.card().avatar) !== null && !this.avatarFailed());
   protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
   protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));
 

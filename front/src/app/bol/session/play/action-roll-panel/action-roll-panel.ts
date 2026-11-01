@@ -23,6 +23,7 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
 import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollSumTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
+import {DwRollSumComponent} from '../../../../shared/roll-sum/roll-sum';
 
 /** Icône de chaque attribut sur son médaillon. */
 const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'gi-sprint', vigueur: 'gi-biceps', esprit: 'gi-brain', aura: 'gi-aura'};
@@ -39,7 +40,7 @@ interface RolledDie {
  * `action-roll.util.ts`. */
 @Component({
   selector: 'bol-action-roll-panel',
-  imports: [MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDieFaceComponent],
+  imports: [DwRollSumComponent, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDieFaceComponent],
   templateUrl: './action-roll-panel.html',
   styleUrl: './action-roll-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

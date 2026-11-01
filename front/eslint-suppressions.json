@@ -1,38 +1,6 @@
 {
-  "src/app/bol/creature/form/general/creature-general.component.html": {
-    "@angular-eslint/template/click-events-have-key-events": {
-      "count": 1
-    },
-    "@angular-eslint/template/interactive-supports-focus": {
-      "count": 1
-    }
-  },
-  "src/app/bol/demon/form/general/demon-general.component.html": {
-    "@angular-eslint/template/click-events-have-key-events": {
-      "count": 1
-    },
-    "@angular-eslint/template/interactive-supports-focus": {
-      "count": 1
-    }
-  },
   "src/app/bol/hero/advanced/region/region.component.html": {
     "no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/app/bol/hero/form/summary-rail/summary-rail.component.html": {
-    "@angular-eslint/template/click-events-have-key-events": {
-      "count": 1
-    },
-    "@angular-eslint/template/interactive-supports-focus": {
-      "count": 1
-    }
-  },
-  "src/app/bol/pnj/form/summary-rail/pnj-summary-rail.component.html": {
-    "@angular-eslint/template/click-events-have-key-events": {
-      "count": 1
-    },
-    "@angular-eslint/template/interactive-supports-focus": {
       "count": 1
     }
   },
@@ -92,9 +60,6 @@
     },
     "@angular-eslint/template/interactive-supports-focus": {
       "count": 1
-    },
-    "@angular-eslint/template/no-any": {
-      "count": 4
     }
   }
 }

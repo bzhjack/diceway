@@ -42,7 +42,7 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--dw-forge-gold);
-  text-shadow: 0 1px 2px #000;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
 .sr-lifes {
@@ -67,7 +67,7 @@
 }
 
 .sr-langues-note--hint {
-  color: #fde68a;
+  color: var(--dw-forge-warning-text);
 }
 
 .sr-life {
@@ -91,7 +91,7 @@
 }
 
 .sr-life-icon--pv .mat-icon {
-  color: #c9271f;
+  color: var(--dw-forge-heart);
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
 }
 
@@ -108,14 +108,14 @@
   justify-content: center;
   font-size: 0.95rem;
   font-weight: 900;
-  color: #fff;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  color: var(--dw-forge-white);
+  text-shadow: -1px -1px 0 var(--dw-forge-shade), 1px -1px 0 var(--dw-forge-shade), -1px 1px 0 var(--dw-forge-shade), 1px 1px 0 var(--dw-forge-shade);
   padding-bottom: 2px;
   font-variant-numeric: tabular-nums;
 }
 
 .sr-life-value--dark {
-  color: #3b2f06;
+  color: var(--dw-forge-on-star);
   text-shadow: none;
   padding-bottom: 2px;
   font-size: 0.85rem;

@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, Component, computed, input, output} from '@angu
 import {libellePoints} from '../../combat-attack.util';
 import {heroismeGems} from '../../heroisme-spend.util';
 import {TapisKind} from '../../models/tapis.model';
+import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
 
 /** Les points d'héroïsme d'un héros, ou de vilénie d'un rival : une rangée de gemmes (dorées, ou rouges pour la vilénie) entre − et
  * +. Il ne fait qu'annoncer le pas (`stepped`) : le parent l'enregistre. À 0 point, − est grisé (`aria-disabled`, le focus reste). */
 @Component({
   selector: 'bol-points-stepper',
+  imports: [DwGemmesComponent],
   template: `
     <button
       type="button"
@@ -17,11 +19,7 @@ import {TapisKind} from '../../models/tapis.model';
     >
       −
     </button>
-    <span class="pst-gemmes" role="img" [attr.aria-label]="libelle()">
-      @for (allumee of gemmes(); track $index) {
-        <i class="pst-gemme" [class.pst-gemme--on]="allumee"></i>
-      }
-    </span>
+    <dw-gemmes class="pst-gemmes" role="img" [attr.aria-label]="libelle()" [gems]="gemmes()" />
     <button type="button" class="pst-step" [attr.aria-label]="'Ajouter ' + unPoint() + ' à ' + nom()" (click)="step(1)">+</button>
   `,
   styles: `
@@ -31,26 +29,9 @@ import {TapisKind} from '../../models/tapis.model';
       gap: 0.35rem;
     }
 
-    .pst-gemmes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.2rem;
-    }
-
-    .pst-gemme {
-      width: 0.75rem;
-      height: 1rem;
-      background: var(--dw-forge-gem-off);
-      clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
-    }
-
-    .pst-gemme--on {
-      background: var(--dw-forge-gem);
-    }
-
     // La vilénie, en braise : le pendant sombre des gemmes d'héroïsme.
-    :host(.pst--vilenie) .pst-gemme--on {
-      background: linear-gradient(160deg, #fca5a5, var(--dw-color-echec) 55%, #7f1d1d);
+    :host(.pst--vilenie) {
+      --gem-on: linear-gradient(160deg, #fca5a5, var(--dw-color-echec) 55%, #7f1d1d);
     }
 
     .pst-step {

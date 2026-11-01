@@ -274,21 +274,10 @@
 
 .cmp-gemmes {
   flex: 1;
-  display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.2em;
-}
-
-.cmp-gemme {
-  width: 0.65em;
-  height: 0.85em;
-  background: var(--dw-forge-gem-off);
-  clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
-}
-
-.cmp-gemme--on {
-  background: var(--dw-forge-gem);
+  --gem-w: 0.65em;
+  --gem-h: 0.85em;
+  --gem-gap: 0.2em;
 }
 
 .cmp-vide {

@@ -2,14 +2,14 @@ import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, E
 import {NgTemplateOutlet} from '@angular/common';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {A11yModule} from '@angular/cdk/a11y';
-import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
+import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {DeMj} from '../../models/combat-turn.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
@@ -59,11 +59,14 @@ import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombattantCarteComponent} from './combattant-carte';
 import {ActeurComponent} from '../theatre/acteur';
 import {parFiche} from '../theatre/theatre.util';
 import {sansNumero} from '../../reaction-roll.util';
+import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
+import {DwRollSumTerm} from '../../../../shared/models/roll-sum.model';
+import {DwRollSumComponent, DwRollSumEditableDirective} from '../../../../shared/roll-sum/roll-sum';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -128,14 +131,6 @@ function protectionTile(text: string | null, fixed: number): StatTile {
   return /d\d/i.test(die) ? {label: 'Protection', value: String(fixed), sub: die.replace('-', '−')} : {label: 'Protection', value: text ?? String(fixed)};
 }
 
-/** Un terme de l'addition d'un jet sur le plateau. */
-interface TraySumTerm extends RollSumTerm {
-  /** Effet du registre dont le terme vient : sa croix le retire. */
-  readonly effetId?: string;
-  /** Le terme se clique pour saisir sa valeur à la main (protection de la cible). */
-  readonly editable?: boolean;
-}
-
 /** Ce qu'il faut aux dés pour toucher, et les chances d'y arriver. */
 interface AttackGoal extends ActionDiceTargetLabel {
   readonly chance: number;
@@ -186,7 +181,7 @@ interface PlayedAttack {
   readonly dice: readonly DiceRowDie[] | null;
   readonly total: number | null;
   readonly slots: number;
-  readonly sum: readonly TraySumTerm[];
+  readonly sum: readonly DwRollSumTerm[];
   readonly verdict: AttackVerdict;
   /** Les options prises sur un succès héroïque ou légendaire, en clair. */
   readonly picks: string | null;
@@ -236,8 +231,11 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
 @Component({
   selector: 'bol-turn-assistant',
   imports: [
+    DwPopoverDirective,
     A11yModule,
     ActeurComponent,
+    DwRollSumComponent,
+    DwRollSumEditableDirective,
     CombattantCarteComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
@@ -645,15 +643,6 @@ export class TurnAssistantComponent {
   /** Le popover ouvert (les effets en cours), ou aucun ; il se ferme à chaque nouveau tour. */
   protected readonly openPop = linkedSignal<string, TurnPopover | null>({source: () => this.cardKey(), computation: () => null});
 
-  /** Les popovers s'ouvrent sous leur bouton, calés sur son bord gauche ; près du bord droit de l'écran, sur son bord droit ; au-dessus
-   * s'il n'y a pas la place en bas. En dernier recours, ils sont poussés dans l'écran (`cdkConnectedOverlayPush`). */
-  protected readonly popoverPositions: ConnectedPosition[] = [
-    {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6},
-    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
-    {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6},
-    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
-  ];
-
   /** L'identifiant du bouton d'un popover, pour lui rendre le focus à la fermeture. */
   protected popId(pop: TurnPopover): string {
     return `tas-pop-${pop}`;
@@ -1057,7 +1046,7 @@ export class TurnAssistantComponent {
 
   /** L'addition du jet d'attaque, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet elle
    * s'ouvre sur « 2d6 » et se ferme sur le seuil ; après, sur le total des dés et le total du jet. */
-  protected readonly attackSum = computed<readonly TraySumTerm[]>(() => {
+  protected readonly attackSum = computed<readonly DwRollSumTerm[]>(() => {
     const a = this.attacker();
     const t = this.targetStats();
     if (!a || !t) {
@@ -1067,7 +1056,7 @@ export class TurnAssistantComponent {
     // Avec un dé de bonus ou de malus, « 2d6B » ou « 2d6M » (les deux meilleurs ou les deux moins bons gardés), comme au jet de réaction :
     // avant le jet en valeur, après le jet sous le total des dés.
     const kept = this.keptDice();
-    const terms: TraySumTerm[] = [
+    const terms: DwRollSumTerm[] = [
       {value: dice === null ? (kept ?? '2d6') : `${dice}`, caption: dice === null ? 'dés' : (kept ?? 'dés'), tone: 'dice'},
     ];
     const add = (value: number, caption: string): void => {
@@ -1099,7 +1088,7 @@ export class TurnAssistantComponent {
   });
 
   /** Un modificateur du registre (« − 1 bouclier (Krongar) ») en terme d'addition : sa valeur, puis son nom dessous. */
-  private sumTermOf(term: ModifierTerm): TraySumTerm {
+  private sumTermOf(term: ModifierTerm): DwRollSumTerm {
     return {value: signedTerm(term.valeur), caption: term.label.replace(/^[+−] \d+ /, ''), tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})};
   }
 
@@ -1133,7 +1122,7 @@ export class TurnAssistantComponent {
 
   /** L'addition du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur, la protection de la cible (elle se clique pour la
    * saisir), les effets en cours, puis la fourchette des dégâts — et, le dé tombé, leur total. */
-  protected readonly damageSum = computed<readonly TraySumTerm[]>(() => {
+  protected readonly damageSum = computed<readonly DwRollSumTerm[]>(() => {
     const spec = this.damageSpec();
     const face = this.face();
     const add = (value: number, caption: string): void => {
@@ -1141,7 +1130,7 @@ export class TurnAssistantComponent {
         terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
       }
     };
-    const terms: TraySumTerm[] = [];
+    const terms: DwRollSumTerm[] = [];
     if (spec === null) {
       // Dégâts spéciaux : le total tapé, tel quel.
       terms.push({value: this.raw() === null ? '?' : `${this.raw()}`, caption: 'spécial', tone: 'dice'});
@@ -1611,10 +1600,7 @@ export class TurnAssistantComponent {
 
   /** La ligne des cartes de cible déborde-t-elle, et peut-elle défiler vers la gauche ou la droite : les flèches s'affichent et se grisent. */
   /** Le portrait de la cible, sur ses boutons de réaction ; sans portrait, son initiale. */
-  protected readonly targetPortrait = computed(() => {
-    const avatar = this.target()?.avatar;
-    return avatar && avatar !== EMPTY_AVATAR ? avatar : null;
-  });
+  protected readonly targetPortrait = computed(() => usableAvatar(this.target()?.avatar));
 
   /** Il reste à choisir qui viser : les cartes des cibles prennent toute la largeur, l'attaque et les dégâts attendent. */
   protected readonly choixCible = computed(

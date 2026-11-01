@@ -1,0 +1,184 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.rs-term {
+  position: relative;
+  display: grid;
+
+  b {
+    white-space: nowrap;
+  }
+}
+
+.rs-term--total {
+  border-left-style: solid;
+  border-left-width: 1px;
+}
+
+// Dans une ligne de réaction : calés à gauche, sur une ligne de valeurs de hauteur fixe pour que les légendes s'alignent.
+:host(.rs--small) {
+  align-items: flex-start;
+  gap: 0 0.45rem;
+  min-width: 0;
+
+  .rs-term {
+    grid-template-rows: 1.05rem auto;
+    align-items: center;
+    justify-items: start;
+    min-width: 1rem;
+
+    b {
+      font: 400 0.95rem / 1.05 'Muse Display Harmony', 'Muse Sans', serif;
+      color: var(--dw-surface-900);
+    }
+
+    small {
+      color: var(--dw-surface-500);
+      font-size: 0.58rem;
+      font-weight: 700;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+  }
+
+  .rs-term--plus b {
+    color: var(--dw-color-reussite);
+  }
+
+  .rs-term--minus b {
+    color: var(--dw-color-danger-muted);
+  }
+
+  .rs-term--total {
+    padding-left: 0.4rem;
+    border-left-color: var(--dw-border);
+
+    b {
+      font-size: 1.05rem;
+      color: var(--dw-color-legendary);
+    }
+  }
+}
+
+:host(.rs--small.rs--pending) .rs-term:not(.rs-term--total) b {
+  opacity: 0.75;
+}
+
+// Dans l'assistant de tour : centrés, sur une ligne de valeurs de hauteur fixe pour que les légendes s'alignent, même sous le total écrit plus gros.
+:host(.rs--medium) {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.3rem 0.55rem;
+
+  .rs-term {
+    grid-template-rows: 1.75rem auto;
+    place-items: center;
+    min-width: 1.7rem;
+
+    b {
+      font: 400 1.35rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+      color: var(--dw-forge-bone);
+    }
+
+    small {
+      max-width: 9rem;
+      font-size: 0.66rem;
+      line-height: 1.2;
+      text-align: center;
+      color: var(--dw-forge-stud-text);
+    }
+  }
+
+  .rs-term--plus b {
+    color: var(--dw-forge-verdict-reussite);
+  }
+
+  .rs-term--minus b {
+    color: var(--dw-forge-verdict-echec);
+  }
+
+  .rs-term--total {
+    padding-left: 0.55rem;
+    border-left-color: var(--dw-forge-bronze-dim);
+
+    b {
+      font-size: 1.6rem;
+      color: var(--dw-forge-gold);
+    }
+  }
+}
+
+:host(.rs--medium.rs--pending) .rs-term:not(.rs-term--total) b {
+  opacity: 0.85;
+}
+
+// Sur le plateau d'un jet d'action : en grand, au centre.
+:host(.rs--large) {
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.4rem 1.1rem;
+
+  .rs-term {
+    justify-items: center;
+    min-width: 2.6rem;
+
+    b {
+      font: 400 2.6rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+      color: var(--dw-forge-bone);
+    }
+
+    small {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--dw-surface-600);
+      white-space: nowrap;
+    }
+  }
+
+  .rs-term--plus b {
+    color: var(--dw-color-reussite);
+  }
+
+  .rs-term--minus b {
+    color: var(--dw-color-danger-muted);
+  }
+
+  .rs-term--total {
+    padding-left: 1.1rem;
+    border-left-color: var(--dw-forge-bronze-edge);
+
+    b {
+      font-size: 3.2rem;
+      color: var(--dw-forge-gold);
+    }
+  }
+}
+
+:host(.rs--large.rs--pending) .rs-term b {
+  opacity: 0.7;
+}
+
+// Croix d'un terme qui vient d'un effet en cours : elle le retire.
+.rs-x {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.55rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: 50%;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-600);
+  font-size: 0.72rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-color-echec);
+    color: var(--dw-color-echec);
+  }
+}

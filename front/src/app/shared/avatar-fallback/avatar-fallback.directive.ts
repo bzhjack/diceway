@@ -1,6 +1,6 @@
 import {Directive} from '@angular/core';
+import {EMPTY_AVATAR} from './avatar.util';
 
-const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
 /** Portrait introuvable (ex. `/assets/bol/pnj/<id>.jpg` jamais déposé) : remplace l'image cassée par l'avatar vide. */
 @Directive({

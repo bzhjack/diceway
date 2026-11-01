@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
@@ -63,7 +63,7 @@ export class CombattantCarteComponent {
 
   /** Le portrait n'a pas pu se charger : repli sur l'initiale (à nouveau tenté pour une autre carte). */
   protected readonly avatarFailed = linkedSignal({source: () => this.card().key, computation: () => false});
-  protected readonly hasAvatar = computed(() => !!this.card().avatar && this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
+  protected readonly hasAvatar = computed(() => usableAvatar(this.card().avatar) !== null && !this.avatarFailed());
   /** Sans portrait, son initiale. */
   protected readonly initiale = computed(() => this.card().nom.trim().charAt(0).toUpperCase());
   /** L'étiquette du coin : son rang, ou « Héros » pour un héros. */

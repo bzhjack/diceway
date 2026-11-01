@@ -49,41 +49,6 @@
       "count": 8
     }
   },
-  "src/app/bol/arme/library/arme-library-page.scss": {
-    "color-no-hex": {
-      "count": 1
-    }
-  },
-  "src/app/bol/armure/library/armure-library-page.scss": {
-    "color-no-hex": {
-      "count": 1
-    }
-  },
-  "src/app/bol/creature/form/creature-form-page.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
-  "src/app/bol/demon/form/demon-form-page.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
-  "src/app/bol/hero/advanced/hero-advanced-page.scss": {
-    "color-no-hex": {
-      "count": 5
-    }
-  },
-  "src/app/bol/hero/form/hero-form-page.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
-  "src/app/bol/pnj/form/pnj-form-page.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
   "src/app/bol/session/ordre-frise/ordre-frise.scss": {
     "color-no-hex": {
       "count": 2
@@ -122,11 +87,6 @@
       "count": 2
     }
   },
-  "src/app/bol/creature/form/capacites/creature-capacites.component.scss": {
-    "color-no-hex": {
-      "count": 1
-    }
-  },
   "src/app/bol/creature/form/general/creature-general.component.scss": {
     "color-no-hex": {
       "count": 2
@@ -137,31 +97,6 @@
       "count": 2
     }
   },
-  "src/app/bol/demon/form/pouvoirs/demon-pouvoirs.component.scss": {
-    "color-no-hex": {
-      "count": 1
-    }
-  },
-  "src/app/bol/hero/advanced/armes-panel/armes-panel.component.scss": {
-    "color-no-hex": {
-      "count": 2
-    }
-  },
-  "src/app/bol/hero/advanced/armures-panel/armures-panel.component.scss": {
-    "color-no-hex": {
-      "count": 1
-    }
-  },
-  "src/app/bol/hero/advanced/carrieres-panel/carrieres-panel.component.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
-  "src/app/bol/hero/advanced/identite/identite.component.scss": {
-    "color-no-hex": {
-      "count": 3
-    }
-  },
   "src/app/bol/hero/advanced/region/region.component.scss": {
     "color-no-hex": {
       "count": 7
@@ -169,27 +104,12 @@
   },
   "src/app/bol/hero/advanced/ressources-panel/ressources-panel.component.scss": {
     "color-no-hex": {
-      "count": 2
-    }
-  },
-  "src/app/bol/hero/advanced/stats-panel/stats-panel.component.scss": {
-    "color-no-hex": {
-      "count": 2
-    }
-  },
-  "src/app/bol/hero/form/general/general.component.scss": {
-    "color-no-hex": {
       "count": 1
     }
   },
   "src/app/bol/hero/form/summary-rail/summary-rail.component.scss": {
     "color-no-hex": {
       "count": 10
-    }
-  },
-  "src/app/bol/pnj/form/general/pnj-general.component.scss": {
-    "color-no-hex": {
-      "count": 1
     }
   },
   "src/app/bol/pnj/form/summary-rail/pnj-summary-rail.component.scss": {

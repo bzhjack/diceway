@@ -28,11 +28,7 @@
         <ng-content select="[sheetSide]" />
         @if (heroism(); as h) {
           <span class="bs-vit">
-            <span class="bs-gems" aria-hidden="true">
-              @for (lit of h.gems; track $index) {
-                <i [class.bs-gem--on]="lit"></i>
-              }
-            </span>
+            <dw-gemmes class="bs-gems" aria-hidden="true" [gems]="h.gems" />
             Héroïsme {{ h.points }}
           </span>
         }

@@ -661,61 +661,6 @@ bol-start-combat-page {
   min-width: 0;
 }
 
-// L'addition du jet, en petit : un nombre par terme, son nom dessous, le total en or.
-.scd-sum {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 0 0.45rem;
-  min-width: 0;
-}
-
-.scd-sum-term {
-  display: grid;
-  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros. Calés à gauche.
-  grid-template-rows: 1.05rem auto;
-  align-items: center;
-  justify-items: start;
-  min-width: 1rem;
-
-  b {
-    font: 400 0.95rem / 1.05 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
-    white-space: nowrap;
-  }
-
-  small {
-    color: var(--dw-surface-500);
-    font-size: 0.58rem;
-    font-weight: 700;
-    line-height: 1.1;
-    white-space: nowrap;
-  }
-}
-
-.scd-sum-term--plus b {
-  color: var(--dw-color-reussite);
-}
-
-.scd-sum-term--minus b {
-  color: var(--dw-color-danger-muted);
-}
-
-.scd-sum-term--total {
-  padding-left: 0.4rem;
-  border-left: 1px solid var(--dw-border);
-
-  b {
-    font-size: 1.05rem;
-    color: var(--dw-color-legendary);
-  }
-}
-
-// Avant le jet, l'addition annonce les termes en plus pâle.
-.scd-sum--pending .scd-sum-term:not(.scd-sum-term--total) b {
-  opacity: 0.75;
-}
-
 // Ce que le verdict change au combat ; le texte complet est dans son infobulle s'il est coupé.
 .scd-consequence {
   display: -webkit-box;
@@ -873,7 +818,10 @@ bol-start-combat-page {
 .scd-gems {
   display: inline-flex;
   flex: none;
-  gap: 0.15rem;
+  flex-wrap: nowrap;
+  --gem-w: 0.62rem;
+  --gem-h: 0.85rem;
+  --gem-gap: 0.15rem;
 }
 
 .scd-gem {

@@ -3,7 +3,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
-import {EMPTY_AVATAR, pnjAvatar} from '../../combat-play.util';
+import {creaturePortrait, demonPortrait, heroPortrait, pnjPortrait} from '../../combat-play.util';
 import {TapisKind, TapisCard, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
 
 const NO_VALUE = '—';
@@ -42,7 +42,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       pivotId: h.id,
       sourceId: h.heros_id,
       nom: h.heros?.origines.nom ?? 'Héros',
-      avatar: h.heros?.origines.avatar || EMPTY_AVATAR,
+      avatar: heroPortrait(h),
       badge: null,
       rang: null,
       degats: firstEquippedDegats(h.heros?.armes) ?? NO_VALUE,
@@ -65,7 +65,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       pivotId: p.id,
       sourceId: p.pnj_id,
       nom: p.surnom ?? p.nom,
-      avatar: pnjAvatar(p) ?? EMPTY_AVATAR,
+      avatar: pnjPortrait(p),
       badge: badgeFor(p.camp, rang),
       rang,
       degats: (p.armes?.find((a) => a.degats && a.equipee !== false) ?? p.armes?.find((a) => a.degats))?.degats ?? NO_VALUE,
@@ -88,7 +88,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       pivotId: c.id,
       sourceId: c.creature_id,
       nom: c.surnom ?? c.nom,
-      avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: creaturePortrait(c),
       badge: badgeFor(c.camp, rang),
       rang,
       degats: c.degats ?? NO_VALUE,
@@ -111,7 +111,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       pivotId: d.id,
       sourceId: d.demon_id,
       nom: d.surnom ?? d.nom,
-      avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: demonPortrait(d),
       badge: badgeFor(d.camp, rang),
       rang,
       degats: d.degats ?? NO_VALUE,

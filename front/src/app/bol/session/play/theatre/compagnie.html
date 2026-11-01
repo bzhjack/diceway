@@ -85,15 +85,12 @@
               >
                 −
               </button>
-              <span
+              <dw-gemmes
                 class="cmp-gemmes"
                 role="img"
                 [attr.aria-label]="plaque.heroisme + ' points d’héroïsme'"
-              >
-                @for (lit of plaque.gems; track $index) {
-                  <i class="cmp-gemme" [class.cmp-gemme--on]="lit"></i>
-                }
-              </span>
+                [gems]="plaque.gems"
+              />
               <button
                 type="button"
                 class="cmp-step"
@@ -125,9 +122,8 @@
           <li
             cdkDrag
             cdkDragPreviewContainer="parent"
-            (cdkDragStarted)="onDragStarted(allie)"
-            (cdkDragMoved)="onDragMoved($event)"
-            (cdkDragEnded)="onDragEnded($event, allie)"
+            [bolStageDrag]="{kind: allie.kind, camp: allie.camp}"
+            (stageDropped)="onStageDropped($event, allie)"
           >
             <bol-acteur
               [card]="allie"

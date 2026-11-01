@@ -22,8 +22,8 @@ describe('PointsStepperComponent', () => {
   it('montre l’héroïsme d’un héros en gemmes, allumées jusqu’aux points restants', async () => {
     const element = await rendre('hero', 3);
     expect(element.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('3 points d’héroïsme');
-    expect(element.querySelectorAll('.pst-gemme').length).toBe(5);
-    expect(element.querySelectorAll('.pst-gemme--on').length).toBe(3);
+    expect(element.querySelectorAll('.gem').length).toBe(5);
+    expect(element.querySelectorAll('.gem--on').length).toBe(3);
     expect(element.classList).not.toContain('pst--vilenie');
   });
 

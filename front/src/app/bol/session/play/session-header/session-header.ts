@@ -1,5 +1,5 @@
 import {A11yModule} from '@angular/cdk/a11y';
-import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -7,12 +7,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 import {TurnOrderInterrupter} from '../../models/turn-order.model';
 import {DeMj} from '../../models/combat-turn.model';
+import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 
 /** Barre du haut de la table : titre de la session, contenu projeté par la page (la frise des actes en mode libre, l'ordre d'action
  * en combat), coulisses ou commandes du round, action de combat, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
 @Component({
   selector: 'bol-session-header',
-  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
+  imports: [DwPopoverDirective, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
   templateUrl: './session-header.html',
   styleUrl: './session-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,11 +43,6 @@ export class SessionHeaderComponent {
 
   /** Le popover des options du combat. */
   protected readonly optionsOpen = signal(false);
-  protected readonly optionsPositions: ConnectedPosition[] = [
-    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
-    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
-  ];
-
   /** Ferme le popover des options et rend le focus à son bouton. */
   protected closeOptions(): void {
     this.optionsOpen.set(false);

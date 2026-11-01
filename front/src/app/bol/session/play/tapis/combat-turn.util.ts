@@ -3,7 +3,7 @@ import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
@@ -360,7 +360,7 @@ export function turnOrderFrise(entries: readonly TurnOrderEntry[], targetKey: st
       return {
         key: entry.key,
         nom: entry.nom,
-        avatar: entry.avatar && entry.avatar !== EMPTY_AVATAR ? entry.avatar : null,
+        avatar: usableAvatar(entry.avatar),
         hero,
         tone: hero ? ((entry.tier && HERO_TONES[entry.tier]) ?? 'attente') : entry.ally ? 'allie' : 'adversaire',
         label,

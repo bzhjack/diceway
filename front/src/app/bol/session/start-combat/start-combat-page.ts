@@ -15,7 +15,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
-import {CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition} from '@angular/cdk/overlay';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -47,6 +47,9 @@ import {OrdreFriseComponent} from '../ordre-frise/ordre-frise';
 import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../combat-play.util';
+import {DwPopoverDirective} from '../../../shared/popover/popover.directive';
+import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
+import {DwRollSumComponent} from '../../../shared/roll-sum/roll-sum';
 
 /** Un PNJ, une créature ou un démon tel que la page le charge : ce que l'ordre d'action en montre, plus son initiative. */
 interface AdversaryRow extends Omit<ReactionAdversary, 'excluded'> {
@@ -156,7 +159,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [DwRollSumComponent, DwGemmesComponent, DwPopoverDirective, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrl: './start-combat-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -679,11 +682,6 @@ export class StartCombatPageComponent {
 
   /** Le popover des modificateurs ouvert (clé pivotId du héros), `null` sinon : un seul à la fois. */
   protected readonly modsOpen = signal<number | null>(null);
-  protected readonly popoverPositions: ConnectedPosition[] = [
-    {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6},
-    {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -6},
-  ];
-
   /** Le popover des options de la rencontre (embuscade, dé du MJ pour tous, malus adverse). */
   protected readonly optionsOpen = signal(false);
   /** Le bonus de l'embuscade choisie, lu sur le bouton des options (« +2 », « −1 ») ; vide sans embuscade. */

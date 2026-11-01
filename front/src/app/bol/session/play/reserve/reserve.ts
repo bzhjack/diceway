@@ -7,7 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
-import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
@@ -16,6 +16,7 @@ import {ReservePlacementService} from '../../reserve-placement.service';
 import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, KIND_LABEL, RESERVE_TABS, reserveTab} from './reserve.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {StageDragDirective} from './stage-drag.directive';
 
 interface ReserveRow {
   readonly entry: CombatCatalogEntry;
@@ -35,7 +36,7 @@ const AVATAR_CLICK_DELAY_MS = 220;
  * session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule, SceneStripComponent],
+  imports: [StageDragDirective, AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule, SceneStripComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -168,18 +169,7 @@ export class ReserveComponent {
     }
   }
 
-  protected onDragStarted(row: ReserveRow): void {
-    this.placement.startDrag([row.entry.kind], null);
-  }
-
-  protected onDragMoved(event: CdkDragMove): void {
-    this.placement.hoverCamp.set(this.placement.campAt(event.pointerPosition.x, event.pointerPosition.y));
-  }
-
-  protected onDragEnded(event: CdkDragEnd, row: ReserveRow): void {
-    const camp = this.placement.campAt(event.dropPoint.x, event.dropPoint.y);
-    this.placement.endDrag();
-    event.source.reset();
+  protected onStageDropped(camp: CombatCamp | null, row: ReserveRow): void {
     if (camp) {
       this.run([row.entry], camp);
     }
