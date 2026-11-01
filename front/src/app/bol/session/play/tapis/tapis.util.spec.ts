@@ -249,13 +249,13 @@ describe('heroDetails', () => {
       active: true,
       origines: {joueur: 'Léa', region: {region: 'Nord'}, commentaire: 'Prudente.'},
       traits: [
-        {type: 'A', detail: 'Au Nord', traitable: {avantage: 'Ami des bêtes'}},
-        {type: 'D', detail: null, traitable: {desavantage: 'Arrogant'}},
+        {type: 'A', detail: 'Au Nord', traitable_id: 3, traitable: {avantage: 'Ami des bêtes'}},
+        {type: 'D', detail: null, traitable_id: 8, traitable: {desavantage: 'Arrogant'}},
         {type: 'A', detail: null},
       ],
       carrieres: [
-        {carriere: {carriere: 'Barbare'}, value: 3},
-        {carriere: {carriere: 'Assassin'}, value: 2},
+        {carriere_id: 2, carriere: {carriere: 'Barbare'}, value: 3},
+        {carriere_id: 3, carriere: {carriere: 'Assassin'}, value: 2},
         {carriere: null, value: 9},
       ],
       armes: [
@@ -274,8 +274,8 @@ describe('heroDetails', () => {
 
   it('lists the careers by name with their value, and skips a career whose catalogue entry is missing', () => {
     expect(heroDetails(hero()).carrieres).toEqual([
-      {label: 'Barbare', value: 3},
-      {label: 'Assassin', value: 2},
+      {id: 2, label: 'Barbare', value: 3},
+      {id: 3, label: 'Assassin', value: 2},
     ]);
   });
 
@@ -313,8 +313,8 @@ describe('heroDetails', () => {
 
   it('lists the advantages and disadvantages with their detail, and skips a trait without catalogue entry', () => {
     expect(heroDetails(hero()).traits).toEqual([
-      {label: 'Ami des bêtes', detail: 'Au Nord', kind: 'avantage'},
-      {label: 'Arrogant', detail: null, kind: 'desavantage'},
+      {id: 3, label: 'Ami des bêtes', detail: 'Au Nord', kind: 'avantage'},
+      {id: 8, label: 'Arrogant', detail: null, kind: 'desavantage'},
     ]);
   });
 

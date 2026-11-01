@@ -1,4 +1,5 @@
 import {describe, expect, it} from 'vitest';
+import {AVANTAGE_VIGILANT_ID, DESAVANTAGE_LENT_A_LA_DETENTE_ID} from '../bol-rules.constants';
 import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat.model';
 import {reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
 
@@ -208,16 +209,24 @@ describe('reactionFrise', () => {
 });
 
 describe('reactionDiceNet', () => {
-  const trait = (label: string, kind: 'avantage' | 'desavantage') => ({label, kind, detail: null});
+  const trait = (id: number, kind: 'avantage' | 'desavantage', label = 'Un nom') => ({id, label, kind, detail: null});
+  const vigilant = trait(AVANTAGE_VIGILANT_ID, 'avantage');
+  const lent = trait(DESAVANTAGE_LENT_A_LA_DETENTE_ID, 'desavantage');
 
   it('donne un dé de bonus à un héros Vigilant, un dé de malus à un héros Lent à la détente', () => {
-    expect(reactionDiceNet([trait('Vigilant', 'avantage')])).toBe(1);
-    expect(reactionDiceNet([trait('Lent à la détente', 'desavantage')])).toBe(-1);
+    expect(reactionDiceNet([vigilant])).toBe(1);
+    expect(reactionDiceNet([lent])).toBe(-1);
   });
 
   it('annule le bonus par le malus, et ignore les autres traits', () => {
-    expect(reactionDiceNet([trait('Vigilant', 'avantage'), trait('Lent à la détente', 'desavantage')])).toBe(0);
-    expect(reactionDiceNet([trait('Attirant', 'avantage'), trait('Arrogant', 'desavantage')])).toBe(0);
+    expect(reactionDiceNet([vigilant, lent])).toBe(0);
+    expect(reactionDiceNet([trait(1, 'avantage'), trait(2, 'desavantage')])).toBe(0);
+  });
+
+  it('reconnaît un trait à son id, renommé ou non, et dans sa bonne liste', () => {
+    expect(reactionDiceNet([trait(AVANTAGE_VIGILANT_ID, 'avantage', 'Toujours sur ses gardes')])).toBe(1);
+    expect(reactionDiceNet([trait(1, 'avantage', 'Vigilant')])).toBe(0);
+    expect(reactionDiceNet([trait(AVANTAGE_VIGILANT_ID, 'desavantage')])).toBe(0);
   });
 });
 

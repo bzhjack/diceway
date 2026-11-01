@@ -44,7 +44,7 @@ import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
 import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
 import {OrdreFriseComponent} from '../ordre-frise/ordre-frise';
-import {REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
+import {REACTION_BONUS_TRAIT_LABEL, REACTION_MALUS_TRAIT_LABEL, REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
 import {pnjAvatar} from '../combat-play.util';
 import {DwPopoverDirective} from '../../../shared/popover/popover.directive';
@@ -274,7 +274,7 @@ export class StartCombatPageComponent {
         diceWhyLabel: diceSources.length > 0 ? ` ${diceLabel ? diceLabel[0].toUpperCase() + diceLabel.slice(1) : 'Dés annulés'} : ${diceSources.map((source) => source.label).join(', ')}.` : '',
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
         modsLabel: this.modsLabel(hero, parts.carriere ?? null),
-        traitNote: hero.diceNet > 0 ? 'Vigilant : un dé de bonus, toujours.' : hero.diceNet < 0 ? 'Lent à la détente : un dé de malus, toujours.' : null,
+        traitNote: hero.diceNet > 0 ? `${REACTION_BONUS_TRAIT_LABEL} : un dé de bonus, toujours.` : hero.diceNet < 0 ? `${REACTION_MALUS_TRAIT_LABEL} : un dé de malus, toujours.` : null,
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts, net),
@@ -639,7 +639,7 @@ export class StartCombatPageComponent {
     const gm = this.gmDieByPivot().get(hero.pivotId) ?? 0;
     const mj = gm + (this.globalGmDie() ?? 0);
     return [
-      ...(hero.diceNet !== 0 ? [{label: hero.diceNet > 0 ? 'Vigilant' : 'Lent à la détente', tone: tone(hero.diceNet)}] : []),
+      ...(hero.diceNet !== 0 ? [{label: hero.diceNet > 0 ? REACTION_BONUS_TRAIT_LABEL : REACTION_MALUS_TRAIT_LABEL, tone: tone(hero.diceNet)}] : []),
       ...(mj !== 0 ? [{label: Math.abs(mj) > 1 ? 'MJ ×2' : gm !== 0 ? 'MJ' : 'MJ tous', tone: tone(mj)}] : []),
     ];
   }

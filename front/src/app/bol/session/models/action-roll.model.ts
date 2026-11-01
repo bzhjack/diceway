@@ -2,6 +2,8 @@ import {DwRollSumTerm} from '../../../shared/models/roll-sum.model';
 
 /** Une carrière du héros, proposée comme bonus de son jet d'action. */
 export interface ActionRollCarriere {
+  /** L'id de la carrière dans son catalogue, quand elle vient d'une fiche : les règles s'appuient sur lui, pas sur son nom. */
+  readonly id?: number;
   readonly label: string;
   readonly value: number;
 }

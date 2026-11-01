@@ -1,6 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {form, FormField, maxLength} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -11,7 +10,7 @@ import {DwPromptDialogData} from '../models/dw-prompt-dialog.model';
 /** Dialogue à un seul champ texte obligatoire (nommer ou renommer quelque chose). */
 @Component({
   selector: 'dw-prompt-dialog',
-  imports: [ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [FormField, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <form (submit)="submit($event)">
@@ -23,8 +22,7 @@ import {DwPromptDialogData} from '../models/dw-prompt-dialog.model';
             matInput
             cdkFocusInitial
             autocomplete="off"
-            [formControl]="control"
-            [attr.maxlength]="data.maxLength ?? null"
+            [formField]="field"
           />
         </mat-form-field>
       </mat-dialog-content>
@@ -46,16 +44,14 @@ class DwPromptDialogComponent {
   protected readonly data = inject<DwPromptDialogData>(MAT_DIALOG_DATA);
   private readonly ref = inject(MatDialogRef<DwPromptDialogComponent, string>);
 
-  protected readonly control = new FormControl(this.data.value ?? '', {nonNullable: true});
-  // Validité en signal : l'état d'un FormControl lu dans un template OnPush ne se rafraîchit pas seul.
-  private readonly value = toSignal(this.control.valueChanges, {initialValue: this.control.value});
+  private readonly value = signal(this.data.value ?? '');
+  protected readonly field = form(this.value, (path) => maxLength(path, () => this.data.maxLength));
   protected readonly valid = computed(() => /\S/.test(this.value()));
 
-  /** `(submit)` natif : sans `FormGroupDirective` sur le `<form>`, `(ngSubmit)` n'est jamais émis. */
   protected submit(event: Event): void {
     event.preventDefault();
     if (this.valid()) {
-      this.ref.close(this.control.value.trim());
+      this.ref.close(this.value().trim());
     }
   }
 }

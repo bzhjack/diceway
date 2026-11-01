@@ -19,8 +19,10 @@ class BolArme extends Model
         'degats',
         'portee',
         'notes',
+        'deux_mains',
     ];
     protected $casts = [
         'id' => 'integer',
+        'deux_mains' => 'boolean',
     ];
 }

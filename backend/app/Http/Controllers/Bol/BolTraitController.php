@@ -4,57 +4,40 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolAvantage;
-use App\Models\Bol\BolDesavantage;
-use App\Models\Bol\BolHerosTrait;
+use App\Http\Services\Bol\BolHeroDetailsService;
+use App\Http\Services\Bol\BolReferenceData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BolTraitController extends Controller
 {
     use ProtectsHeros;
 
+    public function __construct(
+        private readonly BolReferenceData $reference,
+        private readonly BolHeroDetailsService $details,
+    ) {}
+
     public function getAllAvantages()
     {
-        $cacheKey = 'bol_avantages_all';
-        $cacheDuration = BolCache::TTL;
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolAvantage::all();
-        });
-        // Retourner les données en tant que réponse JSON
-        return response()->json($donnees);
+        return response()->json($this->reference->avantages());
     }
 
     public function getAllDesavantages()
     {
-
-        $cacheKey = 'bol_desavantages_all';
-        $cacheDuration = BolCache::TTL;
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolDesavantage::all();
-        });
-        // Retourner les données en tant que réponse JSON
-        return response()->json($donnees);
+        return response()->json($this->reference->desavantages());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function delete($herosId, $id): \Illuminate\Http\JsonResponse
+    public function delete($herosId, $id): JsonResponse
     {
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $trait = BolHerosTrait::where('heros_id', $herosId)->where('id', $id)->first();
+        $trait = $this->details->trait($herosId, $id);
         if (!$trait) {
             return response()->json(['message' => 'Trait non trouvé'], 404);
         }
-        $trait->delete();
+        $this->details->remove($trait);
         return response()->json(['success' => true]);
     }
 
@@ -64,21 +47,9 @@ class BolTraitController extends Controller
             return $this->herosNotFound();
         }
         $newTrait = $request->input();
-        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->where('type', $newTrait['type'])->first();
-        if ($trait) {
+        if ($this->details->hasTrait($herosId, $newTrait['traitable_id'], $newTrait['type'])) {
             return response()->json(['message' => 'Traits déjà existant'], 403);
         }
-        $traitable_type = $newTrait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
-        $heros_trait = [
-            'heros_id' => $herosId,
-            'traitable_id' => $newTrait['traitable_id'],
-            'type' => $newTrait['type'],
-            'detail' => $newTrait['detail'],
-            'region_id' => $newTrait['region_id'],
-            'traitable_type' => $traitable_type,
-            'carriere' => $newTrait['carriere']
-        ];
-        $created = BolHerosTrait::create($heros_trait);
-        return response()->json($created);
+        return response()->json($this->details->addTrait($herosId, $newTrait));
     }
 }

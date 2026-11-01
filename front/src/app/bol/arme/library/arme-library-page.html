@@ -75,6 +75,8 @@
           <mat-label>Notes</mat-label>
           <textarea matInput [formField]="itemForm.notes" rows="4" class="resize-none"></textarea>
         </mat-form-field>
+
+        <mat-checkbox class="md:col-span-2" [formField]="itemForm.deux_mains">Se tient à deux mains</mat-checkbox>
         </form>
       </bol-equipment-form-panel>
     }

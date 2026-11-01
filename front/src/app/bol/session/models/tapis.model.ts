@@ -57,6 +57,8 @@ interface HeroDetailArme {
 
 /** Un trait d'un héros avec son détail, pour le popover des traits. */
 export interface HeroDetailTrait {
+  /** L'id de l'avantage ou du désavantage dans son catalogue : les règles s'appuient sur lui, pas sur son nom. */
+  readonly id: number;
   readonly label: string;
   readonly detail: string | null;
   readonly kind: 'avantage' | 'desavantage';

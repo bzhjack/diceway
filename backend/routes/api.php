@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Bol\BolPortraitController;
+use App\Http\Services\Bol\BolPortraits;
 use App\Http\Controllers\Bol\BolCreatureController;
 use App\Http\Controllers\Bol\BolHerosController;
 use App\Http\Controllers\Bol\BolLangueController;
@@ -47,6 +49,7 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
     Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->middleware('signed')->name('verification.verify'); // Lien de retour de verification du mail (signed)
     Route::get('auth/avatar/{id}', [ProfileController::class, 'show']);
+    Route::get('bol/portraits/{file}', [BolPortraitController::class, 'show'])->where('file', BolPortraits::FILE_PATTERN);
     // Gestion du mot de passe
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
     Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement

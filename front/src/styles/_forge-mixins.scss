@@ -48,3 +48,47 @@
   border-radius: 50%;
   color: var(--dw-forge-hot-text);
 }
+
+// La case où se tape le total d'un jet : un creux, en grands chiffres. Case vide : la police du champ passe à celle de l'invite, qui reste ainsi
+// centrée en hauteur.
+@mixin roll-entry($font-size, $hint-size) {
+  @include recess;
+  padding: 0;
+  font: 400 #{$font-size}/1 'Muse Display Harmony', 'Muse Sans', serif;
+  text-align: center;
+
+  &:placeholder-shown {
+    font: 600 $hint-size 'Muse Sans', sans-serif;
+  }
+}
+
+// Les couleurs d'un verdict de jet, sur `&--reussite`, `&--echec`, `&--heroique` et `&--legendaire`.
+@mixin verdict-tones($glow: false) {
+  &--reussite {
+    color: var(--dw-forge-verdict-reussite);
+    @if $glow {
+      text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
+    }
+  }
+
+  &--echec {
+    color: var(--dw-forge-verdict-echec);
+    @if $glow {
+      text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
+    }
+  }
+
+  &--heroique {
+    color: var(--dw-forge-verdict-heroique);
+    @if $glow {
+      text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
+    }
+  }
+
+  &--legendaire {
+    color: var(--dw-forge-verdict-legendaire);
+    @if $glow {
+      text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+    }
+  }
+}

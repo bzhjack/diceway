@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
+import {applyEach, FieldTree, form, min, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -166,6 +166,7 @@ export class PnjFormPageComponent extends BolCharacterFormPageBase<PnjFormModel>
     applyEach(fieldPath.carrieres, (item) => {
       required(item.id);
       required(item.value);
+      min(item.value, 0);
     });
     applyEach(fieldPath.traits, (item) => {
       required(item.id);

@@ -242,6 +242,68 @@ describe('TurnAssistantComponent', () => {
     });
   });
 
+  describe('la main passe de case en case', () => {
+    const focus = () => document.activeElement as HTMLElement;
+
+    it('après un jet qui touche, au dé de dégâts ; puis au bouton qui applique', async () => {
+      await viser();
+
+      await saisirAttaque('8');
+      expect(focus().getAttribute('aria-label')).toContain('Dé de dégâts');
+
+      await saisirDegats('4');
+      expect(focus().textContent).toContain('Appliquer');
+    });
+
+    it('après un coup raté, à « Fin du tour »', async () => {
+      await viser();
+
+      await saisirAttaque('5');
+
+      expect(focus().textContent).toContain('Fin du tour');
+    });
+
+    it('après les dégâts, à « Fin du tour »', async () => {
+      await viser();
+      await saisirAttaque('8');
+      await saisirDegats('4');
+
+      await cliquer('Appliquer');
+
+      expect(focus().textContent).toContain('Fin du tour');
+    });
+
+    it('une cible choisie donne la main à la case du jet', async () => {
+      await rendre({targets: [cible]});
+      element.querySelector<HTMLButtonElement>('.tas-cible button')!.click();
+
+      fixture.componentRef.setInput('target', cible);
+      fixture.componentRef.setInput('targetStats', stats({herosId: null, heroisme: null}));
+      await stable();
+
+      expect(focus().getAttribute('aria-label')).toContain('Total des deux dés');
+    });
+
+    it('« Changer d’adversaire » rend la main à la première carte', async () => {
+      await viser();
+      // La page retire la cible dès qu'on y renonce.
+      fixture.componentInstance.targetSelected.subscribe(() => fixture.componentRef.setInput('target', null));
+
+      await cliquer('Changer d’adversaire');
+
+      expect(focus().closest('.tas-cible')).not.toBeNull();
+    });
+
+    it('la saisie de la protection prend la main', async () => {
+      await viser();
+      await saisirAttaque('8');
+
+      await cliquer('Modifier la protection');
+
+      expect(focus().getAttribute('aria-label')).toContain('Protection de la cible');
+    });
+  });
+
   describe('les réglages du coup', () => {
     it('le dé bonus du MJ passe à trois dés, et améliore les chances', async () => {
       await viser();

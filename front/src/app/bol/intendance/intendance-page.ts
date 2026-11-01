@@ -40,7 +40,7 @@ export class IntendancePageComponent {
   protected readonly rangedWeapons = computed(() => this.weapons().filter((weapon) => weapon.type === 'T').length);
   protected readonly meleeWeapons = computed(() => this.weapons().filter((weapon) => weapon.type === 'M').length);
   protected readonly shieldEntries = computed(() =>
-    this.armors().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
+    this.armors().filter((armor) => armor.categorie === 'bouclier').length,
   );
 
   protected readonly libraryEntries = computed<readonly IntendanceLibraryEntry[]>(() => [

@@ -1,13 +1,10 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, output, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, model, output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {heroismeGems} from '../../heroisme-spend.util';
-import {ValueTracker} from '../../value-tracker';
 import {HeroResourcesData} from '../../models/hero-resources.model';
 import {TableChange} from '../../models/table-change.model';
 import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
@@ -17,11 +14,11 @@ import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
  * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
 @Component({
   selector: 'bol-hero-resources',
-  imports: [DwGemmesComponent, ReactiveFormsModule, DwValueStepperComponent],
+  imports: [DwGemmesComponent, DwValueStepperComponent],
   template: `
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
-      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" [heart]="true" />
+      <dw-value-stepper [value]="vitalite()" (valueChange)="onVitaliteChange($event)" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" [heart]="true" />
       <span class="hrs-bar" aria-hidden="true"><i [style.width.%]="vitalitePercent()"></i></span>
     </div>
     <div class="hrs-field">
@@ -143,7 +140,7 @@ import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroResourcesComponent implements OnInit {
+export class HeroResourcesComponent {
   readonly data = input.required<HeroResourcesData>();
   readonly heroisme = model.required<number>();
   /** Une valeur a été persistée : le parent met la session à jour. */
@@ -153,10 +150,7 @@ export class HeroResourcesComponent implements OnInit {
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly vitaliteControl = new FormControl(0, {nonNullable: true});
-  /** Miroir en signal de la vitalité affichée dans le libellé (un `FormControl.value` lu dans un
-   * template OnPush ne se rafraîchit pas après un `setValue` venu d'un callback asynchrone). */
-  protected readonly vitalite = signal(0);
+  protected readonly vitalite = linkedSignal(() => this.data().vitaliteCourante);
   /** Part de vitalité restante, de 0 à 100, pour la jauge sous le cœur. */
   protected readonly vitalitePercent = computed(() => {
     const max = this.data().vitaliteMax;
@@ -165,27 +159,9 @@ export class HeroResourcesComponent implements OnInit {
   /** Une gemme par point d'héroïsme, allumée s'il reste à dépenser. */
   protected readonly gems = computed(() => heroismeGems(this.heroisme()));
 
-  private readonly vitaliteTracker = new ValueTracker();
-
-  constructor() {
-    this.vitaliteControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.onVitaliteChange(value));
-  }
-
-  // Valeurs initiales posées ici (pas en initialiseur de champ) : un input required n'a pas encore
-  // de valeur à ce moment-là (NG8118).
-  ngOnInit(): void {
-    this.setVitalite(this.data().vitaliteCourante);
-  }
-
-  private setVitalite(value: number): void {
-    this.vitaliteTracker.reset(value);
-    this.vitalite.set(value);
-    this.vitaliteControl.setValue(value, {emitEvent: false});
-  }
-
-  private onVitaliteChange(value: number): void {
-    const previous = this.vitaliteTracker.value;
-    const delta = this.vitaliteTracker.take(value);
+  protected onVitaliteChange(value: number): void {
+    const previous = this.vitalite();
+    const delta = value - previous;
     if (delta === 0) {
       return;
     }
@@ -199,7 +175,7 @@ export class HeroResourcesComponent implements OnInit {
         this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
           duration: 5000,
         });
-        this.setVitalite(previous);
+        this.vitalite.set(previous);
       },
     });
   }

@@ -40,9 +40,9 @@ function isRealWeapon(arme: BolHerosArmeModel): boolean {
 }
 
 /** Une arme jouable en combat à deux armes, en principale ou en secondaire : une vraie arme, légère ou moyenne, qui se tient d'une main
- * (un arc, légère ou moyenne par ses dégâts, est une « arme à deux mains » d'après ses notes). */
+ * (un arc, léger ou moyen par ses dégâts, se tient à deux mains). */
 export function isDualWieldWeapon(arme: BolHerosArmeModel): boolean {
-  return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats) && !/^armes? à deux mains/i.test(arme.arme?.notes ?? '');
+  return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats) && !arme.arme?.deux_mains;
 }
 
 /** Une arme lourde (d6B, même modifiée : khastok d6B+1) : qui a moins de 0 en vigueur ne peut pas la manier (02-actions-combat.md,

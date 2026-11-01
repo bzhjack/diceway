@@ -3,36 +3,27 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolRegion;
+use App\Http\Services\Bol\BolReferenceData;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BolRegionController extends Controller
 {
+    public function __construct(private readonly BolReferenceData $reference) {}
+
     /**
      * Récupère toutes les régions
      */
     public function getAll()
     {
-
-        $cacheKey = 'bol_regions_all';
-        $cacheDuration = BolCache::TTL;
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolRegion::with('avantages', 'desavantages', 'noms', 'langueNative', 'premiereCarriere')->get();
-        });
-        // Retourner les données en tant que réponse JSON
-        return response()->json($donnees);
+        return response()->json($this->reference->regions());
     }
 
     public function getOne(Request $request)
     {
-        $id = $request->route('id');
-        $hero = BolRegion::with('avantages', 'desavantages', 'noms', 'langueNative', 'premiereCarriere')->where('id', $id)->get()->first();
-        if ($hero === null) {
+        $region = $this->reference->region($request->route('id'));
+        if ($region === null) {
             return response()->json(['error' => 'Country not found'], 404);
-        } else {
-            return response($hero);
         }
+        return response($region);
     }
 }

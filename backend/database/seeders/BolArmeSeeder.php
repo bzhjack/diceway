@@ -20,14 +20,16 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Arme d’hast',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Arme à deux mains.'
+                'notes' => 'Arme à deux mains.',
+                'deux_mains' => true
             ],
             [
                 'id' => 2,
                 'arme' => 'Bâton',
                 'type' => 'M',
                 'degats' => 'd6',
-                'notes' => 'Armes à deux mains.'
+                'notes' => 'Armes à deux mains.',
+                'deux_mains' => true
             ],
             [
                 'id' => 3,
@@ -95,7 +97,8 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Morgenstern',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Arme à deux mains'
+                'notes' => 'Arme à deux mains',
+                'deux_mains' => true
             ],
             [
                 'id' => 12,
@@ -110,7 +113,8 @@ class BolArmeSeeder extends Seeder
                 'type' => 'T',
                 'degats' => 'd6',
                 'portee' => '30m',
-                'notes' => 'Arme à deux mains ; rechargement : 1 round de combat'
+                'notes' => 'Arme à deux mains ; rechargement : 1 round de combat',
+                'deux_mains' => true
             ],
             [
                 'id' => 14,
@@ -118,7 +122,8 @@ class BolArmeSeeder extends Seeder
                 'type' => 'T',
                 'degats' => 'd6B',
                 'portee' => '45m',
-                'notes' => 'Arme à deux mains ; rechargement : 2 rounds de combat'
+                'notes' => 'Arme à deux mains ; rechargement : 2 rounds de combat',
+                'deux_mains' => true
             ],
             [
                 'id' => 15,
@@ -126,7 +131,8 @@ class BolArmeSeeder extends Seeder
                 'type' => 'T',
                 'degats' => 'd6',
                 'portee' => '22m',
-                'notes' => 'Arme à deux mains'
+                'notes' => 'Arme à deux mains',
+                'deux_mains' => true
             ],
             [
                 'id' => 16,
@@ -149,7 +155,8 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Épée / hache à 2 mains',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Armes à deux mains.'
+                'notes' => 'Armes à deux mains.',
+                'deux_mains' => true
             ],
             [
                 'id' => 19,
@@ -157,7 +164,8 @@ class BolArmeSeeder extends Seeder
                 'type' => 'T',
                 'degats' => 'd6B',
                 'portee' => '38m',
-                'notes' => 'Arme à deux mains. Arme de Tyrus : seul un héros de Tyrus peut en faire son arme favorite.'
+                'notes' => 'Arme à deux mains. Arme de Tyrus : seul un héros de Tyrus peut en faire son arme favorite.',
+                'deux_mains' => true
             ],
             [
                 'id' => 20,
@@ -179,7 +187,8 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Khastok',
                 'type' => 'M',
                 'degats' => 'd6B+1',
-                'notes' => 'Arme à deux mains ; lance de la Garde Jemadar. Arme de Malakut : seul un héros de Malakut peut en faire son arme favorite.'
+                'notes' => 'Arme à deux mains ; lance de la Garde Jemadar. Arme de Malakut : seul un héros de Malakut peut en faire son arme favorite.',
+                'deux_mains' => true
             ],
             [
                 'id' => 23,

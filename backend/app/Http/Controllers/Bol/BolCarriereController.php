@@ -4,24 +4,22 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolCarriere;
-use App\Models\Bol\BolHerosCarriere;
+use App\Http\Services\Bol\BolHeroDetailsService;
+use App\Http\Services\Bol\BolReferenceData;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BolCarriereController extends Controller
 {
     use ProtectsHeros;
 
+    public function __construct(
+        private readonly BolReferenceData $reference,
+        private readonly BolHeroDetailsService $details,
+    ) {}
+
     public function getAll()
     {
-        $cacheKey = 'bol_carrieres_all';
-        $cacheDuration = BolCache::TTL;
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolCarriere::all();
-        });
-        return response()->json($donnees);
+        return response()->json($this->reference->carrieres());
     }
 
     public function delete($herosId, $id)
@@ -29,22 +27,12 @@ class BolCarriereController extends Controller
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $id)->first();
+        $carriere = $this->details->carriere($herosId, $id);
         if (!$carriere) {
             return response()->json(['message' => 'Carrière non trouvée'], 404);
         }
-        $carriere->delete();
+        $this->details->remove($carriere);
         return response()->json(['success' => true]);
-    }
-
-    public static function update($carriereToUpdate, $herosId)
-    {
-        $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $carriereToUpdate['carriere_id'])->first();
-        if (!$carriere) {
-            return response()->json(['message' => 'Carrière non trouvée'], 404);
-        }
-        BolHerosCarriere::where('id', $carriere['id'])->update($carriereToUpdate);
-        return response()->json(['success' => $carriereToUpdate]);
     }
 
     public function create(Request $request, $herosId)
@@ -53,16 +41,10 @@ class BolCarriereController extends Controller
             return $this->herosNotFound();
         }
         $newCarriere = $request->input();
-        $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $newCarriere['carriere_id'])->first();
-        if ($carriere) {
+        if ($this->details->carriere($herosId, $newCarriere['carriere_id'])) {
             return response()->json(['message' => 'Carrière déjà existante'], 403);
         }
-        $heros_carrieres = [
-            'heros_id' => $herosId,
-            'carriere_id' => $newCarriere['carriere_id'],
-            'value' => $newCarriere['value'],
-        ];
-        BolHerosCarriere::create($heros_carrieres);
+        $this->details->addCarriere($herosId, $newCarriere);
         return response()->json(['success' => $newCarriere]);
     }
 }

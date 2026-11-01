@@ -4,54 +4,24 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolArmure;
-use App\Models\Bol\BolHerosArmure;
+use App\Http\Services\Bol\BolArmureService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 
 class BolArmureController extends Controller
 {
     use ProtectsHeros;
 
+    public function __construct(private readonly BolArmureService $armures) {}
+
     public function getAll()
     {
-        $cacheDuration = BolCache::TTL;
-        $cacheKey = BolCache::armures(Auth::id());
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolArmure::query()
-                ->where(function ($query) {
-                    $query->whereNull('user_id')->orWhere('user_id', Auth::id());
-                })
-                ->orderByRaw('case when user_id is null then 0 else 1 end')
-                ->orderBy('armure')
-                ->get();
-        });
-        return response()->json($donnees);
+        return response()->json($this->armures->catalog());
     }
 
     public function createCatalog(Request $request)
     {
-        $payload = $this->validatedPayload($request);
-
-        $armure = new BolArmure();
-        $armure->user_id = Auth::id();
-        $armure->armure = $payload['armure'];
-        $armure->protection = $payload['protection'];
-        $armure->malus = $payload['malus'];
-        $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
-        $armure->categorie = $payload['categorie'];
-        $armure->malus_agilite = $payload['malus_agilite'];
-        $armure->malus_initiative = $payload['malus_initiative'];
-        $armure->malus_attaque_subie = $payload['malus_attaque_subie'];
-        $armure->malus_attaque_subie_portee = $payload['malus_attaque_subie_portee'];
-        $armure->save();
-
-        $this->flushCache();
-
-        return response()->json($armure, 201);
+        return response()->json($this->armures->createEntry($this->validatedPayload($request)), 201);
     }
 
     public function updateCatalog(Request $request)
@@ -60,48 +30,29 @@ class BolArmureController extends Controller
             'id' => ['required', 'integer'],
         ]);
 
-        $id = (int) $request->input('id');
-        $armure = BolArmure::query()->where('user_id', Auth::id())->find($id);
-
+        $armure = $this->armures->ownEntry((int) $request->input('id'));
         if (!$armure) {
             return response()->json(['message' => 'Armure personnelle introuvable.'], 404);
         }
 
-        $payload = $this->validatedPayload($request, $armure->id);
-
-        $armure->armure = $payload['armure'];
-        $armure->protection = $payload['protection'];
-        $armure->malus = $payload['malus'];
-        $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
-        $armure->categorie = $payload['categorie'];
-        $armure->malus_agilite = $payload['malus_agilite'];
-        $armure->malus_initiative = $payload['malus_initiative'];
-        $armure->malus_attaque_subie = $payload['malus_attaque_subie'];
-        $armure->malus_attaque_subie_portee = $payload['malus_attaque_subie_portee'];
-        $armure->save();
-
-        $this->flushCache();
-
-        return response()->json($armure);
+        return response()->json($this->armures->saveEntry($armure, $this->validatedPayload($request, $armure->id)));
     }
 
     public function deleteCatalog(int $id)
     {
-        $armure = BolArmure::query()->where('user_id', Auth::id())->find($id);
-
+        $armure = $this->armures->ownEntry($id);
         if (!$armure) {
             return response()->json(['message' => 'Seules vos armures personnelles peuvent etre supprimees.'], 404);
         }
 
-        if (BolHerosArmure::query()->where('armure_id', $id)->exists()) {
+        if ($this->armures->isWorn($id)) {
             return response()->json(
                 ['message' => 'Cette armure est encore utilisée par des héros ou des PNJ.'],
                 409,
             );
         }
 
-        $armure->delete();
-        $this->flushCache();
+        $this->armures->deleteEntry($armure);
 
         return response()->json(['success' => true]);
     }
@@ -112,18 +63,13 @@ class BolArmureController extends Controller
             return $this->herosNotFound();
         }
         $newArmure = $request->input();
-        if (!BolArmure::accessibleTo(Auth::id())->whereKey($newArmure['armure_id'] ?? null)->exists()) {
+        if (!$this->armures->isAccessible($newArmure['armure_id'] ?? null)) {
             return response()->json(['message' => 'Armure non trouvée'], 404);
         }
-        $carriere = BolHerosArmure::where('heros_id', $herosId)->where('armure_id', $newArmure['armure_id'])->first();
-        if ($carriere) {
+        if ($this->armures->onSheet($herosId, $newArmure['armure_id'])) {
             return response()->json(['message' => 'Armure déjà existante'], 403);
         }
-        $heros_carrieres = [
-            'heros_id' => $herosId,
-            'armure_id' => $newArmure['armure_id']
-        ];
-        BolHerosArmure::create($heros_carrieres);
+        $this->armures->give($herosId, $newArmure['armure_id']);
         return response()->json(['success' => $newArmure]);
     }
 
@@ -132,40 +78,25 @@ class BolArmureController extends Controller
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $armure = BolHerosArmure::where('heros_id', $herosId)->where('armure_id', $id)->first();
-        if (!$armure) {
+        $pivot = $this->armures->onSheet($herosId, $id);
+        if (!$pivot) {
             return response()->json(['message' => 'Armure non trouvée'], 404);
         }
-        $armure->delete();
+        $this->armures->take($pivot);
         return response()->json(['success' => true]);
     }
 
-    /** Bascule l'équipement d'une armure de héros/PNJ ; n'en laisse qu'une équipée par catégorie (armure/bouclier/casque). */
     public function equip($herosId, $id)
     {
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $pivot = BolHerosArmure::with('armure')->where('heros_id', $herosId)->where('armure_id', $id)->first();
+        $pivot = $this->armures->onSheet($herosId, $id);
         if (!$pivot) {
             return response()->json(['message' => 'Armure non trouvée'], 404);
         }
 
-        $equipee = !$pivot->equipee;
-
-        if ($equipee && $pivot->armure) {
-            BolHerosArmure::where('heros_id', $herosId)
-                ->where('armure_id', '!=', $id)
-                ->whereHas('armure', fn ($query) => $query->where('categorie', $pivot->armure->categorie))
-                ->update(['equipee' => false]);
-        }
-
-        $pivot->equipee = $equipee;
-        $pivot->save();
-
-        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshPnjSnapshots((string) $herosId);
-
-        return response()->json(['success' => true, 'equipee' => $equipee]);
+        return response()->json(['success' => true, 'equipee' => $this->armures->toggleEquipped($pivot, (string) $herosId, $id)]);
     }
 
     private function validatedPayload(Request $request, ?int $ignoreId = null): array
@@ -201,10 +132,5 @@ class BolArmureController extends Controller
         $validated['malus_attaque_subie_portee'] = $validated['malus_attaque_subie_portee'] ?? null;
 
         return $validated;
-    }
-
-    private function flushCache(): void
-    {
-        Cache::forget(BolCache::armures(Auth::id()));
     }
 }

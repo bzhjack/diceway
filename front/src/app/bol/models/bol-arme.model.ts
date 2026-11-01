@@ -7,6 +7,8 @@ export interface BolArmeModel {
   degats: string | null;
   portee: string | null;
   notes: string | null;
+  /** Se tient à deux mains : elle ne peut pas servir en combat à deux armes. Absent pour ce qui n'est pas une arme du catalogue (mains nues, copie d'un PNJ à la table). */
+  deux_mains?: boolean;
 }
 
 /** Une arme possédée par un personnage, et si elle est équipée. */

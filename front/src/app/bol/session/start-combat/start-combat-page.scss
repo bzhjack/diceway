@@ -926,18 +926,13 @@ bol-start-combat-page {
   flex: none;
   width: 3.8rem;
   height: 2.7rem;
-  padding: 0;
+  @include forge.roll-entry(1.6rem, 0.8rem);
   border: 2px solid var(--dw-forge-bronze);
   border-radius: 7px;
-  @include forge.recess;
   color: #ffe9bd;
-  font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-  text-align: center;
   text-shadow: 0 0 12px rgba(232, 135, 58, 0.5);
 
-  // Case vide : la police du champ lui-même passe à celle de l'invite, qui reste ainsi centrée en hauteur.
   &:placeholder-shown {
-    font: 600 0.8rem 'Muse Sans', sans-serif;
     text-shadow: none;
   }
 

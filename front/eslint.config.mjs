@@ -15,7 +15,7 @@ export default defineConfig([
     processor: angular.processInlineTemplates,
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', {ignoreRestSiblings: true, argsIgnorePattern: '^_'}],
-      '@angular-eslint/component-selector': ['error', {type: 'element', prefix: ['bol', 'dw', 'app'], style: 'kebab-case'}],
+      '@angular-eslint/component-selector': ['error', {type: ['element', 'attribute'], prefix: ['bol', 'dw', 'app'], style: 'kebab-case'}],
       '@angular-eslint/directive-selector': ['error', {type: 'attribute', prefix: ['bol', 'dw', 'app'], style: 'camelCase'}],
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@angular-eslint/prefer-inject': 'error',
@@ -30,6 +30,8 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
+          // Les formulaires passent par Signal Forms.
+          paths: [{name: '@angular/forms', message: 'Utiliser Signal Forms : @angular/forms/signals.'}],
           patterns: [{group: ['primeng', 'primeng/*', 'primeicons'], message: 'Angular Material seulement.'}],
         },
       ],
@@ -62,7 +64,7 @@ export default defineConfig([
       '@angular-eslint/template/prefer-at-empty': 'off',
       'no-restricted-syntax': [
         'error',
-        restricted("TextAttribute[name='size'][value='small']", "Les boutons Material n'ont pas d'entrée size : l'attribut n'a aucun effet."),
+        restricted("Element[name=/^(button|a)$/] > TextAttribute[name='size'][value='small']", "Les boutons Material n'ont pas d'entrée size : l'attribut n'a aucun effet."),
         restricted("Element[name='mat-form-field'] > TextAttribute[name='appearance'][value='outline']", 'Déjà le réglage par défaut (app.config.ts).'),
         restricted("Element[name='img'] > TextAttribute[name='src']", 'Une image statique passe par NgOptimizedImage (ngSrc).'),
         restricted("TextAttribute[name=/^p[A-Z]/]", 'PrimeNG est retiré.'),

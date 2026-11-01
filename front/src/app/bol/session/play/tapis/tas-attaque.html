@@ -1,0 +1,121 @@
+<span class="tas-lbl" id="tas-l2">L’attaque</span>
+@if (store.actionPerdue()) {
+  <!-- « Juste une égratignure » : se remettre du coup lui coûte cette action. Retirer l'effet (ⓘ de l'attaquant) rend le jet. -->
+  <p class="tas-note">{{ store.card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet (ⓘ) pour le laisser agir.</p>
+} @else if (store.defenseTotale()) {
+  <p class="tas-note">Pas d’attaque ce round : il esquive et pare. « Fin du tour » applique le +2.</p>
+} @else if (store.played(); as p) {
+  <!-- Le coup joué, figé jusqu'à la fin du tour : ce qu'il fallait, les dés et la formule, le verdict et les options prises.
+       « Autre attaque » le rouvre, pour une créature qui frappe plusieurs fois par round. -->
+  @if (p.goal; as goal) {
+    <span class="tas-goal">
+      <b>{{ goal.big }}</b>
+      <span><small>{{ goal.small }}</small></span>
+    </span>
+  }
+  <span class="tas-stack">
+    <span class="tas-r1">
+      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="p.dice" [total]="p.total" [slots]="p.slots" />
+    </span>
+    <dw-roll-sum aria-label="Calcul de l’attaque" [terms]="p.sum" />
+  </span>
+  <div class="tas-issue">
+    <span class="tas-verdict">
+      <b [class]="'tas-verdict-title tas-verdict-title--' + p.verdict.tone">{{ p.verdict.title }}</b>
+      <span>{{ p.picks ?? p.verdict.detail }}</span>
+    </span>
+    <button mat-stroked-button type="button" matTooltip="Pour un combattant qui frappe plusieurs fois par round" (click)="store.newAttack()">Autre attaque</button>
+  </div>
+} @else if (store.attackGoal(); as goal) {
+  <span class="tas-goal" [matTooltip]="store.armeFavoriteNote() ?? ''">
+    <b>{{ goal.big }}</b>
+    <span>
+      <em [class]="'tas-chance tas-chance--' + (goal.chance >= 50 ? 'good' : goal.chance >= 25 ? 'mid' : 'low')">{{ goal.chance }} %</em>
+      <small>{{ goal.small }}</small>
+    </span>
+  </span>
+  <span class="tas-stack">
+    <span class="tas-r1">
+      <!-- À table, le cas courant : on tape le total des deux dés. Le bouton les lance à l'écran. -->
+      <span class="tas-entry">
+        <input
+          #attackInput
+          class="tas-total"
+          type="text"
+          inputmode="numeric"
+          maxlength="2"
+          autocomplete="off"
+          placeholder="total"
+          [attr.aria-label]="store.diceCount() > 2 ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
+          [value]="store.diceSum() ?? ''"
+          [disabled]="store.rolling()"
+          (focus)="attackInput.select()"
+          (input)="store.onAttackInput(attackInput.value)"
+          (blur)="store.restoreInput(attackInput, store.diceSum())"
+        />
+        <button type="button" class="tas-dice-btn" [disabled]="store.rolling()" [attr.aria-label]="'Lancer ' + store.diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + store.diceCount() + 'd6 à l’écran'" (click)="store.roll()">
+          <mat-icon svgIcon="gi-dice" />
+        </button>
+      </span>
+      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="store.attackRowDice()" [total]="store.diceSum()" [slots]="store.diceCount()" />
+    </span>
+    <dw-roll-sum aria-label="Calcul de l’attaque" [pending]="store.total() === null" [terms]="store.attackSum()" (effectRemoved)="store.removeEffect($event)" />
+  </span>
+  <div class="tas-issue">
+  <span class="tas-verdict" aria-live="polite">
+    @if (store.rolling()) {
+      <span class="tas-wait">Les dés roulent…</span>
+    } @else if (store.attackVerdict(); as v) {
+      <b [class]="'tas-verdict-title tas-verdict-title--' + v.tone">{{ v.title }}</b>
+      <span>{{ v.detail }}</span>
+    } @else {
+      <span class="tas-wait">Tape le total, ou lance à l’écran.</span>
+    }
+  </span>
+  <!-- L'héroïsme de l'attaquant sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire -->
+  <span class="tas-acts">
+    @if (!store.rolling()) {
+      @if (store.canCritique()) {
+        <button type="button" class="tas-act tas-act--critique" [attr.aria-pressed]="store.critique()" matTooltipPosition="above" matTooltip="Échec critique : le joueur décrit une issue franchement défavorable, et gagne 1 point d’héroïsme" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="store.toggleCritique()">
+          <mat-icon svgIcon="skull" aria-hidden="true" /> <span class="tas-cost">+1 <span class="tas-gem" aria-hidden="true"></span></span>
+        </button>
+      }
+      @if (store.canFavor()) {
+        <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + store.unPointAttaquant()" (click)="store.divineFavor()">
+          <mat-icon svgIcon="gi-reroll" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+        </button>
+      }
+      @if (store.canLegendary()) {
+        <button type="button" class="tas-act tas-act--legendaire" [attr.aria-pressed]="store.legendary()" matTooltipPosition="above" matTooltip="Succès légendaire : deux options de succès héroïque au lieu d’une" [attr.aria-label]="'Succès légendaire, pour ' + store.unPointAttaquant()" (click)="store.toggleLegendary()">
+          <mat-icon svgIcon="crown" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+        </button>
+      }
+      @if (store.canUpgrade()) {
+        <button type="button" class="tas-act" [attr.aria-pressed]="store.heroicUpgrade()" matTooltipPosition="above" matTooltip="Succès héroïque : le coup devient héroïque, une option au choix" [attr.aria-label]="'Convertir en succès héroïque, pour ' + store.unPointAttaquant()" (click)="store.toggleHeroicUpgrade()">
+          <mat-icon aria-hidden="true">{{ store.heroicUpgrade() ? 'star' : 'star_border' }}</mat-icon> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+        </button>
+      }
+    }
+  </span>
+  </div>
+  @if (store.picksMax() > 0) {
+    <div class="tas-sub tas-heroic" role="group" [attr.aria-label]="store.picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
+      <span class="tas-label" [class.tas-label--gold]="store.picksMax() === 1" [class.tas-label--red]="store.picksMax() > 1">{{ store.picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
+      <div class="tas-chips">
+        @for (o of store.heroicOptions; track o.slug) {
+          @let count = store.pickCounts()[o.slug] ?? 0;
+          <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="count > 0" [matTooltip]="o.effect" (click)="store.pickHeroic(o.slug)">
+            {{ o.label }}
+            @if (count > 1) {
+              <em>×{{ count }}</em>
+            }
+          </button>
+        }
+      </div>
+    </div>
+  }
+} @else if (store.target()) {
+  <span class="tas-wait">Calcul du jet…</span>
+} @else {
+  <span class="tas-wait">Dès que tu sais qui est visé.</span>
+}

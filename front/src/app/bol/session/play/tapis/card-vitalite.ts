@@ -1,11 +1,8 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, output} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, inject, input, linkedSignal, output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {ValueTracker} from '../../value-tracker';
 import {TableChange} from '../../models/table-change.model';
 import {TapisKind} from '../../models/tapis.model';
 
@@ -13,11 +10,12 @@ import {TapisKind} from '../../models/tapis.model';
  * valeur affichée suit chaque rechargement de la session. */
 @Component({
   selector: 'bol-card-vitalite',
-  imports: [ReactiveFormsModule, DwValueStepperComponent],
+  imports: [DwValueStepperComponent],
   template: `
     <span class="ivt-label">{{ label() }} ({{ value() }} / {{ max() ?? '—' }})</span>
     <dw-value-stepper
-      [formControl]="control"
+      [value]="shown()"
+      (valueChange)="onChange($event)"
       [min]="0"
       [max]="max() ?? undefined"
       [ariaLabel]="'Vitalité de ' + nom() + ' ' + label()"
@@ -64,28 +62,16 @@ export class CardVitaliteComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly control = new FormControl(0, {nonNullable: true});
-  private readonly tracker = new ValueTracker();
+  protected readonly shown = linkedSignal(() => this.value());
 
-  constructor() {
-    effect(() => {
-      const value = this.value();
-      this.tracker.reset(value);
-      if (value !== this.control.value) {
-        this.control.setValue(value, {emitEvent: false});
-      }
-    });
-
-    this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.onChange(value));
-  }
-
-  private onChange(value: number): void {
-    const previous = this.tracker.value;
-    const delta = this.tracker.take(value);
+  protected onChange(value: number): void {
+    const previous = this.shown();
+    const delta = value - previous;
     if (delta === 0) {
       return;
     }
 
+    this.shown.set(value);
     this.fightSessionService
       .applyDamage(this.sessionId(), this.kind(), this.pivotId(), delta)
       .subscribe({
@@ -94,8 +80,7 @@ export class CardVitaliteComponent {
           this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
             duration: 5000,
           });
-          this.tracker.reset(previous);
-          this.control.setValue(previous, {emitEvent: false});
+          this.shown.set(previous);
         },
       });
   }

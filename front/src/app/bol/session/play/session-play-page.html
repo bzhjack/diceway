@@ -1,124 +1,129 @@
-@if (loading()) {
+@if (table.loading()) {
   <div class="cp-status">Chargement de la table…</div>
-} @else if (errorMessage()) {
+} @else if (table.errorMessage()) {
   <div class="cp-status cp-status--error">
-    <p>{{ errorMessage() }}</p>
+    <p>{{ table.errorMessage() }}</p>
     <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
-} @else if (board(); as b) {
+} @else if (table.board(); as b) {
   <div class="cp-page cp-page--barbare">
     <div class="cp-table">
     <bol-session-header
-      [mode]="mode()"
-      [titre]="headerTitle()"
-      (startCombat)="openStartCombat()"
-      (endCombat)="askEndCombat()"
-      (searchRequested)="openPalette()"
-      [coulissesOpen]="reserveOpen()"
-      (coulissesToggled)="toggleReserve()"
-      [interrupters]="interrupters()"
-      [deMj]="etat().deMj"
-      (deMjChanged)="setDeMj($event)"
-      (interruptRequested)="onInterrupt($event)"
-      (rerollRequested)="openStartCombat(true)"
+      [mode]="table.mode()"
+      [titre]="table.headerTitle()"
+      (startCombat)="commands.openStartCombat()"
+      (endCombat)="ending.askEndCombat()"
+      (searchRequested)="commands.openPalette()"
+      [coulissesOpen]="table.reserveOpen()"
+      (coulissesToggled)="table.toggleReserve()"
+      [interrupters]="combat.interrupters()"
+      [deMj]="combat.etat().deMj"
+      (deMjChanged)="combat.setDeMj($event)"
+      (interruptRequested)="combat.onInterrupt($event)"
+      (rerollRequested)="commands.openStartCombat(true)"
     >
-      @if (mode() === 'libre') {
-        <bol-scene-acts [sessionTitre]="session()?.titre ?? null" (sceneChanged)="onSceneLoaded($event)" />
+      @if (table.mode() === 'libre') {
+        <bol-scene-acts [sessionTitre]="table.session()?.titre ?? null" (sceneChanged)="commands.onSceneLoaded($event)" />
       } @else {
         <!-- En combat, l'ordre d'action en seconde rangée de l'en-tête, comme les modificateurs sur la page du jet de réaction -->
         <bol-turn-order
           cpHeaderRow
-          [entries]="turnEntries()"
-          [round]="etat().round"
-          [targetKey]="selectedTarget()?.key ?? null"
+          [entries]="combat.turnEntries()"
+          [round]="combat.etat().round"
+          [targetKey]="combat.selectedTarget()?.key ?? null"
           [legendaryActive]="b.legendaryActive"
-          [announcement]="turnAnnouncement()"
-          (gaveBack)="onGiveBackTurn($event)"
-          (addRequested)="openAddCombatantDialog()"
+          [announcement]="combat.turnAnnouncement()"
+          (gaveBack)="combat.onGiveBackTurn($event)"
+          (addRequested)="commands.openAddCombatantDialog()"
         />
       }
     </bol-session-header>
 
-    @if (sessionId(); as sid) {
-      @if (mode() === 'libre') {
-        <!-- Mode libre : le théâtre, et les coulisses (la réserve) à droite. -->
-        <mat-sidenav-container class="spp-coulisses" [hasBackdrop]="false">
-          <mat-sidenav
-            id="spp-coulisses-panel"
-            class="spp-coulisses-panel"
-            position="end"
-            mode="side"
-            role="complementary"
-            aria-label="Coulisses"
-            [opened]="reserveOpen()"
-            (openedChange)="onCoulissesChange($event)"
-          >
-            <div class="spp-coulisses-inner">
-              <div class="spp-coulisses-tete">
-                <h2 class="spp-coulisses-titre">Coulisses</h2>
-                <button mat-icon-button type="button" aria-label="Fermer les coulisses" (click)="setReserveOpen(false)">
-                  <mat-icon>close</mat-icon>
-                </button>
+    @if (table.sessionId(); as sid) {
+      @if (table.mode() === 'libre') {
+        <!-- Mode libre : le théâtre, et les coulisses (la réserve) à droite. Chacun des deux modes a son paquet : on ne charge que celui qu'on affiche. -->
+        @defer (on immediate) {
+          <mat-sidenav-container class="spp-coulisses" [hasBackdrop]="false">
+            <mat-sidenav
+              id="spp-coulisses-panel"
+              class="spp-coulisses-panel"
+              position="end"
+              mode="side"
+              role="complementary"
+              aria-label="Coulisses"
+              [opened]="table.reserveOpen()"
+              (openedChange)="table.onCoulissesChange($event)"
+            >
+              <div class="spp-coulisses-inner">
+                <div class="spp-coulisses-tete">
+                  <h2 class="spp-coulisses-titre">Coulisses</h2>
+                  <button mat-icon-button type="button" aria-label="Fermer les coulisses" (click)="table.setReserveOpen(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <bol-reserve
+                  [titre]="null"
+                  [sessionId]="sid"
+                  [existingHeroIds]="table.existingHeroIds()"
+                  [currentSceneId]="table.session()?.scene_id ?? null"
+                  [nonHeroCount]="table.nonHeroCount()"
+                  (sceneChanged)="commands.onSceneChanged()"
+                  (placed)="table.reloadSession()"
+                />
               </div>
-              <bol-reserve
-                [titre]="null"
+            </mat-sidenav>
+            <mat-sidenav-content class="spp-scene">
+              <bol-theatre
+                [cards]="table.cards()"
                 [sessionId]="sid"
-                [existingHeroIds]="existingHeroIds()"
-                [currentSceneId]="session()?.scene_id ?? null"
-                [nonHeroCount]="nonHeroCount()"
-                (sceneChanged)="onSceneChanged()"
-                (placed)="reloadSession()"
+                [selectedKeys]="table.selectedKeys()"
+                (cardToggled)="expanded.onCardToggled($event)"
+                (selectToggled)="table.toggleSelected($event)"
+                (campToggleRequested)="commands.toggleCamp($event)"
+                (sceneChanged)="commands.onSceneLoaded($event)"
+                (changed)="table.onTableChanged($event)"
+                (coulissesRequested)="table.setReserveOpen(true)"
               />
-            </div>
-          </mat-sidenav>
-          <mat-sidenav-content class="spp-scene">
-            <bol-theatre
-              [cards]="cards()"
-              [sessionId]="sid"
-              [selectedKeys]="selectedKeys()"
-              (cardToggled)="onCardToggled($event)"
-              (selectToggled)="toggleSelected($event)"
-              (campToggleRequested)="toggleCamp($event)"
-              (sceneChanged)="onSceneLoaded($event)"
-              (changed)="onTableChanged($event)"
-              (coulissesRequested)="setReserveOpen(true)"
-            />
-          </mat-sidenav-content>
-        </mat-sidenav-container>
+            </mat-sidenav-content>
+          </mat-sidenav-container>
+        }
       } @else {
         <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
-        <bol-combat-board
-          [effets]="effetsAffiches()"
-          [deMj]="etat().deMj"
-          [activeCard]="activeCard()"
-          [armes]="assistantArmes()"
-          [ownedArmes]="activeOwnedArmes()"
-          [combatOptions]="combatOptions()"
-          [targets]="targets()"
-          [target]="selectedTarget()"
-          [attacker]="attackerStats()"
-          [targetStats]="targetStats()"
-          [targetsStats]="targetsStats()"
-          [legendaryBonus]="legendaryForActive()"
-          [canRescue]="rescuePatients().length > 0"
-          [hordeMates]="hordeMates()"
-          (hordeChanged)="hordeKeys.set($event)"
-          [carrieres]="activeCarrieres()"
-          (delayRequested)="onDelay()"
-          (endTurnRequested)="onEndTurn($event)"
-          (choiceChanged)="attackChoice.set($event)"
-          (targetSelected)="onAttackCard($event)"
-          (sheetRequested)="onCardToggled($event)"
-          (attackRolled)="onAttackRolled($event)"
-          (effectRemoved)="onEffectRemoved($event)"
-          (effectAdded)="onEffectAdded($event)"
-          (damageApplied)="onHitApplied($event)"
-          (totalDefenseRequested)="onTotalDefense($event)"
-          (rescueRequested)="onRescue()"
-          (heroismeAdjusted)="onHeroismeAdjusted($event)"
-          (vitaliteAdjusted)="onVitaliteAdjusted($event)"
-          (targetHeroismeAdjusted)="onTargetHeroismeAdjusted($event)"
-        />
+        @defer (on immediate) {
+          <bol-combat-board
+            #combatBoard
+            [effets]="combat.effetsAffiches()"
+            [deMj]="combat.etat().deMj"
+            [activeCard]="combat.activeCard()"
+            [armes]="stats.assistantArmes()"
+            [ownedArmes]="stats.activeOwnedArmes()"
+            [combatOptions]="stats.combatOptions()"
+            [targets]="combat.targets()"
+            [target]="combat.selectedTarget()"
+            [attacker]="stats.attackerStats()"
+            [targetStats]="stats.targetStats()"
+            [targetsStats]="stats.targetsStats()"
+            [legendaryBonus]="combat.legendaryForActive()"
+            [canRescue]="combat.rescuePatients().length > 0"
+            [hordeMates]="combat.hordeMates()"
+            (hordeChanged)="combat.hordeKeys.set($event)"
+            [carrieres]="stats.activeCarrieres()"
+            (delayRequested)="combat.onDelay()"
+            (endTurnRequested)="combat.onEndTurn($event)"
+            (choiceChanged)="combat.attackChoice.set($event)"
+            (targetSelected)="combat.onAttackCard($event)"
+            (sheetRequested)="expanded.onCardToggled($event)"
+            (attackRolled)="stats.onAttackRolled($event)"
+            (effectRemoved)="combat.onEffectRemoved($event)"
+            (effectAdded)="combat.onEffectAdded($event)"
+            (damageApplied)="wounds.onHitApplied($event)"
+            (totalDefenseRequested)="combat.onTotalDefense($event)"
+            (rescueRequested)="wounds.onRescue()"
+            (heroismeAdjusted)="stats.onHeroismeAdjusted($event)"
+            (vitaliteAdjusted)="wounds.onVitaliteAdjusted($event)"
+            (targetHeroismeAdjusted)="stats.onTargetHeroismeAdjusted($event)"
+          />
+        }
       }
     }
     <bol-rideau [etat]="stage.rideau()" [carton]="stage.carton()" />

@@ -1,18 +1,18 @@
 <h2 mat-dialog-title>Préparer la scène</h2>
-<form [formGroup]="form" (submit)="submit($event)">
+<form (submit)="submit($event)">
   <mat-dialog-content class="sed-content">
     <section class="sed-col" aria-labelledby="sed-decor-title">
       <h3 class="sed-col-title" id="sed-decor-title">Le décor</h3>
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Titre</mat-label>
-        <input id="sed-titre" matInput formControlName="titre" autocomplete="off" [attr.maxlength]="titreMax" />
+        <input id="sed-titre" matInput [formField]="sceneForm.titre" autocomplete="off" />
       </mat-form-field>
 
       <div class="sed-pair">
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Région</mat-label>
-          <mat-select id="sed-region" formControlName="region_id">
+          <mat-select id="sed-region" [formField]="sceneForm.region_id">
             <mat-option [value]="null">Aucune</mat-option>
             @for (region of regions(); track region.id) {
               <mat-option [value]="region.id">{{ region.region }}</mat-option>
@@ -21,7 +21,7 @@
         </mat-form-field>
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Lieu</mat-label>
-          <input id="sed-lieu" matInput formControlName="lieu" autocomplete="off" maxlength="120" placeholder="Gué du Tyr" />
+          <input id="sed-lieu" matInput [formField]="sceneForm.lieu" autocomplete="off" placeholder="Gué du Tyr" />
         </mat-form-field>
       </div>
 
@@ -47,7 +47,7 @@
       <div class="sed-pair">
         <mat-form-field subscriptSizing="dynamic">
           <mat-label>Météo</mat-label>
-          <mat-select id="sed-meteo" formControlName="meteo">
+          <mat-select id="sed-meteo" [formField]="sceneForm.meteo">
             <mat-option [value]="null">Aucune</mat-option>
             @for (meteo of meteos; track meteo.value) {
               <mat-option [value]="meteo.value">{{ meteo.label }}</mat-option>
@@ -56,7 +56,7 @@
         </mat-form-field>
         <div class="sed-field">
           <span class="sed-label" id="sed-danger-label">Danger</span>
-          <mat-button-toggle-group class="sed-toggles" aria-labelledby="sed-danger-label" formControlName="danger" [hideSingleSelectionIndicator]="true">
+          <mat-button-toggle-group class="sed-toggles" aria-labelledby="sed-danger-label" [formField]="sceneForm.danger" [hideSingleSelectionIndicator]="true">
             <mat-button-toggle [value]="0">Aucun</mat-button-toggle>
             @for (niveau of dangers; track niveau) {
               <mat-button-toggle [value]="niveau" [attr.aria-label]="'Danger ' + niveau + ' sur 4'">{{ niveau }}</mat-button-toggle>
@@ -67,8 +67,8 @@
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Illustration (adresse d'une image)</mat-label>
-        <input id="sed-image" matInput formControlName="image" autocomplete="off" maxlength="500" placeholder="https://…" />
-        @if (form.controls.image.hasError('pattern')) {
+        <input id="sed-image" matInput [formField]="sceneForm.image" autocomplete="off" placeholder="https://…" />
+        @if (imageInvalid()) {
           <mat-error>L'adresse commence par https:// ou /assets/.</mat-error>
         }
       </mat-form-field>
@@ -83,33 +83,33 @@
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>À lire aux joueurs</mat-label>
-        <textarea id="sed-lecture" matInput rows="8" formControlName="lecture" [attr.maxlength]="lectureMax"></textarea>
+        <textarea id="sed-lecture" matInput rows="8" [formField]="sceneForm.lecture"></textarea>
         <mat-hint align="end">{{ lectureLength() }} / {{ lectureMax }}</mat-hint>
       </mat-form-field>
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>En jeu</mat-label>
-        <textarea id="sed-jeu" matInput rows="5" formControlName="jeu" [attr.maxlength]="jeuMax"></textarea>
+        <textarea id="sed-jeu" matInput rows="5" [formField]="sceneForm.jeu"></textarea>
         <mat-hint>Jets, difficultés, tables d'effets : visibles pendant toute la scène.</mat-hint>
       </mat-form-field>
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Secret du MJ</mat-label>
-        <textarea id="sed-notes" matInput rows="5" formControlName="notes" maxlength="10000"></textarea>
+        <textarea id="sed-notes" matInput rows="5" [formField]="sceneForm.notes"></textarea>
       </mat-form-field>
 
       <div class="sed-field">
         <span class="sed-label" id="sed-pistes-label">Pistes</span>
-        <ul class="sed-pistes" formArrayName="pistes" aria-labelledby="sed-pistes-label">
-          @for (piste of pistes.controls; track piste; let index = $index) {
-            <li class="sed-piste" [formGroupName]="index">
+        <ul class="sed-pistes" aria-labelledby="sed-pistes-label">
+          @for (piste of sceneForm.pistes; track piste; let index = $index) {
+            <li class="sed-piste">
               <mat-form-field subscriptSizing="dynamic" class="sed-piste-texte">
                 <mat-label>Piste {{ index + 1 }}</mat-label>
-                <input matInput formControlName="texte" autocomplete="off" maxlength="200" />
+                <input matInput [formField]="piste.texte" autocomplete="off" />
               </mat-form-field>
               <mat-form-field subscriptSizing="dynamic" class="sed-piste-scene">
                 <mat-label>Mène à</mat-label>
-                <mat-select formControlName="scene_id">
+                <mat-select [formField]="piste.scene_id">
                   <mat-option [value]="null">Aucune scène</mat-option>
                   @for (sibling of data.siblings; track sibling.id) {
                     <mat-option [value]="sibling.id">{{ sibling.titre }}</mat-option>

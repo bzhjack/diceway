@@ -1,3 +1,4 @@
+import {AVANTAGE_VIGILANT_ID, DESAVANTAGE_LENT_A_LA_DETENTE_ID} from '../bol-rules.constants';
 import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {actionDiceTarget, actionResultTone, netDiceModifier} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
@@ -8,17 +9,15 @@ import {ReactionAdversary, ReactionGroup, ReactionHero, ReactionLane, ReactionPa
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
 
-/** Les traits qui changent le nombre de dés du jet de réaction (livre, « Avantages » et « Désavantages ») : « Vigilant » donne un dé de
- * bonus, « Lent à la détente » un dé de malus. */
-const REACTION_BONUS_TRAIT = 'vigilant';
-const REACTION_MALUS_TRAIT = 'lent à la détente';
+/** Les noms à l'écran des traits qui changent le nombre de dés du jet de réaction (livre, « Avantages » et « Désavantages »). */
+export const REACTION_BONUS_TRAIT_LABEL = 'Vigilant';
+export const REACTION_MALUS_TRAIT_LABEL = 'Lent à la détente';
 
 /** Dés de bonus (positif) ou de malus (négatif) d'un héros à son jet de réaction, d'après ses avantages et désavantages : on lance
  * 2 + |n| dés et on garde les deux meilleurs (bonus) ou les deux moins bons (malus). Un dé de bonus et un dé de malus s'annulent. */
 export function reactionDiceNet(traits: readonly HeroDetailTrait[]): number {
-  const named = (kind: 'avantage' | 'desavantage', label: string): number =>
-    traits.filter((trait) => trait.kind === kind && trait.label.trim().toLowerCase() === label).length;
-  return netDiceModifier(named('avantage', REACTION_BONUS_TRAIT), named('desavantage', REACTION_MALUS_TRAIT));
+  const count = (kind: HeroDetailTrait['kind'], id: number): number => traits.filter((trait) => trait.kind === kind && trait.id === id).length;
+  return netDiceModifier(count('avantage', AVANTAGE_VIGILANT_ID), count('desavantage', DESAVANTAGE_LENT_A_LA_DETENTE_ID));
 }
 
 /** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − malus adverse + carrière utile. */

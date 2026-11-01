@@ -417,24 +417,8 @@ bol-action-roll-panel {
 }
 
 // Le mot du verdict brille de la couleur qui chauffe le foyer.
-.ard-verdict-title--reussite {
-  color: var(--dw-forge-verdict-reussite);
-  text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
-}
-
-.ard-verdict-title--echec {
-  color: var(--dw-forge-verdict-echec);
-  text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
-}
-
-.ard-verdict-title--heroique {
-  color: var(--dw-forge-verdict-heroique);
-  text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
-}
-
-.ard-verdict-title--legendaire {
-  color: var(--dw-forge-verdict-legendaire);
-  text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+.ard-verdict-title {
+  @include forge.verdict-tones(true);
 }
 
 .ard-verdict .ard-verdict-wait {

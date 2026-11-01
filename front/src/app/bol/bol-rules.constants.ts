@@ -9,7 +9,8 @@ export const CARRIERE_PRETRE_ID = 21;
 export const CARRIERE_SORCIER_ID = 24;
 /** Forgeron — avec l'avantage Maître artisan (Mythic+), points de création = rang. */
 export const CARRIERE_FORGERON_ID = 10;
-const CARRIERE_MEDECIN_ID = 14;
+/** Médecin (guérisseur, rebouteux) — sa carrière soigne et secourt. */
+export const CARRIERE_MEDECIN_ID = 14;
 const CARRIERE_TENTATRICE_ID = 25;
 
 /** E11 — Non-combattant : budget combat 4 → 2, budget carrières 4 → 6. */
@@ -26,6 +27,11 @@ export const AVANTAGE_PEAU_DURE_ID = 39;
 export const AVANTAGE_RECUPERATION_RAPIDE_ID = 45;
 /** Souffreteux — ne récupère sa vitalité que par des soins médicaux, jamais par le repos. */
 export const DESAVANTAGE_SOUFFRETEUX_ID = 41;
+
+/** Vigilant — un dé de bonus au jet de réaction. */
+export const AVANTAGE_VIGILANT_ID = 56;
+/** Lent à la détente — un dé de malus au jet de réaction. */
+export const DESAVANTAGE_LENT_A_LA_DETENTE_ID = 24;
 
 /** Arme favorite — dé de bonus avec l'arme nommée par sa précision (régionale : l'arme régionale). */
 export const AVANTAGE_ARME_FAVORITE_ID = 6;

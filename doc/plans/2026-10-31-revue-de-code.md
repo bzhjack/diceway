@@ -298,7 +298,7 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 
 - **File d'appels :** `BolFightSessionService` envoie les appels d'une table un par un. Apache traite les requêtes en parallèle : sans cette file, la réponse d'une écriture doublée par une autre pourrait remplacer la session par un état sans cette autre écriture.
 - **GET conservés :** chargement de la page, changement de scène, ajout depuis la réserve, changement d'équipement, relèves et saignements de héros, où plusieurs écritures se suivent. Ces cas sont rares ou leur PATCH ne renvoie pas de session.
-- **Encore lourd :** chaque action transfère encore la session une fois, portraits compris. Seule la phase 6 règle ce point.
+- **Encore lourd :** chaque action transfère encore la session une fois, portraits compris. La phase 6 règle ce point, une fois `bol:extract-portraits` lancé.
 - **`GET /bol/fight-session` :** la route existante renvoie maintenant `id`, `titre`, `statut`, `heros_count` et `adversaires_count`. La table complète n'est plus disponible que session par session.
 - **Cartes :** recherche faite dans le dépôt, les scénarios et la base de ce poste. Une autre base qui les référencerait les retrouverait dans l'historique git.
 - **À traiter :** `start-combat-page.scss` dépasse le seuil d'avertissement de style (20,19 ko pour 16 ko).
@@ -353,23 +353,54 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 - **Choix différents de la revue :** M5 reste une paire de classes globales (`dw-field-error`, `dw-field-warning`), plus simple qu'un composant pour un simple bloc de texte. `hero-advanced-page` garde sa propre logique : la reprendre n'était pas dans cette phase.
 - **Défaut corrigé :** ajouter ou retirer de l'équipement sur une fiche de héros ou de PNJ ne marquait pas la fiche comme modifiée. Quitter la page perdait le changement sans alerte.
 - **Accessibilité :** le portrait d'une fiche est un vrai bouton, utilisable au clavier.
-- **Reste en formulaires réactifs :** `scene-editor-dialog` et `dw-prompt-dialog`, hors de cette phase.
+- **Restaient en formulaires réactifs :** `scene-editor-dialog` et `dw-prompt-dialog`, migrés en phase 5.
 - **Exception à la règle Tailwind :** les marges de page restent sur `dw-field-error` et `dw-field-warning`, comme la règle le permet pour une primitive.
 
 ### Phase 5 : le combat (L)
 
-- [ ] Tests de `turn-assistant`, `start-combat-page`, `session-play-page`
-- [ ] M16, M17, M18, M19, M20 : les petites briques
-- [ ] M13, M14, M15 : addition, saisie, verdict
-- [ ] Découpage de `turn-assistant`, puis de `session-play-page`
-- [ ] Signal Forms : `turn-assistant`, `card-vitalite`, `hero-resources`, au moment de leur reprise
-- [ ] `@defer` sur le combat et le théâtre
+- [x] Tests de `turn-assistant`, `start-combat-page`, `session-play-page`
+- [x] M16, M17, M18, M19, M20 : les petites briques
+- [x] M13, M14, M15 : addition, saisie, verdict
+- [x] Découpage de `turn-assistant`, puis de `session-play-page`
+- [x] Signal Forms : `turn-assistant`, `card-vitalite`, `hero-resources`, et aussi `scene-editor-dialog` et `dw-prompt-dialog`
+- [x] `@defer` sur le combat et le théâtre
+
+**Fait le 2026-11-01.** Vérifié par 57 captures du combat au pixel près, identiques à celles d'avant le découpage, 34 contrôles de parcours dans le navigateur et les tests unitaires.
+
+- **`turn-assistant` :** le composant ne garde que ses entrées et ses sorties. L'état et les règles sont dans `turn-assistant.store.ts`, l'écran dans quatre blocs (`tas-attaquant`, `tas-cible`, `tas-attaque`, `tas-degats`). **Limite :** le store fait encore environ 2 100 lignes, déplacées telles quelles. Il reste le plus gros fichier du front, et pourrait être redécoupé par étape du tour.
+- **`session-play-page` :** de 1 559 à une centaine de lignes. Le reste est dans `play/table/`, un service par domaine : la table, le tour, les statistiques, les blessures, la fin du combat, la carte dépliée, les commandes.
+- **Choix différents de la revue :** M14 et M15 sont des mixins (`forge.roll-entry`, `forge.verdict-tones`) plutôt que des composants : chaque page garde la main sur le focus de ses champs.
+- **Signal Forms :** plus aucun import de `@angular/forms`, et une règle de lint l'interdit. `dw-value-stepper` est un vrai `FormValueControl` ; hors formulaire, on lui donne `[value]` et `(valueChange)`. Dans un formulaire, ses bornes viennent du schéma (`min()`, `max()`), car Angular refuse `[min]` à côté de `[formField]`. `ValueTracker` a disparu : le pas se calcule depuis la valeur affichée.
+- **Changement de comportement :** le cœur de vitalité de `hero-resources` suit maintenant les rechargements de la table. Il ne lisait la valeur qu'à l'ouverture.
+- **Poids :** `session-play-page` passe de 523 ko à 218 ko ; `combat-board` a son paquet (157 ko), chargé seulement en combat, et le théâtre le sien.
+- **À traiter :** `turn-assistant.scss` (18,1 ko) et `start-combat-page.scss` (19,5 ko) dépassent le seuil d'avertissement de style (16 ko).
 
 ### Phase 6 : portraits et backend (L)
 
-- [ ] Sortir les portraits du JSON : fichiers, URL, migration
-- [ ] Déplacer les requêtes des contrôleurs vers les services
-- [ ] Règles appuyées sur des identifiants plutôt que sur des textes
+- [x] Sortir les portraits du JSON : fichiers, URL, migration
+- [x] Déplacer les requêtes des contrôleurs vers les services
+- [x] Règles appuyées sur des identifiants plutôt que sur des textes
+
+**Fait le 2026-11-01.** Vérifié par les tests backend (123), sur SQLite en mémoire, dans un conteneur sans réseau.
+
+**Non vérifié :** rien n'a tourné sur la vraie base ni avec un compte connecté. `bol:extract-portraits` et les deux migrations n'ont jamais vu MySQL, et l'ajout du domaine de l'API aux portraits (production) n'est testé que par sa spécification.
+
+**À faire sur chaque machine**, dans cet ordre, car la route est figée dans l'image et les portraits sont propres à chaque base :
+
+```bash
+docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php
+docker exec diceway php artisan migrate
+docker exec diceway php artisan bol:extract-portraits --dry-run
+docker exec diceway php artisan bol:extract-portraits
+```
+
+- **Portraits :** une fiche ne garde que l'adresse de son portrait (`/api/bol/portraits/<empreinte>.<ext>`), un fichier servi avec un cache navigateur permanent. Sur une copie de la session réelle, 311 ko deviennent 24 ko (−92 %).
+- **Retour en arrière :** les originaux restent dans `bol_portrait_backup`. `--restore` les remet ; `--forget-originals` les efface, une fois vérifié. Une machine qui n'a pas lancé la commande continue d'afficher ses portraits en base64.
+- **Limites des portraits :** la route est publique, une balise `<img>` n'envoyant pas de jeton (l'adresse est l'empreinte de l'image, elle ne se devine pas). Aucun fichier n'est effacé quand une fiche change de portrait ou disparaît : il n'y a pas encore de nettoyage.
+- **Contrôleurs :** ils valident, vérifient les droits, appellent un service et répondent. Reste le `find` de `ProtectsHeros`, qui sert au contrôle d'accès, et les contrôleurs `Auth`, hors du périmètre. La validation reste dans les contrôleurs. Les synchronisations des héros et des PNJ restent séparées : leurs requêtes n'ont pas la même forme.
+- **Défaut corrigé :** `/bol/heros/update` écrivait par une requête directe qui contournait le modèle ; elle passe désormais par lui. Code mort retiré : `BolCarriereController::update`, sans route.
+- **Règles :** « Vigilant », « Lent à la détente » et la carrière de soins se reconnaissent à leur id. « Se tient à deux mains » est une colonne de `bol_arme`, reprise des notes par la migration et réglable par une case du formulaire. L'intendance compte les boucliers par catégorie.
+- **Gardé tel quel :** `d6 ou d6B` reste lu dans les dégâts : c'est une notation documentée (`doc/resources/armes.md`) dont on tire les deux dés, pas un libellé. Les mains nues d'un PNJ se reconnaissent encore à leur nom, car sa copie à la table ne porte pas l'id de l'arme.
 
 ## 8. Limites de cette revue
 

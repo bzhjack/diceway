@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {bestHealingCareer, isHealingCareer, medicalCareAmount, rescueDifficulty} from './rescue.util';
+import {CARRIERE_MEDECIN_ID} from '../bol-rules.constants';
+import {bestHealingCareer, medicalCareAmount, rescueDifficulty} from './rescue.util';
 
 describe('rescueDifficulty', () => {
   it('starts from Moyenne and gets one level harder per negative point', () => {
@@ -16,15 +17,11 @@ describe('rescueDifficulty', () => {
 });
 
 describe('healing careers', () => {
-  it('spots a healer by its name', () => {
-    expect(isHealingCareer('Médecin')).toBe(true);
-    expect(isHealingCareer('Guérisseuse')).toBe(true);
-    expect(isHealingCareer('Barbare')).toBe(false);
-  });
+  it('recognizes the healing career by its id, whatever its name', () => {
+    const medecin = {id: CARRIERE_MEDECIN_ID, label: 'Rebouteux', value: 2};
 
-  it('keeps the best-ranked healing career', () => {
-    expect(bestHealingCareer([{label: 'Barbare', value: 3}, {label: 'Médecin', value: 1}, {label: 'Rebouteux', value: 2}])).toEqual({label: 'Rebouteux', value: 2});
-    expect(bestHealingCareer([{label: 'Barbare', value: 3}])).toBeNull();
+    expect(bestHealingCareer([{id: 2, label: 'Barbare', value: 3}, medecin])).toEqual(medecin);
+    expect(bestHealingCareer([{id: 2, label: 'Médecin', value: 3}])).toBeNull();
   });
 });
 

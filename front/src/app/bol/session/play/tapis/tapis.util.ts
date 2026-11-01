@@ -211,7 +211,7 @@ export function heroHeaderStats(hero: BolHerosModel): HeroHeaderStat[] {
  * (un simple id) sont ignorées ; les armures équipées passent en premier. */
 export function heroDetails(hero: BolHerosModel): HeroDetails {
   const carrieres = hero.carrieres
-    .map((entry) => ({label: entry.carriere?.carriere ?? '', value: entry.value}))
+    .map((entry) => ({id: entry.carriere_id ?? undefined, label: entry.carriere?.carriere ?? '', value: entry.value}))
     .filter((entry) => entry.label);
 
   const armes = (hero.armes as readonly (BolHerosArmeModel | number)[])
@@ -239,10 +239,10 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
     .map((trait): HeroDetailTrait | null => {
       const traitable = trait.traitable;
       if (traitable && 'avantage' in traitable) {
-        return {label: traitable.avantage, detail: trait.detail || null, kind: 'avantage'};
+        return {id: trait.traitable_id, label: traitable.avantage, detail: trait.detail || null, kind: 'avantage'};
       }
       if (traitable && 'desavantage' in traitable) {
-        return {label: traitable.desavantage, detail: trait.detail || null, kind: 'desavantage'};
+        return {id: trait.traitable_id, label: traitable.desavantage, detail: trait.detail || null, kind: 'desavantage'};
       }
       return null;
     })

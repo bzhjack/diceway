@@ -301,12 +301,18 @@ final class BolScenarioImportPlan
             $this->error("$path.type", 'M (mêlée) ou T (tir)');
         }
 
+        $deuxMains = $arme['deux_mains'] ?? false;
+        if (!is_bool($deuxMains)) {
+            $this->error("$path.deux_mains", 'true ou false');
+        }
+
         return ['id' => null, 'custom' => [
             'arme'   => $this->text($arme, 'nom', "$path.nom", 255, true),
             'degats' => $this->text($arme, 'degats', "$path.degats", 255, true),
             'type'   => is_string($type) ? $type : 'M',
             'portee' => $this->text($arme, 'portee', "$path.portee", 255),
             'notes'  => $this->text($arme, 'notes', "$path.notes", 1000),
+            'deux_mains' => $deuxMains === true,
         ]];
     }
 

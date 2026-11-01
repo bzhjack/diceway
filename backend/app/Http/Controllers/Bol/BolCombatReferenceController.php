@@ -3,35 +3,24 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolCombatOption;
-use App\Models\Bol\BolDifficulte;
-use App\Models\Bol\BolHeroicOption;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Services\Bol\BolReferenceData;
 
 class BolCombatReferenceController extends Controller
 {
+    public function __construct(private readonly BolReferenceData $reference) {}
+
     public function getCombatOptions()
     {
-        $data = Cache::remember('bol_combat_options_all', BolCache::TTL, fn() =>
-            BolCombatOption::orderBy('ordre')->get()
-        );
-        return response()->json($data);
+        return response()->json($this->reference->combatOptions());
     }
 
     public function getHeroicOptions()
     {
-        $data = Cache::remember('bol_heroic_options_all', BolCache::TTL, fn() =>
-            BolHeroicOption::orderBy('ordre')->get()
-        );
-        return response()->json($data);
+        return response()->json($this->reference->heroicOptions());
     }
 
     public function getDifficultes()
     {
-        $data = Cache::remember('bol_difficultes_all', BolCache::TTL, fn() =>
-            BolDifficulte::orderBy('ordre')->get()
-        );
-        return response()->json($data);
+        return response()->json($this->reference->difficultes());
     }
 }

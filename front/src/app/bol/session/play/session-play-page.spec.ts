@@ -15,9 +15,11 @@ import {BolPnjService} from '../../services/bol-pnj.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {SceneActionsService} from '../scene-actions.service';
-import {TableChange} from '../models/table-change.model';
-import {TapisCard} from '../models/tapis.model';
 import {SessionPlayPageComponent} from './session-play-page';
+import {CombatTurnStore} from './table/combat-turn.store';
+import {CombatWoundsService} from './table/combat-wounds.service';
+import {TableCommandsService} from './table/table-commands.service';
+import {TableStore} from './table/table.store';
 import {SceneStageStore} from './theatre/scene-stage.store';
 
 function heroRow(id: number, vitalite: number) {
@@ -61,25 +63,13 @@ function session(over: Partial<BolFightSessionModel> = {}): BolFightSessionModel
   } as unknown as BolFightSessionModel;
 }
 
-/** Ce que la page expose à son gabarit : la spécification la conduit comme lui. */
-interface PageApi {
-  session: ReturnType<typeof signal<BolFightSessionModel | null>>;
-  loading: () => boolean;
-  errorMessage: () => string | null;
-  mode: () => string;
-  activeCard: () => TapisCard | null;
-  cards: () => readonly TapisCard[];
-  etat: () => {round: number; joues: readonly string[]};
-  onEndTurn(afterHit?: boolean): void;
-  onDelay(): void;
-  onTableChanged(change: TableChange): void;
-  toggleCamp(card: TapisCard): void;
-  onHitApplied(hit: {target: TapisCard; damage: number; unarmed: boolean}): void;
-}
 
 describe('SessionPlayPageComponent', () => {
   let fixture: ComponentFixture<SessionPlayPageComponent>;
-  let page: PageApi;
+  let table: TableStore;
+  let combat: CombatTurnStore;
+  let wounds: CombatWoundsService;
+  let commands: TableCommandsService;
   const service = {
     fightSession: vi.fn(),
     updateCombatState: vi.fn(),
@@ -114,11 +104,16 @@ describe('SessionPlayPageComponent', () => {
       ],
     });
     // Le gabarit a ses propres tests : ici, la page seule, avec ce qu'elle enregistre et recharge.
-    TestBed.overrideComponent(SessionPlayPageComponent, {
-      set: {imports: [], template: '', providers: [{provide: SceneStageStore, useValue: {sync: vi.fn(), reload: vi.fn(), rideau: signal(null), carton: signal(null)}}]},
-    });
+    TestBed.overrideComponent(SessionPlayPageComponent, {set: {imports: [], template: ''}});
+    TestBed.overrideProvider(SceneStageStore, {useValue: {sync: vi.fn(), reload: vi.fn(), rideau: signal(null), carton: signal(null)}});
+    // Le gabarit d'origine a des blocs `@defer` : ses dépendances se résolvent de façon asynchrone.
+    await TestBed.compileComponents();
     fixture = TestBed.createComponent(SessionPlayPageComponent);
-    page = fixture.componentInstance as unknown as PageApi;
+    const injector = fixture.debugElement.injector;
+    table = injector.get(TableStore);
+    combat = injector.get(CombatTurnStore);
+    wounds = injector.get(CombatWoundsService);
+    commands = injector.get(TableCommandsService);
     await stable();
   }
 
@@ -133,22 +128,22 @@ describe('SessionPlayPageComponent', () => {
       await rendre(session());
 
       expect(service.fightSession).toHaveBeenCalledWith('s1');
-      expect(page.loading()).toBe(false);
-      expect(page.mode()).toBe('combat');
-      expect(page.cards().length).toBe(3);
+      expect(table.loading()).toBe(false);
+      expect(table.mode()).toBe('combat');
+      expect(table.cards().length).toBe(3);
     });
 
     it('sans identifiant, le dit au lieu de charger', async () => {
       await rendre(session(), null);
 
-      expect(page.errorMessage()).toBe('Session introuvable.');
+      expect(table.errorMessage()).toBe('Session introuvable.');
       expect(service.fightSession).not.toHaveBeenCalled();
     });
 
     it('la première carte du tour est celle de l’ordre d’initiative', async () => {
       await rendre(session());
 
-      expect(page.activeCard()?.key).toBe('hero-1');
+      expect(combat.activeCard()?.key).toBe('hero-1');
     });
   });
 
@@ -158,31 +153,31 @@ describe('SessionPlayPageComponent', () => {
       service.fightSession.mockClear();
       service.updateCombatState.mockClear();
 
-      page.onEndTurn();
+      combat.onEndTurn();
       await stable();
 
       expect(service.updateCombatState).toHaveBeenCalledTimes(1);
       expect(service.updateCombatState.mock.calls[0][1].joues).toEqual(['hero-1']);
       expect(service.fightSession).not.toHaveBeenCalled();
-      expect(page.activeCard()?.key).toBe('hero-2');
+      expect(combat.activeCard()?.key).toBe('hero-2');
     });
 
     it('« Retarder » fait passer la carte après les autres, sans rien enregistrer de son tour', async () => {
       await rendre(session());
 
-      page.onDelay();
+      combat.onDelay();
       await stable();
 
-      expect(page.activeCard()?.key).toBe('hero-2');
-      expect(page.etat().joues).toEqual([]);
+      expect(combat.activeCard()?.key).toBe('hero-2');
+      expect(combat.etat().joues).toEqual([]);
     });
 
     it('des dégâts s’enregistrent sur la cible, sans rechargement', async () => {
       await rendre(session());
       service.fightSession.mockClear();
-      const cible = page.cards().find((card) => card.key === 'pnj-7')!;
+      const cible = table.cards().find((card) => card.key === 'pnj-7')!;
 
-      page.onHitApplied({target: cible, damage: 3, unarmed: false});
+      wounds.onHitApplied({target: cible, damage: 3, unarmed: false});
       await stable();
 
       expect(service.applyDamage).toHaveBeenCalledWith('s1', 'pnj', 7, -3);
@@ -191,9 +186,9 @@ describe('SessionPlayPageComponent', () => {
 
     it('à mains nues, les dégâts ne font pas passer sous 0', async () => {
       await rendre(session({pnjs: [pnjRow(7, 2) as never]}));
-      const cible = page.cards().find((card) => card.key === 'pnj-7')!;
+      const cible = table.cards().find((card) => card.key === 'pnj-7')!;
 
-      page.onHitApplied({target: cible, damage: 5, unarmed: true});
+      wounds.onHitApplied({target: cible, damage: 5, unarmed: true});
       await stable();
 
       expect(service.applyDamage).toHaveBeenCalledWith('s1', 'pnj', 7, -2);
@@ -203,7 +198,7 @@ describe('SessionPlayPageComponent', () => {
       await rendre(session({pnjs: [pnjRow(7, 0) as never]}));
       expect(dialogOpen).toHaveBeenCalledTimes(1);
 
-      page.session.set(session({pnjs: [pnjRow(7, 0) as never], etat_combat: etat({round: 1})}));
+      table.session.set(session({pnjs: [pnjRow(7, 0) as never], etat_combat: etat({round: 1})}));
       await stable();
 
       expect(dialogOpen).toHaveBeenCalledTimes(1);
@@ -213,7 +208,7 @@ describe('SessionPlayPageComponent', () => {
       await rendre(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never}));
       service.applyDamage.mockClear();
 
-      page.session.set(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never, etat_combat: etat({round: 2})}));
+      table.session.set(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never, etat_combat: etat({round: 2})}));
       await stable();
 
       expect(service.applyDamage).toHaveBeenCalledWith('s1', 'hero', 1, -1);
@@ -225,18 +220,18 @@ describe('SessionPlayPageComponent', () => {
       await rendre(session({statut: 'libre'}));
       const renvoyee = session({statut: 'libre', titre: 'Après'});
 
-      page.onTableChanged({session: renvoyee});
+      table.onTableChanged({session: renvoyee});
 
-      expect(page.session()).toBe(renvoyee);
+      expect(table.session()).toBe(renvoyee);
     });
 
     it('l’héroïsme d’un héros se met à jour sans requête', async () => {
       await rendre(session({statut: 'libre'}));
       service.fightSession.mockClear();
 
-      page.onTableChanged({herosId: 'h2', heroisme: 5});
+      table.onTableChanged({herosId: 'h2', heroisme: 5});
 
-      expect(page.cards().find((card) => card.key === 'hero-2')?.heroisme).toBe(5);
+      expect(table.cards().find((card) => card.key === 'hero-2')?.heroisme).toBe(5);
       expect(service.fightSession).not.toHaveBeenCalled();
     });
 
@@ -246,11 +241,11 @@ describe('SessionPlayPageComponent', () => {
       service.setCamp.mockReturnValue(of(renvoyee));
       service.fightSession.mockClear();
 
-      page.toggleCamp(page.cards().find((card) => card.key === 'pnj-7')!);
+      commands.toggleCamp(table.cards().find((card) => card.key === 'pnj-7')!);
       await stable();
 
       expect(service.setCamp).toHaveBeenCalledWith('s1', 'pnj', 7, 'heros');
-      expect(page.session()).toBe(renvoyee);
+      expect(table.session()).toBe(renvoyee);
       expect(service.fightSession).not.toHaveBeenCalled();
     });
   });

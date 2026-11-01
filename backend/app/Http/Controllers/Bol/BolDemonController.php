@@ -3,142 +3,69 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\Bol\BolCache;
 use App\Http\Services\Bol\BolDemonService;
-use App\Models\Bol\BolCategorie;
-use App\Models\Bol\BolDemon;
-use App\Models\Bol\BolDemonPouvoir;
-use App\Models\Bol\BolPouvoir;
-use Symfony\Component\HttpFoundation\Response;
+use App\Http\Services\Bol\BolReferenceData;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class BolDemonController extends Controller
 {
-
-    protected $bolDemonService;
-
-    public function __construct(BolDemonService $bolDemonService)
-    {
-        $this->bolDemonService = $bolDemonService;
-    }
+    public function __construct(
+        private readonly BolDemonService $bolDemonService,
+        private readonly BolReferenceData $reference,
+    ) {}
 
     public function getAll()
     {
-        $cacheKey = BolCache::demons(Auth::id());
-        $cacheDuration = BolCache::TTL;
-        $demon = Cache::remember($cacheKey, $cacheDuration, function () {
-            return $this->bolDemonService->getDemonsWithRelations();
-        });
-        return response($demon);
+        return response($this->bolDemonService->cachedList());
     }
 
     /**
-     * Récupère une créature par son id
+     * Récupère un démon par son id
      */
     public function getOne(Request $request)
     {
-        $id = $request->route('id');
-        $Demon = $this->bolDemonService->getDemonWithRelations($id);
-        if ($Demon === null || Gate::denies('view', $Demon)) {
+        $demon = $this->bolDemonService->getDemonWithRelations($request->route('id'));
+        if ($demon === null || Gate::denies('view', $demon)) {
             return response()->json(['error' => 'Demon not found'], 404);
         }
-        return response($Demon);
+        return response($demon);
     }
 
     public function getAllCategories()
     {
-        $cacheKey = 'bol_demons_categories';
-        $cacheDuration = BolCache::TTL;
-        $categorie = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolCategorie::orderBy('id', 'asc')->get();
-        });
-        return response($categorie);
+        return response($this->reference->categories());
     }
 
     public function getAllPouvoirs()
     {
-        $cacheKey = 'bol_demon_pouvoirs';
-        $cacheDuration = BolCache::TTL;
-        $pouvoirs = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolPouvoir::orderBy('id', 'asc')->get();
-        });
-        return response($pouvoirs);
+        return response($this->reference->pouvoirs());
     }
 
     public function create(Request $request)
     {
-        Cache::forget(BolCache::demons(Auth::id()));
-        $demon = $request->except(['id']);
-        $demon['user_id'] = Auth::id();
-        $demon = BolDemon::create($demon);
-        $pouvoirs = $request->input('pouvoirs');
-        foreach ($pouvoirs as $pouvoir) {
-            $newPower['demon_id'] = $demon['id'];
-            $newPower['pouvoir_id'] = $pouvoir['id'];
-            $newPower['detail'] = $pouvoir['detail'];
-            BolDemonPouvoir::create($newPower);
-        }
-        $createdDemon = BolDemon::with('categorie', 'pouvoirs.pouvoir')
-            ->where('user_id', Auth::id())
-            ->where('id', $demon['id'])->get()->first();
-        return response($createdDemon);
+        return response($this->bolDemonService->create($request->input()));
     }
 
     public function update(Request $request)
     {
-        Cache::forget(BolCache::demons(Auth::id()));
-        $demonId = $request->input('id');
-        $updatedDemon = $request->except(['pouvoirs', 'id', 'user_id']);
-        $demon = BolDemon::with('categorie', 'pouvoirs')
-            ->where('user_id', Auth::id())
-            ->where('id', $demonId)->get()->first();
-
+        $demon = $this->bolDemonService->update($request->input());
         if ($demon === null) {
             return response()->json(['error' => 'Demon not found'], 404);
         }
-
-        // Le nouveau tableau de capacités venant de la requête
-        $tableau2 = $request->input('pouvoirs');
-        $ids_tableau2 = array_column($tableau2, 'id');
-
-        // Supprimer les capacités qui ne sont plus associées à la créature
-        BolDemonPouvoir::whereNotIn('pouvoir_id', $ids_tableau2)
-            ->where('demon_id', $demonId)
-            ->delete();
-
-        // Mettre à jour ou insérer les nouvelles capacités
-        foreach ($tableau2 as $item) {
-            BolDemonPouvoir::updateOrCreate(
-                [
-                    'demon_id' => $demonId,
-                    'pouvoir_id' => $item['id']
-                ],
-                [
-                    'detail' => $item['detail']
-                ]
-            );
-        }
-
-        // Mettre à jour les autres champs de la créature
-        $demon->update($updatedDemon);
-        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshDemonSnapshots((string) $demonId);
-        return response($this->bolDemonService->getDemonWithRelations($demonId));
+        return response($demon);
     }
 
-    public function delete($id): \Illuminate\Http\JsonResponse
+    public function delete($id): JsonResponse
     {
-        Cache::forget(BolCache::demons(Auth::id()));
-        $bolDemon = BolDemon::find($id);
+        $bolDemon = $this->bolDemonService->find($id);
         // Check if the resource exists
         if (!$bolDemon || Gate::denies('delete', $bolDemon)) {
             return response()->json(['message' => 'Demon not found'], Response::HTTP_NOT_FOUND);
         }
-        // Delete the resource
-        $bolDemon->delete();
-        // Return a successful response
+        $this->bolDemonService->delete($bolDemon);
         return response()->json(['message' => 'Demon deleted successfully'], Response::HTTP_OK);
     }
 }

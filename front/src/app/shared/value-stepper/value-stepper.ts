@@ -1,35 +1,24 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  OnInit,
-  computed,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, input, model, output} from '@angular/core';
+import {FormValueControl} from '@angular/forms/signals';
 
+/** Un nombre à régler : `[formField]` dans un formulaire, `[value]` et `(valueChange)` pour un chiffre seul. Dans un formulaire, les bornes
+ * viennent du schéma (`min()`, `max()`). */
 @Component({
   selector: 'dw-value-stepper',
   templateUrl: './value-stepper.html',
   styleUrl: './value-stepper.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
-  // Type `| undefined` (pas `| null`) pour matcher le contrat FormUiControl de Signal
-  // Forms, qui bind min/max en `NonNullable<TValue> | undefined` quand le champ a des
-  // validateurs min()/max().
+export class DwValueStepperComponent implements FormValueControl<number> {
+  readonly value = model(0);
+  readonly disabled = input(false);
   readonly min = input<number | undefined>(undefined);
   readonly max = input<number | undefined>(undefined);
   readonly step = input(1);
   readonly ariaLabel = input<string | null>(null);
   /** Pose un cœur derrière la valeur (vitalité). */
   readonly heart = input(false);
-
-  protected readonly value = signal(0);
-  protected readonly disabled = signal(false);
+  readonly touch = output();
 
   protected readonly isMin = computed(() => {
     const min = this.min();
@@ -39,45 +28,6 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
     const max = this.max();
     return max !== undefined && this.value() >= max;
   });
-
-  // Injecté puis câblé à la main (pas de NG_VALUE_ACCESSOR en provider) pour
-  // pouvoir écouter valueChanges : Angular ne resynchronise pas les autres vues
-  // liées au même FormControl quand la modification vient d'une vue.
-  private readonly ngControl = inject(NgControl, {self: true, optional: true});
-  private readonly destroyRef = inject(DestroyRef);
-
-  private onChange: (value: number) => void = () => undefined;
-  private onTouched: () => void = () => undefined;
-
-  constructor() {
-    if (this.ngControl) {
-      this.ngControl.valueAccessor = this;
-    }
-  }
-
-  // Signal Forms n'expose pas valueChanges sur son NgControl d'interop (writeValue()
-  // suffit à resynchroniser dans ce cas) : seul le chemin Reactive Forms passe ici.
-  ngOnInit(): void {
-    this.ngControl?.control?.valueChanges
-      ?.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value: number | null) => this.value.set(Number(value) || 0));
-  }
-
-  writeValue(value: number | null): void {
-    this.value.set(Number(value) || 0);
-  }
-
-  registerOnChange(fn: (value: number) => void): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
-  }
 
   protected decrement(): void {
     this.setValue(this.value() - this.step());
@@ -110,7 +60,6 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
     }
 
     this.value.set(clamped);
-    this.onChange(clamped);
-    this.onTouched();
+    this.touch.emit();
   }
 }

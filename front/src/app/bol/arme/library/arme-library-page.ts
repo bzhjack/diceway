@@ -3,6 +3,7 @@ import {form, FormField, maxLength, required} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
+import {MatCheckbox} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -31,6 +32,7 @@ interface WeaponDraft {
   degats: string;
   portee: string;
   notes: string;
+  deux_mains: boolean;
 }
 
 @Component({
@@ -40,6 +42,7 @@ interface WeaponDraft {
     RouterLink,
     MatButtonModule,
     MatCard,
+    MatCheckbox,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -114,7 +117,7 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
   }
 
   protected emptyDraft(): WeaponDraft {
-    return {arme: '', type: 'M', degats: '', portee: '', notes: ''};
+    return {arme: '', type: 'M', degats: '', portee: '', notes: '', deux_mains: false};
   }
 
   protected draftOf(weapon: BolArmeModel): WeaponDraft {
@@ -124,6 +127,7 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
       degats: weapon.degats ?? '',
       portee: weapon.portee ?? '',
       notes: weapon.notes ?? '',
+      deux_mains: weapon.deux_mains ?? false,
     };
   }
 
@@ -135,6 +139,7 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
       degats: draft.degats.trim(),
       portee: this.nullableTrimmed(draft.portee),
       notes: this.nullableTrimmed(draft.notes),
+      deux_mains: draft.deux_mains,
     };
   }
 

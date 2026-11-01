@@ -174,9 +174,6 @@
   "src/app/bol/session/play/tapis/turn-assistant-attaquant.scss": {
     "color-no-hex": {
       "count": 10
-    },
-    "selector-pseudo-element-disallowed-list": {
-      "count": 3
     }
   },
   "src/app/bol/session/play/tapis/turn-assistant-colonnes.scss": {

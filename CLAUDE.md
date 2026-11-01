@@ -106,7 +106,7 @@ When a task touches game rules, character creation, equipment, careers, language
 - Keep state transformations pure.
 
 ### Forms
-- Prefer Signal Forms (`@angular/forms/signals`) over Reactive Forms and template-driven forms (`ngModel`). New forms use Signal Forms; existing Reactive Forms and `ngModel` are migrated when their component is reworked.
+- Signal Forms only (`@angular/forms/signals`): ESLint forbids importing `@angular/forms`. `dw-value-stepper` is a `FormValueControl`: `[formField]` in a form, with its bounds in the schema (`min()`, `max()`: Angular refuses `[min]` next to `[formField]`); `[value]` and `(valueChange)` for a lone number.
 
 ### Services
 - `inject()` function instead of constructor injection.
@@ -123,7 +123,7 @@ When a task touches game rules, character creation, equipment, careers, language
 - **Angular Material only** — the app has fully migrated off PrimeNG (no `primeng`/`primeicons` dependency, no `p-*` element anywhere in `front/src/app/`). Use `mat-flat-button`/`mat-stroked-button`/`mat-icon-button` etc., not PrimeNG component names or `pi-*` icons.
 - For buttons, prefer component attributes (`mat-flat-button`, `mat-stroked-button`, `color`) and CSS on container wrappers over ad-hoc inline styling. Material buttons have no `size` input.
 - Small anchored popups (e.g. a menu triggered by an icon button) use `MatMenuModule` (`mat-menu` + `[matMenuTriggerFor]`) — see `bol/shared/add-menu/` for the reference pattern.
-- Custom cross-page primitives live under `front/src/app/shared/` (`dw-tag`, `dw-badge`, `dw-panel`, `dw-collapsible-row`, `dw-confirm-dialog`, `dw-statblock-dialog`, `dw-library-header`, `dw-library-toolbar`, …) — reuse these before inventing a new one.
+- Custom cross-page primitives live under `front/src/app/shared/` (`dw-tag`, `dw-badge`, `dw-panel`, `dw-collapsible-row`, `dw-confirm-dialog`, `dw-statblock-dialog`, `dw-library-header`, `dw-library-toolbar`, `dw-gemmes`, `dw-roll-sum`, `dwPopover`, …) — reuse these before inventing a new one.
 
 ### Theming
 - Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
@@ -146,6 +146,11 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 ### Accessibility
 - All components must pass AXE checks and meet WCAG AA minimums (focus management, color contrast, ARIA attributes).
 
+### Combat screens
+
+- `bol/session/play/session-play-page` assembles the table; its state and actions live in page-scoped services under `play/table/` (`TableStore`, `CombatTurnStore`, `CombatStatsStore`, `CombatWoundsService`, `CombatEndService`, `ExpandedCardStore`, `TableCommandsService`). Combat and theatre each load through `@defer`: don't reference their component classes outside `imports`.
+- `play/tapis/turn-assistant` holds its inputs and outputs; state and rules are in `turn-assistant.store.ts`, the screen in the `tas-*` blocks. Its stylesheets have no encapsulation and are scoped to `bol-turn-assistant` and the overlay container.
+
 ## Backend architecture (`backend/`)
 
 - **RESTful API** — about 100 routes in `routes/api.php`, grouped under `sanctum` auth middleware.
@@ -153,4 +158,5 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 - **Service layer** — business logic in `app/Http/Services/Bol/`, not in controllers.
 - **Eloquent models** — in `app/Models/Bol/`. Primary entities: `BolHeros` (an NPC is a `BolHeros` whose `type` is not `H`; there is no `BolPnj`), `BolCreature`, `BolDemon`, `BolScenario`, `BolFightSession`.
 - **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
+- **Portraits** — files, not base64: writing `avatar` on a sheet (`HasPortrait`, `BolPortraits`) stores the image and keeps its address, `/api/bol/portraits/<hash>.<ext>`. The address stays relative; `portraitUrlInterceptor` adds `apiBase` in production. On each machine, once: `docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php`, `php artisan migrate`, then `php artisan bol:extract-portraits`; the originals stay in `bol_portrait_backup` (`--restore`, `--forget-originals`).
 - **Note** — `DatabaseSeeder.php` does not call the 21 other seeders; reference data requires manual population.

@@ -4,51 +4,24 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolArme;
-use App\Models\Bol\BolHerosArme;
+use App\Http\Services\Bol\BolArmeService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 
 class BolArmeController extends Controller
 {
     use ProtectsHeros;
 
+    public function __construct(private readonly BolArmeService $armes) {}
+
     public function getAll()
     {
-        $cacheDuration = BolCache::TTL;
-        $cacheKey = BolCache::armes(Auth::id());
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolArme::query()
-                ->where(function ($query) {
-                    $query->whereNull('user_id')->orWhere('user_id', Auth::id());
-                })
-                ->orderByRaw('case when user_id is null then 0 else 1 end')
-                ->orderBy('type')
-                ->orderBy('arme')
-                ->get();
-        });
-        return response()->json($donnees);
+        return response()->json($this->armes->catalog());
     }
 
     public function createCatalog(Request $request)
     {
-        $payload = $this->validatedPayload($request);
-
-        $arme = new BolArme();
-        $arme->user_id = Auth::id();
-        $arme->arme = $payload['arme'];
-        $arme->type = $payload['type'];
-        $arme->degats = $payload['degats'];
-        $arme->portee = $payload['portee'];
-        $arme->notes = $payload['notes'];
-        $arme->save();
-
-        $this->flushCache();
-
-        return response()->json($arme, 201);
+        return response()->json($this->armes->createEntry($this->validatedPayload($request)), 201);
     }
 
     public function updateCatalog(Request $request)
@@ -57,44 +30,29 @@ class BolArmeController extends Controller
             'id' => ['required', 'integer'],
         ]);
 
-        $id = (int) $request->input('id');
-        $arme = BolArme::query()->where('user_id', Auth::id())->find($id);
-
+        $arme = $this->armes->ownEntry((int) $request->input('id'));
         if (!$arme) {
             return response()->json(['message' => 'Arme personnelle introuvable.'], 404);
         }
 
-        $payload = $this->validatedPayload($request, $arme->id);
-
-        $arme->arme = $payload['arme'];
-        $arme->type = $payload['type'];
-        $arme->degats = $payload['degats'];
-        $arme->portee = $payload['portee'];
-        $arme->notes = $payload['notes'];
-        $arme->save();
-
-        $this->flushCache();
-
-        return response()->json($arme);
+        return response()->json($this->armes->saveEntry($arme, $this->validatedPayload($request, $arme->id)));
     }
 
     public function deleteCatalog(int $id)
     {
-        $arme = BolArme::query()->where('user_id', Auth::id())->find($id);
-
+        $arme = $this->armes->ownEntry($id);
         if (!$arme) {
             return response()->json(['message' => 'Seules vos armes personnelles peuvent etre supprimees.'], 404);
         }
 
-        if (BolHerosArme::query()->where('arme_id', $id)->exists()) {
+        if ($this->armes->isCarried($id)) {
             return response()->json(
                 ['message' => 'Cette arme est encore utilisée par des héros ou des PNJ.'],
                 409,
             );
         }
 
-        $arme->delete();
-        $this->flushCache();
+        $this->armes->deleteEntry($arme);
 
         return response()->json(['success' => true]);
     }
@@ -105,38 +63,27 @@ class BolArmeController extends Controller
             return $this->herosNotFound();
         }
         $newArme = $request->input();
-        if (!BolArme::accessibleTo(Auth::id())->whereKey($newArme['arme_id'] ?? null)->exists()) {
+        if (!$this->armes->isAccessible($newArme['arme_id'] ?? null)) {
             return response()->json(['message' => 'Arme non trouvée'], 404);
         }
-        $arme = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $newArme['arme_id'])->first();
-        if ($arme) {
+        if ($this->armes->onSheet($herosId, $newArme['arme_id'])) {
             return response()->json(['message' => 'Arme déjà existante'], 403);
         }
-        $heros_armes = [
-            'heros_id' => $herosId,
-            'arme_id' => $newArme['arme_id']
-        ];
-        BolHerosArme::create($heros_armes);
+        $this->armes->give($herosId, $newArme['arme_id']);
         return response()->json(['success' => $newArme]);
     }
 
-    /** Équipe ou déséquipe une arme du héros. Contrairement aux armures, pas d'exclusivité : plusieurs armes
-     * peuvent être équipées (combat à deux armes). */
     public function equip($herosId, $id)
     {
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $pivot = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();
+        $pivot = $this->armes->onSheet($herosId, $id);
         if (!$pivot) {
             return response()->json(['message' => 'Arme non trouvée'], 404);
         }
 
-        $pivot->equipee = !$pivot->equipee;
-        $pivot->save();
-        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshPnjSnapshots((string) $herosId);
-
-        return response()->json(['success' => true, 'equipee' => $pivot->equipee]);
+        return response()->json(['success' => true, 'equipee' => $this->armes->toggleEquipped($pivot, (string) $herosId)]);
     }
 
     public function delete($herosId, $id)
@@ -144,11 +91,11 @@ class BolArmeController extends Controller
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $armure = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();
-        if (!$armure) {
+        $pivot = $this->armes->onSheet($herosId, $id);
+        if (!$pivot) {
             return response()->json(['message' => 'Arme non trouvée'], 404);
         }
-        $armure->delete();
+        $this->armes->take($pivot);
         return response()->json(['success' => true]);
     }
 
@@ -167,6 +114,7 @@ class BolArmeController extends Controller
             'degats' => ['required', 'string', 'max:50'],
             'portee' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
+            'deux_mains' => ['sometimes', 'boolean'],
         ]);
 
         $validated['portee'] = isset($validated['portee']) && $validated['portee'] !== '' ? $validated['portee'] : null;
@@ -174,10 +122,4 @@ class BolArmeController extends Controller
 
         return $validated;
     }
-
-    private function flushCache(): void
-    {
-        Cache::forget(BolCache::armes(Auth::id()));
-    }
-
 }

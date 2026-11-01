@@ -4,27 +4,25 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Bol\Concerns\ProtectsHeros;
-use App\Http\Services\Bol\BolCache;
-use App\Models\Bol\BolHerosLangue;
-use App\Models\Bol\BolLangue;
+use App\Http\Services\Bol\BolHeroDetailsService;
+use App\Http\Services\Bol\BolReferenceData;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BolLangueController extends Controller
 {
     use ProtectsHeros;
 
+    public function __construct(
+        private readonly BolReferenceData $reference,
+        private readonly BolHeroDetailsService $details,
+    ) {}
+
     /**
-     * Récupère toutes les régions
+     * Récupère toutes les langues
      */
     public function getAll()
     {
-        $cacheKey = 'bol_langues_all';
-        $cacheDuration = BolCache::TTL;
-        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolLangue::all();
-        });
-        return response()->json($donnees);
+        return response()->json($this->reference->langues());
     }
 
     public function delete($herosId, $id)
@@ -32,11 +30,11 @@ class BolLangueController extends Controller
         if (!$this->canEditHeros($herosId)) {
             return $this->herosNotFound();
         }
-        $langue = BolHerosLangue::where('heros_id', $herosId)->where('langue_id', $id)->first();
+        $langue = $this->details->langue($herosId, $id);
         if (!$langue) {
             return response()->json(['message' => 'Langue non trouvée'], 404);
         }
-        $langue->delete();
+        $this->details->remove($langue);
         return response()->json(['success' => true]);
     }
 
@@ -46,15 +44,10 @@ class BolLangueController extends Controller
             return $this->herosNotFound();
         }
         $newLangue = $request->input();
-        $langue = BolHerosLangue::where('heros_id', $herosId)->where('langue_id', $newLangue['langue_id'])->first();
-        if ($langue) {
+        if ($this->details->langue($herosId, $newLangue['langue_id'])) {
             return response()->json(['message' => 'Langue déjà existante'], 403);
         }
-        $heros_langues = [
-            'heros_id' => $herosId,
-            'langue_id' => $newLangue['langue_id']
-        ];
-        BolHerosLangue::create($heros_langues);
+        $this->details->addLangue($herosId, $newLangue);
         return response()->json(['success' => $newLangue]);
     }
 }

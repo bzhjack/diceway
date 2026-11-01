@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {applyEach, form, FormField, maxLength, pattern, required} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -9,12 +9,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, Observable, startWith} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../../core/api-error.utils';
-import {BolSceneModel, SceneMeteo, SceneMoment} from '../../../../models/bol-scene.model';
+import {BolSceneModel, SceneMoment} from '../../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../../services/bol-catalog.service';
 import {BolSceneService} from '../../../../services/bol-scene.service';
-import {SceneEditorDialogData, SceneEditorValue} from '../../../models/scene-editor-dialog.model';
+import {SceneEditorDialogData} from '../../../models/scene-editor-dialog.model';
 import {SCENE_TITLE_MAX} from '../../scene-list/scene.util';
 import {METEOS, MOMENTS, sceneDecor} from '../theatre.util';
 import {editorValue, sceneChanges} from './scene-editor.util';
@@ -25,21 +25,12 @@ const JEU_MAX = 10000;
 /** Valeur du bouton « Aucun » du moment : un groupe de boutons ne sait pas sélectionner `null`. */
 const AUCUN = 'aucun';
 
-type PisteGroup = FormGroup<{texte: FormControl<string>; scene_id: FormControl<string | null>}>;
-
-function pisteGroup(piste: {texte: string; scene_id: string | null}): PisteGroup {
-  return new FormGroup({
-    texte: new FormControl(piste.texte, {nonNullable: true, validators: [Validators.maxLength(200)]}),
-    scene_id: new FormControl<string | null>(piste.scene_id),
-  });
-}
-
 /** « Préparer la scène » : son décor (région, lieu, ambiance, illustration), le texte à lire aux joueurs,
  * les règles de la scène (« En jeu »), le secret du MJ et les pistes. Enregistre lui-même et se ferme avec la scène enregistrée. */
 @Component({
   selector: 'bol-scene-editor-dialog',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatButtonToggleModule,
     MatDialogModule,
@@ -62,9 +53,7 @@ class SceneEditorDialogComponent {
   protected readonly meteos = METEOS;
   protected readonly aucun = AUCUN;
   protected readonly dangers = [1, 2, 3, 4];
-  protected readonly titreMax = SCENE_TITLE_MAX;
   protected readonly lectureMax = LECTURE_MAX;
-  protected readonly jeuMax = JEU_MAX;
   protected readonly pistesMax = PISTES_MAX;
 
   protected readonly regions = toSignal(
@@ -74,27 +63,21 @@ class SceneEditorDialogComponent {
     {initialValue: []},
   );
 
-  private readonly initial = editorValue(this.data.scene);
-  protected readonly form = new FormGroup({
-    titre: new FormControl(this.initial.titre, {nonNullable: true, validators: [Validators.required, Validators.maxLength(SCENE_TITLE_MAX)]}),
-    region_id: new FormControl<number | null>(this.initial.region_id),
-    lieu: new FormControl(this.initial.lieu, {nonNullable: true, validators: [Validators.maxLength(120)]}),
-    moment: new FormControl<SceneMoment | null>(this.initial.moment),
-    meteo: new FormControl<SceneMeteo | null>(this.initial.meteo),
-    danger: new FormControl(this.initial.danger, {nonNullable: true}),
-    image: new FormControl(this.initial.image, {nonNullable: true, validators: [Validators.maxLength(500), Validators.pattern(/^\s*(https:\/\/|\/assets\/).*|^\s*$/)]}),
-    lecture: new FormControl(this.initial.lecture, {nonNullable: true, validators: [Validators.maxLength(LECTURE_MAX)]}),
-    jeu: new FormControl(this.initial.jeu, {nonNullable: true, validators: [Validators.maxLength(JEU_MAX)]}),
-    notes: new FormControl(this.initial.notes, {nonNullable: true, validators: [Validators.maxLength(10000)]}),
-    pistes: new FormArray<PisteGroup>(this.initial.pistes.map(pisteGroup)),
+  private readonly value = signal(editorValue(this.data.scene));
+  protected readonly sceneForm = form(this.value, (path) => {
+    required(path.titre);
+    maxLength(path.titre, SCENE_TITLE_MAX);
+    maxLength(path.lieu, 120);
+    maxLength(path.image, 500);
+    pattern(path.image, /^\s*(https:\/\/|\/assets\/).*|^\s*$/);
+    maxLength(path.lecture, LECTURE_MAX);
+    maxLength(path.jeu, JEU_MAX);
+    maxLength(path.notes, 10000);
+    applyEach(path.pistes, (piste) => maxLength(piste.texte, 200));
   });
 
-  // Valeur et validité en signaux : l'état d'un formulaire lu dans un template OnPush ne se rafraîchit pas seul.
-  private readonly value = toSignal(this.form.valueChanges.pipe(map(() => this.form.getRawValue()), startWith(this.form.getRawValue())), {
-    initialValue: this.form.getRawValue(),
-  });
-  private readonly status = toSignal(this.form.statusChanges.pipe(startWith(this.form.status)), {initialValue: this.form.status});
-  protected readonly valid = computed(() => this.status() === 'VALID');
+  protected readonly valid = computed(() => this.sceneForm().valid());
+  protected readonly imageInvalid = computed(() => this.sceneForm.image().invalid());
   protected readonly momentChoisi = computed(() => this.value().moment ?? AUCUN);
   protected readonly lectureLength = computed(() => this.value().lecture.length);
   protected readonly pisteCount = computed(() => this.value().pistes.length);
@@ -102,22 +85,18 @@ class SceneEditorDialogComponent {
   protected readonly apercu = computed(() => sceneDecor({...this.data.scene, image: this.value().image}));
   protected readonly busy = signal(false);
 
-  protected get pistes(): FormArray<PisteGroup> {
-    return this.form.controls.pistes;
-  }
-
   protected setMoment(change: MatButtonToggleChange): void {
-    this.form.controls.moment.setValue(change.value === AUCUN ? null : (change.value as SceneMoment));
+    this.sceneForm.moment().value.set(change.value === AUCUN ? null : (change.value as SceneMoment));
   }
 
   protected addPiste(): void {
-    if (this.pistes.length < PISTES_MAX) {
-      this.pistes.push(pisteGroup({texte: '', scene_id: null}));
+    if (this.pisteCount() < PISTES_MAX) {
+      this.value.update((value) => ({...value, pistes: [...value.pistes, {texte: '', scene_id: null}]}));
     }
   }
 
   protected removePiste(index: number): void {
-    this.pistes.removeAt(index);
+    this.value.update((value) => ({...value, pistes: value.pistes.filter((_, position) => position !== index)}));
   }
 
   /** `(submit)` natif : enregistre, puis ferme le dialogue avec la scène renvoyée par le serveur. */
@@ -127,8 +106,7 @@ class SceneEditorDialogComponent {
       return;
     }
     this.busy.set(true);
-    const value: SceneEditorValue = this.form.getRawValue();
-    this.sceneService.update(this.data.scene.id, sceneChanges(value)).subscribe({
+    this.sceneService.update(this.data.scene.id, sceneChanges(this.value())).subscribe({
       next: (scene) => this.ref.close(scene),
       error: (error: unknown) => {
         this.busy.set(false);

@@ -543,14 +543,6 @@ class BolFightSessionService
     /** Statistiques et capacités d'une créature telles qu'elles sont copiées à la table (hors camp, surnom et vitalité courante). */
     private function creatureSnapshot(BolCreature $creature): array
     {
-        $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
-            'capacite_id' => $c->capacite_id,
-            'capacite'    => $c->capacite?->capacite,
-            'de_bonus'    => $c->capacite?->de_bonus,
-            'de_malus'    => $c->capacite?->de_malus,
-            'detail'      => $c->detail,
-        ])->values()->toArray();
-
         return [
             'rang'         => $creature->rang ?? 'coriace',
             'nom'          => $creature->nom,
@@ -563,7 +555,7 @@ class BolFightSessionService
             'degats'       => $creature->degats,
             'protection'   => $creature->protection,
             'id_taille'    => $creature->id_taille,
-            'capacites'    => $capacites,
+            'capacites'    => BolCombatantCopies::capacites($creature),
         ];
     }
 
@@ -634,12 +626,6 @@ class BolFightSessionService
     /** Statistiques et pouvoirs d'un démon tels qu'ils sont copiés à la table (hors camp, surnom et vitalité courante). */
     private function demonSnapshot(BolDemon $demon): array
     {
-        $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
-            'pouvoir_id' => $p->pouvoir_id,
-            'pouvoir'    => $p->pouvoir?->pouvoir,
-            'detail'     => $p->detail,
-        ])->values()->toArray();
-
         return [
             'rang'         => $this->rangFromType($demon->type),
             'nom'          => $demon->nom,
@@ -652,7 +638,7 @@ class BolFightSessionService
             'defense'      => $demon->defense,
             'vitalite_max' => $demon->vitalite,
             'degats'       => $demon->degats,
-            'pouvoirs'     => $pouvoirs,
+            'pouvoirs'     => BolCombatantCopies::pouvoirs($demon),
         ];
     }
 
