@@ -91,9 +91,17 @@
   background: transparent;
 }
 
+// Le plateau garde toute sa largeur sous le panneau, qui glisse par-dessus : réduire le contenu à chaque image, comme le fait Material,
+// redessinerait le décor plein écran et ferait ramer l'animation. Seul le premier plan (`--spp-coulisses`, lu par `bol-theatre` et
+// `bol-compagnie`) lui fait de la place, d'un coup.
 .spp-scene {
   display: flex;
+  margin-right: 0 !important;
   overflow: hidden;
+}
+
+.spp-scene--coulisses {
+  --spp-coulisses: min(21rem, 85vw);
 }
 
 .spp-coulisses-panel {

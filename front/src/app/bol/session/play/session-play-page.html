@@ -72,7 +72,7 @@
                 />
               </div>
             </mat-sidenav>
-            <mat-sidenav-content class="spp-scene">
+            <mat-sidenav-content class="spp-scene" [class.spp-scene--coulisses]="table.reserveOpen()">
               <bol-theatre
                 [cards]="table.cards()"
                 [sessionId]="sid"

@@ -31,6 +31,8 @@
     'cartouche'
     'troupe';
   gap: 1rem 1.5rem;
+  // La place du panneau des coulisses, d'un coup : l'animer recalculerait les cartes à chaque image.
+  margin-right: var(--spp-coulisses, 0px);
   padding: 1.4rem 1.5rem 0.6rem;
   overflow-x: hidden;
   overflow-y: auto;
