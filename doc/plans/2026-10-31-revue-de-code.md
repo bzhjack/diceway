@@ -390,10 +390,11 @@ L'ordre compte : d'abord le risque, puis les gains rapides, puis les outils de c
 ```bash
 docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php
 docker exec diceway php artisan migrate
-docker exec diceway php artisan bol:extract-portraits --dry-run
-docker exec diceway php artisan bol:extract-portraits
+docker exec -u www-data diceway php artisan bol:extract-portraits --dry-run
+docker exec -u www-data diceway php artisan bol:extract-portraits
 ```
 
+- **`-u www-data` :** sans lui, `docker exec` écrit en root, et Apache ne peut plus déposer de nouveaux portraits dans le dossier créé : ils restent en base64, sans erreur visible. Si c'est déjà arrivé : `docker exec diceway chown -R www-data:www-data storage/app/public/portraits`.
 - **Portraits :** une fiche ne garde que l'adresse de son portrait (`/api/bol/portraits/<empreinte>.<ext>`), un fichier servi avec un cache navigateur permanent. Sur une copie de la session réelle, 311 ko deviennent 24 ko (−92 %).
 - **Retour en arrière :** les originaux restent dans `bol_portrait_backup`. `--restore` les remet ; `--forget-originals` les efface, une fois vérifié. Une machine qui n'a pas lancé la commande continue d'afficher ses portraits en base64.
 - **Limite des portraits :** la route est publique, une balise `<img>` n'envoyant pas de jeton (l'adresse est l'empreinte de l'image, elle ne se devine pas).
