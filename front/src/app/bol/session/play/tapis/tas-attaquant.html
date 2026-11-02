@@ -1,15 +1,53 @@
 <bol-combattant-carte #tete class="tas-head" [card]="turn.card()" [ligne]="true" role="group" [attr.aria-label]="'Qui joue : ' + turn.card().nom">
-  <!-- Sa vitalité sur son cœur et ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici -->
-  <div class="tas-zone-vit">
-    <div class="tas-vit">
-      <dw-value-stepper [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + turn.card().nom" [heart]="true" />
-      <span class="tas-tag">Vitalité /{{ turn.card().vitaliteMax ?? '—' }}</span>
-    </div>
-    @if (attack.pointsAttaquant(); as p) {
-      <div class="tas-vit">
-        <bol-points-stepper [kind]="turn.card().kind" [points]="p.points" [nom]="turn.card().nom" (stepped)="turn.heroismeAdjusted.emit($event)" />
-        <span class="tas-tag">{{ p.titre }}</span>
+  <!-- En haut à droite de la carte, comme pour la cible : sa fiche et ses effets, ce qu'il peut faire au lieu d'attaquer, et « Fin du tour » -->
+  <div ccActions class="tas-head-actions">
+    <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="turn.sheetRequested.emit(turn.card())">
+      <mat-icon svgIcon="gi-sheet" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      class="tas-ib"
+      [id]="turn.popId('effets')"
+      cdkOverlayOrigin
+      #effetsOrigin="cdkOverlayOrigin"
+      aria-haspopup="dialog"
+      [attr.aria-expanded]="turn.openPop() === 'effets'"
+      [attr.aria-label]="'Effets en cours (' + cible.effetsCount() + ')'"
+      matTooltip="Effets en cours"
+      (click)="turn.togglePop('effets')"
+    >
+      <mat-icon svgIcon="gi-sparkles" aria-hidden="true" />
+      @if (cible.effetsCount() > 0) {
+        <b class="tas-count tas-count--corner" aria-hidden="true">{{ cible.effetsCount() }}</b>
+      }
+    </button>
+    <ng-template
+      cdkConnectedOverlay
+      dwPopover="start"
+      cdkConnectedOverlayPanelClass="tas-scope"
+      [cdkConnectedOverlayOrigin]="effetsOrigin"
+      [cdkConnectedOverlayOpen]="turn.openPop() === 'effets'"
+      (backdropClick)="turn.closePop()"
+      (overlayKeydown)="turn.onPopKeydown($event)"
+      (detach)="turn.openPop.set(null)"
+    >
+      <div class="tas-options tas-options--pop" role="dialog" aria-label="Effets en cours" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+        <span class="tas-pop-title">Effets en cours</span>
+        <bol-effects-list [effets]="turn.effets()" [cartes]="cible.duelistes()" (retire)="flow.removeEffect($event)" (ajoute)="turn.effectAdded.emit($event)" />
       </div>
+    </ng-template>
+    <!-- Ce qu'il peut faire au lieu d'attaquer, en icônes rondes : secourir un héros mourant, retarder son action -->
+    @if (turn.canRescue()) {
+      <button type="button" class="tas-ib" [disabled]="flow.attaqueEngagee()" aria-label="Secourir" matTooltip="Secourir : stabiliser un héros mourant, à la place de l’attaque. Termine le tour." (click)="turn.rescueRequested.emit()">
+        <mat-icon svgIcon="gi-rescue" aria-hidden="true" />
+      </button>
+    }
+    <button type="button" class="tas-ib" [disabled]="flow.attaqueEngagee()" aria-label="Retarder" matTooltip="Retarder : passe son tour en fin de round" (click)="turn.delayRequested.emit()">
+      <mat-icon svgIcon="gi-wait" aria-hidden="true" />
+    </button>
+    <!-- Quand la ligne des dégâts porte « Fin du tour » (coup raté ou joué), celui de la carte s'efface, sauf en défense totale -->
+    @if (loadout.defenseTotale() || !flow.endTurnInLine()) {
+      <button mat-flat-button type="button" class="tas-end" matTooltip="Raccourci : F" (click)="flow.requestEndTurn()"><mat-icon aria-hidden="true">skip_next</mat-icon> Fin du tour</button>
     }
   </div>
 
@@ -40,6 +78,20 @@
           <span class="tas-note">{{ loadout.abilityDice() }}, à chaque attaque.</span>
         }
       </p>
+    }
+  </div>
+
+  <!-- Sa vitalité sur son cœur et ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici -->
+  <div class="tas-zone-vit">
+    <div class="tas-vit">
+      <dw-value-stepper [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + turn.card().nom" [heart]="true" />
+      <span class="tas-tag">Vitalité /{{ turn.card().vitaliteMax ?? '—' }}</span>
+    </div>
+    @if (attack.pointsAttaquant(); as p) {
+      <div class="tas-vit">
+        <bol-points-stepper [kind]="turn.card().kind" [points]="p.points" [nom]="turn.card().nom" (stepped)="turn.heroismeAdjusted.emit($event)" />
+        <span class="tas-tag">{{ p.titre }}</span>
+      </div>
     }
   </div>
 
@@ -219,55 +271,6 @@
           }
         </div>
       }
-    }
-  </div>
-
-  <!-- En bout de ligne : sa fiche et ses effets en icônes rondes, ce qu'il peut faire au lieu d'attaquer, et « Fin du tour » -->
-  <div class="tas-zone tas-zone--act">
-    <div class="tas-head-actions">
-      <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="turn.sheetRequested.emit(turn.card())">
-        <mat-icon svgIcon="gi-sheet" aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        class="tas-ib"
-        [id]="turn.popId('effets')"
-        cdkOverlayOrigin
-        #effetsOrigin="cdkOverlayOrigin"
-        aria-haspopup="dialog"
-        [attr.aria-expanded]="turn.openPop() === 'effets'"
-        [attr.aria-label]="'Effets en cours (' + cible.effetsCount() + ')'"
-        matTooltip="Effets en cours"
-        (click)="turn.togglePop('effets')"
-      >
-        <mat-icon svgIcon="gi-sparkles" aria-hidden="true" />
-        @if (cible.effetsCount() > 0) {
-          <b class="tas-count tas-count--corner" aria-hidden="true">{{ cible.effetsCount() }}</b>
-        }
-      </button>
-      <ng-template
-        cdkConnectedOverlay
-        dwPopover="start"
-        cdkConnectedOverlayPanelClass="tas-scope"
-        [cdkConnectedOverlayOrigin]="effetsOrigin"
-        [cdkConnectedOverlayOpen]="turn.openPop() === 'effets'"
-        (backdropClick)="turn.closePop()"
-        (overlayKeydown)="turn.onPopKeydown($event)"
-        (detach)="turn.openPop.set(null)"
-      >
-        <div class="tas-options tas-options--pop" role="dialog" aria-label="Effets en cours" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
-          <span class="tas-pop-title">Effets en cours</span>
-          <bol-effects-list [effets]="turn.effets()" [cartes]="cible.duelistes()" (retire)="flow.removeEffect($event)" (ajoute)="turn.effectAdded.emit($event)" />
-        </div>
-      </ng-template>
-    </div>
-    @if (turn.canRescue()) {
-      <button mat-stroked-button type="button" class="tas-end" [disabled]="flow.attaqueEngagee()" matTooltip="Stabiliser un héros mourant, à la place de l’attaque. Termine le tour." (click)="turn.rescueRequested.emit()"><mat-icon svgIcon="gi-rescue" aria-hidden="true" /> Secourir</button>
-    }
-    <button mat-stroked-button type="button" class="tas-end" [disabled]="flow.attaqueEngagee()" matTooltip="Passe son tour en fin de round" (click)="turn.delayRequested.emit()"><mat-icon svgIcon="gi-wait" aria-hidden="true" /> Retarder</button>
-    <!-- Quand la ligne des dégâts porte « Fin du tour » (coup raté ou joué), celui de la ligne s'efface, sauf en défense totale -->
-    @if (loadout.defenseTotale() || !flow.endTurnInLine()) {
-      <button mat-flat-button type="button" class="tas-end" matTooltip="Raccourci : F" (click)="flow.requestEndTurn()"><mat-icon aria-hidden="true">skip_next</mat-icon> Fin du tour</button>
     }
   </div>
 </bol-combattant-carte>

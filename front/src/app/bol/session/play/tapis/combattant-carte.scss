@@ -181,9 +181,9 @@
   filter: grayscale(1) brightness(0.7);
 }
 
-// En ligne, pour celui qui joue : une plaque de fer rivetée, lue de gauche à droite. Le nom et la vie, puis ce que la page projette, chacun
-// dans sa zone (`grid-area`) : sa vie et ses points, ses chiffres, sa posture, ses armes, ses actions. Quand la place manque, les zones
-// passent les unes sous les autres, les actions restant en bout de ligne.
+// En ligne, pour celui qui joue : une plaque de fer rivetée, lue de gauche à droite. Le nom, puis ce que la page projette, chacun
+// dans sa zone (`grid-area`) : à côté du nom ses actions, dessous ses chiffres puis sa vie et ses points, ensuite sa posture et ses armes.
+// Quand la place manque, les zones passent les unes sous les autres.
 :host(.cc--ligne) {
   container-type: inline-size;
   display: flex;
@@ -191,11 +191,12 @@
 
   .cc-body {
     display: grid;
-    grid-template-columns: 9rem 16.4rem 24.6rem minmax(0, 1fr) 7.9rem;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: 22rem 24.6rem minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas:
-      'who vit post armes act'
-      'chiffres chiffres post armes act';
+      'who post armes'
+      'chiffres post armes'
+      'vit post armes';
     gap: 0.25rem 0;
     // Une hauteur fixe, celle de son contenu le plus chargé à cette largeur (toutes ses notes, une feinte retentée, une horde) : elle ne bouge
     // ni d'un combattant à l'autre, ni une fois le coup joué. Les paliers ci-dessous suivent les retours à la ligne de ce contenu.
@@ -203,30 +204,21 @@
     padding: 0.5rem 1.15rem 0.6rem 0.8rem;
   }
 
+  // Le nom et ses boutons : le même écart que ses chiffres avant le pointillé de la zone suivante.
   .cc-head {
     grid-area: who;
     gap: 0.15rem;
+    padding-right: 0.7rem;
   }
 
-  // Le portrait : de la hauteur de la ligne, fondu vers la droite sous le texte. Il ne dicte pas la hauteur : c'est le texte qui décide.
+  // Le portrait : le même carré encadré que celui de la cible, en haut à gauche. Il ne dicte pas la hauteur : c'est le texte qui décide.
   .cc-art {
     flex: none;
-    align-self: stretch;
-    width: 8.5rem;
-    margin-right: -0.5rem;
-    aspect-ratio: auto;
-    border: 0;
-    border-radius: 0;
-    background: linear-gradient(180deg, #2a1c11, #120c07);
-    box-shadow: none;
-    mask-image: linear-gradient(90deg, #000 72%, transparent);
-
-    img {
-      object-position: center 20%;
-    }
+    width: 10.5rem;
+    margin: 0.6rem 0 0.6rem 0.8rem;
 
     .cc-initiale {
-      font-size: 3.4rem;
+      font-size: 3.8rem;
     }
   }
 
@@ -246,18 +238,19 @@
 // Sur un portable : le portrait se resserre, pour que les armes gardent leur place.
 @container (max-width: 86rem) {
   :host(.cc--ligne) .cc-art {
-    width: 6rem;
+    width: 7.5rem;
   }
 }
 
 @container (max-width: 82rem) {
   :host(.cc--ligne) .cc-body {
-    grid-template-columns: 9rem 16.4rem minmax(0, 1fr) 7.9rem;
-    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-columns: 22rem minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(0, 1fr);
     grid-template-areas:
-      'who vit post act'
-      'chiffres chiffres post act'
-      'armes armes armes act';
+      'who post'
+      'chiffres post'
+      'vit post'
+      'armes armes';
     row-gap: 0.5rem;
     min-height: 15.9rem;
   }
@@ -271,13 +264,14 @@
 
 @container (max-width: 64rem) {
   :host(.cc--ligne) .cc-body {
-    grid-template-columns: 9rem minmax(0, 1fr) 7.9rem;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto minmax(0, 1fr);
     grid-template-areas:
-      'who vit act'
-      'chiffres chiffres act'
-      'post post post'
-      'armes armes armes';
+      'who'
+      'chiffres'
+      'vit'
+      'post'
+      'armes';
     min-height: 26.7rem;
   }
 }
@@ -286,7 +280,7 @@
   :host(.cc--ligne) .cc-body {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
-    grid-template-areas: 'who' 'vit' 'chiffres' 'post' 'armes' 'act';
+    grid-template-areas: 'who' 'chiffres' 'vit' 'post' 'armes';
     min-height: 0;
   }
 }
