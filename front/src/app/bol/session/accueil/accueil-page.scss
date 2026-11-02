@@ -7,87 +7,40 @@
 .acc-cadre {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 1200px;
+  gap: 1.25rem;
+  max-width: 1360px;
   margin: 0 auto;
 }
 
-// En-tête : l'illustration du tableau de bord, voilée à gauche sous le titre.
+// ── L'en-tête : le titre de l'écran, et à droite de quoi ouvrir une table et le compte ────────────────────────────────────────────
 .acc-entete {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--dw-forge-bronze-edge);
-  border-radius: 7px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--dw-forge-plate-shadow);
-}
-
-.acc-entete-image {
-  object-fit: cover;
-  object-position: center 22%;
-}
-
-.acc-entete-contenu {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  min-height: 8rem;
-  padding: 1.25rem;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--dw-forge-recess) 92%, transparent) 0%,
-    color-mix(in srgb, var(--dw-forge-recess) 72%, transparent) 50%,
-    color-mix(in srgb, var(--dw-forge-recess) 25%, transparent) 100%
-  );
-}
-
-.acc-entete-titre {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.acc-medaillon {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  @include forge.medallion;
-
-  .mat-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-    font-size: 1.75rem;
-  }
+  gap: 0.75rem 1rem;
 }
 
 .acc-surtitre {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: var(--dw-forge-gold);
+  color: var(--dw-color-rival);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  text-shadow: 0 1px 2px var(--dw-forge-shade);
+  letter-spacing: 0.2em;
 }
 
 .acc-titre {
   margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.9rem;
+  font-size: 2.1rem;
   font-weight: 400;
   line-height: 1.1;
   color: var(--dw-forge-name);
-  text-shadow: 0 1px 4px var(--dw-forge-shade);
+  text-shadow: 0 0 22px rgba(255, 150, 40, 0.45);
 
   @media (min-width: 768px) {
-    font-size: 2.4rem;
+    font-size: 2.5rem;
   }
 }
 
@@ -96,238 +49,478 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
+}
 
-  // Le contour reste lisible sur l'illustration.
-  .mat-mdc-outlined-button {
-    background-color: color-mix(in srgb, var(--dw-forge-recess) 60%, transparent);
+// ── Le haut : la table ouverte, la compagnie à côté ─────────────────────────────────────────────────────────────────────────────
+.acc-haut {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+}
+
+// La table ouverte : l'illustration du tableau de bord, chauffée par la braise par le bas, sous un voile qui garde le texte lisible.
+.acc-soir {
+  position: relative;
+  flex: 2 1 36rem;
+  min-width: 0;
+  min-height: 21rem;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--dw-forge-recess);
+  box-shadow:
+    0 0 0 1px var(--dw-color-legendary),
+    0 0 40px rgba(255, 140, 40, 0.25),
+    0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.acc-soir-image {
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.acc-soir-contenu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.85rem;
+  height: 100%;
+  min-height: 21rem;
+  box-sizing: border-box;
+  padding: 1.75rem 2rem;
+  background:
+    radial-gradient(70% 60% at 30% 110%, rgba(255, 120, 30, 0.55), transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(11, 7, 5, 0.45) 50%, rgba(11, 7, 5, 0.92) 100%);
+}
+
+.acc-etiquette {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
+  border-radius: var(--dw-radius-pill);
+  background: color-mix(in srgb, var(--saga) 18%, transparent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--saga-clair);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.acc-etiquette-feu {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--saga);
+  box-shadow: 0 0 10px var(--saga);
+}
+
+.acc-soir-titre {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2.6rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dw-forge-hot-text);
+  text-shadow:
+    0 2px 0 var(--dw-forge-shade),
+    0 0 30px rgba(255, 140, 40, 0.55);
+
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
   }
 }
 
-// Bandeau « Table ouverte » : une plaque bordée d'or, avec l'action principale de l'écran.
-.acc-bandeau {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--dw-forge-bronze);
-  border-left: 4px solid var(--dw-forge-gold);
-  border-radius: 7px;
+.acc-soir-texte {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+// Une tuile de fer : la compagnie, les erreurs.
+.acc-tuile {
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 16px;
   @include forge.plate;
 }
 
-.acc-bandeau-texte {
+.acc-compagnie {
+  display: flex;
+  flex: 1 1 20rem;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.9rem;
+  box-sizing: border-box;
+  padding: 1.35rem 1.25rem 1.1rem;
+}
+
+.acc-section-titre {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--dw-color-rival);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.acc-section-titre--espace {
+  margin-bottom: 0.75rem;
+}
+
+.acc-compagnie-liste {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acc-heros {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 3.75rem;
+  box-sizing: border-box;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-bonus) 40%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 55%, transparent);
+  color: var(--dw-forge-bone);
+  text-decoration: none;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+    background-color: rgba(255, 170, 60, 0.08);
+  }
+}
+
+.acc-heros-medaillon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  overflow: hidden;
+  border: 2px solid var(--dw-color-bonus);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--dw-surface-300), var(--dw-surface-50));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--dw-color-bonus) 45%, transparent);
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.25rem;
+  color: var(--dw-forge-hot-text);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+}
+
+.acc-heros-nom {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.acc-note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--dw-surface-700);
+}
+
+.acc-erreur {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+// ── Les sagas : une carte chacune, sa couleur et son image, son avancement et le chapitre à jouer ensuite ─────────────────────────
+.acc-sagas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Une couleur et une image d'ambiance par teinte de saga (`AccueilSagaResume.teinte`), pour sa carte et pour l'étiquette de la table
+// ouverte ; les images sont prises parmi celles des bibliothèques, en attendant une illustration par saga. 0 : hors saga.
+.acc-teinte--0 {
+  --saga: var(--dw-forge-bronze);
+  --saga-clair: var(--dw-forge-bronze-text);
+  --saga-image: url('/assets/bol/quest.jpg');
+}
+
+.acc-teinte--1 {
+  --saga: var(--dw-saga-1);
+  --saga-clair: var(--dw-saga-1-clair);
+  --saga-image: url('/assets/bol/header-pnj.webp');
+}
+
+.acc-teinte--2 {
+  --saga: var(--dw-saga-2);
+  --saga-clair: var(--dw-saga-2-clair);
+  --saga-image: url('/assets/bol/header-demons.webp');
+}
+
+.acc-teinte--3 {
+  --saga: var(--dw-saga-3);
+  --saga-clair: var(--dw-saga-3-clair);
+  --saga-image: url('/assets/bol/header-combat.webp');
+}
+
+.acc-teinte--4 {
+  --saga: var(--dw-saga-4);
+  --saga-clair: var(--dw-saga-4-clair);
+  --saga-image: url('/assets/bol/header-creatures.webp');
+}
+
+.acc-saga {
+  display: flex;
+  flex: 1 1 18rem;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.1rem;
+  // Sans lui, la suite (sur une ligne) imposerait sa largeur à la carte, au-delà de l'écran d'un téléphone.
+  min-width: 0;
+  min-height: 14rem;
+  box-sizing: border-box;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--saga) 55%, transparent);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(28, 19, 11, 0.05) 20%, rgba(28, 19, 11, 0.95) 100%),
+    linear-gradient(90deg, color-mix(in srgb, var(--saga) 35%, transparent), transparent),
+    var(--saga-image) center 30% / cover,
+    var(--dw-surface-100);
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--saga) 14%, transparent),
+    0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.acc-saga-tete {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.acc-anneau {
+  flex: none;
+  width: 4rem;
+  height: 4rem;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.8));
+
+  text {
+    font-family: 'Muse Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    fill: var(--dw-forge-bone);
+  }
+}
+
+.acc-anneau-fond {
+  fill: rgba(10, 6, 4, 0.85);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 6;
+}
+
+.acc-anneau-plein {
+  fill: none;
+  stroke: var(--saga);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.acc-saga-texte {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   min-width: 0;
 }
 
-.acc-bandeau-nom {
-  margin: 0;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.4rem;
-  line-height: 1.2;
-  color: var(--dw-forge-name);
-  overflow-wrap: anywhere;
-}
-
-// Deux colonnes sur grand écran ; dessous, les scénarios, puis Créer, puis Bibliothèques.
-.acc-grille {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-
-  @media (min-width: 1024px) {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
-.acc-cote {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.acc-panneau {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.acc-panneau-titre {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dw-forge-gold);
-}
-
-// Les scénarios n'ont pas chargé : le bandeau « Reprendre la table » non plus, la partie en cours se retrouve par « Mes sessions ».
-.acc-erreur {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.acc-message {
-  margin: 0;
-  color: var(--dw-forge-stud-text);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-// Une saga : son nom sur un liseré d'or, ses chapitres dans l'ordre de lecture.
-.acc-saga {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-left: 0.75rem;
-  border-left: 3px solid var(--dw-forge-bronze);
-}
-
 .acc-saga-nom {
   margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.2rem;
+  font-size: 1.85rem;
   font-weight: 400;
-  line-height: 1.2;
-  color: var(--dw-forge-name);
+  line-height: 1;
+  color: var(--saga-clair);
+  text-shadow:
+    0 2px 0 var(--dw-forge-shade),
+    0 0 18px color-mix(in srgb, var(--saga) 60%, transparent);
 }
 
-.acc-chapitres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+.acc-saga-resume {
   margin: 0;
-  padding: 0;
-  list-style: none;
-
-  li {
-    max-width: 100%;
-  }
-}
-
-.acc-chapitre {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.15rem 0.5rem;
-  max-width: 100%;
-  min-height: 2rem;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: var(--dw-radius-toggle);
-  @include forge.recess;
-  color: var(--dw-forge-bone);
-  font-size: 0.875rem;
-  line-height: 1.3;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-
-  &:hover {
-    border-color: var(--dw-forge-hot);
-    color: var(--dw-forge-hot-text);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-forge-hot);
-    outline-offset: 2px;
-  }
-
-  // Joué : atténué, en restant lisible (AA).
-  &--joue {
-    color: var(--dw-forge-caption);
-
-    .acc-repere {
-      color: var(--dw-forge-caption);
-    }
-  }
-
-  // En cours sur la table ouverte : bordé d'or.
-  &--en-cours {
-    border-color: var(--dw-forge-gold);
-    box-shadow:
-      inset 0 0 0 1px var(--dw-forge-gold),
-      0 0 10px color-mix(in srgb, var(--dw-forge-gold) 35%, transparent);
-    color: var(--dw-forge-name);
-  }
-
-  // À suivre : un liseré d'or plus discret, à gauche.
-  &--prochain {
-    border-color: var(--dw-forge-bronze);
-    box-shadow:
-      inset 3px 0 0 var(--dw-forge-gold),
-      var(--dw-forge-recess-shadow);
-  }
-}
-
-.acc-repere {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--dw-forge-gold);
-}
-
-// Les tuiles : des cartes-liens, une icône frappée sur un clou et le nom dessous.
-.acc-tuiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.acc-tuile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  height: 100%;
-  padding: 0.75rem 0.5rem;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 7px;
-  @include forge.recess;
-  color: var(--dw-forge-bone);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  text-align: center;
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+.acc-saga-suite {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3.6rem;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--saga);
+  border-radius: 12px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--saga) 20%, transparent), rgba(10, 6, 4, 0.75));
+  color: var(--saga-clair);
   text-decoration: none;
 
   &:hover {
     border-color: var(--dw-forge-hot);
-    color: var(--dw-forge-hot-text);
-
-    .acc-tuile-icone {
-      @include forge.stud-hot;
-    }
+    background-color: rgba(255, 170, 60, 0.08);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-forge-hot);
-    outline-offset: 2px;
-  }
-}
-
-.acc-tuile-icone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  @include forge.medallion;
 
   .mat-icon {
-    width: 1.4rem;
-    height: 1.4rem;
-    font-size: 1.4rem;
+    flex: none;
+  }
+}
+
+.acc-saga-suite-texte {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.acc-saga-suite-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.acc-saga-suite-titre {
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dw-forge-bone);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Les bibliothèques : une tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ─────────────────────────────
+.acc-bibliotheques {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acc-biblio {
+  position: relative;
+}
+
+.acc-biblio-lien {
+  --biblio-image: url('/assets/bol/header-intendance.webp');
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  min-height: 8rem;
+  box-sizing: border-box;
+  padding: 0.9rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(10, 6, 4, 0.15), rgba(10, 6, 4, 0.9)),
+    var(--biblio-image) center 30% / cover,
+    var(--dw-surface-100);
+  color: var(--dw-forge-bone);
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+    box-shadow: 0 0 22px rgba(255, 170, 60, 0.35);
+    transform: translateY(-2px);
+  }
+}
+
+.acc-biblio--heros {
+  --biblio-image: url('/assets/bol/header-heros.webp');
+}
+
+.acc-biblio--pnjs {
+  --biblio-image: url('/assets/bol/header-pnj.webp');
+}
+
+.acc-biblio--creatures {
+  --biblio-image: url('/assets/bol/header-creatures.webp');
+}
+
+.acc-biblio--demons {
+  --biblio-image: url('/assets/bol/header-demons.webp');
+}
+
+.acc-biblio--armes {
+  --biblio-image: url('/assets/bol/header-armes.webp');
+}
+
+.acc-biblio--armures {
+  --biblio-image: url('/assets/bol/header-armures.webp');
+}
+
+.acc-biblio-compte {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--dw-forge-info-hot);
+  text-shadow:
+    0 0 16px rgba(255, 150, 40, 0.5),
+    0 2px 0 var(--dw-forge-shade);
+}
+
+.acc-biblio-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+// Le « + » : un clou rond, en haut à droite de sa tuile.
+.acc-biblio-plus {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  @include forge.stud;
+}
+
+.acc-saga-suite,
+.acc-heros,
+.acc-biblio-lien {
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acc-biblio-lien {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 }

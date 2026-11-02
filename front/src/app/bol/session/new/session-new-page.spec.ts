@@ -21,6 +21,8 @@ const ACCUEIL: BolAccueilModel = {
   scenarios_joues: [],
   scenario_recent_id: null,
   derniers_heros: ['h1'],
+  compagnie: [{id: 'h1', nom: 'Axel', avatar: null}],
+  comptes: {heros: 1, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 1},
 };
 
 describe('SessionNewPageComponent', () => {

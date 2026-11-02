@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilScenario, BolAccueilTable} from '../../models/bol-accueil.model';
-import {accueilSagas, findScenario, tableTitre} from './accueil.util';
+import {accueilSagas, findScenario, sagaResumes, tableOuverte, tableTitre} from './accueil.util';
 
 const S: BolAccueilScenario[] = [
   {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
@@ -141,5 +141,59 @@ describe('findScenario', () => {
   it('renvoie null pour un id inconnu ou absent', () => {
     expect(findScenario(S, 'zz')).toBeNull();
     expect(findScenario(S, null)).toBeNull();
+  });
+});
+
+describe('sagaResumes', () => {
+  const resume = (nom: string | null, joues: string[] = [], enCours: string | null = null) =>
+    sagaResumes(accueilSagas(S, new Set(joues), enCours, null)).find((r) => r.nom === nom)!;
+
+  it('compte les chapitres joués et propose le prochain', () => {
+    const perle = resume('Perle du Beshaar', ['p1', 'p2']);
+
+    expect(perle).toMatchObject({joues: 2, total: 3, resume: '2 sur 3 joués'});
+    expect(perle.suite?.id).toBe('p10');
+  });
+
+  it('propose le premier chapitre à jouer quand aucun n’est le prochain', () => {
+    expect(resume('Le Dieu voilé').suite?.id).toBe('dvi');
+    expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencée');
+  });
+
+  it('dit la saga sur la table, et achevée quand tout est joué', () => {
+    expect(resume('Perle du Beshaar', ['p2'], 'p1').resume).toBe('Sur la table ce soir');
+    const achevee = resume('Chroniques lémuriennes', ['clm', 'clt']);
+    expect(achevee.suite).toBeNull();
+    expect(achevee.resume).toBe('Saga achevée');
+  });
+
+  it('donne à chaque saga une teinte stable, dans l’ordre alphabétique, et aucune hors saga', () => {
+    const teintes = (recent: string | null) =>
+      Object.fromEntries(sagaResumes(accueilSagas(S, new Set(), null, recent)).map((r) => [r.nom ?? 'hors', r.teinte]));
+
+    expect(teintes(null)).toEqual({'Chroniques lémuriennes': 1, 'Le Dieu voilé': 2, 'Perle du Beshaar': 3, hors: 0});
+    expect(teintes('dv1')).toEqual(teintes(null));
+  });
+
+  it('remplit l’anneau à la mesure de l’avancement', () => {
+    const [plein, circonference] = resume('Perle du Beshaar', ['p1', 'p2', 'p10']).anneau.split(' ').map(Number);
+    expect(plein).toBeCloseTo(circonference, 0);
+    expect(Number(resume('Le Dieu voilé').anneau.split(' ')[0])).toBe(0);
+  });
+});
+
+describe('tableOuverte', () => {
+  const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({id: 't', titre: null, scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z', ...over});
+
+  it('met la saga au-dessus et le chapitre en titre', () => {
+    expect(tableOuverte(table(), S)).toEqual({id: 't', saga: 'Perle du Beshaar', titre: '1. Sacrilège à Satarla'});
+  });
+
+  it('garde le titre donné à la table', () => {
+    expect(tableOuverte(table({titre: 'Soirée chez Lionel'}), S)).toEqual({id: 't', saga: 'Perle du Beshaar', titre: 'Soirée chez Lionel'});
+  });
+
+  it('sans scénario, tombe sur la date', () => {
+    expect(tableOuverte(table({scenario_id: null}), S)).toEqual({id: 't', saga: null, titre: 'Table du 2 novembre'});
   });
 });

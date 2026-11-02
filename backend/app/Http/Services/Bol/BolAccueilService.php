@@ -2,13 +2,18 @@
 
 namespace App\Http\Services\Bol;
 
+use App\Models\Bol\BolArme;
+use App\Models\Bol\BolArmure;
+use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 
-/** Ce que l'accueil lit d'un compte : sa table ouverte, ses scénarios, leur avancement et les héros de sa dernière table. */
+/** Ce que l'accueil lit d'un compte : sa table ouverte, ses scénarios, leur avancement, les héros de sa dernière table et le nombre de
+ * fiches de chaque bibliothèque. */
 class BolAccueilService
 {
     /** Statuts d'une table encore ouverte : une table au statut `terminee` n'en est plus une. */
@@ -34,7 +39,44 @@ class BolAccueilService
             'scenarios'          => $scenarios->map(fn (BolScenario $scenario) => ['id' => $scenario->id, 'titre' => $scenario->titre])->values()->all(),
             'scenarios_joues'    => $this->scenariosJoues($userId, $sessions->all(), $scenarios->pluck('id')->all()),
             'scenario_recent_id' => $touchee?->scenario_id,
-            'derniers_heros'     => $derniere ? $this->herosDeLaTable($userId, $derniere->id) : [],
+            'derniers_heros'     => $herosIds = ($derniere ? $this->herosDeLaTable($userId, $derniere->id) : []),
+            'compagnie'          => $this->compagnie($herosIds),
+            'comptes'            => $this->comptes($userId),
+        ];
+    }
+
+    /**
+     * Les héros de la dernière table, dans le même ordre, avec ce qu'il faut pour les montrer.
+     *
+     * @param array<int, string> $herosIds
+     * @return array<int, array{id: string, nom: string, avatar: ?string}>
+     */
+    private function compagnie(array $herosIds): array
+    {
+        $heros = BolHeros::whereIn('id', $herosIds)->get(['id', 'nom', 'avatar'])->keyBy('id');
+
+        return array_values(array_filter(array_map(
+            fn (string $id) => isset($heros[$id]) ? ['id' => $id, 'nom' => $heros[$id]->nom, 'avatar' => $heros[$id]->avatar] : null,
+            $herosIds,
+        )));
+    }
+
+    /**
+     * Le nombre de fiches que chaque bibliothèque montre au compte : ses héros et ses tables ; pour le reste, ses fiches et celles du
+     * catalogue.
+     *
+     * @return array{heros: int, pnjs: int, creatures: int, demons: int, armes: int, armures: int, sessions: int}
+     */
+    private function comptes(string $userId): array
+    {
+        return [
+            'heros'     => BolHeros::where('user_id', $userId)->where('type', 'H')->count(),
+            'pnjs'      => BolHeros::accessibleTo($userId)->where('type', '!=', 'H')->count(),
+            'creatures' => BolCreature::accessibleTo($userId)->count(),
+            'demons'    => BolDemon::accessibleTo($userId)->count(),
+            'armes'     => BolArme::accessibleTo($userId)->count(),
+            'armures'   => BolArmure::accessibleTo($userId)->count(),
+            'sessions'  => BolFightSession::where('user_id', $userId)->count(),
         ];
     }
 

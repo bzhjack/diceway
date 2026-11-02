@@ -2,6 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Bol\BolArme;
+use App\Models\Bol\BolArmure;
+use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolHeros;
@@ -9,6 +13,7 @@ use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -165,6 +170,51 @@ class BolAccueilTest extends TestCase
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
         $this->assertSame([$own->id], $response->json('derniers_heros'));
+    }
+
+    public function test_company_names_the_last_heroes_in_their_order_with_their_portrait(): void
+    {
+        $h1 = $this->hero('Axel');
+        $h2 = $this->hero('Balaram');
+        $h2->update(['avatar' => '/assets/bol/empty-avatar.jpg']);
+
+        $table = $this->tableSession('libre');
+        $this->seat($table, $h2);
+        $this->seat($table, $h1);
+
+        $response = $this->getJson('/api/bol/accueil')->assertOk();
+
+        $this->assertSame([
+            ['id' => $h2->id, 'nom' => 'Balaram', 'avatar' => '/assets/bol/empty-avatar.jpg'],
+            ['id' => $h1->id, 'nom' => 'Axel', 'avatar' => null],
+        ], $response->json('compagnie'));
+    }
+
+    public function test_counts_what_each_library_shows_to_the_account(): void
+    {
+        // Les migrations posent déjà quelques fiches au catalogue (armes régionales…) : on compte ce que le test ajoute.
+        $avant = $this->getJson('/api/bol/accueil')->assertOk()->json('comptes');
+        $other = User::factory()->create();
+        $taille = DB::table('bol_taille')->insertGetId(['taille' => 'Moyenne', 'type' => 'C']);
+        $categorie = DB::table('bol_categorie')->insertGetId(['categorie' => 'Mineur', 'type' => 'C']);
+        $this->hero('Héros');
+        BolHeros::create(['nom' => 'Héros du catalogue', 'joueur' => 'J', 'user_id' => null, 'type' => 'H']);
+        $this->hero('PNJ', 'C');
+        BolHeros::create(['nom' => 'PNJ du catalogue', 'joueur' => 'J', 'user_id' => null, 'type' => 'C']);
+        $this->hero('PNJ étranger', 'C', $other);
+        foreach ([$this->user->id, null, $other->id] as $owner) {
+            BolCreature::create(['nom' => 'Bête', 'user_id' => $owner, 'id_taille' => $taille]);
+            BolDemon::create(['nom' => 'Démon', 'user_id' => $owner, 'id_categorie' => $categorie]);
+            BolArme::create(['arme' => 'Lame ' . $owner, 'type' => 'M', 'degats' => 'd6', 'user_id' => $owner]);
+            BolArmure::create(['armure' => 'Cuir ' . $owner, 'protection' => '1', 'user_id' => $owner]);
+        }
+        $this->tableSession('terminee');
+        BolFightSession::create(['titre' => 'Autre', 'statut' => 'libre', 'user_id' => $other->id]);
+
+        $apres = $this->getJson('/api/bol/accueil')->assertOk()->json('comptes');
+        $ajoutes = array_map(fn (string $cle) => $apres[$cle] - $avant[$cle], array_combine(array_keys($apres), array_keys($apres)));
+
+        $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1], $ajoutes);
     }
 
     public function test_hides_other_accounts(): void

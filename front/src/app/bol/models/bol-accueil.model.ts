@@ -12,6 +12,25 @@ export interface BolAccueilTable {
   created_at: string;
 }
 
+/** Un héros de la dernière table, pour la carte de la compagnie. */
+export interface BolAccueilHeros {
+  id: string;
+  nom: string;
+  avatar: string | null;
+}
+
+/** Le nombre de fiches de chaque bibliothèque, telles que le compte les voit (catalogue compris pour les PNJ, créatures, démons, armes et
+ * armures). */
+export interface BolAccueilComptes {
+  heros: number;
+  pnjs: number;
+  creatures: number;
+  demons: number;
+  armes: number;
+  armures: number;
+  sessions: number;
+}
+
 /** Réponse de `GET /api/bol/accueil` : tout ce que le tableau de bord affiche, en une requête. */
 export interface BolAccueilModel {
   table: BolAccueilTable | null;
@@ -22,4 +41,7 @@ export interface BolAccueilModel {
   scenario_recent_id: string | null;
   /** Ids des héros de la dernière table. */
   derniers_heros: string[];
+  /** Les mêmes héros, avec leur nom et leur portrait. */
+  compagnie: BolAccueilHeros[];
+  comptes: BolAccueilComptes;
 }
