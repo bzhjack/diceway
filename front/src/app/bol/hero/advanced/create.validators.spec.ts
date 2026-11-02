@@ -1,7 +1,9 @@
 import {
+  armureLourdeInterdite,
   attributRangeErrors,
   attributsBudgetErrors,
   avantagesSansCarriere,
+  carrieresLettreesPourIllettre,
   carrieresReserveesHorsOrigine,
   carriereRangeErrors,
   carrieresBudgetErrors,
@@ -381,5 +383,53 @@ describe('R-CARR-RESERVEE — carrieresReserveesHorsOrigine : une carrière rés
   it('ne dit rien tant que l’origine n’est pas choisie, ni sans carrière réservée', () => {
     expect(carrieresReserveesHorsOrigine([PILOTE_DES_AIRS], null)).toEqual([]);
     expect(carrieresReserveesHorsOrigine([GUERRIER], TYRUS)).toEqual([]);
+  });
+});
+
+describe('R-ARMURE-LOURDE — armureLourdeInterdite : pas d’armure lourde avec une vigueur négative (p. 52)', () => {
+  const ARMURE_LEGERE = 2;
+  const ARMURE_MOYENNE = 3;
+  const ARMURE_LOURDE = 4;
+  const CASQUE = 5;
+
+  it('signale une armure lourde quand la vigueur est négative', () => {
+    expect(armureLourdeInterdite(-1, [ARMURE_LOURDE])).toBe(true);
+    expect(armureLourdeInterdite(-1, [CASQUE, ARMURE_LOURDE])).toBe(true);
+  });
+
+  it('accepte l’armure lourde à partir de vigueur 0', () => {
+    expect(armureLourdeInterdite(0, [ARMURE_LOURDE])).toBe(false);
+    expect(armureLourdeInterdite(2, [ARMURE_LOURDE])).toBe(false);
+  });
+
+  it('ne dit rien des autres armures, du casque ni de l’absence d’armure', () => {
+    expect(armureLourdeInterdite(-1, [ARMURE_LEGERE, ARMURE_MOYENNE, CASQUE])).toBe(false);
+    expect(armureLourdeInterdite(-1, [])).toBe(false);
+  });
+});
+
+describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit pas une carrière qui exige d’être lettré (p. 45)', () => {
+  const ILLETTRE = 17;
+  const ALCHIMISTE = 1;
+  const MEDECIN = 14;
+  const PRETRE = 21;
+  const SCRIBE = 22;
+  const SORCIER = 24;
+  const SOLDAT = 23;
+  const AUTRE_DESAVANTAGE = 33;
+
+  it('signale chaque carrière lettrée choisie par un illettré, dans l’ordre des carrières', () => {
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [SCRIBE, SOLDAT, ALCHIMISTE, SORCIER])).toEqual([SCRIBE, ALCHIMISTE, SORCIER]);
+    expect(carrieresLettreesPourIllettre([AUTRE_DESAVANTAGE, ILLETTRE], [MEDECIN, PRETRE])).toEqual([MEDECIN, PRETRE]);
+  });
+
+  it('ne dit rien sans le désavantage Illettré', () => {
+    expect(carrieresLettreesPourIllettre([], [SCRIBE, MEDECIN, PRETRE, ALCHIMISTE])).toEqual([]);
+    expect(carrieresLettreesPourIllettre([AUTRE_DESAVANTAGE], [SCRIBE])).toEqual([]);
+  });
+
+  it('ne dit rien d’un illettré sans carrière lettrée', () => {
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [SOLDAT, 12])).toEqual([]);
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [])).toEqual([]);
   });
 });

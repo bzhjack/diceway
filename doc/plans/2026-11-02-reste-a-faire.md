@@ -8,7 +8,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 À faire sur le serveur, dans cet ordre, une fois le code déployé :
 
-1. `docker cp backend/routes/api.php …` (le conteneur ne monte que `app/` et `database/`), puis `php artisan migrate` : il ajoute `bol_fight_session.scenario_id` (accueil), corrige les données du catalogue relevées par l'audit du livre (`2026_11_02_120000_fix_reference_data_from_rulebook_audit.php`) ajoute les listes de la Côte de Feu et des Plaines de Klaar (`2026_11_02_130000_add_cote_de_feu_and_klaar_regional_lists.php`) précise le terrain des avantages de terrain (`2026_11_02_140000_terrain_advantages_name_their_terrain.php`) et passe trois PNJ du catalogue aux armes régionales (`2026_11_02_150000_npcs_take_mythic_plus_regional_weapons.php`).
+1. `docker cp backend/routes/api.php …` (le conteneur ne monte que `app/` et `database/`), puis `php artisan migrate` : il ajoute `bol_fight_session.scenario_id` (accueil), corrige les données du catalogue relevées par l'audit du livre (`2026_11_02_120000_fix_reference_data_from_rulebook_audit.php`) ajoute les listes de la Côte de Feu et des Plaines de Klaar (`2026_11_02_130000_add_cote_de_feu_and_klaar_regional_lists.php`) précise le terrain des avantages de terrain (`2026_11_02_140000_terrain_advantages_name_their_terrain.php`) passe trois PNJ du catalogue aux armes régionales (`2026_11_02_150000_npcs_take_mythic_plus_regional_weapons.php`) et ajoute le Roi-Sorcier mort-vivant au catalogue (`2026_11_02_160000_add_undead_sorcerer_king_to_catalogue.php`).
 2. Portraits : `docker exec -u www-data diceway php artisan bol:extract-portraits` (voir `CLAUDE.md`, section Portraits).
 3. **Après** la mise en production des portraits : supprimer la table `bol_portrait_backup` et les options `--restore` / `--forget-originals` de `bol:extract-portraits` (S).
 
@@ -130,16 +130,26 @@ Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-1
 
 ### Doc
 
-L'audit a aussi relevé des oublis (environ 70, surtout dans `02-actions-combat.md` et `03-guerre.md`) et des règles sans source (environ 25, souvent des choix de l'appli) qui n'ont pas été traités. Les plus utiles :
+✅ Oublis utiles traités le 2026-11-02 : environ 75 règles ajoutées dans `doc/rules/`, `doc/resources/` et `doc/specs/`, chacune revérifiée dans le livre. Ne restent que des détails d'ambiance ou des redites, et les règles sans source (environ 25, souvent des choix de l'appli), non traitées.
 
-- Portée des armes : la colonne « portée » est la largeur de la bande Bout portant, chaque bande suivante en est un multiple (p. 62).
-- Armure lourde interdite si vigueur < 0 (p. 52), et le casque n'ajoute +1 qu'avec une armure.
-- Langues : les langues supplémentaires viennent du rang de 8 carrières (p. 46).
-- Sorts de cercle 1 à 3 : au moins une condition d'incantation (p. 150).
-- Guerre navale : succès légendaire, une action par phase, dégâts de feu à chaque round.
-- Magie des Rois-Sorciers et Pouvoir du Néant imposent un désavantage supplémentaire.
+- ✅ Portée des armes : la colonne « portée » est la largeur de la bande Bout portant, chaque bande suivante en est un multiple (p. 62) — fait le 2026-11-02
+- ✅ Armure lourde interdite si vigueur < 0 (p. 52), et le casque n'ajoute +1 qu'avec une armure — fait le 2026-11-02
+- ✅ Langues : les langues supplémentaires viennent du rang de 8 carrières (p. 46) — fait le 2026-11-02
+- ✅ Sorts de cercle 1 à 3 : au moins une condition d'incantation (p. 150) — fait le 2026-11-02
+- ✅ Guerre navale : succès légendaire, une action par phase, dégâts de feu à chaque round — fait le 2026-11-02 (dégâts du feu non chiffrés par le livre : d3 proposé, marqué comme interprétation)
+- ✅ Magie des Rois-Sorciers et Pouvoir du Néant imposent un désavantage supplémentaire — fait le 2026-11-02
 
-Pour la liste complète, relancer l'audit (doc ↔ `doc/pdf-text/`).
+### Révélés par la doc complétée : vérifiés dans l'appli le 2026-11-02
+
+| Règle du livre | Constat dans l'appli | Effort |
+| --- | --- | --- |
+| ✅ Armure lourde interdite si vigueur < 0 (p. 52) | Avertissement dans le panneau des armures (`armureLourdeInterdite`, `create.validators.ts`) — fait le 2026-11-02 | S |
+| ✅ Le casque n'ajoute +1 qu'à la protection d'une armure portée (p. 52) | `equippedProtection` corrigé, avec son test ; les dégâts et les fiches en héritent — fait le 2026-11-02 | S |
+| ✅ Illettré : pas de carrière exigeant d'être lettré (p. 45) | Avertissement à la création pour scribe, médecin, prêtre (dits lettrés par le livre), alchimiste et sorcier (`CARRIERES_LETTREES`) — fait le 2026-11-02 | S |
+| ✅ Points de création : rang d'alchimiste entre deux aventures, 5 au plus ; au départ seulement si le MJ l'autorise (p. 139) | Conforme : la fiche porte une réserve égale au rang ; l'usage au départ reste une décision du MJ | — |
+| ✅ Foi : réserve égale au rang de prêtre (p. 146) | Conforme | — |
+| ✅ Sorcier et alchimiste : un désavantage par rang supplémentaire | Conforme à la création (`carriereDesavantageCount`) ; la progression par XP n'est pas gérée par l'appli | — |
+| ✅ Rois-Sorciers morts-vivants (p. 128) | Ajouté au catalogue (seeder et migration `2026_11_02_160000_add_undead_sorcerer_king_to_catalogue`), taille moyenne donc rang « coriace » (le livre n'en donne pas) ; squelettes et zombies sans profil : rien à ajouter — fait le 2026-11-02 | S |
 
 ## 4. Code
 

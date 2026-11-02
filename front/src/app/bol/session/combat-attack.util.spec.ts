@@ -80,14 +80,17 @@ describe('equippedProtection', () => {
     expect(equippedProtection([{...heavy, equipee: false}])).toEqual({text: null, value: 0});
   });
 
-  it('counts a helmet alone as 1', () => {
-    expect(equippedProtection([helmet])).toEqual({text: '1', value: 1});
+  it('counts a helmet only on a worn armour: alone it adds nothing (book p. 52)', () => {
+    expect(equippedProtection([helmet])).toEqual({text: null, value: 0});
+    expect(equippedProtection([{...heavy, equipee: false}, helmet])).toEqual({text: null, value: 0});
+    expect(equippedProtection([light, helmet])).toEqual({text: 'd6-3 (1) +1', value: 2});
   });
 
   it('adds a bonus such as Peau dure, even without armour', () => {
     expect(equippedProtection([heavy, helmet], 1)).toEqual({text: 'd6-1 (3) +2', value: 5});
     expect(equippedProtection([light], 1)).toEqual({text: 'd6-3 (1) +1', value: 2});
     expect(equippedProtection([], 1)).toEqual({text: '1', value: 1});
+    expect(equippedProtection([helmet], 1)).toEqual({text: '1', value: 1});
   });
 
   it('is nothing when the hero wears nothing, or when the catalogue is not loaded', () => {

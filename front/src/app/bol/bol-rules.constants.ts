@@ -23,6 +23,22 @@ export const AVANTAGE_POUVOIR_DU_NEANT_ID = 44;
 /** Peau dure — +1 en protection, même sans armure. */
 export const AVANTAGE_PEAU_DURE_ID = 39;
 
+/** Armure lourde (catalogue, catégorie `armure`) — interdite avec une vigueur négative (livre p. 52). */
+export const ARMURE_LOURDE_ID = 4;
+
+/** Illettré — ne sait ni lire ni écrire et « ne peut pas choisir de carrière exigeant d'être lettré » (livre p. 45). */
+export const DESAVANTAGE_ILLETTRE_ID = 17;
+/** Carrières qui exigent d'être lettré. Le livre nomme Scribe, Médecin (« tous se doivent de savoir lire et écrire ») et Prêtre (« des
+ * lettrés ») ; Alchimiste et Sorcier le sont dans la pratique : le livre les interdit aux Céruléens, qui n'ont pas d'écriture, comme
+ * le scribe et le médecin. Le livre n'en donne pas de liste : à compléter au besoin. */
+export const CARRIERES_LETTREES: readonly number[] = [
+  CARRIERE_ALCHIMISTE_ID,
+  CARRIERE_MEDECIN_ID,
+  CARRIERE_PRETRE_ID,
+  22, // Scribe
+  CARRIERE_SORCIER_ID,
+];
+
 /** Récupération rapide — 1 point de vitalité de plus récupéré après un combat. */
 export const AVANTAGE_RECUPERATION_RAPIDE_ID = 45;
 /** Souffreteux — ne récupère sa vitalité que par des soins médicaux, jamais par le repos. */

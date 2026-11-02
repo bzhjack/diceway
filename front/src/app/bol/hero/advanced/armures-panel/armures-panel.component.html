@@ -7,5 +7,12 @@
   addLabel="Ajouter l'armure"
   (added)="armureAdded.emit($event.id)"
 >
+  @if (warnHeavy()) {
+    <div class="dw-field-warning mb-3">
+      Armure lourde — Vigueur négative : le livre interdit l'armure lourde à ce personnage (p. 52). Vérifiez la
+      cohérence avec les règles.
+    </div>
+  }
+
   <bol-armure-list [armures]="armures()" (equippedToggled)="armureEquippedToggled.emit($event)" (removed)="armureRemoved.emit($event)" />
 </bol-list-panel>

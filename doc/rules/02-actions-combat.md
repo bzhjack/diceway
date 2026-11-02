@@ -12,6 +12,8 @@ En combat :
 
 `2d6 + attribut approprié + aptitude de combat appropriée`
 
+Le MJ décide si une carrière peut intervenir dans l'action ; le joueur peut toujours tenter de le convaincre (ex. : le rang d'assassin aide à détecter un poison dans un verre de vin, pas à traquer un deodarg : c'est le métier d'un chasseur).
+
 Seuil standard :
 
 - Réussite à `9+`
@@ -28,6 +30,7 @@ Règles absolues :
 - Désavantage : lancer `3d6` et garder les `2` moins bons.
 - Deux avantages applicables : `4d6`, garder les `2` meilleurs.
 - Deux désavantages applicables : `4d6`, garder les `2` moins bons.
+- Un avantage et un désavantage contradictoires sur le même jet s'annulent (cf. `01-creation-heros.md`).
 
 ## Difficulté et portée
 
@@ -56,20 +59,20 @@ Succès légendaire :
 - Uniquement accessible sur `12 naturel` (double 6). On ne peut pas convertir une réussite normale en héroïque puis en légendaire via deux dépenses de PH.
 - Si un succès héroïque est obtenu (double 6), dépenser `1 point d'héroïsme` permet de le convertir en succès légendaire.
 - La conversion reste possible après une relance par **Faveur divine**, si le second jet donne un double 6 (même si un PH a déjà été dépensé pour relancer).
-- En combat : permet de choisir **deux** options de succès héroïque (la même option peut être choisie deux fois si le MJ l'estime cohérent).
+- En combat : permet de choisir **deux** options de succès héroïque (le joueur peut choisir deux fois la même option, p. 59).
 
 ## Échec critique
 
 - Sur `2 naturel`, le personnage échoue automatiquement.
 - Le joueur peut choisir de transformer cet échec automatique en échec critique.
-- Il décrit alors une issue franchement défavorable, au moins pour le round en cours et le suivant.
-- Ce type d'acceptation volontaire peut justifier l'octroi d'`1 point d'héroïsme`.
+- Il décrit alors une issue franchement défavorable, au moins pour le round en cours et le suivant (ou dans un futur immédiat si la scène n'est pas un combat).
+- Ce type d'acceptation volontaire peut justifier l'octroi d'`1 point d'héroïsme` supplémentaire, à utiliser plus tard dans l'aventure ; le MJ l'accorde ou non. Il peut dépasser temporairement la limite habituelle de 5 PH.
 
 ## Points d'héroïsme
 
 Usages en jeu :
 
-- **Coup de chance** : suggérer un élément favorable de scène, soumis à l'approbation du MJ. Ne peut pas apporter de changement majeur ni modifier un élément déjà établi.
+- **Coup de chance** : suggérer un élément favorable de scène, soumis à l'approbation du MJ. Ne peut pas apporter de changement majeur ni modifier un élément déjà établi. Quand l'élément n'est pas évident, le MJ peut demander `1 PH` pour que la scène l'offre. Un sorcier peut aussi dépenser `1 PH` pour remplir une condition d'incantation (ex. : « cette heure du jour est idéale pour mon invocation », si le MJ n'a pas précisé le moment).
 - **Défier la mort** : si la vitalité tombe entre `-1` et `-5`, dépenser `1 PH` pour la ramener immédiatement à `0` (vivant mais inconscient). Si la vitalité tombe en dessous de `-5`, dépenser `1 PH` pour se stabiliser (reste inconscient, se remet sur pied après quelques jours de repos).
 - **Faveur divine** : relancer tous les dés d'un jet d'action (y compris les dés de bonus), conserver le résultat du second jet ; utilisable même après un `2` naturel (échec automatique).
 - **Juste une égratignure** : perdre sa prochaine action et lancer `d6B` (le meilleur de deux d6 ; `1d6` avant la mise à jour Mythic+) pour récupérer ce nombre de points de vitalité (sans dépasser le nombre de dégâts tout juste encaissés lors de cette attaque).
@@ -88,12 +91,14 @@ Récupération des points d'héroïsme : tous les points utilisés sont récupé
 | --- | --- |
 | Carnage | Effectuer immédiatement une nouvelle attaque (même adversaire ou adversaire différent). Pas de dépense de PH pour cette attaque supplémentaire. |
 | Coup dévastateur | `+6 dégâts`. |
-| Coup précis | Dégâts normaux + imposer un dé de malus à la cible sur un type spécifique de jets (attaque, vue, déplacement…). Peut aussi trancher un tentacule, réduire l'armure naturelle d'une créature, etc. (accord MJ). |
+| Coup précis | Dégâts normaux + imposer un dé de malus à la cible sur un type spécifique de jets (attaque, vue, déplacement…). Peut aussi trancher un tentacule, réduire d'une catégorie la protection (armure naturelle) d'une créature, etc. (accord MJ). |
 | Désarmement | L'adversaire perd son arme ou objet tenu (au lieu de subir des dégâts). |
 | Massacrer la piétaille | Les dégâts infligés représentent le nombre d'adversaires de type piétaille mis hors combat (pas forcément tués). |
 | Renversement | Jeter l'adversaire à terre (taille max. supérieure d'une catégorie à la vôtre). L'adversaire qui se relève subit un dé de malus à sa prochaine action. |
 
 ## Jet de réaction
+
+Le combat se divise en rounds de quelques secondes : à chaque round, un personnage fait une action (tirer, frapper, parer, lancer une arme…).
 
 Formule :
 
@@ -150,7 +155,7 @@ Si un quadrillage est utilisé :
 - Course : distance ×2
 - Sprint : distance ×4
 
-Un jet d'agilité peut être demandé pour déterminer qui arrive en premier à un endroit précis ou si un fuyard échappe à un poursuivant.
+Un jet d'agilité peut être demandé pour déterminer qui arrive en premier à un endroit précis ou si un fuyard échappe à un poursuivant. Une carrière peut s'y ajouter selon la situation, au choix du MJ (ex. : chasseur ou barbare lors d'une poursuite dans la jungle).
 
 ## Jet d'attaque
 
@@ -176,7 +181,9 @@ La défense de la cible se soustrait toujours au total. La distance agit comme u
 | Extrême | −6 |
 | Maximale | −8 |
 
-La portée de base d'une arme à distance est indiquée dans le tableau des armes (p. 49). Chaque facteur de portée au-delà de la portée de base accroît la difficulté d'un cran.
+La colonne « portée » du tableau des armes (p. 49) donne le facteur de portée de l'arme : la longueur de la bande Bout portant. Chaque ajout d'un facteur accroît la difficulté d'un cran, et chaque bande suivante est un multiple de ce facteur : Courte jusqu'à 2×, Moyenne 3×, Longue 4×, Très longue 5×, Extrême 6×, Maximale 7× (p. 62).
+
+Exemples : dague de jet (3 m) = Bout portant jusqu'à 3 m, Courte jusqu'à 6 m ; lance (6 m) sur une cible à 15 m = 3e facteur = Moyenne (−1).
 
 ## Dégâts
 
@@ -190,6 +197,7 @@ La portée de base d'une arme à distance est indiquée dans le tableau des arme
 
 - **d6M** (dé de malus) : lancer 2d6, garder le moins bon.
 - **d6B** (dé de bonus) : lancer 2d6, garder le meilleur.
+- Le bonus de vigueur/2 des armes de tir et de jet est toujours arrondi à l'inférieur (pas seulement les mains nues).
 - Les personnages ayant moins de `0` en vigueur ne peuvent pas manier les armes lourdes.
 - Les armes régionales de Mythic+ ont leurs propres dégâts, qui ne suivent pas la catégorie ci-dessus : Khastok `d6B+1`, Kriss `d6M+1`, hache d'abordage de Parsool et épée valgardienne `d6` à une main ou `d6B` à deux mains, arc de guerre de Tyrus `d6B`, fronde de l'Axos `d6M` (liste complète dans `01-creation-heros.md` et `../resources/armes.md`).
 - Les dégâts sont soustraits à la vitalité de la cible, après déduction de la protection de l'armure.
@@ -205,6 +213,9 @@ L'armure protège en absorbant tout ou partie des dégâts. Les boucliers influe
 | Moyenne | 2 | d6−2 |
 | Lourde | 3 | d6−1 |
 | Casque | +1 protection | — |
+
+- Le casque s'ajoute à l'armure portée (sans armure, il n'apporte rien) : armure légère + casque = d6−2, moyenne = d6−1, lourde = d6.
+- La réduction de dégâts ne descend pas sous `0` (d6−3 : 0 à 3 points ; d6−1 : 0 à 5). Malus d'agilité, d'initiative, social et surcoût en pouvoir des armures : cf. `01-creation-heros.md`.
 
 ## Carrières et combat
 

@@ -39,10 +39,12 @@ import {HeroAdvancedCarrieresPanelComponent} from './carrieres-panel/carrieres-p
 import {automaticLanguageIdsForRegion, selectedLanguageTarget} from './create.rules';
 import {HeroAdvancedCreateTools} from './create.tools';
 import {
+  armureLourdeInterdite,
   attributRangeErrors,
   attributsBudgetErrors,
-  carrieresReserveesHorsOrigine,
   avantagesSansCarriere,
+  carrieresLettreesPourIllettre,
+  carrieresReserveesHorsOrigine,
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
@@ -434,6 +436,14 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     () => Number(this.vigueurValue()) < 0 && this.selectedArmes().some((arme) => arme.degats?.startsWith('d6B')),
   );
 
+  // Armure lourde avec vigueur négative : interdite par le livre (p. 52) ; même avertissement que l'arme lourde, sans bloquer.
+  protected readonly warnHeavyArmure = computed(() =>
+    armureLourdeInterdite(
+      Number(this.vigueurValue()),
+      this.selectedArmures().map((armure) => armure.id),
+    ),
+  );
+
   // Langues : lémurien + langue natale d'office, quota selon esprit/carrières/origine.
   private readonly selectedLangueIds = computed(() => this.selectedLanguesDraft().map((draft) => Number(draft.id)));
   private readonly automaticLangueIds = computed(() =>
@@ -639,6 +649,18 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       warnings.push({
         step: 'Carrières',
         warn: `La carrière ${this.carriereFromId(reservee.carriereId)?.carriere ?? 'choisie'} est réservée aux héros de ${reservee.region}.`,
+      });
+    }
+
+    // R-ILLETTRE : un illettré ne choisit pas de carrière qui exige d'être lettré (livre p. 45). Désavantage général seulement : un
+    // désavantage régional n'a pas les ids du catalogue général.
+    const generalDesavantageIds = this.selectedTraitsDraft()
+      .filter((trait) => trait.type === 'D' && (trait.region_id ?? 0) <= 0)
+      .map((trait) => Number(trait.traitable_id));
+    for (const carriereId of carrieresLettreesPourIllettre(generalDesavantageIds, selectedIds)) {
+      warnings.push({
+        step: 'Carrières',
+        warn: `Illettré : la carrière ${this.carriereFromId(carriereId)?.carriere ?? 'choisie'} exige de savoir lire et écrire.`,
       });
     }
 

@@ -200,6 +200,7 @@
                           <bol-hero-advanced-armures-panel
                             [armures]="selectedArmures()"
                             [armureOptions]="armureOptions()"
+                            [warnHeavy]="warnHeavyArmure()"
                             (armureAdded)="addArmureEntry($event)"
                             (armureRemoved)="removeArmureAt($event)"
                             (armureEquippedToggled)="toggleArmureEquipped($event)"

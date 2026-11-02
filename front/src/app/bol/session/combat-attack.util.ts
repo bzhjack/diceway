@@ -54,13 +54,14 @@ interface BolHerosArmureLike {
   readonly armure?: {readonly protection: string | null; readonly categorie?: string | null};
 }
 
-/** Protection du héros d'après ce qu'il porte : l'armure équipée (légère, moyenne, lourde) et, s'il y en a un d'équipé, le casque qui
- * ajoute +1 ; `bonus` s'y ajoute (Peau dure, même sans armure). `text` est la forme écrite du livre (« d6-1 (3) +1 »), `value` la
- * valeur fixe retenue pour les dégâts. */
+/** Protection du héros d'après ce qu'il porte : l'armure équipée (légère, moyenne, lourde) et, s'il en porte une, le casque équipé qui
+ * lui ajoute +1 (livre p. 52 : « dans le cas où vous en portez une ») ; `bonus` s'y ajoute (Peau dure, même sans armure). `text` est
+ * la forme écrite du livre (« d6-1 (3) +1 »), `value` la valeur fixe retenue pour les dégâts. */
 export function equippedProtection(armures: readonly (BolHerosArmureLike | number)[] | undefined, bonus = 0): {text: string | null; value: number} {
   const worn = (armures ?? []).filter((a): a is BolHerosArmureLike => typeof a === 'object' && a.equipee !== false);
-  const body = worn.find((a) => a.armure?.categorie === 'armure')?.armure?.protection ?? null;
-  const helmet = worn.some((a) => a.armure?.categorie === 'casque');
+  const bodyArmour = worn.find((a) => a.armure?.categorie === 'armure');
+  const body = bodyArmour?.armure?.protection ?? null;
+  const helmet = bodyArmour !== undefined && worn.some((a) => a.armure?.categorie === 'casque');
   const total = (helmet ? 1 : 0) + bonus;
   const value = parseProtectionValue(body) + total;
   if (body === null && total === 0) {

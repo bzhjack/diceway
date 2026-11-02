@@ -23,6 +23,8 @@ Gain reduit:
 
 ## Depenses d'XP
 
+Les XP se conservent pour plus tard, ou se depensent entre deux aventures.
+
 ### Acheter ou retirer des traits
 
 | Depense | Cout |
@@ -63,6 +65,7 @@ Regle:
 - Cout = `nouveau rang`
 - Exemple: passer de `2` a `3` coute `3 XP`
 - Maximum humain: `5`
+- `Sorcier` : chaque rang au-dela du 1er impose un desavantage supplementaire, y compris quand le rang est monte avec de l'XP (p. 38). `Alchimiste` : meme logique au-dessus du rang 2 (voir `01-creation-heros.md`).
 
 ### Acheter une nouvelle carriere
 
@@ -81,7 +84,11 @@ Regle:
 
 ### Usage attendu
 
-- Les suivants accomplissent des taches ordinaires, servent d'appui, gardent, transportent, accompagnent.
+- Les suivants accomplissent des taches ordinaires, servent d'appui, gardent, transportent, accompagnent. Ils se battent seulement s'ils ont ete recrutes dans ce but.
+- Pour obtenir d'eux ce qui depasse leurs fonctions habituelles, le heros doit reussir un jet d'action `aura` + carriere appropriee.
+- Les joueurs controlent leurs suivants; le MJ les incarne dans sa narration et decide comment ils s'acquittent d'une tache confiee.
+- Certaines carrieres attirent mal les suivants (assassin); un pretre en rassemble beaucoup, mais ils restent plutot au temple. Trop de suivants peut faire passer le heros pour une menace (un noble ou un roi s'inquietera d'une troupe de mercenaires dans sa ville).
+- Les suivants ne sont pas une unite de soldats commandee par le heros, ni la congregation d'un pretre, ni le public d'un menestrel ou d'un gladiateur: ceux-la ne sont "a lui" que brievement. Les suivants lui sont devoues tant qu'ils sont bien traites.
 - Ils ne sont pas la pour remplacer les heros dans les scenes decisives.
 - Si les heros les utilisent comme chair a canon, ils ne gagnent aucun XP, et leurs suivants, s'ils se sentent maltraites, abandonnent le groupe.
 

@@ -1016,6 +1016,22 @@ class BolCreatureSeeder extends Seeder
                 'id_taille' => '5',  // Grande
                 'commentaire' => "Chroniques Lémuriennes, p. 26. Forêts froides, toundras. Revenant né de l'âme maudite d'un cannibale ; nécrophage émacié ou géant mêlant arctodus et xalibu. Ennemi de l'eucladocéros.",
             ],
+
+            // ── Morts-vivants du livre (Bestiaire, p. 128) : seuls les Rois-Sorciers ont un profil, squelettes et zombies sont de la piétaille ──
+            [
+                'id' => '75',
+                'nom' => 'Roi-Sorcier mort-vivant',
+                'vigueur' => '3',
+                'agilite' => '0',
+                'esprit' => '3',
+                'vitalite' => '13',  // Force vitale
+                'attaque' => '2',
+                'defense' => '2',
+                'degats' => 'd6+3',
+                'protection' => '0',
+                'id_taille' => '4',  // Moyenne
+                'commentaire' => "Bestiaire, p. 128. Cryptes obscures et souterrains perdus. Visage blafard et squelettique, proche des morgal ; d'une malfaisance démente, il attend l'heure de gouverner de nouveau le monde.\nLe livre ne donne ni taille ni rang : taille « Moyenne » retenue (force vitale 13 = vitalité 10 + vigueur 3 ; dégâts d6+3 = d6 + vigueur 3, à l'épée). Avec ses carrières, il se joue comme un rival.\nForce vitale 13 : mort-vivant, il n'a pas de vitalité et ne souffre pas des blessures ; à 0, il retourne à la mort.\nPoints de pouvoir : 15. Carrières : Sorcier 3-6.\nMagie des Rois-Sorciers : un dé de bonus pour lancer des sorts. Pouvoir du Néant : inclus dans le profil.\nInquiétant : un dé de malus dans les situations sociales ou face à des animaux. Deux autres désavantages au choix.",
+            ],
         ];
 
         // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)

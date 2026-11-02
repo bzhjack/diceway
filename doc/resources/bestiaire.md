@@ -2,7 +2,7 @@
 
 Source principale : chapitre 5, section `Bestiaire de la Lémurie` et `Table de création des créatures`.
 
-Ce fichier sert de catalogue de travail pour le projet, en priorité à partir des créatures déjà présentes dans les seeders.
+Ce fichier sert de catalogue de travail pour le projet, en priorité à partir des créatures déjà présentes dans les seeders. Parmi les morts-vivants du livre (p. 127-128), seuls ceux qui ont un profil y figurent ; les squelettes et zombies (piétaille) n'en ont pas : voir `doc/rules/04-pnj-creatures-demons.md`.
 
 ## Créatures actuellement disponibles dans le projet
 
@@ -56,6 +56,7 @@ Ce fichier sert de catalogue de travail pour le projet, en priorité à partir d
 - Main cavaleuse
 - Nécropède
 - Nécrophage
+- Roi-Sorcier mort-vivant (p. 128 ; force vitale 13 en vitalité ; le livre ne donne ni taille ni rang : taille « Moyenne » retenue ; points de pouvoir 15, carrières Sorcier 3-6 et capacités dans le commentaire)
 
 ### Bestiaire du Beshaar (*La Perle du Beshaar*, p. 24-35)
 

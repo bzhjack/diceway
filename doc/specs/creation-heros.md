@@ -62,7 +62,7 @@ Reference :
 
 Regles :
 - somme de creation = `4`
-- une seule baisse a `-1`
+- une seule baisse a `-1`, avec l'accord du MJ (p. 13 ; aucun accord requis pour une aptitude de combat, p. 15)
 - pas de valeur > `3` a la creation pour les points repartis ; le bonus d'un avantage d'attribut s'ajoute ensuite (`Savant`, `Agilite de l'homme-oiseau`, `Vigueur ceruleenne` p. 40/43, Mythic+ `Prestance` ci-dessous), d'ou un depart a `4`
 
 Mythic+ :
@@ -74,6 +74,7 @@ Impacts utiles :
 - `vitalite = 10 + vigueur`
 - les degats de melee utilisent `vigueur`
 - les degats de tir utilisent `vigueur / 2`, arrondi a l'inferieur
+- avec `vigueur < 0` : pas d'armure lourde (p. 52), pas d'arme lourde `d6B` (p. 63) ; le materiel de depart (armes, armure) se choisit avec l'accord du MJ (etape 8, p. 54) ; dans le front, un avertissement (non bloquant) sur les panneaux Armes et Armures (`armureLourdeInterdite`, `create.validators.ts`)
 
 ## Aptitudes de combat
 
@@ -131,8 +132,9 @@ Carrieres pertinentes pour les langues :
 - `Sorcier`
 
 Points particuliers :
-- sauf `illetre`, le heros lit et ecrit les langues qu'il parle
+- sauf `illetre`, le heros lit et ecrit les langues qu'il parle, a condition qu'elles aient une forme ecrite (aucune pour l'`argot des mers`, le `ceruleen`, le `grooth`)
 - exception : le `demonique` demande un apprentissage separe oral / ecrit
+- `illetre` : ne sait ni lire ni ecrire (p. 44) et ne peut pas choisir une carriere exigeant d'etre lettre : `Scribe`, `Medecin`, `Alchimiste`, `Pretre`, etc. (p. 47, liste non exhaustive) ; dans le front, un warning de carriere pour `Scribe`, `Medecin`, `Pretre`, `Alchimiste` et `Sorcier` (`CARRIERES_LETTREES`, `bol-rules.constants.ts` ; `carrieresLettreesPourIllettre`)
 
 ## Traits regionaux
 
@@ -176,6 +178,7 @@ Reference :
 Regles :
 - valeur initiale normale : `5`
 - peut descendre a `4` ou `3` si on compense des avantages supplementaires
+- puis `+1` avec `Marque par les dieux`, `-1` avec `Maudit` (voir `Ressources derivees`)
 
 Interpretation projet :
 - le cout d'heroisme a la creation ne doit pas etre calcule en simple formule globale
@@ -193,8 +196,8 @@ Formules de base :
 - `vitalite = 10 + vigueur` (bonus de `Vigueur ceruleenne` compris), `+2` avec `Dur a cuire`, `-2` avec `Chetif`
 - `heroisme = 5 - cout_eventuel_des_avantages`, `+1` avec `Marque par les dieux`, `-1` avec `Maudit`
 - `pouvoir = 10 + rang de Sorcier`, `+2` avec `Pouvoir du Neant`
-- `foi` : lie a `Pretre`
-- `creation` : lie a `Alchimiste`
+- `foi` : reserve maximale = rang de `Pretre` ou `Druide` (1 point par heure de devotion, p. 146)
+- `creation` : points de creation = rang d'`Alchimiste` entre deux aventures (5 au plus, non cumulables) ; au depart, seulement si le MJ l'autorise, pour une preparation complete (p. 139)
 
 Convention projet actuelle pour l'editeur avance :
 - le bloc `Ressources` est `readonly / calcule`
@@ -225,6 +228,19 @@ Cas particulier céruleen / `Plaines de Klaar` :
 Points a garder en tete :
 - `Parsool` : un personnage y prendra souvent `Marin`, mais le texte est moins strict
 - `Zalut` : certaines carrieres sont tres attendues, mais pas strictement exclusives dans le texte
+- `Malakut` : « de fortes chances » que la premiere carriere soit `Voleur` (p. 19)
+- `Oomis` : le heros prendra « souvent » `Marchand` en premiere carriere (p. 21)
+- `Tyrus` : les sorciers y sont proscrits (p. 22, 37) ; le livre n'en fait pas une regle de creation et ne dit pas si un heros de Tyrus peut etre `Sorcier` : a trancher, au plus un warning
+
+## Races jouables (p. 90-95)
+
+Avec l'accord du MJ ; non modelisees dans l'app (voir `doc/rules/01-creation-heros.md`).
+
+Regles :
+- chaque race a sa propre liste d'avantages et de desavantages ; a la creation, on ne choisit que dans cette liste, la liste generale ne s'ouvre qu'en depensant des points d'experience (p. 90)
+- `kalukan` : 1re carriere `Esclave`, 2e `Garde` (soldat) ou `Ouvrier` ; ni `Menestrel`, ni `Marchand`, ni `Courtisan` ; desavantage `muet` automatique (p. 93)
+- `grooth` : carrieres de depart limitees a `Barbare`, `Dresseur`, `Esclavagiste`, `Gladiateur`, `Chasseur`, `Guerrier`, `Chaman` (pretre), `Esclave`, `Ouvrier` ; desavantage `illetre` automatique (p. 91)
+- `ceruleen` : carrieres interdites, voir `Contraintes regionales de carrieres`
 
 ## Cas speciaux non encore completes partout
 
@@ -240,6 +256,7 @@ Ces points existent dans le livre mais ne sont pas forcement entierement modelis
 - p. 24+ : carrieres heroiques
 - p. 46 : langues
 - p. 54 : resume de creation d'un heros
+- p. 90-95 : races jouables
 
 ## Regle de priorite projet
 
