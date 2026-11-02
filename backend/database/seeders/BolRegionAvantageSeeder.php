@@ -13,7 +13,20 @@ class BolRegionAvantageSeeder extends Seeder
     public function run(): void
     {
         $regions_avantages = [
-            // Côte de Feu (kalukan)
+            // Côte de Feu (humain : listes de Halakh et des marais de Kasht réunies, sans l’arme favorite kriss réservée à Halakh ; pas de liste kalukan)
+            ["region_id" => 1, "avantage_id" => 2], // Ami des bêtes
+            ["region_id" => 1, "avantage_id" => 8], // Athlète
+            ["region_id" => 1, "avantage_id" => 18], // Discret
+            ["region_id" => 1, "avantage_id" => 34], // Montagnard
+            ["region_id" => 1, "avantage_id" => 36], // Odorat développé
+            ["region_id" => 1, "avantage_id" => 37], // Ouïe fine
+            ["region_id" => 1, "avantage_id" => 38], // Outillage
+            ["region_id" => 1, "avantage_id" => 42], // Pisteur des marais
+            ["region_id" => 1, "avantage_id" => 46], // Renard du désert
+            ["region_id" => 1, "avantage_id" => 48], // Résistant aux poisons
+            ["region_id" => 1, "avantage_id" => 51], // Santé de fer
+            ["region_id" => 1, "avantage_id" => 56], // Vigilant
+            ["region_id" => 1, "avantage_id" => 58], // Vision nocturne
             // Désert de Beshaar
             ["region_id" => 2, "avantage_id" => 2], // Ami des bêtes
             ["region_id" => 2, "avantage_id" => 6 ,'detail' => 'Javelot / fléchette'], // Arme favorite
@@ -127,6 +140,16 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 12, "avantage_id" => 22], // Fêtard
             ["region_id" => 12, "avantage_id" => 41], // Pied marin
             // Plaines de Klaar (céruléen)
+            ["region_id" => 13, "avantage_id" => 2], // Ami des bêtes
+            ["region_id" => 13, "avantage_id" => 3], // Ami des céruléens
+            ["region_id" => 13, "avantage_id" => 10], // Bagarreur
+            ["region_id" => 13, "avantage_id" => 15], // Colosse
+            ["region_id" => 13, "avantage_id" => 20], // Dur à cuire
+            ["region_id" => 13, "avantage_id" => 23], // Fils des plaines
+            ["region_id" => 13, "avantage_id" => 27], // Intimidant
+            ["region_id" => 13, "avantage_id" => 39], // Peau dure
+            ["region_id" => 13, "avantage_id" => 45], // Récupération rapide
+            ["region_id" => 13, "avantage_id" => 57], // Vigueur céruléenne
             // Satarla
             ["region_id" => 14, "avantage_id" => 5], // Amis haut placés
             ["region_id" => 14, "avantage_id" => 7], // Artiste

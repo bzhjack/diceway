@@ -14,7 +14,15 @@ class BolRegionDesavantageSeeder extends Seeder
     public function run(): void
     {
         $regions_desavantages = [
-            // Côte de Feu (kalukan)
+            // Côte de Feu (humain : listes de Halakh et des marais de Kasht réunies ; pas de liste kalukan)
+            ["region_id" => 1, "desavantage_id" => 1], // Addiction
+            ["region_id" => 1, "desavantage_id" => 6], // Bouseux
+            ["region_id" => 1, "desavantage_id" => 7], // Chétif
+            ["region_id" => 1, "desavantage_id" => 8], // Crédule
+            ["region_id" => 1, "desavantage_id" => 13], // Fanatique
+            ["region_id" => 1, "desavantage_id" => 16], // Gars de la ville
+            ["region_id" => 1, "desavantage_id" => 22], // Indigne de confiance
+            ["region_id" => 1, "desavantage_id" => 28], // Marin d’eau douce
             // Désert de Beshaar
             ["region_id" => 2, "desavantage_id" => 6], // Bouseux
             ["region_id" => 2, "desavantage_id" => 7], // Chétif
@@ -94,6 +102,12 @@ class BolRegionDesavantageSeeder extends Seeder
             ["region_id" => 12, "desavantage_id" => 27], // Manchot/unijambiste
             ["region_id" => 12, "desavantage_id" => 40], // Soiffard
             // Plaines de Klaar (céruléen)
+            ["region_id" => 13, "desavantage_id" => 6], // Bouseux
+            ["region_id" => 13, "desavantage_id" => 10], // Deux mains gauches
+            ["region_id" => 13, "desavantage_id" => 28], // Marin d’eau douce
+            ["region_id" => 13, "desavantage_id" => 31], // Méfiance envers la sorcellerie
+            ["region_id" => 13, "desavantage_id" => 35], // Pataud
+            ["region_id" => 13, "desavantage_id" => 39], // Signe distinctif
             // Satarla
             ["region_id" => 14, "desavantage_id" => 3], // Arrogant
             ["region_id" => 14, "desavantage_id" => 9], // Cupide

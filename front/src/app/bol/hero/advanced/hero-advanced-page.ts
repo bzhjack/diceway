@@ -41,6 +41,7 @@ import {HeroAdvancedCreateTools} from './create.tools';
 import {
   attributRangeErrors,
   attributsBudgetErrors,
+  carrieresReserveesHorsOrigine,
   avantagesSansCarriere,
   carriereRangeErrors,
   carrieresBudgetErrors,
@@ -633,6 +634,12 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
           warn: `Pour cette origine, la carrière ${this.carriereFromId(forbiddenId)?.carriere ?? 'interdite'} n'est pas autorisée.`,
         });
       }
+    }
+    for (const reservee of carrieresReserveesHorsOrigine(selectedIds, region ? Number(region.id) : null)) {
+      warnings.push({
+        step: 'Carrières',
+        warn: `La carrière ${this.carriereFromId(reservee.carriereId)?.carriere ?? 'choisie'} est réservée aux héros de ${reservee.region}.`,
+      });
     }
 
     return warnings;

@@ -42,7 +42,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '2']
                 ],
                 'armes' => [
-                    ['arme_id' => '15'],
+                    ['arme_id' => '19'], // Arc de guerre de Tyrus (Mythic+ ; « arc long de Tyrus » du livre de base)
                     ['arme_id' => '3']
                 ]
             ],
@@ -97,7 +97,8 @@ class BolPnjSeeder extends Seeder
                 ],
                 'commentaire' => 'Armes emblématiques : kriss et couteaux de lancer.',
                 'armes' => [
-                    ['arme_id' => '3']
+                    ['arme_id' => '23'], // Kriss (Mythic+)
+                    ['arme_id' => '3'] // Dague : les couteaux de lancer
                 ]
             ],
             [
@@ -212,7 +213,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '2'],
                 ],
                 'armes' => [
-                    ['arme_id' => '1'],
+                    ['arme_id' => '22'], // Khastok (Mythic+)
                     ['arme_id' => '3']
                 ]
             ],

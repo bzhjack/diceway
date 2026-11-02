@@ -151,7 +151,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/heros/{id}/arme-favorite', [BolHerosController::class, 'armeFavorite']);
 
     // Traits régionaux
-    Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
     Route::post('/bol/heros/traits/create/{herosId}', [BolTraitController::class, 'create']);
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
 

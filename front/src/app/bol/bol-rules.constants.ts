@@ -46,6 +46,11 @@ export const ARMES_REGIONALES: readonly {readonly arme: string; readonly regionI
   {arme: 'Épée valgardienne', regionId: 19, region: 'Valgard'},
 ];
 
+/** Carrières réservées à une origine : seuls les Satarlans peuvent être pilotes des airs (livre p. 21). Région = `bol_region.id`. */
+export const CARRIERES_RESERVEES: readonly {readonly carriereId: number; readonly regionId: number; readonly region: string}[] = [
+  {carriereId: 20, regionId: 14, region: 'Satarla'},
+];
+
 /** Mythic+ — Maître artisan : points de création comme un alchimiste, au rang de forgeron. */
 export const AVANTAGE_MAITRE_ARTISAN_ID = 60;
 const AVANTAGE_MAINS_GUERISSEUSES_ID = 31;

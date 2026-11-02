@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31. Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31 et le 2026-11-02. Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
 
@@ -9,7 +9,7 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 ## 1. Déroulement d'un combat
 
 1. **Démarrer le combat** : une page entière (`session/:id/combat`) recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
-2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, la ligne de celui qui joue porte sa posture (dont la défense totale), ses armes et ses actions : Fiche, Effets, Retarder, Secourir (s'il y a un mourant), Fin du tour. Plus bas, trois colonnes conduisent le coup : la cible, l'attaque, les dégâts.
+2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, la carte de celui qui joue porte son portrait, sa posture (dont la défense totale), ses armes, et en haut à droite ses actions : Fiche, Effets, Retarder, Secourir (s'il y a un mourant) en icônes, puis Fin du tour. Plus bas, trois colonnes conduisent le coup : la cible, l'attaque, les dégâts.
 3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence. Si le coup qui a touché n'est pas appliqué, l'application demande d'abord : l'appliquer et finir, finir sans l'appliquer, ou rester sur le tour.
 4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat). Au début de chaque round :
    - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
@@ -22,7 +22,7 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 
 Formule : `2d6 + esprit + initiative`, réussite à 9 ou plus. S'y ajoutent l'embuscade (+2, ou −1 si les héros sont surpris), l'initiative ennemie la plus haute (en malus, calculée d'office et corrigeable dans les options) et, si le MJ l'accorde, le rang d'une carrière utile du héros (bouton Modificateurs de sa ligne).
 
-Dés de bonus ou de malus, deux au plus : le trait du héros (Vigilant, Lent à la détente), le dé du MJ pour ce héros (Modificateurs) et le dé du MJ pour tous (Options). La ligne du héros dit d'où ils viennent.
+Dés de bonus ou de malus, deux au plus : le trait du héros (Vigilant, Lent à la détente), et le dé du MJ pour ce héros (Modificateurs). La ligne du héros dit d'où ils viennent.
 
 - Une ligne par héros, triées par agilité brute décroissante. On tape le total des dés, ou « Lancer pour tous ».
 - Double 1 : case « échec critique » ; double 6 : case « légendaire » (−1 point d'héroïsme).
@@ -43,7 +43,7 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 - **Bonus d'attaque** : agilité + mêlée (ou tir) ; pour une créature, son attaque combinée.
 - **Avant le jet** : l'assistant annonce ce qu'il faut aux dés et les chances de toucher, pour la cible choisie et sur le jeton de chaque adversaire.
 - **Saisie** : on tape le total des dés lancés à table, ou on les lance à l'écran.
-- **Dé du MJ** : un dé de bonus ou de malus (3d6, on garde les deux meilleurs ou les deux moins bons).
+- **Dé du MJ** (carte « L'attaque ») : un dé de bonus ou de malus (3d6, on garde les deux meilleurs ou les deux moins bons).
 - **Capacités d'attaque** : « Attaque féroce » et « Armes améliorées » donnent d'office un dé de bonus, « Attaque timide » un dé de malus ; ils s'annulent avec le dé du MJ.
 - **Double 1** : raté, quel que soit le total. **Double 6** : touché, quel que soit le total.
 - **Postures** : défensive, offensive, intrépide, combat à deux armes, attaque au défaut de l'armure. Créatures et démons n'en ont pas.
@@ -138,13 +138,7 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 ## 8. Limites connues
 
-Ce qui reste à faire est dans `doc/plans/2026-10-14-combat-reste-a-faire.md`.
-
-- Un Carnage pris deux fois doit deux attaques ; si la première rate, l'assistant ne rappelle pas la seconde.
-- La taille de l'adversaire (renversement) et l'arme tenue (désarmement) ne sont pas vérifiées.
-- Retirer une carte ne se fait que hors combat.
-- Pas d'effet libre (valeur et durée au choix) dans le menu « + Effet ».
-- Pas d'annonce vocale des effets expirés.
+Ce qui reste à faire est dans `doc/plans/2026-11-02-reste-a-faire.md` (section 2), dont les petites limites de l'assistant (Carnage pris deux fois, renversement et désarmement non vérifiés, retrait d'une carte en combat, effet libre). S'y ajoute : pas d'annonce vocale des effets expirés.
 
 ## 9. Où c'est dans le code
 

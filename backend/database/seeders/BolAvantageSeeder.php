@@ -145,7 +145,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 23 ,
                 'avantage' => 'Fils des plaines',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie'
+                'de_bonus_domaine' => 'Dans un paysage de plaine : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).'
             ],
             [
                 'id'=> 24 ,
@@ -212,7 +212,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 34 ,
                 'avantage' => 'Montagnard',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
+                'de_bonus_domaine' => 'Dans un paysage montagneux : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).',
             ],
             [
                 'id'=> 35 ,
@@ -261,7 +261,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 42 ,
                 'avantage' => 'Pisteur des marais',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
+                'de_bonus_domaine' => 'Dans un paysage de marécage : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).',
             ],
             [
                 'id'=> 43 ,
@@ -284,7 +284,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 46 ,
                 'avantage' => 'Renard du désert',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
+                'de_bonus_domaine' => 'Dans un désert : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).',
             ],
             [
                 'id'=> 47 ,
@@ -301,7 +301,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 49 ,
                 'avantage' => 'Roi de la jungle',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
+                'de_bonus_domaine' => 'Dans un paysage de jungle : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).',
             ],
             [
                 'id'=> 50 ,
@@ -330,7 +330,7 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 54 ,
                 'avantage' => 'Tigre des neiges',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
+                'de_bonus_domaine' => 'Dans un paysage neigeux : pister, piéger ou chasser, ainsi que d’autres activités similaires de survie (pas pour combattre).',
             ],
             [
                 'id'=> 55 ,

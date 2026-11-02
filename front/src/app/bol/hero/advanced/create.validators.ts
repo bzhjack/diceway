@@ -1,4 +1,4 @@
-import {CARRIERE_EXIGEE_PAR_AVANTAGE} from '../../bol-rules.constants';
+import {CARRIERE_EXIGEE_PAR_AVANTAGE, CARRIERES_RESERVEES} from '../../bol-rules.constants';
 import {ValidationIssue, AttributsValues, CombatValues} from '../models/create-validators.model';
 
 
@@ -72,4 +72,18 @@ export function avantagesSansCarriere(avantageIds: readonly number[], carriereId
     const carriereId = CARRIERE_EXIGEE_PAR_AVANTAGE[avantageId];
     return carriereId !== undefined && !carriereIds.includes(carriereId) ? [{avantageId, carriereId}] : [];
   });
+}
+
+/** R-CARR-RESERVEE : les carrières choisies qui sont réservées à une autre origine (pilote des airs : Satarla). Rien tant que l'origine
+ * n'est pas choisie. */
+export function carrieresReserveesHorsOrigine(
+  carriereIds: readonly number[],
+  regionId: number | null,
+): {carriereId: number; regionId: number; region: string}[] {
+  if (regionId === null) {
+    return [];
+  }
+  return CARRIERES_RESERVEES.filter((reservee) => carriereIds.includes(reservee.carriereId) && reservee.regionId !== regionId).map(
+    (reservee) => ({...reservee}),
+  );
 }

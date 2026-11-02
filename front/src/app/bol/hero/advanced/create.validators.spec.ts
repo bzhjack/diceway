@@ -2,6 +2,7 @@ import {
   attributRangeErrors,
   attributsBudgetErrors,
   avantagesSansCarriere,
+  carrieresReserveesHorsOrigine,
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
@@ -358,5 +359,27 @@ describe('R-TRAIT-CARR — avantagesSansCarriere : un avantage qui exige une car
       {avantageId: MAINS_GUERISSEUSES, carriereId: MEDECIN},
       {avantageId: ENVOUTANT, carriereId: TENTATRICE},
     ]);
+  });
+});
+
+describe('R-CARR-RESERVEE — carrieresReserveesHorsOrigine : une carrière réservée à une origine', () => {
+  const PILOTE_DES_AIRS = 20;
+  const SATARLA = 14;
+  const TYRUS = 17;
+  const GUERRIER = 12;
+
+  it('signale le pilote des airs choisi par un héros qui n’est pas satarlan', () => {
+    expect(carrieresReserveesHorsOrigine([GUERRIER, PILOTE_DES_AIRS], TYRUS)).toEqual([
+      {carriereId: PILOTE_DES_AIRS, regionId: SATARLA, region: 'Satarla'},
+    ]);
+  });
+
+  it('accepte le pilote des airs pour un Satarlan', () => {
+    expect(carrieresReserveesHorsOrigine([PILOTE_DES_AIRS], SATARLA)).toEqual([]);
+  });
+
+  it('ne dit rien tant que l’origine n’est pas choisie, ni sans carrière réservée', () => {
+    expect(carrieresReserveesHorsOrigine([PILOTE_DES_AIRS], null)).toEqual([]);
+    expect(carrieresReserveesHorsOrigine([GUERRIER], TYRUS)).toEqual([]);
   });
 });
