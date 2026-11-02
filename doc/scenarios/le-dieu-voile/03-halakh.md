@@ -2,7 +2,7 @@
 
 *Livre p. 24-32 (PDF p. 26-34 ; la PDF p. 34 est une illustration sans texte). Auteur : Vincent Basset. Plan d’Halakh : livre p. 26-27 (PDF p. 28-29, image seulement — légende transcrite ci-dessous).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent. Les renvois « page N » sont ceux du livre (les druides gris : livre p. 33-35, cf. `04-les-druides-gris.md`).*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent. Les renvois « page N » sont ceux du livre (les druides gris : livre p. 33-35, cf. `04-les-druides-gris.md`).*
 
 > *Cette ville empeste plus le jasmin qu’une courtisane de Satarla !*
 >

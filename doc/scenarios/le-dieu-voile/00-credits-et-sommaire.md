@@ -2,7 +2,7 @@
 
 *Livre p. 1-4 (PDF p. 3-6). La PDF p. 3 est la page de titre (« Chroniques lémuriennes 2 »).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les numéros de page cités dans le sommaire sont ceux du livre (page PDF = page livre + 2).*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les numéros de page cités dans le sommaire sont ceux du livre (page PDF = page livre + 2).*
 
 ## Crédits
 

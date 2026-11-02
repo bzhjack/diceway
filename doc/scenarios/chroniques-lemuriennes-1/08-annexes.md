@@ -2,7 +2,7 @@
 
 *Livre p. 131-134 (PDF p. 133-136)*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
 
 ## Le calendrier de Satarla : les mois et les dieux
 

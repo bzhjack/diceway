@@ -2,7 +2,7 @@
 
 *Livre p. 11-27 (PDF p. 13-29). Auteurs : Vincent Basset & Emmanuel Roudier. Carte du Khanat : livre p. 134 (PDF p. 136, image seulement — cf. `08-annexes.md`).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`. Les encadrés du livre sont rendus en citations (`>`), les blocs de statistiques en tableaux. Les renvois « page N » sont ceux du livre.*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`. Les encadrés du livre sont rendus en citations (`>`), les blocs de statistiques en tableaux. Les renvois « page N » sont ceux du livre.*
 
 ## Vue d’ensemble
 

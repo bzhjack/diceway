@@ -1,5 +1,6 @@
 /.idea/
 /front/proxy.conf.json
+/doc/pdf/
 /doc/*.pdf
 /.claude/
 /.worktrees/

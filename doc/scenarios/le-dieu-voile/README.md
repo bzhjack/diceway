@@ -1,6 +1,6 @@
 # Le Dieu voilé (*Chroniques Lémuriennes 2*) — Markdown de préparation
 
-Texte extrait de `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (200 pages, Ludospherik, 2020) avec :
+Texte extrait de `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (200 pages, Ludospherik, 2020) avec :
 
 ```bash
 pdftotext -layout -f <première page PDF> -l <dernière page PDF> "Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf" -

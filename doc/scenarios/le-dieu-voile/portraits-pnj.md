@@ -1,7 +1,7 @@
 # Prompts — portraits des PNJ du Dieu voilé
 
 Prompts pour générer (via ChatGPT) les portraits des **89 PNJ** créés par l'import de la saga (`app/intro.json` à
-`app/ch5.json`), dans le style des PNJ du catalogue (`doc/pnj-image-prompts.md`) : illustration peinte et encrée
+`app/ch5.json`), dans le style des PNJ du catalogue (`doc/image-prompts/pnj.md`) : illustration peinte et encrée
 façon BD fantasy des années 80, dominante vert émeraude sombre / teal contrastée par la lumière chaude d'une torche.
 Les descriptions viennent du livre, reprises dans le commentaire de chaque fiche.
 
@@ -40,7 +40,7 @@ tête de chaque planche, suivie de la liste de ses six personnages :
 > Les six personnages, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
 
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
-de `doc/pnj-image-prompts.md`.
+de `doc/image-prompts/pnj.md`.
 
 ## Planches
 
@@ -208,7 +208,7 @@ magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
 ```
 
 Si ChatGPT ne respecte pas la grille (cases décalées, portraits verticaux), recadrer à la main chaque case en carré
-autour du visage, comme pour la planche C des PNJ du catalogue (`doc/pnj-image-prompts.md`).
+autour du visage, comme pour la planche C des PNJ du catalogue (`doc/image-prompts/pnj.md`).
 
 ## Avancement
 

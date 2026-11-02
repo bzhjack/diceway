@@ -1,6 +1,6 @@
 # Barbarians of Lemuria Mythic - Corpus mecanique
 
-Source locale: `doc/Pdf BoL Mythic Livre de base VF 1.3.pdf`, avec la mise a jour vers l'edition Mythic+ (`doc/MaJ_Mythic.pdf`,
+Source locale: `doc/pdf/Pdf BoL Mythic Livre de base VF 1.3.pdf`, avec la mise a jour vers l'edition Mythic+ (`doc/pdf/MaJ_Mythic.pdf`,
 texte dans `doc/pdf-text/07-maj-mythic-plus.txt`): nouveaux avantages, desavantage et armes regionales (`01`), `Juste une
 egratignure` en `d6B` (`02`).
 

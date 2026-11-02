@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Frontend**: Angular 22 app in `/front/`
 - **Backend**: Laravel 13 REST API in `/backend/`
-- Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown)
+- Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown); layout of `/doc/` in `doc/README.md`
 
 
 ## Commands

@@ -2,7 +2,7 @@
 
 *Livre p. 3-4 (PDF p. 5-6)*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
 
 ## Crédits
 

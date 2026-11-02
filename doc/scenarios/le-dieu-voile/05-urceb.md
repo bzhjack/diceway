@@ -2,7 +2,7 @@
 
 *Livre p. 36-43 (PDF p. 38-45). Auteur : Andrea Salvatores. Plan d’Urceb : livre p. 38-39 (PDF p. 40-41, image seulement — légende transcrite ci-dessous).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent.*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent.*
 
 > *Urceb ? Une ville poussiéreuse ? C’est que l’on ne vous a pas fait visiter les bons quartiers !*
 >

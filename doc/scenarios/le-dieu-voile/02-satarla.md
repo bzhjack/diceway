@@ -2,7 +2,7 @@
 
 *Livre p. 12-23 (PDF p. 14-25). Auteur : Vincent Basset. Plan de Satarla : livre p. 14-15 (PDF p. 16-17, image seulement — légende transcrite ci-dessous).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent. « ChL » renvoie à* Chroniques lémuriennes *(1).*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`) et placés à la fin de la section qu’ils accompagnent. « ChL » renvoie à* Chroniques lémuriennes *(1).*
 
 > *Un marin est toujours heureux de rentrer au port, mais l’arrivée sur les quais de Satarla… C’est tellement beau que ça vous noue les tripes !*
 >

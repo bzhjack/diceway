@@ -1,6 +1,6 @@
 # Le Dieu voilé — Registre des personnages récurrents
 
-*Saga d’import : `dieu-voile`. Source : `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (page PDF = page
+*Saga d’import : `dieu-voile`. Source : `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (page PDF = page
 livre + 2), parcouru de la PDF p. 46 à 199 : chaque chapitre survolé, ses blocs de stats et ses « Protagonistes » lus.*
 
 ## Pourquoi ce registre

@@ -1,6 +1,6 @@
 # La Perle du Beshaar — Markdown de préparation
 
-Texte extrait de `doc/La-Perle-du-Beshaar.pdf` (146 pages, *Chroniques
+Texte extrait de `doc/pdf/La-Perle-du-Beshaar.pdf` (146 pages, *Chroniques
 lémuriennes 4*) via :
 
 ```bash
@@ -52,7 +52,7 @@ ci-dessous pour les bornes PDF réelles de chaque fichier).
 ## Fiches de session et version jouable dans l'app
 
 Chaque chapitre a une fiche de session condensée, établie en relisant le texte avec le PDF :
-`chapter-one/` à `chapter-five/` (l'annexe des saltimbanques est dans celle du chapitre 4). Les blocs de stats
+`chapitre-1/` à `chapitre-5/` (l'annexe des saltimbanques est dans celle du chapitre 4). Les blocs de stats
 perdus dans les fichiers `05` à `12` y sont rétablis. Le PDF source est hors du dépôt, dans
 `~/Téléchargements/La-Perle-du-Beshaar.pdf` ; on l'extrait avec `pdftotext -layout`.
 

@@ -5,7 +5,7 @@ PDF p. 166-167). Auteur : Vincent Basset, avec la collaboration d’Arnaud Prié
 [chapitre-4/01-fiche-de-session.md](chapitre-4/01-fiche-de-session.md). Personnages récurrents :
 [personnages-recurrents.md](personnages-recurrents.md). Données de l’app : [app/ch4.json](app/ch4.json).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent, les notes au MJ en gras, les blocs de stats à leur place. Les
 renvois « page N » sont ceux du livre (Satarla : livre p. 12-23, voir `02-satarla.md` ; Fort Junia : livre p. 184-185,
