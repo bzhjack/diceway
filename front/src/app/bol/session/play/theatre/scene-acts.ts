@@ -13,7 +13,7 @@ import {acteLabel} from './theatre.util';
 
 /** Le titre et la frise des actes, dans l'en-tête de la table : la session en sur-titre, le scénario affiché (son
  * titre ouvre le menu pour en changer) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre
- * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée, et la session vidée de ses adversaires quand on change de scénario. */
+ * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée, et la session à jour à chaque changement de scénario réussi (vidée de ses adversaires, après confirmation, s'il y en avait). */
 @Component({
   selector: 'bol-scene-acts',
   imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],

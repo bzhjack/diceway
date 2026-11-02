@@ -71,15 +71,17 @@ class BolAccueilService
     }
 
     /**
-     * Les héros (pas les PNJ) de la table, dans l'ordre où ils y ont été posés, parmi ceux que le compte peut utiliser.
+     * Les héros de la table, dans l'ordre où ils y ont été posés : seulement les héros du compte (pas les PNJ ni le
+     * catalogue public, que le seuil ne liste pas) et du camp des héros (pas ceux posés côté adversaires).
      *
      * @return array<int, string>
      */
     private function herosDeLaTable(string $userId, string $sessionId): array
     {
-        $heros = BolHeros::accessibleTo($userId)->where('type', 'H')->select('id');
+        $heros = BolHeros::where('user_id', $userId)->where('type', 'H')->select('id');
 
         return BolFightSessionHeros::where('fight_session_id', $sessionId)
+            ->where('camp', 'heros')
             ->whereIn('heros_id', $heros)
             ->orderBy('id')
             ->pluck('heros_id')

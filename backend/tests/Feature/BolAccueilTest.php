@@ -148,6 +148,25 @@ class BolAccueilTest extends TestCase
         $this->assertSame([$h2->id, $h3->id], $response->json('derniers_heros'));
     }
 
+    /** Le seuil ne liste que les héros du compte, du camp des héros : les autres seraient comptés sans qu'on puisse les voir. */
+    public function test_last_heroes_are_the_accounts_own_heroes_on_the_heroes_side(): void
+    {
+        $own = $this->hero('Le mien');
+        $rival = $this->hero('Rival');
+        $catalog = BolHeros::create(['nom' => 'Catalogue', 'joueur' => 'J', 'user_id' => null, 'type' => 'H']);
+        $foreign = $this->hero('Étranger', 'H', User::factory()->create());
+
+        $table = $this->tableSession('libre');
+        $this->seat($table, $catalog);
+        $this->seat($table, $own);
+        $this->seat($table, $foreign);
+        $this->seat($table, $rival, 'adversaires');
+
+        $response = $this->getJson('/api/bol/accueil')->assertOk();
+
+        $this->assertSame([$own->id], $response->json('derniers_heros'));
+    }
+
     public function test_hides_other_accounts(): void
     {
         $other = User::factory()->create();
@@ -186,8 +205,8 @@ class BolAccueilTest extends TestCase
         return BolHeros::create(['nom' => $nom, 'joueur' => 'J', 'user_id' => ($owner ?? $this->user)->id, 'type' => $type]);
     }
 
-    private function seat(BolFightSession $session, BolHeros $hero): void
+    private function seat(BolFightSession $session, BolHeros $hero, string $camp = 'heros'): void
     {
-        BolFightSessionHeros::create(['fight_session_id' => $session->id, 'heros_id' => $hero->id, 'camp' => 'heros']);
+        BolFightSessionHeros::create(['fight_session_id' => $session->id, 'heros_id' => $hero->id, 'camp' => $camp]);
     }
 }

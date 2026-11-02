@@ -64,11 +64,27 @@
   color: var(--dw-surface-500);
 }
 
-// Supprimer : un clou de bronze, l'icône en rouge.
+// Supprimer : un clou de bronze bordé de rouge, comme celui des cartes — l'icône centrée, un peu grande et d'un rouge clair, qui reste rouge au survol
+// (ses traits sont fins : un rouge plus sombre se perd sur le bronze).
 .cl-row-actions .mat-mdc-icon-button {
   --mat-icon-button-state-layer-size: 2rem;
-  --mat-icon-button-icon-size: 1.1rem;
+  --mat-icon-button-icon-size: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   @include forge.stud;
-  color: var(--dw-forge-verdict-echec);
+
+  &,
+  &:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--dw-forge-verdict-echec) 70%, var(--dw-forge-bronze-dim));
+    color: var(--dw-forge-danger-text);
+  }
+
+  .mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+  }
 }

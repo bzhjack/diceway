@@ -1,13 +1,13 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {take} from 'rxjs';
+import {map, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {BolAccueilScenario} from '../../models/bol-accueil.model';
+import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
@@ -18,6 +18,7 @@ import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fa
 /**
  * Seuil, sur `/session/new` : le MJ choisit les héros présents et ouvre la table (session en mode libre). Arrivé de l'accueil avec
  * `?scenario=<id>`, il montre ce scénario (qu'on peut retirer) et la table s'ouvre avec ; une sélection vide reprend les héros de la dernière table.
+ * Le paramètre fait foi et se relit à chaque changement (Angular garde le composant quand seule la query change) ; l'accueil, lui, n'est chargé qu'une fois.
  */
 @Component({
   selector: 'bol-session-new-page',
@@ -35,10 +36,17 @@ export class SessionNewPageComponent {
   protected readonly selection = inject(CombatSelectionService);
 
   protected readonly launching = signal(false);
-  protected readonly canLaunch = computed(() => this.selection.combatants().length > 0);
+  /** L'accueil n'a pas encore répondu : le scénario demandé n'est pas encore connu, la table ne s'ouvre pas sans lui. */
+  protected readonly loadingAccueil = signal(true);
+  protected readonly canLaunch = computed(() => this.selection.combatants().length > 0 && !this.loadingAccueil());
 
-  /** Le scénario de la future table : celui de `?scenario=`, s'il est connu du compte ; le MJ peut le retirer. */
-  protected readonly scenario = signal<BolAccueilScenario | null>(null);
+  private readonly accueil = signal<BolAccueilModel | null>(null);
+  private readonly requestedScenario = toSignal(this.route.queryParamMap.pipe(map((params) => params.get('scenario'))), {
+    initialValue: this.route.snapshot.queryParamMap.get('scenario'),
+  });
+
+  /** Le scénario de la future table : celui de `?scenario=`, s'il est connu du compte ; le MJ peut le retirer (« × » ôte le paramètre). */
+  protected readonly scenario = computed(() => findScenario(this.accueil()?.scenarios ?? [], this.requestedScenario()));
 
   /** Revenir sur le seuil (avec son scénario) après la création d'un héros, et non sur l'accueil (`/`). */
   protected readonly createHeroState = computed(() => {
@@ -49,22 +57,22 @@ export class SessionNewPageComponent {
   constructor() {
     this.selection.loadCatalog();
 
-    const demande = this.route.snapshot.queryParamMap.get('scenario');
     this.accueilService
       .accueil()
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: (data) => {
-          this.scenario.set(findScenario(data.scenarios, demande));
+          this.accueil.set(data);
           this.selection.preselectHeroes(data.derniers_heros);
+          this.loadingAccueil.set(false);
         },
-        // Sans l'accueil, le seuil reste tel qu'il était : sans scénario, sans présélection.
-        error: () => undefined,
+        // Sans l'accueil, le seuil reste utilisable tel qu'il était : sans scénario, sans présélection.
+        error: () => this.loadingAccueil.set(false),
       });
   }
 
   protected removeScenario(): void {
-    this.scenario.set(null);
+    void this.router.navigate([], {queryParams: {scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
   }
 
   protected openPicker(): void {
