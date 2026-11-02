@@ -20,6 +20,7 @@ use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
+use App\Http\Controllers\Bol\BolAccueilController;
 use App\Http\Controllers\Bol\BolScenarioController;
 use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
@@ -68,6 +69,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
      **/
     // Gestion du dashboard
     Route::get('/bol/dashboard/count', [BolDashboardController::class, 'getCounts']);
+    // Accueil
+    Route::get('/bol/accueil', [BolAccueilController::class, 'show']);
     // Gestion de la région
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
     Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
@@ -178,6 +181,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/etat-combat', [BolFightSessionController::class, 'updateCombatState']);
     Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
     Route::post('/bol/fight-session/{id}/clear-table', [BolSceneController::class, 'clearTable']);
+    Route::patch('/bol/fight-session/{id}/scenario', [BolSceneController::class, 'setScenario']);
 
     // Scènes
     Route::get('/bol/scene', [BolSceneController::class, 'getAll']);

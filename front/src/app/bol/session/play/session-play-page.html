@@ -65,6 +65,7 @@
                   [sessionId]="sid"
                   [existingHeroIds]="table.existingHeroIds()"
                   [currentSceneId]="table.session()?.scene_id ?? null"
+                  [scenarioId]="table.session()?.scenario_id ?? null"
                   [nonHeroCount]="table.nonHeroCount()"
                   (sceneChanged)="commands.onSceneChanged()"
                   (placed)="table.reloadSession()"

@@ -52,6 +52,8 @@ export class SceneListComponent {
   readonly sessionId = input.required<string>();
   /** Scène courante de la session, marquée dans la liste. */
   readonly currentSceneId = input<string | null>(null);
+  /** Scénario de la table (`scenario_id` de la session) : celui que le filtre affiche à l'ouverture. */
+  readonly scenarioId = input<string | null>(null);
   /** Nombre de PNJ / créatures / démons sur la table : décide si le chargement demande « Remplacer ou Ajouter ». */
   readonly nonHeroCount = input(0);
   /** La session a été modifiée (scène chargée, ou scène courante changée) : la page la recharge. */
@@ -87,9 +89,8 @@ export class SceneListComponent {
             .filter((s): s is typeof s & {id: string} => !!s.id)
             .map((s) => ({id: s.id, titre: s.titre})),
         );
-        // À l'ouverture : le scénario de la scène courante de la session, sinon « On improvise ».
-        const current = scenes.find((s) => s.id === this.currentSceneId());
-        const scenarioId = current?.scenario_id ?? null;
+        // À l'ouverture : le scénario de la table (jamais déduit de la scène courante), sinon « On improvise ».
+        const scenarioId = this.scenarioId();
         this.selectedScenario.set(scenarioId && this.knownScenarioIds().has(scenarioId) ? scenarioId : null);
         this.loading.set(false);
       },

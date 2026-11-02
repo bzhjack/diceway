@@ -16,6 +16,7 @@ import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
       <bol-scene-list
         [sessionId]="data.sessionId"
         [currentSceneId]="data.currentSceneId()"
+        [scenarioId]="data.scenarioId()"
         [nonHeroCount]="data.nonHeroCount()"
         (changed)="data.onChanged()"
       />

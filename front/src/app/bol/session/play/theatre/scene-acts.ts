@@ -333,7 +333,7 @@ export class SceneActsComponent {
     return acteLabel(acte);
   }
 
-  /** Change le scénario de la frise ; s'il fallait vider la table (après confirmation), la page pose la session à jour. */
+  /** Change le scénario de la table ; la page pose la session à jour que le store renvoie (table vidée après confirmation, le cas échéant). */
   protected choisirScenario(id: string | null): void {
     this.store.changeScenario(id).subscribe({
       next: (session) => {
@@ -341,7 +341,7 @@ export class SceneActsComponent {
           this.sceneChanged.emit({session, ignored: 0});
         }
       },
-      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de vider la table.'), 'Fermer', {duration: 5000}),
+      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de changer de scénario.'), 'Fermer', {duration: 5000}),
     });
   }
 }

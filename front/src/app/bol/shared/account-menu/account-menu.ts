@@ -13,6 +13,7 @@ interface AccountMenuLink {
 }
 
 const SESSION_LINKS: readonly AccountMenuLink[] = [
+  {label: 'Accueil', icon: 'home', link: '/'},
   {label: 'Changer de session', icon: 'swap_horiz', link: '/library/sessions'},
   {label: 'Nouvelle session', icon: 'add', link: '/session/new'},
 ];
@@ -25,8 +26,8 @@ const LIBRARY_LINKS: readonly AccountMenuLink[] = [
   {label: 'Intendance', icon: 'work', link: '/intendance'},
 ];
 
-/** Menu compte de la table et du seuil : tout ce qui n'est pas la partie en cours (autre session,
- * bibliothèques, déconnexion). Remplace les cartes du dashboard supprimé. */
+/** Menu compte de la table, du seuil et de l'accueil : tout ce qui n'est pas la partie en cours (accueil, autre session,
+ * bibliothèques, déconnexion). */
 @Component({
   selector: 'bol-account-menu',
   imports: [RouterLink, MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule],

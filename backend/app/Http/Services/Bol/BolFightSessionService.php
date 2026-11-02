@@ -12,6 +12,7 @@ use App\Models\Bol\BolFightSessionDemon;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolFightSessionPnj;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolScenario;
 
 class BolFightSessionService
 {
@@ -23,9 +24,10 @@ class BolFightSessionService
         $data['pnjs'] = $this->accessibles($userId, BolHeros::class, $data['pnjs'] ?? [], 'pnjId');
 
         $session = BolFightSession::create([
-            'user_id' => $userId,
-            'titre'   => $data['titre'] ?? null,
-            'statut'  => $this->determineInitialStatut($data),
+            'user_id'     => $userId,
+            'titre'       => $data['titre'] ?? null,
+            'statut'      => $this->determineInitialStatut($data),
+            'scenario_id' => $this->ownScenarioId($userId, $data['scenario_id'] ?? null),
         ]);
 
         $this->syncHeros($session->id, $data['heros'] ?? []);
@@ -34,6 +36,14 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /** Le scénario d'une table doit être celui du compte ; un autre, ou un inconnu, est ignoré. */
+    private function ownScenarioId(string $userId, mixed $scenarioId): ?string
+    {
+        return is_string($scenarioId) && BolScenario::where('id', $scenarioId)->where('user_id', $userId)->exists()
+            ? $scenarioId
+            : null;
     }
 
     /**

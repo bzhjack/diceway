@@ -126,6 +126,16 @@ class BolSceneController extends Controller
         return $session ? response()->json($session) : $this->notFound();
     }
 
+    /** Pose ou retire le scénario de la table ; la table elle-même n'est pas touchée. */
+    public function setScenario(Request $request, string $id)
+    {
+        $data = $request->validate(['scenario_id' => 'present|nullable|string']);
+
+        $session = $this->sceneService->setSessionScenario(Auth::id(), $id, $data['scenario_id']);
+
+        return $session ? response()->json($session) : $this->notFound();
+    }
+
     private function notFound()
     {
         return response()->json(['error' => 'Not found'], 404);

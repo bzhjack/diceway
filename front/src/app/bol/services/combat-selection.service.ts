@@ -217,6 +217,15 @@ export class CombatSelectionService {
     this.setHeroInitiative(catalogId, null);
   }
 
+  /** Présélectionne les héros de la dernière table, sans jamais écraser une sélection déjà commencée. */
+  preselectHeroes(heroIds: readonly string[]): void {
+    if (this.combatants().length > 0) {
+      return;
+    }
+
+    this.combatants.set(heroIds.map((id) => ({catalogId: `hero:${id}`, qty: 1})));
+  }
+
   /** Résultat du jet de réaction choisi pour un héros, avant même le lancement du combat. */
   setHeroInitiative(catalogId: string, resultat: InitiativeResultat | null): void {
     this.heroInitiative.update((map) => {
@@ -244,16 +253,17 @@ export class CombatSelectionService {
     this.ambushState.set(null);
   }
 
-  launch(titre?: string | null): Observable<BolFightSessionModel> {
-    return this.fightSessionService.create(this.buildCreatePayload(titre));
+  launch(titre?: string | null, scenarioId: string | null = null): Observable<BolFightSessionModel> {
+    return this.fightSessionService.create(this.buildCreatePayload(titre, scenarioId));
   }
 
-  private buildCreatePayload(titre?: string | null): BolFightSessionCreatePayload {
+  private buildCreatePayload(titre: string | null | undefined, scenarioId: string | null): BolFightSessionCreatePayload {
     const byKind = (kind: CombatantKind) =>
       this.combatants().filter((c) => this.entryFor(c.catalogId)?.kind === kind);
 
     return {
       titre: titre ?? null,
+      scenario_id: scenarioId,
       heros: byKind('hero').map((c) => ({
         heroId: this.entryFor(c.catalogId)!.sourceId,
         camp: defaultCampFor('hero'),

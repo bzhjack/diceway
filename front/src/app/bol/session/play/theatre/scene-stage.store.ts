@@ -54,9 +54,8 @@ export class SceneStageStore {
   readonly scenes = this.scenesState.asReadonly();
   private readonly scenariosState = signal<readonly BolSceneScenarioRef[]>([]);
   readonly scenarios = this.scenariosState.asReadonly();
-  /** Scénario affiché dans la frise — `null` = « On improvise ». */
+  /** Scénario de la table d'après la page, ou choisi dans la frise pour l'afficher sans attendre. */
   private readonly scenarioIdState = signal<string | null>(null);
-  readonly scenarioId = this.scenarioIdState.asReadonly();
   private readonly regionNomsState = signal<ReadonlyMap<number, string>>(new Map());
   readonly regionNoms = this.regionNomsState.asReadonly();
 
@@ -69,6 +68,11 @@ export class SceneStageStore {
   readonly busy = this.busyState.asReadonly();
 
   private readonly knownScenarioIds = computed(() => new Set(this.scenarios().map((s) => s.id)));
+  /** Scénario affiché dans la frise : celui de la session, s'il existe encore — `null` = « On improvise ». */
+  readonly scenarioId = computed(() => {
+    const id = this.scenarioIdState();
+    return id !== null && this.knownScenarioIds().has(id) ? id : null;
+  });
   readonly acts = computed<readonly SceneActe[]>(() =>
     sceneActs(this.scenes(), this.scenarioId(), this.knownScenarioIds(), this.currentSceneId(), this.played()),
   );
@@ -90,8 +94,6 @@ export class SceneStageStore {
   /** Les scènes ont été demandées au moins une fois. */
   private requested = false;
   private loading = false;
-  /** Le scénario de la frise a été choisi d'après la scène courante (au premier chargement seulement). */
-  private placed = false;
   private regionsRequested = false;
   /** Une scène est chargée, le rideau attend que la page montre la session à jour (prochain `sync`) : la pause avant
    * de le rouvrir, et la garde qui le rouvre de toute façon au bout de `RIDEAU_ATTENTE_MAX_MS`. */
@@ -101,10 +103,18 @@ export class SceneStageStore {
   /** L'annonce de la scène chargée, faite à la réouverture du rideau (pas par-dessus le carton). */
   private annonce: (() => void) | null = null;
 
-  /** Session chargée par la page : sa scène courante et ses scènes jouées. Les scènes sont rechargées au
-   * premier appel, ou si la scène courante n'est pas connue (créée depuis la réserve ou la barre de commande). */
-  sync(sessionId: string, currentSceneId: string | null, played: readonly string[], adversaires = 0): void {
+  /** Session chargée par la page : sa scène courante, ses scènes jouées, le nombre de ses adversaires et son scénario
+   * (seule source de la frise). Les scènes sont rechargées au premier appel, ou si la scène courante n'est pas connue
+   * (créée depuis la réserve ou la barre de commande). */
+  sync(
+    sessionId: string,
+    currentSceneId: string | null,
+    played: readonly string[],
+    adversaires = 0,
+    scenarioId: string | null = null,
+  ): void {
     this.sessionId.set(sessionId);
+    this.scenarioIdState.set(scenarioId);
     this.adversaires = adversaires;
     this.currentSceneId.set(currentSceneId);
     this.played.set(played);
@@ -141,14 +151,6 @@ export class SceneStageStore {
       if (scenarios) {
         this.scenariosState.set(scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: s.titre})));
       }
-      const known = this.knownScenarioIds();
-      if (!this.placed) {
-        this.placed = true;
-        const scenarioId = scenes.find((s) => s.id === this.currentSceneId())?.scenario_id ?? null;
-        this.scenarioIdState.set(scenarioId && known.has(scenarioId) ? scenarioId : null);
-      } else if (this.scenarioId() && !known.has(this.scenarioId()!)) {
-        this.scenarioIdState.set(null);
-      }
     });
   }
 
@@ -156,27 +158,25 @@ export class SceneStageStore {
     this.scenarioIdState.set(id);
   }
 
-  /** Change le scénario de la frise. S'il reste des PNJ, créatures ou démons sur la table, le MJ confirme, puis la table est vidée
-   * (les héros restent) et la session n'a plus de scène en cours : émet alors la session à jour, que la page pose. Émet `null` sans
-   * rien vider : même scénario, table sans adversaire (la frise change seule), ou confirmation refusée (rien ne change). */
+  /** Change le scénario de la table (`null` : on improvise) et l'enregistre sur la session. S'il reste des PNJ, créatures ou démons
+   * sur la table, le MJ confirme d'abord, puis la table est vidée (les héros restent) et la session n'a plus de scène en cours.
+   * Émet la session à jour, que la page pose, une fois le scénario enregistré ; la frise change aussitôt. Émet `null` sans rien
+   * changer : même scénario, pas de session, ou confirmation refusée. */
   changeScenario(id: string | null): Observable<BolFightSessionModel | null> {
     const sessionId = this.sessionId();
-    if (id === this.scenarioId()) {
+    if (!sessionId || id === this.scenarioId()) {
       return of(null);
     }
-    if (!sessionId || this.adversaires === 0) {
-      this.selectScenario(id);
-      return of(null);
+    // Différé : le scénario ne s'enregistre qu'une fois la table vidée, ou la confirmation donnée.
+    const enregistrer = defer(() => this.fightSessions.setScenario(sessionId, id)).pipe(tap(() => this.selectScenario(id)));
+    if (this.adversaires === 0) {
+      return enregistrer;
     }
     return confirmDialog(this.dialog, {
       title: 'Changer de scénario ?',
       message: 'Les PNJ, créatures et démons quittent la table ; les héros restent.',
       confirmLabel: 'Vider la table',
-    }).pipe(
-      switchMap((confirmed) =>
-        confirmed ? this.fightSessions.clearTable(sessionId).pipe(tap(() => this.selectScenario(id))) : of(null),
-      ),
-    );
+    }).pipe(switchMap((confirmed) => (confirmed ? this.fightSessions.clearTable(sessionId).pipe(switchMap(() => enregistrer)) : of(null))));
   }
 
   /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes

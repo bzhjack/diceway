@@ -41,6 +41,8 @@ export interface BolFightSessionModel {
   /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */
   scene_id?: string | null;
   scene?: BolSessionSceneRef | null;
+  /** Scénario de la table, affiché dans la frise — null si on improvise. */
+  scenario_id?: string | null;
   /** Scènes qui ont été courantes sur cette table, dans l'ordre — la frise les marque « jouées ». */
   scenes_jouees?: string[] | null;
   /** Round, cartes qui ont joué et cartes en défense totale — null hors combat. */
@@ -192,6 +194,8 @@ interface BolFightSessionPnjModel {
 /** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */
 export interface BolFightSessionCreatePayload {
   titre?: string | null;
+  /** Scénario de la table dès sa création — absent ou null si on improvise. */
+  scenario_id?: string | null;
   heros: {heroId: string; camp: CombatCamp; resultat?: InitiativeResultat | null}[];
   pnjs: {pnjId: string; camp: CombatCamp}[];
   creatures: {creatureId: string; camp: CombatCamp; qty: number}[];

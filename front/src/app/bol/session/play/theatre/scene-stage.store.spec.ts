@@ -39,6 +39,7 @@ describe('SceneStageStore', () => {
   const announceLoad = vi.fn();
   const open = vi.fn();
   const clearTable = vi.fn();
+  const setScenario = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -46,6 +47,7 @@ describe('SceneStageStore', () => {
     announceLoad.mockReset();
     open.mockReset();
     clearTable.mockReset();
+    setScenario.mockReset();
     TestBed.configureTestingModule({
       providers: [
         SceneStageStore,
@@ -54,7 +56,7 @@ describe('SceneStageStore', () => {
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
         {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
         {provide: MatDialog, useValue: {open}},
-        {provide: BolFightSessionService, useValue: {clearTable}},
+        {provide: BolFightSessionService, useValue: {clearTable, setScenario}},
       ],
     });
     store = TestBed.inject(SceneStageStore);
@@ -64,12 +66,25 @@ describe('SceneStageStore', () => {
     vi.useRealTimers();
   });
 
-  it('suit le scénario de la scène courante au premier sync', () => {
-    store.sync('sess', 's2', ['s1']);
+  it('montre le scénario de la session au premier sync', () => {
+    store.sync('sess', 's2', ['s1'], 0, 'sc1');
     expect(store.scenarioId()).toBe('sc1');
     expect(store.acts().map((a) => a.statut)).toEqual(['jouee', 'en-cours', 'a-venir']);
     expect(store.currentScene()?.id).toBe('s2');
     expect(store.regionNoms().get(5)).toBe('Jungle de Qo et jungle de Qush');
+  });
+
+  it('la frise suit le scénario de la session, pas celui de la scène courante', () => {
+    store.sync('sess', 's2', [], 0, null);
+    expect(store.scenarioId()).toBeNull();
+    expect(store.displayedScene()).toBeNull();
+    store.sync('sess', null, [], 0, 'sc1');
+    expect(store.scenarioId()).toBe('sc1');
+  });
+
+  it('un scénario inconnu affiche « On improvise »', () => {
+    store.sync('sess', null, [], 0, 'zz');
+    expect(store.scenarioId()).toBeNull();
   });
 
   it('sans scène courante, montre les scènes sans scénario', () => {
@@ -133,7 +148,7 @@ describe('SceneStageStore', () => {
   });
 
   it('laisse le plateau vierge quand la frise montre un autre scénario que celui de la scène courante', () => {
-    store.sync('sess', 's2', []);
+    store.sync('sess', 's2', [], 0, 'sc1');
     expect(store.displayedScene()?.id).toBe('s2');
     store.selectScenario(null);
     expect(store.displayedScene()).toBeNull();
@@ -171,7 +186,7 @@ describe('SceneStageStore', () => {
     expect(store.currentScene()?.lieu).toBe('Gué du Tyr');
   });
 
-    it('rouvre le rideau après une erreur', () => {
+  it('rouvre le rideau après une erreur', () => {
     loadAs.mockReturnValue(throwError(() => new Error('409')));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe({error: () => undefined});
@@ -182,31 +197,39 @@ describe('SceneStageStore', () => {
   });
 
   it('change de scénario sans rien demander quand la table n’a pas d’adversaire', async () => {
-    store.sync('sess', 's2', [], 0);
+    const maj = {id: 'sess', titre: null, statut: 'libre', scenario_id: null};
+    setScenario.mockReturnValue(of(maj));
+    store.sync('sess', 's2', [], 0, 'sc1');
     const result = await firstValueFrom(store.changeScenario(null));
-    expect(result).toBeNull();
-    expect(store.scenarioId()).toBeNull();
+    expect(setScenario).toHaveBeenCalledWith('sess', null);
+    expect(result).toBe(maj);
     expect(open).not.toHaveBeenCalled();
     expect(clearTable).not.toHaveBeenCalled();
+    expect(store.scenarioId()).toBeNull();
   });
 
   it('vide la table après confirmation quand on change de scénario avec des adversaires', async () => {
-    const videe = {id: 'sess', titre: null, statut: 'libre'};
+    const videe = {id: 'sess', titre: null, statut: 'libre', scenario_id: 'sc1'};
+    const maj = {id: 'sess', titre: null, statut: 'libre', scenario_id: null};
     open.mockReturnValue({afterClosed: () => of(true)});
     clearTable.mockReturnValue(of(videe));
-    store.sync('sess', 's2', [], 2);
+    setScenario.mockReturnValue(of(maj));
+    store.sync('sess', 's2', [], 2, 'sc1');
     const result = await firstValueFrom(store.changeScenario(null));
     expect(clearTable).toHaveBeenCalledWith('sess');
-    expect(result).toBe(videe);
+    expect(setScenario).toHaveBeenCalledWith('sess', null);
+    expect(clearTable.mock.invocationCallOrder[0]).toBeLessThan(setScenario.mock.invocationCallOrder[0]);
+    expect(result).toBe(maj);
     expect(store.scenarioId()).toBeNull();
   });
 
   it('ne change rien quand le MJ refuse de vider la table', async () => {
     open.mockReturnValue({afterClosed: () => of(false)});
-    store.sync('sess', 's2', [], 2);
+    store.sync('sess', 's2', [], 2, 'sc1');
     const result = await firstValueFrom(store.changeScenario(null));
     expect(result).toBeNull();
     expect(clearTable).not.toHaveBeenCalled();
+    expect(setScenario).not.toHaveBeenCalled();
     expect(store.scenarioId()).toBe('sc1');
   });
 });

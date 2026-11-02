@@ -233,8 +233,8 @@ export class TableCommandsService {
         this.ending.askEndCombat();
         break;
       case 'saveScene':
-        // Rangée dans le scénario de la scène courante, sinon dans « On improvise ».
-        this.sceneActions.saveTable(sessionId, this.table.session()?.scene?.scenario?.id ?? null).subscribe({
+        // Rangée dans le scénario de la table (jamais celui de la scène courante), sinon dans « On improvise ».
+        this.sceneActions.saveTable(sessionId, this.table.session()?.scenario_id ?? null).subscribe({
           next: (scene) => {
             if (scene) {
               this.onSceneChanged();

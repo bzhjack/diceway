@@ -54,6 +54,8 @@ export class ReserveComponent {
   readonly placed = output<void>();
   /** Scène courante de la session et nombre de non-héros sur la table, relayés à `bol-scene-list`. */
   readonly currentSceneId = input<string | null>(null);
+  /** Scénario de la table (`scenario_id` de la session), relayé au filtre de l'onglet Scènes. */
+  readonly scenarioId = input<string | null>(null);
   readonly nonHeroCount = input(0);
   /** Une opération sur les scènes a modifié la session : la page la recharge. */
   readonly sceneChanged = output<void>();

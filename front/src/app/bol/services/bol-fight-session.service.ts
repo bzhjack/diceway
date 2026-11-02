@@ -134,6 +134,11 @@ export class BolFightSessionService {
     return this.inOrder(this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/clear-table`, {}));
   }
 
+  /** Change le scénario de la table (`null` : on improvise) ; renvoie la session à jour. */
+  setScenario(sessionId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
+  }
+
   /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */
   updateHeroInitiative(
     sessionId: string,

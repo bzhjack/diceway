@@ -43,6 +43,7 @@ class BolSceneService
             ]);
             $session->update([
                 'scene_id'      => $scene->id,
+                'scenario_id'   => $scene->scenario_id,
                 'scenes_jouees' => BolScenePreparation::played($session->scenes_jouees, $scene->id),
             ]);
 
@@ -199,6 +200,7 @@ class BolSceneService
             $session->update([
                 'positions_jetons' => $positions === [] ? null : $positions,
                 'scene_id'         => $scene->id,
+                'scenario_id'      => $scene->scenario_id,
                 'scenes_jouees'    => BolScenePreparation::played($session->scenes_jouees, $scene->id),
             ]);
 
@@ -240,6 +242,19 @@ class BolSceneService
 
             return $this->fightSessionService->getSessionWithRelations($sessionId);
         });
+    }
+
+    /** Pose (ou, avec null, retire) le scénario d'une table, sans toucher à ce qu'elle porte. Null si la table ou le scénario n'est pas au compte. */
+    public function setSessionScenario(string $userId, string $sessionId, ?string $scenarioId): ?BolFightSession
+    {
+        $session = $this->ownedSession($sessionId, $userId);
+        if (!$session || !$this->scenarioAllowed($scenarioId, $userId)) {
+            return null;
+        }
+
+        $session->update(['scenario_id' => $scenarioId]);
+
+        return $this->fightSessionService->getSessionWithRelations($sessionId);
     }
 
     /** @return array<int, array<string, mixed>> */

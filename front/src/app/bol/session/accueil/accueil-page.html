@@ -1,0 +1,115 @@
+<section class="dw-page">
+  <div class="acc-cadre">
+    <header class="acc-entete">
+      <img class="acc-entete-image" ngSrc="assets/bol/dashboard-header.webp" alt="" fill priority />
+      <div class="acc-entete-contenu">
+        <div class="acc-entete-titre">
+          <div class="acc-medaillon">
+            <mat-icon svgIcon="gi-dice" />
+          </div>
+          <div>
+            <p class="acc-surtitre">Diceway · Barbarians of Lemuria</p>
+            <h1 class="acc-titre">Que joue-t-on ce soir ?</h1>
+          </div>
+        </div>
+
+        <div class="acc-entete-actions">
+          <a mat-stroked-button routerLink="/session/new">
+            <mat-icon>add</mat-icon> Nouvelle table
+          </a>
+          <bol-account-menu />
+        </div>
+      </div>
+    </header>
+
+    @if (bandeau(); as table) {
+      <section class="acc-bandeau" aria-labelledby="acc-bandeau-titre">
+        <div class="acc-bandeau-texte">
+          <h2 id="acc-bandeau-titre" class="acc-surtitre">Table ouverte</h2>
+          <p class="acc-bandeau-nom">{{ table.titre }}</p>
+        </div>
+        <a mat-flat-button [routerLink]="['/session', table.id, 'play']">
+          <mat-icon>play_arrow</mat-icon> Reprendre la table
+        </a>
+      </section>
+    }
+
+    <div class="acc-grille">
+      <section class="dw-section--form acc-panneau" aria-labelledby="acc-scenarios-titre">
+        <h2 id="acc-scenarios-titre" class="acc-panneau-titre">Scénarios</h2>
+
+        @if (error()) {
+          <p class="acc-message" role="alert">Impossible de charger les scénarios.</p>
+        } @else if (!data()) {
+          <p class="acc-message" role="status">Chargement des scénarios…</p>
+        } @else {
+          @for (saga of sagas(); track saga.nom) {
+            <div class="acc-saga">
+              <h3 class="acc-saga-nom">{{ saga.nom ?? 'Hors saga' }}</h3>
+              <ul class="acc-chapitres">
+                @for (chapitre of saga.chapitres; track chapitre.id) {
+                  <li>
+                    <a
+                      class="acc-chapitre"
+                      [class]="'acc-chapitre--' + chapitre.etat"
+                      routerLink="/session/new"
+                      [queryParams]="{scenario: chapitre.id}"
+                      [attr.aria-label]="'Ouvrir une nouvelle table : ' + chapitre.titre"
+                      [attr.aria-describedby]="reperes[chapitre.etat] ? 'acc-repere-' + chapitre.id : null"
+                    >
+                      <span class="acc-chapitre-libelle">{{ chapitre.libelle }}</span>
+                      @if (reperes[chapitre.etat]; as repere) {
+                        <span class="acc-repere" [id]="'acc-repere-' + chapitre.id">{{ repere }}</span>
+                      }
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          } @empty {
+            <p class="acc-message">
+              Aucun scénario pour l'instant. Importe-en un (voir doc/scenarios/format-import.md) ou ouvre une nouvelle table.
+            </p>
+          }
+        }
+      </section>
+
+      <div class="acc-cote">
+        <nav class="dw-section--form acc-panneau" aria-labelledby="acc-creer-titre">
+          <h2 id="acc-creer-titre" class="acc-panneau-titre">Créer</h2>
+          <ul class="acc-tuiles">
+            @for (tuile of tuilesCreer; track tuile.route) {
+              <li>
+                <a class="acc-tuile" [routerLink]="tuile.route" [attr.aria-label]="tuile.ariaLabel">
+                  <span class="acc-tuile-icone"><mat-icon [svgIcon]="tuile.icon" /></span>
+                  <span>{{ tuile.label }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </nav>
+
+        <nav class="dw-section--form acc-panneau" aria-labelledby="acc-bibliotheques-titre">
+          <h2 id="acc-bibliotheques-titre" class="acc-panneau-titre">Bibliothèques</h2>
+          <ul class="acc-tuiles">
+            @for (tuile of tuilesBibliotheques; track tuile.route) {
+              <li>
+                <a class="acc-tuile" [routerLink]="tuile.route" [attr.aria-label]="tuile.ariaLabel">
+                  <span class="acc-tuile-icone"><mat-icon [svgIcon]="tuile.icon" /></span>
+                  <span>{{ tuile.label }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <p class="dw-forge-credit">
+      Icônes :
+      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
+      (Lorc, Delapouite et contributeurs),
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
+    </p>
+  </div>
+</section>

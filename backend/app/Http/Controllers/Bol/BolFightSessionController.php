@@ -33,11 +33,12 @@ class BolFightSessionController extends Controller
     public function create(Request $request)
     {
         $session = $this->fightSessionService->createSession(Auth::id(), [
-            'titre'     => $request->titre,
-            'heros'     => $request->heros ?? [],
-            'creatures' => $request->creatures ?? [],
-            'demons'    => $request->demons ?? [],
-            'pnjs'      => $request->pnjs ?? [],
+            'titre'       => $request->titre,
+            'scenario_id' => $request->scenario_id,
+            'heros'       => $request->heros ?? [],
+            'creatures'   => $request->creatures ?? [],
+            'demons'      => $request->demons ?? [],
+            'pnjs'        => $request->pnjs ?? [],
         ]);
 
         return response()->json($session);

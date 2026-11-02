@@ -7,6 +7,8 @@ export interface SceneManagerDialogData {
    * scène courante et le nombre de personnages sur la table, et la liste doit le voir (marqueur « en
    * cours », question « Remplacer ou Ajouter » au chargement suivant). */
   readonly currentSceneId: Signal<string | null>;
+  /** Scénario de la table : le filtre de la liste s'y place à l'ouverture. */
+  readonly scenarioId: Signal<string | null>;
   readonly nonHeroCount: Signal<number>;
   /** Appelé à chaque opération qui a modifié la session (scène chargée, renommée, supprimée…). */
   readonly onChanged: () => void;

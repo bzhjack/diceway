@@ -146,6 +146,8 @@ export class SceneStripComponent {
 
   readonly sessionId = input.required<string>();
   readonly currentSceneId = input<string | null>(null);
+  /** Scénario de la table (`scenario_id` de la session) : celui que le filtre affiche à l'ouverture. */
+  readonly scenarioId = input<string | null>(null);
   readonly nonHeroCount = input(0);
   /** La session a été modifiée (scène chargée ou enregistrée…) : la page la recharge. */
   readonly changed = output<void>();
@@ -180,8 +182,8 @@ export class SceneStripComponent {
     });
   }
 
-  /** Recharge scènes et scénarios. Au premier chargement, se place sur le scénario de la scène
-   * courante de la session. */
+  /** Recharge scènes et scénarios. Au premier chargement, se place sur le scénario de la table (jamais
+   * déduit de la scène courante). */
   private reload(selectCurrent: boolean): void {
     forkJoin({scenes: this.sceneService.scenes(), scenarios: this.scenarioService.scenarios()}).subscribe({
       next: ({scenes, scenarios}) => {
@@ -191,7 +193,7 @@ export class SceneStripComponent {
         );
         const known = this.knownScenarioIds();
         if (selectCurrent) {
-          const scenarioId = scenes.find((s) => s.id === this.currentSceneId())?.scenario_id ?? null;
+          const scenarioId = this.scenarioId();
           this.selectedScenario.set(scenarioId && known.has(scenarioId) ? scenarioId : null);
         } else if (this.selectedScenario() && !known.has(this.selectedScenario()!)) {
           // Le scénario affiché a été supprimé depuis le dialogue de gestion.
@@ -254,6 +256,7 @@ export class SceneStripComponent {
     const data: SceneManagerDialogData = {
       sessionId: this.sessionId(),
       currentSceneId: this.currentSceneId,
+      scenarioId: this.scenarioId,
       nonHeroCount: this.nonHeroCount,
       onChanged: () => this.changed.emit(),
     };
