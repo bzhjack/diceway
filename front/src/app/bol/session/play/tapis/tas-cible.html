@@ -21,7 +21,8 @@
     @if (flow.played() && flow.playedTargetOut()) {
       <span class="tas-pill">hors de combat</span>
     }
-    <div ccBas class="tas-cible-regl">
+    <!-- Sa vitalité et ses points sous ses chiffres, comme pour celui qui joue -->
+    <div class="tas-cible-regl">
       <div class="tas-vit">
         <dw-value-stepper [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
         <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
