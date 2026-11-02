@@ -42,7 +42,7 @@ Usage conseille :
 5. Protection :
 - la protection d'une creature fonctionne comme une armure
 - elle peut etre jouee en valeur variable ou en valeur fixe
-- la valeur fixe entre parentheses est la reference la plus simple
+- le livre autorise la valeur fixe entre parentheses, meme si les armures fabriquees jouent la valeur variable (p. 109) ; choix de l'appli : c'est la seule jouee en combat, le de n'est pas lance (`parseProtectionValue`, `combat-attack.util.ts`)
 
 ## Table de base par taille
 
@@ -51,7 +51,7 @@ Reference :
 
 Lecture projet :
 - dans `front`, cette table correspond au referentiel `tailles`
-- le choix de taille doit donc pre-remplir au minimum `vigueur`, `vitalite` et `degats`
+- le choix de taille doit donc pre-remplir au minimum `vigueur`, `vitalite` et `degats` (choix de l'appli : `setupReferenceDefaults`, `creature-form-page.ts`, pre-remplit exactement ces trois champs)
 - le referentiel `tailles` porte aussi le `deplacement` de la table ; ce n'est pas une regle de construction, juste une valeur de base
 - il est logique de laisser ensuite un ajustement manuel pour creer une version plus faible ou plus forte
 
@@ -89,9 +89,10 @@ Regles :
 - une creature particulierement placide peut infliger les degats d'une ou deux tailles inferieures
 - la `vigueur` de la creature est deja comprise dans ses degats
 
-Implication projet :
+Implication projet (choix de l'appli, coherent avec le livre) :
 - dans le formulaire rapide, `degats` doit etre initialise par la taille
-- si on modifie `vigueur`, cela ne doit pas recalculer automatiquement `degats` sans decision explicite, car le livre parle d'une base MJ et pas d'une formule stricte de re-synchronisation
+- si on modifie `vigueur`, cela ne doit pas recalculer automatiquement `degats` sans decision explicite, car le livre parle d'une base MJ et pas d'une formule stricte de re-synchronisation (p. 108), et que la `vigueur` est deja comprise dans les degats : la recalculer la compterait deux fois
+- c'est le comportement actuel : le pre-remplissage ne se declenche qu'au changement de `taille` (`creature-form-page.ts`)
 
 ## Protection
 
@@ -117,8 +118,8 @@ Regles :
 - `petite` et `moyenne` = `coriace` avec `+0` initiative
 - `grande` ou plus = `rival` avec `+0` initiative
 
-Implication projet :
-- si on expose un jour `ordre de reaction` ou un type tactique dans l'UI, il devrait etre derive de la taille par defaut
+Implication projet (choix de l'appli) :
+- l'`ordre de reaction` n'est pas un champ du formulaire : il est derive de la taille (`type` `P` / `C` / `R` du referentiel `tailles`, `BolTailleSeeder.php`) pour la fiche (`bol-statblock.builders.ts`) et le combat (`rangFromType`, `BolFightSessionService.php`)
 
 ## Capacites speciales communes
 
@@ -142,6 +143,9 @@ Implication projet :
 - les details textuels saisis dans `front` servent a preciser les exceptions et effets specifiques
 
 ## Ce qui semble regle par le livre vs libre MJ
+
+Reference :
+- chapitre 5, p. 108-109 (la repartition ci-dessous est une lecture du projet)
 
 Clairement regle :
 - base par `taille`

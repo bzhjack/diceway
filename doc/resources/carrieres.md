@@ -29,7 +29,7 @@ Source principale : chapitre 2, pages 24-39 du livre.
 | Prêtre | druide / chaman | Démonique requis (prêtres et druides) pour utiliser les créations magiques et alchimiques des Rois-Sorciers (p. 36). |
 | Scribe | érudit / copiste | Lecture, écriture, savoirs, traduction. |
 | Soldat | garde / milicien | Discipline, service, combat régulier. |
-| Sorcier | magicien / enchanteur | Un désavantage supplémentaire par rang au-delà du 1er, y compris lors d'une progression ultérieure. Démonique oral et écrit requis. |
+| Sorcier | magicien / enchanteur | Un désavantage supplémentaire par rang au-delà du 1er, y compris lors d'une progression ultérieure. Démonique requis pour utiliser les créations magiques et alchimiques des Rois-Sorciers ; ses formes orale et écrite s'apprennent séparément (p. 38). |
 | Tentatrice | courtisane / serveuse | Présentée au féminin dans le livre, mais utilisable pour un personnage masculin. |
 | Voleur | filou / crapule | Discrétion, ruse, bas-fonds. |
 

@@ -152,8 +152,8 @@ Structure attendue :
   - soit `-1 heroisme`
 
 Important :
-- la creation standard ne doit pas depasser `3` avantages
-- les desavantages de carriere ne remplacent pas automatiquement les desavantages de creation regionale
+- la creation standard ne depasse pas `3` avantages : le livre ne decrit que trois paliers (premier, deuxieme, troisieme, p. 16 et 54) et renvoie tout avantage de plus aux points d'experience (`2` points l'avantage, p. 165) ; applique dans le front (`MAX_CREATION_AVANTAGES`, `hero-advanced-page.ts`)
+- les desavantages de carriere ne remplacent pas les desavantages de creation regionale : le livre les dit « supplementaires » (Alchimiste p. 25, Sorcier p. 38) ; choix de l'appli : ils ne paient ni le 2e ni le 3e avantage (exclus de `heroismCost` et des warnings de traits : `bol-heros-state.service.ts`, `hero-advanced-page.ts`)
 
 ## Ajouts Mythic+
 
@@ -180,12 +180,13 @@ Regles :
 - peut descendre a `4` ou `3` si on compense des avantages supplementaires
 - puis `+1` avec `Marque par les dieux`, `-1` avec `Maudit` (voir `Ressources derivees`)
 
-Interpretation projet :
+Choix de l'appli (conforme au livre, p. 16 et 54) :
 - le cout d'heroisme a la creation ne doit pas etre calcule en simple formule globale
 - il doit suivre la sequence du livre :
   - 1er avantage gratuit
   - 2e avec desavantage regional ou -1 heroisme
   - 3e avec desavantage general ou -1 heroisme
+- c'est ce que calcule `heroismCost` (`bol-heros-state.service.ts`) : `-1` si 2e avantage sans desavantage regional, `-1` si 3e avantage sans desavantage general
 
 ## Ressources derivees
 
@@ -194,18 +195,20 @@ Reference :
 
 Formules de base :
 - `vitalite = 10 + vigueur` (bonus de `Vigueur ceruleenne` compris), `+2` avec `Dur a cuire`, `-2` avec `Chetif`
-- `heroisme = 5 - cout_eventuel_des_avantages`, `+1` avec `Marque par les dieux`, `-1` avec `Maudit`
+- `heroisme = 5 - cout_eventuel_des_avantages` (le cout par palier de la section `Heroisme`), `+1` avec `Marque par les dieux`, `-1` avec `Maudit`
 - `pouvoir = 10 + rang de Sorcier`, `+2` avec `Pouvoir du Neant`
 - `foi` : reserve maximale = rang de `Pretre` ou `Druide` (1 point par heure de devotion, p. 146)
 - `creation` : points de creation = rang d'`Alchimiste` entre deux aventures (5 au plus, non cumulables) ; au depart, seulement si le MJ l'autorise, pour une preparation complete (p. 139)
 
-Convention projet actuelle pour l'editeur avance :
-- le bloc `Ressources` est `readonly / calcule`
-- si l'utilisateur veut un ajustement manuel libre, il passe par l'ecran de creation/modification rapide
+Convention projet actuelle pour l'editeur avance (choix de l'appli) :
+- le bloc `Ressources` est `readonly / calcule` (`ressources-panel.component`, simple affichage)
+- si l'utilisateur veut un ajustement manuel libre, il passe par l'ecran de creation/modification rapide (`hero-form-page.ts` : `vitalite`, `heroisme`, `pouvoir`, `foi`, `creation` editables)
 
 ## Contraintes regionales de carrieres
 
-Ces regles sont explicites dans le livre et doivent etre controlees au minimum par warning.
+Ces regles sont explicites dans le livre (« doivent choisir barbare pour premiere carriere », p. 17 ; « une de ses carrieres doit etre barbare », p. 23) et doivent etre controlees au minimum par warning.
+
+Choix de l'appli : un simple warning, plus souple que le livre. Il n'empeche pas d'enregistrer le brouillon mais bloque l'activation du heros (`carriereWarns`, `activateDisabled`, `hero-advanced-page.ts` ; regles portees par `BolRegionSeeder.php`).
 
 Regles actuellement identifiees :
 - `Desert de Beshaar` : premiere carriere = `Barbare`

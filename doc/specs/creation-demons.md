@@ -42,7 +42,7 @@ Reference :
 Lecture projet :
 - dans `front`, cette table correspond au referentiel `categories`
 - le choix de categorie doit donc pre-remplir au minimum `vitalite` et `degats`
-- la page peut aussi s'appuyer sur cette categorie pour controler le nombre de pouvoirs choisis
+- la page peut aussi s'appuyer sur cette categorie pour controler le nombre de pouvoirs choisis (pas fait aujourd'hui)
 
 | Categorie | Ordre de reaction | Attributs | Combat | Pouvoirs | Vitalite de base | Degats |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -187,6 +187,10 @@ Pour la page `demon-create` actuelle :
   - une gestion speciale de `Cuirassé`
   - une gestion speciale de `Vulnerabilite`
 - le reste peut rester editable librement tant qu'on assume une version `rapide` plutot que `strictement reglee`
+
+Constate dans le code (choix de l'appli) :
+- `demon-form-page.ts` ne pre-remplit que `vitalite` et `degats` depuis la categorie, et n'a pas de champ `taille`
+- ni le front ni `BolDemonService.php` ne controlent le budget d'attributs, le budget de combat ni le nombre de pouvoirs
 
 ## References utiles du livre
 

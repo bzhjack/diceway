@@ -13,7 +13,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | Combat : piétaille contre piétaille, « Fuite opportune » des rivaux | 2, lot 3 | S |
 | Combat : sorcellerie et foi | 2, lot 4 | L |
 | Combat : petites limites de l'assistant | 2, point 17 | S à M |
-| Doc : environ 25 règles sans source, souvent des choix de l'appli, à trier | 3 | M |
+| Bugs révélés par le tri de la doc : protection du Cuirassé, carrières du Non-combattant refusées par le serveur, désavantage compté deux fois | 3 | S |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
@@ -152,7 +152,9 @@ Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-1
 
 ### Doc
 
-✅ Oublis utiles traités le 2026-11-02 : environ 75 règles ajoutées dans `doc/rules/`, `doc/resources/` et `doc/specs/`, chacune revérifiée dans le livre. Ne restent que des détails d'ambiance ou des redites, et les règles sans source (environ 25, souvent des choix de l'appli), non traitées.
+✅ Oublis utiles traités le 2026-11-02 : environ 75 règles ajoutées dans `doc/rules/`, `doc/resources/` et `doc/specs/`, chacune revérifiée dans le livre. Ne restent que des détails d'ambiance ou des redites.
+
+✅ Règles sans source triées le 2026-11-02 (28) : 9 avaient en fait une source dans le livre (page ajoutée), 13 sont des choix de l'appli (étiquetés, avec le code qui les porte), 2 sont des interprétations (étiquetées), 4 étaient des inventions (supprimées ou remplacées par le texte du livre : sorts plus puissants qui blesseraient davantage, « aventure normale », 3e cercle « à l'échelle d'une cité », option légendaire « si le MJ l'estime cohérent »).
 
 - ✅ Portée des armes : la colonne « portée » est la largeur de la bande Bout portant, chaque bande suivante en est un multiple (p. 62) — fait le 2026-11-02
 - ✅ Armure lourde interdite si vigueur < 0 (p. 52), et le casque n'ajoute +1 qu'avec une armure — fait le 2026-11-02
@@ -172,6 +174,14 @@ Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-1
 | ✅ Foi : réserve égale au rang de prêtre (p. 146) | Conforme | — |
 | ✅ Sorcier et alchimiste : un désavantage par rang supplémentaire | Conforme à la création (`carriereDesavantageCount`) ; la progression par XP n'est pas gérée par l'appli | — |
 | ✅ Rois-Sorciers morts-vivants (p. 128) | Ajouté au catalogue (seeder et migration `2026_11_02_160000_add_undead_sorcerer_king_to_catalogue`), taille moyenne donc rang « coriace » (le livre n'en donne pas) ; squelettes et zombies sans profil : rien à ajouter — fait le 2026-11-02 | S |
+
+### Révélés par le tri des règles sans source : bugs dans l'appli
+
+| Constat | Où | Effort |
+| --- | --- | --- |
+| Un démon Cuirassé n'a pas sa protection d6 (4) en combat : le code cherche « cuirasse » sans accent, le pouvoir s'appelle « Cuirassé » (le test utilise lui aussi le nom sans accent) | `demonProtection`, `combat-play.util.ts` | S |
+| Le serveur refuse plus de 4 rangs de carrières, alors que Non-combattant en donne 6 (le front l'autorise) : l'enregistrement d'un tel héros échoue | `BolHerosRequest::validateCarrieres` | S |
+| Un seul désavantage général compte à la fois pour le 3e avantage et pour le désavantage supplémentaire de Magie des Rois-Sorciers ou Pouvoir du Néant | `traitWarns`, `hero-advanced-page.ts` | S |
 
 ## 4. Code
 
