@@ -739,6 +739,58 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     }
   }
 
+  // Les pouvoirs des démons en jeu sur ce coup : la cible intangible, la case « Dégâts doublés » d'une cible vulnérable, le poison.
+  .tas-pouvoirs {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .tas-pouvoir {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    color: var(--dw-forge-bone);
+
+    .tas-act {
+      min-height: 2rem;
+    }
+  }
+
+  // Intangible : un avertissement, icône et texte (pas seulement la couleur).
+  .tas-pouvoir--alerte {
+    flex-wrap: nowrap;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--dw-color-warn) 60%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--dw-color-warn) 12%, transparent);
+
+    .mat-icon {
+      flex: none;
+      width: 1.05rem;
+      height: 1.05rem;
+      font-size: 1.05rem;
+      color: var(--dw-color-warn);
+    }
+  }
+
+  .tas-pouvoir-note {
+    font-size: 0.78rem;
+    color: var(--dw-forge-stud-text);
+
+    b {
+      color: var(--dw-forge-bone);
+    }
+  }
+
+  .tas-act:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
   .tas-cost {
     display: inline-flex;
     align-items: center;

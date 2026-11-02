@@ -112,6 +112,13 @@ export class TurnFlowStore {
     return {title, detail, scratch};
   });
 
+  /** Le démon venimeux a touché (sans parade ni bouclier humain) une cible qu'il peut paralyser : après les dégâts, le rappel du jet et
+   * le bouton « Paralysé » restent offerts. */
+  readonly poisonAfterHit = computed(() => {
+    const hit = this.lastHit();
+    return !!hit && !hit.parried && hit.target.key === this.turn.target()?.key && this.damage.poison();
+  });
+
   /** « Juste une égratignure » ouverte : son d6B attend, lancé à table (le dé gardé, saisi) ou à l'écran. Refermée à chaque nouveau
    * coup. */
   readonly scratching = linkedSignal<AppliedHit | null, boolean>({source: () => this.lastHit(), computation: () => false});
@@ -225,11 +232,11 @@ export class TurnFlowStore {
   }
 
   /** Le coup est conclu : ses options héroïques laissent leurs effets sur la cible (dé de malus du coup précis, du renversement), et
-   * un Carnage donne une attaque de plus. */
+   * un Carnage donne une attaque de plus. Un démon qui se régénère se débarrasse du coup précis au bout de 2 rounds. */
   private conclude(target: TapisCard, withEffects = true): void {
     const picks = new Set(withEffects ? this.attack.picks() : []);
     if (picks.has('precis')) {
-      this.turn.effectAdded.emit(effetCoupPrecis(target.key));
+      this.turn.effectAdded.emit(effetCoupPrecis(target.key, target.pouvoirs?.regeneration ?? false));
     }
     if (picks.has('renversement')) {
       this.turn.effectAdded.emit(effetRenversement(target.key));

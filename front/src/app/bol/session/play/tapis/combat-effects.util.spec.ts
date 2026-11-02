@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {aDejaFeinte, appliquerEvenement, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, appliquerEvenement, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -245,6 +245,12 @@ describe('normalizeEffets', () => {
     expect(garde.libelle).toHaveLength(60);
     expect(garde.duree).toEqual({type: 'usages', restants: 2, expireAuTour: true});
   });
+
+  it('keeps a duration in rounds between 1 and 20, as the backend does', () => {
+    const deuxRounds = effet({id: 'e-2', duree: {type: 'rounds', restants: 2}});
+    expect(normalizeEffets([deuxRounds, effet({id: 'e-3', duree: {type: 'rounds', restants: 0}}), {...effet({id: 'e-4'}), duree: {type: 'rounds'}}])).toEqual([deuxRounds]);
+    expect(normalizeEffets([effet({duree: {type: 'rounds', restants: 1, expireAuTour: true} as never})])[0].duree).toEqual({type: 'rounds', restants: 1});
+  });
 });
 
 describe('effetsDeLAncienFormat', () => {
@@ -270,6 +276,8 @@ describe('libelleDuree', () => {
     expect(libelleDuree({type: 'debut-tour-porteur'})).toBe('jusqu’à son prochain tour');
     expect(libelleDuree({type: 'action-porteur'})).toBe('jusqu’à sa prochaine action');
     expect(libelleDuree({type: 'combat'})).toBe('jusqu’à la fin du combat');
+    expect(libelleDuree({type: 'rounds', restants: 2})).toBe('encore 2 rounds');
+    expect(libelleDuree({type: 'rounds', restants: 1})).toBe('jusqu’à la fin du round');
   });
 });
 
@@ -344,6 +352,16 @@ describe('effets des options héroïques', () => {
     const apresSonTour = appliquerEvenement(effets, {type: 'fin-tour', carte: 'pnj-7', crees: []});
     expect(doitUnDeDeMalus(appliquerEvenement(apresSonTour, {type: 'nouveau-round'}), 'pnj-7')).toBe(true);
     expect(sommeModificateurs(modificateursPour(effets, {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0}))).toBe(0);
+  });
+
+  it('lets a regenerating demon shake off a precise blow after 2 rounds', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetCoupPrecis('demon-4', true)}, () => 'e-1');
+    expect(effets[0].duree).toEqual({type: 'rounds', restants: 2});
+    expect(doitUnDeDeMalus(effets, 'demon-4')).toBe(true);
+    const round2 = appliquerEvenement(appliquerEvenement(effets, {type: 'fin-tour', carte: 'demon-4', crees: []}), {type: 'nouveau-round'});
+    expect(doitUnDeDeMalus(round2, 'demon-4')).toBe(true);
+    expect(round2[0].duree).toEqual({type: 'rounds', restants: 1});
+    expect(doitUnDeDeMalus(appliquerEvenement(round2, {type: 'nouveau-round'}), 'demon-4')).toBe(false);
   });
 
   it('gives a knocked-down target a malus die for its next action only', () => {
@@ -425,5 +443,21 @@ describe('perdSonAction', () => {
   it('pas pour un dé de malus à sa prochaine action, qui laisse agir', () => {
     expect(perdSonAction([{...effetRenversement('hero-1'), id: 'e-1'}], 'hero-1')).toBe(false);
     expect(perdSonAction([], 'hero-1')).toBe(false);
+  });
+});
+
+describe('effetParalyse', () => {
+  it('paralyses the target until the GM removes it, and recalls what the book says', () => {
+    const cree = effetParalyse('hero-1');
+    expect(cree).toMatchObject({porteur: 'hero-1', stat: 'action', duree: {type: 'combat'}, manuel: true});
+    expect(cree.libelle!.length).toBeLessThanOrEqual(60);
+    expect(cree.libelle).toContain('paralysé');
+    expect(cree.libelle).toContain('heure');
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: cree}, () => 'e-1');
+    expect(estParalyse(effets, 'hero-1')).toBe(true);
+    expect(estParalyse(appliquerEvenement(effets, {type: 'nouveau-round'}), 'hero-1')).toBe(true);
+    expect(estParalyse(appliquerEvenement(effets, {type: 'retrait-manuel', id: 'e-1'}), 'hero-1')).toBe(false);
+    expect(estParalyse(effets, 'hero-2')).toBe(false);
+    expect(sommeModificateurs(modificateursPour(effets, {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0}))).toBe(0);
   });
 });

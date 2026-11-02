@@ -109,6 +109,7 @@
     }
   </span>
   </div>
+  <ng-container *ngTemplateOutlet="pouvoirs; context: {$implicit: true}" />
   @if (damage.damage() !== null) {
     <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="flow.apply()">Appliquer {{ damage.damage() }} à {{ turn.target()?.nom }}</button>
   }
@@ -170,6 +171,9 @@
     }
   </span>
   </div>
+  @if (flow.poisonAfterHit()) {
+    <ng-container *ngTemplateOutlet="pouvoirs; context: {$implicit: false}" />
+  }
   @if (attack.carnageOwed() > 0) {
     <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
   } @else {
@@ -181,7 +185,58 @@
     <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damage.damageSum()" />
   }
   <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
+  @if (damage.intangible() && !loadout.defenseTotale()) {
+    <ng-container *ngTemplateOutlet="intangible" />
+  }
 }
+
+<!-- Ce que les pouvoirs des démons changent au coup : la cible intangible, la cible vulnérable (dégâts doublés), le poison de l'attaquant.
+     `$implicit` : le coup n'est pas encore appliqué (après, seul le poison reste à régler). -->
+<ng-template #pouvoirs let-avant>
+  @if ((avant && (damage.intangible() || damage.vulnerabilite())) || damage.poison()) {
+    <div class="tas-pouvoirs" role="group" aria-label="Pouvoirs en jeu">
+      @if (avant && damage.intangible()) {
+        <ng-container *ngTemplateOutlet="intangible" />
+      }
+      @if (avant && damage.vulnerabilite(); as v) {
+        <span class="tas-pouvoir">
+          <button
+            type="button"
+            class="tas-act"
+            [attr.aria-pressed]="damage.doubled()"
+            [matTooltip]="v + ' : coche si le coup frappe sa faiblesse.'"
+            (click)="damage.doubled.set(!damage.doubled())"
+          >
+            <mat-icon aria-hidden="true">{{ damage.doubled() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Dégâts doublés
+          </button>
+          <small class="tas-pouvoir-note">{{ v }}</small>
+        </span>
+      }
+      @if (damage.poison()) {
+        <span class="tas-pouvoir">
+          <span class="tas-pouvoir-note"><b>Poison :</b> jet de vigueur Difficile (−2), sinon paralysie</span>
+          <button
+            type="button"
+            class="tas-act tas-act--foe"
+            [disabled]="damage.targetParalysed()"
+            matTooltip="Jet raté : la cible ne joue plus tant que le MJ ne retire pas l’effet. Livre : sans nouveau jet Difficile (−2) réussi, elle meurt dans l’heure."
+            [attr.aria-label]="damage.targetParalysed() ? turn.target()?.nom + ' est paralysé' : 'Paralyser ' + turn.target()?.nom + ' : il ne joue plus jusqu’à ce que le MJ retire l’effet ; sans nouveau jet réussi, il meurt dans l’heure'"
+            (click)="damage.paralyze()"
+          >
+            <mat-icon aria-hidden="true">{{ damage.targetParalysed() ? 'check' : 'block' }}</mat-icon> Paralysé
+          </button>
+        </span>
+      }
+    </div>
+  }
+</ng-template>
+
+<ng-template #intangible>
+  <p class="tas-pouvoir tas-pouvoir--alerte" role="note">
+    <mat-icon aria-hidden="true">warning</mat-icon>
+    <span><b>Intangible :</b> seules la sorcellerie et l’alchimie le blessent</span>
+  </p>
+</ng-template>
 
 <!-- Le portrait de la cible, sur ses boutons de réaction : c'est elle qui décide, et qui paie de ses points -->
 <ng-template #targetFace>

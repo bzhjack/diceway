@@ -14,6 +14,8 @@ export interface BolCreatureModel {
   avatar: string | null;
   commentaire: string | null;
   id_taille: number;
+  /** Morte-vivante : sa vitalité est une force vitale (Bestiaire, p. 127). */
+  mort_vivant?: boolean;
   capacites: {
     capacite: BolCreatureCapaciteModel;
     capacite_id: number;

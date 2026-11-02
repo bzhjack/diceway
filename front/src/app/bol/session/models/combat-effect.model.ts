@@ -8,6 +8,8 @@ export type EffectWhen = 'attaque' | 'subie';
 export type EffectDuration =
   /** N attaques subies ; `expireAuTour` l'éteint aussi au début du prochain tour du porteur. */
   | {readonly type: 'usages'; readonly restants: number; readonly expireAuTour?: boolean}
+  /** N rounds : chaque nouveau round en retire un, et l'effet tombe au dernier (coup précis sur un démon qui se régénère). */
+  | {readonly type: 'rounds'; readonly restants: number}
   | {readonly type: 'fin-round'}
   | {readonly type: 'debut-tour-porteur'}
   | {readonly type: 'action-porteur'}

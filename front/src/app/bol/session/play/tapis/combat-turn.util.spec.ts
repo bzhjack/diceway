@@ -4,7 +4,7 @@ import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {appliquerEvenement, effetAssomme, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
+import {appliquerEvenement, effetAssomme, effetCoupPrecis, effetParalyse, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
   return {
@@ -206,6 +206,14 @@ describe('turnState', () => {
     const state = turnState(ordered(KALENA, out, RORK), etat(1, ['hero-1']));
     expect(state.activeKey).toBe('hero-2');
     expect(state.statuses.get('pnj-7')).toBe('skipped');
+  });
+
+  it('skips a paralysed card until the GM removes the effect', () => {
+    const paralyse: CombatEffect = {...effetParalyse('pnj-7'), id: 'e-1'};
+    const state = turnState(ordered(KALENA, PRETRE, RORK), etat(1, ['hero-1'], [paralyse]));
+    expect(state.activeKey).toBe('hero-2');
+    expect(state.statuses.get('pnj-7')).toBe('skipped');
+    expect(turnState(ordered(KALENA, PRETRE, RORK), etat(1, ['hero-1'])).activeKey).toBe('pnj-7');
   });
 
   it('skips a locked card in round 1 only', () => {
@@ -656,6 +664,36 @@ describe('raisonHorsJeu', () => {
   it('otherwise gives the out-of-combat reason', () => {
     expect(raisonHorsJeu(card('pnj', 3, {vitaliteCourante: 0}), etat(2))).toBe('hors de combat');
     expect(raisonHorsJeu(card('pnj', 3), etat(2))).toBeNull();
+  });
+});
+
+describe('raisonHorsJeu : paralysie et morts-vivants', () => {
+  it('says a paralysed card is « paralysé » while it stands', () => {
+    const paralyse: CombatEffect = {...effetParalyse('hero-1'), id: 'e-1'};
+    expect(raisonHorsJeu(KALENA, etat(2, [], [paralyse]))).toBe('paralysé');
+    expect(raisonHorsJeu(card('hero', 1, {vitaliteCourante: -2}), etat(2, [], [paralyse]))).toBe('mourant');
+  });
+
+  it('says an undead at 0 is « détruit », not « hors de combat »', () => {
+    expect(horsCombat(card('creature', 3, {vitaliteCourante: 0, mortVivant: true}))).toBe('détruit');
+    expect(raisonHorsJeu(card('creature', 3, {vitaliteCourante: 0, mortVivant: true}), etat(2))).toBe('détruit');
+    expect(horsCombat(card('creature', 3, {vitaliteCourante: 0, mortVivant: false}))).toBe('hors de combat');
+    expect(isOut(card('creature', 3, {vitaliteCourante: 0, mortVivant: true}))).toBe(true);
+  });
+});
+
+describe('endTurn : coup précis sur un démon qui se régénère', () => {
+  it('drops the malus die at the start of the second round after the blow', () => {
+    const demon = card('demon', 4);
+    const order = ordered(KALENA, demon);
+    const coup: CombatEffect = {...effetCoupPrecis('demon-4', true), id: 'e-1'};
+    // Round 1 : Kalena porte le coup précis, puis le démon joue avec son dé de malus.
+    const round2 = endTurn(order, endTurn(order, etat(1, [], [coup])));
+    expect(round2.round).toBe(2);
+    expect(round2.effets.map((e) => e.id)).toEqual(['e-1']);
+    const round3 = endTurn(order, endTurn(order, round2));
+    expect(round3.round).toBe(3);
+    expect(round3.effets).toEqual([]);
   });
 });
 

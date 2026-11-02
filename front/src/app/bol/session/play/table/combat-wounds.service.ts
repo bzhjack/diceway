@@ -16,12 +16,13 @@ import {MeleePietailleDialogComponent} from '../melee-pietaille-dialog/melee-pie
 import {MeleePietailleDialogData, MeleePietailleResult} from '../../models/melee-pietaille-dialog.model';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {heroDetails} from '../tapis/tapis.util';
+import {regenerationsDuRound} from '../tapis/pouvoirs-combat.util';
 import {TapisCard} from '../../models/tapis.model';
 import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
 import {CombatStatsStore} from './combat-stats.store';
 
-/** Les coups et leurs suites : les dégâts enregistrés, « Défier la mort », les héros à 0 qui reprennent leurs esprits ou sombrent, les mourants qui perdent de la vitalité à chaque round, le secours, et les pertes de la mêlée de piétaille. */
+/** Les coups et leurs suites : les dégâts enregistrés, « Défier la mort », les héros à 0 qui reprennent leurs esprits ou sombrent, les mourants qui perdent de la vitalité à chaque round, les démons qui se régénèrent, le secours, et les pertes de la mêlée de piétaille. */
 @Injectable()
 export class CombatWoundsService {
   private readonly fightSessionService = inject(BolFightSessionService);
@@ -37,7 +38,7 @@ export class CombatWoundsService {
 
   constructor() {
     // Un nouveau round commence : un héros resté à 0 de vitalité sombre dans l'inconscience, ou dépense 1 PH pour reprendre ses esprits ;
-    // un héros mourant perd 1 de vitalité.
+    // un héros mourant perd 1 de vitalité ; un démon qui se régénère en reprend 1.
     effect(() => {
       const round = this.table.mode() === 'combat' ? this.combat.etat().round : null;
       untracked(() => {
@@ -45,7 +46,7 @@ export class CombatWoundsService {
         this.lastRound = round;
         if (round !== null && previous !== null && round > previous) {
           this.askUnconsciousHeroes();
-          this.bleedDyingHeroes();
+          this.regenerateDemons();
         }
       });
     });
@@ -103,11 +104,13 @@ export class CombatWoundsService {
 
   /** Au début d'un round, chaque héros mourant (−1 à −5, pas stabilisé) perd 1 de vitalité (02-actions-combat.md, « Blessures,
    * inconscience et mort »). Un message l'annonce, avec « Stabilisé » pour le héros secouru à la table : le point revient et la perte
-   * s'arrête. Celui qui passe sous −5 se voit proposer « Défier la mort » pour se stabiliser. */
-  private bleedDyingHeroes(): void {
+   * s'arrête. Celui qui passe sous −5 se voit proposer « Défier la mort » pour se stabiliser. `then` passe une fois leurs messages
+   * refermés (tout de suite s'il n'y a pas de mourant). */
+  private bleedDyingHeroes(then: () => void = () => undefined): void {
     const sessionId = this.table.sessionId();
     const heroes = herosMourants(this.table.cards(), this.combat.etat());
     if (!sessionId || heroes.length === 0) {
+      then();
       return;
     }
     forkJoin(heroes.map((card) => this.fightSessionService.applyDamage(sessionId, 'hero', card.pivotId, -1).pipe(map(() => card)))).subscribe({
@@ -127,14 +130,53 @@ export class CombatWoundsService {
                 .pipe(map(({dismissedByAction}) => ({card, stabilise: dismissedByAction})));
             }),
           )
-          .subscribe(({card, stabilise}) => {
-            if (stabilise) {
-              this.stabilize(card, 1);
-            }
+          .subscribe({
+            next: ({card, stabilise}) => {
+              if (stabilise) {
+                this.stabilize(card, 1);
+              }
+            },
+            complete: then,
           });
       },
-      error: (error: unknown) => this.table.notifyError(error, 'Impossible de retirer la vitalité des héros mourants.'),
+      error: (error: unknown) => {
+        this.table.notifyError(error, 'Impossible de retirer la vitalité des héros mourants.');
+        then();
+      },
     });
+  }
+
+  /** Au début d'un round, chaque démon debout qui a « Régénération » reprend 1 de vitalité, sans dépasser son maximum
+   * (04-pnj-creatures-demons.md, « Pouvoirs démoniaques ») ; son coup précis, lui, s'en va de lui-même au bout de 2 rounds
+   * (`effetCoupPrecis`). Les points sont rendus d'abord, puis les mourants saignent (`bleedDyingHeroes`, qui relit la table) ; le message
+   * de la régénération vient après les leurs, pour ne pas chasser leur bouton « Stabilisé ». */
+  private regenerateDemons(): void {
+    const sessionId = this.table.sessionId();
+    const regenerations = regenerationsDuRound(this.table.cards(), this.combat.etat());
+    if (!sessionId || regenerations.length === 0) {
+      this.bleedDyingHeroes();
+      return;
+    }
+    const announce = (): void => {
+      const noms = regenerations.map(({card, vitalite}) => `${card.nom} (${vitalite}/${card.vitaliteMax})`).join(', ');
+      this.snackBar.open(`Régénération : ${noms} ${regenerations.length > 1 ? 'reprennent' : 'reprend'} 1 de vitalité.`, undefined, {duration: 6000});
+    };
+    from(regenerations)
+      .pipe(
+        concatMap(({card}) => this.fightSessionService.applyDamage(sessionId, card.kind, card.pivotId, 1)),
+        last(),
+      )
+      .subscribe({
+        next: (session) => {
+          this.table.session.set(session);
+          this.bleedDyingHeroes(announce);
+        },
+        error: (error: unknown) => {
+          this.table.loadSession(sessionId);
+          this.table.notifyError(error, 'Impossible de régénérer les démons.');
+          this.bleedDyingHeroes();
+        },
+      });
   }
 
   /** Un héros mourant est stabilisé : il ne perd plus de vitalité pour le reste du combat. `refund` rend les points qu'il vient de

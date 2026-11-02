@@ -120,14 +120,19 @@ interface BolFightSessionCreatureModel {
   protection: string | null;
   id_taille: number;
   capacites: BolFightSessionCapaciteModel[] | null;
+  /** Morte-vivante : une force vitale au lieu de la vitalité — absent des lignes posées avant cette information. */
+  mort_vivant?: boolean;
   creature?: {avatar: string | null};
 }
 
-/** Pouvoir d'un démon posé à la table. */
+/** Pouvoir d'un démon posé à la table, avec ses drapeaux de combat (absents des lignes posées avant eux). */
 interface BolFightSessionPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
   detail: string | null;
+  regeneration?: boolean;
+  intangible?: boolean;
+  avertissement_combat?: boolean;
 }
 
 /** Un démon posé à la table : copie de ses statistiques au moment de l'ajout, comme pour une

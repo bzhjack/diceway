@@ -42,7 +42,7 @@ function nomDePouvoir(nom: string): string {
 }
 
 /** Un pouvoir démoniaque, comparé sans tenir compte de la casse ni des accents. */
-function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
+export function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
   const attendu = nomDePouvoir(nom);
   return pouvoirs.some((pouvoir) => pouvoir !== null && nomDePouvoir(pouvoir) === attendu);
 }

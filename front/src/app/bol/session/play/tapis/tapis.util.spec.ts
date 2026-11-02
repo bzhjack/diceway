@@ -123,6 +123,25 @@ describe('buildTapisCards', () => {
     expect(card('demon-9')).toMatchObject({nom: 'Le Voilé', badge: 'Rival', vitaliteCourante: 20});
   });
 
+  it('tells an undead creature and its size', () => {
+    const s = session({creatures: [{...CREATURE, mort_vivant: true, id_taille: 5}] as BolFightSessionModel['creatures']});
+    expect(card('creature-3', s)).toMatchObject({mortVivant: true, taille: 5});
+    expect(card('creature-3')).toMatchObject({mortVivant: false, taille: 1});
+    expect(card('pnj-7').mortVivant).toBeUndefined();
+  });
+
+  it('reads the combat powers of a demon', () => {
+    const pouvoirs = [
+      {pouvoir_id: 11, pouvoir: 'Régénération', detail: null, regeneration: true},
+      {pouvoir_id: 16, pouvoir: 'Vulnérabilité', detail: 'feu'},
+      {pouvoir_id: 9, pouvoir: 'Poison', detail: null, avertissement_combat: true},
+    ];
+    const s = session({demons: [{...DEMON, pouvoirs}] as BolFightSessionModel['demons']});
+    expect(card('demon-9', s).pouvoirs).toEqual({regeneration: true, intangible: false, poison: true, vulnerabilite: {element: 'feu'}, avertissements: ['Poison']});
+    expect(card('demon-9').pouvoirs).toEqual({regeneration: false, intangible: false, poison: false, vulnerabilite: null, avertissements: []});
+    expect(card('creature-3').pouvoirs).toBeUndefined();
+  });
+
   it('numbers identical creatures in order of arrival, and leaves a lone one as is', () => {
     const s = session({creatures: [CREATURE, {...CREATURE, id: 4}, {...CREATURE, id: 5, nom: 'Loup'}] as BolFightSessionModel['creatures']});
     const names = buildTapisCards(s).map((c) => c.nom);
@@ -163,6 +182,8 @@ describe('labels', () => {
     expect(cardAriaLabel(card('pnj-7'))).toBe('Prêtre de Shazzadion, PNJ, Coriace, dégâts d6B, défense 0, vitalité 2 sur 6');
     expect(cardAriaLabel(card('hero-1'))).toBe('Kalena, Héros, dégâts d6B, défense 0, vitalité 9 sur 11');
     expect(cardAriaLabel(card('creature-3'))).toBe('Hippocampe, Créature, Piétaille, dégâts d6, défense 1, vitalité 5 sur 5');
+    const s = session({creatures: [{...CREATURE, mort_vivant: true}] as BolFightSessionModel['creatures']});
+    expect(cardAriaLabel(card('creature-3', s))).toBe('Hippocampe, Créature, Piétaille, dégâts d6, défense 1, force vitale 5 sur 5');
   });
 
 

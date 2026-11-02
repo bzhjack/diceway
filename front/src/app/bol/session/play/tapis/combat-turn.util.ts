@@ -6,7 +6,7 @@ import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {aAssomme, appliquerEvenement, aStabilise, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, effetsDeLAncienFormat, effetsDeTour, estParalyse, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
@@ -111,14 +111,15 @@ export function combatOutcome(cards: readonly TapisCard[], exclus: readonly stri
 }
 
 /** Pourquoi une carte est hors combat, en clair : un héros est inconscient à 0 (assommé, si c'est une bagarre), mourant de −1 à −5,
- * mort à −6 ou moins — stabilisé sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0. `null` pour une carte qui joue. */
-export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'assommé' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | null {
+ * mort à −6 ou moins — stabilisé sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0, un mort-vivant
+ * « détruit » (sa force vitale épuisée, il retourne à la mort). `null` pour une carte qui joue. */
+export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'assommé' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | 'détruit' | null {
   const vitalite = card.vitaliteCourante;
   if (card.vitaliteMax === null || card.vitaliteMax <= 0 || vitalite === null || vitalite > 0) {
     return null;
   }
   if (card.kind !== 'hero') {
-    return 'hors de combat';
+    return card.mortVivant ? 'détruit' : 'hors de combat';
   }
   if (vitalite === 0) {
     return aAssomme(effets, card.key) ? 'assommé' : 'inconscient';
@@ -127,9 +128,12 @@ export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []
 }
 
 /** Pourquoi une carte ne joue plus, pour la frise : « enfui » pour un rival qui a pris la fuite (« Fuite opportune »), sinon la raison de
- * `horsCombat` ; `null` pour une carte qui joue. */
-export function raisonHorsJeu(card: TapisCard, etat: EtatCombat): ReturnType<typeof horsCombat> | 'enfui' {
-  return etat.fuis.includes(card.key) ? 'enfui' : horsCombat(card, etat.effets);
+ * `horsCombat`, sinon « paralysé » pour une carte debout que le poison d'un démon paralyse ; `null` pour une carte qui joue. */
+export function raisonHorsJeu(card: TapisCard, etat: EtatCombat): ReturnType<typeof horsCombat> | 'enfui' | 'paralysé' {
+  if (etat.fuis.includes(card.key)) {
+    return 'enfui';
+  }
+  return horsCombat(card, etat.effets) ?? (estParalyse(etat.effets, card.key) ? 'paralysé' : null);
 }
 
 /** Les héros qui perdent 1 de vitalité au début d'un round (02-actions-combat.md, « Blessures, inconscience et mort ») : mourants
@@ -144,8 +148,9 @@ export function bloqueeCeRound(lockedRound1: boolean, round: number): boolean {
   return round === 1 && lockedRound1;
 }
 
+/** Une carte sautée : hors combat, exclue, bloquée au round 1, ou paralysée (jusqu'à ce que le MJ retire l'effet). */
 function isSkipped(entry: OrderedCard, etat: EtatCombat): boolean {
-  return isOut(entry.card) || etat.exclus.includes(entry.card.key) || bloqueeCeRound(entry.lockedRound1, etat.round);
+  return isOut(entry.card) || etat.exclus.includes(entry.card.key) || bloqueeCeRound(entry.lockedRound1, etat.round) || estParalyse(etat.effets, entry.card.key);
 }
 
 /** Qui joue, et où en est chaque carte : la carte active est la première de l'ordre qui n'a pas

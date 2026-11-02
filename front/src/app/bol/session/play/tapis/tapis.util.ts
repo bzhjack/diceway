@@ -5,6 +5,7 @@ import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
 import {creaturePortrait, demonPortrait, heroPortrait, pnjPortrait} from '../../combat-play.util';
 import {TapisKind, TapisCard, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
+import {libelleVitalite, pouvoirsDeCombat} from './pouvoirs-combat.util';
 
 const NO_VALUE = '—';
 
@@ -99,6 +100,8 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       heroisme: null,
       attitude: c.attitude ?? null,
       vilenie: null,
+      mortVivant: c.mort_vivant ?? false,
+      taille: c.id_taille ?? null,
     });
   }
 
@@ -122,6 +125,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       heroisme: null,
       attitude: d.attitude ?? null,
       vilenie: null,
+      pouvoirs: pouvoirsDeCombat(d.pouvoirs),
     });
   }
 
@@ -182,7 +186,7 @@ export function cardAriaLabel(card: TapisCard): string {
     parts.push(card.badge);
   }
   parts.push(`dégâts ${card.degats}`, `défense ${card.defense}`);
-  parts.push(`vitalité ${card.vitaliteCourante ?? NO_VALUE} sur ${card.vitaliteMax ?? NO_VALUE}`);
+  parts.push(`${libelleVitalite(card).toLowerCase()} ${card.vitaliteCourante ?? NO_VALUE} sur ${card.vitaliteMax ?? NO_VALUE}`);
   return parts.join(', ');
 }
 

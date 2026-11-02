@@ -19,6 +19,8 @@ const FEINTE = 'feinte';
 const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
 const DE_MALUS = 'de-malus';
+/** La carte est paralysée par le poison d'un démon : elle ne joue plus tant que le MJ ne retire pas l'effet. */
+const PARALYSE = 'paralyse';
 
 const POSTURE_ORIGINE: Readonly<Record<string, string>> = {
   defensive: 'posture-defensive',
@@ -160,7 +162,13 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
     }
 
     case 'nouveau-round':
-      return effets.filter((effet) => effet.duree.type !== 'fin-round');
+      // Un effet compté en rounds en perd un ; au dernier, il tombe avec ceux de fin de round.
+      return effets.flatMap((effet): CombatEffect[] => {
+        if (effet.duree.type === 'fin-round' || (effet.duree.type === 'rounds' && effet.duree.restants <= 1)) {
+          return [];
+        }
+        return effet.duree.type === 'rounds' ? [{...effet, duree: {type: 'rounds', restants: effet.duree.restants - 1}}] : [effet];
+      });
 
     case 'ajout-manuel':
       return ajouter(effets, [{...evenement.effet, manuel: true}], genererId);
@@ -204,7 +212,7 @@ export function effetsDeTour(carte: string, choix: TurnChoice): NewEffect[] {
 const MAX_EFFETS = 200;
 const STATS: readonly string[] = ['attaque', 'defense', 'degats', 'protection', 'action'];
 const QUAND: readonly string[] = ['attaque', 'subie'];
-const DUREES: readonly string[] = ['usages', 'fin-round', 'debut-tour-porteur', 'action-porteur', 'combat'];
+const DUREES: readonly string[] = ['usages', 'rounds', 'fin-round', 'debut-tour-porteur', 'action-porteur', 'combat'];
 
 function texte(valeur: unknown): string | null {
   return typeof valeur === 'string' && valeur !== '' ? valeur : null;
@@ -219,12 +227,15 @@ function duree(raw: unknown): EffectDuration | null {
   if (typeof type !== 'string' || !DUREES.includes(type)) {
     return null;
   }
-  if (type !== 'usages') {
+  if (type !== 'usages' && type !== 'rounds') {
     return {type} as EffectDuration;
   }
   const restants = source['restants'];
   if (!Number.isInteger(restants) || (restants as number) < 1 || (restants as number) > 20) {
     return null;
+  }
+  if (type === 'rounds') {
+    return {type: 'rounds', restants: restants as number};
   }
   return source['expireAuTour'] === true ? {type: 'usages', restants: restants as number, expireAuTour: true} : {type: 'usages', restants: restants as number};
 }
@@ -302,6 +313,8 @@ export function libelleDuree(duree: EffectDuration): string {
       const base = `${duree.restants} ${duree.restants > 1 ? 'attaques subies' : 'attaque subie'}`;
       return duree.expireAuTour ? `${base}, ou jusqu’à son prochain tour` : base;
     }
+    case 'rounds':
+      return duree.restants > 1 ? `encore ${duree.restants} rounds` : 'jusqu’à la fin du round';
     case 'fin-round':
       return 'jusqu’à la fin du round';
     case 'debut-tour-porteur':
@@ -314,9 +327,31 @@ export function libelleDuree(duree: EffectDuration): string {
 }
 
 /** Coup précis (option de succès héroïque) : la cible, estropiée, garde un dé de malus à ses jets jusqu'à la fin du combat — le MJ le
- * retire s'il ne concernait pas ses attaques. */
-export function effetCoupPrecis(porteur: string): NewEffect {
-  return {origine: DE_MALUS, libelle: 'coup précis : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'combat'}, manuel: true};
+ * retire s'il ne concernait pas ses attaques. Un démon qui se régénère (`regeneration`) s'en débarrasse au bout de 2 rounds : le dé tombe
+ * au début du deuxième round qui suit le coup. */
+export function effetCoupPrecis(porteur: string, regeneration = false): NewEffect {
+  return {
+    origine: DE_MALUS,
+    libelle: 'coup précis : dé de malus',
+    porteur,
+    stat: 'action',
+    valeur: -1,
+    quand: 'attaque',
+    duree: regeneration ? {type: 'rounds', restants: 2} : {type: 'combat'},
+    manuel: true,
+  };
+}
+
+/** Paralysé par le poison d'un démon (04-pnj-creatures-demons.md, « Poison ») : la carte ne joue plus tant que le MJ ne retire pas
+ * l'effet. Le livre ajoute que la victime meurt dans l'heure sans un nouveau jet de vigueur Difficile (−2) réussi : le libellé le
+ * rappelle, l'application ne le compte pas. */
+export function effetParalyse(porteur: string): NewEffect {
+  return {origine: PARALYSE, libelle: 'paralysé (poison) : meurt dans l’heure sans jet', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'combat'}, manuel: true};
+}
+
+/** Vrai si la carte est paralysée : elle ne joue pas. */
+export function estParalyse(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === PARALYSE);
 }
 
 /** Renversement (option de succès héroïque) : la cible, jetée à terre, se relève avec un dé de malus à sa prochaine action. */

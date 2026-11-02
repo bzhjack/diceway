@@ -1,6 +1,7 @@
 import {afterNextRender, computed, inject, Injectable, signal} from '@angular/core';
 import {ModifierTerm} from '../../models/combat-effect.model';
-import {modificateursPour, sommeModificateurs} from './combat-effects.util';
+import {effetParalyse, estParalyse, modificateursPour, sommeModificateurs} from './combat-effects.util';
+import {degatsDoubles, libelleVulnerabilite, poisonPossible} from './pouvoirs-combat.util';
 import {DiceRowDie} from '../../../../shared/models/dice-row.model';
 import {damageDiceCount, damageDieMax, damageRange, devastatingBonus, finalDamage, parseDamage, rawDamage, scaleDamage, vigueurBonus} from '../../combat-resolution.util';
 import {DamageDie} from '../../models/combat-attack.model';
@@ -40,7 +41,8 @@ export class TurnDamageStore {
     if (spec === null) {
       return null;
     }
-    const [min, max] = damageRange(spec, this.vigueur(), this.effectiveProtection(), this.devastating());
+    const range = damageRange(spec, this.vigueur(), this.effectiveProtection(), this.devastating());
+    const [min, max] = range.map((value) => degatsDoubles(value, this.doubled()) ?? value);
     return min === max ? `${min}` : `${min} à ${max}`;
   });
 
@@ -135,10 +137,40 @@ export class TurnDamageStore {
   /** Ce qui se retranche vraiment des dégâts : un modificateur positif des effets ajoute aux dégâts, il se retranche de la protection. */
   private readonly effectiveProtection = computed(() => this.protection() - sommeModificateurs(this.damageEffectTerms()));
 
+  /** Les dégâts du coup, doublés si le MJ a coché la vulnérabilité de la cible. */
   readonly damage = computed(() => {
     const raw = this.raw();
-    return raw === null ? null : finalDamage(raw, this.vigueur(), this.effectiveProtection(), this.devastating());
+    return degatsDoubles(raw === null ? null : finalDamage(raw, this.vigueur(), this.effectiveProtection(), this.devastating()), this.doubled());
   });
+
+  /** La cible est vulnérable (« Vulnérabilité ») : sa faiblesse, que le MJ peut cocher pour doubler les dégâts de ce coup ; `null` sinon. */
+  readonly vulnerabilite = computed(() => {
+    const v = this.turn.target()?.pouvoirs?.vulnerabilite;
+    return v ? libelleVulnerabilite(v) : null;
+  });
+
+  /** « Dégâts doublés » coché : le coup frappe la faiblesse de la cible. Décoché à chaque nouveau jet, cible ou attaquant. */
+  readonly doubled = signal(false);
+
+  /** La cible est intangible : seules la sorcellerie et l'alchimie la blessent. Le MJ décide d'appliquer ou non. */
+  readonly intangible = computed(() => this.turn.target()?.pouvoirs?.intangible === true);
+
+  /** Le coup d'un démon venimeux touche une cible de taille moyenne ou moins : le jet de vigueur contre la paralysie est à faire. */
+  readonly poison = computed(() => poisonPossible(this.turn.card(), this.turn.target()));
+
+  /** La cible est déjà paralysée : le bouton « Paralysé » l'a fait. */
+  readonly targetParalysed = computed(() => {
+    const target = this.turn.target();
+    return !!target && estParalyse(this.turn.effets(), target.key);
+  });
+
+  /** « Paralysé » : la cible a raté son jet de vigueur, elle ne joue plus tant que le MJ ne retire pas l'effet. */
+  paralyze(): void {
+    const target = this.turn.target();
+    if (target && this.poison() && !this.targetParalysed()) {
+      this.turn.effectAdded.emit(effetParalyse(target.key));
+    }
+  }
 
   /** Ce que rapporte le dé de dégâts, à côté de sa case : « d6M : le moins bon de deux d6 », « d6Bx2 : le meilleur de deux d6, multiplié
    * par 2 ». */
@@ -194,12 +226,15 @@ export class TurnDamageStore {
       terms.push({value: protection === 0 ? '0' : signedTerm(-protection), caption: `protection${source}`, tone: 'minus', editable: true});
     }
     terms.push(...this.damageEffectTerms().map((term) => sumTermOf(term)));
+    if (this.doubled()) {
+      terms.push({value: '×2', caption: 'vulnérable', tone: 'plus'});
+    }
     const damage = this.damage();
     if (damage === null && spec === null) {
       terms.push({value: '?', caption: 'dégâts', tone: 'total'});
     } else if (damage === null && spec !== null) {
-      const [min, max] = damageRange(spec, this.vigueur(), this.effectiveProtection(), this.devastating());
-      terms.push({value: min === max ? `${min}` : `${min} à ${max}`, caption: 'dégâts', tone: 'total'});
+      const span = this.damageSpan();
+      terms.push({value: span ?? '?', caption: 'dégâts', tone: 'total'});
     } else {
       terms.push({value: `= ${damage}`, caption: 'dégâts', tone: 'total'});
     }
@@ -304,6 +339,7 @@ export class TurnDamageStore {
 
   /** Oublie les dégâts du jet : le dé, la protection saisie, les modificateurs figés. */
   resetRoll(): void {
+    this.doubled.set(false);
     this.protectionFace.set(null);
     this.protectionManual.set(null);
     this.editingProtection.set(false);
