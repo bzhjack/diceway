@@ -298,7 +298,7 @@ Source : ch. 5 « Personnages non joueurs », p. 132 (`04-bestiaire` l. 1396).
 | Dé de malus (3 dés, on garde les 2 moins bons) | FO1 |
 | Dégâts d6M (2 dés, garde le moins bon) | D1 |
 | Dégâts d6B (2 dés, garde le meilleur) | D2 |
-| Vigueur ajoutée aux dégâts de mêlée, moitié à distance | D1, D2 |
+| Vigueur ajoutée aux dégâts de mêlée (la moitié, arrondie à l'inférieur, à distance : règle p. 63, sans exemple chiffré dans le livre) | D1, D2 (mêlée seulement) |
 | Protection de l'armure en dé (d6−n) | D2 |
 | Facteurs de portée et modificateurs | T1, T2 |
 | Soins et récupération de vitalité | S1, S2, S3 |

@@ -253,7 +253,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 
 - **Conditions** : chaque condition au-delà de la première réduit le coût de 1 (sans passer sous le minimum). Exemples : ligne de vue, focaliseur, heure propice, blessures, rituel de groupe, sacrifice, conjonction astrale…
 - Un sort du 1er cercle qui blesse inflige **d6**.
-- **Échelle** : 1er cercle = ce qu'un humain bien équipé peut faire. 2e = au-delà d'un mortel. 3e = catastrophe à l'échelle d'une cité.
+- **Échelle** : 1er cercle = ce qu'un humain bien équipé peut faire. 2e = au-delà d'un mortel. 3e = catastrophes naturelles ou terribles malédictions pouvant s'étendre sur plusieurs générations (p. 153).
 
 ### Foi (prêtre, druide)
 

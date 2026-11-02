@@ -9,9 +9,9 @@ Pages source principales: p. 138-157
 - L'alchimie se pratique entre les aventures.
 - Il faut en general au moins `1 semaine` de temps libre.
 - Points de creation gagnes sur cet intervalle: egaux au rang d'`alchimiste`.
-- On ne peut pas depenser plus de `5` points de creation entre deux aventures normales.
+- On ne peut pas depenser plus de `5` points de creation entre deux aventures.
 - Les points de creation non utilises ne se stockent pas d'une aventure a l'autre.
-- Mythic+: l'avantage `Maitre artisan` (voir `01-creation-heros.md`) donne des points de creation comme un alchimiste (rang de forgeron), mais seulement pour armes, armures et outils de qualite courante ou rare; il peut aussi ajouter ses points a ceux d'un alchimiste pour des machines et instruments (pas les potions).
+- Mythic+: l'avantage `Maitre artisan` (voir `01-creation-heros.md`) donne des points de creation comme un alchimiste (le livre ne chiffre pas le total; choix de l'appli: autant que le rang de `forgeron`), mais seulement pour armes, armures et outils de qualite courante ou rare; il peut aussi ajouter ses points a ceux d'un alchimiste pour des machines et instruments (pas les potions).
 
 ### Cout des creations
 
@@ -160,7 +160,6 @@ Charmes:
 ### Effets blessants par defaut
 
 - Un sort du `1er cercle` destine a blesser inflige `d6` degats par defaut.
-- Les sorts plus puissants infligent generalement davantage, selon leur description.
 
 ### Echelle qualitative des cercles
 
@@ -168,7 +167,7 @@ Reperes du livre pour situer un sort improvise:
 
 - `1er cercle`: reproduit ce qu'un humain bien equipe peut accomplir (ex. detruire une porte, escalader avec materiel).
 - `2e cercle`: depasse les capacites d'un simple mortel (ex. detruire un mur, controler les esprits).
-- `3e cercle`: catastrophes a l'echelle d'une cite ou malediction generationnelle.
+- `3e cercle`: catastrophes naturelles ou terribles maledictions pouvant s'etendre sur plusieurs generations (ex. peste noire dans une ville, volcan au milieu d'une ville).
 
 ### Sorts d'exemple a effet chiffre (p. 154-155)
 

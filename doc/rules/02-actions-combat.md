@@ -301,7 +301,7 @@ Soins médicaux (carrière de soin adaptée) :
 - Récupération immédiate de `rang du soigneur` en vitalité.
 - Puis jet d'action Moyenne (chaque jour) pour doubler le rythme : récupère 2 vitalités par jour.
 
-> L'aggravation de difficulté par point de vitalité négatif ne s'applique qu'au jet de **stabilisation** (cf. Secourir un mourant), pas au jet quotidien de doublement.
+> L'aggravation de difficulté par point de vitalité négatif est décrite par le livre pour le jet de **stabilisation** (cf. Secourir un mourant) ; le jet quotidien de doublement est donné en difficulté Moyenne (0) sans aggravation (interprétation : le livre ne traite pas le cas d'un blessé stabilisé encore dans les négatifs ; l'application, `front/src/app/bol/session/rescue.util.ts`, n'aggrave que la stabilisation).
 
 ## Vitalité des PNJ
 

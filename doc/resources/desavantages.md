@@ -62,4 +62,4 @@ Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07
 - `Non-combattant` influe sur la construction du personnage.
 - `Maudit` touche l'héroïsme.
 - `Traqué` et `Signe distinctif` se combinent particulièrement bien dans les scénarios.
-- `Méfiance envers les inconnus` (Mythic+) : à interpréter en jeu, sans dé de malus.
+- `Méfiance envers les inconnus` (Mythic+) : essentiellement à interpréter en jeu (Mythic+). Choix de l'appli : aucun dé de malus n'y est attaché.

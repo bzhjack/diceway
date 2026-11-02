@@ -210,7 +210,7 @@ Regles generales:
 | Laboratoire fourni | De de bonus pour alchimie et invention dans son propre laboratoire. |
 | Magie des Rois-Sorciers | De de bonus pour lancer des sorts; impose aussi un desavantage supplementaire a la creation. |
 | Mains guerisseuses | De de bonus pour aider la recuperation des blessures, poisons et etats; exige `medecin`. |
-| Maitre artisan (Mythic+) | Points de creation comme un alchimiste (`= rang de forgeron`), mais seulement pour armes, armures et outils de qualite courante ou rare; peut ajouter ses points a ceux d'un alchimiste pour machines et instruments (pas les potions); exige `forgeron`. |
+| Maitre artisan (Mythic+) | Points de creation comme un alchimiste (le livre ne chiffre pas le total; choix de l'appli: autant que le rang de `forgeron`), mais seulement pour armes, armures et outils de qualite courante ou rare; peut ajouter ses points a ceux d'un alchimiste pour machines et instruments (pas les potions); exige `forgeron`. |
 | Maitre du deguisement | De de bonus pour se deguiser; depenser `1 point d'heroisme` permet d'avoir "deja ete la sous un deguisement". |
 | Marque par les dieux | `+1` point d'heroisme initial. |
 | Montagnard | De de bonus pour survivre, pister et chasser en montagne. |
@@ -360,7 +360,7 @@ Armes regionales (Mythic+):
 
 - Elles se rencontrent rarement entre les mains d'un etranger (achetee a prix d'or, pillee...), ce qui lui vaut la reprobation des gens du cru.
 - Seul un heros de meme origine regionale peut en faire son arme favorite.
-- Le kriss et le khastok ne sont plus des variantes de la dague et de l'arme d'hast.
+- Le kriss et le khastok ne sont plus des variantes de la dague et de l'arme d'hast (lignes propres dans le tableau des armes de la MaJ, qui remplace celui de la p. 48; la note « inclut » a disparu des lignes dague et arme d'hast).
 - L'« arc long de Tyrus » du livre de base s'appelle desormais `arc de guerre de Tyrus` (y compris comme arme favorite regionale de Tyrus).
 
 ## Options raciales jouables

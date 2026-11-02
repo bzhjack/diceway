@@ -6,7 +6,7 @@ Source principale : chapitre 2, pages 24-39 du livre.
 
 | Carrière | Détail / archétype | Notes utiles |
 | --- | --- | --- |
-| Alchimiste | artificier / inventeur | Un désavantage par rang au-dessus de 2. Démonique requis pour les savoirs avancés. |
+| Alchimiste | artificier / inventeur | Un désavantage par rang au-dessus de 2. Démonique requis pour utiliser les créations magiques et alchimiques des Rois-Sorciers (p. 25). |
 | Assassin | agent / espion | Carrière furtive et d'approche. |
 | Barbare | berserk / primitif | Archétype sword & sorcery classique. |
 | Bourreau | geôlier / esclavagiste | Brutal, peu subtil. |
@@ -26,7 +26,7 @@ Source principale : chapitre 2, pages 24-39 du livre.
 | Noble | aristocrate / courtisan | Étiquette, influence, statut. |
 | Ouvrier | docker / manœuvre | Force, manutention, travail dur. |
 | Pilote des airs | - | Nefs volantes, navigation aérienne. Réservée aux Satarlans. |
-| Prêtre | druide / chaman | Démonique requis pour certains savoirs sacrés ou anciens. |
+| Prêtre | druide / chaman | Démonique requis (prêtres et druides) pour utiliser les créations magiques et alchimiques des Rois-Sorciers (p. 36). |
 | Scribe | érudit / copiste | Lecture, écriture, savoirs, traduction. |
 | Soldat | garde / milicien | Discipline, service, combat régulier. |
 | Sorcier | magicien / enchanteur | Un désavantage supplémentaire par rang au-delà du 1er, y compris lors d'une progression ultérieure. Démonique oral et écrit requis. |

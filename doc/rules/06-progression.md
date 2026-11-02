@@ -95,7 +95,7 @@ Regle:
 ### Remplacement
 
 - La `pietaille` morte peut etre remplacee avec le temps.
-- Un `coriace` tue ne revient pas automatiquement et n'est pas remplace gratuitement.
+- Un `coriace` tue n'est pas remplace avec le temps: seule la `pietaille` l'est (p. 166). Pour en avoir un autre, il faut en recruter un nouveau (`1 XP`, table ci-dessus) (interpretation: le livre ne traite pas ce cas, mais le recrutement n'est pas limite).
 
 ### Promotion implicite
 

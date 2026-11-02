@@ -82,6 +82,7 @@ Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07
 - `Baudrier de guerre` : traite un cas d'armure moyenne sans malus standard.
 - `Magie des Rois-Sorciers` (+1 dé de bonus pour lancer des sorts, p. 42) et `Pouvoir du Néant` (+2 points de pouvoir, p. 43) : structurants pour les lanceurs de sorts ; chacun impose un désavantage supplémentaire à la création.
 - `Prestance` (Mythic+) : `+1 aura`, maximum 6, maximum de départ 4, comme `Savant` pour l'esprit.
-- `Maître artisan` (Mythic+) : exige la carrière forgeron ; points de création comme un alchimiste (égaux au rang de forgeron),
-  mais seulement pour armes, armures et outils de qualité courante ou rare. Un alchimiste maître artisan cumule les deux réserves.
+- `Maître artisan` (Mythic+) : exige la carrière forgeron ; points de création comme un alchimiste, mais seulement pour armes,
+  armures et outils de qualité courante ou rare. Choix de l'appli (le livre ne chiffre pas ce total) : ces points sont égaux au
+  rang de forgeron. Choix de l'appli : un alchimiste maître artisan cumule les deux réserves (le livre ne traite pas ce cas).
 - `Envoûtant` (Mythic+) : exige la carrière tentatrice ; une fois par jour, l'aide de `aura + d6` piétailles.

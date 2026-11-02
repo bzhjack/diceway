@@ -4,6 +4,20 @@ Date : 2026-11-02. Ce fichier regroupe tout ce qui reste ouvert. Ce qui est fait
 
 Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs jours).
 
+## En bref : ce qui reste ouvert
+
+| Sujet | Section | Effort |
+| --- | --- | --- |
+| Mise en production : migrations du 2026-11-02, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
+| Combat : capacités des créatures et démons (régénération, intangible, poison, vulnérabilité, force vitale) | 2, lot 3 | L |
+| Combat : piétaille contre piétaille, « Fuite opportune » des rivaux | 2, lot 3 | S |
+| Combat : sorcellerie et foi | 2, lot 4 | L |
+| Combat : petites limites de l'assistant | 2, point 17 | S à M |
+| Doc : environ 25 règles sans source, souvent des choix de l'appli, à trier | 3 | M |
+| Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
+
+Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
+
 ## 1. Mise en production
 
 À faire sur le serveur, dans cet ordre, une fois le code déployé :
