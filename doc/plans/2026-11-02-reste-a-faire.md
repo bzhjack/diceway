@@ -29,8 +29,9 @@ Sans objet tant que l'appli ne les gère pas : la progression par XP (double co�
    - `2026_11_02_140000_terrain_advantages_name_their_terrain` : le terrain des six avantages de terrain ;
    - `2026_11_02_150000_npcs_take_mythic_plus_regional_weapons` : trois PNJ du catalogue aux armes régionales ;
    - `2026_11_02_160000_add_undead_sorcerer_king_to_catalogue` : le Roi-Sorcier mort-vivant.
+   - `2026_11_02_170000_drop_unused_reference_and_scenario_cast_tables` : supprime 7 tables inutilisées (`bol_race`, `bol_heroic_option`, `bol_difficulte`, `bol_scenario_heros`, `bol_scenario_pnj`, `bol_scenario_creature`, `bol_scenario_demon`) ; son `down()` les recrée vides.
 
-   La première ajoute une colonne aux tables de jeu et la remplit d'après leur scène en cours ; les cinq autres ne touchent que le catalogue (fiches sans compte) et n'ajoutent rien si on les relance.
+   La première ajoute une colonne aux tables de jeu et la remplit d'après leur scène en cours ; les cinq suivantes ne touchent que le catalogue (fiches sans compte) et n'ajoutent rien si on les relance ; la dernière supprime des tables dont l'appli ne se sert plus.
 2. Portraits : `docker exec -u www-data diceway php artisan bol:extract-portraits` (voir `CLAUDE.md`, section Portraits).
 3. **Après** la mise en production des portraits : supprimer la table `bol_portrait_backup` et les options `--restore` / `--forget-originals` de `bol:extract-portraits` (S).
 
@@ -113,9 +114,10 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
 - Carrière en feinte : héros seulement, pas les PNJ rivaux.
 - Secours : seuls les héros secourent ; pas de dé de bonus ou de malus sur le jet ; un soigneur soigne tous les blessés cochés, sans limite ni jet quotidien de doublement.
 
-### Question à trancher
+### Questions à trancher
 
 1. **Sorcellerie** (point 15) : faut-il un catalogue de sorts, ou une saisie libre (cercle, difficulté, coût) au moment du jet ?
+2. **Barre de commande en combat** : depuis le 2026-11-02, `/` y trouve aussi les cartes de la table (ajouté pour ouvrir la carte d'un rival à terre et lancer sa « Fuite opportune »). À garder, ou à limiter aux actions comme avant ?
 
 ### Hors périmètre du combat
 
