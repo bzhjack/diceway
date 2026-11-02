@@ -186,10 +186,11 @@
     gap: 0.15rem;
   }
 
-  // Le MJ, à côté des chiffres qu'il change.
+  // Le MJ, dans la carte de l'attaque, à côté des dés qu'il change : au bout de leur rang.
   .tas-mj {
     display: grid;
     flex: none;
+    margin-left: auto;
     justify-items: center;
     gap: 0.1rem;
   }
@@ -201,7 +202,7 @@
   }
 
   // Le dé seul : vert pour le bonus, rouge pour le malus (trois classes : plus fort que les options, déclarées plus bas).
-  .tas-head .tas-chip.tas-chip--de {
+  .tas-mj .tas-chip.tas-chip--de {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -304,14 +305,16 @@
   }
 
   .tas-head .tas-tag,
+  .tas-mj .tas-tag,
   .tas-target .tas-tag {
     color: var(--dw-surface-700);
     font-size: 0.6rem;
     letter-spacing: 0.08em;
   }
 
-  // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement. Celui du MJ, resserré à côté des tuiles.
+  // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement. Celui du MJ, resserré à côté des dés de l'attaque.
   .tas-head dw-value-stepper .vs__btn,
+  .tas-mj dw-value-stepper .vs__btn,
   .tas-target dw-value-stepper .vs__btn {
     width: 1.3rem;
     height: 1.3rem;
@@ -405,7 +408,8 @@
   }
 
   // Une option qui se coche : un creux, or une fois choisie.
-  .tas-head .tas-chip {
+  .tas-head .tas-chip,
+  .tas-mj .tas-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -438,13 +442,13 @@
     }
   }
 
-  .tas-head .tas-chip.tas-chip--bonus[aria-pressed='true'] {
+  .tas-mj .tas-chip.tas-chip--bonus[aria-pressed='true'] {
     border-color: var(--dw-color-reussite);
     background: var(--dw-color-reussite);
     color: #041a0d;
   }
 
-  .tas-head .tas-chip.tas-chip--malus[aria-pressed='true'] {
+  .tas-mj .tas-chip.tas-chip--malus[aria-pressed='true'] {
     border-color: var(--dw-color-echec);
     background: var(--dw-color-echec);
     color: #2a0505;

@@ -13,7 +13,7 @@
     }
   </div>
 
-  <!-- Ses chiffres, et à côté ce que dit le MJ, qui les change -->
+  <!-- Ses chiffres -->
   <div class="tas-zone-chiffres">
     <div class="tas-chiffres">
       <div class="tas-tiles tas-tiles--start">
@@ -26,19 +26,6 @@
             <span>{{ tile.label }}</span>
           </div>
         }
-      </div>
-      <!-- Le dé que le MJ accorde ou impose selon les circonstances : 3d6 à l'attaque, on garde les deux meilleurs ou les deux moins bons ; et son modificateur -->
-      <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="flow.played() || loadout.defenseTotale()" [attr.inert]="flow.played() || loadout.defenseTotale() ? '' : null">
-        <div class="tas-mj-row">
-          <button type="button" class="tas-chip tas-chip--de tas-chip--bonus" [attr.aria-pressed]="loadout.gmDie() === 'bonus'" aria-label="Dé de bonus du MJ" matTooltip="Dé de bonus, quand les circonstances aident : 3d6 à l'attaque, on garde les deux meilleurs" (click)="loadout.toggleGmDie('bonus')">
-            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
-          </button>
-          <button type="button" class="tas-chip tas-chip--de tas-chip--malus" [attr.aria-pressed]="loadout.gmDie() === 'malus'" aria-label="Dé de malus du MJ" matTooltip="Dé de malus, quand les circonstances gênent (ivresse, obscurité…) : 3d6 à l'attaque, on garde les deux moins bons" (click)="loadout.toggleGmDie('malus')">
-            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
-          </button>
-          <dw-value-stepper [(value)]="loadout.freeModifier" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
-        </div>
-        <span class="tas-tag">Le MJ</span>
       </div>
     </div>
     @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice()) {
