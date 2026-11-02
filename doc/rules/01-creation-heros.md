@@ -111,7 +111,7 @@ Interaction avantages / desavantages:
 
 | Region | Regles de creation |
 | --- | --- |
-| Cote de Feu | Les humains utilisent les listes d'Halakh ou des Marais de Kasht. Les kalukans sont une option raciale separee. |
+| Cote de Feu | Les humains utilisent les listes d'Halakh ou des Marais de Kasht (l'application propose la reunion des deux, voir plus bas). Les kalukans sont une option raciale separee, leurs listes ne sont pas modelisees. |
 | Desert de Beshaar | La 1re carriere doit etre `barbare`. |
 | Halakh | Pas de contrainte de carriere absolue dans l'extrait exploite. |
 | Iles du Crane | Une carriere doit etre `pirate`. |
@@ -122,7 +122,7 @@ Interaction avantages / desavantages:
 | Marais de Kasht | Pas de contrainte supplementaire relevee. |
 | Montagnes de l'Axos | La 1re carriere doit etre `barbare`. |
 | Oomis | Une carriere `marchand` est frequente, pas imposee strictement. |
-| Plaines de Klaar | Pour un ceruleen, la 1re carriere doit etre `barbare`; une 2e carriere `marchand` est frequente. Carrieres interdites au ceruleen: `alchimiste`, `medecin`, `scribe`, `sorcier`. |
+| Plaines de Klaar | Pour un ceruleen, la 1re carriere doit etre `barbare`; une 2e carriere `marchand` est frequente. Carrieres interdites au ceruleen: `alchimiste`, `medecin`, `scribe`, `sorcier`. Avantages, desavantages et noms: les listes des ceruleens (chapitre 5, p. 91), voir plus bas. |
 | Parsool | Une carriere `marin` est frequente, pas imposee strictement. |
 | Satarla | Impossible de debuter comme `mendiant`. Seuls les Satarlans peuvent prendre `pilote des airs`. |
 | Shamballah | Pas de contrainte supplementaire relevee. |
@@ -138,6 +138,7 @@ Les noms sont conserves pour permettre une implementation directe.
 
 | Region | Avantages regionaux | Desavantages regionaux |
 | --- | --- | --- |
+| Cote de Feu (humain) | ami des betes, athlete, discret, montagnard, odorat developpe, ouie fine, outillage, pisteur des marais, renard du desert, resistant aux poisons, sante de fer, vigilant, vision nocturne | addiction, bouseux, chetif, credule, fanatique, gars de la ville, indigne de confiance, marin d'eau douce |
 | Desert de Beshaar | ami des betes, arme favorite (javelot), attirant, baudrier de guerre, ne en selle, renard du desert, vision nocturne, vue percante | bouseux, chetif, impetueux, inadapte au froid, marin d'eau douce, signe distinctif, taciturne |
 | Halakh | arme favorite (kriss), discret, montagnard, outillage, renard du desert, resistant aux poisons, vision nocturne | addiction, fanatique, gars de la ville, indigne de confiance, marin d'eau douce |
 | Iles du Crane | amis dans la pegre, athlete, bagarreur, discret, doigts de fee, fetard, gamin des rues, pied marin, recuperation rapide, roi de l'evasion, vigilant, vue percante | borgne/oreille coupee, cupide, fanfaron, illettre, indigne de confiance, lubrique, malediction de Morgazzon, manchot/unijambiste, maudit, phobie, poltron, signe distinctif, soiffard, traque |
@@ -148,12 +149,16 @@ Les noms sont conserves pour permettre une implementation directe.
 | Montagnes de l'Axos | arme favorite (fronde de l'Axos), athlete, colosse, cri de guerre, dur a cuire, montagnard, odorat developpe, ouie fine, recuperation rapide, sante de fer, vigilant | bouseux, illettre, inadapte a la chaleur, marin d'eau douce, mefiance envers la sorcellerie, taciturne |
 | Oomis | ami des ceruleens, dur a cuire, fortune, perspicace | cupide, dur d'oreille, lent a la detente, malediction de Morgazzon |
 | Parsool | arme favorite (hache d'abordage de Parsool), cri de guerre (Parsool), fetard, pied marin | borgne/oreille coupee, gars de la ville, illettre, manchot/unijambiste, soiffard |
+| Plaines de Klaar (ceruleen) | ami des betes, ami des ceruleens, bagarreur, colosse, dur a cuire, fils des plaines, intimidant, peau dure, recuperation rapide, vigueur ceruleenne | bouseux, deux mains gauches, marin d'eau douce, mefiance envers la sorcellerie, pataud, signe distinctif |
 | Satarla | amis haut places, artiste, bibliotheque savante, bien ne, erudit, fortune, marque par les dieux, ne en selle, savant | arrogant, cupide, gars de la ville |
 | Shamballah | ami des betes, athlete, odorat developpe, ouie fine, roi de la jungle, vigilant, vue percante | bouseux, illettre, inadapte au froid, marin d'eau douce, mefiance envers la sorcellerie |
 | Tyrus | arme favorite (arc de guerre de Tyrus), bagarreur, cri de guerre (Tyrus), fetard, resistant a la magie, roi de la jungle, sentir la magie, vigilant | fanfaron, gars de la ville, illettre, mefiance envers la sorcellerie, soiffard |
 | Urceb | amis dans la pegre, amis haut places, combat a l'aveugle, fetard, outillage, roi de l'evasion, vision nocturne | gars de la ville, illettre, taciturne |
 | Valgard | arme favorite (epee valgardienne), cri de guerre (Valgard), marque par les dieux, odorat developpe, recuperation rapide, tigre des neiges | bouseux, illettre, inadapte a la chaleur, incapable de mentir, marin d'eau douce, mefiance envers la sorcellerie, taciturne |
 | Zalut | erudit, intimidant, magie des Rois-Sorciers, pouvoir du Neant, resistant a la magie, resistant aux poisons, savant, sentir la magie, vision nocturne | addiction, arrogant, chetif, foie jaune, indigne de confiance, inquietant, malediction de Morgazzon, maudit, obsession, poltron, signe distinctif, souffreteux |
+
+- Cote de Feu: le livre (p. 18-19) renvoie, pour un humain, aux listes d'Halakh ou des Marais de Kasht ; l'application propose la reunion des deux (avantages, desavantages et noms), sans l'arme favorite kriss qui reste reservee a Halakh (Mythic+). Un kalukan (chapitre 5, avec l'accord du MJ) n'est pas modelise : l'application ne gere pas les races.
+- Plaines de Klaar: les listes sont celles des ceruleens (chapitre 5, p. 91), noms masculins et feminins compris.
 
 ## Langues
 

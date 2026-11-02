@@ -16,17 +16,17 @@ Usage conseille :
 
 1. Attributs :
 - 4 points a repartir entre `vigueur`, `agilite`, `esprit`, `aura`
-- maximum `3` a la creation (sauf avantage qui releve ce plafond : Mythic+ `Prestance` sur `aura`, voir `Attributs`)
+- maximum `3` a la creation pour les points repartis ; un avantage d'attribut ajoute `+1` par-dessus, d'ou un depart a `4` : `Savant` (esprit), `Agilite de l'homme-oiseau`, `Vigueur ceruleenne`, Mythic+ `Prestance` (aura), voir `Attributs`
 - on peut descendre une seule valeur a `-1` pour gagner `+1` point a repartir
 
 2. Aptitudes de combat :
-- 4 points a repartir entre `initiative`, `melee`, `tir`, `defense`
+- 4 points a repartir entre `initiative`, `melee`, `tir`, `defense` (`2` avec le desavantage `Non-combattant`, p. 45)
 - maximum `3` a la creation
 - on peut descendre une seule aptitude a `-1` pour gagner `+1` point a repartir
 
 3. Carrieres :
 - choisir `4` carrieres
-- repartir `4` points entre elles
+- repartir `4` points entre elles (`6` avec le desavantage `Non-combattant`, p. 45)
 - rang minimum `0`
 - rang maximum `3` a la creation
 
@@ -63,7 +63,7 @@ Reference :
 Regles :
 - somme de creation = `4`
 - une seule baisse a `-1`
-- pas de valeur > `3` a la creation, sauf avantage qui releve ce plafond (Mythic+ `Prestance`, ci-dessous)
+- pas de valeur > `3` a la creation pour les points repartis ; le bonus d'un avantage d'attribut s'ajoute ensuite (`Savant`, `Agilite de l'homme-oiseau`, `Vigueur ceruleenne` p. 40/43, Mythic+ `Prestance` ci-dessous), d'ou un depart a `4`
 
 Mythic+ :
 - `Prestance` : `+1` a l'`aura`
@@ -190,9 +190,9 @@ Reference :
 - resume de creation p. 54
 
 Formules de base :
-- `vitalite = 10 + vigueur`
-- `heroisme = 5 - cout_eventuel_des_avantages`
-- `pouvoir` : lie a `Sorcier`
+- `vitalite = 10 + vigueur` (bonus de `Vigueur ceruleenne` compris), `+2` avec `Dur a cuire`, `-2` avec `Chetif`
+- `heroisme = 5 - cout_eventuel_des_avantages`, `+1` avec `Marque par les dieux`, `-1` avec `Maudit`
+- `pouvoir = 10 + rang de Sorcier`, `+2` avec `Pouvoir du Neant`
 - `foi` : lie a `Pretre`
 - `creation` : lie a `Alchimiste`
 
@@ -209,6 +209,8 @@ Regles actuellement identifiees :
 - `Iles du Crane` : une carriere doit etre `Marin (matelot/pirate)`
 - `Montagnes de l'Axos` : premiere carriere = `Barbare`
 - `Valgard` : une carriere doit etre `Barbare`
+- `Satarla` : pas de `Mendiant` au depart (p. 21)
+- `Pilote des airs` : reserve aux Satarlans (p. 21) ; dans le front, `CARRIERES_RESERVEES` (`bol-rules.constants.ts`)
 
 Cas particulier céruleen / `Plaines de Klaar` :
 - premiere carriere = `Barbare`
@@ -218,6 +220,7 @@ Cas particulier céruleen / `Plaines de Klaar` :
   - `Medecin`
   - `Scribe`
   - `Sorcier`
+- source : p. 21 ; la p. 91 (options raciales) ne cite que `Alchimiste` et `Sorcier` : on garde les 4 de la p. 21 (choix du 2026-11-02)
 
 Points a garder en tete :
 - `Parsool` : un personnage y prendra souvent `Marin`, mais le texte est moins strict
