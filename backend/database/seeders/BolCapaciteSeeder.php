@@ -61,9 +61,11 @@ class BolCapaciteSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         BolCapacite::truncate();
         Schema::enableForeignKeyConstraints();
-        // Insérer les données dans la table des régions
-        foreach ($capacites as $capacite) {
-            BolCapacite::create($capacite);
-        }
+        // `id` n'est pas fillable : unguarded garde ces ids même hors de db:seed (qui, lui, désactive déjà la protection).
+        BolCapacite::unguarded(function () use ($capacites) {
+            foreach ($capacites as $capacite) {
+                BolCapacite::create($capacite);
+            }
+        });
     }
 }

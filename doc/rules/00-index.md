@@ -25,7 +25,7 @@ Exclusion volontaire (contenu narratif du chapitre 5):
 - Dieux et dieux sombres (p. 85-89).
 - Geographie et cites de la Lemurie (p. 96-107).
 - Flore (p. 107).
-- Exemples nommes de PNJ et de demons (p. 131-135), hors gabarits de creation.
+- Exemples nommes de PNJ et de demons (demons: p. 131; PNJ: p. 133-137, en partie sur les memes pages que le texte des categories), hors gabarits de creation.
 - Tout texte narratif sans consequence mecanique directe.
 
 Fichiers:

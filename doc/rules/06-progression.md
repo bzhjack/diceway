@@ -83,7 +83,7 @@ Regle:
 
 - Les suivants accomplissent des taches ordinaires, servent d'appui, gardent, transportent, accompagnent.
 - Ils ne sont pas la pour remplacer les heros dans les scenes decisives.
-- Si les heros les utilisent comme chair a canon, ils risquent de ne pas recevoir d'XP et de voir leurs suivants les abandonner.
+- Si les heros les utilisent comme chair a canon, ils ne gagnent aucun XP, et leurs suivants, s'ils se sentent maltraites, abandonnent le groupe.
 
 ### Remplacement
 

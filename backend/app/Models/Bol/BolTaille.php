@@ -11,6 +11,7 @@ class BolTaille extends Model
 
     protected $table = 'bol_taille';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['taille', 'type', 'degats', 'vitalite', 'vigueur', 'deplacement'];
     protected $casts = [
         'id' => 'integer',
     ];

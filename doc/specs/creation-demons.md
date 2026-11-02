@@ -126,8 +126,8 @@ Pouvoirs cites dans le livre :
 - `Armes ameliorees` : de bonus a tous les jets d'attaque
 - `Armure` : protection `d6-2 (2)`
 - `Attaques devastatrices` : degats d'une categorie superieure sur la table des creatures
-- `Chair malleable` : deformation, infiltration, difficile a entraver
-- `Cuirasse` : protection `d6 (4)`, compte pour `2` pouvoirs
+- `Chair malleable` : deformation, infiltration, ne peut etre entrave ni emprisonne (sauf sorcellerie)
+- `Cuirassé` : protection `d6 (4)`, compte pour `2` pouvoirs
 - `Faculte de parole`
 - `Forme humaine`
 - `Intangible`
@@ -142,7 +142,7 @@ Pouvoirs cites dans le livre :
 
 Implications projet importantes :
 - le nombre de pouvoirs devrait etre borne par la categorie
-- `Cuirasse` vaut `2` pouvoirs, donc une simple liste `1 entree = 1 slot` n'est pas completement fidele
+- `Cuirassé` vaut `2` pouvoirs, donc une simple liste `1 entree = 1 slot` n'est pas completement fidele
 - `Vulnerabilite` donne un pouvoir supplementaire, donc elle modifie aussi le budget
 - certains pouvoirs changent des ressources ou des regles de jeu, pas seulement un texte descriptif
 
@@ -184,19 +184,20 @@ Pour la page `demon-create` actuelle :
 - `categorie` doit pre-remplir au minimum `vitalite` et `degats`
 - il serait pertinent de rajouter plus tard :
   - un warning sur le nombre de pouvoirs selon la categorie
-  - une gestion speciale de `Cuirasse`
+  - une gestion speciale de `Cuirassé`
   - une gestion speciale de `Vulnerabilite`
 - le reste peut rester editable librement tant qu'on assume une version `rapide` plutot que `strictement reglee`
 
 ## References utiles du livre
 
-- p. 128-130 : categories de demons et pouvoirs demoniaques
+- p. 129-130 : categories de demons et pouvoirs demoniaques
 - p. 130 : table de creation des demons
+- p. 131 : exemples de demons (Zullthegg, Mazallakos, Vul'mazzanlu)
 
 ## Regle de priorite projet
 
 Si une future implementation veut devenir strictement conforme au livre, les points les plus importants a ajouter seront :
 - validation du budget d'attributs selon la categorie
 - validation du budget de combat selon la categorie
-- validation du nombre reel de pouvoirs en tenant compte de `Cuirasse` et `Vulnerabilite`
+- validation du nombre reel de pouvoirs en tenant compte de `Cuirassé` et `Vulnerabilite`
 - recalcul derive `vitalite / degats` a partir de `vigueur`

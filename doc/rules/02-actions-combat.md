@@ -191,6 +191,7 @@ La portée de base d'une arme à distance est indiquée dans le tableau des arme
 - **d6M** (dé de malus) : lancer 2d6, garder le moins bon.
 - **d6B** (dé de bonus) : lancer 2d6, garder le meilleur.
 - Les personnages ayant moins de `0` en vigueur ne peuvent pas manier les armes lourdes.
+- Les armes régionales de Mythic+ ont leurs propres dégâts, qui ne suivent pas la catégorie ci-dessus : Khastok `d6B+1`, Kriss `d6M+1`, hache d'abordage de Parsool et épée valgardienne `d6` à une main ou `d6B` à deux mains, arc de guerre de Tyrus `d6B`, fronde de l'Axos `d6M` (liste complète dans `01-creation-heros.md` et `../resources/armes.md`).
 - Les dégâts sont soustraits à la vitalité de la cible, après déduction de la protection de l'armure.
 
 ## Protection (armures)

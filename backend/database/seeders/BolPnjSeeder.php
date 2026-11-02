@@ -319,7 +319,7 @@ class BolPnjSeeder extends Seeder
                 'initiative' => '0',
                 'melee' => '2',
                 'tir' => '0',
-                'defense' => '1',
+                'defense' => '0', // Défense 0 au livre (p. 135) : le petit bouclier ajoute son +1 en combat
 
                 'vitalite' => '8',
                 'carrieres' => [
@@ -349,7 +349,7 @@ class BolPnjSeeder extends Seeder
                 'initiative' => '1',
                 'melee' => '2',
                 'tir' => '-1',
-                'defense' => '1',
+                'defense' => '0', // Défense 0 au livre (p. 135) : le petit bouclier ajoute son +1 en combat
 
                 'vitalite' => '9',
                 'carrieres' => [
@@ -389,6 +389,7 @@ class BolPnjSeeder extends Seeder
                 'carrieres' => [
                     ['carriere_id' => '24', 'value' => '4'],
                     ['carriere_id' => '18', 'value' => '1'],
+                    ['carriere_id' => '21', 'value' => '2'], // Druidesse (de Zaggath)
                     ['carriere_id' => '4', 'value' => '1'],
                 ],
                 'armures' => [

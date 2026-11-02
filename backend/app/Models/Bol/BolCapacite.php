@@ -11,6 +11,7 @@ class BolCapacite extends Model
 
     protected $table = 'bol_capacite';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['capacite', 'description', 'de_bonus', 'de_malus'];
     protected $casts = [
         'id' => 'integer',
     ];

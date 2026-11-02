@@ -37,7 +37,7 @@ class BolDemonSeeder extends Seeder
             ],
             [
                 'id' => '2',
-                'nom' => 'Vul’mazzanlu, la chose singe',
+                'nom' => 'Vul’mazzanlu, la chose-singe',
 
                 'vigueur' => '3',
                 'agilite' => '3',

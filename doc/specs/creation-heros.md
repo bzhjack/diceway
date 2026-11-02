@@ -6,6 +6,7 @@ Il resume les regles de creation de heros a respecter dans l'UI, en priorite pou
 Source principale :
 - `Pdf BoL Mythic Livre de base VF 1.3.pdf`
 - Chapitre 2 `Creer un heros`
+- Mise a jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) : prime sur le livre de base la ou elle change une regle (voir `Ajouts Mythic+`)
 
 Usage conseille :
 - Quand on demande de "se recaler sur les regles de creation", relire ce fichier avant d'editer le code.
@@ -15,7 +16,7 @@ Usage conseille :
 
 1. Attributs :
 - 4 points a repartir entre `vigueur`, `agilite`, `esprit`, `aura`
-- maximum `3` a la creation
+- maximum `3` a la creation (sauf avantage qui releve ce plafond : Mythic+ `Prestance` sur `aura`, voir `Attributs`)
 - on peut descendre une seule valeur a `-1` pour gagner `+1` point a repartir
 
 2. Aptitudes de combat :
@@ -62,7 +63,12 @@ Reference :
 Regles :
 - somme de creation = `4`
 - une seule baisse a `-1`
-- pas de valeur > `3` a la creation
+- pas de valeur > `3` a la creation, sauf avantage qui releve ce plafond (Mythic+ `Prestance`, ci-dessous)
+
+Mythic+ :
+- `Prestance` : `+1` a l'`aura`
+- score maximum en `aura` : `6` au lieu de `5`
+- score de depart maximum en `aura` : `4` au lieu de `3`
 
 Impacts utiles :
 - `vitalite = 10 + vigueur`
@@ -146,6 +152,21 @@ Structure attendue :
 Important :
 - la creation standard ne doit pas depasser `3` avantages
 - les desavantages de carriere ne remplacent pas automatiquement les desavantages de creation regionale
+
+## Ajouts Mythic+
+
+Reference :
+- `doc/pdf-text/07-maj-mythic-plus.txt`
+
+Avantages et desavantage :
+- `Prestance` : `+1 aura`, plafond d'aura releve (voir `Attributs`)
+- `Maitre artisan` : exige la carriere `Forgeron`
+- `Envoutant` : exige la carriere `Tentatrice`
+- `Mefiance envers les inconnus` (desavantage) : a interpreter en jeu, sans effet chiffre
+
+Armes regionales :
+- l'arc de guerre de Tyrus, la fronde de l'Axos, la hache d'abordage de Parsool, le khastok, le kriss et l'epee valgardienne sont des armes regionales
+- `Arme favorite` : seul un heros de meme origine regionale que l'arme peut la choisir
 
 ## Heroisme
 

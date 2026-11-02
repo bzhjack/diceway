@@ -143,14 +143,14 @@ Les noms sont conserves pour permettre une implementation directe.
 | Iles du Crane | amis dans la pegre, athlete, bagarreur, discret, doigts de fee, fetard, gamin des rues, pied marin, recuperation rapide, roi de l'evasion, vigilant, vue percante | borgne/oreille coupee, cupide, fanfaron, illettre, indigne de confiance, lubrique, malediction de Morgazzon, manchot/unijambiste, maudit, phobie, poltron, signe distinctif, soiffard, traque |
 | Lysor | amis haut places, artiste, attirant, bibliotheque savante, erudit, fortune, mains guerisseuses, perspicace, recuperation rapide, resistant aux poisons, sante de fer, savant | chetif, foie jaune, gars de la ville, incapable de mentir, lent a la detente, malediction de Morgazzon, non-combattant |
 | Malakut | amis dans la pegre, arme favorite (khastok), combat a l'aveugle, discret, doigts de fee, fetard, fils des plaines, gamin des rues, outillage (outils de voleur), vigilant | chetif, gars de la ville, indigne de confiance, marin d'eau douce, mauvaise reputation, traque |
-| Marais de Festrel | athlete, bagarreur, odorat developpe, ouie fine, pisteur des marais, resistant aux poisons, sante de fer, vigilant | bouseux, illettre, inadapte a la chaleur, maudit, taciturne |
+| Marais de Festrel | athlete, bagarreur, discret, odorat developpe, ouie fine, pisteur des marais, resistant aux poisons, sante de fer, vigilant | bouseux, illettre, inadapte a la chaleur, maudit, taciturne |
 | Marais de Kasht | ami des betes, athlete, discret, odorat developpe, ouie fine, pisteur des marais, resistant aux poisons, sante de fer, vigilant | bouseux, chetif, credule |
 | Montagnes de l'Axos | arme favorite (fronde de l'Axos), athlete, colosse, cri de guerre, dur a cuire, montagnard, odorat developpe, ouie fine, recuperation rapide, sante de fer, vigilant | bouseux, illettre, inadapte a la chaleur, marin d'eau douce, mefiance envers la sorcellerie, taciturne |
 | Oomis | ami des ceruleens, dur a cuire, fortune, perspicace | cupide, dur d'oreille, lent a la detente, malediction de Morgazzon |
 | Parsool | arme favorite (hache d'abordage de Parsool), cri de guerre (Parsool), fetard, pied marin | borgne/oreille coupee, gars de la ville, illettre, manchot/unijambiste, soiffard |
 | Satarla | amis haut places, artiste, bibliotheque savante, bien ne, erudit, fortune, marque par les dieux, ne en selle, savant | arrogant, cupide, gars de la ville |
 | Shamballah | ami des betes, athlete, odorat developpe, ouie fine, roi de la jungle, vigilant, vue percante | bouseux, illettre, inadapte au froid, marin d'eau douce, mefiance envers la sorcellerie |
-| Tyrus | arme favorite (arc long de Tyrus), bagarreur, cri de guerre (Tyrus), fetard, resistant a la magie, roi de la jungle, sentir la magie, vigilant | fanfaron, gars de la ville, illettre, mefiance envers la sorcellerie, soiffard |
+| Tyrus | arme favorite (arc de guerre de Tyrus), bagarreur, cri de guerre (Tyrus), fetard, resistant a la magie, roi de la jungle, sentir la magie, vigilant | fanfaron, gars de la ville, illettre, mefiance envers la sorcellerie, soiffard |
 | Urceb | amis dans la pegre, amis haut places, combat a l'aveugle, fetard, outillage, roi de l'evasion, vision nocturne | gars de la ville, illettre, taciturne |
 | Valgard | arme favorite (epee valgardienne), cri de guerre (Valgard), marque par les dieux, odorat developpe, recuperation rapide, tigre des neiges | bouseux, illettre, inadapte a la chaleur, incapable de mentir, marin d'eau douce, mefiance envers la sorcellerie, taciturne |
 | Zalut | erudit, intimidant, magie des Rois-Sorciers, pouvoir du Neant, resistant a la magie, resistant aux poisons, savant, sentir la magie, vision nocturne | addiction, arrogant, chetif, foie jaune, indigne de confiance, inquietant, malediction de Morgazzon, maudit, obsession, poltron, signe distinctif, souffreteux |
@@ -165,8 +165,8 @@ Regles generales:
 - Certaines carrieres ajoutent encore des langues: `alchimiste`, `sorcier`, `marchand`, `menestrel`, `noble`, `medecin`, `pretre`, `scribe`, a hauteur de leur rang.
 - Sauf avec le desavantage `illetre`, un heros sait lire et ecrire toutes ses langues disposant d'une ecriture.
 - Exception: `demonique` parle et `demonique` ecrit s'apprennent separement.
-- Un personnage littere peut tenter de dechiffrer une langue ecrite inconnue par jet d'action.
-- Un personnage voyageur, savant ou orateur peut tenter de comprendre ou parler approximativement une langue inconnue si le MJ l'autorise.
+- Une carriere de lettre (`scribe`, `medecin`, `alchimiste`, `pretre`, etc.) permet un jet d'action pour comprendre dans ses grandes lignes un texte ecrit dans une langue inconnue (difficulte selon le texte, a la discretion du MJ).
+- Une carriere qui demande un talent oratoire ou une vie itinerante (`menestrel`, `marchand`, etc.) permet un jet pour comprendre approximativement une langue inconnue et s'y exprimer de facon rudimentaire.
 
 ## Avantages generaux
 
@@ -279,7 +279,7 @@ Regles generales:
 | Poltron | 1 de malus contre peur et intimidation; tendance a eviter le conflit. |
 | Repoussant | 1 de malus quand l'apparence compte. |
 | Signe distinctif | 1 de malus pour se cacher ou se deguiser; avec `Traque`, les chasseurs ont 2 fois plus de chances de vous remarquer. |
-| Soiffard | Quand on vous confie une tache importante, un mauvais resultat approprie peut signifier que vous etes ivre et inutilisable. |
+| Soiffard | Quand vos compagnons vous confient une tache importante, lancer un de: sur un `1`, le personnage est ivre et incapable d'agir jusqu'a ce qu'il ait dessoule. |
 | Souffreteux | Ne recupere la vitalite qu'avec soins medicaux; pas de recuperation naturelle normale. |
 | Taciturne | 1 de malus dans les interactions sociales. |
 | Traque | A chaque entree dans une nouvelle ville, lancer 1d6: sur `1`, des ennemis ou poursuivants vous retrouvent. |
@@ -353,6 +353,7 @@ Armes regionales (Mythic+):
 - Elles se rencontrent rarement entre les mains d'un etranger (achetee a prix d'or, pillee...), ce qui lui vaut la reprobation des gens du cru.
 - Seul un heros de meme origine regionale peut en faire son arme favorite.
 - Le kriss et le khastok ne sont plus des variantes de la dague et de l'arme d'hast.
+- L'« arc long de Tyrus » du livre de base s'appelle desormais `arc de guerre de Tyrus` (y compris comme arme favorite regionale de Tyrus).
 
 ## Options raciales jouables
 
@@ -430,7 +431,7 @@ Desavantages:
 Restrictions:
 
 - Toutes carrieres autorisees en theorie.
-- Carrieres rares chez eux et exigeant une justification: `assassin`, `bourreau`, `gladiateur`, `marin`, `soldat`, `voleur`, `ouvrier`.
+- Carrieres rares chez eux et exigeant une justification: `assassin`, `bourreau`, `gladiateur`, `marin`, `soldat`, `voleur`, `ouvrier`, `vagabond (mendiant)`.
 
 Avantages:
 

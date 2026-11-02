@@ -23,7 +23,7 @@ class BolPouvoirSeeder extends Seeder
             ['id' =>  7, 'pouvoir' => 'Forme humaine',       'description' => 'Prend l\'apparence humaine ; retour à la forme démoniaque dès qu\'il se bat ou est blessé.'],
             ['id' =>  8, 'pouvoir' => 'Intangible',          'description' => 'Pas de corps physique dans cette dimension ; blessé uniquement par sorcellerie ou alchimie.', 'intangible' => true, 'avertissement_combat' => true],
             ['id' =>  9, 'pouvoir' => 'Poison',              'description' => 'Contact paralysant ; jet de vigueur Difficile (−2) pour éviter la paralysie. Paralysé = mort dans l\'heure sauf nouveau jet Difficile (−2) réussi.', 'avertissement_combat' => true],
-            ['id' => 10, 'pouvoir' => 'Progéniture',         'description' => 'Produit 1d6 rejetons par semaine, considérés comme piétaille la 1re semaine puis comme démons mineurs d\'une catégorie en dessous.'],
+            ['id' => 10, 'pouvoir' => 'Progéniture',         'description' => 'Produit 1d6 rejetons par semaine : piétaille la 1re semaine, démons mineurs la suivante, et ainsi de suite, en restant d\'une catégorie en dessous de leur géniteur (un démon mineur n\'engendre que de la piétaille).'],
             ['id' => 11, 'pouvoir' => 'Régénération',        'description' => 'Récupère 1 PV par round ; se débarrasse des effets d\'un coup précis au bout de 2 rounds.', 'regeneration' => true],
             ['id' => 12, 'pouvoir' => 'Savoir spécial',      'description' => 'Possède une carrière au rang 6.'],
             ['id' => 13, 'pouvoir' => 'Séducteur',           'description' => 'Peut asservir 1d6+6 piétaille. Un héros résiste via un jet d\'esprit.', 'avertissement_combat' => true],

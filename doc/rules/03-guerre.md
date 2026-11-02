@@ -49,7 +49,7 @@ Interpretation:
 - Le resultat, meme negatif, correspond aux points de victoire gagnes ou perdus ce round.
 - La bataille commence a `0`.
 - A `+10`: victoire.
-- A `-10`: defaite, mais le systeme recommande souvent de laisser aux heros une derniere action decisive.
+- A `-10`: defaite (a moins qu'une action heroique ne renverse le cours des choses); le MJ laisse aux heros une ultime action heroique, et les heros survivent a la bataille quelle qu'en soit l'issue.
 
 ### Actions heroques influencant la bataille
 
@@ -108,7 +108,7 @@ Portee maximale par action ou arme navale:
 
 | Action ou arme | Portee maximale |
 | --- | --- |
-| Catapulte | `Maximale` |
+| Catapulte | `Extreme` |
 | Crache-feu, projectiles (arcs, frondes, etc.) | `Longue` |
 | Eperonner | `Moyenne` |
 | Lancer les grappins, briser les rames | `Courte` |
@@ -173,7 +173,7 @@ Seuil:
 
 - Se tentent a `courte` ou `bout portant`.
 - En cas de succes, la cible est immobilisee jusqu'au desengagement.
-- Option heroique: la cible perd sa prochaine action ou l'abordage gagne 1 de bonus.
+- Option heroique: la cible perd sa prochaine action ou une action d'abordage gagne un de bonus (`d6B`).
 
 #### Desengagement
 

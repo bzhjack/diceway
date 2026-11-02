@@ -1,6 +1,6 @@
 # Barbarians of Lemuria Mythic : aide de jeu
 
-> Résumé des règles pour la table. Source : `doc/rules/` (vérifié contre le livre de base VF 1.3). Les pages citées sont celles du livre.
+> Résumé des règles pour la table. Source : `doc/rules/` (vérifié contre le livre de base VF 1.3). Les pages citées sont celles du livre. Ce que la mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) change est marqué « Mythic+ » ou par un astérisque.
 
 ---
 
@@ -36,7 +36,7 @@
 ### Succès héroïque, succès légendaire, échec critique
 
 - **Succès héroïque** : 12 naturel (sauf si l'action n'était possible que grâce à la réussite automatique), ou réussite normale + **1 PH**. En combat, on choisit **1 option héroïque**.
-- **Succès légendaire** : uniquement sur un **double 6** (y compris après une Faveur divine), + **1 PH**. En combat, on choisit **2 options héroïques** (la même deux fois si le MJ l'accepte).
+- **Succès légendaire** : uniquement sur un **double 6** (y compris après une Faveur divine), + **1 PH**. En combat, on choisit **2 options héroïques** (la même option peut être choisie deux fois).
 - **Échec critique** : sur un 2 naturel, le joueur *peut* choisir de le transformer en échec critique (issue franchement défavorable pour ce round et le suivant). Le MJ peut alors lui accorder **+1 PH**.
 
 ---
@@ -48,7 +48,7 @@
 | **Coup de chance** | Ajouter un détail favorable à la scène (pas de changement majeur, ne contredit rien d'établi). |
 | **Défier la mort** | Vitalité entre −1 et −5 : remonte à 0 (inconscient). En dessous de −5 : stabilisé (inconscient, debout après quelques jours). |
 | **Faveur divine** | Relancer tous les dés d'un jet (bonus compris) et garder le second résultat. Possible même après un 2 naturel. |
-| **Juste une égratignure** | Perdre sa prochaine action et récupérer 1d6 vitalité (au maximum les dégâts de l'attaque qui vient d'être subie). |
+| **Juste une égratignure** | Perdre sa prochaine action et récupérer **d6B** vitalité (Mythic+ : et non plus d6), au maximum les dégâts de l'attaque qui vient d'être subie. |
 | **Parade in extremis** | Annuler les dégâts d'une attaque. Le bouclier ou l'arme interposé est détruit. |
 | **Succès héroïque / légendaire** | Voir ci-dessus. |
 | **Interrompre une action** | Après avoir retardé la sienne, agir avant un autre protagoniste. |
@@ -145,8 +145,11 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 | Dague (jet 3 m) | Épée | Épée ou hache à 2 mains | Arc d6, 22 m |
 | Rapière | Hache (jet 3 m) | Arme d'hast | Arbalète d6, 30 m, recharge 1 round |
 | Gourdin (non létal) | Lance (jet 6 m) | Morgenstern | Arb. lourde d6B, 45 m, recharge 2 rounds |
-| Javelot / fléchette (6 m) | Masse (1,5 m), Massue (3 m) | | Fronde d6M, 9 m / bâton-fronde 18 m |
-| | Bâton, Fléau (ignore les boucliers) | | |
+| Javelot / fléchette (6 m) | Masse (1,5 m), Massue (3 m) | Khastok\* (d6B+1) | Fronde d6M, 9 m / bâton-fronde 18 m |
+| Kriss\* (d6M+1) | Bâton, Fléau (ignore les boucliers) | | Arc de guerre de Tyrus\* d6B, 38 m |
+| | Hache d'abordage de Parsool\*, Épée valgardienne\* (d6 ou d6B, à une ou deux mains) | | Fronde de l'Axos\* d6M, 12 m |
+
+\* **Armes régionales (Mythic+)** : hache d'abordage de Parsool, khastok (Malakut), kriss (Halakh), épée valgardienne (Valgard), arc de guerre de Tyrus, fronde de l'Axos. Seul un héros de même origine régionale que l'arme peut la choisir pour arme favorite.
 
 ---
 
@@ -199,7 +202,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 | Monstrueuse | rival | d6 ×4 | 100 | 18 | 13,5 m |
 
 - L'attaque d'une créature **intègre déjà** tous ses modificateurs : n'ajoutez ni Agilité ni Vigueur. Les créatures n'ont pas d'Aura.
-- Une créature placide fait des dégâts d'une catégorie en dessous. Une créature féroce ou à attaques multiples, d'une catégorie au-dessus.
+- Une créature placide fait des dégâts d'une ou deux catégories en dessous. Une créature féroce ou à attaques multiples, d'une catégorie au-dessus.
 - **Morts-vivants** : une *force vitale* remplace la vitalité. À 0, ils retournent à la mort. Squelettes et zombies comptent comme de la piétaille.
 
 ### Démons
@@ -214,7 +217,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 
 - **Armes améliorées** : dé de bonus à l'attaque.
 - **Armure** : d6−2 (2).
-- **Cuirasse** : d6 (4). Compte pour 2 pouvoirs.
+- **Cuirassé** : d6 (4). Compte pour 2 pouvoirs.
 - **Attaques dévastatrices** : dégâts de la taille au-dessus.
 - **Chair malléable** : aucun lien ni prison ne le retient, sauf la sorcellerie.
 - **Faculté de parole**.
@@ -260,17 +263,17 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 
 ### Alchimie (entre deux aventures)
 
-- On gagne **points de création = rang d'Alchimiste** par semaine libre, au maximum **5 dépensés** entre deux aventures. Ils ne se conservent pas.
+- On reçoit **un nombre de points de création égal au rang d'Alchimiste** à chaque intervalle entre deux aventures (au moins 1 semaine de temps libre), au maximum **5 dépensés** par intervalle. Ils ne se conservent pas.
 - **Jet final** : `2d6 + Esprit + Alchimiste ± difficulté`.
 
 | Catégorie | Coût | Difficulté | Limite |
 | --- | :---: | --- | --- |
-| Commune | 1 | Facile (simple) ou Moyenne | — |
+| Courante | 1 | Facile (simple) ou Moyenne | — |
 | Rare | 2 | Ardue | — |
 | Légendaire | 4 | Difficile | 1 par aventure |
 | Mythique | 8 | Très difficile | 1 toutes les 2 aventures |
 
-- Sans laboratoire, ou pour identifier : **+1 cran** de difficulté. Pour réparer ou recharger (commune ou rare) : **−1 cran**, et la moitié du coût.
+- Sans laboratoire, ou pour identifier : **+1 cran** de difficulté. Pour réparer un objet ou rallonger une potion (courante ou rare) : **−1 cran**. Les réparations coûtent la moitié des points de création.
 
 ---
 

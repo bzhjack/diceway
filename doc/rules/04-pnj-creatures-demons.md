@@ -1,6 +1,6 @@
 # PNJ, creatures, morts-vivants et demons
 
-Pages source principales: p. 108-135
+Pages source principales: p. 108-137
 
 ## Categories de PNJ
 
@@ -82,7 +82,7 @@ Regles d'application:
 - Les aptitudes de combat d'une creature incorporent deja tous ses modificateurs. Ne pas ajouter `agilite` aux jets d'attaque ni `vigueur` aux degats.
 - Les creatures n'ont pas d'`aura`.
 - La protection d'une creature fonctionne comme une armure. Valeur fixe entre parentheses acceptable a la place du de variable.
-- Une creature moyenne ou plus placide peut infliger des degats d'une categorie inferieure; une creature feroce ou a attaques multiples peut monter d'une categorie.
+- Une creature particulierement placide peut infliger des degats d'une ou deux categories de taille en dessous; une creature feroce ou a attaques multiples peut monter d'une categorie.
 
 ### Avantages courants de creatures
 
@@ -113,7 +113,7 @@ Creatures creees par sortileges ou pratiques alchimiques, ou anciennes a l'extre
 - Taille: `tres petite`
 - Vigueur `0`, Agilite `3`, Esprit `-2`
 - Force vitale `3`
-- Attaque `+2`, Degats `d3`, Defense `4`, Protection `0`
+- Attaque `+3`, Degats `d3`, Defense `4`, Protection `0`
 
 Attaque speciale:
 
@@ -187,7 +187,7 @@ Regle d'ajustement:
 | Forme humaine | Prend l'apparence humaine; retour a la forme demoniaque des qu'il se bat ou est blesse. |
 | Intangible | Pas de corps physique dans cette dimension; blesse uniquement par sorcellerie ou alchimie. |
 | Poison | Contact paralysant; jet de `vigueur Difficile -2` pour eviter la paralysie; paralyse = mort dans l'heure sauf nouveau jet `Difficile -2` reussi. |
-| Progeniture | Produit `1d6` rejetons par semaine, consideres comme `pietaille` la 1re semaine puis comme demons mineurs d'une categorie en dessous. |
+| Progeniture | Produit `1d6` rejetons par semaine; `pietaille` la 1re semaine, puis demons mineurs la semaine suivante, et ainsi de suite, sans jamais atteindre la categorie du geniteur (un demon mineur n'engendre que de la pietaille). |
 | Regeneration | `1 PV / round`; se debarrasse des effets d'un coup precis au bout de 2 rounds. |
 | Savoir special | Une carriere au rang `6`. |
 | Seducteur | Peut asservir `1d6 + 6` pietaille; un heros resiste via un jet d'`esprit`. |
@@ -202,4 +202,4 @@ Regle d'ajustement:
 - Invoquer un demon majeur: sort du `3e cercle`.
 - Une fois invoque, il faut lier le demon par un second sort du cercle correspondant, ou conclure un pacte.
 - Passer un pacte ne necessite pas de jet mais oblige le sorcier a satisfaire regulierement les besoins du demon (nature et frequence laissees au MJ).
-- Un demon non lie et sans pacte se retourne contre son invocateur.
+- Un demon non lie et sans pacte est hors de controle et peut s'en prendre a son invocateur.

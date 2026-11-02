@@ -31,9 +31,11 @@ class BolTailleSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
         BolTaille::truncate();
         Schema::enableForeignKeyConstraints();
-        // Insérer les données dans la table des régions
-        foreach ($tailles as $taille) {
-            BolTaille::create($taille);
-        }
+        // `id` n'est pas fillable : unguarded garde les ids du livre même hors de db:seed (qui, lui, désactive déjà la protection).
+        BolTaille::unguarded(function () use ($tailles) {
+            foreach ($tailles as $taille) {
+                BolTaille::create($taille);
+            }
+        });
     }
 }

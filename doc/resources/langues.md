@@ -10,7 +10,7 @@ Source principale : chapitre 2, pages 46-47 du livre.
 - Il connaît un nombre de langues supplémentaires égal à son score d'`esprit`.
 - Certaines carrières lettrées ou oratoires permettent d'en apprendre davantage.
 - Sauf `illettré`, un héros lit et écrit les langues qu'il parle quand elles ont une forme écrite.
-- Le `démonique` exige souvent d'apprendre séparément l'oral et l'écrit.
+- Le `démonique` exige d'apprendre séparément l'oral et l'écrit.
 
 ## Langues principales
 

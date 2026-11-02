@@ -84,7 +84,7 @@ class BolRegionDesavantageSeeder extends Seeder
             ["region_id" => 10, "desavantage_id" => 42], // Taciturne
             // Oomis
             ["region_id" => 11, "desavantage_id" => 9], // Cupide
-            ["region_id" => 11, "desavantage_id" => 10], // Dur d’oreille
+            ["region_id" => 11, "desavantage_id" => 12], // Dur d’oreille
             ["region_id" => 11, "desavantage_id" => 24], // Lent à la détente
             ["region_id" => 11, "desavantage_id" => 26], // Malédiction de Morgazzon
             // Parsool

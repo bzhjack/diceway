@@ -250,7 +250,7 @@ class BolDesavantageSeeder extends Seeder
             [
                 'id'=> 40 ,
                 'desavantage' => 'Soiffard',
-                'description' => 'Quand vous êtes chargé d’une tâche importante par vos compagnons, lancez un D6. Si vous obtenez un 1, vous échoué.'
+                'description' => 'Quand vous êtes chargé d’une tâche importante par vos compagnons, lancez un d6. Sur un 1, vous êtes ivre et incapable de faire quoi que ce soit jusqu’à ce que vous ayez dessoûlé.'
             ],
             [
                 'id'=> 41 ,

@@ -116,7 +116,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '4',
                 'degats' => 'd3',
                 'protection' => '0',
-                'id_taille' => '1',  // Très petite
+                'id_taille' => '2',  // Très petite
             ],
             [
                 'id' => '9',
@@ -291,7 +291,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '3',
                 'degats' => 'd6Bx2',
                 'protection' => 'd6-2 (2)',
-                'id_taille' => '7',  // Très grande
+                'id_taille' => '6',  // Très grande
 
             ],
             [
@@ -319,7 +319,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degats' => 'd6Bx3',
                 'protection' => 'd6-1 (3)',
-                'id_taille' => '12',  // Gigantesque
+                'id_taille' => '10',  // Gigantesque
 
             ],
             [
@@ -385,7 +385,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '2',
                 'degats' => 'd6B',
                 'protection' => '0',
-                'id_taille' => '9',  // Énorme
+                'id_taille' => '7',  // Énorme
             ],
             [
                 'id' => '29',
@@ -398,7 +398,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '1',
                 'degats' => 'd6x2',
                 'protection' => 'd6-2 (2)',
-                'id_taille' => '9',  // Énorme
+                'id_taille' => '7',  // Énorme
             ],
             [
                 'id' => '30',
@@ -450,7 +450,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degats' => 'd6x3',
                 'protection' => 'd6-2 (2)',
-                'id_taille' => '10',  // Colossale
+                'id_taille' => '9',  // Colossale
             ],
             [
                 'id' => '34',
@@ -503,7 +503,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degats' => 'd6x2',
                 'protection' => 'd6 (4)',
-                'id_taille' => '11',  // Colossale
+                'id_taille' => '9',  // Colossale
                 'commentaire' => 'Attaque:  3 (pinces) 1 (dard). Dégâts : d6x2(pinces) d6 + poison (dard)'
             ],
             [
@@ -608,7 +608,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degats' => 'spécial',
                 'protection' => 'd6 (4)',
-                'id_taille' => '12',  // Immense
+                'id_taille' => '11',  // Immense
             ],
             [
                 'id' => '46',
@@ -634,7 +634,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degats' => 'd6x2',
                 'protection' => 'd6-2 (2)',
-                'id_taille' => '6',  // Énorme
+                'id_taille' => '7',  // Énorme
             ],
             [
                 'id' => '48',
@@ -1042,7 +1042,7 @@ class BolCreatureSeeder extends Seeder
                 'id' => '3',
                 'creature_id' => '2',
                 'capacite_id' => '3',
-                'detail' => 'Assomme sa proie avec une puissante décharge. Un héros doit réussir un jet de vigueur difficile (-1), sinon il perd connaissance pour 6 moins sa vigueur en rounds.'
+                'detail' => 'Assomme sa proie avec une puissante décharge. Un héros doit réussir un jet de vigueur ardu (-1), sinon il perd connaissance pour 6 moins sa vigueur en rounds.'
             ],
             [
                 'id' => '4',
@@ -1120,7 +1120,7 @@ class BolCreatureSeeder extends Seeder
                 'id' => '16',
                 'creature_id' => '22',
                 'capacite_id' => '3',
-                'detail' => 'Sur un 1 au d6, la jit injecte des œufs. Si un médecin traite la plaie dans l’heure, il peut les retirer. Sinon, ils causent 1d6 dégâts s’ils sont extraits dans les 24 heures, ou 2d6 dégâts après ce délai.'
+                'detail' => 'Sur un 1 au d6, la jit injecte des œufs. Si un médecin traite la plaie dans l’heure, il peut les retirer. Sinon, les extraire dans les 24 heures en rouvrant la plaie cause 1d6 dégâts ; passé ce délai, les araignées éclosent et causent d6x2 dégâts.'
             ],
             [
                 'id' => '17',
@@ -1150,7 +1150,7 @@ class BolCreatureSeeder extends Seeder
                 'id' => '21',
                 'creature_id' => '35',
                 'capacite_id' => '4',
-                'detail' => 'Le poison tue immédiatement les créatures de taille petite ou moins. Les autres doivent réussir un jet de vigueur très difficile (-6) ou tomber dans un coma de 1d6 jours mortel sans antidote.'
+                'detail' => 'Le poison tue immédiatement les créatures de taille petite ou moins. Les autres doivent réussir un jet de vigueur impossible (-6) ou tomber dans un coma de 1d6 jours mortel sans antidote.'
             ],
             [
                 'id' => '22',
@@ -1341,6 +1341,15 @@ class BolCreatureSeeder extends Seeder
                 'capacite_id' => '3',
                 'detail' => 'Cannibalisme : qui entre dans la région qu\'il hante fait chaque jour un jet d\'esprit, de Facile le premier jour à Très difficile dès le cinquième. En cas d\'échec, une envie de chair de ses semblables naît, puis devient insatiable.'
             ],
+
+            // Morts-vivants du livre (p. 127). Ids à partir de 3001 : les créatures d'utilisateur ont déjà pris les ids après 2014.
+            [
+                'id' => '3001',
+                'creature_id' => '48',
+                'capacite_id' => '3',
+                'detail' => 'Face à une personne endormie, jet d\'attaque très facile (+2) qui ignore la défense de la cible, pour la saisir à la gorge. Elle l\'étrangle alors : d3 dégâts automatiques à chaque round. Il faut réussir un jet de vigueur moyen (+0) pour l\'arracher.'
+            ],
+            ['id' => '3002', 'creature_id' => '49', 'capacite_id' => '1', 'detail' => null],
         ];
         // `id` n'est pas fillable : sans unguarded, la création l'ignorerait (auto-incrément) et chaque re-seed dupliquerait.
         BolCreatureCapacite::unguarded(function () use ($capacites) {

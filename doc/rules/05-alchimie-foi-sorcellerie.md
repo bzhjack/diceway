@@ -11,6 +11,7 @@ Pages source principales: p. 138-157
 - Points de creation gagnes sur cet intervalle: egaux au rang d'`alchimiste`.
 - On ne peut pas depenser plus de `5` points de creation entre deux aventures normales.
 - Les points de creation non utilises ne se stockent pas d'une aventure a l'autre.
+- Mythic+: l'avantage `Maitre artisan` (voir `01-creation-heros.md`) donne des points de creation comme un alchimiste (rang de forgeron), mais seulement pour armes, armures et outils de qualite courante ou rare; il peut aussi ajouter ses points a ceux d'un alchimiste pour des machines et instruments (pas les potions).
 
 ### Cout des creations
 
@@ -51,7 +52,7 @@ Modificateurs:
 
 - Sans laboratoire adapte: augmenter la difficulte d'un cran.
 - Identifier un objet ou une potion: augmenter la difficulte d'un cran.
-- Reparer un objet ou recharger une potion `commune` ou `rare`: diminuer la difficulte d'un cran.
+- Reparer un objet ou rallonger une potion `commune` ou `rare`: diminuer la difficulte d'un cran.
 - Cout de reparation: la moitie du cout initial.
 
 ### Cout reel en cas d'echec
@@ -78,12 +79,14 @@ Principe:
 
 Temps de devotion:
 
-| Temps | Effet attendu |
-| --- | --- |
-| 1 h | priere ou meditation |
-| 2 h | priere + petite ceremonie ou accueil des fideles |
-| 3 h | priere + ceremonie importante |
-| 4 h | office complet + sacrifice ou rite majeur selon la divinite |
+| Temps | Devotion attendue du pretre | Points de foi gagnes |
+| --- | --- | --- |
+| 1 h | priere ou meditation | `1` |
+| 2 h | priere + petite ceremonie ou accueil des fideles | `2` |
+| 3 h | priere + ceremonie importante | `3` |
+| 4 h | office complet + sacrifice ou rite majeur selon la divinite | `4` |
+
+Les points gagnes restent limites par la reserve maximale (rang).
 
 ### Depense de foi
 

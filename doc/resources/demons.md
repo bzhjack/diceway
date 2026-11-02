@@ -11,7 +11,7 @@ Source principale : chapitre 5, sections `Les démons` et `Table de création de
 ## Démons actuellement présents dans le projet
 
 - Zullthegg
-- Vul’mazzanlu, la chose singe
+- Vul’mazzanlu, la chose-singe
 - Mazallakos le Voilé
 
 ## Utilisation

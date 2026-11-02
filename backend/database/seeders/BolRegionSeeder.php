@@ -31,7 +31,7 @@ class BolRegionSeeder extends Seeder
             ["id" => 11, "region" => "Oomis"],
             ["id" => 12, "region" => "Parsool"],
             ["id" => 13, "region" => "Plaines de Klaar", "langue_native_id" => 4, "premiere_carriere_id" => 3, "carrieres_interdites" => [1, 14, 22, 24]],
-            ["id" => 14, "region" => "Satarla"],
+            ["id" => 14, "region" => "Satarla", "carrieres_interdites" => [15]], // pas de mendiant au départ (livre p. 21)
             ["id" => 15, "region" => "Shamballah", "langue_native_id" => 11],
             ["id" => 16, "region" => "Terres Désolées"],
             ["id" => 17, "region" => "Tyrus"],
