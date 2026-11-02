@@ -24,7 +24,7 @@ npm run lint:prune # After fixing a listed debt: lowers the counts in the suppre
 npm run watch      # Incremental dev build
 ```
 
-> `eslint-suppressions.json` and `stylelint-suppressions.json` count the existing debts: never add to them to get past the lint, fix the new violation. CI (`.github/workflows/ci.yml`) runs lint, build and both test suites on every push to `develop` and on pull requests.
+> `eslint-suppressions.json` and `stylelint-suppressions.json` count the existing debts: never add to them to get past the lint, fix the new violation.
 
 ### Backend (`backend/`)
 
