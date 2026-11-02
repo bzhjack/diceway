@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, inject, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {SessionHeaderComponent} from './session-header/session-header';
@@ -20,6 +20,7 @@ import {RideauComponent} from './theatre/rideau';
 import {SceneActsComponent} from './theatre/scene-acts';
 import {SceneStageStore} from './theatre/scene-stage.store';
 import {TheatreComponent} from './theatre/theatre';
+import {ReservePlacementService} from '../reserve-placement.service';
 
 /** Ce que la page demande au plateau. Le composant est chargé par son `@defer` : ce fichier ne doit le citer que dans `imports`. */
 interface CombatBoardHandle {
@@ -55,10 +56,28 @@ export class SessionPlayPageComponent {
   protected readonly ending = inject(CombatEndService);
   protected readonly expanded = inject(ExpandedCardStore);
   protected readonly commands = inject(TableCommandsService);
+  /** Un glisser des coulisses vers la scène en cours : le backdrop s'efface pour laisser viser la scène. */
+  protected readonly placement = inject(ReservePlacementService);
 
   private readonly combatBoard = viewChild<CombatBoardHandle>('combatBoard');
+  /** Le plateau sous les coulisses : Material le rend `inert` derrière le voile. */
+  private readonly sceneContent = viewChild(MatSidenavContent, {read: ElementRef});
 
   constructor() {
+    // Un élément `inert` échappe à `document.elementFromPoint` : pendant un glisser des coulisses vers la scène, le plateau redevient
+    // visable (le dépôt cherche la zone sous le pointeur), puis repasse derrière le voile tant que les coulisses restent ouvertes.
+    effect(() => {
+      const content = this.sceneContent()?.nativeElement as HTMLElement | undefined;
+      if (!content) {
+        return;
+      }
+      if (this.placement.dragging()) {
+        content.removeAttribute('inert');
+      } else if (this.table.reserveOpen()) {
+        content.setAttribute('inert', 'true');
+      }
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.table.errorMessage.set('Session introuvable.');

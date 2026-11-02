@@ -41,7 +41,8 @@
       @if (table.mode() === 'libre') {
         <!-- Mode libre : le théâtre, et les coulisses (la réserve) à droite. Chacun des deux modes a son paquet : on ne charge que celui qu'on affiche. -->
         @defer (on immediate) {
-          <mat-sidenav-container class="spp-coulisses" [hasBackdrop]="false">
+          <!-- Les coulisses passent au-dessus du plateau, derrière un voile : un clic sur le voile les ferme. -->
+          <mat-sidenav-container class="spp-coulisses" [class.spp-coulisses--glisser]="placement.dragging()" [hasBackdrop]="true">
             <mat-sidenav
               id="spp-coulisses-panel"
               class="spp-coulisses-panel"
@@ -70,7 +71,7 @@
                 />
               </div>
             </mat-sidenav>
-            <mat-sidenav-content class="spp-scene" [class.spp-scene--coulisses]="table.reserveOpen()">
+            <mat-sidenav-content class="spp-scene">
               <bol-theatre
                 [cards]="table.cards()"
                 [sessionId]="sid"

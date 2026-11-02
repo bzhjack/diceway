@@ -119,3 +119,10 @@ body:has(.dw-page) .cdk-overlay-container {
     @include forge.recess;
   }
 }
+
+// Les coulisses de la table : pendant un glisser vers la scène, leur voile (rendu par Material dans leur conteneur) s'efface et laisse passer
+// le pointeur, car le dépôt vise la zone sous lui (`document.elementFromPoint`).
+.spp-coulisses--glisser > .mat-drawer-backdrop {
+  visibility: hidden;
+  pointer-events: none;
+}

@@ -86,22 +86,21 @@
 // Sous l'en-tête, en mode libre : le théâtre, et les coulisses (la réserve) qui s'ouvrent à droite en le
 // poussant — la scène reste entière visible pour y glisser un personnage.
 .spp-coulisses {
+  --mat-sidenav-scrim-color: rgba(8, 5, 3, 0.45);
+
   flex: 1;
   min-height: 0;
   background: transparent;
 }
 
-// Le plateau garde toute sa largeur sous le panneau, qui glisse par-dessus : réduire le contenu à chaque image, comme le fait Material,
-// redessinerait le décor plein écran et ferait ramer l'animation. Seul le premier plan (`--spp-coulisses`, lu par `bol-theatre` et
-// `bol-compagnie`) lui fait de la place, d'un coup.
+// Pendant un glisser des coulisses vers la scène, leur voile s'efface : voir `styles/_forge-page.scss` (`spp-coulisses--glisser`).
+
+// Le plateau garde toute sa largeur sous le panneau, qui glisse par-dessus : ni les cartes ni le cartouche de la scène ne bougent quand les
+// coulisses s'ouvrent (réduire le contenu à chaque image, comme le fait Material, ferait aussi ramer l'animation).
 .spp-scene {
   display: flex;
   margin-right: 0 !important;
   overflow: hidden;
-}
-
-.spp-scene--coulisses {
-  --spp-coulisses: min(21rem, 85vw);
 }
 
 .spp-coulisses-panel {
@@ -109,7 +108,10 @@
   max-width: 85vw;
   border-left: 2px solid var(--dw-forge-bronze);
   background: var(--dw-forge-iron) 0 0 / 420px, #17110c;
-  box-shadow: inset 8px 0 14px -8px rgba(0, 0, 0, 0.8);
+  // Il passe au-dessus des cartes : une ombre portée l'en détache.
+  box-shadow:
+    inset 8px 0 14px -8px rgba(0, 0, 0, 0.8),
+    -10px 0 24px rgba(0, 0, 0, 0.6);
   color: inherit;
 }
 
