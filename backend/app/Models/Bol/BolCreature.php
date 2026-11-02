@@ -33,7 +33,8 @@ class BolCreature extends Model
         'protection',
         'avatar',
         'commentaire',
-        'id_taille'
+        'id_taille',
+        'mort_vivant',
     ];
     protected $casts = [
         'vigueur' => 'integer',
@@ -43,6 +44,7 @@ class BolCreature extends Model
         'attaque' => 'integer',
         'defense' => 'integer',
         'id_taille' => 'integer',
+        'mort_vivant' => 'boolean',
         'type_order' => 'string'
     ];
 

@@ -566,6 +566,7 @@ class BolFightSessionService
             'protection'   => $creature->protection,
             'id_taille'    => $creature->id_taille,
             'capacites'    => BolCombatantCopies::capacites($creature),
+            'mort_vivant'  => (bool) $creature->mort_vivant,
         ];
     }
 

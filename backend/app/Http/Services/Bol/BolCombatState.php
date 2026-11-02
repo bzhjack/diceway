@@ -21,7 +21,7 @@ class BolCombatState
     private const MAX_CARTE = 60;
     private const STATS = ['attaque', 'defense', 'degats', 'protection', 'action'];
     private const QUAND = ['attaque', 'subie'];
-    private const DUREES = ['usages', 'fin-round', 'debut-tour-porteur', 'action-porteur', 'combat'];
+    private const DUREES = ['usages', 'rounds', 'fin-round', 'debut-tour-porteur', 'action-porteur', 'combat'];
 
     /**
      * État valide à partir de n'importe quelle valeur lue ou reçue : un état absent ou mal formé
@@ -202,12 +202,16 @@ class BolCombatState
         if (!is_array($raw) || !in_array($raw['type'] ?? null, self::DUREES, true)) {
             return null;
         }
-        if ($raw['type'] !== 'usages') {
+        if ($raw['type'] !== 'usages' && $raw['type'] !== 'rounds') {
             return ['type' => $raw['type']];
         }
         $restants = $raw['restants'] ?? null;
         if (!is_int($restants) || $restants < 1 || $restants > 20) {
             return null;
+        }
+        // Un nombre de rounds (coup précis sur un démon qui se régénère) : il baisse à chaque nouveau round.
+        if ($raw['type'] === 'rounds') {
+            return ['type' => 'rounds', 'restants' => $restants];
         }
         $duree = ['type' => 'usages', 'restants' => $restants];
         if (($raw['expireAuTour'] ?? false) === true) {

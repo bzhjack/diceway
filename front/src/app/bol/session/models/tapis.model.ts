@@ -1,4 +1,5 @@
 import {CombatantAttitude, CombatCamp} from '../../models/bol-fight-session.model';
+import {CardPouvoirs} from './pouvoirs-combat.model';
 
 /** Le type de personnage d'une carte du tapis. */
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -31,6 +32,12 @@ export interface TapisCard {
   readonly attitude: CombatantAttitude | null;
   /** Points de vilénie d'un PNJ rival — null pour les autres cartes. */
   readonly vilenie: number | null;
+  /** Une créature morte-vivante : sa vitalité est une force vitale, et à 0 elle est détruite. Absent : vivante. */
+  readonly mortVivant?: boolean;
+  /** La taille d'une créature (`bol_taille`, 4 = moyenne) — absente pour les autres cartes, qui comptent comme moyennes. */
+  readonly taille?: number | null;
+  /** Ce que les pouvoirs d'un démon changent en combat — absent pour les autres cartes. */
+  readonly pouvoirs?: CardPouvoirs;
 }
 
 /** Une statistique de combat de l'en-tête de la carte d'un héros dépliée. */

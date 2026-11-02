@@ -19,12 +19,16 @@ final class BolCombatantCopies
         ])->values()->toArray();
     }
 
+    /** Les pouvoirs gardent leurs drapeaux de combat : l'écran de combat régénère, prévient ou rappelle d'après eux. */
     public static function pouvoirs(BolDemon $demon): array
     {
         return collect($demon->pouvoirs ?? [])->map(fn ($p) => [
-            'pouvoir_id' => $p->pouvoir_id,
-            'pouvoir'    => $p->pouvoir?->pouvoir,
-            'detail'     => $p->detail,
+            'pouvoir_id'           => $p->pouvoir_id,
+            'pouvoir'              => $p->pouvoir?->pouvoir,
+            'detail'               => $p->detail,
+            'regeneration'         => (bool) $p->pouvoir?->regeneration,
+            'intangible'           => (bool) $p->pouvoir?->intangible,
+            'avertissement_combat' => (bool) $p->pouvoir?->avertissement_combat,
         ])->values()->toArray();
     }
 }

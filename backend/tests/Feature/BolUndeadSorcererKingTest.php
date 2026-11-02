@@ -159,9 +159,11 @@ class BolUndeadSorcererKingTest extends TestCase
 
         $this->assertSame(1, $this->catalogue()->count());
         $apres = (array) $this->catalogue()->first();
-        foreach (['created_at', 'updated_at'] as $horodatage) {
-            unset($avant[$horodatage], $apres[$horodatage]);
+        // `mort_vivant` est posé par la migration suivante (2026_11_02_180000), pas par celle-ci : le seeder l'écrit d'emblée.
+        foreach (['created_at', 'updated_at', 'mort_vivant'] as $champ) {
+            unset($avant[$champ], $apres[$champ]);
         }
         $this->assertEquals($avant, $apres);
+        $this->assertSame(1, (int) $this->catalogue()->value('mort_vivant'));
     }
 }

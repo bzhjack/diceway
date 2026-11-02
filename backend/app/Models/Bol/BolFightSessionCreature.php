@@ -15,7 +15,7 @@ class BolFightSessionCreature extends Model
         'vigueur', 'agilite', 'esprit',
         'vitalite_max', 'vitalite_courante',
         'attaque', 'defense', 'degats', 'protection', 'id_taille',
-        'capacites',
+        'capacites', 'mort_vivant',
     ];
 
     protected $casts = [
@@ -28,6 +28,7 @@ class BolFightSessionCreature extends Model
         'defense'             => 'integer',
         'id_taille'           => 'integer',
         'capacites'           => 'array',
+        'mort_vivant'         => 'boolean',
     ];
 
     public function creature(): BelongsTo

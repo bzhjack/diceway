@@ -167,6 +167,29 @@ class BolCombatStateTest extends TestCase
         $this->assertTrue($kept['manuel']);
     }
 
+    public function test_keeps_an_effect_that_lasts_a_number_of_rounds(): void
+    {
+        $regenere = $this->effet(['id' => 'e-2', 'stat' => 'action', 'valeur' => -1, 'quand' => 'attaque', 'duree' => ['type' => 'rounds', 'restants' => 2]]);
+        $kept = BolCombatState::normalize(['round' => 1, 'effets' => [$regenere]])['effets'];
+
+        $this->assertSame(['type' => 'rounds', 'restants' => 2], $kept[0]['duree']);
+    }
+
+    public function test_drops_an_effect_whose_number_of_rounds_is_out_of_bounds(): void
+    {
+        $effets = [
+            $this->effet(['id' => 'e-1', 'duree' => ['type' => 'rounds', 'restants' => 0]]),
+            $this->effet(['id' => 'e-2', 'duree' => ['type' => 'rounds', 'restants' => 21]]),
+            $this->effet(['id' => 'e-3', 'duree' => ['type' => 'rounds']]),
+            $this->effet(['id' => 'e-4', 'duree' => ['type' => 'rounds', 'restants' => 1, 'expireAuTour' => true]]),
+        ];
+
+        $kept = BolCombatState::normalize(['round' => 1, 'effets' => $effets])['effets'];
+
+        $this->assertSame(['e-4'], array_column($kept, 'id'));
+        $this->assertSame(['type' => 'rounds', 'restants' => 1], $kept[0]['duree']);
+    }
+
     public function test_keeps_only_well_formed_starting_vitalities(): void
     {
         $state = BolCombatState::normalize(['depart' => ['hero-1' => 11, 'pnj-2' => '8', '' => 3, 5 => 4, 'demon-3' => -2, 'creature-4' => 5000]]);

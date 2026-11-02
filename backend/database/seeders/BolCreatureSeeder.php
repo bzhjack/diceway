@@ -648,6 +648,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd3',
                 'protection' => '0',
                 'id_taille' => '2',
+                'mort_vivant' => true,
             ],
             [
                 'id' => '49',
@@ -661,6 +662,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6B',
                 'protection' => '0',
                 'id_taille' => '5',
+                'mort_vivant' => true,
             ],
             [
                 'id' => '50',
@@ -674,6 +676,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6',
                 'protection' => '0',
                 'id_taille' => '4',
+                'mort_vivant' => true,
             ],
 
             // ── Bestiaire du Beshaar (La Perle du Beshaar, p. 24-35) ──
@@ -844,6 +847,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6M+2',
                 'protection' => 'd6-3 (1)',
                 'id_taille' => '4',  // Moyenne
+                'mort_vivant' => true,
                 'commentaire' => "La Perle du Beshaar, p. 32-33. Marges occidentales du Beshaar (sable noir). Dégâts et protection : ou selon arme et armure.\nVulnérable au feu (dégâts doublés) et à l'eau (plongée ou aspergée : dé de malus à tous ses jets, « meurt » en 3 rounds).\nAutre créature : celle d'origine avec Vigueur +2, Esprit -2, Vitalité +2, Défense 0, Protection d6-3 (1) au moins, dégâts d'une taille au-dessus.",
             ],
             [
@@ -858,6 +862,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6B',
                 'protection' => 'd6-3 (1)',
                 'id_taille' => '5',  // Grande
+                'mort_vivant' => true,
                 'commentaire' => "La Perle du Beshaar, p. 33. Marges occidentales du Beshaar (sable noir).\nVulnérable au feu (dégâts doublés) et à l'eau (plongée ou aspergée : dé de malus à tous ses jets, « meurt » en 3 rounds).",
             ],
 
@@ -972,6 +977,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6B+1',
                 'protection' => 'd6 (4)',
                 'id_taille' => '4',  // Moyenne
+                'mort_vivant' => true,
                 'commentaire' => "Chroniques Lémuriennes, p. 24. Forêts froides, toundras. Guerrier mort-vivant momifié par le froid, à la tête d'une troupe de squelettes.\nAgilité et Défense avec l'armure (sans : Agilité 2, Défense 1). Armure lourde, casque, petit bouclier (+1 en défense contre une attaque par round). Dégâts : arme moyenne, dé de bonus de l'aura de givre compris.\nCapitaine des morts : avec des squelettes piétaille (BoL p. 128), sacrifie d6B points de force vitale pour relever deux fois ce nombre de ces morts-vivants, qui agissent dès le round suivant.",
             ],
             [
@@ -986,6 +992,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd3',
                 'protection' => '0',
                 'id_taille' => '4',  // Moyenne
+                'mort_vivant' => true,
                 'commentaire' => "Chroniques Lémuriennes, p. 25. Tous milieux. Fantôme d'une créature morte de froid, attaché au lieu de sa dépouille. Taille : moyenne, ou celle de la créature d'origine.\nN'attaque pas : dégâts d3 = son hurlement (cf. capacité). Apaisé par des funérailles convenables ou en obtenant justice.\nIntangible : traverse les objets solides ; seules la sorcellerie et l'alchimie le blessent. À 0, il est détruit.\nPossession : près de sa dépouille, jet d'esprit Moyen (0) ou la victime devient sa marionnette. Libérée si elle tombe à 0 ou est assommée (puis esprit Très facile +2).",
             ],
             [
@@ -1000,6 +1007,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd3',
                 'protection' => '0',
                 'id_taille' => '4',  // Moyenne
+                'mort_vivant' => true,
                 'commentaire' => "Chroniques Lémuriennes, p. 26. Lieux d'habitation, lieux clos. Revenant né du meurtre rituel d'un enfant, lié à un lieu et au sorcier qui l'a créé (la mèche de cheveux de l'enfant protège de ses attaques et lui donne des ordres).\nLe livre ne donne pas de profil (taille : aucune) : attaque et dégâts de la volée de petits objets, vitalité 1 = le phylactère, taille « Moyenne » retenue pour en faire un coriace.\nEsprit frappeur : sans forme matérielle, il ne peut être combattu.\nPhylactère : son âme est enfermée dans un objet (souvent un jouet) déposé dans le lieu ; le briser détruit le mogmaï.",
             ],
             [
@@ -1014,6 +1022,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6B',
                 'protection' => 'd6-3 (1)',
                 'id_taille' => '5',  // Grande
+                'mort_vivant' => true,
                 'commentaire' => "Chroniques Lémuriennes, p. 26. Forêts froides, toundras. Revenant né de l'âme maudite d'un cannibale ; nécrophage émacié ou géant mêlant arctodus et xalibu. Ennemi de l'eucladocéros.",
             ],
 
@@ -1030,6 +1039,7 @@ class BolCreatureSeeder extends Seeder
                 'degats' => 'd6+3',
                 'protection' => '0',
                 'id_taille' => '4',  // Moyenne
+                'mort_vivant' => true,
                 'commentaire' => "Bestiaire, p. 128. Cryptes obscures et souterrains perdus. Visage blafard et squelettique, proche des morgal ; d'une malfaisance démente, il attend l'heure de gouverner de nouveau le monde.\nLe livre ne donne ni taille ni rang : taille « Moyenne » retenue (force vitale 13 = vitalité 10 + vigueur 3 ; dégâts d6+3 = d6 + vigueur 3, à l'épée). Avec ses carrières, il se joue comme un rival.\nForce vitale 13 : mort-vivant, il n'a pas de vitalité et ne souffre pas des blessures ; à 0, il retourne à la mort.\nPoints de pouvoir : 15. Carrières : Sorcier 3-6.\nMagie des Rois-Sorciers : un dé de bonus pour lancer des sorts. Pouvoir du Néant : inclus dans le profil.\nInquiétant : un dé de malus dans les situations sociales ou face à des animaux. Deux autres désavantages au choix.",
             ],
         ];

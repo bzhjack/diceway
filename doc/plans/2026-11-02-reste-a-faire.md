@@ -1,6 +1,6 @@
 # Reste à faire
 
-Date : 2026-11-02. Ce fichier regroupe tout ce qui reste ouvert. Ce qui est fait (revue de code du 2026-10-31 et ses six phases, audits des calculs du combat, horde, vilénie, accueil) est dans l'historique git, notamment dans `2026-10-14-combat-reste-a-faire.md` et `2026-10-31-revue-de-code.md`, supprimés ce jour. Le comportement actuel du combat est décrit dans `2026-10-13-combat-etat-des-lieux.md`.
+Date : 2026-11-02. Ce fichier ne garde que ce qui reste ouvert : ce qui est fait en est retiré et reste dans l'historique git (dont les anciens `2026-10-14-combat-reste-a-faire.md` et `2026-10-31-revue-de-code.md`). Le comportement actuel du combat est décrit dans `2026-10-13-combat-etat-des-lieux.md`.
 
 Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs jours).
 
@@ -13,8 +13,6 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | Combat : sorcellerie et foi | 2, lot 4 | L |
 | Combat : petites limites de l'assistant | 2, point 17 | S à M |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
-
-Tout le reste du fichier est coché ✅ : audit de la doc et des seeders, création de héros, données de référence, bugs révélés, accueil, carte de Lémurie, piétaille contre piétaille et « Fuite opportune » des rivaux.
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
 
@@ -44,8 +42,6 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
 | # | Sujet | État | Effort | Lot |
 | --- | --- | --- | --- | --- |
 | 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque et attaques multiples faits | L | 3 |
-| 13 | Horde de piétaille | ✅ Fait, piétaille contre piétaille comprise (2026-11-02) | S | 3 |
-| 14 | Points de vilenie des rivaux | ✅ Fait, « Fuite opportune » comprise (2026-11-02) | S | 3 |
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
 | 16 | Foi en combat | Règle absente | S | 4 |
 | 17 | Petites limites de l'assistant | Confort | S à M | au fil de l'eau |
@@ -66,16 +62,6 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
   | Morts-vivants | « Force vitale » au lieu de vitalité | Libellé « Force vitale » |
 
 - Les pouvoirs à prévenir (`avertissement_combat` : Poison, Intangible) ne s'affichent pas encore sur la carte de l'attaquant ou de la cible.
-
-#### 13. Horde de piétaille
-
-- **Fait** : l'attaque en groupe contre un héros (`hordeMates`, `endTurn` dans `combat-turn.util.ts`).
-- ✅ **Reste** : piétaille contre piétaille (le camp le plus nombreux tue d6M adversaires, qui lui infligent d3 pertes), sans jet d'attaque — fait le 2026-11-02 : bouton « Mêlée de piétaille » de l'en-tête, une fois par round (`melee-pietaille.util.ts`, `play/melee-pietaille-dialog/`) ; à égalité, chaque camp perd d3 (interprétation).
-
-#### 14. Points de vilenie des rivaux
-
-- **Fait** : le compteur de vilenie sur la carte d'un rival, ses dépenses à l'attaque, la parade in extremis et « Bouclier humain ».
-- ✅ **Reste** : « Fuite opportune » — fait le 2026-11-02 : bouton de la carte du rival, 1 point de vilénie, le rival quitte le combat et la frise le dit « enfui » (`fuite-opportune.util.ts`).
 
 ### Lot 4 : la magie en combat
 
@@ -126,71 +112,13 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
 - **Fabrication alchimique** : hors combat ; l'usage d'une préparation en combat se traite comme un effet posé à la main.
 - **Journal complet des événements et annulation d'un coup**.
 
-## 3. Création et données : écarts avec le livre
+## 3. Données de référence
 
-Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-11-02). Les erreurs de la doc et des seeders sont corrigées ; restent les points ci-dessous.
-
-### Création de héros
-
-| Règle du livre | État | Effort |
-| --- | --- | --- |
-| ✅ Plafond d'attribut : 3 pour les points répartis, +1 d'un avantage d'attribut par-dessus (Savant, Agilité de l'homme-oiseau, Vigueur céruléenne, Prestance) | Déjà géré par l'appli (`create.validators.ts`, `bol-heros-state.service.ts`), spec corrigée — vérifié le 2026-11-02 | — |
-| ✅ Budgets et ressources modifiés par les traits : Non-combattant (2 en combat, 6 en carrières), Marqué par les dieux et Maudit (héroïsme), Dur à cuire et Chétif (vitalité), Pouvoir du Néant (pouvoir) | Déjà géré par l'appli, spec corrigée — vérifié le 2026-11-02 | — |
-| ✅ Carrière exigée par Maître artisan et Envoûtant, arme favorite régionale (Mythic+) | Déjà géré par l'appli (`bol-rules.constants.ts`) — vérifié le 2026-11-02 | — |
-| ✅ Pilote des airs réservé aux Satarlans (p. 21) | Avertissement à la création (`CARRIERES_RESERVEES`) — fait le 2026-11-02 | S |
-| ✅ Carrières interdites aux céruléens : 4 en p. 21, 2 en p. 91 | On garde les 4 de la p. 21, déjà dans les données — tranché le 2026-11-02 | — |
-| Non-combattant : aptitudes de combat au double du coût en XP (p. 45) | L'appli ne gère pas la dépense d'XP ; à reprendre si elle la gère un jour | — |
-
-### Données de référence
-
-- ✅ Listes d'avantages, de désavantages et de noms absentes pour la Côte de Feu (le livre renvoie à Halakh ou Kasht) et les Plaines de Klaar (chapitre 5) (S) — fait le 2026-11-02
-  (migration `2026_11_02_130000_add_cote_de_feu_and_klaar_regional_lists` et seeders : Klaar 10 avantages, 6 désavantages, 50 noms ; Côte de Feu 13, 8, 80, union de Halakh et Kasht sans le kriss).
 - Les listes des kalukans (Côte de Feu, chapitre 5) ne sont pas modélisées : l'appli ne gère pas les races.
-- ✅ Les six avantages de terrain (Fils des plaines, Montagnard, Pisteur des marais, Renard du désert, Roi de la jungle, Tigre des neiges) ont le même texte, sans leur terrain (S) — fait le 2026-11-02
-  (seeder et migration `2026_11_02_140000_terrain_advantages_name_their_terrain` : chacun nomme son terrain et exclut le combat, comme le livre).
-- ✅ Passer les PNJ du livre aux armes régionales Mythic+ (Archer de Tyrus, Assassin halakhi, Garde jemadar) — fait le 2026-11-02
-  (seeder et migration `2026_11_02_150000_npcs_take_mythic_plus_regional_weapons` : arc de guerre de Tyrus, kriss en plus de la dague des couteaux de lancer, khastok ; les copies déjà posées à une table ou dans un scénario gardent leurs armes).
-- Copies faites avant la correction et gardées telles quelles : le Mythunga posé à une table (taille), la Main cavaleuse d'un scénario (capacité manquante).
-
-### Doc
-
-✅ Oublis utiles traités le 2026-11-02 : environ 75 règles ajoutées dans `doc/rules/`, `doc/resources/` et `doc/specs/`, chacune revérifiée dans le livre. Ne restent que des détails d'ambiance ou des redites.
-
-✅ Règles sans source triées le 2026-11-02 (28) : 9 avaient en fait une source dans le livre (page ajoutée), 13 sont des choix de l'appli (étiquetés, avec le code qui les porte), 2 sont des interprétations (étiquetées), 4 étaient des inventions (supprimées ou remplacées par le texte du livre : sorts plus puissants qui blesseraient davantage, « aventure normale », 3e cercle « à l'échelle d'une cité », option légendaire « si le MJ l'estime cohérent »).
-
-- ✅ Portée des armes : la colonne « portée » est la largeur de la bande Bout portant, chaque bande suivante en est un multiple (p. 62) — fait le 2026-11-02
-- ✅ Armure lourde interdite si vigueur < 0 (p. 52), et le casque n'ajoute +1 qu'avec une armure — fait le 2026-11-02
-- ✅ Langues : les langues supplémentaires viennent du rang de 8 carrières (p. 46) — fait le 2026-11-02
-- ✅ Sorts de cercle 1 à 3 : au moins une condition d'incantation (p. 150) — fait le 2026-11-02
-- ✅ Guerre navale : succès légendaire, une action par phase, dégâts de feu à chaque round — fait le 2026-11-02 (dégâts du feu non chiffrés par le livre : d3 proposé, marqué comme interprétation)
-- ✅ Magie des Rois-Sorciers et Pouvoir du Néant imposent un désavantage supplémentaire — fait le 2026-11-02
-
-### Révélés par la doc complétée : vérifiés dans l'appli le 2026-11-02
-
-| Règle du livre | Constat dans l'appli | Effort |
-| --- | --- | --- |
-| ✅ Armure lourde interdite si vigueur < 0 (p. 52) | Avertissement dans le panneau des armures (`armureLourdeInterdite`, `create.validators.ts`) — fait le 2026-11-02 | S |
-| ✅ Le casque n'ajoute +1 qu'à la protection d'une armure portée (p. 52) | `equippedProtection` corrigé, avec son test ; les dégâts et les fiches en héritent — fait le 2026-11-02 | S |
-| ✅ Illettré : pas de carrière exigeant d'être lettré (p. 45) | Avertissement à la création pour scribe, médecin, prêtre (dits lettrés par le livre), alchimiste et sorcier (`CARRIERES_LETTREES`) — fait le 2026-11-02 | S |
-| ✅ Points de création : rang d'alchimiste entre deux aventures, 5 au plus ; au départ seulement si le MJ l'autorise (p. 139) | Conforme : la fiche porte une réserve égale au rang ; l'usage au départ reste une décision du MJ | — |
-| ✅ Foi : réserve égale au rang de prêtre (p. 146) | Conforme | — |
-| ✅ Sorcier et alchimiste : un désavantage par rang supplémentaire | Conforme à la création (`carriereDesavantageCount`) ; la progression par XP n'est pas gérée par l'appli | — |
-| ✅ Rois-Sorciers morts-vivants (p. 128) | Ajouté au catalogue (seeder et migration `2026_11_02_160000_add_undead_sorcerer_king_to_catalogue`), taille moyenne donc rang « coriace » (le livre n'en donne pas) ; squelettes et zombies sans profil : rien à ajouter — fait le 2026-11-02 | S |
-
-### Révélés par le tri des règles sans source : bugs dans l'appli
-
-| Constat | Correction | Effort |
-| --- | --- | --- |
-| ✅ Un démon Cuirassé n'a pas sa protection d6 (4) en combat : le code cherche « cuirasse » sans accent, le pouvoir s'appelle « Cuirassé » | Les noms de pouvoirs se comparent sans accents (`hasPouvoir`, `combat-play.util.ts`) — fait le 2026-11-02 | S |
-| ✅ Le serveur refuse plus de 4 rangs de carrières, alors que Non-combattant en donne 6 ; et il refuse l'activation d'un héros dont un avantage porte un attribut à 4 | `BolHerosRequest` : budgets de Non-combattant (6 et 2), limites de création réservées aux brouillons, bornes larges pour un héros actif — fait le 2026-11-02 | S |
-| ✅ Un seul désavantage général compte à la fois pour le 3e avantage et pour le désavantage supplémentaire de Magie des Rois-Sorciers ou Pouvoir du Néant | `desavantagesGeneraux` (`create.validators.ts`), utilisé par l'avertissement et le coût en héroïsme — fait le 2026-11-02 | S |
+- Copies faites avant les corrections du catalogue et gardées telles quelles : le Mythunga posé à une table (taille), la Main cavaleuse d'un scénario (capacité manquante).
+- Non-combattant : aptitudes de combat au double du coût en XP (p. 45), sans objet tant que l'appli ne gère pas la dépense d'XP.
 
 ## 4. Code
 
-- **Dette suivie par le lint** (`eslint-suppressions.json`, `stylelint-suppressions.json`) : 285 couleurs hexadécimales hors de `_tokens.scss`, 14 `::ng-deep`, 6 clics sans clavier et 5 éléments cliquables sans focus, 3 `$any()` (la syntaxe interdite de la carte de Lémurie est réglée le 2026-11-02). `npm run lint:prune` baisse les comptes après correction (M).
-- ✅ `bol/hero/advanced/region/region.component.html:7` : la carte de Lémurie est une `<img>` sans `NgOptimizedImage` (S) — fait le 2026-11-02
+- **Dette suivie par le lint** (`eslint-suppressions.json`, `stylelint-suppressions.json`) : 285 couleurs hexadécimales hors de `_tokens.scss`, 14 `::ng-deep`, 6 clics sans clavier et 5 éléments cliquables sans focus, 3 `$any()`. `npm run lint:prune` baisse les comptes après correction (M).
 - Hauteurs fixes mesurées à la main (`--tas-h`, `min-height` de `combattant-carte.scss`) : toute nouvelle option dans ces cartes peut demander de les remesurer.
-
-## 5. Accueil
-
-- ✅ Si l'accueil ne charge pas (par exemple `routes/api.php` non copié dans le conteneur), le bandeau « Reprendre la table » disparaît : ajouter un lien « Mes sessions » dans le message d'erreur (S) — fait le 2026-11-02
