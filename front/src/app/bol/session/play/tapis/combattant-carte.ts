@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
+import {libelleVulnerabilite} from './pouvoirs-combat.util';
 
 /** La carte d'un combattant dans l'assistant de tour, la même pour celui qui joue et pour sa cible : à gauche son portrait, carré sur toute la hauteur, qui se fond vers la droite ;
  * à côté son rang et son attitude (et en haut à droite les boutons projetés avec `ccActions`), son nom, ses chances et sa barre de vie
@@ -27,6 +29,13 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
             @if (attitude(); as a) {
               <span [class]="'cc-attitude cc-attitude--' + a.value">{{ a.label }}</span>
             }
+            <!-- Les pouvoirs d'un démon à garder en tête en combat (Poison, Intangible), et sa faiblesse : une icône et leur nom -->
+            @for (pouvoir of avertissements(); track pouvoir) {
+              <span class="cc-pouvoir" [title]="'Pouvoir à prévenir : ' + pouvoir"><mat-icon aria-hidden="true">warning</mat-icon>{{ pouvoir }}</span>
+            }
+            @if (vulnerabilite(); as v) {
+              <span class="cc-pouvoir cc-pouvoir--faible" [title]="v"><mat-icon aria-hidden="true">heart_broken</mat-icon><span class="cc-pouvoir-texte">{{ v }}</span></span>
+            }
           </span>
           <!-- Les boutons de la page (ouvrir la fiche, changer de cible), en haut à droite -->
           <ng-content select="[ccActions]" />
@@ -44,6 +53,7 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
     <!-- Ce qui se règle, sous le portrait et le texte -->
     <ng-content select="[ccBas]" />
   `,
+  imports: [MatIconModule],
   styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -72,6 +82,13 @@ export class CombattantCarteComponent {
   protected readonly attitude = computed(() => {
     const card = this.card();
     return card.camp === 'adversaires' ? (ATTITUDES.find((a) => a.value === card.attitude) ?? null) : null;
+  });
+  /** Les pouvoirs d'un démon à prévenir en combat (`avertissement_combat`). */
+  protected readonly avertissements = computed(() => this.card().pouvoirs?.avertissements ?? []);
+  /** La faiblesse d'un démon vulnérable : « Vulnérable : feu (dégâts doublés) ». */
+  protected readonly vulnerabilite = computed(() => {
+    const v = this.card().pouvoirs?.vulnerabilite;
+    return v ? libelleVulnerabilite(v) : null;
   });
   private readonly percent = computed(() => vitalitePercent(this.card().vitaliteCourante, this.card().vitaliteMax));
   protected readonly loss = computed(() => {
