@@ -8,9 +8,10 @@ dans le même style que les bannières des bibliothèques
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
-Les créatures 51 à 63 (bestiaire du Beshaar) et 64 à 74 (bestiaire du Khanat,
-*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les autres ont
-aujourd'hui un rendu réaliste qui ne colle plus au style.
+Les créatures 55 à 63 (bestiaire du Beshaar) et 64 à 74 (bestiaire du Khanat,
+*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les créatures 25 à 48
+et les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
+Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
 
 ## Fichiers attendus
 
@@ -32,10 +33,10 @@ renommage.
 
 | Planche | Ids | Planche | Ids |
 | --- | --- | --- | --- |
-| C1 | 1 à 6 | C7 | 37 à 42 |
-| C2 | 7 à 12 | C8 | 43 à 48 |
-| C3 | 13 à 18 | C9 | 49 à 54 |
-| C4 | 19 à 24 | C10 | 55 à 60 |
+| ✅ C1 | 1 à 6 | C7 | 37 à 42 |
+| ✅ C2 | 7 à 12 | C8 | 43 à 48 |
+| ✅ C3 | 13 à 18 | ✅ C9 | 49 à 54 |
+| ✅ C4 | 19 à 24 | C10 | 55 à 60 |
 | C5 | 25 à 30 | C11 | 61 à 66 |
 | C6 | 31 à 36 | C12 | 67 à 72 |
 | | | C13 | 73 et 74 |
@@ -43,6 +44,8 @@ renommage.
 
 Ordre des cases : ligne du haut de gauche à droite, puis ligne du bas de gauche
 à droite.
+
+✅ : portrait fait dans ce style et déposé dans `front/src/assets/bol/` (le reste est à générer).
 
 ## Consignes de planche — créatures
 
@@ -56,41 +59,41 @@ créatures :
 Pour **un seul portrait**, reprendre la phrase de la créature avec le même
 préambule, en remplaçant « planche » par « portrait carré unique ».
 
-### C1 — créatures 1 à 6
+### ✅ C1 — créatures 1 à 6
 
-> 1. Andrak : fauve ressemblant à un lion noir à l'épaisse crinière, plus de trois mètres de long, crocs acérés et regard de chasseur ; montagnes et plaines.
-> 2. Anguille chasseresse : grosse anguille à la tête volumineuse, longs piquants sur le corps serpentin, jaillissant d'une eau trouble de marais ou de rivière.
-> 3. Azhdarkho : grand lézard volant aux ailes membraneuses de chauve-souris (neuf mètres d'envergure), plus petit et plus agile qu'un drakk, plumage de crête et cou serpentin, en plein vol au-dessus des montagnes.
-> 4. Banth : énorme bête placide ressemblant à un tricératops, cuir épais, trois cornes et collerette, harnaché de sacs de marchand, plaines de Klaar.
-> 5. Béhémathon : gigantesque pieuvre marine à dix tentacules s'enroulant autour de la coque d'une galère de guerre, mer sombre et ciel de tempête.
-> 6. Bubalus : bovidé robuste ressemblant à un bison, épaisse robe de cuir et de fourrure, cornes courtes, bête de somme au regard calme.
+> 1. ✅ Andrak : fauve ressemblant à un lion noir à l'épaisse crinière, plus de trois mètres de long, crocs acérés et regard de chasseur ; montagnes et plaines.
+> 2. ✅ Anguille chasseresse : grosse anguille à la tête volumineuse, longs piquants sur le corps serpentin, jaillissant d'une eau trouble de marais ou de rivière.
+> 3. ✅ Azhdarkho : grand lézard volant aux ailes membraneuses de chauve-souris (neuf mètres d'envergure), plus petit et plus agile qu'un drakk, plumage de crête et cou serpentin, en plein vol au-dessus des montagnes.
+> 4. ✅ Banth : énorme bête placide ressemblant à un tricératops, cuir épais, trois cornes et collerette, harnaché de sacs de marchand, plaines de Klaar.
+> 5. ✅ Béhémathon : gigantesque pieuvre marine à dix tentacules s'enroulant autour de la coque d'une galère de guerre, mer sombre et ciel de tempête.
+> 6. ✅ Bubalus : bovidé robuste ressemblant à un bison, épaisse robe de cuir et de fourrure, cornes courtes, bête de somme au regard calme.
 
-### C2 — créatures 7 à 12
+### ✅ C2 — créatures 7 à 12
 
-> 7. Bronyx : prédateur proche d'un chark en moins énorme, longue queue, griffes aussi longues que des épées courtes, gueule allongée d'alligator hérissée de crocs ; jungles de Qo et de Qush.
-> 8. Cathgan : petite vipère écarlate enroulée, crocs venimeux dévoilés, gros plan sur le sable d'un désert.
-> 9. Chark : le « dragon des jungles », monstre massif à plusieurs rangées de crocs aussi grands que des épées, peau épaisse, surgissant de la végétation vierge.
-> 10. Coursier des sables : grand oiseau coureur ressemblant à une autruche, plumage ocre, pattes puissantes, dunes du désert, bête de selle.
-> 11. Crocator : énorme crocodile-dragon à fleur d'eau, camouflé dans la vase d'une jungle, yeux et naseaux à la surface.
-> 12. Dinohyus : phacochère géant au crâne allongé, canines larges, bosse hérissée de piquants entre les épaules, hérissé le long de l'échine ; jungle.
+> 7. ✅ Bronyx : prédateur proche d'un chark en moins énorme, longue queue, griffes aussi longues que des épées courtes, gueule allongée d'alligator hérissée de crocs ; jungles de Qo et de Qush.
+> 8. ✅ Cathgan : petite vipère écarlate enroulée, crocs venimeux dévoilés, gros plan sur le sable d'un désert.
+> 9. ✅ Chark : le « dragon des jungles », monstre massif à plusieurs rangées de crocs aussi grands que des épées, peau épaisse, surgissant de la végétation vierge.
+> 10. ✅ Coursier des sables : grand oiseau coureur ressemblant à une autruche, plumage ocre, pattes puissantes, dunes du désert, bête de selle.
+> 11. ✅ Crocator : énorme crocodile-dragon à fleur d'eau, camouflé dans la vase d'une jungle, yeux et naseaux à la surface.
+> 12. ✅ Dinohyus : phacochère géant au crâne allongé, canines larges, bosse hérissée de piquants entre les épaules, hérissé le long de l'échine ; jungle.
 
-### C3 — créatures 13 à 18
+### ✅ C3 — créatures 13 à 18
 
-> 13. Deodarg : gigantesque croisement de félin et de reptile, corps musclé tacheté d'écailles, mâchoires de prédateur, jungle dense.
-> 14. Dracophon : six pattes courtes et larges comme des souches, peau épaisse, air pataud d'herbivore, mais énormes crocs qui saillent de la gueule, longue queue serpentine, il se dresse sur ses pattes arrière quand il est en colère.
-> 15. Drakk : monstre volant ressemblant à un ptérodactyle géant, corps écailleux et serpentin, ailes de chauve-souris de plus de treize mètres d'envergure, serres sous le ventre, emportant une proie vers son nid.
-> 16. Elasmotherium : rhinocéros massif de quatre mètres au garrot, museau armé d'une longue corne unique, plaines poussiéreuses.
-> 17. Eldaphon : mastodonte à la longue trompe encadrée de défenses de plus de quatre mètres, peau ridée, plaines, harnaché pour la guerre des nomades bleus.
-> 18. Fangeux : cousin de la pieuvre des marais, quatre tentacules, quatre pieds de limace, corps flasque couvert de vase, yeux globuleux, surgissant d'un marécage.
+> 13. ✅ Deodarg : gigantesque croisement de félin et de reptile, corps musclé tacheté d'écailles, mâchoires de prédateur, jungle dense.
+> 14. ✅ Dracophon : six pattes courtes et larges comme des souches, peau épaisse, air pataud d'herbivore, mais énormes crocs qui saillent de la gueule, longue queue serpentine, il se dresse sur ses pattes arrière quand il est en colère.
+> 15. ✅ Drakk : monstre volant ressemblant à un ptérodactyle géant, corps écailleux et serpentin, ailes de chauve-souris de plus de treize mètres d'envergure, serres sous le ventre, emportant une proie vers son nid.
+> 16. ✅ Elasmotherium : rhinocéros massif de quatre mètres au garrot, museau armé d'une longue corne unique, plaines poussiéreuses.
+> 17. ✅ Eldaphon : mastodonte à la longue trompe encadrée de défenses de plus de quatre mètres, peau ridée, plaines, harnaché pour la guerre des nomades bleus.
+> 18. ✅ Fangeux : cousin de la pieuvre des marais, quatre tentacules, quatre pieds de limace, corps flasque couvert de vase, yeux globuleux, surgissant d'un marécage.
 
-### C4 — créatures 19 à 24
+### ✅ C4 — créatures 19 à 24
 
-> 19. Frossor : croisement de reptile et de mammifère d'un peu plus d'un mètre, fourrure grise, puissantes griffes de fouisseur, petites dents venimeuses, déterrant des termites.
-> 20. Ganuc : minuscule phytophage sauteur, mi-mammifère mi-reptile, assez petit pour tenir dans la paume d'une main (montrer une main pour l'échelle), air mignon, jungle ou plaine.
-> 21. Jemadar : énorme prédateur à la peau épaisse de couleur pourpre, croisement entre un chat sauvage et un raptor, six longues pattes griffues, queue à piquants, crocs terrifiants.
-> 22. Jit : petite araignée jaune à pois rouges, grosse comme une paume, sur une toile dans une jungle humide, gros plan macro.
-> 23. Kalathorn : serpent de mer géant ressemblant à un plésiosaure préhistorique, deux fois plus long qu'une galère de guerre, dressé hors des flots sous un ciel menaçant.
-> 24. Kroark : créature reptilienne gris-vert dressée sur deux puissantes pattes postérieures, monture rétive et dressée au combat, selle et harnais de cuir.
+> 19. ✅ Frossor : croisement de reptile et de mammifère d'un peu plus d'un mètre, fourrure grise, puissantes griffes de fouisseur, petites dents venimeuses, déterrant des termites.
+> 20. ✅ Ganuc : minuscule phytophage sauteur, mi-mammifère mi-reptile, assez petit pour tenir dans la paume d'une main (montrer une main pour l'échelle), air mignon, jungle ou plaine.
+> 21. ✅ Jemadar : énorme prédateur à la peau épaisse de couleur pourpre, croisement entre un chat sauvage et un raptor, six longues pattes griffues, queue à piquants, crocs terrifiants.
+> 22. ✅ Jit : petite araignée jaune à pois rouges, grosse comme une paume, sur une toile dans une jungle humide, gros plan macro.
+> 23. ✅ Kalathorn : serpent de mer géant ressemblant à un plésiosaure préhistorique, deux fois plus long qu'une galère de guerre, dressé hors des flots sous un ciel menaçant.
+> 24. ✅ Kroark : créature reptilienne gris-vert dressée sur deux puissantes pattes postérieures, monture rétive et dressée au combat, selle et harnais de cuir.
 
 ### C5 — créatures 25 à 30
 
@@ -128,14 +131,14 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 47. Zathog : ignoble reptile des marais ressemblant à un crocator géant, peau grise ou gris-brun épaisse, énorme gueule hérissée de plusieurs rangées de crocs venimeux.
 > 48. Main cavaleuse : main humaine coupée et animée par sorcellerie, rampant sur ses doigts, peau grise et nécrosée, dans un antre de sorcier éclairé de bougies, gros plan (palette plus froide, exception à l'ambre).
 
-### C9 — créatures 49 à 54
+### ✅ C9 — créatures 49 à 54
 
-> 49. Nécropède : plusieurs torses de cadavres humains cousus ensemble en un mille-pattes grotesque, seul le torse supérieur a gardé sa tête, bras multiples servant de pattes, dans une crypte (palette froide verdâtre, exception à l'ambre).
-> 50. Nécrophage : sous-humain dégénéré, blafard, décharné et glabre, grands yeux globuleux, mains griffues, bouche de crocs, tapi dans une cave de crypte (palette froide, exception à l'ambre).
-> 51. Chien de Zaggath : prédateur efflanqué tenant du lézard autant que du chien, corps couvert d'écailles et de fourrure, peau luisante d'un suint huileux, entouré de braises et de chaleur, désert brûlant de la Côte de Feu, en meute.
-> 52. Dyrhunga : oiseau-titan nichant dans les monts Besharoon, béni par Dyr, dieu des tempêtes, fondant sur sa proie au cœur d'une tempête de sable, ailes immenses et éclair en arrière-plan.
-> 53. Dragon de feu : grand lézard carnivore à la peau grise et écailleuse, corps irradiant une chaleur qui fait frémir l'air, nageant dans la lave d'une grotte volcanique, vapeurs toxiques.
-> 54. Essaim de fourmis d'os : nuée de fourmis blanches dont les corps ressemblent à de petits os, déferlant sur le sable et sur des ossements, gros plan de la masse grouillante.
+> 49. ✅ Nécropède : plusieurs torses de cadavres humains cousus ensemble en un mille-pattes grotesque, seul le torse supérieur a gardé sa tête, bras multiples servant de pattes, dans une crypte (palette froide verdâtre, exception à l'ambre).
+> 50. ✅ Nécrophage : sous-humain dégénéré, blafard, décharné et glabre, grands yeux globuleux, mains griffues, bouche de crocs, tapi dans une cave de crypte (palette froide, exception à l'ambre).
+> 51. ✅ Chien de Zaggath : prédateur efflanqué tenant du lézard autant que du chien, corps couvert d'écailles et de fourrure, peau luisante d'un suint huileux, entouré de braises et de chaleur, désert brûlant de la Côte de Feu, en meute.
+> 52. ✅ Dyrhunga : oiseau-titan nichant dans les monts Besharoon, béni par Dyr, dieu des tempêtes, fondant sur sa proie au cœur d'une tempête de sable, ailes immenses et éclair en arrière-plan.
+> 53. ✅ Dragon de feu : grand lézard carnivore à la peau grise et écailleuse, corps irradiant une chaleur qui fait frémir l'air, nageant dans la lave d'une grotte volcanique, vapeurs toxiques.
+> 54. ✅ Essaim de fourmis d'os : nuée de fourmis blanches dont les corps ressemblent à de petits os, déferlant sur le sable et sur des ossements, gros plan de la masse grouillante.
 
 ### C10 — créatures 55 à 60
 
@@ -208,19 +211,19 @@ la carte affiche l'avatar vide.
 
 | Planche | Ids | État | Date | Remarque |
 | --- | --- | --- | --- | --- |
-| C1 | 1 à 6 | fait | 2026-10-23 | Grille respectée (bords pile à 512 et 1024 px) : découpe régulière. |
-| C2 | 7 à 12 | fait | 2026-10-23 | Grille respectée : découpe régulière. |
-| C3 | 13 à 18 | à faire (ancien) | | |
-| C4 | 19 à 24 | à faire (ancien) | | |
+| ✅ C1 | 1 à 6 | fait | 2026-10-23 | Grille respectée (bords pile à 512 et 1024 px) : découpe régulière. |
+| ✅ C2 | 7 à 12 | fait | 2026-10-23 | Grille respectée : découpe régulière. |
+| ✅ C3 | 13 à 18 | fait | 2026-11-02 | Grille respectée à 2 px près. |
+| ✅ C4 | 19 à 24 | fait | 2026-11-02 | Grille respectée. |
 | C5 | 25 à 30 | à faire (ancien) | | |
 | C6 | 31 à 36 | à faire (ancien) | | |
 | C7 | 37 à 42 | à faire (ancien) | | |
 | C8 | 43 à 48 | à faire (ancien) | | |
-| C9 | 49 à 54 | à faire (49-50 ancien, **51-54 aucune**) | | Priorité : bestiaire du Beshaar sans image. |
+| ✅ C9 | 49 à 54 | fait | 2026-11-02 | Grille respectée à 1 px près, filet noir entre les cases : rogner 3 px par bord. |
 | C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
 | C11 | 61 à 66 | à faire (**aucune**) | | Priorité : bestiaires du Beshaar et du Khanat sans image. |
 | C12 | 67 à 72 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
 | C13 | 73 et 74 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
 | D | démons 1 à 3 | à faire (ancien) | | |
 
-Ordre conseillé pour la suite : C9 à C13 d'abord (24 créatures sans aucune image), puis D, puis C3 à C8.
+Ordre conseillé pour la suite : C10 à C13 d'abord (20 créatures sans aucune image), puis D, puis C5 à C8.
