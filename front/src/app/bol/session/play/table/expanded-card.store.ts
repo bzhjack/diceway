@@ -18,6 +18,7 @@ import {findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_
 import {TapisCard} from '../../models/tapis.model';
 import {TableStore} from './table.store';
 import {CombatStatsStore} from './combat-stats.store';
+import {CombatTurnStore} from './combat-turn.store';
 
 /** La carte dépliée en dialogue : ses données, chargées à l'ouverture, ce qu'on y change (équipement, retrait). */
 @Injectable()
@@ -30,12 +31,19 @@ export class ExpandedCardStore {
   private readonly dialog = inject(MatDialog);
   private readonly table = inject(TableStore);
   private readonly stats = inject(CombatStatsStore);
+  private readonly combat = inject(CombatTurnStore);
 
   /** Clé de la carte dépliée. La carte elle-même est retrouvée à chaque rechargement : si elle a
    * quitté la table (retirée, scène chargée en remplacement), plus rien n'est déplié. */
   private readonly expandedKey = signal<string | null>(null);
 
   private readonly expandedCard = computed(() => findCard(this.table.cards(), this.expandedKey()));
+
+  /** La carte dépliée est un rival en combat qui peut encore prendre la fuite. */
+  private readonly expandedCanFlee = computed(() => {
+    const card = this.expandedCard();
+    return card !== null && this.combat.canFlee(card);
+  });
 
   /** Données de la carte dépliée, chargées au dépliage — `null` pendant le chargement. */
   private readonly expandedHero = signal<ExpandedHeroData | null>(null);
@@ -74,8 +82,10 @@ export class ExpandedCardStore {
       hero: this.expandedHero,
       statblock: this.expandedStatblock,
       returnUrl: this.table.returnUrl,
+      canFlee: this.expandedCanFlee,
       changed: (change) => this.table.onTableChanged(change),
       remove: (card) => this.askRemoveCard(card),
+      flee: (card) => this.askFlee(card),
       toggleArmure: (event) => this.onArmureToggled(event),
       toggleArme: (event) => this.onArmeToggled(event),
     };
@@ -218,6 +228,23 @@ export class ExpandedCardStore {
         next: (session) => this.table.session.set(session),
         error: (error: unknown) => this.table.notifyError(error, 'Impossible de retirer ce personnage.'),
       });
+    });
+  }
+
+  /** « Fuite opportune » depuis la carte d'un rival : confirmée, elle dépense 1 point de vilénie et le rival quitte le combat. */
+  private askFlee(card: TapisCard): void {
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Fuite opportune',
+        message: `${card.nom} dépense 1 point de vilénie et s'enfuit, profitant de ce que les héros sont distraits : il quitte le combat (il ne joue plus et ne compte plus pour l'issue), même s'il semblait mort. Sa fiche reste sur la table.`,
+        confirmLabel: 'Fuir (−1 vilénie)',
+      },
+      {width: '420px'},
+    ).subscribe((confirmed) => {
+      if (confirmed) {
+        this.combat.flee(card);
+      }
     });
   }
 

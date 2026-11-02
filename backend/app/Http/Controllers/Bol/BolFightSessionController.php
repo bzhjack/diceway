@@ -222,6 +222,9 @@ class BolFightSessionController extends Controller
             'effets.*'         => 'array',
             'exclus'           => 'sometimes|array',
             'exclus.*'         => 'string',
+            'fuis'             => 'sometimes|array',
+            'fuis.*'           => 'string',
+            'melee'            => 'sometimes|nullable|integer|min:1',
         ]);
 
         $session = $this->fightSessionService->updateCombatState($id, Auth::id(), $data);

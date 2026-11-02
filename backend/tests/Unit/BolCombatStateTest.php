@@ -23,14 +23,14 @@ class BolCombatStateTest extends TestCase
 
     public function test_a_missing_state_is_round_one_with_nobody_played(): void
     {
-        $this->assertSame(['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => []], BolCombatState::normalize(null));
+        $this->assertSame(['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => [], 'fuis' => [], 'melee' => null], BolCombatState::normalize(null));
         $this->assertSame(BolCombatState::INITIAL, BolCombatState::normalize('n-importe-quoi'));
         $this->assertSame(BolCombatState::INITIAL, BolCombatState::normalize([]));
     }
 
     public function test_keeps_a_valid_state(): void
     {
-        $state = ['round' => 3, 'joues' => ['hero-1', 'pnj-7'], 'effets' => [$this->effet()], 'exclus' => ['creature-4'], 'depart' => ['hero-1' => 11, 'pnj-7' => 8]];
+        $state = ['round' => 3, 'joues' => ['hero-1', 'pnj-7'], 'effets' => [$this->effet()], 'exclus' => ['creature-4', 'pnj-9'], 'depart' => ['hero-1' => 11, 'pnj-7' => 8], 'fuis' => ['pnj-9'], 'melee' => 2];
 
         $this->assertSame($state, BolCombatState::normalize($state));
     }
@@ -57,7 +57,7 @@ class BolCombatStateTest extends TestCase
     {
         $state = BolCombatState::normalize(['round' => 2, 'joues' => [], 'effets' => [], 'autre' => true]);
 
-        $this->assertSame(['round', 'joues', 'effets', 'exclus', 'depart'], array_keys($state));
+        $this->assertSame(['round', 'joues', 'effets', 'exclus', 'depart', 'fuis', 'melee'], array_keys($state));
     }
 
     public function test_keeps_the_excluded_cards_and_drops_invalid_keys(): void
@@ -185,5 +185,57 @@ class BolCombatStateTest extends TestCase
 
         $this->assertSame(['hero-1' => 11], BolCombatState::merge(['round' => 2, 'joues' => [], 'depart' => ['hero-1' => 3]], $existing)['depart']);
         $this->assertSame(['hero-1' => 11], BolCombatState::merge(['round' => 2, 'joues' => []], $existing)['depart']);
+    }
+
+    public function test_a_card_that_fled_stays_excluded(): void
+    {
+        $state = BolCombatState::normalize(['round' => 2, 'exclus' => ['creature-4'], 'fuis' => ['pnj-3', 'pnj-3', '', 7]]);
+
+        $this->assertSame(['pnj-3'], $state['fuis']);
+        $this->assertSame(['creature-4', 'pnj-3'], $state['exclus']);
+    }
+
+    public function test_keeps_the_round_of_the_mook_melee_only_when_well_formed(): void
+    {
+        $this->assertSame(3, BolCombatState::normalize(['round' => 3, 'melee' => 3])['melee']);
+        $this->assertNull(BolCombatState::normalize(['round' => 3, 'melee' => 0])['melee']);
+        $this->assertNull(BolCombatState::normalize(['round' => 3, 'melee' => '2'])['melee']);
+        $this->assertNull(BolCombatState::normalize(['round' => 3, 'melee' => 2.5])['melee']);
+        $this->assertNull(BolCombatState::normalize(['round' => 3])['melee']);
+    }
+
+    public function test_merge_keeps_the_escapes_and_the_mook_melee_when_the_update_omits_them(): void
+    {
+        $existing = ['round' => 2, 'joues' => [], 'effets' => [], 'exclus' => ['pnj-3'], 'fuis' => ['pnj-3'], 'melee' => 2];
+
+        $merged = BolCombatState::merge(['round' => 2, 'joues' => ['hero-1']], $existing);
+
+        $this->assertSame(['pnj-3'], $merged['fuis']);
+        $this->assertSame(2, $merged['melee']);
+    }
+
+    public function test_merge_lets_the_update_record_an_escape_and_a_mook_melee(): void
+    {
+        $existing = ['round' => 2, 'joues' => [], 'effets' => [], 'exclus' => [], 'fuis' => [], 'melee' => null];
+
+        $merged = BolCombatState::merge(['round' => 2, 'joues' => [], 'exclus' => ['pnj-3'], 'fuis' => ['pnj-3'], 'melee' => 2], $existing);
+
+        $this->assertSame(['pnj-3'], $merged['exclus']);
+        $this->assertSame(['pnj-3'], $merged['fuis']);
+        $this->assertSame(2, $merged['melee']);
+    }
+
+    public function test_a_new_reaction_roll_keeps_the_rounds_escapes_and_mook_melee(): void
+    {
+        $enCours = BolCombatState::normalize(['round' => 3, 'joues' => ['hero-1'], 'exclus' => ['creature-4', 'pnj-3'], 'fuis' => ['pnj-3'], 'melee' => 3, 'depart' => ['hero-1' => 9]]);
+
+        $state = BolCombatState::nouveauJet($enCours, ['hero-2']);
+
+        $this->assertSame(3, $state['round']);
+        $this->assertSame([], $state['joues']);
+        $this->assertSame(['hero-2', 'pnj-3'], $state['exclus']);
+        $this->assertSame(['pnj-3'], $state['fuis']);
+        $this->assertSame(3, $state['melee']);
+        $this->assertSame(['hero-1' => 9], $state['depart']);
     }
 }

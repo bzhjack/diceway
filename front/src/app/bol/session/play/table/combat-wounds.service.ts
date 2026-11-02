@@ -1,7 +1,7 @@
 import {effect, inject, Injectable, untracked} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {catchError, concatMap, EMPTY, forkJoin, from, map, of, switchMap} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, last, map, of, switchMap} from 'rxjs';
 import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -12,6 +12,8 @@ import {CombatEffect} from '../../models/combat-effect.model';
 import {aSombre, appliquerEvenement, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, idAleatoire} from '../tapis/combat-effects.util';
 import {RescueDialogComponent} from '../rescue-dialog/rescue-dialog';
 import {RescueDialogData, RescueResult} from '../../models/rescue-dialog.model';
+import {MeleePietailleDialogComponent} from '../melee-pietaille-dialog/melee-pietaille-dialog';
+import {MeleePietailleDialogData, MeleePietailleResult} from '../../models/melee-pietaille-dialog.model';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {heroDetails} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
@@ -19,7 +21,7 @@ import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
 import {CombatStatsStore} from './combat-stats.store';
 
-/** Les coups et leurs suites : les dégâts enregistrés, « Défier la mort », les héros à 0 qui reprennent leurs esprits ou sombrent, les mourants qui perdent de la vitalité à chaque round, et le secours. */
+/** Les coups et leurs suites : les dégâts enregistrés, « Défier la mort », les héros à 0 qui reprennent leurs esprits ou sombrent, les mourants qui perdent de la vitalité à chaque round, le secours, et les pertes de la mêlée de piétaille. */
 @Injectable()
 export class CombatWoundsService {
   private readonly fightSessionService = inject(BolFightSessionService);
@@ -211,6 +213,50 @@ export class CombatWoundsService {
           this.combat.onEndTurn(true);
         },
         error: (error: unknown) => this.table.notifyError(error, 'Impossible de charger le secouriste.'),
+      });
+  }
+
+  /** « Mêlée de piétaille » (04-pnj-creatures-demons.md, « Règle de horde ») : une fois par round, quand les deux camps ont de la piétaille
+   * debout, le dialogue tire les pertes de chaque camp et le MJ coche qui tombe. « Appliquer » met chacune à 0 de vitalité (hors de combat)
+   * et retient que la mêlée de ce round est faite. La piétaille garde ses tours pour attaquer les héros en horde. */
+  onPietailleMelee(): void {
+    const sessionId = this.table.sessionId();
+    if (!sessionId || this.combat.meleeDisponibilite() !== 'disponible') {
+      return;
+    }
+    const camps = this.combat.meleeCamps();
+    this.dialog
+      .open<MeleePietailleDialogComponent, MeleePietailleDialogData, MeleePietailleResult>(MeleePietailleDialogComponent, {width: 'min(640px, 94vw)', maxWidth: '94vw', data: {camps}})
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result) {
+          return;
+        }
+        const tombes = [...camps.heros, ...camps.adversaires].filter((card) => result.tombes.includes(card.key));
+        const recorded = (): void => {
+          this.combat.recordMelee();
+          const parCamp = (camp: TapisCard['camp']): string => tombes.filter((card) => card.camp === camp).map((card) => card.nom).join(', ') || 'personne';
+          this.snackBar.open(`Mêlée de piétaille — tombent chez les héros : ${parCamp('heros')} ; chez les adversaires : ${parCamp('adversaires')}.`, undefined, {duration: 6000});
+        };
+        if (tombes.length === 0) {
+          recorded();
+          return;
+        }
+        from(tombes)
+          .pipe(
+            concatMap((card) => this.fightSessionService.applyDamage(sessionId, card.kind, card.pivotId, -Math.max(1, card.vitaliteCourante ?? card.vitaliteMax ?? 1))),
+            last(),
+          )
+          .subscribe({
+            next: (session) => {
+              this.table.session.set(session);
+              recorded();
+            },
+            error: (error: unknown) => {
+              this.table.loadSession(sessionId);
+              this.table.notifyError(error, "Impossible d'appliquer les pertes de la mêlée.");
+            },
+          });
       });
   }
 

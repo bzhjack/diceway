@@ -13,8 +13,12 @@ export interface ExpandedCardDialogData {
   readonly hero: Signal<ExpandedHeroData | null>;
   readonly statblock: Signal<BolStatblockData | null>;
   readonly returnUrl: Signal<string | null>;
+  /** La carte ouverte est un rival en combat qui peut encore prendre la fuite. */
+  readonly canFlee: Signal<boolean>;
   readonly changed: (change: TableChange) => void;
   readonly remove: (card: TapisCard) => void;
+  /** « Fuite opportune » : demande confirmation, puis le rival quitte le combat. */
+  readonly flee: (card: TapisCard) => void;
   readonly toggleArmure: (event: {card: TapisCard; armureId: number}) => void;
   readonly toggleArme: (event: {card: TapisCard; armeId: number}) => void;
 }

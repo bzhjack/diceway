@@ -5,6 +5,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 import {TurnOrderInterrupter} from '../../models/turn-order.model';
+import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 
 /** Barre du haut de la table : titre de la session, contenu projeté par la page (la frise des actes en mode libre, l'ordre d'action
  * en combat), coulisses ou commandes du round, action de combat, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
@@ -22,6 +23,8 @@ export class SessionHeaderComponent {
   readonly coulissesOpen = input(false);
   /** En combat : les héros qui ont retardé leur action ce round, chacun peut l'interrompre pour agir tout de suite. */
   readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
+  /** En combat : la « Mêlée de piétaille », absente sans piétaille debout des deux côtés, grisée une fois faite ce round. */
+  readonly melee = input<MeleeDisponibilite>('absente');
 
   readonly startCombat = output<void>();
   readonly endCombat = output<void>();
@@ -33,4 +36,6 @@ export class SessionHeaderComponent {
   readonly interruptRequested = output<string>();
   /** En combat : un nouveau jet de réaction des héros. */
   readonly rerollRequested = output<void>();
+  /** En combat : la piétaille des deux camps s'affronte (« Mêlée de piétaille »). */
+  readonly meleeRequested = output<void>();
 }

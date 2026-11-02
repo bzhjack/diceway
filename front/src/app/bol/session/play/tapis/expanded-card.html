@@ -91,6 +91,19 @@
         @if (card().vilenie !== null) {
           <bol-card-vilenie sheetSide class="exc-entry-vilenie" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit($event)" />
         }
+        @if (canFlee()) {
+          <!-- « Fuite opportune » : en combat, le rival dépense 1 point de vilénie et quitte le combat, même s'il semble mort -->
+          <button
+            sheetSide
+            mat-stroked-button
+            type="button"
+            class="exc-entry-fuite"
+            matTooltip="Le rival s'enfuit : il quitte le combat, sa fiche reste sur la table"
+            (click)="fleeRequested.emit(card())"
+          >
+            <mat-icon>directions_run</mat-icon> Fuite opportune (−1 vilénie)
+          </button>
+        }
         @if (card().camp === 'adversaires') {
           <bol-attitude-picker sheetSide class="exc-entry-attitude" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit($event)" />
         }

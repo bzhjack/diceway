@@ -3,7 +3,7 @@ import {PlayToken} from './combat-play.model';
 import {InitiativeTierKey} from './initiative.model';
 import {TapisCard} from './tapis.model';
 
-/** État d'un combat : le round, les cartes qui ont joué ce round, les effets en cours, celles exclues. Gardé
+/** État d'un combat : le round, les cartes qui ont joué ce round, les effets en cours, celles exclues ou enfuies, la mêlée de piétaille. Gardé
  * dans la session (`etat_combat`) ; les clés sont celles des cartes (`{kind}-{pivotId}`). */
 export interface EtatCombat {
   readonly round: number;
@@ -15,6 +15,10 @@ export interface EtatCombat {
   /** Vitalité de chaque carte au début du combat, notée par le serveur au démarrage : le repos d'après combat rend la moitié des
    * points perdus pendant ce combat, pas des blessures plus anciennes. Une carte absente est entrée au maximum. */
   readonly depart: Readonly<Record<string, number>>;
+  /** Rivaux qui ont pris la fuite (« Fuite opportune », 1 point de vilénie) : ils sont aussi dans `exclus`, la frise les dit « enfuis ». */
+  readonly fuis: readonly string[];
+  /** Round de la dernière mêlée de piétaille (une par round) ; `null` s'il n'y en a pas eu. */
+  readonly melee: number | null;
 }
 
 /** Où en est une carte dans le round : c'est à elle, elle a joué, elle est sautée (hors combat ou

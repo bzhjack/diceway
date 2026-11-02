@@ -18,6 +18,10 @@ export interface EtatCombatDto {
   effets?: unknown[];
   /** Cartes laissées sur la table mais exclues du combat. */
   exclus?: string[];
+  /** Rivaux enfuis (« Fuite opportune ») : ils sont aussi exclus. */
+  fuis?: string[];
+  /** Round de la dernière mêlée de piétaille. */
+  melee?: number | null;
 }
 
 /** Scène courante d'une session, telle que sérialisée avec la session (titres pour la barre du haut). */

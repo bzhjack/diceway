@@ -79,8 +79,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
     // Références de combat
     Route::get('/bol/combat/options', [BolCombatReferenceController::class, 'getCombatOptions']);
-    Route::get('/bol/combat/heroic-options', [BolCombatReferenceController::class, 'getHeroicOptions']);
-    Route::get('/bol/combat/difficultes', [BolCombatReferenceController::class, 'getDifficultes']);
 
     // Gestion des carrieres
     Route::get('/bol/carrieres', [BolCarriereController::class, 'getAll']);

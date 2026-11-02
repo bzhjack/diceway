@@ -19,6 +19,8 @@
       [interrupters]="combat.interrupters()"
       (interruptRequested)="combat.onInterrupt($event)"
       (rerollRequested)="commands.openStartCombat(true)"
+      [melee]="combat.meleeDisponibilite()"
+      (meleeRequested)="wounds.onPietailleMelee()"
     >
       @if (table.mode() === 'libre') {
         <bol-scene-acts [sessionTitre]="table.session()?.titre ?? null" (sceneChanged)="commands.onSceneLoaded($event)" />

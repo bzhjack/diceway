@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -38,7 +38,7 @@ function defended(key: string, id = 'e-1'): CombatEffect {
 }
 
 function etat(round: number, joues: string[] = [], effets: CombatEffect[] = []): EtatCombat {
-  return {round, joues, effets, exclus: [], depart: {}};
+  return {round, joues, effets, exclus: [], depart: {}, fuis: [], melee: null};
 }
 
 const KALENA = card('hero', 1);
@@ -65,6 +65,21 @@ describe('normalizeEtat', () => {
   it('reads the starting vitalities, and an empty PHP array as none', () => {
     expect(normalizeEtat({round: 1, depart: {'hero-1': 11, 'pnj-2': '8', 'pnj-3': 2.5}}).depart).toEqual({'hero-1': 11});
     expect(normalizeEtat({round: 1, depart: []}).depart).toEqual({});
+  });
+
+  it('keeps the rivals who fled, always excluded, and the round of the mook melee', () => {
+    const normalized = normalizeEtat({round: 3, exclus: ['creature-4'], fuis: ['pnj-3', 'pnj-3', '', 5], melee: 3});
+
+    expect(normalized.fuis).toEqual(['pnj-3']);
+    expect(normalized.exclus).toEqual(['creature-4', 'pnj-3']);
+    expect(normalized.melee).toBe(3);
+  });
+
+  it('drops a malformed mook melee round', () => {
+    expect(normalizeEtat({round: 3, melee: 0}).melee).toBeNull();
+    expect(normalizeEtat({round: 3, melee: '2'}).melee).toBeNull();
+    expect(normalizeEtat({round: 3, melee: 1.5}).melee).toBeNull();
+    expect(normalizeEtat({round: 3}).melee).toBeNull();
   });
 
   it('drops the GM die for everyone that an older version saved', () => {
@@ -471,7 +486,7 @@ describe('turnOrderFrise', () => {
 });
 
 describe('excluded cards', () => {
-  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys, depart: {}});
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys, depart: {}, fuis: [], melee: null});
 
   it('skips an excluded card, which never becomes active', () => {
     const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));
@@ -626,5 +641,30 @@ describe('horde', () => {
   it('drops the effects an engaged piétaille kept until its next turn', () => {
     const order = ordered(B1, B2, KALENA);
     expect(endTurn(order, etat(1, [], [defended('pnj-12')]), [], undefined, ['pnj-12']).effets).toEqual([]);
+  });
+});
+
+describe('raisonHorsJeu', () => {
+  it('says a rival who fled is « enfui », whatever his vitality', () => {
+    const rival = card('pnj', 3, {vitaliteCourante: 0});
+    const fled: EtatCombat = {...etat(2), exclus: ['pnj-3'], fuis: ['pnj-3']};
+
+    expect(raisonHorsJeu(rival, fled)).toBe('enfui');
+    expect(raisonHorsJeu(card('pnj', 3), fled)).toBe('enfui');
+  });
+
+  it('otherwise gives the out-of-combat reason', () => {
+    expect(raisonHorsJeu(card('pnj', 3, {vitaliteCourante: 0}), etat(2))).toBe('hors de combat');
+    expect(raisonHorsJeu(card('pnj', 3), etat(2))).toBeNull();
+  });
+});
+
+describe('combatOutcome with a rival who fled', () => {
+  it('no longer counts him: his camp falls when the rest is down', () => {
+    const rival = card('pnj', 3);
+    const mook = card('pnj', 4, {vitaliteCourante: 0});
+
+    expect(combatOutcome([KALENA, rival, mook], [])).toBeNull();
+    expect(combatOutcome([KALENA, rival, mook], ['pnj-3'])).toBe('victoire');
   });
 });

@@ -7,12 +7,13 @@ namespace App\Http\Services\Bol;
  * les effets en cours (bonus, malus et traces d'usage : posture, défense totale, petit bouclier dépensé…), les cartes
  * exclues de ce combat (restées sur la table, mais qui n'y participent pas : elles réintègrent la scène à la fin du
  * combat) et la vitalité de chaque carte au début du combat (la récupération d'après combat rend la moitié des points perdus
- * pendant ce combat, pas des blessures plus anciennes). Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
+ * pendant ce combat, pas des blessures plus anciennes), les rivaux qui ont pris la fuite (« Fuite opportune » : ils restent exclus) et le
+ * round de la dernière mêlée de piétaille (une par round). Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
  * effets sans connaître les règles. Fonctions pures, sans base.
  */
 class BolCombatState
 {
-    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => []];
+    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => [], 'fuis' => [], 'melee' => null];
 
     private const MAX_EFFETS = 200;
     private const MAX_DEPART = 200;
@@ -27,7 +28,9 @@ class BolCombatState
      * (combat démarré avant que l'état n'existe) vaut le round 1, personne n'ayant joué. Un état de l'ancien format
      * (`defense_totale`, `attaquees`) est converti en effets.
      *
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
+     * Un rival enfui reste exclu du combat : `fuis` est toujours compris dans `exclus`.
+     *
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, fuis: array<int, string>, melee: int|null}
      */
     public static function normalize(mixed $raw): array
     {
@@ -35,27 +38,56 @@ class BolCombatState
             return self::INITIAL;
         }
 
+        $fuis = self::keys($raw['fuis'] ?? null);
+        $melee = $raw['melee'] ?? null;
+
         return [
             'round'  => max(1, (int) (is_numeric($raw['round'] ?? null) ? $raw['round'] : 1)),
             'joues'  => self::keys($raw['joues'] ?? null),
             'effets' => array_key_exists('effets', $raw) ? self::effets($raw['effets']) : self::effetsDeLAncienFormat($raw),
-            'exclus' => self::keys($raw['exclus'] ?? null),
+            'exclus' => self::keys([...self::keys($raw['exclus'] ?? null), ...$fuis]),
             'depart' => self::depart($raw['depart'] ?? null),
+            'fuis'   => $fuis,
+            'melee'  => is_int($melee) && $melee >= 1 ? $melee : null,
         ];
     }
 
     /**
-     * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage, les effets ne sont pas
-     * réécrits par un état envoyé sans eux, et la vitalité de départ ne vient que du démarrage (le front ne peut pas la changer).
+     * L'état d'un nouveau jet de réaction en plein combat : le round, la vitalité de départ, les rivaux enfuis (toujours exclus) et la mêlée
+     * de piétaille du round sont gardés ; personne n'a encore joué, les effets repartent de zéro et les exclusions sont celles du nouveau jet.
+     *
+     * @param array{round: int, depart: array<string, int>, fuis: array<int, string>, melee: int|null} $enCours l'état normalisé du combat
+     * @param array<int, string> $exclus clés de carte exclues par le nouveau jet
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, fuis: array<int, string>, melee: int|null}
+     */
+    public static function nouveauJet(array $enCours, array $exclus): array
+    {
+        return self::normalize([
+            'round'  => $enCours['round'],
+            'exclus' => $exclus,
+            'depart' => $enCours['depart'],
+            'fuis'   => $enCours['fuis'],
+            'melee'  => $enCours['melee'],
+        ]);
+    }
+
+    /**
+     * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage, les effets, les fuites
+     * et la mêlée de piétaille ne sont pas réécrits par un état envoyé sans eux, et la vitalité de départ ne vient que du démarrage (le front
+     * ne peut pas la changer).
      *
      * @param array<string, mixed> $envoye
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, fuis: array<int, string>, melee: int|null}
      */
     public static function merge(array $envoye, mixed $existant): array
     {
         $garde = self::normalize($existant);
         $envoye['exclus'] ??= $garde['exclus'];
         $envoye['effets'] ??= $garde['effets'];
+        $envoye['fuis'] ??= $garde['fuis'];
+        if (!array_key_exists('melee', $envoye)) {
+            $envoye['melee'] = $garde['melee'];
+        }
         $envoye['depart'] = $garde['depart'];
 
         return self::normalize($envoye);

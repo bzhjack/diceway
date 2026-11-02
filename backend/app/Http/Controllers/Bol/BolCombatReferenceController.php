@@ -13,14 +13,4 @@ class BolCombatReferenceController extends Controller
     {
         return response()->json($this->reference->combatOptions());
     }
-
-    public function getHeroicOptions()
-    {
-        return response()->json($this->reference->heroicOptions());
-    }
-
-    public function getDifficultes()
-    {
-        return response()->json($this->reference->difficultes());
-    }
 }

@@ -8,7 +8,7 @@ import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-ef
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -26,12 +26,17 @@ export function normalizeEtat(raw: unknown): EtatCombat {
 
   const source = raw as Record<string, unknown>;
   const round = typeof source['round'] === 'number' && Number.isFinite(source['round']) ? Math.floor(source['round']) : 1;
+  const fuis = uniqueKeys(source['fuis']);
+  const melee = source['melee'];
   return {
     round: Math.max(1, round),
     joues: uniqueKeys(source['joues']),
     effets: 'effets' in source ? normalizeEffets(source['effets']) : effetsDeLAncienFormat(source),
-    exclus: uniqueKeys(source['exclus']),
+    // Un rival enfui reste exclu du combat.
+    exclus: uniqueKeys([...uniqueKeys(source['exclus']), ...fuis]),
     depart: departOf(source['depart']),
+    fuis,
+    melee: Number.isInteger(melee) && (melee as number) >= 1 ? (melee as number) : null,
   };
 }
 
@@ -119,6 +124,12 @@ export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []
     return aAssomme(effets, card.key) ? 'assommé' : 'inconscient';
   }
   return aStabilise(effets, card.key) ? 'stabilisé' : vitalite >= -5 ? 'mourant' : 'mort';
+}
+
+/** Pourquoi une carte ne joue plus, pour la frise : « enfui » pour un rival qui a pris la fuite (« Fuite opportune »), sinon la raison de
+ * `horsCombat` ; `null` pour une carte qui joue. */
+export function raisonHorsJeu(card: TapisCard, etat: EtatCombat): ReturnType<typeof horsCombat> | 'enfui' {
+  return etat.fuis.includes(card.key) ? 'enfui' : horsCombat(card, etat.effets);
 }
 
 /** Les héros qui perdent 1 de vitalité au début d'un round (02-actions-combat.md, « Blessures, inconscience et mort ») : mourants
@@ -218,7 +229,7 @@ export function effetsDerives(ordered: readonly OrderedCard[], round: number): C
 }
 
 /** Rang en clair d'une carte de piétaille (`TapisCard.rang`). */
-const PIETAILLE = 'Piétaille';
+export const PIETAILLE = 'Piétaille';
 
 /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, quand elle-même est une piétaille : celles de son camp qui
  * n'ont pas encore joué ce round et peuvent jouer (04-pnj-creatures-demons.md, « Règle de horde » ; livre p. 132). Vide sinon. */

@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="mpd-title">
+  <mat-icon svgIcon="gi-swords" />
+  Mêlée de piétaille
+</h2>
+
+<mat-dialog-content class="mpd-content">
+  <p class="mpd-lead">
+    Pas de jet d'attaque quand la piétaille affronte la piétaille.
+    @if (egalite) {
+      Les deux camps sont aussi nombreux : chacun perd d3 (le livre ne dit rien de l'égalité : interprétation).
+    } @else {
+      Le camp le plus nombreux tue d6M adversaires, l'autre lui en tue d3 (livre p. 132).
+    }
+    Tapez le dé lancé à table, ou lancez-le ici.
+  </p>
+
+  <div class="mpd-camps">
+    @for (row of rows(); track row.camp) {
+      <section class="mpd-camp" [attr.aria-labelledby]="'mpd-titre-' + row.camp">
+        <h3 class="mpd-camp-titre" [id]="'mpd-titre-' + row.camp">
+          {{ row.titre }} <small>{{ row.debout.length }} debout</small>
+        </h3>
+
+        <div class="mpd-jet">
+          <span class="mpd-jet-label">
+            Tuent <b>{{ row.de }}</b>
+          </span>
+          <input
+            #total
+            class="mpd-total"
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            autocomplete="off"
+            [placeholder]="row.de"
+            [attr.aria-label]="row.titre + ' : résultat du ' + row.de + ' lancé à table, ce qu’ils tuent chez les ' + row.tues"
+            [value]="row.typed"
+            (input)="onTyped(row.camp, total.value)"
+          />
+          <button mat-icon-button type="button" class="mpd-roll" [attr.aria-label]="'Lancer le ' + row.de + ' des ' + row.nom + ' à l’écran'" (click)="roll(row.camp)">
+            <mat-icon>casino</mat-icon>
+          </button>
+          @if (row.detail; as detail) {
+            <small class="mpd-detail">{{ detail }}</small>
+          }
+        </div>
+
+        <p class="mpd-pertes">
+          @if (row.pertes === null) {
+            Qui tombe : en attente du jet d'en face.
+          } @else {
+            Perdent <b>{{ row.pertes }}</b> · {{ row.tombes.size }} {{ row.tombes.size > 1 ? 'cochés' : 'coché' }}
+          }
+        </p>
+        <ul class="mpd-list" [attr.aria-label]="'Qui tombe chez les ' + row.nom">
+          @for (card of row.debout; track card.key) {
+            <li>
+              <mat-checkbox [checked]="row.tombes.has(card.key)" (change)="toggle(row.camp, card.key)">
+                {{ card.nom }} <small>{{ card.vitaliteCourante ?? card.vitaliteMax }} / {{ card.vitaliteMax }}</small>
+              </mat-checkbox>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+
+  <p class="mpd-bilan" aria-live="polite">{{ bilan() }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-flat-button type="button" [disabled]="!ready()" (click)="apply()">Appliquer</button>
+</mat-dialog-actions>

@@ -13,12 +13,12 @@ class BolScenarioController extends Controller
 
     public function getAll()
     {
-        return response()->json($this->scenarioService->getScenariosWithRelations());
+        return response()->json($this->scenarioService->getScenarios());
     }
 
     public function getOne(string $id)
     {
-        $scenario = $this->scenarioService->getScenarioWithRelations($id);
+        $scenario = $this->scenarioService->getScenario($id);
         if (!$scenario || Gate::denies('view', $scenario)) {
             return response()->json(['error' => 'Not found'], 404);
         }

@@ -30,6 +30,8 @@ Regle de horde:
 - Exemple: 2 pietaille => `+2`; 3 pietaille => `+3`.
 - Si la horde touche: degats `d6M`.
 - Pietaille contre pietaille: pas de jet d'attaque; le groupe le plus nombreux inflige `d6M` pertes; le plus faible riposte a `d3`.
+- Pietaille contre pietaille, egalite de nombre (interpretation): le livre ne dit rien; l'application fait perdre `d3` a chaque camp.
+- Pietaille contre pietaille, frequence (interpretation): une fois par round dans l'application; chaque pietaille garde son tour pour attaquer les heros en horde.
 
 ### Coriaces
 
@@ -60,6 +62,7 @@ Equivalent des `points d'heroisme` pour les rivaux (le livre ne fixe pas de nomb
 
 - `Bouclier humain`: utiliser un PNJ pietaille qui l'entoure comme bouclier humain pour absorber les degats d'une attaque. Fonctionne comme `parade in extremis`.
 - `Fuite opportune`: permet au rival de s'echapper quand la situation tourne mal (porte derobee, diversion, disparition subite), meme s'il semblait perdu. Combine avec `defier la mort`, un rival peut meme echapper a une mort apparente. Necessite une occasion narrative.
+- Cout de la `Fuite opportune` (interpretation): le livre ne donne pas de nombre; l'application la compte `1` point de vilenie, comme les options des points d'heroisme.
 
 ## Gabarits de creatures
 

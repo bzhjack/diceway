@@ -41,8 +41,8 @@ function heroRow(id: number, vitalite: number) {
   };
 }
 
-function pnjRow(id: number, vitalite: number, camp = 'adversaires') {
-  return {id, pnj_id: `p${id}`, camp, rang: 'coriace', nom: `PNJ ${id}`, surnom: null, initiative: 0, vitalite_max: 10, vitalite_courante: vitalite, degats: 'd6', defense: 1, armes: [], pnj: null};
+function pnjRow(id: number, vitalite: number, camp = 'adversaires', rang = 'coriace', vilenie: number | null = null) {
+  return {id, pnj_id: `p${id}`, camp, rang, nom: `PNJ ${id}`, surnom: null, initiative: 0, vitalite_max: 10, vitalite_courante: vitalite, vilenie_courante: vilenie, degats: 'd6', defense: 1, armes: [], pnj: null};
 }
 
 function etat(over: Partial<EtatCombatDto> = {}): EtatCombatDto {
@@ -76,6 +76,7 @@ describe('SessionPlayPageComponent', () => {
     applyDamage: vi.fn(),
     setCamp: vi.fn(),
     removeCombatant: vi.fn(),
+    adjustVilenie: vi.fn(),
   };
   const dialogOpen = vi.fn();
 
@@ -212,6 +213,84 @@ describe('SessionPlayPageComponent', () => {
       await stable();
 
       expect(service.applyDamage).toHaveBeenCalledWith('s1', 'hero', 1, -1);
+    });
+  });
+
+  describe('la fuite opportune', () => {
+    const avecRival = (vilenie: number, over: Partial<BolFightSessionModel> = {}): BolFightSessionModel =>
+      session({pnjs: [pnjRow(7, 10) as never, pnjRow(9, 0, 'adversaires', 'rival', vilenie) as never], ...over});
+
+    it('un rival à terre peut encore fuir s’il a de la vilénie', async () => {
+      await rendre(avecRival(2));
+      const rival = table.cards().find((card) => card.key === 'pnj-9')!;
+
+      expect(combat.canFlee(rival)).toBe(true);
+    });
+
+    it('fuir dépense 1 point de vilénie, retire le rival du combat et la frise le dit enfui', async () => {
+      await rendre(avecRival(2));
+      service.adjustVilenie.mockReturnValue(of(avecRival(1)));
+      const rival = table.cards().find((card) => card.key === 'pnj-9')!;
+
+      combat.flee(rival);
+      await stable();
+
+      expect(service.adjustVilenie).toHaveBeenCalledWith('s1', 9, -1);
+      const envoye = service.updateCombatState.mock.calls.at(-1)![1] as EtatCombatDto;
+      expect(envoye.exclus).toContain('pnj-9');
+      expect(envoye.fuis).toEqual(['pnj-9']);
+      expect(combat.turnEntries().find((entry) => entry.key === 'pnj-9')?.horsCombat).toBe('enfui');
+      expect(combat.canFlee(table.cards().find((card) => card.key === 'pnj-9')!)).toBe(false);
+    });
+
+    it('sans vilénie, pas de fuite', async () => {
+      await rendre(avecRival(0));
+      const rival = table.cards().find((card) => card.key === 'pnj-9')!;
+
+      combat.flee(rival);
+      await stable();
+
+      expect(combat.canFlee(rival)).toBe(false);
+      expect(service.adjustVilenie).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('la mêlée de piétaille', () => {
+    const melee = (over: Partial<EtatCombatDto> = {}): BolFightSessionModel =>
+      session({
+        pnjs: [pnjRow(20, 2, 'heros', 'pietaille') as never, pnjRow(21, 2, 'adversaires', 'pietaille') as never, pnjRow(22, 2, 'adversaires', 'pietaille') as never],
+        etat_combat: etat(over),
+      });
+
+    it('n’est proposée que si les deux camps ont de la piétaille debout', async () => {
+      await rendre(session());
+      expect(combat.meleeDisponibilite()).toBe('absente');
+
+      table.session.set(melee());
+      await stable();
+      expect(combat.meleeDisponibilite()).toBe('disponible');
+    });
+
+    it('« Appliquer » met hors de combat les piétailles cochées et retient la mêlée du round', async () => {
+      await rendre(melee({round: 2}));
+      dialogOpen.mockReturnValue({afterClosed: () => of({tombes: ['pnj-22']})});
+      service.updateCombatState.mockClear();
+
+      wounds.onPietailleMelee();
+      await stable();
+
+      expect(service.applyDamage).toHaveBeenCalledTimes(1);
+      expect(service.applyDamage).toHaveBeenCalledWith('s1', 'pnj', 22, -2);
+      expect(service.updateCombatState.mock.calls.at(-1)![1].melee).toBe(2);
+    });
+
+    it('une fois faite, elle attend le round suivant', async () => {
+      await rendre(melee({round: 2, melee: 2}));
+      dialogOpen.mockClear();
+
+      expect(combat.meleeDisponibilite()).toBe('faite');
+      wounds.onPietailleMelee();
+      expect(dialogOpen).not.toHaveBeenCalled();
     });
   });
 

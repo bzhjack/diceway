@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31 et le 2026-11-02. Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31 et le 2026-11-02 (dont la mêlée de piétaille et la fuite opportune). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
 
@@ -11,11 +11,11 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 1. **Démarrer le combat** : une page entière (`session/:id/combat`) recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
 2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, la carte de celui qui joue porte son portrait, sa posture (dont la défense totale), ses armes, et en haut à droite ses actions : Fiche, Effets, Retarder, Secourir (s'il y a un mourant) en icônes, puis Fin du tour. Plus bas, trois colonnes conduisent le coup : la cible, l'attaque, les dégâts.
 3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence. Si le coup qui a touché n'est pas appliqué, l'application demande d'abord : l'appliquer et finir, finir sans l'appliquer, ou rester sur le tour.
-4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat). Au début de chaque round :
+4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat, ou enfui pour un rival qui a pris la fuite, voir § 6). Au début de chaque round :
    - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
    - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
 5. **Secourir** : à son tour, un héros peut tenter de stabiliser un allié mourant au lieu d'attaquer (bouton « Secourir » de sa ligne) : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le tour se termine ensuite.
-6. **Fin du combat** : dès qu'un camp n'a plus personne debout (hors de combat ou retiré du combat), une boîte « Victoire » ou « Défaite » s'ouvre (après une éventuelle boîte en cours, comme « Défier la mort »). Elle nomme les héros encore mourants ; « Continuer » laisse le temps de les secourir, « Terminer le combat » ouvre « Après combat ». Elle ne revient que si l'issue change, ou au rechargement de la page.
+6. **Fin du combat** : dès qu'un camp n'a plus personne debout (hors de combat, retiré du combat ou enfui), une boîte « Victoire » ou « Défaite » s'ouvre (après une éventuelle boîte en cours, comme « Défier la mort »). Elle nomme les héros encore mourants ; « Continuer » laisse le temps de les secourir, « Terminer le combat » ouvre « Après combat ». Elle ne revient que si l'issue change, ou au rechargement de la page.
 7. **Terminer le combat** : la boîte « Après combat » (livre p. 65-66) montre, pour chaque blessé du camp des héros, ce qu'il récupère. « Repos » : à 0 ou plus, la moitié des points perdus pendant ce combat, et la totalité des dégâts reçus à mains nues (l'application les retient coup par coup). Le serveur note la vitalité de chacun au démarrage (`etat_combat.depart`) : une blessure d'avant le combat ne se récupère pas ici. « Soins » : si un héros a une carrière de soins (médecin, guérisseur, rebouteux), son rang en vitalité. Le MJ décoche ce qui ne s'applique pas ; « Terminer le combat » enregistre tout et repasse en mode libre.
 
 ## 2. Le jet de réaction
@@ -60,7 +60,7 @@ Formule : `dé de l'arme + vigueur − protection de la cible + effets en cours`
 - À distance et à mains nues, la vigueur compte pour moitié (arrondie à l'inférieur).
 - Bagarre à mains nues : la case « Bagarre » fait jouer la vigueur à la place de l'agilité pour l'attaque. Un coup à mains nues ne fait pas passer sous 0 : la cible est assommée, sans coma ni « Défier la mort », et ses dégâts à mains nues reviennent en entier après le combat.
 - Avec moins de 0 en vigueur, les armes lourdes (d6B) sont grisées : elles ne se manient pas.
-- La protection est la valeur fixe de l'armure portée ; un casque y ajoute +1, seulement avec une armure (livre p. 52), et Peau dure +1, même sans armure (`equippedProtection`, `combat-attack.util.ts`). Le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
+- La protection est la valeur fixe de l'armure portée ; un casque y ajoute +1, seulement avec une armure (livre p. 52), et Peau dure +1, même sans armure (`equippedProtection`, `combat-attack.util.ts`). Un démon tire sa protection de ses pouvoirs : Cuirassé d6 (4), sinon Armure d6-2 (2) (`demonProtection`, `combat-play.util.ts`, noms comparés sans accents). Le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
 - « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort » ; sous −5, il se stabilise et ne perd plus de vitalité.
 
 ## 5. Le registre d'effets
@@ -109,6 +109,7 @@ Les usages de l'héroïsme du jet d'action valent pour le jet d'attaque.
 | Double 6 | Succès légendaire −1 | Deux options au lieu d'une. |
 
 - **Côté défenseur** : un héros ou un rival touché peut dépenser 1 point pour une « Parade in extremis » (pas de dégâts ; son bouclier, ou son arme, est brisé), ou, une fois les dégâts appliqués, pour « Juste une égratignure » (d6B rendu, sans dépasser les dégâts du coup, et il perd sa prochaine action). Un rival avec un sbire à ses côtés a aussi « Bouclier humain » : le sbire encaisse le coup.
+- **Fuite opportune** (rival, livre p. 133) : sur la carte d'un rival qui a encore de la vilénie (ouverte par « Fiche », ou par la barre de commande `/`, qui trouve aussi les cartes de la table en combat), le bouton « Fuite opportune (−1 vilénie) » demande confirmation, dépense 1 point et le rival quitte le combat : il ne joue plus, ne se vise plus et ne compte plus pour l'issue ; la frise l'éteint, « enfui » ; la table l'annonce. Le bouton reste offert à un rival à 0 ou moins (« il semblait mort »). Sa fiche reste sur la table. L'état garde la fuite (`etat_combat.fuis`, aussi dans `exclus`) : un rechargement ou un nouveau jet de réaction ne le ramène pas.
 - **Interrompre** : un héros qui a retardé son action peut, pour 1 PH, agir tout de suite (bouton dans la barre de la frise).
 - **Double 6 de justesse** : si seul le double 6 pouvait toucher, le coup touche normalement, sans option gratuite ni légendaire. Il reste convertible en succès héroïque pour 1 point.
 - **Pas de légendaire depuis un succès héroïque acheté**, comme le veut le livre.
@@ -127,7 +128,16 @@ Une pour un succès héroïque, deux pour un succès légendaire, la même deux 
 | Carnage | Nouvelle attaque immédiate annoncée ; plus aucune dépense d'héroïsme jusqu'à la fin du tour. |
 | Massacrer la piétaille | Rappel en infobulle : le MJ retire les cartes. |
 
-## 7. Hypothèses prises
+## 7. La mêlée de piétaille
+
+Livre p. 132 : quand de la piétaille affronte de la piétaille, pas de jet d'attaque. Dès que les deux camps ont de la piétaille debout (ni hors de combat, ni exclue ; celle du camp des héros, ce sont leurs suivants), l'en-tête montre « Mêlée de piétaille ».
+
+- Le dialogue donne l'effectif debout de chaque camp et son dé : le plus nombreux tue d6M adversaires, l'autre lui en tue d3 ; à égalité, chacun perd d3. Chaque camp tape son dé lancé à table ou le lance à l'écran (d6M : le moins bon de deux d6).
+- L'application propose qui tombe dans chaque camp, les derniers dans l'ordre de jeu, jamais plus que l'effectif debout ; le MJ coche ou décoche. « Appliquer » met chacun à 0 de vitalité (hors de combat) et la table annonce les pertes.
+- Une fois par round : l'état retient le round de la dernière mêlée (`etat_combat.melee`) ; le bouton reste grisé, avec une infobulle qui dit pourquoi, jusqu'au round suivant.
+- La piétaille garde ses tours pour attaquer les héros en horde.
+
+## 8. Hypothèses prises
 
 Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corriger à la main.
 
@@ -135,12 +145,14 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Dé de malus du coup précis** : jusqu'à la fin du combat, et sur tous les jets d'attaque de la cible.
 - **Échec critique sur une attaque** : seul le point d'héroïsme est accordé ; l'issue défavorable est à poser par le MJ.
 - **Égalité entre héros dans l'ordre d'action** : agilité brute, sans le malus d'armure.
+- **Mêlée de piétaille à égalité de nombre** : chaque camp perd d3 ; une mêlée par round.
+- **Coût de la fuite opportune** : 1 point de vilénie, comme les options des points d'héroïsme.
 
-## 8. Limites connues
+## 9. Limites connues
 
 Ce qui reste à faire est dans `doc/plans/2026-11-02-reste-a-faire.md` (section 2), dont les petites limites de l'assistant (Carnage pris deux fois, renversement et désarmement non vérifiés, retrait d'une carte en combat, effet libre). S'y ajoute : pas d'annonce vocale des effets expirés.
 
-## 9. Où c'est dans le code
+## 10. Où c'est dans le code
 
 Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 
@@ -155,6 +167,8 @@ Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 | Page, enregistrements | `play/session-play-page.ts` |
 | Jet d'action du héros | `action-roll.util.ts`, `play/action-roll-panel/` |
 | Secours et soins | `rescue.util.ts`, `play/rescue-dialog/`, `play/after-combat-dialog/` |
+| Fuite opportune | `play/tapis/fuite-opportune.util.ts`, `CombatTurnStore.flee`, `ExpandedCardStore` (confirmation) |
+| Mêlée de piétaille | `play/tapis/melee-pietaille.util.ts`, `play/melee-pietaille-dialog/`, `CombatWoundsService.onPietailleMelee` |
 | Validation de l'état côté serveur | `backend/app/Http/Services/Bol/BolCombatState.php` |
 
 Chaque fichier `*.util.ts` a son `*.spec.ts` à côté.

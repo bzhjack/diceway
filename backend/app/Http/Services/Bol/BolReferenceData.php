@@ -8,8 +8,6 @@ use App\Models\Bol\BolCarriere;
 use App\Models\Bol\BolCategorie;
 use App\Models\Bol\BolCombatOption;
 use App\Models\Bol\BolDesavantage;
-use App\Models\Bol\BolDifficulte;
-use App\Models\Bol\BolHeroicOption;
 use App\Models\Bol\BolLangue;
 use App\Models\Bol\BolPouvoir;
 use App\Models\Bol\BolRegion;
@@ -74,16 +72,6 @@ class BolReferenceData
     public function combatOptions()
     {
         return $this->remember('bol_combat_options_all', fn () => BolCombatOption::orderBy('ordre')->get());
-    }
-
-    public function heroicOptions()
-    {
-        return $this->remember('bol_heroic_options_all', fn () => BolHeroicOption::orderBy('ordre')->get());
-    }
-
-    public function difficultes()
-    {
-        return $this->remember('bol_difficultes_all', fn () => BolDifficulte::orderBy('ordre')->get());
     }
 
     private function remember(string $key, callable $query)

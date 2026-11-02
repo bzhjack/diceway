@@ -22,6 +22,19 @@
           Interrompre : {{ i.nom }} (−1 PH)
         </button>
       }
+      @if (melee() !== 'absente') {
+        <!-- Piétaille contre piétaille : une action secondaire, une fois par round -->
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="melee() === 'faite'"
+          disabledInteractive
+          [matTooltip]="melee() === 'faite' ? 'Déjà résolue ce round : de nouveau possible au round suivant' : 'Piétaille contre piétaille : les pertes de chaque camp, sans jet d’attaque'"
+          (click)="meleeRequested.emit()"
+        >
+          <mat-icon svgIcon="gi-swords" /> Mêlée de piétaille
+        </button>
+      }
       <button
         mat-icon-button
         type="button"

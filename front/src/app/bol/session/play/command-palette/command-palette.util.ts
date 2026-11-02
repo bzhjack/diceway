@@ -92,9 +92,11 @@ export function buildResults(input: PaletteInput): PaletteGroup[] {
   }
 
   const groups: PaletteGroup[] = [];
+  // Les cartes de la table se cherchent dans les deux modes (en combat, pour ouvrir la fiche d'une carte qui n'est ni active ni visée) ;
+  // poser un personnage ou charger une scène, en mode libre seulement.
   const searchable = input.mode === 'libre' && term !== '';
 
-  if (searchable && !batch) {
+  if (term !== '' && !batch) {
     groups.push({
       id: 'table',
       label: GROUP_LABELS.table,

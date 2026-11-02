@@ -10,11 +10,11 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | --- | --- | --- |
 | Mise en production : migrations du 2026-11-02, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
 | Combat : capacités des créatures et démons (régénération, intangible, poison, vulnérabilité, force vitale) | 2, lot 3 | L |
-| Combat : piétaille contre piétaille, « Fuite opportune » des rivaux | 2, lot 3 | S |
 | Combat : sorcellerie et foi | 2, lot 4 | L |
 | Combat : petites limites de l'assistant | 2, point 17 | S à M |
-| Bugs révélés par le tri de la doc : protection du Cuirassé, carrières du Non-combattant refusées par le serveur, désavantage compté deux fois | 3 | S |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
+
+Tout le reste du fichier est coché ✅ : audit de la doc et des seeders, création de héros, données de référence, bugs révélés, accueil, carte de Lémurie, piétaille contre piétaille et « Fuite opportune » des rivaux.
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
 
@@ -43,8 +43,8 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
 | # | Sujet | État | Effort | Lot |
 | --- | --- | --- | --- | --- |
 | 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque et attaques multiples faits | L | 3 |
-| 13 | Horde de piétaille | Reste piétaille contre piétaille | S | 3 |
-| 14 | Points de vilenie des rivaux | Reste « Fuite opportune » | S | 3 |
+| 13 | Horde de piétaille | ✅ Fait, piétaille contre piétaille comprise (2026-11-02) | S | 3 |
+| 14 | Points de vilenie des rivaux | ✅ Fait, « Fuite opportune » comprise (2026-11-02) | S | 3 |
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
 | 16 | Foi en combat | Règle absente | S | 4 |
 | 17 | Petites limites de l'assistant | Confort | S à M | au fil de l'eau |
@@ -69,12 +69,12 @@ Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons
 #### 13. Horde de piétaille
 
 - **Fait** : l'attaque en groupe contre un héros (`hordeMates`, `endTurn` dans `combat-turn.util.ts`).
-- **Reste** : piétaille contre piétaille (le camp le plus nombreux tue d6M adversaires, qui lui infligent d3 pertes), sans jet d'attaque.
+- ✅ **Reste** : piétaille contre piétaille (le camp le plus nombreux tue d6M adversaires, qui lui infligent d3 pertes), sans jet d'attaque — fait le 2026-11-02 : bouton « Mêlée de piétaille » de l'en-tête, une fois par round (`melee-pietaille.util.ts`, `play/melee-pietaille-dialog/`) ; à égalité, chaque camp perd d3 (interprétation).
 
 #### 14. Points de vilenie des rivaux
 
 - **Fait** : le compteur de vilenie sur la carte d'un rival, ses dépenses à l'attaque, la parade in extremis et « Bouclier humain ».
-- **Reste** : « Fuite opportune ».
+- ✅ **Reste** : « Fuite opportune » — fait le 2026-11-02 : bouton de la carte du rival, 1 point de vilénie, le rival quitte le combat et la frise le dit « enfui » (`fuite-opportune.util.ts`).
 
 ### Lot 4 : la magie en combat
 
@@ -177,11 +177,11 @@ Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-1
 
 ### Révélés par le tri des règles sans source : bugs dans l'appli
 
-| Constat | Où | Effort |
+| Constat | Correction | Effort |
 | --- | --- | --- |
-| Un démon Cuirassé n'a pas sa protection d6 (4) en combat : le code cherche « cuirasse » sans accent, le pouvoir s'appelle « Cuirassé » (le test utilise lui aussi le nom sans accent) | `demonProtection`, `combat-play.util.ts` | S |
-| Le serveur refuse plus de 4 rangs de carrières, alors que Non-combattant en donne 6 (le front l'autorise) : l'enregistrement d'un tel héros échoue | `BolHerosRequest::validateCarrieres` | S |
-| Un seul désavantage général compte à la fois pour le 3e avantage et pour le désavantage supplémentaire de Magie des Rois-Sorciers ou Pouvoir du Néant | `traitWarns`, `hero-advanced-page.ts` | S |
+| ✅ Un démon Cuirassé n'a pas sa protection d6 (4) en combat : le code cherche « cuirasse » sans accent, le pouvoir s'appelle « Cuirassé » | Les noms de pouvoirs se comparent sans accents (`hasPouvoir`, `combat-play.util.ts`) — fait le 2026-11-02 | S |
+| ✅ Le serveur refuse plus de 4 rangs de carrières, alors que Non-combattant en donne 6 ; et il refuse l'activation d'un héros dont un avantage porte un attribut à 4 | `BolHerosRequest` : budgets de Non-combattant (6 et 2), limites de création réservées aux brouillons, bornes larges pour un héros actif — fait le 2026-11-02 | S |
+| ✅ Un seul désavantage général compte à la fois pour le 3e avantage et pour le désavantage supplémentaire de Magie des Rois-Sorciers ou Pouvoir du Néant | `desavantagesGeneraux` (`create.validators.ts`), utilisé par l'avertissement et le coût en héroïsme — fait le 2026-11-02 | S |
 
 ## 4. Code
 

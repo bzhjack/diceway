@@ -20,10 +20,6 @@ use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use App\Models\Bol\BolLangue;
 use App\Models\Bol\BolScenario;
-use App\Models\Bol\BolScenarioCreature;
-use App\Models\Bol\BolScenarioDemon;
-use App\Models\Bol\BolScenarioPj;
-use App\Models\Bol\BolScenarioPnj;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -316,26 +312,17 @@ class BolAccessTest extends TestCase
         $this->assertSame($mine['creatures'][0]['creatureId'], BolFightSessionCreature::where('fight_session_id', $response->json('id'))->value('creature_id'));
     }
 
-    public function test_a_scenario_keeps_only_what_the_account_can_use(): void
+    public function test_a_new_scenario_belongs_to_the_account_and_only_it_lists_it(): void
     {
-        $theirs = $this->scenarioPayload($this->a->id);
-        $mine = $this->scenarioPayload($this->b->id);
-        $list = fn (string $key) => [...$theirs[$key], ...$mine[$key]];
+        $this->scenario($this->a->id);
 
-        $response = $this->postJson('/api/bol/scenario/create', [
-            'titre' => 'Sacrilège',
-            'pj' => $list('pj'),
-            'creatures' => $list('creatures'),
-            'demons' => $list('demons'),
-            'pnjs' => $list('pnjs'),
-        ])->assertOk();
+        $id = $this->postJson('/api/bol/scenario/create', ['titre' => 'Sacrilège', 'pitch' => 'Un temple profané'])
+            ->assertOk()
+            ->assertJsonPath('titre', 'Sacrilège')
+            ->json('id');
 
-        $id = $response->json('id');
-        $this->assertSame(1, BolScenarioPj::where('scenario_id', $id)->count());
-        $this->assertSame(1, BolScenarioCreature::where('scenario_id', $id)->count());
-        $this->assertSame(1, BolScenarioDemon::where('scenario_id', $id)->count());
-        $this->assertSame(1, BolScenarioPnj::where('scenario_id', $id)->count());
-        $this->assertSame($mine['creatures'][0]['creatureId'], BolScenarioCreature::where('scenario_id', $id)->value('creature_id'));
+        $this->assertEquals($this->b->id, BolScenario::findOrFail($id)->user_id);
+        $this->getJson('/api/bol/scenario')->assertOk()->assertJsonCount(1)->assertJsonPath('0.id', $id);
     }
 
     public function test_b_cannot_update_the_scenario_of_a(): void
@@ -591,16 +578,6 @@ class BolAccessTest extends TestCase
             'pnjs' => [['pnjId' => $this->sheet($userId, 'C')->id, 'camp' => 'ennemi']],
             'creatures' => [['creatureId' => $this->creature($userId)->id, 'camp' => 'ennemi']],
             'demons' => [['demonId' => $this->demon($userId)->id, 'camp' => 'ennemi']],
-        ];
-    }
-
-    private function scenarioPayload(string $userId): array
-    {
-        return [
-            'pj' => [['heroId' => $this->sheet($userId)->id]],
-            'pnjs' => [['pnjId' => $this->sheet($userId, 'C')->id]],
-            'creatures' => [['creatureId' => $this->creature($userId)->id]],
-            'demons' => [['demonId' => $this->demon($userId)->id]],
         ];
     }
 }

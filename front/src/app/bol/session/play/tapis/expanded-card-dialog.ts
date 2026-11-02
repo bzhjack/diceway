@@ -20,6 +20,8 @@ import {ExpandedCardComponent} from './expanded-card';
         [hero]="data.hero()"
         [statblock]="data.statblock()"
         [returnUrl]="data.returnUrl()"
+        [canFlee]="data.canFlee()"
+        (fleeRequested)="data.flee($event)"
         (closed)="ref.close()"
         (changed)="data.changed($event)"
         (removeRequested)="data.remove($event)"

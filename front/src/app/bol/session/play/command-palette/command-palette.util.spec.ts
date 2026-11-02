@@ -167,7 +167,11 @@ describe('buildResults', () => {
     expect(actionLabels).toContain('Terminer le combat');
     expect(actionLabels).not.toContain('Démarrer un combat');
     expect(actionLabels).not.toContain('Enregistrer la table comme scène');
-    expect(buildResults(input('kalena', {mode: 'combat'}))).toEqual([]);
+  });
+
+  it('finds the cards of the table in combat mode, to open their sheet, but places nobody', () => {
+    expect(labels('garde', {mode: 'combat'})).toEqual({table: ['Garde du port']});
+    expect(buildResults(input('3 garde', {mode: 'combat'}))).toEqual([]);
   });
 
   it('names the reserve action after its current state', () => {
