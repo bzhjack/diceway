@@ -178,10 +178,19 @@
   }
 }
 
-// Un clou qui supprime : l'icône reste rouge, même au survol.
+// Un clou qui supprime : bordé de rouge, l'icône un peu plus grande et d'un rouge clair, qui reste rouge au survol. Ses traits sont fins : un rouge
+// plus sombre se perd sur le bronze.
 .entity-card__action-btn--danger,
 .entity-card__action-btn--danger:hover:not(:disabled) {
-  color: var(--dw-forge-verdict-echec);
+  border-color: color-mix(in srgb, var(--dw-forge-verdict-echec) 70%, var(--dw-forge-bronze-dim));
+  color: var(--dw-forge-danger-text);
+}
+
+.entity-card__action-btn--danger .mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
 }
 
 .entity-card__gauges {
