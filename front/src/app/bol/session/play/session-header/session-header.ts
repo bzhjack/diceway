@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {RouterLink} from '@angular/router';
 import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 import {TurnOrderInterrupter} from '../../models/turn-order.model';
 
@@ -9,7 +10,7 @@ import {TurnOrderInterrupter} from '../../models/turn-order.model';
  * en combat), coulisses ou commandes du round, action de combat, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
 @Component({
   selector: 'bol-session-header',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
   templateUrl: './session-header.html',
   styleUrl: './session-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

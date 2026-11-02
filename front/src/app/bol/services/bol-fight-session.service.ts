@@ -129,16 +129,6 @@ export class BolFightSessionService {
     return this.inOrder(this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/load-scene`, {scene_id: sceneId, mode}));
   }
 
-  /** Vide la table : les PNJ, créatures et démons quittent la session, qui n'a plus de scène en cours ; les héros restent. */
-  clearTable(sessionId: string): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/clear-table`, {}));
-  }
-
-  /** Change le scénario de la table (`null` : on improvise) ; renvoie la session à jour. */
-  setScenario(sessionId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
-  }
-
   /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */
   updateHeroInitiative(
     sessionId: string,

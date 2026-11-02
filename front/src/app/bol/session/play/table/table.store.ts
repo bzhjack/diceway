@@ -74,7 +74,6 @@ export class TableStore {
             session.id!,
             session.scene_id ?? null,
             session.scenes_jouees ?? [],
-            (session.pnjs?.length ?? 0) + (session.creatures?.length ?? 0) + (session.demons?.length ?? 0),
             session.scenario_id ?? null,
           ),
         );

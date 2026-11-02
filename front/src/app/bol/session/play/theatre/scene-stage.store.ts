@@ -1,11 +1,8 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, switchMap, tap, timer} from 'rxjs';
-import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
+import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
-import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
@@ -42,9 +39,6 @@ export class SceneStageStore {
   private readonly catalog = inject(BolCatalogService);
   private readonly sceneActions = inject(SceneActionsService);
   private readonly dialog = inject(MatDialog);
-  private readonly fightSessions = inject(BolFightSessionService);
-  /** Le nombre de PNJ, créatures et démons sur la table, d'après le dernier `sync` de la page. */
-  private adversaires = 0;
 
   private readonly sessionId = signal<string | null>(null);
   private readonly currentSceneId = signal<string | null>(null);
@@ -103,19 +97,17 @@ export class SceneStageStore {
   /** L'annonce de la scène chargée, faite à la réouverture du rideau (pas par-dessus le carton). */
   private annonce: (() => void) | null = null;
 
-  /** Session chargée par la page : sa scène courante, ses scènes jouées, le nombre de ses adversaires et son scénario
-   * (seule source de la frise). Les scènes sont rechargées au premier appel, ou si la scène courante n'est pas connue
+  /** Session chargée par la page : sa scène courante, ses scènes jouées et son scénario (seule source de la frise, choisi
+   * à l'accueil). Les scènes sont rechargées au premier appel, ou si la scène courante n'est pas connue
    * (créée depuis la réserve ou la barre de commande). */
   sync(
     sessionId: string,
     currentSceneId: string | null,
     played: readonly string[],
-    adversaires = 0,
     scenarioId: string | null = null,
   ): void {
     this.sessionId.set(sessionId);
     this.scenarioIdState.set(scenarioId);
-    this.adversaires = adversaires;
     this.currentSceneId.set(currentSceneId);
     this.played.set(played);
     if (this.attente) {
@@ -152,31 +144,6 @@ export class SceneStageStore {
         this.scenariosState.set(scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: s.titre})));
       }
     });
-  }
-
-  selectScenario(id: string | null): void {
-    this.scenarioIdState.set(id);
-  }
-
-  /** Change le scénario de la table (`null` : on improvise) et l'enregistre sur la session. S'il reste des PNJ, créatures ou démons
-   * sur la table, le MJ confirme d'abord, puis la table est vidée (les héros restent) et la session n'a plus de scène en cours.
-   * Émet la session à jour, que la page pose, une fois le scénario enregistré ; la frise change aussitôt. Émet `null` sans rien
-   * changer : même scénario, pas de session, ou confirmation refusée. */
-  changeScenario(id: string | null): Observable<BolFightSessionModel | null> {
-    const sessionId = this.sessionId();
-    if (!sessionId || id === this.scenarioId()) {
-      return of(null);
-    }
-    // Différé : le scénario ne s'enregistre qu'une fois la table vidée, ou la confirmation donnée.
-    const enregistrer = defer(() => this.fightSessions.setScenario(sessionId, id)).pipe(tap(() => this.selectScenario(id)));
-    if (this.adversaires === 0) {
-      return enregistrer;
-    }
-    return confirmDialog(this.dialog, {
-      title: 'Changer de scénario ?',
-      message: 'Les PNJ, créatures et démons quittent la table ; les héros restent.',
-      confirmLabel: 'Vider la table',
-    }).pipe(switchMap((confirmed) => (confirmed ? this.fightSessions.clearTable(sessionId).pipe(switchMap(() => enregistrer)) : of(null))));
   }
 
   /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes

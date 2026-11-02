@@ -150,7 +150,7 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 
 - `bol/session/play/session-play-page` assembles the table; its state and actions live in page-scoped services under `play/table/` (`TableStore`, `CombatTurnStore`, `CombatStatsStore`, `CombatWoundsService`, `CombatEndService`, `ExpandedCardStore`, `TableCommandsService`). Combat and theatre each load through `@defer`: don't reference their component classes outside `imports`.
 - `play/tapis/turn-assistant` holds its inputs and outputs; the screen is in the `tas-*` blocks; state and rules are in six stores, one per step of the turn, each depending only on the earlier ones: `TurnContextStore`, `TurnLoadoutStore`, `TurnAttackStore`, `TurnDamageStore`, `TurnCibleStore`, `TurnFlowStore`. Its stylesheets have no encapsulation and are scoped to `.tas-scope`, set on the assistant and on the panel of its popover: a new overlay needs `cdkConnectedOverlayPanelClass="tas-scope"`.
-- `bol_fight_session.scenario_id` is the only source of a table's scenario (the strip, the home page, saving the table as a scene): never infer it from the current scene. Loading or saving a scene sets it server-side.
+- `bol_fight_session.scenario_id` is the only source of a table's scenario (the strip, the home page, saving the table as a scene): never infer it from the current scene. It is chosen on the home page when the table opens; the strip only shows it as text. Loading or saving a scene sets it server-side.
 
 ## Backend architecture (`backend/`)
 

@@ -1,8 +1,6 @@
 import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {SceneActe} from '../../models/theatre.model';
@@ -11,28 +9,19 @@ import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 import {acteLabel} from './theatre.util';
 
-/** Le titre et la frise des actes, dans l'en-tête de la table : la session en sur-titre, le scénario affiché (son
- * titre ouvre le menu pour en changer) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre
- * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée, et la session à jour à chaque changement de scénario réussi (vidée de ses adversaires, après confirmation, s'il y en avait). */
+/** Le titre et la frise des actes, dans l'en-tête de la table : la session en sur-titre, le scénario de la table (choisi à
+ * l'accueil, affiché en texte) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre le menu d'aperçu
+ * de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée. */
 @Component({
   selector: 'bol-scene-acts',
   imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],
   template: `
     <div class="sca-titre">
       <span class="sca-sur">{{ sessionTitre() || 'Session' }}</span>
-      <h1 class="sca-h1">
-        <button type="button" class="sca-scenario" [matMenuTriggerFor]="scenarios" [attr.aria-label]="'Changer de scénario, scénario affiché : ' + scenarioTitre()">
-          <span class="sca-scenario-titre">{{ scenarioTitre() }}</span>
-          <mat-icon aria-hidden="true">expand_more</mat-icon>
-        </button>
+      <h1 class="sca-h1" [attr.title]="scenarioTitre()">
+        <span class="sca-scenario-titre">{{ scenarioTitre() }}</span>
       </h1>
     </div>
-    <mat-menu #scenarios="matMenu" class="thr-scenarios-menu">
-      <button mat-menu-item type="button" (click)="choisirScenario(null)">On improvise</button>
-      @for (scenario of sortedScenarios(); track scenario.id) {
-        <button mat-menu-item type="button" (click)="choisirScenario(scenario.id)">{{ scenario.titre }}</button>
-      }
-    </mat-menu>
 
     <nav #nav class="sca-nav" aria-label="Scènes du scénario">
       <dw-scroller class="sca-scroller" label="Scènes du scénario">
@@ -104,41 +93,10 @@ import {acteLabel} from './theatre.util';
       line-height: 1.1;
     }
 
-    // Le titre du scénario ouvre le menu des scénarios.
-    .sca-scenario {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.2rem;
-      max-width: 100%;
-      padding: 0;
-      border: none;
-      background: none;
+    .sca-scenario-titre {
+      min-width: 0;
       color: var(--dw-forge-bone);
       font-family: 'Muse Display Harmony', serif;
-      font-size: 1.3rem;
-      line-height: 1.1;
-      cursor: pointer;
-
-      .mat-icon {
-        flex-shrink: 0;
-        width: 1.1rem;
-        height: 1.1rem;
-        font-size: 1.1rem;
-        color: var(--dw-forge-stud-text);
-      }
-
-      &:hover .mat-icon {
-        color: var(--dw-forge-hot-text);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--dw-color-legendary);
-        outline-offset: 3px;
-        border-radius: 4px;
-      }
-    }
-
-    .sca-scenario-titre {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -291,16 +249,12 @@ import {acteLabel} from './theatre.util';
 })
 export class SceneActsComponent {
   protected readonly store = inject(SceneStageStore);
-  private readonly snackBar = inject(MatSnackBar);
 
   /** Titre de la session, en sur-titre au-dessus du scénario. */
   readonly sessionTitre = input<string | null>(null);
   /** Une scène vient d'être chargée sur la table, avec la session à jour : la page la pose. */
   readonly sceneChanged = output<BolSceneLoadResult>();
 
-  protected readonly sortedScenarios = computed(() =>
-    [...this.store.scenarios()].sort((left, right) => left.titre.localeCompare(right.titre, 'fr')),
-  );
   protected readonly scenarioTitre = computed(
     () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'On improvise',
   );
@@ -331,17 +285,5 @@ export class SceneActsComponent {
 
   protected label(acte: SceneActe): string {
     return acteLabel(acte);
-  }
-
-  /** Change le scénario de la table ; la page pose la session à jour que le store renvoie (table vidée après confirmation, le cas échéant). */
-  protected choisirScenario(id: string | null): void {
-    this.store.changeScenario(id).subscribe({
-      next: (session) => {
-        if (session) {
-          this.sceneChanged.emit({session, ignored: 0});
-        }
-      },
-      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de changer de scénario.'), 'Fermer', {duration: 5000}),
-    });
   }
 }
