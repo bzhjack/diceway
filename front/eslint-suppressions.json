@@ -1,9 +1,4 @@
 {
-  "src/app/bol/hero/advanced/region/region.component.html": {
-    "no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/app/bol/session/play/action-roll-panel/action-roll-panel.html": {
     "@angular-eslint/template/no-any": {
       "count": 1

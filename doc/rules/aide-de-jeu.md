@@ -45,7 +45,7 @@
 
 | Usage | Effet |
 | --- | --- |
-| **Coup de chance** | Ajouter un détail favorable à la scène (pas de changement majeur, ne contredit rien d'établi). |
+| **Coup de chance** | Ajouter un détail favorable à la scène (pas de changement majeur, ne contredit rien d'établi). Un sorcier peut s'en servir pour remplir une condition d'incantation. |
 | **Défier la mort** | Vitalité entre −1 et −5 : remonte à 0 (inconscient). En dessous de −5 : stabilisé (inconscient, debout après quelques jours). |
 | **Faveur divine** | Relancer tous les dés d'un jet (bonus compris) et garder le second résultat. Possible même après un 2 naturel. |
 | **Juste une égratignure** | Perdre sa prochaine action et récupérer **d6B** vitalité (Mythic+ : et non plus d6), au maximum les dégâts de l'attaque qui vient d'être subie. |
@@ -67,7 +67,7 @@ Les PH sont **tous récupérés à la fin de l'aventure**, sans dépasser le sco
 
 - Surpris ou pris en embuscade : **−1**. Tendre une embuscade : **+2**. Carrière utile : **+ rang**.
 - Si un coriace ou un rival ennemi a de l'Initiative, la plus haute valeur s'applique **en malus** aux héros.
-- Les PNJ ne lancent pas ce jet. Chaque nouveau combat demande un nouveau jet.
+- Les PNJ ne lancent pas ce jet. Un nouveau combat, après une pause, demande un nouveau jet.
 
 | Ordre | Qui agit |
 | :---: | --- |
@@ -80,7 +80,7 @@ Les PH sont **tous récupérés à la fin de l'aventure**, sans dépasser le sco
 | 7 | **Piétaille** (même exception au 1er round que les coriaces) |
 | 8 | Héros avec **échec critique** (ne fait rien et n'a pas de bouclier au 1er round) |
 
-Entre héros ex æquo : ils choisissent entre eux, sinon par Agilité décroissante. Un personnage peut **retarder** son action à la fin du round.
+Entre héros ex æquo : ils choisissent entre eux, sinon par Agilité décroissante ; à Agilité égale, ils agissent simultanément. Un personnage peut **retarder** son action à la fin du round.
 
 **Déplacement** (si on utilise un plan) : 7,5 m + 1,5 m × Agilité par round. Course : ×2. Sprint : ×4.
 
@@ -94,7 +94,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 
 | Option | Effet |
 | --- | --- |
-| **Carnage** | Nouvelle attaque immédiate, sur la même cible ou une autre. |
+| **Carnage** | Nouvelle attaque immédiate, sur la même cible ou une autre (sans dépenser de PH). |
 | **Coup dévastateur** | **+6 dégâts**. |
 | **Coup précis** | Dégâts normaux + 1 dé de malus à la cible sur un type de jet (ou trancher un tentacule, réduire une armure naturelle…). |
 | **Désarmement** | La cible lâche son arme ou l'objet qu'elle tient (pas de dégâts). |
@@ -131,10 +131,10 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 
 | Protection | Valeur fixe | Dé | Malus | Surcoût en pouvoir |
 | --- | :---: | :---: | --- | :---: |
-| Légère | 1 | d6−3 | gêne sociale | +1 |
-| Moyenne | 2 | d6−2 | −1 Agilité | +2 |
-| Lourde | 3 | d6−1 | −2 Agilité | +3 |
-| Casque | +1 | — | −1 Initiative | — |
+| Légère | 1 | d6−3 | social (sauf si dissimulée) | +1 |
+| Moyenne | 2 | d6−2 | social, −1 Agilité | +2 |
+| Lourde | 3 | d6−1 | social, −2 Agilité | +3 |
+| Casque | +1 | +1 au dé (si armure) | social, −1 Initiative | — |
 | Petit bouclier | — | — | −1 à **une** attaque subie par round | — |
 | Grand bouclier | — | — | −1 à **toutes** les attaques subies, −1 Agilité | — |
 
@@ -158,14 +158,14 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 | Vitalité | État |
 | --- | --- |
 | **> 0** | Normal. |
-| **= 0** | Hors de combat. Au round suivant, il perd connaissance jusqu'à la fin du combat, **ou** dépense 1 PH pour se relever. Dans les deux cas, il remonte à la moitié de sa vitalité. |
+| **= 0** | Hors de combat. Au round suivant, il perd connaissance jusqu'à la fin du combat, **ou** dépense 1 PH pour se relever (il passe ce round à reprendre ses esprits, puis reprend le combat). Dans les deux cas, il remonte à la moitié de sa vitalité (arrondie au supérieur). |
 | **< 0** | Coma : **−1 vitalité par round** jusqu'aux soins, à la mort ou à *Défier la mort*. |
 | **≤ −6** | **Mort** (sauf *Défier la mort*). |
 
 À mains nues, on ne fait que perdre connaissance pendant environ 15 minutes, sans coma.
 
 - **Stabiliser un mourant** : Esprit + carrière de soins, difficulté Moyenne, **aggravée d'un cran par point de vitalité négatif**. En cas de réussite, il reste inconscient et regagne +1 vitalité par jour.
-- **Après le combat** (10 à 15 minutes de repos, eau ou vin) : on récupère **la moitié des points perdus** (arrondi au supérieur). Les dégâts de bagarre à mains nues reviennent entièrement.
+- **Après le combat** (10 à 15 minutes de repos, eau ou vin) : on récupère **la moitié des points perdus** (arrondi au supérieur), seulement si la vitalité est restée ≥ 0. Les dégâts de bagarre à mains nues reviennent entièrement.
 - **Ensuite** : +1 vitalité par jour. Avec un soigneur : + son rang immédiatement, puis un jet Moyen chaque jour pour récupérer 2 par jour.
 
 ---
@@ -225,7 +225,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 - **Intangible** : seules la sorcellerie et l'alchimie peuvent le blesser.
 - **Poison** : Vigueur −2 pour éviter la paralysie, puis mort dans l'heure sauf nouveau jet à −2.
 - **Progéniture** : 1d6 rejetons par semaine.
-- **Régénération** : 1 PV par round.
+- **Régénération** : 1 PV par round ; se débarrasse des effets d'un coup précis au bout de 2 rounds.
 - **Savoir spécial** : une carrière au rang 6.
 - **Séducteur** : asservit 1d6 + 6 piétailles. Un héros résiste par un jet d'Esprit.
 - **Sorcellerie** : 2, 5 ou 10 points de pouvoir.
@@ -286,11 +286,11 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
 | Entraînement supérieur | +1 / +2 |
 | Taille supérieure / supériorité écrasante | +1 / +2 / +4 |
 | Terrain favorable / très favorable / écrasant | +1 / +2 / +4 |
-| Équipement ou ravitaillement | +1 / +2 |
+| Équipement ou ravitaillement | +1 / +2 (Satarla, nefs volantes : +2, soit +4 si aussi beaucoup mieux approvisionnée) |
 | Sorcier du 2e / du 3e cercle | +2 / +4 |
 | Commandement (**les deux camps**) | + rang de Soldat du chef |
 
-**Actions des héros** : porter un message clé (+2), détruire un objectif (+2), capturer ou sauver une cible majeure (+2 à +3), prendre une position (+1 à +3), tuer un chef (+1 ou +2), tenir une position 3 rounds (+1). Rallier les troupes (Aura) donne un dé de bonus au prochain jet de bataille.
+**Actions des héros** : porter un message clé (+2), détruire un objectif (+2), capturer ou sauver une cible majeure (+2 à +3), prendre une position (+1 à +3), tuer un chef (+1 ou +2), vol de renseignement (+2), tenir une position 3 rounds (+1). Empêcher l'intervention de la sorcellerie annule le bonus de sorcellerie de l'armée adverse. Ramener des renforts : on compare à nouveau la taille des armées. Rallier les troupes (Aura) donne un dé de bonus au prochain jet de bataille.
 
 ---
 
@@ -304,7 +304,7 @@ Portée au-delà de la portée de base de l'arme : chaque tranche dégrade la di
   - 4 points répartis sur 4 carrières.
   - **Maximum 3** partout. On peut descendre **une** valeur à −1 pour gagner 1 point.
 - **Vitalité** 10 + Vigueur. **PH** 5.
-- **Langues** : lémurien + langue natale + un nombre de langues égal à l'Esprit.
+- **Langues** : lémurien + langue natale + un nombre de langues égal à l'Esprit, plus 1 par rang d'une carrière pertinente (alchimiste, sorcier, marchand, ménestrel, noble, médecin, prêtre, scribe).
 - **Origine** : 1 avantage gratuit. On en obtient un 2e ou un 3e en prenant chaque fois 1 désavantage ou en perdant 1 PH permanent.
 - **Sorcier** : 1 désavantage de plus par rang au-dessus de 1. **Alchimiste** : 1 de plus par rang au-dessus de 2.
 

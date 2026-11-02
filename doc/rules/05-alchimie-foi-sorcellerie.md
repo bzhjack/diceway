@@ -70,12 +70,22 @@ Principe:
 
 - Un echec au jet final fait perdre les points engages selon la table ci-dessus.
 
+### Effets standard des creations (p. 142-144)
+
+| Categorie | Serrure / piege | Creation non-arme qui blesse ou soigne | Armes et armures |
+| --- | --- | --- | --- |
+| Courante | serrure `-2` pour la forcer; piege `-2` pour le reperer et le desamorcer, `d3+1` degats | perte ou recuperation de `d3` vitalite | de qualite: une fois par round, relancer un `1` obtenu sur un jet de degats (arme) ou de protection (armure) |
+| Rare | serrure ou piege elabore `-4`; piege `d6+1` degats | `d6` vitalite | arme superieure: de de bonus aux degats; armure superieure: protection de la categorie au-dessus (legere = moyenne, lourde = `d6`) et degats supplementaires d'un succes heroique ou legendaire reduits de moitie |
+| Legendaire | `-6`; piege `d6 x2` degats | `d6 x2` vitalite | arme legendaire: de de bonus aux degats, ignore les armures (sauf celles creees par un alchimiste), incassable; armure legendaire: comme superieure, avec un de bonus au jet de protection |
+| Mythique | `-8`; piege `d6 x3` degats | `d6 x3` vitalite | arme mythique: comme legendaire, plus arme favorite; armure mythique: comme legendaire, sans malus d'agilite |
+
 ## Foi
 
 ### Acquisition de points de foi
 
 - Les `pretres` et `druides` gagnent `1 point de foi` par heure passee en devotions.
 - Reserve maximale: egale au rang de `pretre` ou `druide`.
+- A partir du rang `1`, le pretre choisit une divinite tutelaire (le druide, un dieu sombre de predilection); au rang `0`, c'est un novice sans dieu.
 
 Temps de devotion:
 
@@ -90,10 +100,11 @@ Les points gagnes restent limites par la reserve maximale (rang).
 
 ### Depense de foi
 
-- Depenser `1 point de foi` pour accorder un de bonus ou imposer un de malus.
+- Depenser `1 point de foi` pour accorder un de bonus ou imposer un de malus, pour une tache specifique ou une courte activite.
 - La cible peut etre soi-meme ou un etre visible.
 - L'effet doit rester en lien avec le domaine du dieu honore.
 - Pas de jet requis pour cette application simple.
+- Le MJ a le dernier mot pour decider si un point de foi peut servir dans une situation donnee, mais il devrait recompenser la creativite.
 
 ### Recuperation
 
@@ -104,7 +115,7 @@ Les points gagnes restent limites par la reserve maximale (rang).
 
 ### Reserve de pouvoir
 
-- Sorcier heros: `10 + rang de sorcier`
+- Sorcier heros: `10 + rang de sorcier` (sans rang dans la carriere de sorcier, `0` point de pouvoir)
 - Sorcier pietaille: souvent `1 a 3 points`, generalement lies a sa vitalite
 
 ### Jet de sort
@@ -138,7 +149,13 @@ Regles:
 
 Regle de reduction du cout:
 
-- Pour les sorts de cercle `1` a `3`, chaque condition supplementaire au-dela de la premiere reduit le cout de `1`, sans descendre sous le minimum.
+- Un sort de cercle `1` a `3` exige au moins une condition d'incantation (p. 150); le cout de base suppose cette premiere condition remplie.
+- Chaque condition supplementaire au-dela de la premiere reduit le cout de `1`, sans descendre sous le minimum.
+
+Charmes:
+
+- Aucune condition d'incantation; ils coutent rarement plus de `1` point de pouvoir.
+- Un jet d'action n'est necessaire que si le charme affecte directement une creature, ou si le sorcier a ete depossede de ses fetiches et amulettes (le cout augmente alors aussi).
 
 ### Effets blessants par defaut
 
@@ -153,11 +170,20 @@ Reperes du livre pour situer un sort improvise:
 - `2e cercle`: depasse les capacites d'un simple mortel (ex. detruire un mur, controler les esprits).
 - `3e cercle`: catastrophes a l'echelle d'une cite ou malediction generationnelle.
 
+### Sorts d'exemple a effet chiffre (p. 154-155)
+
+- `Invocation animale` (1er cercle): creature de l'environnement local, taille `tres grande` au maximum; elle obeit jusqu'a avoir accompli sa tache. Condition habituelle: temps d'incantation.
+- `Arme demoniaque` (1er cercle): anime une arme de corps a corps qui attaque avec l'`esprit` du sorcier (jets d'action et de degats) au lieu de l'agilite et de la vigueur. Ligne de vue obligatoire.
+- `Mauvais oeil` (1er cercle): la cible subit un de de malus a tous ses jets d'action. Ligne de vue obligatoire; l'esprit de la cible est le malus du jet de lancement.
+- `Peau ecailleuse` (1er cercle): protection de `d6` pour la cible.
+- `Invocation de monstre` (2e cercle): comme l'invocation animale, taille `monstrueuse` au maximum.
+- `Vaisseau fantome` (2e cercle): equipage de `2d6` marins pietaille; avec la condition blessures, un marin de plus par point de vitalite perdu.
+
 ### Conditions de lancement relevees
 
 #### Premier cercle
 
-- objet special
+- objet special (relativement facile a trouver)
 - ligne de vue
 - temps d'incantation de `1d6 x 30 minutes`
 - focaliseur
@@ -172,9 +198,9 @@ Reperes du livre pour situer un sort improvise:
 
 - objet special rare ou difficile a obtenir
 - ingredients rares demandant environ `1d6 semaines` et beaucoup d'argent
-- focaliseur permanent
+- focaliseur permanent (tatouage rituel)
 - temps d'incantation `1d6 x 2 heures`
-- sacrifice rituel animal
+- sacrifice rituel animal (au moins de la taille d'un jeune bubalus)
 - influence de la lune
 - jeune de `2d6 jours`
 - blessures de `d6 + 1 vitalite`
@@ -191,6 +217,8 @@ Reperes du livre pour situer un sort improvise:
 - blessures de `2d6 + 1 vitalite`
 - rituel de groupe avec `3d6` assistants
 
+Rituel de groupe (tous les cercles): chaque assistant doit avoir au moins le rang `0` dans la carriere de sorcier.
+
 ### Recuperation des points de pouvoir
 
 | Type de pratique | Recuperation |
@@ -202,4 +230,4 @@ Reperes du livre pour situer un sort improvise:
 ### Cout permanent du 3e cercle
 
 - Chaque lancement de sort du `3e cercle` fait perdre `1 point de pouvoir` de facon permanente.
-- A la place, le personnage peut accepter de perdre `1 point d'attribut` de facon permanente.
+- A la place, le personnage peut accepter de perdre `1 point d'attribut` de facon permanente (l'attribut peut ainsi passer sous `0`).

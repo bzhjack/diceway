@@ -168,6 +168,14 @@
   color: var(--dw-forge-gold);
 }
 
+// Les scénarios n'ont pas chargé : le bandeau « Reprendre la table » non plus, la partie en cours se retrouve par « Mes sessions ».
+.acc-erreur {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
 .acc-message {
   margin: 0;
   color: var(--dw-forge-stud-text);

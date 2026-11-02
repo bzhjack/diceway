@@ -27,7 +27,7 @@ Chaque exemple donne sa source, ses entrées, le calcul détaillé et le résult
 | FO1 | Foi : le druide perturbe un jet de tir (dé de malus) | ch. 6, p. 146 (l. 561) | 4 + agilité + tir : insuffisant, rate | Duel, jet d'attaque |
 | SO1 | Sorcellerie : coût d'un sort du premier cercle | ch. 6, p. 151 (l. 791) | 4 points de pouvoir, d6 de dégâts | (hors app, règle de référence) |
 | SO2 | Sorcellerie : sort difficile avec malus d'esprit | ch. 6, p. 152 (l. 857) | Coût 7 PP, jet Difficile (−2) − esprit de la cible | (hors app, règle de référence) |
-| SO3 | Sorcellerie : sort du troisième cercle | ch. 6, p. 153 (l. 945) | Coût réduit par condition, −1 PP définitif | (hors app, règle de référence) |
+| SO3 | Sorcellerie : sort du troisième cercle | ch. 6, p. 153 (l. 945) | Coût 14 PP (15 − 1), −1 PP définitif | (hors app, règle de référence) |
 | G1 | Guerre : valeur d'armée de Satarla et de Tyrus | ch. 4, p. 69 (`03-guerre` l. 173) | Satarla 8, Tyrus 7, +1 au défenseur | (hors app) |
 | G2 | Bataille navale : la Gloire de Parsool | ch. 4, p. 80 (l. 820) | Réaction 11, tir de catapulte 17 (héroïque, puis légendaire) | (hors app) |
 | P1 | Piétaille : bandits contre suivants | ch. 5, p. 132 (`04-bestiaire` l. 1396) | Les suivants perdent 2, les bandits 1 | Duel, groupes de piétaille |
@@ -246,6 +246,7 @@ Source : ch. 6 « Les Sorciers », p. 152 (`05-magie` l. 857).
 Source : ch. 6 « Les Sorciers », p. 153 (`05-magie` l. 945).
 
 - **Sort** : du troisième cercle (coût de base 15 points de pouvoir). Première condition « conjonction astrale », plus un « sacrifice rituel » : une condition supplémentaire réduit le coût d'un point.
+- **Coût** : **14 points de pouvoir** (15 − 1).
 - **Note** : chaque sort du troisième cercle fait perdre définitivement 1 point de pouvoir.
 
 ---

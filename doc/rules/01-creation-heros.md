@@ -85,6 +85,7 @@ Regles speciales de carrieres:
 - `Alchimiste`: carriere dangereuse. Pour chaque rang au-dessus de `2`, prendre un desavantage supplementaire. Le demonique doit etre appris pour exploiter certaines formules anciennes; oral et ecrit s'apprennent separement.
 - `Sorcier`: carriere dangereuse. Pour chaque rang au-dessus de `1`, prendre un desavantage supplementaire. Le demonique doit etre appris pour acceder a certains savoirs anciens.
 - `Pretre` ou `Druide`: peuvent aussi avoir besoin du demonique pour exploiter certaines creations anciennes.
+- Carrieres dangereuses (`alchimiste`, `sorcier`): le desavantage supplementaire par rang s'applique aussi quand le rang est monte plus tard avec de l'XP (p. 38, explicite pour `sorcier`, meme logique pour `alchimiste`).
 - Rang maximum humain ensuite: `5`.
 - Nouvelle carriere plus tard: possible pour `1 XP`, si coherente avec l'histoire recente.
 
@@ -178,11 +179,11 @@ Regles generales:
 | Avantage | Effet mecanique |
 | --- | --- |
 | Agilite de l'homme-oiseau | `+1 agilite`; maximum `6`; maximum initial `4`. |
-| Ami des betes | De de bonus avec les animaux; si `dresseur`, permet des compagnons animaux adaptes. |
+| Ami des betes | De de bonus avec les animaux; si `dresseur`: 2 ou 3 compagnons animaux de petite taille, ou 1 seul de taille moyenne ou grande. |
 | Ami des ceruleens | De de bonus dans les interactions avec les ceruleens. |
 | Amis dans la pegre | Contacts utiles dans le milieu criminel. |
 | Amis haut places | Contacts utiles dans les elites. |
-| Arme favorite | De de bonus avec l'arme choisie; une arme regionale (Mythic+) ne peut etre l'arme favorite que d'un heros de meme origine. |
+| Arme favorite | De de bonus avec l'arme choisie (si elle est perdue, volee ou detruite: avec une arme de substitution reproduisant ses qualites uniques, souvent onereuse); une arme regionale (Mythic+) ne peut etre l'arme favorite que d'un heros de meme origine. |
 | Artiste | De de bonus pour creer, apprecier ou evaluer une oeuvre. |
 | Athlete | De de bonus sur les actions physiques sportives hors combat. |
 | Attirant | De de bonus quand l'apparence compte. |
@@ -306,9 +307,11 @@ Principes:
 | Armure legere | `d6-3 (1)` | mal vue socialement sauf dissimulee; `+1` cout en pouvoir pour lancer un sort |
 | Armure moyenne | `d6-2 (2)` | gene sociale, `-1 agilite`, `+2` cout en pouvoir |
 | Armure lourde | `d6-1 (3)` | gene sociale, `-2 agilite`, `+3` cout en pouvoir |
-| Casque | `+1 protection` | gene sociale, `-1 initiative` |
+| Casque | `+1 protection`, seulement si l'on porte une armure (d6-2 en legere, d6-1 en moyenne, d6 en lourde) | gene sociale, `-1 initiative` |
 | Petit bouclier | defense circonstancielle | impose `-1` a une attaque subie par round |
 | Grand bouclier | defense circonstancielle | impose `-1` a toutes les attaques subies par round, mais `-1 agilite` |
+
+- Vigueur < 0: armure lourde impossible (p. 52). Une armure lourde peut generalement etre allegee en armure moyenne en en retirant des pieces.
 
 ### Categories de degats d'armes
 
@@ -437,6 +440,7 @@ Restrictions:
 
 - Toutes carrieres autorisees en theorie.
 - Carrieres rares chez eux et exigeant une justification: `assassin`, `bourreau`, `gladiateur`, `marin`, `soldat`, `voleur`, `ouvrier`, `vagabond (mendiant)`.
+- Equipement: les armures les empecheraient de voler; seuls les plus forts portent, en cas de danger, l'equivalent d'une armure legere (brassards, harnais, jambieres de cuir) ou un petit bouclier (p. 92).
 
 Avantages:
 
@@ -545,6 +549,8 @@ Desavantages:
 - signe distinctif
 
 ### Slorth
+
+Particularite: leur morsure est venimeuse et plonge la victime dans un profond sommeil (aucune regle chiffree dans le livre, p. 95).
 
 Avantages:
 

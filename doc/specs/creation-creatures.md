@@ -52,24 +52,25 @@ Reference :
 Lecture projet :
 - dans `front`, cette table correspond au referentiel `tailles`
 - le choix de taille doit donc pre-remplir au minimum `vigueur`, `vitalite` et `degats`
+- le referentiel `tailles` porte aussi le `deplacement` de la table ; ce n'est pas une regle de construction, juste une valeur de base
 - il est logique de laisser ensuite un ajustement manuel pour creer une version plus faible ou plus forte
 
 Table extraite du livre :
 
-| Taille | Ordre de reaction | Degats | Vitalite | Vigueur |
-| --- | --- | --- | --- | --- |
-| Minuscule | pietaille | `1` | `1` | `-3` |
-| Tres petite | pietaille | `d3` | `2` | `-2` |
-| Petite | coriace | `d6M` | `5` | `-1` |
-| Moyenne | coriace | `d6` | `10` | `0` |
-| Grande | rival | `d6B` | `20` | `4` |
-| Tres grande | rival | `d6B` | `30` | `6` |
-| Enorme | rival | `d6 x 2` | `40` | `8` |
-| Massive | rival | `d6B x 2` | `50` | `10` |
-| Colossale | rival | `d6B x 2` | `60` | `12` |
-| Gigantesque | rival | `d6 x 3` | `70` | `14` |
-| Immense | rival | `d6B x 3` | `85` | `16` |
-| Monstrueuse | rival | `d6 x 4` | `100` | `18` |
+| Taille | Ordre de reaction | Degats | Vitalite | Vigueur | Deplacement |
+| --- | --- | --- | --- | --- | --- |
+| Minuscule | pietaille | `1` | `1` | `-3` | `4,5 m` |
+| Tres petite | pietaille | `d3` | `2` | `-2` | `6 m` |
+| Petite | coriace | `d6M` | `5` | `-1` | `7,5 m` |
+| Moyenne | coriace | `d6` | `10` | `0` | `7,5 m` |
+| Grande | rival | `d6B` | `20` | `4` | `9 m` |
+| Tres grande | rival | `d6B` | `30` | `6` | `9 m` |
+| Enorme | rival | `d6 x 2` | `40` | `8` | `10,5 m` |
+| Massive | rival | `d6B x 2` | `50` | `10` | `10,5 m` |
+| Colossale | rival | `d6B x 2` | `60` | `12` | `12 m` |
+| Gigantesque | rival | `d6 x 3` | `70` | `14` | `12 m` |
+| Immense | rival | `d6B x 3` | `85` | `16` | `13,5 m` |
+| Monstrueuse | rival | `d6 x 4` | `100` | `18` | `13,5 m` |
 
 Notes :
 - `d6M` = lancer `2d6` et garder le moins bon

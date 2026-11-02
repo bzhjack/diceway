@@ -6,7 +6,7 @@ Source principale : chapitre 2, pages 24-39 du livre.
 
 | Carrière | Détail / archétype | Notes utiles |
 | --- | --- | --- |
-| Alchimiste | artificier / inventeur | Au-dessus du rang 2 : prendre un désavantage supplémentaire. Démonique requis pour les savoirs avancés. |
+| Alchimiste | artificier / inventeur | Un désavantage par rang au-dessus de 2. Démonique requis pour les savoirs avancés. |
 | Assassin | agent / espion | Carrière furtive et d'approche. |
 | Barbare | berserk / primitif | Archétype sword & sorcery classique. |
 | Bourreau | geôlier / esclavagiste | Brutal, peu subtil. |
@@ -20,16 +20,16 @@ Source principale : chapitre 2, pages 24-39 du livre.
 | Marchand | colporteur / négociant | Estimation, réseau, acquisition d'objets. |
 | Marin | matelot / pirate | Lié à la mer ; les pirates parlent l'argot des mers. |
 | Médecin | guérisseur / rebouteux | Soins, remèdes, premiers secours. |
-| Mendiant | vagabond / clochard | Errance, discrétion, bas-fonds. |
+| Mendiant | vagabond / clochard | Errance, discrétion, bas-fonds. Interdite au départ à un Satarlan. |
 | Ménestrel | barde / poète | Histoires, séduction, voyages. |
 | Mercenaire | brigand / guerrier | Soldat de fortune. |
 | Noble | aristocrate / courtisan | Étiquette, influence, statut. |
 | Ouvrier | docker / manœuvre | Force, manutention, travail dur. |
-| Pilote des airs | - | Nefs volantes, navigation aérienne. |
+| Pilote des airs | - | Nefs volantes, navigation aérienne. Réservée aux Satarlans. |
 | Prêtre | druide / chaman | Démonique requis pour certains savoirs sacrés ou anciens. |
 | Scribe | érudit / copiste | Lecture, écriture, savoirs, traduction. |
 | Soldat | garde / milicien | Discipline, service, combat régulier. |
-| Sorcier | magicien / enchanteur | Au-delà du rang 1 : désavantage supplémentaire. Démonique oral et écrit requis. |
+| Sorcier | magicien / enchanteur | Un désavantage supplémentaire par rang au-delà du 1er, y compris lors d'une progression ultérieure. Démonique oral et écrit requis. |
 | Tentatrice | courtisane / serveuse | Présentée au féminin dans le livre, mais utilisable pour un personnage masculin. |
 | Voleur | filou / crapule | Discrétion, ruse, bas-fonds. |
 
@@ -40,4 +40,5 @@ Source principale : chapitre 2, pages 24-39 du livre.
 - Certaines carrières ont des exigences ou contreparties fortes :
   - `Alchimiste` et `Sorcier` : carrières dangereuses sur le plan des désavantages.
   - `Prêtre`, `Druide`, `Sorcier`, `Alchimiste` : lien fort avec le démonique.
+- Certaines carrières sont imposées ou interdites par l'origine du héros (`barbare` imposé au Beshaar, à l'Axos, chez les céruléens et au Valgard, `pirate` aux Îles du Crâne ; pas de `mendiant` de départ à Satarla ; `pilote des airs` réservé aux Satarlans ; quatre carrières interdites aux céruléens) : voir `regions.md`.
 - Pour les seeders, garder les noms de la colonne `Carrière` comme référence principale.

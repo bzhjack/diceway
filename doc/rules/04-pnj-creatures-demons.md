@@ -26,9 +26,10 @@ Regle de horde:
 
 - Une seule attaque de groupe, un seul jet.
 - Bonus d'attaque egal a `+1` par pietaille engage.
+- Les circonstances et les armes dictent combien de pietaille peuvent attaquer en meme temps un meme heros.
 - Exemple: 2 pietaille => `+2`; 3 pietaille => `+3`.
 - Si la horde touche: degats `d6M`.
-- Pietaille contre pietaille: le groupe le plus nombreux inflige `d6M` pertes; le plus faible riposte a `d3`.
+- Pietaille contre pietaille: pas de jet d'attaque; le groupe le plus nombreux inflige `d6M` pertes; le plus faible riposte a `d3`.
 
 ### Coriaces
 
@@ -50,10 +51,12 @@ Profil type:
 - Vitalite: `10+`
 - Degats d'armes normaux
 - Disposent de `points de vilenie`
+- Crees avec les memes regles que les heros
+- Disposent generalement de pietaille en nombre, et d'un ou deux coriaces comme lieutenants et gardes du corps
 
 #### Points de vilenie
 
-Equivalent des `points d'heroisme` pour les rivaux, avec deux options supplementaires:
+Equivalent des `points d'heroisme` pour les rivaux (le livre ne fixe pas de nombre general; ses rivaux d'exemple en ont `5` ou `6`), avec deux options supplementaires:
 
 - `Bouclier humain`: utiliser un PNJ pietaille qui l'entoure comme bouclier humain pour absorber les degats d'une attaque. Fonctionne comme `parade in extremis`.
 - `Fuite opportune`: permet au rival de s'echapper quand la situation tourne mal (porte derobee, diversion, disparition subite), meme s'il semblait perdu. Combine avec `defier la mort`, un rival peut meme echapper a une mort apparente. Necessite une occasion narrative.
@@ -80,14 +83,16 @@ Equivalent des `points d'heroisme` pour les rivaux, avec deux options supplement
 Regles d'application:
 
 - Les aptitudes de combat d'une creature incorporent deja tous ses modificateurs. Ne pas ajouter `agilite` aux jets d'attaque ni `vigueur` aux degats.
-- Les creatures n'ont pas d'`aura`.
+- Les creatures du bestiaire n'ont pas d'`aura` (les demons en ont une, voir plus bas).
+- En general, une creature n'effectue qu'une attaque par round (griffes, crocs, sabots...); les degats indiques sont l'effet global de cette attaque.
+- Pour la reaction et la horde, les creatures coriaces et rivaux de la table ont `+0` en initiative.
 - La protection d'une creature fonctionne comme une armure. Valeur fixe entre parentheses acceptable a la place du de variable.
 - Une creature particulierement placide peut infliger des degats d'une ou deux categories de taille en dessous; une creature feroce ou a attaques multiples peut monter d'une categorie.
 
 ### Avantages courants de creatures
 
 - `attaque feroce`: de de bonus a l'attaque
-- `attaques multiples`: plusieurs jets d'attaque distincts
+- `attaques multiples`: deux types d'attaque totalement differents, avec deux jets d'attaque separes
 - `attaque speciale`: effet propre au profil
 - `attaque venimeuse`: venin defini dans le profil
 - `camouflage`: de de bonus pour se cacher
@@ -173,6 +178,7 @@ Regle d'ajustement:
 
 - On peut abaisser un ou deux attributs sous `0`, jusqu'a `-2`, et redistribuer les points recuperes aux autres attributs.
 - Les demons n'ont pas de carrieres.
+- L'`aura` fait partie des attributs a repartir (d'apres les demons d'exemple p. 131: Zullthegg `1+2-1+0 = 2`, Vul'mazzanlu `3+3+2-2 = 6`, Mazallakos `2+4+5+1 = 12`; l'ajustement jusqu'a `-2` peut donc porter sur l'aura).
 
 ### Pouvoirs demoniaques
 
@@ -186,7 +192,7 @@ Regle d'ajustement:
 | Faculte de parole | Peut parler comme un humain. |
 | Forme humaine | Prend l'apparence humaine; retour a la forme demoniaque des qu'il se bat ou est blesse. |
 | Intangible | Pas de corps physique dans cette dimension; blesse uniquement par sorcellerie ou alchimie. |
-| Poison | Contact paralysant; jet de `vigueur Difficile -2` pour eviter la paralysie; paralyse = mort dans l'heure sauf nouveau jet `Difficile -2` reussi. |
+| Poison | Contact paralysant (creature de taille moyenne ou inferieure); jet de `vigueur Difficile -2` pour eviter la paralysie; paralyse = mort dans l'heure sauf nouveau jet `Difficile -2` reussi. |
 | Progeniture | Produit `1d6` rejetons par semaine; `pietaille` la 1re semaine, puis demons mineurs la semaine suivante, et ainsi de suite, sans jamais atteindre la categorie du geniteur (un demon mineur n'engendre que de la pietaille). |
 | Regeneration | `1 PV / round`; se debarrasse des effets d'un coup precis au bout de 2 rounds. |
 | Savoir special | Une carriere au rang `6`. |

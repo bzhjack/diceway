@@ -36,6 +36,8 @@ Fichiers:
 - `04-pnj-creatures-demons.md`: categories de PNJ, gabarits de creatures, morts-vivants, creation de demons.
 - `05-alchimie-foi-sorcellerie.md`: moteurs de magie, foi et alchimie.
 - `06-progression.md`: recompenses, experience, progression et suivants.
+- `aide-de-jeu.md`: resume des regles pour la table (pas un chapitre du livre).
+- `exemples-de-jets.md`: exemples chiffres du livre, pour verifier les calculs de l'application.
 
 Pages PDF utiles (numerotation du livre):
 

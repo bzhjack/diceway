@@ -23,3 +23,5 @@ Source principale : chapitre 2, page 53 du livre.
   - n'inflige pas le malus d'armure habituel à l'agilité ;
   - reste un cas spécial, lié au trait/avantage.
 - Un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque.
+- Le casque n'ajoute +1 que si le héros porte une armure : légère + casque = `d6-2`, moyenne + casque = `d6-1`, lourde + casque = `d6` (p. 53).
+- Un héros de `vigueur` inférieure à 0 ne peut pas porter d'armure lourde (p. 52).

@@ -1,3 +1,4 @@
+import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -24,6 +25,7 @@ interface RegionPin {
 @Component({
   selector: 'bol-hero-advanced-region',
   imports: [
+    NgOptimizedImage,
     FormField,
     MatButtonModule,
     MatFormFieldModule,

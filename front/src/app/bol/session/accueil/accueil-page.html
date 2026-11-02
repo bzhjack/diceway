@@ -39,7 +39,14 @@
         <h2 id="acc-scenarios-titre" class="acc-panneau-titre">Scénarios</h2>
 
         @if (error()) {
-          <p class="acc-message" role="alert">Impossible de charger les scénarios.</p>
+          <div class="acc-erreur">
+            <p class="acc-message" role="alert">
+              Impossible de charger les scénarios. Une partie en cours se reprend depuis vos sessions.
+            </p>
+            <a mat-stroked-button routerLink="/library/sessions">
+              <mat-icon>history</mat-icon> Mes sessions
+            </a>
+          </div>
         } @else if (!data()) {
           <p class="acc-message" role="status">Chargement des scénarios…</p>
         } @else {

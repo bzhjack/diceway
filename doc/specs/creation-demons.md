@@ -135,7 +135,7 @@ Pouvoirs cites dans le livre :
 - `Regeneration`
 - `Savoir special` : une carriere au rang `6`
 - `Seducteur`
-- `Sorcellerie` : points de pouvoir selon la categorie
+- `Sorcellerie` : points de pouvoir selon la categorie (mineur `2`, inferieur `5`, majeur `10`)
 - `Telepathie`
 - `Vulnerabilite` : donne un pouvoir supplementaire en echange d'une faiblesse
 - `Progeniture`

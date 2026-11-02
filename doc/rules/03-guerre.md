@@ -33,12 +33,24 @@ Principe:
 | Terrain ecrasant | `+4` |
 | Equipement ou ravitaillement meilleurs | `+1` |
 | Equipement ou ravitaillement nettement meilleurs | `+2` |
-| Armee de Satarla avec nefs volantes | `+2` supplementaires possibles |
-| Soutien d'un sorcier de 2e cercle | `+2` |
-| Soutien d'un sorcier de 3e cercle | `+4` |
+| Armee de Satarla incluant des nefs volantes | `+2`, cumulable avec equipement ou ravitaillement (jusqu'a `+4` au total si l'armee est aussi beaucoup mieux approvisionnee) |
+| Sort de 2e cercle lance par un sorcier | `+2` |
+| Sort de 3e cercle lance par un sorcier | `+4` |
 | Commandement | ajouter le rang de `soldat` du chef |
 
+Sorcellerie:
+
+- Le bonus n'est acquis que si le sort est effectivement lance. Le sorcier doit avoir un certain rang de `sorcier` et lancer au moins des sorts du 2e cercle.
+- Presque toutes ces sorcelleries exigent une condition d'incantation (duree tres longue, sacrifice rituel, evenement precis, ingredients rares ou grimoire).
+- Un commandant qui apprend que l'adversaire a un sorcier peut engager le sien (rare: course a l'armement); la solution preferee est d'envoyer des heros s'occuper du sorcier (action heroique).
+
 ### Jet de bataille
+
+Cadre:
+
+- Un round de bataille dure une heure (petites armees), une journee (grande bataille rangee) ou un mois (siege).
+- A chaque round, un des heros fait le jet pour l'armee dans laquelle ils combattent.
+- Les heros ne subissent pas de degats pendant un round de bataille. Entre deux rounds, le MJ peut permettre des actions heroiques.
 
 Chaque round de bataille:
 
@@ -53,6 +65,8 @@ Interpretation:
 
 ### Actions heroques influencant la bataille
 
+Les actions heroiques se jouent en rounds de combat normaux (pas en jets de bataille), entre deux rounds de bataille: elles disent ce qui arrive aux heros eux-memes et peuvent faire gagner des points de victoire.
+
 Valeurs indicatives relevees:
 
 | Action | Effet sur la bataille |
@@ -65,7 +79,7 @@ Valeurs indicatives relevees:
 | Prendre une position cle | `+1 a +3 PV` |
 | Rallier les troupes | jet base sur `aura` et carrieres utiles; donne un de bonus au prochain jet de bataille |
 | Amener des renforts | peut changer la categorie de taille d'armee |
-| Tenir une position 3 rounds de combat | `+1 PV`, reproductible d'un round de bataille a l'autre |
+| Tenir une position 3 rounds de combat (ou proteger une personnalite importante) | `+1 PV`, reproductible d'un round de bataille a l'autre |
 | Tuer une cible majeure | `+1 ou +2 PV` |
 | Voler des informations critiques | `+2 PV` |
 
@@ -88,10 +102,12 @@ Effets:
 | Echec critique | Dernier de tout l'affrontement, et pas d'action au 1er round. |
 | Echec | Agit apres l'adversaire. |
 | Reussite | Agit avant l'adversaire. |
-| Succes heroique | Agit avant et beneficie d'un round libre initial. |
+| Succes heroique | Agit avant et beneficie d'un round libre initial (les adversaires ne peuvent pas agir, sauf les navires ayant un rival a bord). |
 | Succes legendaire | Comme heroique, et `+1` a toutes les attaques pendant la rencontre. |
 
 ### Bandes de portee navales
+
+La distance initiale entre deux navires est estimee de facon abstraite par le MJ. Un navire est repere a portee `Maximale` par grand beau temps, `Extreme` par temps brumeux, plus court par brouillard, tempete ou de nuit.
 
 | Bande | Modificateur indicatif |
 | --- | --- |
@@ -118,9 +134,15 @@ Chaque action reste utilisable a toute portee inferieure ou egale a sa portee ma
 
 ### Sequence d'un round naval
 
-1. Manoeuvres
-2. Attaques
+Un navire effectue une action par phase, au choix:
+
+1. Manoeuvres: fuir / s'approcher, eperonner, briser les rames, lancer les grappins, desengagement
+2. Attaques: projectiles, catapulte, crache-feu, abordage
 3. Reparation / extinction / assistance a l'equipage
+
+Chaque heros a un poste a bord (capitaine, chef des soldats et des abordages, responsable de la catapulte...) qui determine qui lance le jet de l'action. En cas de doute, c'est le capitaine.
+
+Succes legendaire: pour toute action qui a des options heroiques (briser les rames, grappins, abordage, crache-feu, projectiles), choisir deux options de succes heroique, la meme option pouvant etre prise deux fois.
 
 ### Ressources de navire
 
@@ -135,7 +157,7 @@ Principes:
 
 Formule:
 
-`2d6 + carriere pertinente + ressources allouees +/- modificateurs`
+`2d6 + rang de la carriere pertinente du heros charge de l'action + ressources allouees +/- modificateurs (portee, defense de la cible)`
 
 Seuil:
 
@@ -177,13 +199,13 @@ Seuil:
 
 #### Desengagement
 
-- Sert a separer des navires bloques par grappins ou eperonnage.
+- Sert a separer des navires bloques par grappins ou eperonnage: ils sont alors a `bout portant`, et en cas de reussite ils se detachent et la distance passe a `courte`.
 
 ### Attaques navales
 
 Formule generale:
 
-`2d6 + carriere pertinente + ressources allouees - defense cible +/- modificateurs de portee`
+`2d6 + rang de la carriere pertinente du heros charge de l'action + ressources allouees - defense cible +/- modificateurs de portee`
 
 Seuil:
 
@@ -224,7 +246,7 @@ Seuil:
 
 Formule:
 
-`2d6 + carriere pertinente + ressources allouees`
+`2d6 + rang de la carriere pertinente du heros charge de l'action + ressources allouees`
 
 Seuil:
 
@@ -243,7 +265,8 @@ Succes ameliores:
 
 Feu:
 
-- Un incendie continue de round en round tant qu'il n'est pas eteint.
+- Un incendie continue de round en round tant qu'il n'est pas eteint: la coque et l'equipage subissent de nouveaux degats de feu au debut de chaque round, jusqu'a un jet de reparation reussi (phase 3).
+- Le livre ne chiffre pas ces degats recurrents (interpretation: reprendre ceux du pot incendiaire, `d3` coque et `d3` equipage).
 
 Destruction:
 
@@ -252,18 +275,20 @@ Destruction:
 
 ### Profils de navires releves
 
-| Navire | Equipage | Coque | Ressources | Eperonnage / armement |
-| --- | --- | --- | --- | --- |
-| Petit navire a voiles | 4 | 4 | 0 | `d6M` |
-| Grand navire a voiles | 20 | 8 | `+1` | `d6M`, catapulte |
-| Petite galere de guerre / marchande | 24 | 14 | `+1` | `d6 x2`, catapulte |
-| Galere de guerre | 35 | 30 | `+2` | `d6 x3`, catapulte |
-| Grande galere de guerre | 55 | 50 | `+3` | `d6 x4`, catapulte ou crache-feu |
-| Galere amirale | 110 | 65 | `+5` | `d6 x5`, catapulte ou crache-feu |
-| La Gloire de Parsool | 220 | 80 | `+11` | `d6 x6`, catapulte et crache-feu |
-| Nef volante | 3 | 6 | `0 ou +1` | `d6`, parfois arbalete lourde |
+| Navire | Rames | Equipage | Coque | Ressources | Eperonnage / armement |
+| --- | --- | --- | --- | --- | --- |
+| Petit navire a voiles | 0 | 4 | 4 | 0 | `d6M` |
+| Grand navire a voiles | 0 | 20 | 8 | `+1` | `d6M`, catapulte |
+| Petite galere de guerre / marchande | 20 | 24 | 14 | `+1` | `d6 x2`, catapulte |
+| Galere de guerre | 30 | 35 | 30 | `+2` | `d6 x3`, catapulte |
+| Grande galere de guerre | 50 | 55 | 50 | `+3` | `d6 x4`, catapulte ou crache-feu |
+| Galere amirale | 100 | 110 | 65 | `+5` | `d6 x5`, catapulte ou crache-feu |
+| La Gloire de Parsool | 170 | 220 | 80 | `+11` | `d6 x6`, catapulte et crache-feu |
+| Nef volante | - | 3 | 6 | `0 ou +1` | `d6`, parfois arbalete lourde |
 
 Notes:
 
-- Les grandes galeres gagnent des ressources supplementaires d'abordage avec soldats embarques.
+- Soldats embarques: bonus de ressources aux actions d'abordage seulement. Grande galere de guerre (15 a 20 soldats) `+1`, galere amirale (30 a 40 soldats) `+2`, La Gloire de Parsool (60 a 80 soldats) `+3` ou `+4` (exemple du livre: 60 soldats = `+3`). Le livre n'en donne pas pour les autres navires.
+- Nef volante: 3 hommes d'equipage, mais elle peut embarquer jusqu'a 16 personnes, ce qui donne `+1` en ressources (d'ou `0 ou +1`).
+- Les creatures marines (kalathorn, poad, crocator, behemathon) peuvent attaquer les navires, et inversement, avec les regles du combat naval. En general elles percutent les flancs pour couler le navire, certaines preferent s'en prendre a l'equipage.
 - Les grandes batailles navales peuvent etre traitees avec les regles de guerre terrestre en remplacant `soldat` par `marin` ou `pirate`.

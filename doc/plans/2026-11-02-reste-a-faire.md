@@ -8,7 +8,15 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 À faire sur le serveur, dans cet ordre, une fois le code déployé :
 
-1. `docker cp backend/routes/api.php …` (le conteneur ne monte que `app/` et `database/`), puis `php artisan migrate` : il ajoute `bol_fight_session.scenario_id` (accueil), corrige les données du catalogue relevées par l'audit du livre (`2026_11_02_120000_fix_reference_data_from_rulebook_audit.php`) ajoute les listes de la Côte de Feu et des Plaines de Klaar (`2026_11_02_130000_add_cote_de_feu_and_klaar_regional_lists.php`) précise le terrain des avantages de terrain (`2026_11_02_140000_terrain_advantages_name_their_terrain.php`) passe trois PNJ du catalogue aux armes régionales (`2026_11_02_150000_npcs_take_mythic_plus_regional_weapons.php`) et ajoute le Roi-Sorcier mort-vivant au catalogue (`2026_11_02_160000_add_undead_sorcerer_king_to_catalogue.php`).
+1. `docker cp backend/routes/api.php …` (le conteneur ne monte que `app/` et `database/`), puis `php artisan migrate`, qui passe dans l'ordre :
+   - `2026_11_02_100000_add_scenario_id_to_bol_fight_session` : le scénario d'une table (accueil) ;
+   - `2026_11_02_120000_fix_reference_data_from_rulebook_audit` : les erreurs du catalogue relevées par l'audit du livre ;
+   - `2026_11_02_130000_add_cote_de_feu_and_klaar_regional_lists` : les listes de la Côte de Feu et des Plaines de Klaar ;
+   - `2026_11_02_140000_terrain_advantages_name_their_terrain` : le terrain des six avantages de terrain ;
+   - `2026_11_02_150000_npcs_take_mythic_plus_regional_weapons` : trois PNJ du catalogue aux armes régionales ;
+   - `2026_11_02_160000_add_undead_sorcerer_king_to_catalogue` : le Roi-Sorcier mort-vivant.
+
+   La première ajoute une colonne aux tables de jeu et la remplit d'après leur scène en cours ; les cinq autres ne touchent que le catalogue (fiches sans compte) et n'ajoutent rien si on les relance.
 2. Portraits : `docker exec -u www-data diceway php artisan bol:extract-portraits` (voir `CLAUDE.md`, section Portraits).
 3. **Après** la mise en production des portraits : supprimer la table `bol_portrait_backup` et les options `--restore` / `--forget-originals` de `bol:extract-portraits` (S).
 
@@ -153,10 +161,10 @@ Relevés par l'audit de `doc/` et des seeders contre le livre et Mythic+ (2026-1
 
 ## 4. Code
 
-- **Dette suivie par le lint** (`eslint-suppressions.json`, `stylelint-suppressions.json`) : 285 couleurs hexadécimales hors de `_tokens.scss`, 14 `::ng-deep`, 6 clics sans clavier et 5 éléments cliquables sans focus, 3 `$any()`, 1 syntaxe interdite. `npm run lint:prune` baisse les comptes après correction (M).
-- `region.component.html:7` : la carte de Lémurie est une `<img>` sans `NgOptimizedImage` (S).
+- **Dette suivie par le lint** (`eslint-suppressions.json`, `stylelint-suppressions.json`) : 285 couleurs hexadécimales hors de `_tokens.scss`, 14 `::ng-deep`, 6 clics sans clavier et 5 éléments cliquables sans focus, 3 `$any()` (la syntaxe interdite de la carte de Lémurie est réglée le 2026-11-02). `npm run lint:prune` baisse les comptes après correction (M).
+- ✅ `bol/hero/advanced/region/region.component.html:7` : la carte de Lémurie est une `<img>` sans `NgOptimizedImage` (S) — fait le 2026-11-02
 - Hauteurs fixes mesurées à la main (`--tas-h`, `min-height` de `combattant-carte.scss`) : toute nouvelle option dans ces cartes peut demander de les remesurer.
 
 ## 5. Accueil
 
-- Si l'accueil ne charge pas (par exemple `routes/api.php` non copié dans le conteneur), le bandeau « Reprendre la table » disparaît : ajouter un lien « Mes sessions » dans le message d'erreur (S).
+- ✅ Si l'accueil ne charge pas (par exemple `routes/api.php` non copié dans le conteneur), le bandeau « Reprendre la table » disparaît : ajouter un lien « Mes sessions » dans le message d'erreur (S) — fait le 2026-11-02

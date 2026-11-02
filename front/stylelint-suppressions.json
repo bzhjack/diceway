@@ -145,12 +145,12 @@
   },
   "src/app/bol/session/play/session-header/session-header.scss": {
     "color-no-hex": {
-      "count": 4
+      "count": 1
     }
   },
   "src/app/bol/session/play/tapis/combattant-carte.scss": {
     "color-no-hex": {
-      "count": 7
+      "count": 4
     }
   },
   "src/app/bol/session/play/tapis/expanded-card.scss": {

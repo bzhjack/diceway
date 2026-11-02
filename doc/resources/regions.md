@@ -25,6 +25,17 @@ Catalogue de référence basé sur les régions utilisées dans le projet et coh
 - Valgard
 - Zalut
 
+## Carrières imposées ou interdites par l'origine
+
+| Région | Contrainte | Page |
+| --- | --- | --- |
+| Désert de Beshaar | Première carrière : `barbare`. | 17 |
+| Îles du Crâne | Une des carrières doit être `pirate`. | 18 |
+| Montagnes de l’Axos | Première carrière : `barbare` (`chasseur` fréquent). | 20 |
+| Plaines de Klaar (céruléen) | Première carrière : `barbare` ; deuxième : `marchand` probable. `Alchimiste`, `médecin`, `scribe` et `sorcier` interdits. | 21 |
+| Satarla | Pas de départ en `mendiant` (mendicité interdite) ; seuls les Satarlans peuvent prendre `pilote des airs`. | 21 |
+| Valgard | Une des carrières doit être `barbare`. | 23 |
+
 ## Notes
 
 - Cette liste est celle actuellement utilisée dans les seeders du projet.

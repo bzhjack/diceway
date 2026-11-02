@@ -6,7 +6,7 @@ Source principale : chapitre 2, pages 49-50 du livre, avec la mise à jour Mythi
 
 - `d6M` : arme légère.
 - `d6` : arme moyenne.
-- `d6B` : arme lourde.
+- `d6B` : arme lourde ; un héros de `vigueur` inférieure à 0 ne peut pas la manier (p. 63).
 - `d6 ou d6B` (Mythic+) : arme maniée à une main (`d6`) ou à deux mains (`d6B`).
 - En mêlée, on ajoute la `vigueur`.
 - À distance, on ajoute `vigueur / 2` arrondie à l'inférieur.
