@@ -15,6 +15,7 @@ import {
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolCatalogService} from './bol-catalog.service';
 import {HeroCreationWarning, AttributModifier} from '../models/bol-heros-state.model';
+import {desavantagesGeneraux} from '../hero/advanced/create.validators';
 
 @Injectable({
   providedIn: 'root',
@@ -120,7 +121,8 @@ export class BolHerosStateService {
       cost += 1;
     }
 
-    if (extraAdvantages >= 2 && generalDisadvantageCount === 0) {
+    // Les désavantages généraux servent d'abord les avantages spéciaux : seuls ceux qui restent couvrent le 3e avantage.
+    if (!desavantagesGeneraux(advantageCount, generalDisadvantageCount, this.specialAvantageDesavantageRequired()).troisiemeCouvert) {
       cost += 1;
     }
 

@@ -239,13 +239,60 @@ describe('BolHerosStateService', () => {
       expect(service.heroismCost()).toBe(2);
     });
 
-    it('est entièrement couvert par un désavantage régional et un général', () => {
+    it('coûte 1 quand l’unique désavantage général est pris par l’avantage spécial : il ne couvre pas aussi le 3e avantage', () => {
       service.currentHeros.set(
         hero({
           traits: [
             trait(AVANTAGE_COSTAUD_ID, 'A'),
             trait(AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, 'A'),
             trait(AVANTAGE_POUVOIR_DU_NEANT_ID, 'A'),
+            trait(DESAVANTAGE_CHETIF_ID, 'D', {region_id: 5}),
+            trait(DESAVANTAGE_NON_COMBATTANT_ID, 'D'),
+          ],
+        }),
+      );
+      expect(service.heroismCost()).toBe(1);
+    });
+
+    it('coûte 1 quand Pouvoir du Néant est le 3e avantage et que son désavantage général est le seul', () => {
+      service.currentHeros.set(
+        hero({
+          traits: [
+            trait(AVANTAGE_COSTAUD_ID, 'A'),
+            trait(AVANTAGE_COSTAUD_ID + 100, 'A'),
+            trait(AVANTAGE_POUVOIR_DU_NEANT_ID, 'A'),
+            trait(DESAVANTAGE_CHETIF_ID, 'D', {region_id: 5}),
+            trait(DESAVANTAGE_NON_COMBATTANT_ID, 'D'),
+          ],
+        }),
+      );
+      expect(service.heroismCost()).toBe(1);
+    });
+
+    it('est entièrement couvert par un désavantage régional et trois généraux (un par avantage spécial, un pour le 3e avantage)', () => {
+      service.currentHeros.set(
+        hero({
+          traits: [
+            trait(AVANTAGE_COSTAUD_ID, 'A'),
+            trait(AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, 'A'),
+            trait(AVANTAGE_POUVOIR_DU_NEANT_ID, 'A'),
+            trait(DESAVANTAGE_CHETIF_ID, 'D', {region_id: 5}),
+            trait(DESAVANTAGE_NON_COMBATTANT_ID, 'D'),
+            trait(DESAVANTAGE_CHETIF_ID + 100, 'D'),
+            trait(DESAVANTAGE_CHETIF_ID + 101, 'D'),
+          ],
+        }),
+      );
+      expect(service.heroismCost()).toBe(0);
+    });
+
+    it('un 3e avantage ordinaire reste couvert par un seul désavantage général', () => {
+      service.currentHeros.set(
+        hero({
+          traits: [
+            trait(AVANTAGE_COSTAUD_ID, 'A'),
+            trait(AVANTAGE_COSTAUD_ID + 100, 'A'),
+            trait(AVANTAGE_COSTAUD_ID + 101, 'A'),
             trait(DESAVANTAGE_CHETIF_ID, 'D', {region_id: 5}),
             trait(DESAVANTAGE_NON_COMBATTANT_ID, 'D'),
           ],

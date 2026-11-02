@@ -64,6 +64,12 @@ describe('demonProtection', () => {
     expect(demonProtection(['Poison', null])).toBeNull();
     expect(demonProtection([])).toBeNull();
   });
+
+  it('recognises the real accented name of the power, whatever the case or the spaces', () => {
+    expect(demonProtection(['Cuirassé'])).toBe('d6 (4)');
+    expect(demonProtection(['Armure', ' CUIRASSÉ '])).toBe('d6 (4)');
+    expect(demonProtection(['Cuirasse'])).toBe('d6 (4)');
+  });
 });
 
 describe('demonDegats', () => {
@@ -71,6 +77,7 @@ describe('demonDegats', () => {
     expect(demonDegats('d6M', 'pietaille', ['Attaques dévastatrices'])).toBe('d6');
     expect(demonDegats('d6', 'coriace', ['Attaques dévastatrices'])).toBe('d6B');
     expect(demonDegats('d6B', 'rival', ['Attaques dévastatrices'])).toBe('d6x2');
+    expect(demonDegats('d6', 'coriace', ['attaques devastatrices'])).toBe('d6B');
   });
 
   it('leaves damage already raised by hand, or without the power, as it is', () => {

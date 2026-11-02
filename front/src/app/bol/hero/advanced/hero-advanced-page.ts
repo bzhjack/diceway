@@ -48,6 +48,7 @@ import {
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
+  desavantagesGeneraux,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
 import {HeroAdvancedRegionComponent} from './region/region.component';
@@ -684,7 +685,11 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     if (avantages.length >= 2 && this.regionalDesavantageDrafts().length === 0) {
       warnings.push({step: 'Traits', warn: "Le 2e avantage exige un désavantage régional ou coûte 1 point d'héroïsme."});
     }
-    if (avantages.length >= 3 && this.generalDesavantageDrafts().length === 0) {
+    // Un désavantage général ne couvre qu'une exigence : les avantages spéciaux (E12) d'abord, le 3e avantage avec ceux qui restent.
+    const extraRequired = this.herosStateService.specialAvantageDesavantageRequired();
+    const extraActual = this.generalDesavantageDrafts().length;
+    const {speciauxManquants, troisiemeCouvert} = desavantagesGeneraux(avantages.length, extraActual, extraRequired);
+    if (!troisiemeCouvert) {
       warnings.push({step: 'Traits', warn: "Le 3e avantage exige un désavantage général ou coûte 1 point d'héroïsme."});
     }
 
@@ -693,12 +698,10 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     const specialNames = [AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, AVANTAGE_POUVOIR_DU_NEANT_ID]
       .filter((id) => avantageIds.includes(id))
       .map((id) => this.mergedAvantages().find((avantage) => Number(avantage.id) === id)?.avantage ?? `Avantage #${id}`);
-    const extraRequired = this.herosStateService.specialAvantageDesavantageRequired();
-    const extraActual = this.generalDesavantageDrafts().length;
-    if (extraRequired > 0 && extraActual < extraRequired) {
+    if (speciauxManquants > 0) {
       warnings.push({
         step: 'Traits',
-        warn: `${specialNames.join(', ')} exige(nt) encore ${extraRequired - extraActual} désavantage(s) général(aux) supplémentaire(s).`,
+        warn: `${specialNames.join(', ')} exige(nt) encore ${speciauxManquants} désavantage(s) général(aux) supplémentaire(s).`,
       });
     }
 

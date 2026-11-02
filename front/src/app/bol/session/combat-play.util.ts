@@ -36,12 +36,17 @@ export function demonPortrait(d: {demon_id?: string | number | null; demon?: {av
   return d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR;
 }
 
-/** Un pouvoir démoniaque, comparé sans tenir compte de la casse. */
-function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
-  return pouvoirs.some((pouvoir) => pouvoir?.trim().toLowerCase() === nom);
+/** Un nom de pouvoir sans accents, espaces de bord ni casse : « Cuirassé » et « cuirasse » deviennent le même nom. */
+function nomDePouvoir(nom: string): string {
+  return nom.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
 }
 
-/** Protection d'un démon d'après ses pouvoirs (04-pnj-creatures-demons.md) : Cuirasse `d6 (4)`, sinon Armure `d6-2 (2)`, sinon aucune. */
+/** Un pouvoir démoniaque, comparé sans tenir compte de la casse ni des accents. */
+function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
+  const attendu = nomDePouvoir(nom);
+  return pouvoirs.some((pouvoir) => pouvoir !== null && nomDePouvoir(pouvoir) === attendu);
+}
+
 /** Les dés que les capacités d'une créature ou les pouvoirs d'un démon donnent à toutes ses attaques (04-pnj-creatures-demons.md) :
  * « Attaque féroce » et « Armes améliorées » un dé de bonus, « Attaque timide » un dé de malus. Les autres dés de bonus (prédateur,
  * camouflage) ne jouent pas à l'attaque ; les capacités sont reconnues par leur nom. */
@@ -53,6 +58,7 @@ export function attackDiceAbilities(noms: readonly (string | null)[]): {readonly
   };
 }
 
+/** Protection d'un démon d'après ses pouvoirs (04-pnj-creatures-demons.md) : Cuirassé `d6 (4)`, sinon Armure `d6-2 (2)`, sinon aucune. */
 export function demonProtection(pouvoirs: readonly (string | null)[]): string | null {
   if (hasPouvoir(pouvoirs, 'cuirasse')) {
     return 'd6 (4)';

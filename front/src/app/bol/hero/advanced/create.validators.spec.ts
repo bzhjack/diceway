@@ -8,6 +8,7 @@ import {
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
+  desavantagesGeneraux,
 } from './create.validators';
 import {
   automaticLanguageIdsForRegion,
@@ -431,5 +432,39 @@ describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit
   it('ne dit rien d’un illettré sans carrière lettrée', () => {
     expect(carrieresLettreesPourIllettre([ILLETTRE], [SOLDAT, 12])).toEqual([]);
     expect(carrieresLettreesPourIllettre([ILLETTRE], [])).toEqual([]);
+  });
+});
+
+describe('R-DESAV-GENERAUX — desavantagesGeneraux : un désavantage général ne couvre pas deux exigences à la fois (p. 46)', () => {
+  it('3 avantages dont un spécial et 1 désavantage général : le spécial est couvert, pas le 3e avantage', () => {
+    expect(desavantagesGeneraux(3, 1, 1)).toEqual({speciauxManquants: 0, troisiemeCouvert: false});
+  });
+
+  it('3 avantages dont un spécial et 2 désavantages généraux : les deux sont couverts', () => {
+    expect(desavantagesGeneraux(3, 2, 1)).toEqual({speciauxManquants: 0, troisiemeCouvert: true});
+  });
+
+  it('3 avantages dont un spécial et aucun désavantage général : il manque le spécial, le 3e avantage n’est pas couvert', () => {
+    expect(desavantagesGeneraux(3, 0, 1)).toEqual({speciauxManquants: 1, troisiemeCouvert: false});
+  });
+
+  it('2 avantages dont un spécial et 1 désavantage général : le spécial est couvert, pas de 3e avantage à couvrir', () => {
+    expect(desavantagesGeneraux(2, 1, 1)).toEqual({speciauxManquants: 0, troisiemeCouvert: true});
+  });
+
+  it('les deux avantages spéciaux exigent chacun leur désavantage : 3 avantages et 2 désavantages ne couvrent pas le 3e', () => {
+    expect(desavantagesGeneraux(3, 2, 2)).toEqual({speciauxManquants: 0, troisiemeCouvert: false});
+    expect(desavantagesGeneraux(3, 1, 2)).toEqual({speciauxManquants: 1, troisiemeCouvert: false});
+    expect(desavantagesGeneraux(3, 3, 2)).toEqual({speciauxManquants: 0, troisiemeCouvert: true});
+  });
+
+  it('sans avantage spécial, un seul désavantage général couvre le 3e avantage', () => {
+    expect(desavantagesGeneraux(3, 1, 0)).toEqual({speciauxManquants: 0, troisiemeCouvert: true});
+    expect(desavantagesGeneraux(3, 0, 0)).toEqual({speciauxManquants: 0, troisiemeCouvert: false});
+  });
+
+  it('sous 3 avantages, le 3e avantage est toujours « couvert » (il n’existe pas)', () => {
+    expect(desavantagesGeneraux(1, 0, 0)).toEqual({speciauxManquants: 0, troisiemeCouvert: true});
+    expect(desavantagesGeneraux(2, 0, 1)).toEqual({speciauxManquants: 1, troisiemeCouvert: true});
   });
 });

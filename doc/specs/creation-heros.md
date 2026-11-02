@@ -186,6 +186,7 @@ Choix de l'appli (conforme au livre, p. 16 et 54) :
   - 1er avantage gratuit
   - 2e avec desavantage regional ou -1 heroisme
   - 3e avec desavantage general ou -1 heroisme
+- `Magie des Rois-Sorciers` et `Pouvoir du Neant` exigent chacun un desavantage general supplementaire : les desavantages generaux couvrent d'abord ces exigences, seul un desavantage restant couvre le 3e avantage (`desavantagesGeneraux`, `create.validators.ts`)
 - c'est ce que calcule `heroismCost` (`bol-heros-state.service.ts`) : `-1` si 2e avantage sans desavantage regional, `-1` si 3e avantage sans desavantage general
 
 ## Ressources derivees
@@ -244,6 +245,13 @@ Regles :
 - `kalukan` : 1re carriere `Esclave`, 2e `Garde` (soldat) ou `Ouvrier` ; ni `Menestrel`, ni `Marchand`, ni `Courtisan` ; desavantage `muet` automatique (p. 93)
 - `grooth` : carrieres de depart limitees a `Barbare`, `Dresseur`, `Esclavagiste`, `Gladiateur`, `Chasseur`, `Guerrier`, `Chaman` (pretre), `Esclave`, `Ouvrier` ; desavantage `illetre` automatique (p. 91)
 - `ceruleen` : carrieres interdites, voir `Contraintes regionales de carrieres`
+
+## Validation serveur
+
+`BolHerosRequest` (`POST /api/bol/heros/create/advanced` et `/update/advanced`) rejoue les budgets, selon `active` :
+- brouillon (`active` non vrai) : attributs et aptitudes de combat de `-1` a `3`, une seule valeur negative par groupe, somme des attributs `<= 4`, somme des aptitudes `<= 4` (`2` avec `Non-combattant`), rangs de carrieres de `0` a `3`, somme des rangs `<= 4` (`6` avec `Non-combattant`) ; `Non-combattant` = trait de type `D`, `traitable_id` `33`, `carriere` faux
+- heros active (`active` vrai) : le front envoie les attributs et aptitudes avec les bonus d'avantages deja appliques (`4` en esprit avec `Savant`, somme `5`) ; ni budget, ni plafond de creation, ni controle du nombre de valeurs negatives, seulement des bornes de bon sens : attributs et aptitudes de `-1` a `6`, rangs de carrieres de `0` a `5`
+- `nom` et `joueur` restent obligatoires dans les deux cas
 
 ## Cas speciaux non encore completes partout
 

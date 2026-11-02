@@ -104,3 +104,18 @@ export function armureLourdeInterdite(vigueur: number, armureIds: readonly numbe
 export function carrieresLettreesPourIllettre(desavantageIds: readonly number[], carriereIds: readonly number[]): number[] {
   return desavantageIds.includes(DESAVANTAGE_ILLETTRE_ID) ? carriereIds.filter((id) => CARRIERES_LETTREES.includes(id)) : [];
 }
+
+/** R-DESAV-GENERAUX (livre p. 46) : le 3e avantage exige un désavantage général (sinon 1 point d'héroïsme), et chaque avantage spécial
+ * (Magie des Rois-Sorciers, Pouvoir du Néant) en exige un de plus. Un même désavantage ne couvre pas deux exigences : les désavantages
+ * généraux servent d'abord les avantages spéciaux, seuls ceux qui restent couvrent le 3e avantage. `nbSpeciaux` : les avantages spéciaux
+ * choisis. `troisiemeCouvert` est vrai aussi sous 3 avantages, où il n'y a rien à couvrir. */
+export function desavantagesGeneraux(
+  nbAvantages: number,
+  nbGeneraux: number,
+  nbSpeciaux: number,
+): {speciauxManquants: number; troisiemeCouvert: boolean} {
+  return {
+    speciauxManquants: Math.max(nbSpeciaux - nbGeneraux, 0),
+    troisiemeCouvert: nbAvantages < 3 || nbGeneraux - nbSpeciaux >= 1,
+  };
+}
