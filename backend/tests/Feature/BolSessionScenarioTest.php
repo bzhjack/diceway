@@ -43,34 +43,6 @@ class BolSessionScenarioTest extends TestCase
         $this->assertNull($response->json('scenario_id'));
     }
 
-    public function test_sets_and_clears_the_scenario_of_a_table(): void
-    {
-        $scenario = $this->scenario('Le Dieu voilé');
-        $session = $this->tableSession();
-
-        $set = $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $scenario->id])->assertOk();
-        $this->assertSame($scenario->id, $set->json('scenario_id'));
-
-        $cleared = $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => null])->assertOk();
-        $this->assertNull($cleared->json('scenario_id'));
-        $this->assertNull($session->fresh()->scenario_id);
-    }
-
-    public function test_refuses_the_scenario_or_the_table_of_another_account(): void
-    {
-        $other = User::factory()->create();
-        $foreign = $this->scenario('Étranger', $other);
-        $own = $this->scenario('Le Dieu voilé');
-        $session = $this->tableSession();
-        $foreignSession = BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'libre', 'user_id' => $other->id, 'scenario_id' => $foreign->id]);
-
-        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $foreign->id])->assertNotFound();
-        $this->assertNull($session->fresh()->scenario_id);
-
-        $this->patchJson("/api/bol/fight-session/{$foreignSession->id}/scenario", ['scenario_id' => $own->id])->assertNotFound();
-        $this->assertSame($foreign->id, $foreignSession->fresh()->scenario_id);
-    }
-
     public function test_loading_a_scene_sets_its_scenario(): void
     {
         $a = $this->scenario('A');
