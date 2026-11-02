@@ -38,7 +38,7 @@ function defended(key: string, id = 'e-1'): CombatEffect {
 }
 
 function etat(round: number, joues: string[] = [], effets: CombatEffect[] = []): EtatCombat {
-  return {round, joues, effets, exclus: [], depart: {}, deMj: null};
+  return {round, joues, effets, exclus: [], depart: {}};
 }
 
 const KALENA = card('hero', 1);
@@ -67,11 +67,8 @@ describe('normalizeEtat', () => {
     expect(normalizeEtat({round: 1, depart: []}).depart).toEqual({});
   });
 
-  it('reads the GM die for everyone, and nothing else', () => {
-    expect(normalizeEtat({round: 1, deMj: 'bonus'}).deMj).toBe('bonus');
-    expect(normalizeEtat({round: 1, deMj: 'malus'}).deMj).toBe('malus');
-    expect(normalizeEtat({round: 1, deMj: 'autre'}).deMj).toBeNull();
-    expect(normalizeEtat({round: 1}).deMj).toBeNull();
+  it('drops the GM die for everyone that an older version saved', () => {
+    expect(normalizeEtat({round: 1, deMj: 'bonus'})).toEqual(etat(1));
   });
 });
 
@@ -474,7 +471,7 @@ describe('turnOrderFrise', () => {
 });
 
 describe('excluded cards', () => {
-  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys, depart: {}, deMj: null});
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys, depart: {}});
 
   it('skips an excluded card, which never becomes active', () => {
     const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));

@@ -41,8 +41,6 @@ export class TurnContextStore {
 
   readonly effets = computed(() => this.host.effets());
 
-  readonly deMj = computed(() => this.host.deMj());
-
   private readonly diceBox = computed(() => this.host.diceBox());
 
   readonly carrieres = computed(() => this.host.carrieres());

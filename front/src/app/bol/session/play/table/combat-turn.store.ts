@@ -8,7 +8,7 @@ import {bloqueeCeRound, cibleAuHasard, debutDeTour, effetsDerives, endTurn, give
 import {NewEffect} from '../../models/combat-effect.model';
 import {EtatSaver} from '../etat-saver';
 import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from '../tapis/combat-effects.util';
-import {DeMj, EtatCombat} from '../../models/combat-turn.model';
+import {EtatCombat} from '../../models/combat-turn.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {findCard} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
@@ -134,7 +134,7 @@ export class CombatTurnStore {
         return EMPTY;
       }
       return this.fightSessionService
-        .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus], deMj: next.deMj})
+        .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus]})
         .pipe(tap((session) => this.table.session.set(session)));
     },
     (error) => this.table.notifyError(error, "Impossible d'enregistrer l'état du combat."),
@@ -168,10 +168,6 @@ export class CombatTurnStore {
     return this.etatSaver.apply(update, options);
   }
 
-  /** Le dé du MJ pour tous (options du combat) : ajouté à chaque jet d'attaque des héros, tant qu'il est choisi ; gardé dans l'état du combat. */
-  setDeMj(deMj: DeMj | null): void {
-    this.saveEtat((etat) => ({...etat, deMj}));
-  }
 
   /** « Interrompre une action » (02-actions-combat.md, « Retarder son action et interrompre ») : le héros qui a retardé la sienne dépense
    * 1 point d'héroïsme et agit tout de suite, avant la carte active, qui reprendra la main après lui. */

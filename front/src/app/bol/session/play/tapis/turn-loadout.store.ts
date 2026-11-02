@@ -418,16 +418,12 @@ export class TurnLoadoutStore {
     return [...bonus.map((nom) => `${nom} : dé de bonus`), ...malus.map((nom) => `${nom} : dé de malus`)].join(' · ');
   });
 
-  /** Le dé du MJ pour tous, quand l'attaquant est un héros : `null` sinon. */
-  readonly deMjPourTous = computed(() => (this.turn.card().kind === 'hero' ? this.turn.deMj() : null));
-
-  /** Dés de bonus moins dés de malus (dé du MJ du coup et pour tous, capacités de l'attaquant) : ils s'annulent un pour un
+  /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant) : ils s'annulent un pour un
    * (02-actions-combat.md). */
   readonly netDice = computed(() => {
     const a = this.turn.attacker();
-    const pourTous = this.deMjPourTous();
-    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (pourTous === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
-    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (pourTous === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
+    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
+    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
     return netDiceModifier(avantages, desavantages);
   });
 

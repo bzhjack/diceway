@@ -41,7 +41,7 @@
         <span class="tas-tag">Le MJ</span>
       </div>
     </div>
-    @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice() || loadout.deMjPourTous()) {
+    @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice()) {
       <p class="tas-head-notes">
         @if (turn.legendaryBonus()) {
           <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
@@ -51,9 +51,6 @@
         }
         @if (loadout.abilityDice()) {
           <span class="tas-note">{{ loadout.abilityDice() }}, à chaque attaque.</span>
-        }
-        @if (loadout.deMjPourTous(); as de) {
-          <span class="tas-note">Dé de {{ de }} du MJ pour tous.</span>
         }
       </p>
     }

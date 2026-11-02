@@ -124,7 +124,6 @@ export class TurnFlowStore {
       this.turn.targetKey();
       this.loadout.choiceKey();
       this.loadout.gmDie();
-      this.loadout.deMjPourTous();
       this.loadout.brawl();
       untracked(() => this.resetRoll());
     });

@@ -6,7 +6,6 @@ import {ActionRollCarriere} from '../../models/action-roll.model';
 import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
-import {DeMj} from '../../models/combat-turn.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TasAttaqueComponent} from './tas-attaque';
 import {TasAttaquantComponent} from './tas-attaquant';
@@ -58,8 +57,6 @@ export class TurnAssistantComponent {
   readonly legendaryBonus = input(false);
   /** Les effets en cours (registre du combat) : leurs modificateurs entrent dans les jets. */
   readonly effets = input<readonly CombatEffect[]>([]);
-  /** Le dé du MJ pour tous (options du combat) : il s'ajoute à chaque jet d'attaque d'un héros, en plus du dé du MJ de ce coup. */
-  readonly deMj = input<DeMj | null>(null);
   /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
   /** Carrières de l'attaquant (un héros) : le MJ peut en laisser une aider une manœuvre ou une feinte. */

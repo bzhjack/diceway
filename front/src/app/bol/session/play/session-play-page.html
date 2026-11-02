@@ -17,8 +17,6 @@
       [coulissesOpen]="table.reserveOpen()"
       (coulissesToggled)="table.toggleReserve()"
       [interrupters]="combat.interrupters()"
-      [deMj]="combat.etat().deMj"
-      (deMjChanged)="combat.setDeMj($event)"
       (interruptRequested)="combat.onInterrupt($event)"
       (rerollRequested)="commands.openStartCombat(true)"
     >
@@ -93,7 +91,6 @@
           <bol-combat-board
             #combatBoard
             [effets]="combat.effetsAffiches()"
-            [deMj]="combat.etat().deMj"
             [activeCard]="combat.activeCard()"
             [armes]="stats.assistantArmes()"
             [ownedArmes]="stats.activeOwnedArmes()"
