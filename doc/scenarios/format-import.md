@@ -26,12 +26,16 @@ docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>
 
 ```jsonc
 {
-  "saga": "perle-du-beshaar",        // regroupe les chapitres d'une même saga
+  "saga": "perle-du-beshaar",        // clé des imports de ce fichier : le réimport retrouve par elle ce qu'il a créé
   "scenario": { "cle": "ch1", "titre": "Perle du Beshaar — 1. Sacrilège à Satarla", "pitch": "…" },
   "personnages": { "<clé>": { … } },
   "scenes": [ { … } ]
 }
 ```
+
+**Le titre du chapitre** s'écrit d'un seul tenant, `Scénario — Chapitre` : l'import le découpe. La partie avant le tiret cadratin
+désigne le scénario, retrouvé par son nom (sans tenir compte de la casse) parmi ceux du compte, ou créé. La partie après donne le numéro
+(`1. …`, ou `Introduction : …` pour le chapitre 0) et le nom du chapitre. Sans tiret cadratin, le chapitre est un one shot.
 
 **Clés** (`saga`, `scenario.cle`, clés de personnage et de scène) :
 - caractères permis : minuscules, chiffres, `-` et `_` ;

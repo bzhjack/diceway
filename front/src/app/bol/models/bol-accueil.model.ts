@@ -1,7 +1,11 @@
-/** Un scénario de l'accueil : seulement de quoi l'afficher et l'ouvrir. */
+import {BolScenarioSaga} from './bol-scenario.model';
+
+/** Un chapitre de l'accueil : son nom, son numéro et son scénario (null pour un one shot), de quoi l'afficher et l'ouvrir. */
 export interface BolAccueilScenario {
   id: string;
   titre: string;
+  numero: number | null;
+  saga: BolScenarioSaga | null;
 }
 
 /** Une scène du scénario de la table ouverte. */

@@ -9,6 +9,7 @@ import {forkJoin} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
+import {titreDeChapitre} from '../../scenario.util';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from '../scene-list/scene-actions.service';
 import {NO_SCENARIO, scenarioFilterFor, scenesOf} from '../scene-list/scene.util';
@@ -198,7 +199,7 @@ export class SceneStripComponent {
       next: ({scenes, scenarios}) => {
         this.scenes.set(scenes);
         this.scenarios.set(
-          scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: s.titre})),
+          scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: titreDeChapitre(s)})),
         );
         const known = this.knownScenarioIds();
         if (selectCurrent) {

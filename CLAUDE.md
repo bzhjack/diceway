@@ -61,7 +61,7 @@ docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>
 ## Vocabulary (UI)
 
 What the screens call things — keep to these words in any visible text:
-- **Scénario** › **Chapitre** › **Scène**. A scénario (« Perle du Beshaar ») is not a record: it is the title prefix of its chapters (`Scénario — Chapitre`, the `saga` key of the import). A chapitre is a `BolScenario`; a scène, a `BolScene`. A `BolScenario` without prefix is a **one shot**.
+- **Scénario** › **Chapitre** › **Scène**. A scénario (« Perle du Beshaar ») is a `BolSaga` (table `bol_saga`); a chapitre, a `BolScenario` (its `saga_id`, its `numero`: 0 for the introduction, null without number; `titre` is the chapter's name only); a scène, a `BolScene`. A chapitre without `saga_id` is a **one shot**. Where a chapter is written in one piece (import file, « Nouveau chapitre » at the table), `Scénario — 1. Nom` is split by `BolTitreChapitre`; the screens compose it back with `titreDeChapitre` (`bol/session/scenario.util.ts`).
 - **Table**: a `BolFightSession` (never « session » in the UI; a table without chapter is a « partie improvisée »). **Compagnie**: the heroes at the table.
 
 ## Business rules & reference data
@@ -167,4 +167,5 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 - **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
 - **Portraits** — files, not base64: writing `avatar` on a sheet (`HasPortrait`, `BolPortraits`) stores the image and keeps its address, `/api/bol/portraits/<hash>.<ext>`. The address stays relative; `portraitUrlInterceptor` adds `apiBase` in production. On each machine, once: `docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php`, `php artisan migrate`, then `docker exec -u www-data diceway php artisan bol:extract-portraits` (as root, Apache can no longer write to the folder it creates, and new portraits silently stay in base64). The base64 originals are not kept. `bol:prune-portraits` deletes the files no sheet carries any more; run it by hand, with `-u www-data` too.
 - **Table scenario** — after pulling the home page feature, on each machine: `docker cp backend/routes/api.php diceway:/var/www/html/routes/api.php`, then `docker exec diceway php artisan migrate` (adds `bol_fight_session.scenario_id`, filled from each table's current scene).
+- **Scenarios as records** — after pulling the `bol_saga` change, on each machine: `docker exec diceway php artisan migrate` (creates `bol_saga` and files every chapter under its scenario from its title; the rollback rebuilds the titles).
 - **Note** — `DatabaseSeeder.php` does not call the 18 other seeders; reference data requires manual population.

@@ -11,6 +11,7 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {OpenTableData} from '../../models/open-table.model';
 import {OpenTableDialogComponent} from './open-table-dialog';
+import {chapitre} from '../../chapitre.testing';
 
 const TABLE: BolAccueilTable = {
   id: 't1',
@@ -26,11 +27,11 @@ const TABLE: BolAccueilTable = {
 const ACCUEIL: BolAccueilModel = {
   table: null,
   scenarios: [
-    {id: 'p1', titre: 'Perle du Beshaar — 1. Sacrilège à Satarla'},
-    {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
-    {id: 'p3', titre: "Perle du Beshaar — 3. Le tombeau d'Urzûlzalinaar"},
-    {id: 'p4', titre: "Perle du Beshaar — 4. Le réveil de l'Ébranleur"},
-    {id: 'p5', titre: 'Perle du Beshaar — 5. Tolometh'},
+    chapitre('p1', 'Perle du Beshaar — 1. Sacrilège à Satarla'),
+    chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
+    chapitre('p3', "Perle du Beshaar — 3. Le tombeau d'Urzûlzalinaar"),
+    chapitre('p4', "Perle du Beshaar — 4. Le réveil de l'Ébranleur"),
+    chapitre('p5', 'Perle du Beshaar — 5. Tolometh'),
   ],
   scenarios_joues: [],
   scenario_recent_id: null,

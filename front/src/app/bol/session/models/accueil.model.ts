@@ -1,11 +1,13 @@
 /** Où en est un chapitre pour ce compte : joué, en cours sur la table ouverte, le prochain à jouer, ou pas encore joué. */
 export type ChapitreEtat = 'joue' | 'en-cours' | 'prochain' | 'a-jouer';
 
-/** Un chapitre d'une saga : `titre` est le titre complet du scénario, `libelle` la partie après « — » (le titre entier hors saga). */
+/** Un chapitre d'un scénario : `titre` d'un seul tenant (« Perle du Beshaar — 1. Sacrilège à Satarla »), `libelle` sans son scénario
+ * (« 1. Sacrilège à Satarla »), `numero` sa place (0 : l'introduction ; null sans numéro). */
 export interface AccueilChapitre {
   id: string;
   titre: string;
   libelle: string;
+  numero: number | null;
   etat: ChapitreEtat;
 }
 

@@ -43,6 +43,8 @@ final class BolScenarioImporter
     /** @var array<string, int> */
     private array $report = [];
 
+    public function __construct(private readonly BolSagaService $sagaService) {}
+
     /**
      * @return array<string, int> compte rendu : libellé (« scène créée », « PNJ mis à jour »…) → nombre
      * @throws ScenarioImportException si un personnage cité n'est défini ni ici ni par un import précédent de la saga
@@ -90,7 +92,8 @@ final class BolScenarioImporter
     {
         $ref = $this->ref($userId, $plan->saga, BolImportRef::TYPE_SCENARIO, $plan->scenario['cle']);
         $scenario = $ref ? BolScenario::where('user_id', $userId)->find($ref->entity_id) : null;
-        $fields = ['titre' => $plan->scenario['titre'], 'pitch' => $plan->scenario['pitch']];
+        // Le titre du fichier s'écrit d'un seul tenant (« Scénario — 1. Nom ») : le chapitre rejoint son scénario, retrouvé ou créé.
+        $fields = $this->sagaService->champsDuChapitre($userId, $plan->scenario['titre']) + ['pitch' => $plan->scenario['pitch']];
 
         if ($scenario) {
             $scenario->update($fields);

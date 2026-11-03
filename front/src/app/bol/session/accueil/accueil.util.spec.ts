@@ -1,17 +1,18 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilScenario, BolAccueilTable} from '../../models/bol-accueil.model';
 import {accueilSagas, sagaResumes, situerScenario, tableOuverte, tableTitre, teinteDeSaga} from './accueil.util';
+import {chapitre} from '../chapitre.testing';
 
 const S: BolAccueilScenario[] = [
-  {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
-  {id: 'p1', titre: 'Perle du Beshaar — 1. Sacrilège à Satarla'},
-  {id: 'p10', titre: 'Perle du Beshaar — 10. Épilogue'},
-  {id: 'dv1', titre: "Le Dieu voilé — 1. L'oracle de Nemmereth"},
-  {id: 'dvi', titre: 'Le Dieu voilé — Introduction : La colère de Nemmereth'},
-  {id: 'clm', titre: 'Chroniques lémuriennes — Mariage amer'},
-  {id: 'clt', titre: "Chroniques lémuriennes — La tour d'Ajhaskar"},
-  {id: 'ps', titre: 'premier scénario'},
-  {id: 'lp', titre: 'la perle du Beshaar'},
+  chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
+  chapitre('p1', 'Perle du Beshaar — 1. Sacrilège à Satarla'),
+  chapitre('p10', 'Perle du Beshaar — 10. Épilogue'),
+  chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
+  chapitre('dvi', 'Le Dieu voilé — Introduction : La colère de Nemmereth'),
+  chapitre('clm', 'Chroniques lémuriennes — Mariage amer'),
+  chapitre('clt', "Chroniques lémuriennes — La tour d'Ajhaskar"),
+  chapitre('ps', 'premier scénario'),
+  chapitre('lp', 'la perle du Beshaar'),
 ];
 
 const saga = (nom: string | null, scenarios = S, joues: string[] = [], enCours: string | null = null) =>
@@ -54,7 +55,7 @@ describe('accueilSagas', () => {
   });
 
   it('groupe sans tenir compte de la casse, avec le nom du premier titre vu', () => {
-    const avecP3 = [...S, {id: 'p3', titre: 'PERLE DU BESHAAR — 3. Le tombeau'}];
+    const avecP3 = [...S, chapitre('p3', 'PERLE DU BESHAAR — 3. Le tombeau')];
     const perle = saga('Perle du Beshaar', avecP3);
     expect(perle.chapitres).toHaveLength(4);
     expect(accueilSagas(avecP3, new Set(), null, null).filter((s) => s.nom?.toLowerCase() === 'perle du beshaar')).toHaveLength(1);
@@ -63,9 +64,9 @@ describe('accueilSagas', () => {
   it('coupe au premier tiret cadratin', () => {
     const sagas = accueilSagas(
       [
-        {id: 'abc', titre: 'A — B — C'},
-        {id: 'x', titre: '— X'},
-        {id: 'sv', titre: 'Saga — '},
+        chapitre('abc', 'A — B — C'),
+        chapitre('x', '— X'),
+        chapitre('sv', 'Saga — '),
       ],
       new Set(),
       null,
@@ -189,8 +190,8 @@ describe('sagaResumes', () => {
   });
 
   it('parle de scénarios, sans ordre ni saga, hors saga', () => {
-    const un: BolAccueilScenario[] = [{id: 'ps', titre: 'premier scénario'}];
-    const deux: BolAccueilScenario[] = [...un, {id: 'ps2', titre: 'second scénario'}];
+    const un: BolAccueilScenario[] = [chapitre('ps', 'premier scénario')];
+    const deux: BolAccueilScenario[] = [...un, chapitre('ps2', 'second scénario')];
 
     expect(resume(null, [], null, un)).toMatchObject({resume: '1 scénario à jouer', avancement: '0 scénario joué sur 1', suite: {id: 'ps', action: 'Jouer'}});
     expect(resume(null, [], null, deux).resume).toBe('2 scénarios à jouer');
@@ -240,10 +241,10 @@ describe('situerScenario', () => {
 
 describe('tableOuverte', () => {
   const SCENES = [
-    {id: 's1', titre: 'La taverne'},
-    {id: 's2', titre: 'Le trajet'},
-    {id: 's3', titre: 'Le temple'},
-    {id: 's4', titre: 'La nuit'},
+    chapitre('s1', 'La taverne'),
+    chapitre('s2', 'Le trajet'),
+    chapitre('s3', 'Le temple'),
+    chapitre('s4', 'La nuit'),
   ];
   const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({
     id: 't',
@@ -312,7 +313,7 @@ describe('tableOuverte', () => {
 
 describe('teinteDeSaga', () => {
   // Un chapitre dont la saga est écrite dans une autre casse : il rejoint « Perle du Beshaar » (le premier titre vu donne le nom).
-  const AVEC_CASSE: BolAccueilScenario[] = [...S, {id: 'pc', titre: 'PERLE DU BESHAAR — 3. La casse'}];
+  const AVEC_CASSE: BolAccueilScenario[] = [...S, chapitre('pc', 'PERLE DU BESHAAR — 3. La casse')];
   const resumes = sagaResumes(accueilSagas(AVEC_CASSE, new Set(), null, null), null);
   const table: BolAccueilTable = {
     id: 't',

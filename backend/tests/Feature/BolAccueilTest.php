@@ -9,6 +9,7 @@ use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 use App\Models\User;
@@ -106,7 +107,23 @@ class BolAccueilTest extends TestCase
 
         $scenarios = $response->json('scenarios');
         $this->assertEqualsCanonicalizing([$a->id, $b->id], array_column($scenarios, 'id'));
-        $this->assertSame(['id', 'titre'], array_keys($scenarios[0]));
+        $this->assertSame(['id', 'titre', 'numero', 'saga'], array_keys($scenarios[0]));
+    }
+
+    /** Chaque chapitre dit son numéro et son scénario (son id et son nom) ; un one shot n'en a pas. */
+    public function test_each_chapter_names_its_scenario_and_number(): void
+    {
+        $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Perle du Beshaar']);
+        $chapitre = BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => 2, 'titre' => "De sable et d'eau"]);
+        $oneShot = $this->scenario('mon premier scénario');
+
+        $scenarios = collect($this->getJson('/api/bol/accueil')->assertOk()->json('scenarios'))->keyBy('id');
+
+        $this->assertSame(
+            ['id' => $chapitre->id, 'titre' => "De sable et d'eau", 'numero' => 2, 'saga' => ['id' => $saga->id, 'titre' => 'Perle du Beshaar']],
+            $scenarios[$chapitre->id],
+        );
+        $this->assertSame(['id' => $oneShot->id, 'titre' => 'mon premier scénario', 'numero' => null, 'saga' => null], $scenarios[$oneShot->id]);
     }
 
     public function test_played_scenarios_come_from_every_session(): void

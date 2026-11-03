@@ -13,6 +13,7 @@ import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog
 import {promptDialog} from '../../../../shared/dw-prompt-dialog/dw-prompt-dialog';
 import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
+import {titreDeChapitre} from '../../scenario.util';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from './scene-actions.service';
 import {openSceneEditor} from '../theatre/scene-editor-dialog/scene-editor-dialog';
@@ -88,7 +89,7 @@ export class SceneListComponent {
         this.scenarios.set(
           scenarios
             .filter((s): s is typeof s & {id: string} => !!s.id)
-            .map((s) => ({id: s.id, titre: s.titre})),
+            .map((s) => ({id: s.id, titre: titreDeChapitre(s)})),
         );
         // À l'ouverture : le scénario de la table (jamais déduit de la scène courante), sinon « On improvise ».
         this.selectedScenario.set(scenarioFilterFor(this.scenarioId(), this.knownScenarioIds()));
@@ -154,7 +155,7 @@ export class SceneListComponent {
       }
       this.run(this.scenarioService.create({titre}), 'Impossible de créer le chapitre.', (scenario) => {
         if (scenario.id) {
-          this.scenarios.update((list) => [...list, {id: scenario.id!, titre: scenario.titre}]);
+          this.scenarios.update((list) => [...list, {id: scenario.id!, titre: titreDeChapitre(scenario)}]);
           this.selectedScenario.set(scenario.id);
           this.expandedId.set(null);
         }

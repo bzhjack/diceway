@@ -12,65 +12,20 @@ import {
   SceneEtat,
   ScenarioSitue,
 } from '../models/accueil.model';
-import {findScenario} from '../scenario.util';
+import {findScenario, libelleDeChapitre, titreDeChapitre} from '../scenario.util';
 
-const SEPARATEUR = ' — ';
-
-interface Decoupe {
-  saga: string | null;
-  libelle: string;
-}
-
-/** Un titre « Saga — chapitre » se coupe au premier tiret cadratin ; sans tiret, ou avec une moitié vide, il est hors saga. */
-function decouper(titre: string): Decoupe {
-  const coupe = titre.indexOf(SEPARATEUR);
-  if (coupe >= 0) {
-    const saga = titre.slice(0, coupe).trim();
-    const libelle = titre.slice(coupe + SEPARATEUR.length).trim();
-    if (saga && libelle) {
-      return {saga, libelle};
-    }
-  }
-  return {saga: null, libelle: titre};
-}
-
-/** La clé d'une saga : son nom sans tenir compte de la casse (« Perle du Beshaar » et « PERLE DU BESHAAR » sont la même saga). Les accents
- * comptent : « Éveil » et « Eveil » restent deux sagas. */
+/** La clé d'un scénario pour retrouver sa teinte d'après son nom : sans tenir compte de la casse. */
 function cleDeSaga(nom: string): string {
   return nom.toLocaleLowerCase('fr');
 }
 
-interface Numerotation {
-  /** « 1 » pour « 1. Sacrilège à Satarla » ; null sans numéro. */
-  numero: string | null;
-  intro: boolean;
-  /** Le nom du chapitre sans son numéro ni « Introduction : ». */
-  nom: string;
-}
-
-/** Ce que le libellé d'un chapitre dit de sa place : « 1. Sacrilège à Satarla », « Introduction : La colère de Nemmereth », ou rien. */
-function numeroter(libelle: string): Numerotation {
-  const intro = /^introduction\s*(?::\s*(.*))?$/i.exec(libelle);
-  if (intro) {
-    return {numero: null, intro: true, nom: intro[1]?.trim() || libelle};
-  }
-  const numero = /^(\d+)\.\s*(.*)$/.exec(libelle);
-  return numero ? {numero: numero[1], intro: false, nom: numero[2].trim() || libelle} : {numero: null, intro: false, nom: libelle};
-}
-
-/** Introduction d'abord, puis les chapitres numérotés par numéro, puis le reste par ordre alphabétique. */
+/** L'introduction d'abord (numéro 0), puis les chapitres par numéro, puis ceux sans numéro par ordre alphabétique. */
 function comparerChapitres(a: AccueilChapitre, b: AccueilChapitre): number {
-  const [rangA, numeroA] = rang(a.libelle);
-  const [rangB, numeroB] = rang(b.libelle);
-  return rangA - rangB || numeroA - numeroB || a.libelle.localeCompare(b.libelle, 'fr');
+  return rang(a.numero) - rang(b.numero) || a.libelle.localeCompare(b.libelle, 'fr');
 }
 
-function rang(libelle: string): [number, number] {
-  const {numero, intro} = numeroter(libelle);
-  if (intro) {
-    return [0, 0];
-  }
-  return numero ? [1, Number(numero)] : [2, 0];
+function rang(numero: number | null): number {
+  return numero ?? Number.MAX_SAFE_INTEGER;
 }
 
 /** Le `prochain` est le premier chapitre non joué après le chapitre en cours, sinon après le dernier joué ; jamais à rebours, jamais hors saga. */
@@ -85,8 +40,8 @@ function marquerEtats(chapitres: AccueilChapitre[], joues: ReadonlySet<string>, 
 }
 
 /**
- * Range les scénarios en sagas d'après leur titre « Saga — chapitre » : la saga de la table la plus récente d'abord, les autres par ordre
- * alphabétique, les one shots (nom null) en dernier. Chaque chapitre porte son état : joué, en cours, prochain ou à jouer.
+ * Range les chapitres par scénario : le scénario de la table la plus récente d'abord, les autres par ordre alphabétique, les one shots
+ * (nom null) en dernier. Chaque chapitre porte son état : joué, en cours, prochain ou à jouer.
  */
 export function accueilSagas(
   scenarios: readonly BolAccueilScenario[],
@@ -98,17 +53,21 @@ export function accueilSagas(
   let horsSaga: AccueilSaga | null = null;
 
   for (const scenario of scenarios) {
-    const {saga, libelle} = decouper(scenario.titre);
-    const chapitre: AccueilChapitre = {id: scenario.id, titre: scenario.titre, libelle, etat: 'a-jouer'};
-    if (saga === null) {
+    const chapitre: AccueilChapitre = {
+      id: scenario.id,
+      titre: titreDeChapitre(scenario),
+      libelle: libelleDeChapitre(scenario.numero, scenario.titre),
+      numero: scenario.numero,
+      etat: 'a-jouer',
+    };
+    if (scenario.saga === null) {
       horsSaga ??= {nom: null, chapitres: []};
       horsSaga.chapitres.push(chapitre);
       continue;
     }
-    const cle = cleDeSaga(saga);
-    const groupe = groupes.get(cle) ?? {nom: saga, chapitres: []};
+    const groupe = groupes.get(scenario.saga.id) ?? {nom: scenario.saga.titre, chapitres: []};
     groupe.chapitres.push(chapitre);
-    groupes.set(cle, groupe);
+    groupes.set(scenario.saga.id, groupe);
   }
 
   const contientRecent = (saga: AccueilSaga) => recentId !== null && saga.chapitres.some((c) => c.id === recentId);
@@ -135,7 +94,7 @@ export function tableTitre(table: BolAccueilTable, scenarios: readonly BolAccuei
   }
   const scenario = findScenario(scenarios, table.scenario_id);
   if (scenario) {
-    return scenario.titre;
+    return titreDeChapitre(scenario);
   }
   const date = new Date(table.created_at).toLocaleDateString('fr-FR', {day: 'numeric', month: 'long'});
   return `Table du ${date}`;
@@ -190,9 +149,9 @@ const ETAT_CHAPITRE: Record<ChapitreEtat, string> = {joue: 'joué', 'en-cours': 
 /** Les pastilles d'une saga : chaque chapitre par son numéro (« Intro » pour l'introduction, son initiale sans numéro) et son état. */
 function reperesDeSaga(saga: AccueilSaga): AccueilRepere[] {
   return saga.chapitres.map((chapitre) => {
-    const {numero, intro} = numeroter(chapitre.libelle);
+    const {numero} = chapitre;
     return {
-      marque: numero ?? (intro ? 'Intro' : chapitre.libelle.charAt(0).toLocaleUpperCase('fr')),
+      marque: numero === 0 ? 'Intro' : numero !== null ? String(numero) : chapitre.libelle.charAt(0).toLocaleUpperCase('fr'),
       etat: chapitre.etat,
       texte: `${chapitre.libelle} : ${ETAT_CHAPITRE[chapitre.etat]}`,
     };
@@ -255,20 +214,20 @@ export function teinteDeSaga(resumes: readonly AccueilSagaResume[], saga: string
   return resumes.find((resume) => resume.nom !== null && cleDeSaga(resume.nom) === cle)?.teinte ?? 0;
 }
 
-/** Où se place un scénario parmi ceux du compte : sa saga et son chapitre, d'après son numéro et le nombre de chapitres de la saga. */
+/** Où se place un chapitre parmi ceux du compte : son scénario et son chapitre, d'après son numéro et le nombre de chapitres du scénario. */
 export function situerScenario(scenario: BolAccueilScenario, scenarios: readonly BolAccueilScenario[]): ScenarioSitue {
-  const {saga, libelle} = decouper(scenario.titre);
+  const {saga, numero, titre} = scenario;
   if (saga === null) {
-    return {saga: null, histoire: ONE_SHOT, chapitre: null, chapitreCourt: null, nom: libelle};
+    return {saga: null, histoire: ONE_SHOT, chapitre: null, chapitreCourt: null, nom: titre};
   }
-  const numerotation = numeroter(libelle);
-  const total = scenarios.filter((s) => cleDeSaga(decouper(s.titre).saga ?? '') === cleDeSaga(saga)).length;
+  const total = scenarios.filter((s) => s.saga?.id === saga.id).length;
+  const court = numero === null ? null : numero === 0 ? 'Introduction' : `Chapitre ${numero}`;
   return {
-    saga,
-    histoire: saga,
-    chapitre: numerotation.numero ? `Chapitre ${numerotation.numero} sur ${total}` : numerotation.intro ? 'Introduction' : null,
-    chapitreCourt: numerotation.numero ? `Chapitre ${numerotation.numero}` : numerotation.intro ? 'Introduction' : null,
-    nom: numerotation.nom,
+    saga: saga.titre,
+    histoire: saga.titre,
+    chapitre: numero === null ? null : numero === 0 ? 'Introduction' : `${court} sur ${total}`,
+    chapitreCourt: court,
+    nom: titre,
   };
 }
 

@@ -4,6 +4,7 @@ import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
+import {titreDeChapitre} from '../../scenario.util';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
 import {SceneActionsService} from '../scene-list/scene-actions.service';
@@ -141,7 +142,7 @@ export class SceneStageStore {
       this.loading = false;
       this.scenesState.set(scenes);
       if (scenarios) {
-        this.scenariosState.set(scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: s.titre})));
+        this.scenariosState.set(scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: titreDeChapitre(s)})));
       }
     });
   }

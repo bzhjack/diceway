@@ -23,7 +23,7 @@ class BolAccueilService
     {
         $sessions = BolFightSession::where('user_id', $userId)
             ->get(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'created_at', 'updated_at']);
-        $scenarios = BolScenario::where('user_id', $userId)->get(['id', 'titre']);
+        $scenarios = BolScenario::with('saga:id,titre')->where('user_id', $userId)->get(['id', 'saga_id', 'numero', 'titre']);
 
         // La table ouverte la plus récemment active (pas la plus récemment créée) : une table rouverte (`reopenSession` la touche)
         // revient au bandeau ; une table close, elle, n'est plus ouverte, si récente que soit sa clôture.
@@ -47,7 +47,12 @@ class BolAccueilService
                 )),
                 'created_at'    => $ouverte->created_at->toIso8601String(),
             ] : null,
-            'scenarios'          => $scenarios->map(fn (BolScenario $scenario) => ['id' => $scenario->id, 'titre' => $scenario->titre])->values()->all(),
+            'scenarios'          => $scenarios->map(fn (BolScenario $scenario) => [
+                'id'     => $scenario->id,
+                'titre'  => $scenario->titre,
+                'numero' => $scenario->numero,
+                'saga'   => $scenario->saga ? ['id' => $scenario->saga->id, 'titre' => $scenario->saga->titre] : null,
+            ])->values()->all(),
             'scenarios_joues'    => $this->scenariosJoues($userId, $sessions->all(), $scenarios->pluck('id')->all(), $ouverte?->id),
             'scenario_recent_id' => $touchee?->scenario_id,
             'derniers_heros'     => $derniere ? $this->herosDeLaTable($userId, $derniere->id) : [],

@@ -12,6 +12,7 @@ import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
 import {AccueilPageComponent} from './accueil-page';
+import {chapitre} from '../chapitre.testing';
 
 /** Le menu du compte tire l'authentification Google : il a ses propres tests. */
 @Component({selector: 'bol-account-menu', template: '', changeDetection: ChangeDetectionStrategy.OnPush})
@@ -25,17 +26,17 @@ const DATA: BolAccueilModel = {
     scenario_id: 'p1',
     scene_id: 's2',
     scenes: [
-      {id: 's1', titre: 'La taverne de Marsus'},
-      {id: 's2', titre: 'La nuit du coup fourré'},
-      {id: 's3', titre: 'Arrivée à Malakut'},
+      chapitre('s1', 'La taverne de Marsus'),
+      chapitre('s2', 'La nuit du coup fourré'),
+      chapitre('s3', 'Arrivée à Malakut'),
     ],
     scenes_jouees: ['s1', 's2'],
     created_at: '2026-11-02T10:00:00Z',
   },
   scenarios: [
-    {id: 'p1', titre: 'Perle du Beshaar — 1. Sacrilège à Satarla'},
-    {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
-    {id: 'dv1', titre: "Le Dieu voilé — 1. L'oracle de Nemmereth"},
+    chapitre('p1', 'Perle du Beshaar — 1. Sacrilège à Satarla'),
+    chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
+    chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
   ],
   scenarios_joues: ['p1'],
   scenario_recent_id: 'p1',
@@ -94,7 +95,7 @@ describe('AccueilPageComponent', () => {
       of({
         ...DATA,
         table: {...DATA.table!, scenario_id: 'p3'},
-        scenarios: [...DATA.scenarios, {id: 'p3', titre: 'PERLE DU BESHAAR — 3. La casse'}],
+        scenarios: [...DATA.scenarios, chapitre('p3', 'PERLE DU BESHAAR — 3. La casse')],
       }),
     );
     const teinteDeLaCarte = [...page.querySelectorAll('.acc-saga')]
