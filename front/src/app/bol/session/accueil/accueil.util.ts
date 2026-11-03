@@ -114,7 +114,7 @@ function avancement(joues: number, total: number, unite: 'chapitre' | 'scénario
 /**
  * Le bouton d'une saga. Sa saga est-elle sur la table ouverte : il la reprend, sur son chapitre (le bandeau et la carte disent alors la même
  * chose). Sinon il ouvre le dialogue « Ouvrir une table » sur le chapitre `prochain`, à défaut sur le premier à jouer, qui précède alors le dernier joué :
- * « Reste à jouer », pas « Continuer ». Aucun : la saga est achevée.
+ * « Reste à jouer », pas « Chapitre suivant ». Aucun : le scénario est achevé.
  */
 function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): AccueilSagaSuite | null {
   const nom = saga.nom ?? ONE_SHOT;
@@ -134,7 +134,7 @@ function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): 
     return null;
   }
   const action: AccueilSagaAction =
-    saga.nom === null ? 'Jouer' : prochain ? 'Continuer' : joues === 0 && !enCours ? 'Commencer' : 'Reste à jouer';
+    saga.nom === null ? 'Jouer' : prochain ? 'Chapitre suivant' : joues === 0 && !enCours ? 'Commencer' : 'Reste à jouer';
   return {
     id: chapitre.id,
     libelle: chapitre.libelle,

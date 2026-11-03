@@ -149,9 +149,9 @@ describe('sagaResumes', () => {
     expect(perle.suite).toEqual({
       id: 'p10',
       libelle: '10. Épilogue',
-      action: 'Continuer',
+      action: 'Chapitre suivant',
       reprise: false,
-      ariaLabel: 'Continuer 10. Épilogue, Perle du Beshaar, sur une nouvelle table',
+      ariaLabel: 'Chapitre suivant 10. Épilogue, Perle du Beshaar, sur une nouvelle table',
     });
   });
 
@@ -160,7 +160,7 @@ describe('sagaResumes', () => {
     expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencé');
   });
 
-  it('dit « Reste à jouer », pas « Continuer », pour un chapitre sauté avant le dernier joué', () => {
+  it('dit « Reste à jouer », pas « Chapitre suivant », pour un chapitre sauté avant le dernier joué', () => {
     // Joués : le 2 et l'épilogue ; rien après l'épilogue, le 1 reste à jouer.
     const perle = resume('Perle du Beshaar', ['p2', 'p10']);
 
@@ -169,7 +169,7 @@ describe('sagaResumes', () => {
   });
 
   it('reprend la table ouverte sur son chapitre, au lieu d’en ouvrir une autre plus loin dans la saga', () => {
-    // La table porte le 1 alors que le 2 est joué : la carte dit la même chose que le bandeau, pas « Continuer : Épilogue ».
+    // La table porte le 1 alors que le 2 est joué : la carte dit la même chose que le bandeau, pas « Chapitre suivant : Épilogue ».
     const perle = resume('Perle du Beshaar', ['p1', 'p2'], 'p1');
 
     expect(perle.suite).toEqual({

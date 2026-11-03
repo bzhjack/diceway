@@ -18,9 +18,9 @@ export interface AccueilSaga {
 }
 
 /** Le mot du bouton d'une saga : « Reprendre » la table ouverte sur son chapitre ; sinon, sur une nouvelle table, « Commencer » une saga dont
- * rien n'est joué, « Continuer » par le chapitre qui suit le dernier joué, « Reste à jouer » pour un chapitre sauté plus tôt (la fin de la
+ * rien n'est joué, « Chapitre suivant », celui qui suit le dernier joué, « Reste à jouer » pour un chapitre sauté plus tôt (la fin de la
  * saga est jouée), « Jouer » un scénario hors saga, qui n'a pas d'ordre. */
-export type AccueilSagaAction = 'Reprendre' | 'Commencer' | 'Continuer' | 'Reste à jouer' | 'Jouer';
+export type AccueilSagaAction = 'Reprendre' | 'Commencer' | 'Chapitre suivant' | 'Reste à jouer' | 'Jouer';
 
 /** Le bouton d'un scénario : le chapitre qu'il nomme ; il ouvre le dialogue de la table, pour reprendre la table ouverte (`reprise`) ou en
  * ouvrir une nouvelle sur ce chapitre. */
