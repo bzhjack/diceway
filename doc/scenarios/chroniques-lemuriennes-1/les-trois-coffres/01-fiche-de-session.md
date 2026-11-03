@@ -5,7 +5,7 @@ PDF p. 104-126) sans rouvrir le texte complet [../07-les-trois-coffres.md](../07
 le 2026-10-23 en relisant le PDF (`pdftotext -layout`). Les cinq kalukans prétirés (livre p. 125-130) sont transcrits
 à la fin du texte complet.
 
-Version jouable dans l'app : `../app/les-trois-coffres.json` (scénario « Chroniques lémuriennes — Les trois
+Version jouable dans l'app : `../app/les-trois-coffres.json` (scénario « Chroniques lémuriennes — 5. Les trois
 coffres », 16 scènes).
 
 > Sauf indication contraire, un jet est un test normal, difficulté Moyenne (+0). Les héros sont des **kalukans**

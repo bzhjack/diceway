@@ -1,6 +1,6 @@
 # Prompts — portraits des créatures et des démons du catalogue global
 
-Prompts pour regénérer (via ChatGPT) les portraits des **74 créatures** du
+Prompts pour regénérer (via ChatGPT) les portraits des **75 créatures** du
 bestiaire (`BolCreatureSeeder.php`) et des **3 démons** (`BolDemonSeeder.php`),
 dans le même style que les bannières des bibliothèques
 (`doc/image-prompts/headers.md`, en particulier `header-creatures.webp` et
@@ -8,8 +8,8 @@ dans le même style que les bannières des bibliothèques
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
-Les créatures 55 à 63 (bestiaire du Beshaar) et 64 à 74 (bestiaire du Khanat,
-*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les créatures 43 à 48
+Les créatures 55 à 63 (bestiaire du Beshaar), 64 à 74 (bestiaire du Khanat,
+*Chroniques Lémuriennes 1.2*) et 75 (Roi-Sorcier mort-vivant, livre p. 128) n'ont encore aucun portrait ; les créatures 43 à 48
 et les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
 Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
 
@@ -17,7 +17,7 @@ Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
 
 | Type | Dossier | Nom du fichier | Lu par |
 | --- | --- | --- | --- |
-| Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 74) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
+| Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 75) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
 | Démon | `front/src/assets/bol/demon/` | `<id>.jpg` (id 1 à 3) | `tapis.util.ts`, `combat-play.util.ts` |
 
 Format actuel : carrés de 400×400 (JPEG). Les portraits sont affichés en
@@ -39,7 +39,7 @@ renommage.
 | ✅ C4 | 19 à 24 | C10 | 55 à 60 |
 | ✅ C5 | 25 à 30 | C11 | 61 à 66 |
 | ✅ C6 | 31 à 36 | C12 | 67 à 72 |
-| | | C13 | 73 et 74 |
+| | | C13 | 73 à 75 |
 | | | D | démons 1 à 3 |
 
 Ordre des cases : ligne du haut de gauche à droite, puis ligne du bas de gauche
@@ -95,7 +95,7 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 23. ✅ Kalathorn : serpent de mer géant ressemblant à un plésiosaure préhistorique, deux fois plus long qu'une galère de guerre, dressé hors des flots sous un ciel menaçant.
 > 24. ✅ Kroark : créature reptilienne gris-vert dressée sur deux puissantes pattes postérieures, monture rétive et dressée au combat, selle et harnais de cuir.
 
-### C5 — créatures 25 à 30
+### ✅ C5 — créatures 25 à 30
 
 > 25. ✅ Kyphus : petit lézard à fourrure d'une trentaine de centimètres, dents de rongeur, se nourrissant d'insectes et de larves (montrer sa petite taille avec une pierre ou une feuille).
 > 26. ✅ Loup : loup puissant et efflanqué, fourrure grise, gros plan agressif, meute floue en arrière-plan.
@@ -104,7 +104,7 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 29. ✅ Ours des cavernes / ours polaire : ours massif dressé sur ses pattes arrière (plus de trois mètres), griffes redoutables, montagnes enneigées et toundra, fourrure sombre ou blanche.
 > 30. ✅ Phong : chauve-souris suceuse de sang de la taille d'un petit chat, ailes déployées, petits crocs, nuée qui s'approche dans le crépuscule.
 
-### C6 — créatures 31 à 36
+### ✅ C6 — créatures 31 à 36
 
 > 31. ✅ Parvalus : équidé en grands troupeaux, pelage aux couleurs variées, crinière sauvage, plaines de Klaar.
 > 32. ✅ Phororacos : énorme oiseau coureur aux vestiges d'ailes, ressemblant à un coursier des sables mais bien plus grand et hideux, serres impressionnantes, bec acéré et recourbé, désert du Beshaar.
@@ -113,7 +113,7 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 35. ✅ Sardolith : dinosaure quadrupède gigantesque à la peau épaisse couverte de petites plaques osseuses formant une armure articulée, avec une paire de têtes ophidiennes au sommet de ses deux cous, jungle.
 > 36. ✅ Scorpion-araignée : hybride de scorpion et d'araignée d'un mètre de long, noir, grosses pinces et dard au bout de la queue, sable du désert.
 
-### C7 — créatures 37 à 42
+### ✅ C7 — créatures 37 à 42
 
 > 37. ✅ Scorpion-araignée géant : le même hybride en version colossale, pinces énormes et dard menaçant, dominant le cadre, dunes et plaines.
 > 38. ✅ Singe des neiges : primate bipède ressemblant à un grand singe à quatre bras, fourrure blanche épaisse, tempérament agressif, terres gelées ou haute montagne.
@@ -167,11 +167,12 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 71. Gardien du Royaume Putride : guerrier mort-vivant momifié par le froid, au port noble et arrogant, antique armure lourde dont la cuirasse porte un croissant de lune encadré de trois étoiles en triangle, givre sur l'armure, squelettes en armes derrière lui ; forêt froide (palette froide bleutée, exception à l'ambre).
 > 72. Leng shi : fantôme translucide d'une créature morte de froid, silhouette spectrale pâle qui gémit, cristaux de givre en suspension, dépouille gelée à demi ensevelie sous la neige au premier plan ; grande taïga au crépuscule glacé (palette froide bleutée, exception à l'ambre).
 
-### C13 — créatures 73 et 74 (deux cases du haut à gauche, le reste en fond noir uni)
+### C13 — créatures 73 à 75 (les trois cases du haut, le reste en fond noir uni)
 
 > 73. Mogmaï : esprit frappeur invisible d'un ancien palais xi lu, montré par ses effets : vaisselle, bibelots et un tabouret en lévitation autour d'un vieux jouet de bois (une toupie qui tourne sans fin), porte qui claque, une ombre vague et tourmentée dans la poussière ; intérieur sombre (palette froide, exception à l'ambre).
 > 74. Windoku : revenant géant et terrifiant mêlant l'arctodus et le xalibu, corps sombre, émacié et racorni, bois de renne sur un crâne d'ours, regard glaçant ; forêt froide et toundra (palette froide, exception à l'ambre).
-> 3. à 6. : laisser vides (fond noir uni).
+> 75. Roi-Sorcier mort-vivant : ancien roi-sorcier revenu de la tombe, visage blafard et squelettique aux orbites luisantes, couronne antique ternie et robe de sorcier en lambeaux, épée à la main, magie noire crépitant au bout de ses doigts décharnés, regard d'une malfaisance démente ; crypte obscure aux colonnes effondrées (palette froide, exception à l'ambre).
+> 4. à 6. : laisser vides (fond noir uni).
 
 ## Démons
 
@@ -196,7 +197,7 @@ Si les cases sont bien alignées, un découpage en 512×512 puis une réduction 
 ```bash
 magick planche-c1.png -crop 512x512 +repage -resize 400x400 -quality 88 case-%d.jpg
 # case-0 … case-5 (lignes de gauche à droite, du haut vers le bas)
-# à renommer en <id>.jpg : C1 → 1…6, C2 → 7…12, …, C11 → 61…66, C12 → 67…72, C13 → 73…74 ; D → 1…3 (demon/)
+# à renommer en <id>.jpg : C1 → 1…6, C2 → 7…12, …, C11 → 61…66, C12 → 67…72, C13 → 73…75 ; D → 1…3 (demon/)
 ```
 
 Sans ImageMagick (le poste principal ne l'a pas), Python et Pillow font la même chose, en rognant 3 px par bord pour ne
@@ -236,7 +237,7 @@ la carte affiche l'avatar vide.
 | C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
 | C11 | 61 à 66 | à faire (**aucune**) | | Priorité : bestiaires du Beshaar et du Khanat sans image. |
 | C12 | 67 à 72 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
-| C13 | 73 et 74 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
+| C13 | 73 à 75 | à faire (**aucune**) | | Priorité : bestiaire du Khanat et Roi-Sorcier mort-vivant (ajouté au catalogue le 2026-11-02) sans image. |
 | D | démons 1 à 3 | à faire (ancien) | | |
 
-Ordre conseillé pour la suite : C10 à C13 d'abord (20 créatures sans aucune image), puis D, puis C8.
+Ordre conseillé pour la suite : C10 à C13 d'abord (21 créatures sans aucune image), puis D, puis C8.

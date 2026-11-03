@@ -141,7 +141,7 @@ describe('sagaResumes', () => {
   it('compte les chapitres joués et propose le prochain', () => {
     const perle = resume('Perle du Beshaar', ['p1', 'p2']);
 
-    expect(perle).toMatchObject({joues: 2, total: 3, resume: '2 sur 3 joués'});
+    expect(perle).toMatchObject({joues: 2, total: 3, resume: '2 chapitres joués sur 3'});
     expect(perle.suite?.id).toBe('p10');
   });
 
@@ -151,7 +151,8 @@ describe('sagaResumes', () => {
   });
 
   it('dit la saga sur la table, et achevée quand tout est joué', () => {
-    expect(resume('Perle du Beshaar', ['p2'], 'p1').resume).toBe('Sur la table ce soir');
+    // Le compteur reste dit en toutes lettres quand la saga est sur la table : l'anneau seul ne s'explique pas.
+    expect(resume('Perle du Beshaar', ['p2'], 'p1').resume).toBe('Sur la table ce soir · 1 chapitre joué sur 3');
     const achevee = resume('Chroniques lémuriennes', ['clm', 'clt']);
     expect(achevee.suite).toBeNull();
     expect(achevee.resume).toBe('Saga achevée');

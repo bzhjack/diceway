@@ -100,7 +100,7 @@ describe('AccueilPageComponent', () => {
     const sagas = [...page.querySelectorAll('.acc-saga')];
 
     expect(sagas.map((s) => s.querySelector('.acc-saga-nom')?.textContent)).toEqual(['Perle du Beshaar', 'Le Dieu voilé']);
-    expect(sagas[0].querySelector('.acc-saga-resume')?.textContent).toBe('Sur la table ce soir');
+    expect(sagas[0].querySelector('.acc-saga-resume')?.textContent).toBe('Sur la table ce soir · 0 chapitre joué sur 2');
     const suite = sagas[0].querySelector<HTMLAnchorElement>('.acc-saga-suite')!;
     expect(suite.getAttribute('href')).toBe('/session/new?scenario=p2');
     expect(suite.getAttribute('aria-label')).toBe("Continuer Perle du Beshaar : 2. De sable et d'eau, sur une nouvelle table");

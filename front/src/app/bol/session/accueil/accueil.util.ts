@@ -117,6 +117,11 @@ export const ANNEAU_RAYON = 27;
 /** Couleurs et images des sagas (`--dw-saga-1` à `--dw-saga-4`). */
 const TEINTES = 4;
 
+/** Ce que compte l'anneau, en toutes lettres : des chapitres (des scénarios), pas des scènes. */
+function avancement(joues: number, total: number): string {
+  return joues > 1 ? `${joues} chapitres joués sur ${total}` : `${joues} chapitre joué sur ${total}`;
+}
+
 /**
  * Les sagas réduites à ce que l'accueil montre : pas de chapitre, seulement l'avancement et la suite. La suite est le chapitre `prochain`,
  * sinon le premier à jouer ; une saga sans l'un ni l'autre est achevée. Une saga garde sa teinte quel que soit l'ordre d'affichage : elle
@@ -138,7 +143,9 @@ export function sagaResumes(sagas: readonly AccueilSaga[]): AccueilSagaResume[] 
       joues,
       total,
       suite,
-      resume: enCours ? 'Sur la table ce soir' : suite === null ? 'Saga achevée' : joues === 0 ? 'Pas encore commencée' : `${joues} sur ${total} joués`,
+      resume: enCours
+        ? `Sur la table ce soir · ${avancement(joues, total)}`
+        : suite === null ? 'Saga achevée' : joues === 0 ? 'Pas encore commencée' : avancement(joues, total),
       teinte: saga.nom === null ? 0 : (noms.indexOf(saga.nom) % TEINTES) + 1,
       anneau: `${((circonference * joues) / Math.max(1, total)).toFixed(1)} ${circonference.toFixed(1)}`,
     };
