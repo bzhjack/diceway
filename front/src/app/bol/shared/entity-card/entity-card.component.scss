@@ -165,14 +165,14 @@
   padding: 0;
   @include forge.stud;
 
-  // La zone de clic suit la taille du clou (jeton Material, au lieu de percer le bouton).
+  // La zone de clic et l'icône suivent la taille du clou (jetons Material : l'icône du bouton, son dessin compris, en dépend).
   --mat-icon-button-touch-target-size: 26px;
+  --mat-icon-button-icon-size: 15px;
 
   .mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
-    line-height: 15px;
+    width: var(--mat-icon-button-icon-size);
+    height: var(--mat-icon-button-icon-size);
+    line-height: var(--mat-icon-button-icon-size);
   }
 }
 
@@ -184,11 +184,8 @@
   color: var(--dw-forge-danger-text);
 }
 
-.entity-card__action-btn--danger .mat-icon {
-  font-size: 17px;
-  width: 17px;
-  height: 17px;
-  line-height: 17px;
+.entity-card__action-btn--danger {
+  --mat-icon-button-icon-size: 17px;
 }
 
 .entity-card__gauges {

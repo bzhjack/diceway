@@ -9,7 +9,7 @@ années 80, fort contraste, ombres profondes. Même démarche que
 `doc/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
 Les créatures 55 à 63 (bestiaire du Beshaar) et 64 à 74 (bestiaire du Khanat,
-*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les créatures 25 à 48
+*Chroniques Lémuriennes 1.2*) n'ont encore aucun portrait ; les créatures 43 à 48
 et les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
 Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
 
@@ -33,12 +33,12 @@ renommage.
 
 | Planche | Ids | Planche | Ids |
 | --- | --- | --- | --- |
-| ✅ C1 | 1 à 6 | C7 | 37 à 42 |
+| ✅ C1 | 1 à 6 | ✅ C7 | 37 à 42 |
 | ✅ C2 | 7 à 12 | C8 | 43 à 48 |
 | ✅ C3 | 13 à 18 | ✅ C9 | 49 à 54 |
 | ✅ C4 | 19 à 24 | C10 | 55 à 60 |
-| C5 | 25 à 30 | C11 | 61 à 66 |
-| C6 | 31 à 36 | C12 | 67 à 72 |
+| ✅ C5 | 25 à 30 | C11 | 61 à 66 |
+| ✅ C6 | 31 à 36 | C12 | 67 à 72 |
 | | | C13 | 73 et 74 |
 | | | D | démons 1 à 3 |
 
@@ -97,30 +97,30 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 
 ### C5 — créatures 25 à 30
 
-> 25. Kyphus : petit lézard à fourrure d'une trentaine de centimètres, dents de rongeur, se nourrissant d'insectes et de larves (montrer sa petite taille avec une pierre ou une feuille).
-> 26. Loup : loup puissant et efflanqué, fourrure grise, gros plan agressif, meute floue en arrière-plan.
-> 27. Loup géant : loup nettement plus grand et plus imposant, solitaire, fourrure sombre, regard fixe et dents découvertes.
-> 28. Mythunga : immense oiseau de proie aux serres puissantes, capable d'emporter un homme dans son nid ; il plonge en piqué, caché dans le soleil ou derrière un banc de nuages ; montagnes et bord de mer.
-> 29. Ours des cavernes / ours polaire : ours massif dressé sur ses pattes arrière (plus de trois mètres), griffes redoutables, montagnes enneigées et toundra, fourrure sombre ou blanche.
-> 30. Phong : chauve-souris suceuse de sang de la taille d'un petit chat, ailes déployées, petits crocs, nuée qui s'approche dans le crépuscule.
+> 25. ✅ Kyphus : petit lézard à fourrure d'une trentaine de centimètres, dents de rongeur, se nourrissant d'insectes et de larves (montrer sa petite taille avec une pierre ou une feuille).
+> 26. ✅ Loup : loup puissant et efflanqué, fourrure grise, gros plan agressif, meute floue en arrière-plan.
+> 27. ✅ Loup géant : loup nettement plus grand et plus imposant, solitaire, fourrure sombre, regard fixe et dents découvertes.
+> 28. ✅ Mythunga : immense oiseau de proie aux serres puissantes, capable d'emporter un homme dans son nid ; il plonge en piqué, caché dans le soleil ou derrière un banc de nuages ; montagnes et bord de mer.
+> 29. ✅ Ours des cavernes / ours polaire : ours massif dressé sur ses pattes arrière (plus de trois mètres), griffes redoutables, montagnes enneigées et toundra, fourrure sombre ou blanche.
+> 30. ✅ Phong : chauve-souris suceuse de sang de la taille d'un petit chat, ailes déployées, petits crocs, nuée qui s'approche dans le crépuscule.
 
 ### C6 — créatures 31 à 36
 
-> 31. Parvalus : équidé en grands troupeaux, pelage aux couleurs variées, crinière sauvage, plaines de Klaar.
-> 32. Phororacos : énorme oiseau coureur aux vestiges d'ailes, ressemblant à un coursier des sables mais bien plus grand et hideux, serres impressionnantes, bec acéré et recourbé, désert du Beshaar.
-> 33. Poad : énorme serpent-dragon colossal d'un cours d'eau, écrasant la coque d'une barge ou d'une galère dans ses anneaux, eaux troubles et marécages.
-> 34. Purgat : petit mammifère semblable à un rat, fourrure marron, longue queue squameuse, opportuniste fouillant des déchets.
-> 35. Sardolith : dinosaure quadrupède gigantesque à la peau épaisse couverte de petites plaques osseuses formant une armure articulée, avec une paire de têtes ophidiennes au sommet de ses deux cous, jungle.
-> 36. Scorpion-araignée : hybride de scorpion et d'araignée d'un mètre de long, noir, grosses pinces et dard au bout de la queue, sable du désert.
+> 31. ✅ Parvalus : équidé en grands troupeaux, pelage aux couleurs variées, crinière sauvage, plaines de Klaar.
+> 32. ✅ Phororacos : énorme oiseau coureur aux vestiges d'ailes, ressemblant à un coursier des sables mais bien plus grand et hideux, serres impressionnantes, bec acéré et recourbé, désert du Beshaar.
+> 33. ✅ Poad : énorme serpent-dragon colossal d'un cours d'eau, écrasant la coque d'une barge ou d'une galère dans ses anneaux, eaux troubles et marécages.
+> 34. ✅ Purgat : petit mammifère semblable à un rat, fourrure marron, longue queue squameuse, opportuniste fouillant des déchets.
+> 35. ✅ Sardolith : dinosaure quadrupède gigantesque à la peau épaisse couverte de petites plaques osseuses formant une armure articulée, avec une paire de têtes ophidiennes au sommet de ses deux cous, jungle.
+> 36. ✅ Scorpion-araignée : hybride de scorpion et d'araignée d'un mètre de long, noir, grosses pinces et dard au bout de la queue, sable du désert.
 
 ### C7 — créatures 37 à 42
 
-> 37. Scorpion-araignée géant : le même hybride en version colossale, pinces énormes et dard menaçant, dominant le cadre, dunes et plaines.
-> 38. Singe des neiges : primate bipède ressemblant à un grand singe à quatre bras, fourrure blanche épaisse, tempérament agressif, terres gelées ou haute montagne.
-> 39. Triotaur : ressemble à un banth mais avec une épaisse collerette osseuse au niveau du cou, une courte corne sur le museau et deux défenses qui encadrent la gueule, très agressif, jungle.
-> 40. Ursavus : sorte d'ours un peu plus petit qu'un homme, traits mêlant chien et félin, perché dans les branches d'un arbre où il chasse oiseaux et petits singes.
-> 41. Uzeg : sorte de petit rat sans pelage, yeux d'un vert brillant et longs crocs venimeux (de la taille d'un petit chien), dans un égout sombre.
-> 42. Venator : petit prédateur rapide qui marche sur ses deux pattes postérieures, version miniature d'un chark, un peu plus petit qu'un homme, plaines et jungles.
+> 37. ✅ Scorpion-araignée géant : le même hybride en version colossale, pinces énormes et dard menaçant, dominant le cadre, dunes et plaines.
+> 38. ✅ Singe des neiges : primate bipède ressemblant à un grand singe à quatre bras, fourrure blanche épaisse, tempérament agressif, terres gelées ou haute montagne.
+> 39. ✅ Triotaur : ressemble à un banth mais avec une épaisse collerette osseuse au niveau du cou, une courte corne sur le museau et deux défenses qui encadrent la gueule, très agressif, jungle.
+> 40. ✅ Ursavus : sorte d'ours un peu plus petit qu'un homme, traits mêlant chien et félin, perché dans les branches d'un arbre où il chasse oiseaux et petits singes.
+> 41. ✅ Uzeg : sorte de petit rat sans pelage, yeux d'un vert brillant et longs crocs venimeux (de la taille d'un petit chien), dans un égout sombre.
+> 42. ✅ Venator : petit prédateur rapide qui marche sur ses deux pattes postérieures, version miniature d'un chark, un peu plus petit qu'un homme, plaines et jungles.
 
 ### C8 — créatures 43 à 48
 
@@ -199,6 +199,19 @@ magick planche-c1.png -crop 512x512 +repage -resize 400x400 -quality 88 case-%d.
 # à renommer en <id>.jpg : C1 → 1…6, C2 → 7…12, …, C11 → 61…66, C12 → 67…72, C13 → 73…74 ; D → 1…3 (demon/)
 ```
 
+Sans ImageMagick (le poste principal ne l'a pas), Python et Pillow font la même chose, en rognant 3 px par bord pour ne
+rien garder de la case voisine (`xs` : les coupures verticales mesurées, ici une grille exacte ; `premier` : l'id de la
+première case) :
+
+```python
+from PIL import Image
+im = Image.open('C5.png').convert('RGB'); xs, ys, premier, r = [0, 512, 1024, 1536], [0, 512, 1024], 25, 3
+for i in range(6):
+    c, l = i % 3, i // 3
+    im.crop((xs[c] + r, ys[l] + r, xs[c + 1] - r, ys[l + 1] - r)).resize((400, 400), Image.LANCZOS) \
+      .save(f'front/src/assets/bol/bestiary/{premier + i}.jpg', quality=88, optimize=True)
+```
+
 Si ChatGPT ne respecte pas exactement la grille (cases décalées, léger
 débordement), recadrer à la main chaque case en carré autour du point focal
 plutôt que de forcer le découpage régulier ; en dernier recours, redemander
@@ -206,7 +219,7 @@ la planche ou générer le portrait seul avec la même phrase.
 
 ## Avancement
 
-État au 2026-10-23. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
+État au 2026-11-03. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
 la carte affiche l'avatar vide.
 
 | Planche | Ids | État | Date | Remarque |
@@ -215,9 +228,9 @@ la carte affiche l'avatar vide.
 | ✅ C2 | 7 à 12 | fait | 2026-10-23 | Grille respectée : découpe régulière. |
 | ✅ C3 | 13 à 18 | fait | 2026-11-02 | Grille respectée à 2 px près. |
 | ✅ C4 | 19 à 24 | fait | 2026-11-02 | Grille respectée. |
-| C5 | 25 à 30 | à faire (ancien) | | |
-| C6 | 31 à 36 | à faire (ancien) | | |
-| C7 | 37 à 42 | à faire (ancien) | | |
+| ✅ C5 | 25 à 30 | fait | 2026-11-03 | Colonnes décalées d'1 px (coupures à 513 et 1025) : découpe sur les coupures mesurées, 3 px rognés par bord. |
+| ✅ C6 | 31 à 36 | fait | 2026-11-03 | Grille respectée ; 3 px rognés par bord. |
+| ✅ C7 | 37 à 42 | fait | 2026-11-03 | Grille respectée ; 3 px rognés par bord. |
 | C8 | 43 à 48 | à faire (ancien) | | |
 | ✅ C9 | 49 à 54 | fait | 2026-11-02 | Grille respectée à 1 px près, filet noir entre les cases : rogner 3 px par bord. |
 | C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
@@ -226,4 +239,4 @@ la carte affiche l'avatar vide.
 | C13 | 73 et 74 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
 | D | démons 1 à 3 | à faire (ancien) | | |
 
-Ordre conseillé pour la suite : C10 à C13 d'abord (20 créatures sans aucune image), puis D, puis C5 à C8.
+Ordre conseillé pour la suite : C10 à C13 d'abord (20 créatures sans aucune image), puis D, puis C8.
