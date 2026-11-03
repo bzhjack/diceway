@@ -107,6 +107,51 @@ describe('SessionNewPageComponent', () => {
     return element.querySelector<HTMLButtonElement>('.snp-header button[mat-flat-button]')!;
   }
 
+  describe('ce que la page dit d’elle-même', () => {
+    it('ramène à l’accueil, comme la table', async () => {
+      await ouvrir('/session/new');
+
+      expect(element.querySelector('.snp-header a[aria-label="Retour à l\'accueil"]')?.getAttribute('href')).toBe('/');
+    });
+
+    it('dit ce qu’on y fait', async () => {
+      await ouvrir('/session/new');
+
+      expect(element.querySelector('.snp-eyebrow')?.textContent).toContain('Ouvrir une table');
+      expect(element.querySelector('.snp-intro')?.textContent).toContain('Choisis les héros présents, puis ouvre la table.');
+    });
+
+    it('sans scénario, dit que la partie est improvisée et où il se choisit', async () => {
+      await ouvrir('/session/new');
+      await repondre();
+
+      expect(element.querySelector('.snp-scenario-aucun')?.textContent?.replace(/\s+/g, ' ')).toContain('Aucun : partie improvisée');
+      expect(element.querySelector<HTMLAnchorElement>('.snp-scenario-aucun a')?.getAttribute('href')).toBe('/');
+    });
+
+    it('ne dit pas « improvisée » quand un scénario est choisi, ni pendant qu’il se charge', async () => {
+      await ouvrir('/session/new?scenario=A');
+      expect(element.querySelector('.snp-scenario-aucun')).toBeNull();
+
+      await repondre();
+      expect(element.querySelector('.snp-scenario-aucun')).toBeNull();
+    });
+
+    it('sans héros, explique pourquoi « Ouvrir la table » est désactivé', async () => {
+      await ouvrir('/session/new', []);
+      await repondre();
+
+      expect(element.querySelector('.snp-attente')?.textContent).toContain('« Ouvrir la table » attend au moins un héros.');
+    });
+
+    it('avec un héros, n’explique plus rien', async () => {
+      await ouvrir('/session/new');
+      await repondre();
+
+      expect(element.querySelector('.snp-attente')).toBeNull();
+    });
+  });
+
   describe('le scénario demandé', () => {
     it('montre celui de ?scenario=', async () => {
       await ouvrir('/session/new?scenario=A');

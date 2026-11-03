@@ -4,6 +4,7 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {map, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
@@ -22,7 +23,7 @@ import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fa
  */
 @Component({
   selector: 'bol-session-new-page',
-  imports: [AvatarFallbackDirective, RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent],
+  imports: [AvatarFallbackDirective, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
   templateUrl: './session-new-page.html',
   styleUrl: './session-new-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +77,12 @@ export class SessionNewPageComponent {
   });
 
   /** Revenir sur le seuil (avec son scénario) après la création d'un héros, et non sur l'accueil (`/`). */
+  /** Ni scénario choisi, ni scénario demandé en attente ou perdu : la partie est improvisée, et la page le dit. */
+  protected readonly sansScenario = computed(
+    () => !this.scenario() && !this.scenarioPerdu() && !(this.requestedScenario() && this.loadingAccueil()),
+  );
+  /** Aucun héros affiché, le catalogue chargé : « Ouvrir la table » est désactivé, la page dit pourquoi. */
+  protected readonly attenteHeros = computed(() => this.present().length === 0 && !this.selection.loading() && !this.selection.loadFailed());
   protected readonly createHeroState = computed(() => {
     const scenario = this.scenario();
     return {returnUrl: scenario ? `/session/new?scenario=${encodeURIComponent(scenario.id)}` : '/session/new'};

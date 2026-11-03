@@ -7,8 +7,9 @@
             <mat-icon svgIcon="gi-group" />
           </div>
           <div>
-            <p class="snp-eyebrow">Diceway · Barbarians of Lemuria</p>
+            <p class="snp-eyebrow">Ouvrir une table</p>
             <h1 class="snp-title">Qui est à table ce soir ?</h1>
+            <p class="snp-intro">Choisis les héros présents, puis ouvre la table.</p>
           </div>
         </div>
 
@@ -16,6 +17,10 @@
           <button mat-flat-button type="button" [disabled]="!canLaunch() || launching()" (click)="launchSession()">
             <mat-icon>play_arrow</mat-icon> Ouvrir la table
           </button>
+          <!-- Retour à l'accueil, comme sur la table -->
+          <a mat-icon-button class="snp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
+            <mat-icon svgIcon="gi-return" />
+          </a>
           <bol-account-menu />
         </div>
       </div>
@@ -32,6 +37,12 @@
         </section>
       } @else if (scenarioPerdu(); as message) {
         <p class="snp-scenario-perdu" role="alert">{{ message }}</p>
+      } @else if (sansScenario()) {
+        <!-- Sans scénario : la partie est improvisée ; il se choisit sur l'accueil, en ouvrant la table depuis une saga -->
+        <p class="snp-scenario-aucun">
+          <span class="snp-scenario-label">Scénario</span>
+          <span>Aucun : partie improvisée. Il se choisit sur <a routerLink="/">l'accueil</a>.</span>
+        </p>
       }
     </div>
 
@@ -68,12 +79,15 @@
       } @else if (selection.loading()) {
         <p class="snp-empty">Chargement des héros…</p>
       } @else if (!selection.loadFailed()) {
-        <p class="snp-empty">Aucun héros pour l'instant. Ajoute ceux qui jouent ce soir, puis ouvre la table.</p>
+        <p class="snp-empty">Aucun héros pour l'instant.</p>
       }
 
       <button type="button" class="snp-add-tile" (click)="openPicker()">
         <mat-icon>add</mat-icon> Ajouter un héros
       </button>
+      @if (attenteHeros()) {
+        <p class="snp-attente">« Ouvrir la table » attend au moins un héros.</p>
+      }
 
       <div class="mt-3 flex flex-wrap gap-2">
         <a mat-stroked-button routerLink="/create/hero" [state]="createHeroState()">

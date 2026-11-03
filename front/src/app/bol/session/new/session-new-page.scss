@@ -34,6 +34,24 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
+// Ce qu'on fait sur cette page, sous le titre.
+.snp-intro {
+  margin: 0.2rem 0 0;
+  color: var(--dw-forge-bone);
+  font-size: 0.9rem;
+}
+
+// Retour à l'accueil : un clou de bronze, comme sur la table.
+.snp-head-icon {
+  border: 1px solid var(--dw-forge-bronze-dim);
+  @include forge.stud-face;
+  color: var(--dw-forge-stud-text);
+
+  &:hover {
+    @include forge.stud-hot;
+  }
+}
+
 // Le scénario de la future table : même plaque bordée d'or que le bandeau « Table ouverte » de l'accueil.
 .snp-scenario {
   display: flex;
@@ -112,6 +130,33 @@
 .snp-empty {
   color: var(--dw-surface-600);
   font-size: 0.9rem;
+}
+
+// Sans scénario : la même plaque, sans le liseré d'or, et ce qu'il en est.
+.snp-scenario-aucun {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 7px;
+  @include forge.recess;
+  color: var(--dw-forge-bone);
+  font-size: 0.9rem;
+
+  a {
+    color: var(--dw-forge-gold);
+  }
+}
+
+// Pourquoi « Ouvrir la table » est désactivé.
+.snp-attente {
+  margin: 0.5rem 0 0;
+  color: var(--dw-forge-bronze-text);
+  font-size: 0.85rem;
+  font-style: italic;
 }
 
 // Le catalogue n'a pas répondu : le dit, avec de quoi réessayer à côté.
