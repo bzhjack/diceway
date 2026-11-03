@@ -218,6 +218,7 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Mêlée de piétaille** : marquée faite pour le round dès la première perte enregistrée ; interrompue, elle ne se rejoue pas.
 - **Début de round** : il ne se joue que sur l'écran dont l'enregistrement a fait passer le round (`roundCommenceIci`) : un second écran ouvert sur la table ne le rejoue pas.
 - **File d'enregistrement** : un appel de la table qui ne répond pas en 15 s échoue avec le message habituel, et la file repart.
+- **Clavier** : Échap dégage les dés restés à l'écran, comme un clic (démarrage du combat, table) ; après un lancer de dés au clavier, le focus revient au bouton qui l'a lancé (`rendreLeFocus`, `shared/dice-3d/focus.util.ts`).
 
 ## 9. Limites connues
 
@@ -266,3 +267,5 @@ Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 | Validation de l'état côté serveur | `backend/app/Http/Services/Bol/BolCombatState.php` |
 
 Chaque fichier `*.util.ts` a son `*.spec.ts` à côté.
+
+À savoir : les hauteurs des cartes sont fixes et mesurées à la main (`--tas-h`, `min-height` de `combattant-carte.scss`) ; toute nouvelle option dans ces cartes peut demander de les remesurer.
