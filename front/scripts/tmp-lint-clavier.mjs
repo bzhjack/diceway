@@ -44,6 +44,45 @@ const diceInk = async (scope) => {
   }, buf.toString('base64'));
 };
 
+const grab = async () => {
+  // Seule la toile des dés reste visible : on compte ses pixels opaques.
+  await page.addStyleTag({content: 'html, body { background: transparent !important } body * { visibility: hidden !important } canvas, canvas * { visibility: visible !important }'}).then((h) => h.evaluate((el) => el.setAttribute('data-tmp', '1')));
+  const buf = await page.screenshot({omitBackground: true});
+  await page.evaluate(() => document.querySelectorAll('style[data-tmp]').forEach((el) => el.remove()));
+  return buf;
+};
+const ink = (buf) =>
+  page.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = 'data:image/png;base64,' + b64;
+    await img.decode();
+    const c = document.createElement('canvas');
+    c.width = img.width;
+    c.height = img.height;
+    c.getContext('2d').drawImage(img, 0, 0);
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200 && d[i] > 90 && d[i + 1] < 60 && d[i + 2] < 60) n++;
+    return n;
+  }, buf.toString('base64'));
+const diffCount = (a, b) =>
+  page.evaluate(async ([a, b]) => {
+    const load = async (b64) => {
+      const img = new Image();
+      img.src = 'data:image/png;base64,' + b64;
+      await img.decode();
+      const c = document.createElement('canvas');
+      c.width = img.width;
+      c.height = img.height;
+      c.getContext('2d').drawImage(img, 0, 0);
+      return c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    };
+    const [da, db] = [await load(a), await load(b)];
+    let n = 0;
+    for (let i = 0; i < Math.min(da.length, db.length); i += 4) if (Math.abs(da[i] - db[i]) + Math.abs(da[i + 1] - db[i + 1]) + Math.abs(da[i + 2] - db[i + 2]) > 30) n++;
+    return n;
+  }, [a.toString('base64'), b.toString('base64')]);
+
 await page.goto(base + '/login', {waitUntil: 'networkidle'});
 await page.evaluate(async () => {
   const login = await fetch('/api/auth/login', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify({email: 'claude-test@example.com', password: 'ClaudeTest123!'})}).then((r) => r.json());
@@ -125,7 +164,7 @@ try {
   await page.locator('.ard-go').focus();
   await page.keyboard.press('Enter');
   await page.waitForTimeout(4500);
-  const inkCard = await diceInk('.ard-dice-layer');
+  const inkCard = await ink(await grab());
   await page.locator('.ard-go').focus();
   await page.keyboard.press('Escape');
   await page.waitForTimeout(500);
@@ -138,13 +177,21 @@ try {
   await page.waitForTimeout(3000);
   const roller = page.getByRole('button', {name: /Lancer les dés à l’écran pour/}).first();
   await roller.focus();
+  
   await page.keyboard.press('Enter');
   await page.waitForTimeout(5000);
-  const inkStart = await diceInk('.scd-dice-layer');
+  const startBuf = await grab();
+  (await import('node:fs')).writeFileSync(`${shots}-grab-start.png`, startBuf);
+  const startRolled = await ink(startBuf);
+  await page.screenshot({path: `${shots}-2-start-des.png`});
+  console.log('      focus après le lancer :', await active(), '— on revient sur le bouton du jet');
+  await roller.focus();
   await page.keyboard.press('Escape');
   await page.waitForTimeout(800);
-  const inkStartAfter = await diceInk('.scd-dice-layer');
-  ok(inkStart > 0 && inkStartAfter < inkStart, `démarrer le combat : Échap dégage les dés (${inkStart} → ${inkStartAfter} pixels)`);
+  const startBuf2 = await grab();
+  (await import('node:fs')).writeFileSync(`${shots}-grab-start2.png`, startBuf2);
+  const startCleared = await ink(startBuf2);
+  ok(startRolled > 0 && startCleared === 0, `démarrer le combat : Échap dégage les dés (pixels de dés : ${startRolled} → ${startCleared})`);
   await page.screenshot({path: `${shots}-2-start-apres-echap.png`});
 
   // 5. Combat : le jet d'attaque lancé au clavier, puis Échap dégage les dés.
@@ -156,25 +203,35 @@ try {
   }
   await page.getByRole('button', {name: /Commencer le combat/}).click();
   await page.waitForTimeout(2500);
-  await page.locator('.tas-cible button').first().click();
+  await page.screenshot({path: `${shots}-3-combat.png`});
+  await page.locator('.tas-cible button').first().click({timeout: 3000}).catch(() => undefined);
   await page.waitForSelector('.tas-dice-btn');
   await page.waitForTimeout(800);
   await page.locator('.tas-dice-btn').first().focus();
+  
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(5000);
-  const inkCombat = await diceInk('.cb-dice');
+  await page.waitForTimeout(1000);
+  await page.waitForSelector('.tas-dice-btn:not([disabled])', {timeout: 15000});
+  await page.waitForTimeout(500);
+  const combatRolled = await ink(await grab());
+  console.log('      focus après le lancer :', await active(), '— on revient sur le bouton du jet');
+  await page.locator('.tas-dice-btn').first().focus();
   await page.keyboard.press('Escape');
   await page.waitForTimeout(800);
-  const inkCombatAfter = await diceInk('.cb-dice');
-  ok(inkCombat > 0 && inkCombatAfter < inkCombat, `combat : Échap dégage les dés (${inkCombat} → ${inkCombatAfter} pixels)`);
+  const combatCleared = await ink(await grab());
+  ok(combatRolled > 0 && combatCleared === 0, `combat : Échap dégage les dés (pixels de dés : ${combatRolled} → ${combatCleared})`);
   await page.screenshot({path: `${shots}-3-combat-apres-echap.png`});
   // Le clic, lui, les dégage toujours.
+  
   await page.locator('.tas-dice-btn').first().click();
-  await page.waitForTimeout(5000);
-  const inkClick = await diceInk('.cb-dice');
-  await page.mouse.click(800, 900);
+  await page.waitForTimeout(1000);
+  await page.waitForSelector('.tas-dice-btn:not([disabled])', {timeout: 15000});
+  await page.waitForTimeout(500);
+  const clickRolled = await ink(await grab());
+  await page.mouse.click(800, 950);
   await page.waitForTimeout(800);
-  ok(inkClick > 0 && (await diceInk('.cb-dice')) < inkClick, 'combat : un clic dégage toujours les dés');
+  const clickCleared = await ink(await grab());
+  ok(clickRolled > 0 && clickCleared === 0, `combat : un clic dégage toujours les dés (${clickRolled} → ${clickCleared})`);
 } finally {
   if (sessionId) await api('DELETE', `bol/fight-session/delete/${sessionId}`).catch(() => undefined);
 }
