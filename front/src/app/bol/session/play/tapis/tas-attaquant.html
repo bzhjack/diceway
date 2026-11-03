@@ -200,7 +200,7 @@
     @if (flow.played(); as p) {
       <!-- Comme avant le coup : la case de l'arme, sélectionnée, mais figée (rien ne se choisit plus) -->
       <div class="tas-cap">
-        <span>Arme</span>
+        <span>{{ p.arme ? 'Arme' : 'Attaque' }}</span>
         @if (p.arme) {
           <em [matTooltip]="p.arme">{{ p.arme }}</em>
         }
@@ -215,7 +215,15 @@
           </li>
         </ul>
       } @else {
-        <span class="tas-fixed"><span class="tas-label">Dégâts</span> {{ p.degats }}</span>
+        <!-- Sans arme (créature, démon…) : une case comme les armes, à son icône -->
+        <ul class="tas-picks tas-picks--arme" aria-label="Attaque sans arme">
+          <li>
+            <span class="tas-pick tas-pick--arme tas-pick--fige" role="img" [attr.aria-label]="'Dégâts, ' + p.degats">
+              <span class="tas-med tas-med--arme" aria-hidden="true"><mat-icon [svgIcon]="turn.attaqueIcone()" /></span>
+              <em aria-hidden="true">{{ p.degats }}</em>
+            </span>
+          </li>
+        </ul>
       }
     } @else {
       @if (loadout.sortMode()) {
@@ -296,7 +304,15 @@
             }
           </ul>
         } @else {
-          <span class="tas-fixed"><span class="tas-label">Dégâts</span> {{ turn.card().degats }}</span>
+          <!-- Sans arme (créature, démon…) : une case comme les armes, à son icône, déjà choisie -->
+          <ul class="tas-picks tas-picks--arme" aria-label="Attaque sans arme">
+            <li>
+              <span class="tas-pick tas-pick--arme tas-pick--fige" role="img" [attr.aria-label]="'Dégâts, ' + turn.card().degats">
+                <span class="tas-med tas-med--arme" aria-hidden="true"><mat-icon [svgIcon]="turn.attaqueIcone()" /></span>
+                <em aria-hidden="true">{{ turn.card().degats }}</em>
+              </span>
+            </li>
+          </ul>
         }
       </div>
       @if (turn.hordeMates().length > 0) {

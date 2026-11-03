@@ -1,5 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
+import {A11yModule} from '@angular/cdk/a11y';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
@@ -34,7 +38,39 @@ import {libelleVulnerabilite} from './pouvoirs-combat.util';
               <span class="cc-pouvoir" [title]="'Pouvoir à prévenir : ' + pouvoir"><mat-icon aria-hidden="true">warning</mat-icon>{{ pouvoir }}</span>
             }
             @if (vulnerabilite(); as v) {
-              <span class="cc-pouvoir cc-pouvoir--faible" [title]="v"><mat-icon aria-hidden="true">heart_broken</mat-icon><span class="cc-pouvoir-texte">{{ v }}</span></span>
+              <!-- Sa faiblesse : une icône ; son explication, souvent longue, dans un popover au clic -->
+              <button
+                type="button"
+                class="cc-faible"
+                cdkOverlayOrigin
+                #faibleOrigin="cdkOverlayOrigin"
+                aria-haspopup="dialog"
+                [attr.aria-expanded]="faiblesseOuverte()"
+                [attr.aria-label]="v.libelle"
+                [title]="v.libelle"
+                (click)="faiblesseOuverte.set(!faiblesseOuverte())"
+              >
+                <mat-icon aria-hidden="true">heart_broken</mat-icon>
+              </button>
+              <ng-template
+                cdkConnectedOverlay
+                dwPopover="start"
+                [cdkConnectedOverlayOrigin]="faibleOrigin"
+                [cdkConnectedOverlayOpen]="faiblesseOuverte()"
+                (backdropClick)="faiblesseOuverte.set(false)"
+                (overlayKeydown)="fermerSurEchap($event, faibleOrigin)"
+                (detach)="faiblesseOuverte.set(false)"
+              >
+                <div class="cc-faible-pop" role="dialog" aria-labelledby="cc-faible-titre" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+                  <p id="cc-faible-titre" class="cc-faible-titre"><mat-icon aria-hidden="true">heart_broken</mat-icon> Vulnérable</p>
+                  @if (v.element) {
+                    <p class="cc-faible-texte">{{ v.element }}</p>
+                  }
+                  <!-- La règle (bestiaire, pouvoirs des démons) : le texte au-dessus dit, lui, ce qui est propre à ce démon -->
+                  <p class="cc-faible-effet">Cet élément lui inflige des dégâts doublés ; une chose d'ordinaire inoffensive (lumière du jour, eau…) lui inflige des dégâts normaux.</p>
+                  <button mat-stroked-button type="button" (click)="fermerFaiblesse(faibleOrigin)">Fermer</button>
+                </div>
+              </ng-template>
             }
           </span>
           <!-- Les boutons de la page (ouvrir la fiche, changer de cible), en haut à droite -->
@@ -53,7 +89,7 @@ import {libelleVulnerabilite} from './pouvoirs-combat.util';
     <!-- Ce qui se règle, sous le portrait et le texte -->
     <ng-content select="[ccBas]" />
   `,
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatButtonModule, CdkConnectedOverlay, CdkOverlayOrigin, A11yModule, DwPopoverDirective],
   styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -85,11 +121,17 @@ export class CombattantCarteComponent {
   });
   /** Les pouvoirs d'un démon à prévenir en combat (`avertissement_combat`). */
   protected readonly avertissements = computed(() => this.card().pouvoirs?.avertissements ?? []);
-  /** La faiblesse d'un démon vulnérable : « Vulnérable : feu (dégâts doublés) ». */
+  /** La faiblesse d'un démon vulnérable : son libellé entier (« Vulnérable : feu (dégâts doublés) »), et ce que le popover explique. */
   protected readonly vulnerabilite = computed(() => {
     const v = this.card().pouvoirs?.vulnerabilite;
-    return v ? libelleVulnerabilite(v) : null;
+    if (!v) {
+      return null;
+    }
+    const element = v.element ? `${v.element.charAt(0).toUpperCase()}${v.element.slice(1)}` : null;
+    return {libelle: libelleVulnerabilite(v), element};
   });
+  /** Le popover de la faiblesse, ouvert au clic sur son icône. */
+  protected readonly faiblesseOuverte = linkedSignal({source: () => this.card().key, computation: () => false});
   private readonly percent = computed(() => vitalitePercent(this.card().vitaliteCourante, this.card().vitaliteMax));
   protected readonly loss = computed(() => {
     const max = this.card().vitaliteMax ?? 0;
@@ -101,4 +143,17 @@ export class CombattantCarteComponent {
     const vitalite = this.card().vitaliteCourante;
     return vitalite !== null && this.card().vitaliteMax !== null && vitalite <= 0;
   });
+
+  /** Ferme le popover de la faiblesse et rend la main à son icône. */
+  protected fermerFaiblesse(origine: CdkOverlayOrigin): void {
+    this.faiblesseOuverte.set(false);
+    (origine.elementRef.nativeElement as HTMLElement).focus();
+  }
+
+  protected fermerSurEchap(event: KeyboardEvent, origine: CdkOverlayOrigin): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.fermerFaiblesse(origine);
+    }
+  }
 }

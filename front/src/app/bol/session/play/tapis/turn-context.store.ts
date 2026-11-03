@@ -3,7 +3,7 @@ import {effetDeFoi, perdSonAction} from './combat-effects.util';
 import {RessourceMagique, SensDeFoi} from '../../models/magie-combat.model';
 import {libellePoints} from '../../combat-attack.util';
 import {rollD6} from '../../combat-resolution.util';
-import {TapisCard} from '../../models/tapis.model';
+import {TapisCard, TapisKind} from '../../models/tapis.model';
 import type {TurnAssistantComponent} from './turn-assistant';
 import {TurnPopover} from '../../models/turn-assistant.model';
 import {sideOf} from './turn-assistant.util';
@@ -17,11 +17,16 @@ const DICE_TIMEOUT_MS = 12000;
  * par où ils signalent à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme) ; aucun d'eux ne parle à un service.
  * S'y ajoute ce que les étapes partagent : les dés 3D, les éléments où passe la main, le popover des effets, les cœurs de vitalité.
  */
+const ATTAQUE_ICONE: Record<TapisKind, string> = {hero: 'gi-sword', pnj: 'gi-sword', creature: 'gi-paw', demon: 'gi-demon'};
+
 @Injectable()
 export class TurnContextStore {
   private host!: TurnAssistantComponent;
 
   readonly card = computed(() => this.host.card());
+
+  /** L'icône de la case d'une carte qui frappe sans arme : une patte, un démon, sinon une épée (comme sur les fiches). */
+  readonly attaqueIcone = computed(() => ATTAQUE_ICONE[this.card().kind]);
 
   readonly armes = computed(() => this.host.armes());
 
