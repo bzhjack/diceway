@@ -134,11 +134,11 @@ export class AccueilPageComponent {
     rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
   }
 
-  /** Le dialogue « Ouvrir une table », sur ce chapitre (null : on improvise), avec ce que l'accueil a déjà lu ; la table ouverte, il mène
-   * à elle. */
-  protected ouvrirTable(scenarioId: string | null = null): void {
+  /** Le dialogue de la table, sur ce chapitre (null : on improvise), avec ce que l'accueil a déjà lu : une nouvelle table, ou, `reprise`,
+   * la table ouverte (sur ce chapitre ou un autre). Il mène à la table. */
+  protected ouvrirTable(scenarioId: string | null = null, reprise = false): void {
     this.dialog.open<OpenTableDialogComponent, OpenTableData, boolean>(OpenTableDialogComponent, {
-      data: {scenarioId, accueil: this.data()},
+      data: {scenarioId, accueil: this.data(), reprise},
       width: 'min(1120px, 94vw)',
       maxWidth: '94vw',
       ariaLabelledBy: 'otd-titre',

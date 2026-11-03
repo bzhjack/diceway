@@ -237,6 +237,21 @@
   }
 }
 
+// Un héros sans portrait : son initiale dans le même médaillon.
+.otd-heros-initiale {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  box-sizing: border-box;
+  border: 2px solid var(--dw-color-bonus);
+  border-radius: 50%;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.1rem;
+  color: var(--dw-forge-hot-text);
+}
+
 .otd-heros-nom {
   flex: 1;
   min-width: 0;

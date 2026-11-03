@@ -92,6 +92,46 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame($response->json('id'), $fresh->scene_id);
     }
 
+    /** « Reprendre » sur un autre chapitre : la même table passe dessus, ses scènes jouées restent jouées. */
+    public function test_moves_the_table_to_another_own_chapter(): void
+    {
+        $a = $this->scenario('A');
+        $b = $this->scenario('B');
+        $session = $this->tableSession($a->id);
+        $session->update(['scenes_jouees' => ['s1']]);
+
+        $response = $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $b->id])->assertOk();
+
+        $this->assertSame($b->id, $response->json('scenario_id'));
+        $fresh = $session->fresh();
+        $this->assertSame($b->id, $fresh->scenario_id);
+        $this->assertSame(['s1'], $fresh->scenes_jouees);
+    }
+
+    public function test_a_chapter_of_another_account_or_none_makes_the_table_improvised(): void
+    {
+        $a = $this->scenario('A');
+        $etranger = $this->scenario('Étranger', User::factory()->create());
+        $session = $this->tableSession($a->id);
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $etranger->id])->assertOk();
+        $this->assertNull($session->fresh()->scenario_id);
+
+        $session->update(['scenario_id' => $a->id]);
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => null])->assertOk();
+        $this->assertNull($session->fresh()->scenario_id);
+    }
+
+    public function test_cannot_move_the_table_of_another_account(): void
+    {
+        $a = $this->scenario('A');
+        $autre = User::factory()->create();
+        $table = BolFightSession::create(['titre' => 'Autre', 'statut' => 'libre', 'user_id' => $autre->id, 'scenario_id' => null]);
+
+        $this->patchJson("/api/bol/fight-session/{$table->id}/scenario", ['scenario_id' => $a->id])->assertNotFound();
+        $this->assertNull($table->fresh()->scenario_id);
+    }
+
     public function test_deleting_the_scenario_clears_it_on_the_table(): void
     {
         $scenario = $this->scenario('Le Dieu voilé');

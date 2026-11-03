@@ -135,15 +135,16 @@ describe('AccueilPageComponent', () => {
       ['1', '1. Sacrilège à Satarla : sur la table'],
       ['2', "2. De sable et d'eau : à jouer"],
     ]);
-    const reprise = sagas[0].querySelector<HTMLAnchorElement>('.acc-saga-suite')!;
-    expect(reprise.getAttribute('href')).toBe('/session/t1/play');
+    const reprise = sagas[0].querySelector<HTMLButtonElement>('button.acc-saga-suite')!;
     expect(reprise.getAttribute('aria-label')).toBe('Reprendre 1. Sacrilège à Satarla, Perle du Beshaar, sur la table ouverte');
+    reprise.click();
+    expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: {scenarioId: 'p1', accueil: DATA, reprise: true}}));
     const suite = sagas[1].querySelector<HTMLButtonElement>('button.acc-saga-suite')!;
     expect(suite.querySelector('.acc-saga-suite-label')?.textContent).toBe('Commencer');
 
     suite.click();
 
-    expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: {scenarioId: 'dv1', accueil: DATA}}));
+    expect(open).toHaveBeenLastCalledWith(OpenTableDialogComponent, expect.objectContaining({data: {scenarioId: 'dv1', accueil: DATA, reprise: false}}));
   });
 
   it('compte les fiches de chaque bibliothèque et ne propose de créer que des fiches', async () => {

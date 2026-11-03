@@ -124,15 +124,6 @@
         </div>
       }
     </ng-template>
-
-    <ng-template #suiteTpl let-suite>
-      <span class="acc-saga-suite-texte">
-        <span class="acc-saga-suite-label">{{ suite.action }}</span>
-        <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
-      </span>
-      <mat-icon aria-hidden="true">arrow_forward</mat-icon>
-    </ng-template>
-
     <!-- En cas d'erreur, le bandeau le dit (avec « Mes tables ») : pas de section Scénarios vide. Les scénarios défilent de côté, en carrousel. -->
     @if (!error()) {
       <section aria-labelledby="acc-sagas-titre">
@@ -173,16 +164,14 @@
                   <p class="acc-saga-resume">{{ saga.resume }}</p>
                 </div>
                 @if (saga.suite; as suite) {
-                  <!-- La table ouverte se reprend par un lien ; un autre chapitre ouvre le dialogue « Ouvrir une table ». -->
-                  @if (suite.route; as route) {
-                    <a class="acc-saga-suite" [routerLink]="route" [attr.aria-label]="suite.ariaLabel">
-                      <ng-container [ngTemplateOutlet]="suiteTpl" [ngTemplateOutletContext]="{$implicit: suite}" />
-                    </a>
-                  } @else {
-                    <button type="button" class="acc-saga-suite" [attr.aria-label]="suite.ariaLabel" (click)="ouvrirTable(suite.id)">
-                      <ng-container [ngTemplateOutlet]="suiteTpl" [ngTemplateOutletContext]="{$implicit: suite}" />
-                    </button>
-                  }
+                  <!-- « Reprendre » ouvre le dialogue sur la table ouverte (pour changer de chapitre au passage) ; les autres, sur une nouvelle table. -->
+                  <button type="button" class="acc-saga-suite" [attr.aria-label]="suite.ariaLabel" (click)="ouvrirTable(suite.id, suite.reprise)">
+                    <span class="acc-saga-suite-texte">
+                      <span class="acc-saga-suite-label">{{ suite.action }}</span>
+                      <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
+                    </span>
+                    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+                  </button>
                 }
               </li>
             } @empty {

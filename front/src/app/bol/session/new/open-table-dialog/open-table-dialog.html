@@ -2,8 +2,10 @@
   <div class="otd-tete-titre">
     <span class="otd-icone" aria-hidden="true"><mat-icon svgIcon="gi-group" /></span>
     <div>
-      <p class="otd-surtitre">Nouvelle table</p>
-      @if (etape() === 'confirmation' && ouverte(); as table) {
+      <p class="otd-surtitre">{{ reprise ? 'Table ouverte' : 'Nouvelle table' }}</p>
+      @if (reprise) {
+        <h2 id="otd-titre" class="otd-titre">Reprendre la table</h2>
+      } @else if (etape() === 'confirmation' && ouverte(); as table) {
         <h2 id="otd-titre" class="otd-titre">Clore {{ table.titre }} ?</h2>
       } @else {
         <h2 id="otd-titre" class="otd-titre">Qui est à table ce soir ?</h2>
@@ -27,8 +29,8 @@
       </ul>
     </div>
   } @else {
-    <!-- Une autre table est ouverte : un bandeau d'une ligne, au-dessus des deux colonnes. -->
-    @if (ouverte(); as table) {
+    <!-- Une autre table est ouverte : un bandeau d'une ligne, au-dessus des deux colonnes (pas quand on la reprend). -->
+    @if (!reprise && ouverte(); as table) {
       <section class="otd-deja" aria-labelledby="otd-deja-table">
         <mat-icon class="otd-deja-icone" aria-hidden="true">warning</mat-icon>
         <div class="otd-deja-corps">
@@ -79,42 +81,59 @@
       <section class="otd-etape" aria-labelledby="otd-table">
         <h3 id="otd-table" class="otd-etape-titre">
           <span class="otd-numero" aria-hidden="true">2</span> Autour de la table
-          <span class="otd-compte">{{ present().length }} héros</span>
+          <span class="otd-compte">{{ reprise ? compagnie().length : present().length }} héros</span>
         </h3>
 
-        @if (selection.loadFailed()) {
-          <div class="otd-alerte otd-alerte--action" role="alert">
-            <span>Impossible de charger les héros.</span>
-            <button mat-stroked-button type="button" (click)="reloadCatalog()">Réessayer</button>
-          </div>
-        }
-
-        @if (present().length) {
+        @if (reprise) {
+          <!-- La table reprise garde ses héros : ils se gèrent à la table. -->
           <ul class="otd-heros">
-            @for (entry of present(); track entry.catalogId) {
+            @for (heros of compagnie(); track heros.id) {
               <li class="otd-heros-pastille">
-                <img dwAvatarFallback [src]="entry.avatar" alt="" />
-                <span class="otd-heros-nom">{{ entry.nom }}</span>
-                <button type="button" class="otd-heros-retirer" [attr.aria-label]="'Retirer ' + entry.nom + ' de la table'" (click)="selection.remove(entry.catalogId)">
-                  <mat-icon>close</mat-icon>
-                </button>
+                @if (heros.portrait; as portrait) {
+                  <img dwAvatarFallback [src]="portrait" alt="" />
+                } @else {
+                  <span class="otd-heros-initiale" aria-hidden="true">{{ heros.initiale }}</span>
+                }
+                <span class="otd-heros-nom">{{ heros.nom }}</span>
               </li>
             }
           </ul>
-        } @else if (selection.loading()) {
-          <p class="otd-note" role="status">Chargement des héros…</p>
-        }
-        <button type="button" class="otd-ajout" (click)="ajouterHeros()"><mat-icon>add</mat-icon> Ajouter un héros</button>
-
-        @if (attenteHeros()) {
-          <p class="otd-note">« Ouvrir la table » attend au moins un héros.</p>
-        }
-        <p class="otd-note">
-          @if (compagnieReprise()) {
-            La compagnie de la dernière table, reprise d’office.
+          <p class="otd-note">Les héros de la table ; ils s’ajoutent et se retirent à la table.</p>
+        } @else {
+          @if (selection.loadFailed()) {
+            <div class="otd-alerte otd-alerte--action" role="alert">
+              <span>Impossible de charger les héros.</span>
+              <button mat-stroked-button type="button" (click)="reloadCatalog()">Réessayer</button>
+            </div>
           }
-          Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState()" mat-dialog-close>Créer un héros</a>
-        </p>
+
+          @if (present().length) {
+            <ul class="otd-heros">
+              @for (entry of present(); track entry.catalogId) {
+                <li class="otd-heros-pastille">
+                  <img dwAvatarFallback [src]="entry.avatar" alt="" />
+                  <span class="otd-heros-nom">{{ entry.nom }}</span>
+                  <button type="button" class="otd-heros-retirer" [attr.aria-label]="'Retirer ' + entry.nom + ' de la table'" (click)="selection.remove(entry.catalogId)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else if (selection.loading()) {
+            <p class="otd-note" role="status">Chargement des héros…</p>
+          }
+          <button type="button" class="otd-ajout" (click)="ajouterHeros()"><mat-icon>add</mat-icon> Ajouter un héros</button>
+
+          @if (attenteHeros()) {
+            <p class="otd-note">« Ouvrir la table » attend au moins un héros.</p>
+          }
+          <p class="otd-note">
+            @if (compagnieReprise()) {
+              La compagnie de la dernière table, reprise d’office.
+            }
+            Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState()" mat-dialog-close>Créer un héros</a>
+          </p>
+        }
       </section>
     </div>
   }
@@ -129,12 +148,16 @@
   } @else {
     <div class="otd-resume">
       <span class="otd-resume-texte">{{ resume() }}</span>
-      @if (ouverte(); as table) {
+      @if (reprise) {
+        @if (chapitreChange() && ouverte(); as table) {
+          <span class="otd-resume-cloture">La table quitte {{ table.titre }}, avec ses héros et son état.</span>
+        }
+      } @else if (ouverte(); as table) {
         <span class="otd-resume-cloture">{{ table.titre }} sera close.</span>
       }
     </div>
     <button mat-flat-button type="button" [disabled]="!canLaunch()" (click)="ouvrir()">
-      <mat-icon>play_arrow</mat-icon> Ouvrir la table
+      <mat-icon>play_arrow</mat-icon> {{ boutonPrincipal() }}
     </button>
   }
 </mat-dialog-actions>

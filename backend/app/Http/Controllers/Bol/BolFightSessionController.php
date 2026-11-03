@@ -238,6 +238,17 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function changerChapitre(Request $request, string $id)
+    {
+        $session = $this->fightSessionService->changerChapitre($id, Auth::id(), $request->input('scenario_id'));
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function reopen(string $id)
     {
         $session = $this->fightSessionService->reopenSession($id, Auth::id());

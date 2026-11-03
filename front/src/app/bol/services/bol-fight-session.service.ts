@@ -136,6 +136,11 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {}));
   }
 
+  /** Passe la table sur un autre chapitre (null : on improvise) : mêmes héros, même état. */
+  changerChapitre(sessionId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
+  }
+
   /** Clôt la table (`terminee`) ; en combat, le termine d'abord, sans les soins d'après combat. */
   close(sessionId: string): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/close`, {}));

@@ -150,7 +150,7 @@ describe('sagaResumes', () => {
       id: 'p10',
       libelle: '10. Épilogue',
       action: 'Continuer',
-      route: null,
+      reprise: false,
       ariaLabel: 'Continuer 10. Épilogue, Perle du Beshaar, sur une nouvelle table',
     });
   });
@@ -176,7 +176,7 @@ describe('sagaResumes', () => {
       id: 'p1',
       libelle: '1. Sacrilège à Satarla',
       action: 'Reprendre',
-      route: ['/session', 't1', 'play'],
+      reprise: true,
       ariaLabel: 'Reprendre 1. Sacrilège à Satarla, Perle du Beshaar, sur la table ouverte',
     });
     // Le compteur reste dit en toutes lettres : les pastilles seules ne s'expliquent pas.
@@ -197,7 +197,7 @@ describe('sagaResumes', () => {
     expect(resume(null, [], null, deux).resume).toBe('2 scénarios à jouer');
     expect(resume(null, ['ps'], null, deux)).toMatchObject({resume: '1 scénario joué sur 2', suite: {id: 'ps2', action: 'Jouer'}});
     expect(resume(null, ['ps'], null, un).resume).toBe('Tout est joué');
-    expect(resume(null, [], 'ps', un).suite).toMatchObject({action: 'Reprendre', route: ['/session', 't1', 'play']});
+    expect(resume(null, [], 'ps', un).suite).toMatchObject({action: 'Reprendre', reprise: true});
   });
 
   it('donne à chaque saga une teinte stable, dans l’ordre alphabétique, et aucune hors saga', () => {

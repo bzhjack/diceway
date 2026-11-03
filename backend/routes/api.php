@@ -180,6 +180,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
     Route::patch('/bol/fight-session/{id}/close', [BolFightSessionController::class, 'close']);
     Route::patch('/bol/fight-session/{id}/reopen', [BolFightSessionController::class, 'reopen']);
+    Route::patch('/bol/fight-session/{id}/scenario', [BolFightSessionController::class, 'changerChapitre']);
     Route::patch('/bol/fight-session/{id}/etat-combat', [BolFightSessionController::class, 'updateCombatState']);
     Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
 

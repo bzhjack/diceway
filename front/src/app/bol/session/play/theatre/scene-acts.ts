@@ -17,7 +17,7 @@ import {acteLabel} from './theatre.util';
   imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],
   template: `
     <div class="sca-titre">
-      <span class="sca-sur">{{ sessionTitre() || 'Session' }}</span>
+      <span class="sca-sur">{{ sessionTitre() || 'Table' }}</span>
       <h1 class="sca-h1" [attr.title]="scenarioTitre()">
         <span class="sca-scenario-titre">{{ scenarioTitre() }}</span>
       </h1>

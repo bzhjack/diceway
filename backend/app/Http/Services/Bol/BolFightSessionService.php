@@ -260,6 +260,23 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
+    /**
+     * Passe la table sur un autre chapitre (« Reprendre » de l'accueil, chapitre changé) : mêmes héros, même état ; ses scènes déjà jouées
+     * restent jouées, et on charge à la table la scène voulue du nouveau chapitre. Un chapitre qui n'est pas du compte, ou `null` : on
+     * improvise. `null` si la table n'est pas du compte.
+     */
+    public function changerChapitre(string $sessionId, string $userId, mixed $scenarioId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $session->update(['scenario_id' => $this->ownScenarioId($userId, $scenarioId)]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
     /** Rouvre une table close (« Reprendre » depuis les sessions) : elle redevient `libre` ; une table encore ouverte ne change pas. */
     public function reopenSession(string $sessionId, string $userId): ?BolFightSession
     {

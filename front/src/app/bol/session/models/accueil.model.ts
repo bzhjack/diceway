@@ -22,13 +22,13 @@ export interface AccueilSaga {
  * saga est jouée), « Jouer » un scénario hors saga, qui n'a pas d'ordre. */
 export type AccueilSagaAction = 'Reprendre' | 'Commencer' | 'Continuer' | 'Reste à jouer' | 'Jouer';
 
-/** Le bouton d'une saga : le chapitre qu'il nomme, et où il mène : `route`, la table ouverte à reprendre ; null, le dialogue « Ouvrir une
- * table » sur ce chapitre. */
+/** Le bouton d'un scénario : le chapitre qu'il nomme ; il ouvre le dialogue de la table, pour reprendre la table ouverte (`reprise`) ou en
+ * ouvrir une nouvelle sur ce chapitre. */
 export interface AccueilSagaSuite {
   id: string;
   libelle: string;
   action: AccueilSagaAction;
-  route: string[] | null;
+  reprise: boolean;
   ariaLabel: string;
 }
 

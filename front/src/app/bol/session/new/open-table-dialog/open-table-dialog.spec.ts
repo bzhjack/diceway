@@ -46,6 +46,7 @@ describe('OpenTableDialogComponent', () => {
   const launch = vi.fn();
   const loadCatalog = vi.fn();
   const closeSession = vi.fn();
+  const changer = vi.fn();
   const fermer = vi.fn();
   const snack = vi.fn();
   /** Le catalogue de la bibliothèque : vide tant que le réseau n'a pas répondu, comme le vrai service. */
@@ -61,12 +62,13 @@ describe('OpenTableDialogComponent', () => {
     catalogLoading = signal(!catalogResolu);
     catalogFailed = signal(false);
     accueil$ = new Subject<BolAccueilModel>();
-    for (const espion of [accueil, preselectHeroes, launch, loadCatalog, closeSession, fermer, snack]) {
+    for (const espion of [accueil, preselectHeroes, launch, loadCatalog, closeSession, changer, fermer, snack]) {
       espion.mockReset();
     }
     accueil.mockReturnValue(accueil$);
     launch.mockReturnValue(of({id: 's9'}));
     closeSession.mockReturnValue(of({}));
+    changer.mockReturnValue(of({}));
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [
@@ -76,7 +78,7 @@ describe('OpenTableDialogComponent', () => {
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {provide: MatSnackBar, useValue: {open: snack}},
         {provide: BolAccueilService, useValue: {accueil}},
-        {provide: BolFightSessionService, useValue: {close: closeSession}},
+        {provide: BolFightSessionService, useValue: {close: closeSession, changerChapitre: changer}},
         {
           provide: CombatSelectionService,
           useValue: {
@@ -266,6 +268,74 @@ describe('OpenTableDialogComponent', () => {
       expect(fermer).not.toHaveBeenCalled();
       expect(texte('#otd-titre')).toBe('Qui est à table ce soir ?');
       expect(accueil).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('reprendre la table ouverte', () => {
+    const REPRISE = {...ACCUEIL, table: TABLE, compagnie: [{id: 'h1', nom: 'Axel', avatar: null}]};
+    const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
+
+    it('sur son chapitre : mène à elle sans rien changer, avec ses héros, sans rien clore', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
+
+      expect(texte('#otd-titre')).toBe('Reprendre la table');
+      expect(element.querySelector('.otd-deja')).toBeNull();
+      expect([...element.querySelectorAll('.otd-heros-nom')].map((n) => n.textContent)).toEqual(['Axel']);
+      expect(element.querySelector('.otd-heros-retirer')).toBeNull();
+      expect(bouton('Ajouter un héros')).toBeUndefined();
+      expect(loadCatalog).not.toHaveBeenCalled();
+      expect(texte('.otd-resume-texte')).toBe('Sacrilège à Satarla, avec Axel');
+
+      bouton('Reprendre la table').click();
+      await stable();
+
+      expect(changer).not.toHaveBeenCalled();
+      expect(closeSession).not.toHaveBeenCalled();
+      expect(fermer).toHaveBeenCalledWith(true);
+      expect(TestBed.inject(Router).url).toBe('/session/t1/play');
+    });
+
+    it('sur un autre chapitre : la même table passe dessus, avec ses héros et son état', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
+      bouton('Changer de chapitre').click();
+      await stable();
+      items().find((b) => b.textContent?.includes('Perle du Beshaar'))!.click();
+      await stable();
+      items().find((b) => b.textContent?.includes('3. Le tombeau'))!.click();
+      await stable();
+
+      expect(texte('.otd-resume-cloture')).toBe('La table quitte Sacrilège à Satarla, avec ses héros et son état.');
+      bouton("Passer à Le tombeau d'Urzûlzalinaar").click();
+      await stable();
+
+      expect(changer).toHaveBeenCalledWith('t1', 'p3');
+      expect(closeSession).not.toHaveBeenCalled();
+      expect(launch).not.toHaveBeenCalled();
+      expect(TestBed.inject(Router).url).toBe('/session/t1/play');
+    });
+
+    it('« Improviser » passe la table en partie improvisée', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
+
+      bouton('Improviser').click();
+      await stable();
+      bouton('Passer en partie improvisée').click();
+      await stable();
+
+      expect(changer).toHaveBeenCalledWith('t1', null);
+    });
+
+    it('si le changement échoue : le dit et reste ouvert', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
+      changer.mockReturnValue(throwError(() => new Error('réseau')));
+
+      bouton('Improviser').click();
+      await stable();
+      bouton('Passer en partie improvisée').click();
+      await stable();
+
+      expect(snack).toHaveBeenCalledTimes(1);
+      expect(fermer).not.toHaveBeenCalled();
     });
   });
 

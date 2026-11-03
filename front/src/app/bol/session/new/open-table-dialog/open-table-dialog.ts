@@ -9,6 +9,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of, switchMap, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
@@ -47,6 +48,8 @@ export class OpenTableDialogComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   protected readonly selection = inject(CombatSelectionService);
 
+  /** « Reprendre » : le dialogue reprend la table ouverte (ses héros, son état) au lieu d'en ouvrir une nouvelle. */
+  protected readonly reprise = Boolean(this.data.reprise && this.data.accueil?.table);
   protected readonly etape = signal<OpenTableEtape>('choix');
   protected readonly launching = signal(false);
   private readonly accueil = signal<BolAccueilModel | null>(this.data.accueil ?? null);
@@ -65,12 +68,10 @@ export class OpenTableDialogComponent {
   );
   protected readonly canLaunch = computed(
     () =>
-      this.present().length > 0 &&
+      (this.reprise || this.present().length > 0) &&
       !this.launching() &&
       !this.loadingAccueil() &&
-      !this.selection.loading() &&
-      // Après un chargement raté, le catalogue gardé date d'une autre visite : on ne l'engage pas sans réessai.
-      !this.selection.loadFailed(),
+      (this.reprise || (!this.selection.loading() && !this.selection.loadFailed())),
   );
   /** Aucun héros affiché, le catalogue chargé : « Ouvrir la table » est désactivé, le dialogue dit pourquoi. */
   protected readonly attenteHeros = computed(() => this.present().length === 0 && !this.selection.loading() && !this.selection.loadFailed());
@@ -140,16 +141,36 @@ export class OpenTableDialogComponent {
 
   protected readonly clotureEnUneLigne = computed(() => this.effetsCloture().join(', '));
 
+  /** En reprise, les héros assis à la table ouverte : ils se gèrent à la table. */
+  protected readonly compagnie = computed(() =>
+    (this.accueil()?.compagnie ?? []).map((heros) => ({...heros, portrait: usableAvatar(heros.avatar), initiale: heros.nom.charAt(0).toUpperCase()})),
+  );
+
+  /** En reprise, le chapitre choisi n'est plus celui de la table : elle passera dessus. */
+  protected readonly chapitreChange = computed(() => this.reprise && this.scenarioId() !== (this.accueil()?.table?.scenario_id ?? null));
+
   protected readonly compagnieReprise = computed(() => (this.accueil()?.derniers_heros.length ?? 0) > 0);
 
   /** La future table en une ligne : « Tolometh, avec Axel, jadawin, Balaram et jean ». */
   protected readonly resume = computed(() => {
-    const noms = this.present().map((entry) => entry.nom);
+    const noms = (this.reprise ? this.compagnie() : this.present()).map((entry) => entry.nom);
     const nom = this.chapitre()?.nom ?? 'Partie improvisée';
     return noms.length ? `${nom}, avec ${enumerer(noms)}` : nom;
   });
 
   protected readonly nomNouvelle = computed(() => this.chapitre()?.nom ?? 'la nouvelle table');
+
+  /** Le bouton du pied : ouvrir une nouvelle table ; en reprise, la reprendre, ou la passer sur le chapitre choisi. */
+  protected readonly boutonPrincipal = computed(() => {
+    if (!this.reprise) {
+      return 'Ouvrir la table';
+    }
+    if (!this.chapitreChange()) {
+      return 'Reprendre la table';
+    }
+    const chapitre = this.chapitre();
+    return chapitre ? `Passer à ${chapitre.nom}` : 'Passer en partie improvisée';
+  });
 
   /** Revenir au dialogue (avec son chapitre) après la création d'un héros : `/session/new` rouvre l'accueil et ce dialogue. */
   protected readonly createHeroState = computed(() => {
@@ -158,6 +179,10 @@ export class OpenTableDialogComponent {
   });
 
   constructor() {
+    // Une table reprise garde ses héros : ni catalogue ni présélection.
+    if (this.reprise) {
+      return;
+    }
     this.selection.loadCatalog();
     const accueil = this.data.accueil;
     if (accueil) {
@@ -188,9 +213,14 @@ export class OpenTableDialogComponent {
     });
   }
 
-  /** « Ouvrir la table » : avec une autre table ouverte, d'abord la confirmation de sa clôture ; sinon, ou une fois confirmée, la table. */
+  /** « Ouvrir la table » : avec une autre table ouverte, d'abord la confirmation de sa clôture ; sinon, ou une fois confirmée, la table. En
+   * reprise, la table ouverte, passée d'abord sur le chapitre choisi s'il a changé. */
   protected ouvrir(): void {
     if (!this.canLaunch()) {
+      return;
+    }
+    if (this.reprise) {
+      this.reprendre();
       return;
     }
     if (this.ouverte() && this.etape() === 'choix') {
@@ -203,6 +233,36 @@ export class OpenTableDialogComponent {
 
   protected revenirAuChoix(): void {
     this.etape.set('choix');
+  }
+
+  private reprendre(): void {
+    const table = this.accueil()?.table;
+    if (!table) {
+      return;
+    }
+    if (!this.chapitreChange()) {
+      this.allerALaTable(table.id);
+      return;
+    }
+    this.launching.set(true);
+    this.fightSessionService
+      .changerChapitre(table.id, this.scenario()?.id ?? null)
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.launching.set(false);
+          this.allerALaTable(table.id);
+        },
+        error: (error: unknown) => {
+          this.launching.set(false);
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de changer le chapitre de la table.'), 'OK', {duration: 6000});
+        },
+      });
+  }
+
+  private allerALaTable(id: string): void {
+    this.dialogRef.close(true);
+    void this.router.navigate(['/session', id, 'play']);
   }
 
   private lancer(): void {

@@ -124,7 +124,7 @@ function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): 
       id: enCours.id,
       libelle: enCours.libelle,
       action: 'Reprendre',
-      route: ['/session', tableId, 'play'],
+      reprise: true,
       ariaLabel: `Reprendre ${enCours.libelle}, ${nom}, sur la table ouverte`,
     };
   }
@@ -139,7 +139,7 @@ function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): 
     id: chapitre.id,
     libelle: chapitre.libelle,
     action,
-    route: null,
+    reprise: false,
     ariaLabel: `${action} ${chapitre.libelle}, ${nom}, sur une nouvelle table`,
   };
 }
