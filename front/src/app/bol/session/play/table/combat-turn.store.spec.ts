@@ -38,8 +38,10 @@ describe('CombatTurnStore : le début de tour ne passe que quand la main change'
   let session: ReturnType<typeof signal<BolFightSessionModel | null>>;
   const updateCombatState = vi.fn();
 
-  beforeEach(() => {
-    session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: {round: 2, joues: [], effets: [], exclus: [], fuis: [], melee: null}} as unknown as BolFightSessionModel);
+  /** Monte le store sur une session dont l'état du combat est `etatCombat` : rappelé avec l'état enregistré, c'est la page rechargée. */
+  function monter(etatCombat: Partial<EtatCombat>): void {
+    TestBed.resetTestingModule();
+    session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: etatCombat} as unknown as BolFightSessionModel);
     updateCombatState.mockReset();
     // Le serveur renvoie la session avec l'état reçu, comme `BolCombatState::merge`.
     updateCombatState.mockImplementation((_id: string, etat: Partial<EtatCombat>) => of({...session(), etat_combat: {depart: {}, ...etat}}));
@@ -57,7 +59,9 @@ describe('CombatTurnStore : le début de tour ne passe que quand la main change'
     });
     store = TestBed.inject(CombatTurnStore);
     TestBed.tick();
-  });
+  }
+
+  beforeEach(() => monter({round: 2, joues: [], effets: [], exclus: [], fuis: [], melee: null}));
 
   it('« Perd sa prochaine action » posé sur la carte qui joue ne saute pas son tour en cours', () => {
     expect(store.activeKey()).toBe('hero-1');
@@ -67,7 +71,46 @@ describe('CombatTurnStore : le début de tour ne passe que quand la main change'
 
     expect(store.activeKey()).toBe('hero-1');
     expect(store.etat().joues).toEqual([]);
-    expect(perdSonAction(store.etat().effets, 'hero-1')).toBe(true);
+    // Elle vise sa prochaine action : celle-ci reste jouable.
+    expect(perdSonAction(store.etat().effets, 'hero-1')).toBe(false);
+  });
+
+  it('« Perd sa prochaine action » posé sur la carte qui joue ne saute pas son tour en cours au rechargement de la page', () => {
+    store.onEffectAdded(effetActionPerdue('hero-1'));
+    TestBed.tick();
+
+    monter(session()!.etat_combat as Partial<EtatCombat>);
+
+    expect(store.activeKey()).toBe('hero-1');
+    expect(store.etat().joues).toEqual([]);
+    expect(store.etat().effets.map((effet) => effet.libelle)).toEqual(['perd sa prochaine action']);
+  });
+
+  it('« Perd sa prochaine action » posé sur la carte qui joue lui fait sauter son prochain tour', () => {
+    store.onEffectAdded(effetActionPerdue('hero-1'));
+    TestBed.tick();
+    store.onEndTurn();
+    TestBed.tick();
+    expect(store.activeKey()).toBe('pnj-7');
+
+    store.onEndTurn();
+    TestBed.tick();
+
+    // Round 3 : son tour est sauté, la main passe au PNJ.
+    expect(store.etat().round).toBe(3);
+    expect(store.etat().joues).toEqual(['hero-1']);
+    expect(store.activeKey()).toBe('pnj-7');
+  });
+
+  it('« Perd sa prochaine action » posé sur une autre carte que celle qui joue lui fait sauter son prochain tour', () => {
+    store.onEffectAdded(effetActionPerdue('pnj-7'));
+    TestBed.tick();
+    store.onEndTurn();
+    TestBed.tick();
+
+    // Le tour du PNJ est sauté : le round suivant commence, le héros rejoue.
+    expect(store.etat().round).toBe(3);
+    expect(store.activeKey()).toBe('hero-1');
   });
 
   it('un effet « jusqu’à son prochain tour » posé sur la carte qui joue n’est pas effacé aussitôt', () => {

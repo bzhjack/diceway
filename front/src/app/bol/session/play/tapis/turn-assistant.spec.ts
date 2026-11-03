@@ -487,6 +487,43 @@ describe('TurnAssistantComponent', () => {
       expect(texte()).toContain('son arme, qui est brisée');
     });
 
+    it('le choix « Arme » tient quand les statistiques de la cible sont relues (table enregistrée, héroïsme ajusté)', async () => {
+      await viser({targets: [heroCible], target: heroCible, targetStats: stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: true})});
+      await saisirAttaque('8');
+      segment('Arme')!.click();
+      await stable();
+
+      // La table rechargée relit la fiche de la cible : mêmes objets en main, mais un objet neuf.
+      fixture.componentRef.setInput('targetStats', stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: true}));
+      fixture.componentRef.setInput('target', {...heroCible});
+      await stable();
+
+      expect(segment('Arme')!.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('le choix revient au bouclier pour un nouveau défenseur, ou quand l’arme n’est plus possible', async () => {
+      const autre = carte({key: 'hero-3', pivotId: 3, sourceId: 'h3', camp: 'adversaires', nom: 'Brunn', heroisme: 1});
+      await viser({targets: [heroCible, autre], target: heroCible, targetStats: stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: true})});
+      await saisirAttaque('8');
+      segment('Arme')!.click();
+      await stable();
+
+      // Désarmé entre-temps : l'arme n'est plus possible, le bouclier reprend.
+      fixture.componentRef.setInput('targetStats', stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: false}));
+      await stable();
+      fixture.componentRef.setInput('targetStats', stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: true}));
+      await stable();
+      expect(segment('Bouclier')!.getAttribute('aria-pressed')).toBe('true');
+
+      segment('Arme')!.click();
+      await stable();
+      fixture.componentRef.setInput('target', autre);
+      fixture.componentRef.setInput('targetStats', stats({herosId: 'h3', heroisme: 1, bouclier: true, arme: true}));
+      await stable();
+      await saisirAttaque('8');
+      expect(segment('Bouclier')!.getAttribute('aria-pressed')).toBe('true');
+    });
+
     it('sans arme en main, son bouclier, sans choix', async () => {
       await viser({targets: [heroCible], target: heroCible, targetStats: stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: false})});
       await saisirAttaque('8');
@@ -582,7 +619,8 @@ describe('TurnAssistantComponent', () => {
     });
 
     it('moins d’animations : la carte change d’un coup, sans rideau', async () => {
-      vi.stubGlobal('matchMedia', () => ({matches: true}));
+      // Un MediaQueryList complet : le BreakpointObserver du CDK s'y abonne aussi
+      vi.stubGlobal('matchMedia', (media: string) => ({matches: true, media, addListener: () => undefined, removeListener: () => undefined}));
       try {
         await rendre();
 

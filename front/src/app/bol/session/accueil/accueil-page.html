@@ -14,8 +14,9 @@
     </header>
 
     <div class="acc-haut">
-      <!-- La table ouverte, sur l'illustration du tableau de bord ; sans table, de quoi en ouvrir une. -->
-      <section class="acc-soir" aria-labelledby="acc-soir-titre">
+      <!-- La table ouverte, sur l'illustration du tableau de bord ; sans table, de quoi en ouvrir une. Tant que l'accueil n'a pas répondu
+           (ou s'il a échoué), on ne sait pas s'il y a une table : le bandeau ne l'affirme pas. -->
+      <section class="acc-soir" aria-labelledby="acc-soir-titre" [attr.aria-busy]="chargement()">
         <img class="acc-soir-image" ngSrc="assets/bol/dashboard-header.webp" alt="" fill priority />
         <div class="acc-soir-contenu">
           @if (table(); as table) {
@@ -32,6 +33,19 @@
                 <mat-icon>lock</mat-icon> Clore la table
               </button>
             </div>
+          } @else if (error()) {
+            <h2 id="acc-soir-titre" class="acc-soir-titre">La table du soir</h2>
+            <div class="acc-erreur">
+              <p class="acc-soir-texte" role="alert">
+                Impossible de charger la table ouverte et les scénarios. Une partie en cours se reprend depuis vos sessions.
+              </p>
+              <a mat-stroked-button routerLink="/library/sessions">
+                <mat-icon>history</mat-icon> Mes sessions
+              </a>
+            </div>
+          } @else if (chargement()) {
+            <h2 id="acc-soir-titre" class="acc-soir-titre">La table du soir</h2>
+            <p class="acc-soir-texte" role="status">Chargement…</p>
           } @else {
             <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune table ouverte</h2>
             <p class="acc-soir-texte">Ouvre une table sur un chapitre ci-dessous, ou pour improviser.</p>
@@ -64,70 +78,65 @@
             }
           </ul>
           <p class="acc-note">Les héros de la dernière table : une nouvelle table les reprend d'office.</p>
-        } @else {
+        } @else if (data()) {
+          <!-- Seulement une fois l'accueil arrivé : pendant le chargement ou après une erreur, on n'en sait rien -->
           <p class="acc-note">Pas encore de compagnie : elle se forme à la première table.</p>
         }
       </section>
     </div>
 
-    <section aria-labelledby="acc-sagas-titre">
-      <h2 id="acc-sagas-titre" class="acc-section-titre acc-section-titre--espace">Sagas</h2>
-      @if (error()) {
-        <div class="acc-erreur">
-          <p class="acc-note" role="alert">
-            Impossible de charger les scénarios. Une partie en cours se reprend depuis vos sessions.
-          </p>
-          <a mat-stroked-button routerLink="/library/sessions">
-            <mat-icon>history</mat-icon> Mes sessions
-          </a>
-        </div>
-      } @else if (!data()) {
-        <p class="acc-note" role="status">Chargement des scénarios…</p>
-      } @else {
-        <ul class="acc-sagas">
-          @for (saga of sagas(); track saga.nom) {
-            <li class="acc-saga" [class]="'acc-teinte--' + saga.teinte">
-              <div class="acc-saga-tete">
-                <svg class="acc-anneau" viewBox="0 0 64 64" role="img" [attr.aria-label]="saga.joues + ' chapitres joués sur ' + saga.total">
-                  <circle class="acc-anneau-fond" cx="32" cy="32" [attr.r]="anneauRayon" />
-                  <circle
-                    class="acc-anneau-plein"
-                    cx="32"
-                    cy="32"
-                    [attr.r]="anneauRayon"
-                    [attr.stroke-dasharray]="saga.anneau"
-                    transform="rotate(-90 32 32)"
-                  />
-                  <text x="32" y="37" text-anchor="middle">{{ saga.joues }}/{{ saga.total }}</text>
-                </svg>
-                <div class="acc-saga-texte">
-                  <h3 class="acc-saga-nom">{{ saga.nom ?? 'Hors saga' }}</h3>
-                  <p class="acc-saga-resume">{{ saga.resume }}</p>
+    <!-- En cas d'erreur, le bandeau le dit (avec « Mes sessions ») : pas de section Sagas vide. -->
+    @if (!error()) {
+      <section aria-labelledby="acc-sagas-titre">
+        <h2 id="acc-sagas-titre" class="acc-section-titre acc-section-titre--espace">Sagas</h2>
+        @if (!data()) {
+          <p class="acc-note" role="status">Chargement des scénarios…</p>
+        } @else {
+          <ul class="acc-sagas">
+            @for (saga of sagas(); track saga.nom) {
+              <li class="acc-saga" [class]="'acc-teinte--' + saga.teinte">
+                <div class="acc-saga-tete">
+                  <svg class="acc-anneau" viewBox="0 0 64 64" role="img" [attr.aria-label]="saga.joues + ' chapitres joués sur ' + saga.total">
+                    <circle class="acc-anneau-fond" cx="32" cy="32" [attr.r]="anneauRayon" />
+                    <circle
+                      class="acc-anneau-plein"
+                      cx="32"
+                      cy="32"
+                      [attr.r]="anneauRayon"
+                      [attr.stroke-dasharray]="saga.anneau"
+                      transform="rotate(-90 32 32)"
+                    />
+                    <text x="32" y="37" text-anchor="middle">{{ saga.joues }}/{{ saga.total }}</text>
+                  </svg>
+                  <div class="acc-saga-texte">
+                    <h3 class="acc-saga-nom">{{ saga.nom ?? 'Hors saga' }}</h3>
+                    <p class="acc-saga-resume">{{ saga.resume }}</p>
+                  </div>
                 </div>
-              </div>
-              @if (saga.suite; as suite) {
-                <a
-                  class="acc-saga-suite"
-                  routerLink="/session/new"
-                  [queryParams]="{scenario: suite.id}"
-                  [attr.aria-label]="'Continuer ' + (saga.nom ?? 'hors saga') + ' : ' + suite.libelle + ', sur une nouvelle table'"
-                >
-                  <span class="acc-saga-suite-texte">
-                    <span class="acc-saga-suite-label">Continuer</span>
-                    <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
-                  </span>
-                  <mat-icon aria-hidden="true">arrow_forward</mat-icon>
-                </a>
-              }
-            </li>
-          } @empty {
-            <li class="acc-note">
-              Aucun scénario pour l'instant. Importe-en un (voir doc/scenarios/format-import.md) ou ouvre une nouvelle table.
-            </li>
-          }
-        </ul>
-      }
-    </section>
+                @if (saga.suite; as suite) {
+                  <a
+                    class="acc-saga-suite"
+                    routerLink="/session/new"
+                    [queryParams]="{scenario: suite.id}"
+                    [attr.aria-label]="'Continuer ' + (saga.nom ?? 'hors saga') + ' : ' + suite.libelle + ', sur une nouvelle table'"
+                  >
+                    <span class="acc-saga-suite-texte">
+                      <span class="acc-saga-suite-label">Continuer</span>
+                      <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
+                    </span>
+                    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+                  </a>
+                }
+              </li>
+            } @empty {
+              <li class="acc-note">
+                Aucun scénario pour l'instant. Importe-en un (voir doc/scenarios/format-import.md) ou ouvre une nouvelle table.
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
 
     <nav aria-labelledby="acc-bibliotheques-titre">
       <h2 id="acc-bibliotheques-titre" class="acc-section-titre acc-section-titre--espace">Bibliothèques</h2>

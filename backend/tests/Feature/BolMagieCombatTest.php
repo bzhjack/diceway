@@ -158,6 +158,59 @@ class BolMagieCombatTest extends TestCase
         $this->assertSame(2, $pretre->fresh()->foi);
     }
 
+    /** Enregistre la fiche d'un PNJ comme le fait son formulaire. */
+    private function enregistrerFiche(BolHeros $pnj, array $champs, array $carrieres = []): void
+    {
+        $this->postJson('/api/bol/pnj/update', $champs + [
+            'id' => $pnj->id, 'nom' => $pnj->nom, 'carrieres' => $carrieres, 'armes' => [], 'armures' => [], 'langues' => [], 'traits' => [],
+        ])->assertOk();
+    }
+
+    public function test_un_pnj_devenu_pretre_sur_sa_fiche_recoit_sa_foi_a_la_table(): void
+    {
+        DB::table('bol_carriere')->insert([['id' => 21, 'carriere' => 'Prêtre']]);
+        $garde = $this->fiche('R', ['vitalite' => 10]);
+        $table = $this->table();
+        $ligne = app(BolFightSessionService::class)->createPnjRow($table->id, $garde->id, 'adversaires');
+        $this->assertNull($ligne->fresh()->foi_courante);
+
+        $this->enregistrerFiche($garde, ['nom' => 'Grand prêtre', 'vitalite' => 10, 'foi' => 3], [['id' => 21, 'value' => 1]]);
+
+        $this->assertSame(3, $ligne->fresh()->foi_courante);
+        $this->assertSame('Grand prêtre', $ligne->fresh()->nom);
+    }
+
+    public function test_un_maximum_abaisse_sur_la_fiche_ramene_la_reserve_de_table_sans_rendre_ce_qui_est_depense(): void
+    {
+        $sorcier = $this->fiche('R', ['vitalite' => 10, 'pouvoir' => 13]);
+        $table = $this->table();
+        $ligne = app(BolFightSessionService::class)->createPnjRow($table->id, $sorcier->id, 'adversaires');
+        $ligne->update(['pouvoir_courant' => 8]);
+
+        $this->enregistrerFiche($sorcier, ['vitalite' => 10, 'pouvoir' => 10]);
+        $this->assertSame(8, $ligne->fresh()->pouvoir_courant);
+
+        $this->enregistrerFiche($sorcier, ['vitalite' => 10, 'pouvoir' => 6]);
+        $this->assertSame(6, $ligne->fresh()->pouvoir_courant);
+
+        $this->enregistrerFiche($sorcier, ['vitalite' => 10, 'pouvoir' => 0]);
+        $this->assertNull($ligne->fresh()->pouvoir_courant);
+    }
+
+    public function test_les_points_donnes_a_la_main_a_un_pretre_sans_points_sur_sa_fiche_restent_a_la_table(): void
+    {
+        DB::table('bol_carriere')->insert([['id' => 21, 'carriere' => 'Prêtre']]);
+        $pretre = $this->fiche('R', ['vitalite' => 10, 'foi' => 0]);
+        $pretre->carrieres()->create(['carriere_id' => 21, 'value' => 1]);
+        $table = $this->table();
+        $ligne = app(BolFightSessionService::class)->createPnjRow($table->id, $pretre->id, 'adversaires');
+        $ligne->update(['foi_courante' => 3]);
+
+        $this->enregistrerFiche($pretre, ['vitalite' => 10, 'foi' => 0], [['id' => 21, 'value' => 1]]);
+
+        $this->assertSame(3, $ligne->fresh()->foi_courante);
+    }
+
     public function test_la_migration_pose_les_colonnes_et_les_remplit_d_apres_la_fiche(): void
     {
         $migration = require database_path(self::MIGRATION);

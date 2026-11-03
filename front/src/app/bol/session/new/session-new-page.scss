@@ -72,6 +72,18 @@
   overflow-wrap: anywhere;
 }
 
+// `?scenario=` ne mène à aucun scénario du compte (ou l'accueil n'a pas répondu) : la table s'ouvrira sans.
+.snp-scenario-perdu {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--dw-color-warn);
+  border-left-width: 4px;
+  border-radius: 7px;
+  color: var(--dw-forge-warning-text);
+  font-size: 0.9rem;
+  @include forge.recess;
+}
+
 .snp-heroes-head {
   display: flex;
   align-items: center;

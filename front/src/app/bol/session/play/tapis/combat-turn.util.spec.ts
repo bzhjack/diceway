@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, cartesRelevees, commencerTour, retirerDuCombat, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cartesRelevees, commencerTour, retirerDuCombat, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, poserEffet, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -775,6 +775,53 @@ describe('endTurn : action perdue (juste une égratignure)', () => {
     expect(apres.joues).toEqual(['hero-1']);
     const rien = etat(1);
     expect(commencerTour(order, rien)).toBe(rien);
+  });
+});
+
+describe('poserEffet : « Perd sa prochaine action » posé sur la carte qui joue', () => {
+  const order = ordered(KALENA, PRETRE, RORK);
+  let n = 0;
+  const ids = () => `e-${++n}`;
+
+  it('ne lui coûte pas son tour en cours, même quand la page rechargée le recommence', () => {
+    const pose = poserEffet(order, etat(1), effetActionPerdue('hero-1'), ids);
+
+    expect(perdSonAction(pose.effets, 'hero-1')).toBe(false);
+    const recharge = commencerTour(order, pose, ids);
+    expect(turnState(order, recharge).activeKey).toBe('hero-1');
+    expect(recharge.joues).toEqual([]);
+    expect(effetsDeLaFrise(recharge.effets, 'hero-1')).toEqual(['perd sa prochaine action · jusqu’à sa prochaine action']);
+  });
+
+  it('lui fait sauter son prochain tour', () => {
+    const pose = poserEffet(order, etat(1), effetActionPerdue('hero-1'), ids);
+
+    const apres = endTurn(order, pose, [], ids);
+    expect(perdSonAction(apres.effets, 'hero-1')).toBe(true);
+
+    const round2 = endTurn(order, endTurn(order, apres, [], ids), [], ids);
+    expect(round2.round).toBe(2);
+    expect(round2.joues).toEqual(['hero-1']);
+    expect(turnState(order, round2).activeKey).toBe('pnj-7');
+    expect(perdSonAction(round2.effets, 'hero-1')).toBe(false);
+  });
+
+  it('vaut pour le round suivant même si son tour n’est pas allé jusqu’à « Fin du tour »', () => {
+    const pose = poserEffet(order, etat(1), effetActionPerdue('hero-1'), ids);
+
+    expect(perdSonAction(appliquerEvenement(pose.effets, {type: 'nouveau-round'}), 'hero-1')).toBe(true);
+  });
+
+  it('posé sur une autre carte, il lui fait sauter son prochain tour, et les autres effets sont posés tels quels', () => {
+    const pose = poserEffet(order, etat(1), effetActionPerdue('pnj-7'), ids);
+    expect(perdSonAction(pose.effets, 'pnj-7')).toBe(true);
+
+    const apres = endTurn(order, pose, [], ids);
+    expect(turnState(order, apres).activeKey).toBe('hero-2');
+    expect(apres.joues).toEqual(['hero-1', 'pnj-7']);
+
+    const malus = poserEffet(order, etat(1), effetRenversement('hero-1'), ids);
+    expect(malus.effets.map((effet) => effet.origine)).toEqual([effetRenversement('hero-1').origine]);
   });
 });
 

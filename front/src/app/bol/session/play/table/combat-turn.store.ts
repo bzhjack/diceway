@@ -5,7 +5,7 @@ import {EMPTY, switchMap, tap} from 'rxjs';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {AttackChoice} from '../../models/attack-options.model';
-import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
+import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, poserEffet, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
 import {fuir, peutFuir} from '../tapis/fuite-opportune.util';
 import {disponibiliteMelee, pietailleDebout} from '../tapis/melee-pietaille.util';
 import {MeleeCamps, MeleeDisponibilite} from '../../models/melee-pietaille.model';
@@ -315,8 +315,8 @@ export class CombatTurnStore {
     this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'retrait-manuel', id})]}));
   }
 
-  /** Le MJ ajoute un effet depuis le menu « + Effet ». */
+  /** Le MJ ajoute un effet depuis le menu « + Effet » (ou l'assistant en pose un) : cf. `poserEffet`. */
   onEffectAdded(effet: NewEffect): void {
-    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet}, idAleatoire)]}));
+    this.saveEtat((etat) => poserEffet(this.orderedCards(), etat, effet, idAleatoire));
   }
 }

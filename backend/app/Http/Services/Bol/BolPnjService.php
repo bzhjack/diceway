@@ -155,6 +155,8 @@ class BolPnjService
                 array_key_exists('detail', $item) ? ['detail' => $item['detail']] : []);
         }
         $pnj->update($updatedPnj);
+        // Les tables où ce PNJ est posé suivent sa fiche (statistiques, armes, rang, maxima de vitalité, de foi et de pouvoir).
+        app(BolFightSessionService::class)->refreshPnjSnapshots((string) $pnjId);
 
         return BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $pnjId)->first();
     }

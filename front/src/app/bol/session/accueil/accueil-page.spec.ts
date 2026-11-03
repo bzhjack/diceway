@@ -3,7 +3,7 @@ import {ApplicationRef, ChangeDetectionStrategy, Component} from '@angular/core'
 import {TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {provideRouter} from '@angular/router';
-import {Observable, of, throwError} from 'rxjs';
+import {NEVER, Observable, of, throwError} from 'rxjs';
 import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {CloseTableService} from '../../shared/close-table/close-table.service';
@@ -111,9 +111,42 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-compagnie')?.textContent).toContain('Pas encore de compagnie');
   });
 
-  it('dit quand les scénarios ne se chargent pas', async () => {
+  it('pendant le chargement, le bandeau n’affirme rien : il se dit occupé', async () => {
+    const page = await rendre(NEVER);
+    const bandeau = page.querySelector('.acc-soir')!;
+
+    expect(bandeau.textContent).not.toContain('Aucune table ouverte');
+    expect(bandeau.querySelector('a[href="/session/new"]')).toBeNull();
+    expect(bandeau.getAttribute('aria-busy')).toBe('true');
+    expect(bandeau.querySelector('[role="status"]')?.textContent).toContain('Chargement');
+  });
+
+  it('une fois l’accueil arrivé, le bandeau n’est plus occupé', async () => {
+    const page = await rendre();
+
+    expect(page.querySelector('.acc-soir')?.getAttribute('aria-busy')).toBe('false');
+  });
+
+  it('dit quand l’accueil ne se charge pas, dans le bandeau, sans prétendre qu’aucune table n’est ouverte', async () => {
+    const page = await rendre(throwError(() => new Error('réseau')));
+    const bandeau = page.querySelector('.acc-soir')!;
+    const alertes = page.querySelectorAll('[role="alert"]');
+
+    expect(bandeau.textContent).not.toContain('Aucune table ouverte');
+    expect(alertes.length).toBe(1);
+    expect(bandeau.querySelector('[role="alert"]')?.textContent).toContain('Impossible de charger la table ouverte et les scénarios');
+    expect(bandeau.querySelector<HTMLAnchorElement>('a[href="/library/sessions"]')?.textContent).toContain('Mes sessions');
+  });
+
+  it('la compagnie n’affirme rien tant que l’accueil n’est pas arrivé', async () => {
+    const page = await rendre(NEVER);
+
+    expect(page.querySelector('.acc-compagnie')?.textContent).not.toContain('Pas encore de compagnie');
+  });
+
+  it('la compagnie n’affirme rien si l’accueil échoue', async () => {
     const page = await rendre(throwError(() => new Error('réseau')));
 
-    expect(page.querySelector('[role="alert"]')?.textContent).toContain('Impossible de charger les scénarios');
+    expect(page.querySelector('.acc-compagnie')?.textContent).not.toContain('Pas encore de compagnie');
   });
 });

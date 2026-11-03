@@ -203,6 +203,9 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Sort** : le tour de l'assistant est identifié par le round et la carte (`turnKey`) ; un nouveau jet annule un échec critique accepté ; une fois ses dégâts appliqués, le sort est figé ; pas de sort en défense totale.
 - **Après combat** : seuls les soigneurs en état de soigner sont proposés.
 - **Clore la table** (menu de la table, bandeau de l'accueil) : termine d'abord un combat en cours, sans les soins d'après combat, puis passe la table au statut « terminée » ; « Mes sessions » la marque « Close » et « Reprendre » la rouvre.
+- **Action perdue posée pendant son tour** : « Perd sa prochaine action » posé sur la carte active vise son prochain tour ; il est différé (origine `egratignure-differee`) et armé à la fin de son tour, ou au plus tard au round suivant (`poserEffet`, `combat-turn.util.ts`). Recharger la page ne fait donc plus sauter le tour en cours. Limite : « Rendre la main » à cette carte lui fait sauter le tour rouvert.
+- **Parade** : le choix « Bouclier / Arme » tient tant que le tour et le défenseur ne changent pas (`TurnCibleStore.parryWith`).
+- **Fiche de PNJ modifiée** : l'enregistrer met à jour ses lignes de table (stats, armes, foi, pouvoir) ; la foi ou le pouvoir déjà dépensés ne sont pas rendus, seulement ramenés au nouveau maximum. La vilénie de table n'est pas recalculée.
 
 ## 9. Limites connues
 

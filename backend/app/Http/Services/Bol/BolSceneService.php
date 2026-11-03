@@ -43,9 +43,8 @@ class BolSceneService
             ]);
             $session->update([
                 'scene_id'      => $scene->id,
-                'scenario_id'   => $scene->scenario_id,
                 'scenes_jouees' => BolScenePreparation::played($session->scenes_jouees, $scene->id),
-            ]);
+            ] + $this->scenarioDeLaScene($scene));
 
             return $scene->load('scenario:id,titre');
         });
@@ -200,15 +199,25 @@ class BolSceneService
             $session->update([
                 'positions_jetons' => $positions === [] ? null : $positions,
                 'scene_id'         => $scene->id,
-                'scenario_id'      => $scene->scenario_id,
                 'scenes_jouees'    => BolScenePreparation::played($session->scenes_jouees, $scene->id),
-            ]);
+            ] + $this->scenarioDeLaScene($scene));
 
             return [
                 'session' => $this->fightSessionService->getSessionWithRelations($sessionId),
                 'ignored' => $ignored,
             ];
         });
+    }
+
+    /**
+     * Le scénario qu'une scène chargée ou enregistrée donne à la table : le sien, s'il en a un. Une scène
+     * « On improvise » (sans scénario) ne touche pas au scénario choisi pour la table.
+     *
+     * @return array{scenario_id?: string}
+     */
+    private function scenarioDeLaScene(BolScene $scene): array
+    {
+        return $scene->scenario_id === null ? [] : ['scenario_id' => $scene->scenario_id];
     }
 
     /** @return array<int, array<string, mixed>> */

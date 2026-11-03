@@ -30,6 +30,8 @@
             <mat-icon>close</mat-icon>
           </button>
         </section>
+      } @else if (scenarioPerdu(); as message) {
+        <p class="snp-scenario-perdu" role="alert">{{ message }}</p>
       }
     </div>
 

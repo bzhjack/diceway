@@ -66,6 +66,32 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame($b->id, $session->fresh()->scenario_id);
     }
 
+    public function test_loading_an_improvised_scene_keeps_the_table_scenario(): void
+    {
+        $a = $this->scenario('A');
+        $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => null, 'titre' => 'Taverne', 'ordre' => 0, 'distribution' => []]);
+        $session = $this->tableSession($a->id);
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
+
+        $fresh = $session->fresh();
+        $this->assertSame($a->id, $fresh->scenario_id);
+        $this->assertSame($scene->id, $fresh->scene_id);
+    }
+
+    public function test_saving_an_improvised_scene_keeps_the_table_scenario(): void
+    {
+        $a = $this->scenario('A');
+        $session = $this->tableSession($a->id);
+
+        $response = $this->postJson('/api/bol/scene/create', ['titre' => 'Taverne', 'scenario_id' => null, 'session_id' => $session->id])->assertOk();
+
+        $this->assertNull($response->json('scenario_id'));
+        $fresh = $session->fresh();
+        $this->assertSame($a->id, $fresh->scenario_id);
+        $this->assertSame($response->json('id'), $fresh->scene_id);
+    }
+
     public function test_deleting_the_scenario_clears_it_on_the_table(): void
     {
         $scenario = $this->scenario('Le Dieu voilé');

@@ -141,10 +141,13 @@ export class TurnCibleStore {
   /** Ce que la cible peut interposer dans une parade in extremis : son bouclier, son arme, ou les deux (le choix est alors proposé). */
   readonly parryItems = computed(() => objetsDeParade(this.turn.targetStats()));
 
-  /** Ce qu'elle interpose, et qui sera brisé : son bouclier d'office s'il en a un, sinon son arme ; le MJ peut choisir l'autre. */
-  readonly parryWith = linkedSignal<{readonly key: string | null; readonly items: string}, ObjetDeParade>({
-    source: () => ({key: this.turn.targetKey(), items: this.parryItems().join(',')}),
-    computation: () => this.parryItems()[0],
+  /** Ce qu'elle interpose, et qui sera brisé : son bouclier d'office s'il en a un, sinon son arme ; le MJ peut choisir l'autre. Son
+   * choix tient pour ce défenseur pendant ce tour, même quand la table rechargée relit la fiche de la cible (un objet neuf) : il ne
+   * revient au défaut que pour un autre défenseur, un autre tour, ou quand l'objet choisi n'est plus là. */
+  readonly parryWith = linkedSignal<{readonly scope: string; readonly items: readonly ObjetDeParade[]}, ObjetDeParade>({
+    source: () => ({scope: `${this.turn.turnKey()}|${this.turn.targetKey() ?? ''}`, items: this.parryItems()}),
+    computation: (source, previous) =>
+      previous && previous.source.scope === source.scope && source.items.includes(previous.value) ? previous.value : source.items[0],
   });
 
   /** Le sbire qui peut servir de bouclier humain au rival visé : une piétaille encore debout de son camp. */

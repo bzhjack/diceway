@@ -62,6 +62,19 @@ export class SessionNewPageComponent {
   /** Le scénario de la future table : celui de `?scenario=`, s'il est connu du compte ; le MJ peut le retirer (« × » ôte le paramètre). */
   protected readonly scenario = computed(() => findScenario(this.accueil()?.scenarios ?? [], this.requestedScenario()));
 
+  /**
+   * `?scenario=` demande un scénario que la table ne portera pas : le seuil le dit, et la table reste ouvrable (sans scénario). Rien tant que
+   * l'accueil n'a pas répondu (on ne sait pas encore), ni sans paramètre.
+   */
+  protected readonly scenarioPerdu = computed(() => {
+    if (!this.requestedScenario() || this.loadingAccueil() || this.scenario()) {
+      return null;
+    }
+    return this.accueil()
+      ? 'Ce scénario est introuvable : la table s’ouvrira sans scénario.'
+      : 'Impossible de charger le scénario : la table s’ouvrira sans scénario.';
+  });
+
   /** Revenir sur le seuil (avec son scénario) après la création d'un héros, et non sur l'accueil (`/`). */
   protected readonly createHeroState = computed(() => {
     const scenario = this.scenario();

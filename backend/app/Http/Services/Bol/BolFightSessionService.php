@@ -424,6 +424,23 @@ class BolFightSessionService
         return max(0, $courante + $delta);
     }
 
+    /**
+     * Points de foi ou de pouvoir d'une ligne de table après un changement de la fiche du PNJ. Sans réserve sur la fiche, la ligne n'en
+     * a plus ; une ligne sans réserve reçoit celle de la fiche ; sinon ce qui reste est seulement ramené au nouveau maximum s'il le
+     * dépasse, jamais rendu. Un maximum de 0 (la carrière sans points sur la fiche) n'en est pas un : les points donnés à la main restent.
+     */
+    public static function ressourceRecalee(?int $courante, ?int $initiale): ?int
+    {
+        if ($initiale === null) {
+            return null;
+        }
+        if ($courante === null) {
+            return $initiale;
+        }
+
+        return $initiale > 0 ? min($courante, $initiale) : $courante;
+    }
+
     /** Le rang d'une carrière sur la fiche d'un PNJ (carrières chargées) ; `null` sans la carrière. */
     private static function rangDeCarriere(BolHeros $pnj, int $carriereId): ?int
     {
@@ -814,9 +831,21 @@ class BolFightSessionService
             'rang'              => $this->rangFromType($pnj->type),
             'vitalite_courante' => $pnj->vitalite,
             'vilenie_courante'  => self::vilenieInitiale($this->rangFromType($pnj->type), $pnj->vilenie),
-            'foi_courante'      => self::ressourceInitiale($pnj->foi, (self::rangDeCarriere($pnj, self::CARRIERE_PRETRE) ?? 0) > 0),
-            'pouvoir_courant'   => self::ressourceInitiale($pnj->pouvoir, self::rangDeCarriere($pnj, self::CARRIERE_SORCIER) !== null),
+            'foi_courante'      => self::foiInitiale($pnj),
+            'pouvoir_courant'   => self::pouvoirInitial($pnj),
         ] + $this->pnjSnapshot($pnj));
+    }
+
+    /** Foi de départ d'un PNJ posé à la table (carrières chargées) : un prêtre de rang 1 ou plus en a une réserve. */
+    private static function foiInitiale(BolHeros $pnj): ?int
+    {
+        return self::ressourceInitiale($pnj->foi, (self::rangDeCarriere($pnj, self::CARRIERE_PRETRE) ?? 0) > 0);
+    }
+
+    /** Pouvoir de départ d'un PNJ posé à la table (carrières chargées) : un sorcier, même de rang 0, en a une réserve. */
+    private static function pouvoirInitial(BolHeros $pnj): ?int
+    {
+        return self::ressourceInitiale($pnj->pouvoir, self::rangDeCarriere($pnj, self::CARRIERE_SORCIER) !== null);
     }
 
     /**
@@ -853,7 +882,8 @@ class BolFightSessionService
     /**
      * Répercute sur les tables un changement de la fiche d'un PNJ : ses statistiques, son initiative et ses armes sont
      * recopiées dans chaque ligne où il est posé, avec son rang. Le camp, le surnom et la vitalité courante ne bougent pas
-     * (la vitalité est seulement ramenée au nouveau maximum si elle le dépasse).
+     * (la vitalité est seulement ramenée au nouveau maximum si elle le dépasse). La foi et le pouvoir de table suivent la fiche
+     * de la même façon (`ressourceRecalee`).
      */
     public function refreshPnjSnapshots(string $pnjId): void
     {
@@ -863,14 +893,21 @@ class BolFightSessionService
         }
 
         // Une fiche du catalogue (user_id nul) n'est jamais modifiée : seules celles créées par un utilisateur sont répercutées.
-        $pnj = BolHeros::with('armes.arme')->whereNotNull('user_id')->find($pnjId);
+        $pnj = BolHeros::with('armes.arme', 'carrieres')->whereNotNull('user_id')->find($pnjId);
         if (!$pnj) {
             return;
         }
 
         $snapshot = $this->pnjSnapshot($pnj);
+        $foi = self::foiInitiale($pnj);
+        $pouvoir = self::pouvoirInitial($pnj);
         foreach ($rows as $row) {
-            $row->update($snapshot + ['rang' => $this->rangFromType($pnj->type), 'vitalite_courante' => min((int) $row->vitalite_courante, (int) $pnj->vitalite)]);
+            $row->update($snapshot + [
+                'rang'              => $this->rangFromType($pnj->type),
+                'vitalite_courante' => min((int) $row->vitalite_courante, (int) $pnj->vitalite),
+                'foi_courante'      => self::ressourceRecalee($row->foi_courante, $foi),
+                'pouvoir_courant'   => self::ressourceRecalee($row->pouvoir_courant, $pouvoir),
+            ]);
         }
     }
 

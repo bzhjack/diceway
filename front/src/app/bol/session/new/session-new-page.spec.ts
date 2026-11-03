@@ -98,6 +98,11 @@ describe('SessionNewPageComponent', () => {
     return element.querySelector('.snp-scenario-nom')?.textContent?.trim() ?? null;
   }
 
+  /** L'avertissement du scénario demandé mais perdu, s'il est affiché. */
+  function avertissement(): string | null {
+    return element.querySelector('.snp-header [role="alert"]')?.textContent?.trim() ?? null;
+  }
+
   function ouvrirLaTable(): HTMLButtonElement {
     return element.querySelector<HTMLButtonElement>('.snp-header button[mat-flat-button]')!;
   }
@@ -137,6 +142,41 @@ describe('SessionNewPageComponent', () => {
       await repondre();
 
       expect(scenarioAffiche()).toBeNull();
+    });
+
+    it('prévient qu’un scénario inconnu du compte est introuvable, et laisse ouvrir la table sans lui', async () => {
+      await ouvrir('/session/new?scenario=Z');
+      await repondre();
+
+      expect(avertissement()).toBe('Ce scénario est introuvable : la table s’ouvrira sans scénario.');
+      expect(ouvrirLaTable().disabled).toBe(false);
+      ouvrirLaTable().click();
+      expect(launch).toHaveBeenCalledWith(null, null);
+    });
+
+    it('ne prévient de rien tant que l’accueil n’a pas répondu', async () => {
+      await ouvrir('/session/new?scenario=Z');
+      harness.detectChanges();
+
+      expect(avertissement()).toBeNull();
+    });
+
+    it('ne prévient de rien sans ?scenario=, ni quand le scénario est connu', async () => {
+      await ouvrir('/session/new');
+      await repondre();
+      expect(avertissement()).toBeNull();
+
+      await aller('/session/new?scenario=A');
+      expect(avertissement()).toBeNull();
+    });
+
+    it('l’avertissement suit le paramètre', async () => {
+      await ouvrir('/session/new?scenario=A');
+      await repondre();
+
+      await aller('/session/new?scenario=Z');
+
+      expect(avertissement()).toContain('introuvable');
     });
 
     it('« × » retire le scénario et le paramètre de l’URL, sans toucher aux autres', async () => {
@@ -183,7 +223,7 @@ describe('SessionNewPageComponent', () => {
       expect(launch).not.toHaveBeenCalled();
     });
 
-    it('s’active aussi quand l’accueil échoue : le seuil reste utilisable, sans scénario', async () => {
+    it('s’active aussi quand l’accueil échoue : le seuil reste utilisable, sans scénario, et le dit', async () => {
       await ouvrir('/session/new?scenario=A');
 
       accueil$.error(new Error('hors ligne'));
@@ -192,6 +232,7 @@ describe('SessionNewPageComponent', () => {
 
       expect(ouvrirLaTable().disabled).toBe(false);
       expect(scenarioAffiche()).toBeNull();
+      expect(avertissement()).toBe('Impossible de charger le scénario : la table s’ouvrira sans scénario.');
     });
 
     it('sans héros, reste désactivé même une fois l’accueil arrivé', async () => {

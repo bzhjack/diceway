@@ -140,13 +140,17 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
 
     case 'fin-tour': {
       // La carte repart de zéro : ce qu'elle portait de son tour précédent et les effets « à sa prochaine action » tombent,
-      // puis ceux de ce tour naissent. Un effet recréé remplace le précédent au lieu de s'y ajouter.
+      // puis ceux de ce tour naissent. Un effet recréé remplace le précédent au lieu de s'y ajouter. L'action perdue posée pendant ce
+      // tour reste, et vaut désormais pour son prochain tour.
       const restants = effets.filter(
         (effet) =>
-          !(effet.porteur === evenement.carte && (effet.duree.type === 'debut-tour-porteur' || effet.duree.type === 'action-porteur')) &&
-          !evenement.crees.some((cree) => cree.origine === effet.origine && cree.porteur === effet.porteur),
+          !(
+            effet.porteur === evenement.carte &&
+            effet.origine !== ACTION_PERDUE_DIFFEREE &&
+            (effet.duree.type === 'debut-tour-porteur' || effet.duree.type === 'action-porteur')
+          ) && !evenement.crees.some((cree) => cree.origine === effet.origine && cree.porteur === effet.porteur),
       );
-      return ajouter(restants, evenement.crees, genererId);
+      return ajouter(armerActionsPerdues(restants, evenement.carte), evenement.crees, genererId);
     }
 
     case 'jet-attaque': {
@@ -166,13 +170,16 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
     }
 
     case 'nouveau-round':
-      // Un effet compté en rounds en perd un ; au dernier, il tombe avec ceux de fin de round.
-      return effets.flatMap((effet): CombatEffect[] => {
-        if (effet.duree.type === 'fin-round' || (effet.duree.type === 'rounds' && effet.duree.restants <= 1)) {
-          return [];
-        }
-        return effet.duree.type === 'rounds' ? [{...effet, duree: {type: 'rounds', restants: effet.duree.restants - 1}}] : [effet];
-      });
+      // Un effet compté en rounds en perd un ; au dernier, il tombe avec ceux de fin de round. Le tour pendant lequel une action perdue
+      // a été posée est fini, même s'il n'est pas allé jusqu'à « Fin du tour » (carte tombée entre-temps) : elle vaut pour le suivant.
+      return armerActionsPerdues(
+        effets.flatMap((effet): CombatEffect[] => {
+          if (effet.duree.type === 'fin-round' || (effet.duree.type === 'rounds' && effet.duree.restants <= 1)) {
+            return [];
+          }
+          return effet.duree.type === 'rounds' ? [{...effet, duree: {type: 'rounds', restants: effet.duree.restants - 1}}] : [effet];
+        }),
+      );
 
     case 'ajout-manuel':
       return ajouter(effets, [{...evenement.effet, manuel: true}], genererId);
@@ -423,8 +430,9 @@ export function effetSurpris(porteur: string): NewEffect {
   return {origine: SANS_BOUCLIER, libelle: 'surpris', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: true};
 }
 
-/** La carte perd son action (« Juste une égratignure » : se remettre du coup lui coûte sa prochaine action) : elle ne fait que finir
- * son tour, et l'effet tombe avec lui. */
+/** La carte perd son action (« Juste une égratignure » : se remettre du coup lui coûte sa prochaine action) : son tour est sauté quand
+ * il vient (`commencerTour`) ; s'il est déjà en cours, elle ne fait que le finir, et l'effet tombe avec lui. Une action perdue posée
+ * pendant son propre tour (`differerActionPerdue`) ne compte pas encore : elle vise son prochain tour. */
 export function perdSonAction(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === ACTION_PERDUE);
 }
@@ -465,6 +473,9 @@ export function effetParade(porteur: string, bouclier: boolean): NewEffect {
 
 /** Origine de l'effet « perd sa prochaine action » (« Juste une égratignure », ou posé à la main). */
 const ACTION_PERDUE = 'egratignure';
+/** La même, posée sur la carte pendant son propre tour : elle ne coûte pas ce tour-ci, ni quand la page rechargée le recommence, mais le
+ * suivant. Elle devient une action perdue ordinaire à la fin de ce tour, ou au plus tard du round (`armerActionsPerdues`). */
+const ACTION_PERDUE_DIFFEREE = 'egratignure-differee';
 /** Trace : le tour de la carte a été sauté, son action perdue ; elle reste sur la frise jusqu'à ce que son tour revienne. */
 const ACTION_SAUTEE = 'action-sautee';
 
@@ -481,6 +492,18 @@ export function effetActionSautee(porteur: string): NewEffect {
 /** Le tour d'une carte paralysée est venu et a été sauté (la paralysie reste) : la frise dit pourquoi jusqu'à son prochain tour. */
 export function effetTourSauteParalyse(porteur: string): NewEffect {
   return {...effetActionSautee(porteur), libelle: 'paralysé, tour sauté'};
+}
+
+/** « Perd sa prochaine action » posé sur la carte dont c'est le tour : différé à son prochain tour. Tout autre effet est rendu tel quel. */
+export function differerActionPerdue(effet: NewEffect): NewEffect {
+  return effet.origine === ACTION_PERDUE ? {...effet, origine: ACTION_PERDUE_DIFFEREE} : effet;
+}
+
+/** Les actions perdues différées (de `porteur`, ou de toutes les cartes) deviennent ordinaires : le tour où elles ont été posées est fini.
+ * Rend la même liste s'il n'y en a aucune. */
+function armerActionsPerdues(effets: readonly CombatEffect[], porteur?: string): readonly CombatEffect[] {
+  const armer = (effet: CombatEffect) => effet.origine === ACTION_PERDUE_DIFFEREE && (porteur === undefined || effet.porteur === porteur);
+  return effets.some(armer) ? effets.map((effet) => (armer(effet) ? {...effet, origine: ACTION_PERDUE} : effet)) : effets;
 }
 
 /** L'action perdue est consommée : son tour vient d'être sauté. Les autres effets « à sa prochaine action » (dé de malus d'un

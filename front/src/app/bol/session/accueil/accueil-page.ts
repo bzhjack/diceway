@@ -46,6 +46,8 @@ export class AccueilPageComponent {
 
   protected readonly data = signal<BolAccueilModel | null>(null);
   protected readonly error = signal(false);
+  /** L'accueil n'a pas encore répondu : on ne sait pas encore s'il y a une table ouverte. */
+  protected readonly chargement = computed(() => this.data() === null && !this.error());
   protected readonly anneauRayon = ANNEAU_RAYON;
 
   protected readonly sagas = computed(() => {

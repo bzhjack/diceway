@@ -10,7 +10,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | --- | --- | --- |
 | Mise en production : migrations du 2026-11-02 et du 2026-11-03, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
 | Combat : script navigateur rejouable pour l'héroïsme | 2 | S |
-| Revue globale du 2026-11-03 : une trentaine de mineurs à trier | 3 bis | M |
+| Revue globale du 2026-11-03 : environ 25 mineurs à trier | 3 bis | M |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
@@ -61,7 +61,7 @@ Toutes les règles de combat du livre sont gérées (le détail et les limites c
 
 ## 3 bis. Revue globale du 2026-11-03
 
-Les constats importants sont corrigés ; une trentaine de mineurs restent, listés dans `2026-11-03-revue-globale.md` § 5 (à trier quand on y reviendra).
+Environ 25 mineurs restent ouverts, listés dans `2026-11-03-revue-globale.md` § 5 (à trier quand on y reviendra).
 
 ## 4. Code
 

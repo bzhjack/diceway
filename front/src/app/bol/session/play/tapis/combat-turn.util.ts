@@ -6,7 +6,7 @@ import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, effetTourSauteParalyse, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, differerActionPerdue, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, effetTourSauteParalyse, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
@@ -291,6 +291,14 @@ function passerLesParalyses(ordered: readonly OrderedCard[], etat: EtatCombat, g
     return [...sansTour, {...effetTourSauteParalyse(key), id: genererId(sansTour)}];
   }, etat.effets);
   return {...etat, joues: [...etat.joues, ...passees], effets};
+}
+
+/** Le MJ pose un effet à la main. « Perd sa prochaine action » posé sur la carte dont c'est le tour vise son prochain tour, pas celui
+ * qu'elle joue : il est différé (`differerActionPerdue`), et ni ce tour ni la page rechargée, qui le recommence (`commencerTour`), ne le
+ * consomment. Posé sur une autre carte (un coup, « Juste une égratignure »), il lui fait sauter son prochain tour. */
+export function poserEffet(ordered: readonly OrderedCard[], etat: EtatCombat, effet: NewEffect, genererId: EffectIdGenerator = nextEffectId): EtatCombat {
+  const pose = effet.porteur === turnState(ordered, etat).activeKey ? differerActionPerdue(effet) : effet;
+  return {...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet: pose}, genererId)]};
 }
 
 /** « Retirer du combat » : le MJ sort une carte du combat. Elle reste sur la table, mais ne joue plus, ne se vise plus et ne compte plus
