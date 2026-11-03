@@ -6,7 +6,7 @@ import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {aAssomme, appliquerEvenement, aStabilise, effetsDeLAncienFormat, effetsDeTour, estParalyse, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
@@ -127,11 +127,15 @@ export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []
   return aStabilise(effets, card.key) ? 'stabilisé' : vitalite >= -5 ? 'mourant' : 'mort';
 }
 
-/** Pourquoi une carte ne joue plus, pour la frise : « enfui » pour un rival qui a pris la fuite (« Fuite opportune »), sinon la raison de
- * `horsCombat`, sinon « paralysé » pour une carte debout que le poison d'un démon paralyse ; `null` pour une carte qui joue. */
-export function raisonHorsJeu(card: TapisCard, etat: EtatCombat): ReturnType<typeof horsCombat> | 'enfui' | 'paralysé' {
+/** Pourquoi une carte ne joue plus, pour la frise : « enfui » pour un rival qui a pris la fuite (« Fuite opportune »), « retiré » pour une
+ * carte que le MJ a retirée du combat (ou laissée hors du combat au démarrage), sinon la raison de `horsCombat`, sinon « paralysé » pour
+ * une carte debout que le poison d'un démon paralyse ; `null` pour une carte qui joue. */
+export function raisonHorsJeu(card: TapisCard, etat: EtatCombat): ReturnType<typeof horsCombat> | 'enfui' | 'retiré' | 'paralysé' {
   if (etat.fuis.includes(card.key)) {
     return 'enfui';
+  }
+  if (etat.exclus.includes(card.key)) {
+    return 'retiré';
   }
   return horsCombat(card, etat.effets) ?? (estParalyse(etat.effets, card.key) ? 'paralysé' : null);
 }
@@ -201,21 +205,73 @@ export function endTurn(
   for (const key of engagees) {
     effets = appliquerEvenement(appliquerEvenement(effets, {type: 'debut-tour', carte: key}), {type: 'fin-tour', carte: key, crees: []}, genererId);
   }
-  let next: EtatCombat = {
+  const next: EtatCombat = {
     ...etat,
     joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey, ...engagees],
     effets,
   };
+  return commencerTour(ordered, roundSuivantSiFini(ordered, next), genererId);
+}
 
-  if (turnState(ordered, next).activeKey === null) {
-    const nextRound: EtatCombat = {...next, round: etat.round + 1, joues: [], effets: appliquerEvenement(next.effets, {type: 'nouveau-round'})};
-    if (turnState(ordered, nextRound).activeKey !== null) {
-      next = nextRound;
-    }
+/** S'il ne reste personne à jouer ce round, le suivant commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors
+ * combat). */
+function roundSuivantSiFini(ordered: readonly OrderedCard[], etat: EtatCombat): EtatCombat {
+  if (turnState(ordered, etat).activeKey !== null) {
+    return etat;
   }
+  const nextRound: EtatCombat = {...etat, round: etat.round + 1, joues: [], effets: appliquerEvenement(etat.effets, {type: 'nouveau-round'})};
+  return turnState(ordered, nextRound).activeKey !== null ? nextRound : etat;
+}
 
-  const nowActive = turnState(ordered, next).activeKey;
-  return nowActive === null ? next : debutDeTour(next, nowActive);
+/** Le tour de la carte active commence : ses effets « jusqu'à son prochain tour » tombent. Si elle a perdu son action (« Juste une
+ * égratignure »), son tour est sauté d'office : l'action perdue est consommée, une trace le dit sur la frise jusqu'à son prochain tour, et
+ * la main passe à la suivante (au round suivant s'il le faut). Rend le même état s'il n'y a rien à changer. */
+export function commencerTour(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId): EtatCombat {
+  let courant = etat;
+  // Chaque saut consomme une action perdue : la boucle s'arrête au plus tard quand il n'y en a plus.
+  for (let garde = 0; garde <= ordered.length * 2; garde++) {
+    const active = turnState(ordered, courant).activeKey;
+    if (active === null) {
+      return courant;
+    }
+    const debut = debutDeTour(courant, active);
+    if (!perdSonAction(debut.effets, active)) {
+      return debut;
+    }
+    const effets = sansActionPerdue(debut.effets, active);
+    const saute: EtatCombat = {
+      ...debut,
+      joues: [...debut.joues, active],
+      effets: [...effets, {...effetActionSautee(active), id: genererId(effets)}],
+    };
+    courant = roundSuivantSiFini(ordered, saute);
+  }
+  return courant;
+}
+
+/** « Retirer du combat » : le MJ sort une carte du combat. Elle reste sur la table, mais ne joue plus, ne se vise plus et ne compte plus
+ * pour l'issue (`exclus`) ; la frise la dit « retirée ». Les effets qu'elle porte ou qui la visent tombent avec elle. */
+export function retirerDuCombat(etat: EtatCombat, key: string): EtatCombat {
+  if (etat.exclus.includes(key)) {
+    return etat;
+  }
+  return {...etat, exclus: [...etat.exclus, key], effets: appliquerEvenement(etat.effets, {type: 'carte-retiree', carte: key})};
+}
+
+/** Les cartes relevées : leur vitalité repasse au-dessus de 0 alors qu'elles étaient à 0 ou moins (`avant` : la vitalité vue
+ * précédemment, par clé), et elles portent une trace de chute (sombré, stabilisé, assommé) à oublier. Une carte vue pour la première fois
+ * debout avec une trace (table d'avant cette règle) l'est aussi. Une carte encore debout, dont la trace vient d'être posée avant que sa
+ * vitalité ne suive, ne l'est pas. */
+export function cartesRelevees(avant: ReadonlyMap<string, number>, cards: readonly TapisCard[], effets: readonly CombatEffect[]): readonly string[] {
+  return cards
+    .filter((card) => {
+      if (card.vitaliteCourante === null || card.vitaliteCourante <= 0 || !aUneTraceDeChute(effets, card.key)) {
+        return false;
+      }
+      const precedente = avant.get(card.key);
+      return precedente === undefined || precedente <= 0;
+    })
+    .map((card) => card.key);
 }
 
 /** Le tour d'une carte commence : ses effets « jusqu'à son prochain tour » tombent. Rend le même état s'il n'y en a aucun, pour que rien ne soit

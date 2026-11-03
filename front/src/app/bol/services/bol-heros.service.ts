@@ -1,3 +1,4 @@
+import {RessourceMagique} from '../session/models/magie-combat.model';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -107,6 +108,11 @@ export class BolHerosService {
 
   adjustHeroisme(id: string, delta: number): Observable<BolHerosModel> {
     return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/heroisme`), {delta});
+  }
+
+  /** Points de foi ou de pouvoir dépensés (négatif) ou rendus sur la fiche, à la table : un dé de foi, un sort. */
+  adjustRessource(id: string, ressource: RessourceMagique, delta: number): Observable<BolHerosModel> {
+    return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/ressource`), {ressource, delta});
   }
 
   /** Nomme l'arme favorite d'une fiche (héros ou PNJ) ; `null` la retire. Refusé (422) pour un avantage régional, qui l'impose. */

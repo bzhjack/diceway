@@ -23,6 +23,7 @@ import {HeroResourcesComponent} from '../hero-resources/hero-resources';
 import {CardVilenieComponent} from './card-vilenie';
 import {CardVitaliteComponent} from './card-vitalite';
 import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
+import {libelleVitalite} from './pouvoirs-combat.util';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
@@ -68,12 +69,16 @@ export class ExpandedCardComponent {
   readonly returnUrl = input<string | null>(null);
   /** Un rival en combat qui peut encore prendre la fuite (« Fuite opportune ») : le bouton paraît sous sa vilénie. */
   readonly canFlee = input(false);
+  /** En combat : le bouton « Retirer du combat » paraît à côté de la corbeille. */
+  readonly canWithdraw = input(false);
 
   readonly closed = output<void>();
   readonly changed = output<TableChange>();
   readonly removeRequested = output<TapisCard>();
   /** « Fuite opportune » demandée pour ce rival (la page confirme). */
   readonly fleeRequested = output<TapisCard>();
+  /** « Retirer du combat » demandé pour cette carte (la page confirme). */
+  readonly withdrawRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();
   /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
@@ -107,6 +112,9 @@ export class ExpandedCardComponent {
 
   /** Portrait carré du bandeau : l'avatar de la carte, ou l'icône du type s'il manque ou ne charge pas. */
   private readonly avatarFailed = signal(false);
+  /** « Vitalité », ou « Force vitale » pour un mort-vivant. */
+  protected readonly vitaliteLabel = computed(() => libelleVitalite(this.card()));
+
   protected readonly hasAvatar = computed(() => usableAvatar(this.card().avatar) !== null && !this.avatarFailed());
   protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
   protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));

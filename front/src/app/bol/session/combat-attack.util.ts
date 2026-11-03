@@ -7,6 +7,8 @@ import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
 import {degatsEnMain} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
+import {RessourcesMagiques} from './models/magie-combat.model';
+import {ressourcesMagiques} from './magie-combat.util';
 import {TapisCard, TapisKind} from './models/tapis.model';
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6") ; une arme polyvalente (« d6 ou d6B »)
@@ -136,9 +138,11 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         bouclierMalusUneAttaque: shieldMalusOnOneAttack(hero),
         bouclierDefenseToutes: hero.equipement_effectif.bouclier_defense_toutes ?? 0,
         bouclier: porteBouclier(hero.armures),
+        arme: firstEquippedDegats(hero.armes) !== null,
         armeFavorite: armeFavoriteDe(hero.traits),
         herosId,
         heroisme: hero.ressources.heroisme,
+        magie: ressourcesMagiques(hero),
         };
       }),
     );
@@ -161,6 +165,9 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     heroisme: c.vilenie ?? null,
     attaqueAvantages: c.attaqueAvantages ?? [],
     attaqueDesavantages: c.attaqueDesavantages ?? [],
+    magie: sansMagie(c.esprit ?? 0),
+    // Une créature ou un démon frappe de ses armes naturelles : rien à lui faire lâcher.
+    ...(token.kind === 'creature' || token.kind === 'demon' ? {arme: false} : {}),
   };
 
   // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche. Il porte tout ce qu'il
@@ -183,7 +190,11 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
           bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj),
           bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0,
           bouclier: porteBouclier(pnj.armures, true),
+          // Un PNJ a en main toutes les armes qu'il possède.
+          ...(Array.isArray(pnj.armes) ? {arme: pnj.armes.length > 0} : {}),
           armeFavorite: armeFavoriteDe(pnj.traits),
+          // Ses points de foi et de pouvoir sont ceux de sa ligne : il peut être posé en plusieurs exemplaires.
+          magie: ressourcesMagiques(pnj, {foi: c.foi ?? null, pouvoir: c.pouvoir ?? null}, true),
         };
       }),
       catchError(() => of(snapshot)),
@@ -191,6 +202,11 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
   }
 
   return of(snapshot);
+}
+
+/** La magie d'une carte qui n'en fait pas : une créature, un démon (son esprit compte contre un sort qui le vise). */
+function sansMagie(esprit: number): RessourcesMagiques {
+  return {esprit, foi: null, pouvoir: null, sorcier: null, surcoutArmure: 0, magieRoisSorciers: false, resistantMagie: false};
 }
 
 /** Le nom des points qu'une carte dépense pour les options héroïques : l'héroïsme d'un héros, la vilénie d'un rival. */
@@ -212,4 +228,10 @@ export function sbireBouclier(rival: TapisCard, cartes: readonly TapisCard[]): T
 export function libellePoints(kind: TapisKind, nombre: number): string {
   const nom = nomDesPoints(kind);
   return `${nombre} ${nombre > 1 ? 'points' : 'point'} ${nom === 'héroïsme' ? 'd’héroïsme' : 'de vilénie'}`;
+}
+
+/** Une feinte ou une manœuvre peut s'appuyer sur une carrière (02-actions-combat.md, « Carrières et combat ») : celles d'un héros, et
+ * celles d'un rival, que le livre crée comme un héros (p. 66). Un coriace ou une piétaille n'a pas de carrières à y mettre. */
+export function feinteAvecCarrieres(card: Pick<TapisCard, 'kind' | 'rang'>): boolean {
+  return card.kind === 'hero' || (card.kind === 'pnj' && card.rang === 'Rival');
 }

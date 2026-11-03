@@ -100,11 +100,19 @@ Les points gagnes restent limites par la reserve maximale (rang).
 
 ### Depense de foi
 
-- Depenser `1 point de foi` pour accorder un de bonus ou imposer un de malus, pour une tache specifique ou une courte activite.
+- Depenser `1 point de foi` pour accorder un de bonus ou imposer un de malus, pour une tache specifique ou une courte activite (p. 146 : « l'equivalent d'un avantage », ou « un desavantage »).
 - La cible peut etre soi-meme ou un etre visible.
 - L'effet doit rester en lien avec le domaine du dieu honore.
-- Pas de jet requis pour cette application simple.
+- Pas de jet requis pour cette application simple : « la cible est affectee automatiquement ».
 - Le MJ a le dernier mot pour decider si un point de foi peut servir dans une situation donnee, mais il devrait recompenser la creativite.
+- Exemples du livre (p. 146) : un de bonus au jet d'attaque d'un allie ; un de malus au jet d'attaque d'un agresseur, pendant que celui-ci attaque le pretre (la foi s'utilise donc aussi hors de son tour).
+
+### Foi en combat dans l'appli
+
+- Le de de foi porte sur la prochaine action de la cible : il tombe a la fin de son prochain tour (interpretation : le livre dit « une tache specifique ou une courte activite »).
+- Plusieurs des de foi, et le de du MJ, se cumulent (`02-actions-combat.md` : deux avantages, 4d6) ; un de bonus et un de malus s'annulent.
+- Les points d'un heros se depensent sur sa fiche, comme son heroisme ; ceux d'un PNJ sur sa ligne de table, partie de sa fiche (il peut etre pose en plusieurs exemplaires).
+- Le domaine du dieu n'est pas verifie : c'est au MJ.
 
 ### Recuperation
 
@@ -159,7 +167,25 @@ Charmes:
 
 ### Effets blessants par defaut
 
-- Un sort du `1er cercle` destine a blesser inflige `d6` degats par defaut.
+- Un sort du `1er cercle` destine a blesser inflige `d6` degats par defaut (p. 150) ; dans l'exemple de Methyn Sarr (p. 151), le javelot de flammes « infligera automatiquement d6 points de degats ».
+- Charme « Douleur » : la cible perd `1` point de vitalite (p. 150).
+
+### Sorcellerie en combat dans l'appli
+
+Pas de catalogue de sorts : le joueur decrit l'effet, le MJ en fixe la puissance et la difficulte (p. 149-153) ; l'appli calcule le cout et le jet.
+
+- Jet : `2d6 + esprit + sorcier +/- difficulte`, reussite a `9+` (« jet d'action esprit + sorcier », p. 148) ; double 1 et double 6 comme tout jet d'action (`02-actions-combat.md`) ; faveur divine et echec critique des heros aussi.
+- Sort sur l'esprit : moins l'esprit de la cible (p. 148).
+- Des : le de du MJ, les des de foi, et un de bonus avec l'avantage `Magie des Rois-Sorciers` (p. 42).
+- Cout : base de la puissance, moins 1 par condition au-dela de la premiere, sans descendre sous le minimum ; puis le surcout de l'armure portee, apres le minimum (interpretation : le livre ne dit pas dans quel ordre).
+- Un charme coute 1 ou 2 points ; « automatique », il se lance sans jet ; sinon sa difficulte par defaut est Facile (il affecte une creature).
+- Les points de pouvoir sont depenses au premier jet, que le sort reussisse ou non (interpretation : le livre ne dit rien d'un sort rate ; l'alchimie, elle, perd ses points sur un echec, p. 140). Vider la case du jet avant de passer a autre chose les rend.
+- Degats d'un sort qui blesse : le de de sa puissance, sans vigueur ni protection d'armure (interpretation de « automatiquement », p. 151 ; le MJ peut saisir une protection a la main). `d6` au 1er cercle (p. 150), `1` pour un charme (« Douleur »), `d6 x2` au 2e cercle et `d6 x3` au 3e (interpretation : le livre ne chiffre pas ; meme echelle que les creations alchimiques legendaires et mythiques qui blessent, p. 142-144).
+- Contre un sort, ni parade in extremis ni bouclier humain (interpretation : le livre ne les donne que contre un coup).
+- Succes heroique sur un sort : le MJ en renforce l'effet (interpretation : pas d'option de succes heroique de combat).
+- Resistant a la magie (p. 42) : rappele quand la cible l'a ; le d6 se lance a la table.
+- 3e cercle : la perte definitive d'1 point de pouvoir (ou d'attribut, p. 154) est rappelee, a reporter sur la fiche.
+- La condition « blessures » (d3, d6+1, 2d6+1 vitalite) n'est pas appliquee d'office : le MJ corrige la vitalite du sorcier sur son coeur.
 
 ### Echelle qualitative des cercles
 

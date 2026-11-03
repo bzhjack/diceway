@@ -49,6 +49,9 @@
                   validationHint="Le nom et la taille sont requis pour préparer la créature."
                   (avatarClick)="pickAvatar()"
                 />
+                <mat-checkbox class="cfp-mort-vivant" [formField]="creatureForm.mort_vivant">
+                  Mort-vivant : sa vitalité est une force vitale, et à 0 il est détruit
+                </mat-checkbox>
               </div>
 
               <div class="dw-section--form xl:h-full">

@@ -30,12 +30,18 @@
   </div>
 
   <p class="rsc-formula">
-    2d6 {{ signed(data.esprit) }} (esprit)
+    {{ gmDie() === 'bonus' ? '2d6B' : gmDie() === 'malus' ? '2d6M' : '2d6' }} {{ signed(data.esprit) }} (esprit)
     @if (carriere(); as c) {
       {{ signed(c.value) }} ({{ c.label }})
     }
     {{ signed(difficulty().modifier) }} ({{ difficulty().label }}) — 9 ou plus
   </p>
+
+  <span class="rsc-label" id="rsc-mj">Le MJ</span>
+  <div class="rsc-chips" role="group" aria-labelledby="rsc-mj">
+    <button type="button" class="rsc-chip" [attr.aria-pressed]="gmDie() === 'bonus'" (click)="toggleGmDie('bonus')">Dé de bonus <em>3d6, 2 meilleurs</em></button>
+    <button type="button" class="rsc-chip" [attr.aria-pressed]="gmDie() === 'malus'" (click)="toggleGmDie('malus')">Dé de malus <em>3d6, 2 moins bons</em></button>
+  </div>
 
   <div class="rsc-roll">
     <div class="rsc-need">
@@ -50,7 +56,7 @@
       maxlength="2"
       autocomplete="off"
       placeholder="2d6"
-      aria-label="Total des deux dés lancés à table"
+      [attr.aria-label]="gmDie() ? 'Total des deux dés gardés, lancés à table' : 'Total des deux dés lancés à table'"
       [value]="typed()"
       (input)="onTyped(totalInput.value)"
       (keydown.enter)="validate()"
@@ -63,7 +69,11 @@
   @if (dice(); as d) {
     <p class="rsc-verdict" [class.rsc-verdict--ok]="success()" aria-live="polite">
       <b>{{ success() ? 'Stabilisé' : 'Échec' }}</b>
-      {{ d[0] }} et {{ d[1] }} :
+      @if (rolled(); as all) {
+        {{ all.join(', ') }}, gardés {{ d[0] }} et {{ d[1] }} :
+      } @else {
+        {{ d[0] }} et {{ d[1] }} :
+      }
       {{ success() ? patient().nom + ' ne perd plus de vitalité.' : patient().nom + ' reste mourant.' }}
     </p>
     @if (success() === false && heroisme() > 0) {

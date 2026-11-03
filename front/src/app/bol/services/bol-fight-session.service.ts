@@ -1,3 +1,4 @@
+import {RessourceMagique} from '../session/models/magie-combat.model';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap} from 'rxjs';
@@ -97,6 +98,11 @@ export class BolFightSessionService {
   /** Dépense (négatif) ou rend des points de vilénie à un PNJ rival de la table. */
   adjustVilenie(sessionId: string, pivotId: number, delta: number): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/vilenie`, {delta}));
+  }
+
+  /** Points de foi ou de pouvoir d'un PNJ de la table dépensés (négatif) ou rendus, sur sa ligne. */
+  adjustPnjRessource(sessionId: string, pivotId: number, ressource: RessourceMagique, delta: number): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/ressource`, {ressource, delta}));
   }
 
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {

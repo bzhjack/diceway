@@ -14,7 +14,7 @@ import {CombatOutcomeDialogComponent} from '../combat-outcome-dialog/combat-outc
 import {CombatOutcomeDialogData} from '../../models/combat-outcome-dialog.model';
 import {AfterCombatDialogComponent} from '../after-combat-dialog/after-combat-dialog';
 import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../../models/after-combat-dialog.model';
-import {bestHealingCareer} from '../../rescue.util';
+import {bestHealingCareer, peutSecourir} from '../../rescue.util';
 import {heroDetails} from '../tapis/tapis.util';
 import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
@@ -118,10 +118,10 @@ export class CombatEndService {
     );
   }
 
-  /** Les héros de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. */
+  /** Les héros et PNJ alliés de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. */
   private combatHealers(fiches: ReadonlyMap<string, BolHerosModel>): readonly AfterCombatHealer[] {
     return this.table.cards()
-      .filter((card) => card.kind === 'hero' && card.camp === 'heros')
+      .filter((card) => peutSecourir(card))
       .map((card): AfterCombatHealer | null => {
         const fiche = fiches.get(card.key);
         const carriere = fiche ? bestHealingCareer(heroDetails(fiche).carrieres) : null;

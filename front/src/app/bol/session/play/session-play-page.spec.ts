@@ -255,6 +255,45 @@ describe('SessionPlayPageComponent', () => {
     });
   });
 
+  describe('retirer du combat', () => {
+    it('le MJ retire une carte : elle ne joue plus, ne se vise plus, et la frise la dit retirée', async () => {
+      await rendre(session());
+      const pnj = table.cards().find((card) => card.key === 'pnj-7')!;
+      expect(combat.canWithdraw(pnj)).toBe(true);
+
+      combat.withdraw(pnj);
+      await stable();
+
+      const envoye = service.updateCombatState.mock.calls.at(-1)![1] as EtatCombatDto;
+      expect(envoye.exclus).toEqual(['pnj-7']);
+      expect(combat.turnEntries().find((entry) => entry.key === 'pnj-7')?.horsCombat).toBe('retiré');
+      expect(combat.canWithdraw(table.cards().find((card) => card.key === 'pnj-7')!)).toBe(false);
+    });
+  });
+
+  describe('les chutes oubliées', () => {
+    it('un héros relevé au-dessus de 0 oublie qu’il avait sombré', async () => {
+      const sombre = {id: 'e-1', origine: 'inconscient', libelle: 'inconscient', porteur: 'hero-1', stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'combat'}, manuel: false};
+      await rendre(session({heros: [heroRow(1, 0), heroRow(2, 10)] as never, etat_combat: etat({effets: [sombre] as never})}));
+      service.updateCombatState.mockClear();
+
+      table.session.set(session({heros: [heroRow(1, 4), heroRow(2, 10)] as never, etat_combat: etat({effets: [sombre] as never})}));
+      await stable();
+
+      const envoye = service.updateCombatState.mock.calls.at(-1)![1] as EtatCombatDto;
+      expect(envoye.effets).toEqual([]);
+    });
+  });
+
+  describe('le secours', () => {
+    it('un PNJ allié peut secourir un héros mourant à son tour', async () => {
+      await rendre(session({heros: [heroRow(1, -2)] as never, pnjs: [pnjRow(8, 10, 'heros') as never, pnjRow(7, 10) as never]}));
+
+      expect(combat.activeCard()?.key).toBe('pnj-8');
+      expect(combat.rescuePatients().map((card) => card.key)).toEqual(['hero-1']);
+    });
+  });
+
   describe('la mêlée de piétaille', () => {
     const melee = (over: Partial<EtatCombatDto> = {}): BolFightSessionModel =>
       session({

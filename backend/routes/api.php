@@ -146,6 +146,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Maj des origines
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
     Route::patch('/bol/heros/{id}/heroisme', [BolHerosController::class, 'adjustHeroisme']);
+    Route::patch('/bol/heros/{id}/ressource', [BolHerosController::class, 'adjustRessource']);
     Route::patch('/bol/heros/{id}/arme-favorite', [BolHerosController::class, 'armeFavorite']);
 
     // Traits régionaux
@@ -171,6 +172,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/camp', [BolFightSessionController::class, 'setCamp']);
     Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/attitude', [BolFightSessionController::class, 'setAttitude']);
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/vilenie', [BolFightSessionController::class, 'adjustVilenie']);
+    Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/ressource', [BolFightSessionController::class, 'adjustPnjRessource']);
     Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
     Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
     Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);

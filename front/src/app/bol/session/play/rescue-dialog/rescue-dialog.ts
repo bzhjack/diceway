@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, diceFromTotal, parseDiceTotal, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, diceFromTotal, keepBestOrWorstTwo, parseDiceTotal, signedModifier, suggestedActionResult} from '../../action-roll.util';
 import {ActionRollCarriere} from '../../models/action-roll.model';
 import {RescueDialogData, RescueResult} from '../../models/rescue-dialog.model';
 import {bestHealingCareer, rescueDifficulty} from '../../rescue.util';
@@ -34,7 +34,13 @@ export class RescueDialogComponent {
   protected readonly difficulty = computed(() => rescueDifficulty(this.patient().vitalite));
   private readonly modifierSum = computed(() => this.data.esprit + (this.carriere()?.value ?? 0) + this.difficulty().modifier);
   protected readonly target = computed(() => actionDiceTargetLabel(actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD)));
-  protected readonly chance = computed(() => Math.round(actionSuccessChance(0, this.modifierSum(), ACTION_ROLL_THRESHOLD) * 100));
+  /** Le dé du MJ, selon les circonstances (un abri, l'obscurité, des mains qui tremblent…) : 3d6, on garde les deux meilleurs ou les deux
+   * moins bons. */
+  protected readonly gmDie = signal<'bonus' | 'malus' | null>(null);
+  private readonly net = computed(() => (this.gmDie() === 'bonus' ? 1 : this.gmDie() === 'malus' ? -1 : 0));
+  protected readonly chance = computed(() => Math.round(actionSuccessChance(this.net(), this.modifierSum(), ACTION_ROLL_THRESHOLD) * 100));
+  /** Tous les dés lancés à l'écran (trois avec le dé du MJ) ; `null` pour un total tapé. */
+  protected readonly rolled = signal<readonly number[] | null>(null);
 
   /** Les deux dés : lancés ici, ou reconstruits depuis le total tapé (2 et 12 restent des doubles). */
   protected readonly dice = signal<readonly [number, number] | null>(null);
@@ -53,15 +59,26 @@ export class RescueDialogComponent {
     this.carriere.set(carriere);
   }
 
+  /** Accorde ou impose le dé du MJ, ou le retire : le jet déjà fait s'efface. */
+  protected toggleGmDie(die: 'bonus' | 'malus'): void {
+    this.gmDie.update((current) => (current === die ? null : die));
+    this.dice.set(null);
+    this.rolled.set(null);
+    this.typed.set('');
+  }
+
   protected onTyped(raw: string): void {
     this.typed.set(raw);
+    this.rolled.set(null);
     const total = parseDiceTotal(raw);
     this.dice.set(total === null ? null : diceFromTotal(total));
   }
 
   protected roll(): void {
     const die = (): number => 1 + Math.floor(Math.random() * 6);
-    const dice = [die(), die()] as const;
+    const all = Array.from({length: 2 + Math.abs(this.net())}, die);
+    const dice = keepBestOrWorstTwo(all, this.net());
+    this.rolled.set(all.length > 2 ? all : null);
     this.dice.set(dice);
     this.typed.set(String(dice[0] + dice[1]));
   }
@@ -72,6 +89,7 @@ export class RescueDialogComponent {
       next: () => {
         this.heroisme.update((h) => h - 1);
         this.dice.set(null);
+        this.rolled.set(null);
         this.typed.set('');
       },
       error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, "Impossible de dépenser l'héroïsme."), 'Fermer', {duration: 5000}),

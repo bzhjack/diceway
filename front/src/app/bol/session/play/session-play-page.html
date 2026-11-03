@@ -123,6 +123,8 @@
             (heroismeAdjusted)="stats.onHeroismeAdjusted($event)"
             (vitaliteAdjusted)="wounds.onVitaliteAdjusted($event)"
             (targetHeroismeAdjusted)="stats.onTargetHeroismeAdjusted($event)"
+            [visibles]="combat.visibles()"
+            (ressourceAdjusted)="stats.onRessourceAdjusted($event)"
           />
         }
       }

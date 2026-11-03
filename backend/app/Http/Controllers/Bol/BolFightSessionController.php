@@ -126,6 +126,20 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    /** Points de foi ou de pouvoir d'un PNJ de la table dépensés (ou rendus) : un dé de foi, un sort. */
+    public function adjustPnjRessource(Request $request, string $id, int $pivotId)
+    {
+        $data = $request->validate(['ressource' => 'required|in:foi,pouvoir', 'delta' => 'required|integer|between:-30,30']);
+
+        $session = $this->fightSessionService->adjustPnjRessource($id, Auth::id(), $pivotId, $data['ressource'], $data['delta']);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function applyDamage(Request $request, string $id, string $kind, int $pivotId)
     {
         $instanceIndex = $request->input('instanceIndex');

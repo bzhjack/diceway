@@ -16,7 +16,12 @@
   <ol class="tas-reg">
     <!-- 1 · L'attaque : ce qu'il faut et les chances ; la case (tapée à table, ou lancée à l'écran) et les dés, la formule dessous ; le
          verdict ; en bout de ligne, ce que l'attaquant peut payer de ses points. Les options d'un succès héroïque passent dessous. -->
-    <li bol-tas-attaque [class]="'tas-line tas-line--' + flow.stations()[1] + (flow.attackTone() ? ' tas-line--' + flow.attackTone() : '')" aria-labelledby="tas-l2"></li>
+    @if (loadout.sortMode()) {
+      <!-- 1 · Le sort, à la place de l'attaque : le coût, le jet (2d6 + esprit + sorcier ± difficulté), le verdict -->
+      <li bol-tas-sort [class]="'tas-line tas-line--' + flow.stations()[1] + (attack.sortVerdict() ? ' tas-line--' + attack.sortVerdict()?.tone : '')" aria-labelledby="tas-l2"></li>
+    } @else {
+      <li bol-tas-attaque [class]="'tas-line tas-line--' + flow.stations()[1] + (flow.attackTone() ? ' tas-line--' + flow.attackTone() : '')" aria-labelledby="tas-l2"></li>
+    }
 
     <!-- 2 · Les dégâts : la fourchette ; la case et le dé, la formule dessous ; ce que le coup fera à la cible ; en bout de ligne, ce que la
          cible peut y opposer (de ses points, son portrait sur le bouton) et « Appliquer ». Puis l'égratignure, le Carnage ou la fin du tour. -->

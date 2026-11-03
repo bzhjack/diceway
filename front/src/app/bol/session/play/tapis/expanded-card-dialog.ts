@@ -22,6 +22,8 @@ import {ExpandedCardComponent} from './expanded-card';
         [returnUrl]="data.returnUrl()"
         [canFlee]="data.canFlee()"
         (fleeRequested)="data.flee($event)"
+        [canWithdraw]="data.canWithdraw()"
+        (withdrawRequested)="data.withdraw($event)"
         (closed)="ref.close()"
         (changed)="data.changed($event)"
         (removeRequested)="data.remove($event)"

@@ -66,7 +66,7 @@
         }
       </div>
     </div>
-    @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice()) {
+    @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice() || loadout.faithNote()) {
       <p class="tas-head-notes">
         @if (turn.legendaryBonus()) {
           <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
@@ -77,6 +77,9 @@
         @if (loadout.abilityDice()) {
           <span class="tas-note">{{ loadout.abilityDice() }}, à chaque attaque.</span>
         }
+        @if (loadout.faithNote(); as note) {
+          <span class="tas-note tas-note--foi">{{ note }}</span>
+        }
       </p>
     }
   </div>
@@ -84,13 +87,25 @@
   <!-- Sa vitalité sur son cœur et ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici -->
   <div class="tas-zone-vit">
     <div class="tas-vit">
-      <dw-value-stepper [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + turn.card().nom" [heart]="true" />
-      <span class="tas-tag">Vitalité /{{ turn.card().vitaliteMax ?? '—' }}</span>
+      <dw-value-stepper [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="turn.vitaliteLabel() + ' de ' + turn.card().nom" [heart]="true" />
+      <span class="tas-tag">{{ turn.vitaliteLabel() }} /{{ turn.card().vitaliteMax ?? '—' }}</span>
     </div>
     @if (attack.pointsAttaquant(); as p) {
       <div class="tas-vit">
         <bol-points-stepper [kind]="turn.card().kind" [points]="p.points" [nom]="turn.card().nom" (stepped)="turn.heroismeAdjusted.emit($event)" />
         <span class="tas-tag">{{ p.titre }}</span>
+      </div>
+    }
+    <!-- Sa foi (prêtre, druide) et son dé de foi ; son pouvoir (sorcier), que ses sorts dépensent : ils se corrigent ici -->
+    @let foi = turn.attacker()?.magie?.foi ?? null;
+    @if (foi !== null) {
+      <bol-de-foi [pretre]="turn.card()" [foi]="foi" [visibles]="turn.visibles()" (stepped)="turn.ajusterRessource(turn.card(), 'foi', $event)" (donne)="turn.donnerDeFoi(turn.card(), $event.porteur, $event.sens)" />
+    }
+    @let pouvoir = turn.attacker()?.magie?.pouvoir ?? null;
+    @if (pouvoir !== null) {
+      <div class="tas-vit tas-vit--pouvoir">
+        <dw-value-stepper [value]="pouvoir" (valueChange)="turn.ajusterRessource(turn.card(), 'pouvoir', $event - pouvoir)" [min]="0" [ariaLabel]="'Points de pouvoir de ' + turn.card().nom" />
+        <span class="tas-tag">Pouvoir</span>
       </div>
     }
   </div>
@@ -172,11 +187,22 @@
         <em>{{ p.degats }}</em>
       </span>
     } @else {
+      @if (loadout.sortMode()) {
+      <!-- Un sorcier lance un sort au lieu d'attaquer : le sort se règle ici, à la place des armes -->
+      <bol-tas-sort-form />
+      } @else {
       <!-- Ce qui ne sert qu'à certains combattants : bagarre, deux mains, mêlée ou tir, et la portée du tir -->
       @let distance = turn.attacker()?.attaque === null && loadout.distanceModes().length > 1;
       <div class="tas-bloc" role="group" aria-labelledby="tas-armes" [class.tas-off]="loadout.defenseTotale()" [attr.inert]="loadout.defenseTotale() ? '' : null">
         <div class="tas-cap">
           <span id="tas-armes">{{ loadout.rackArmes().length > 1 ? 'Armes' : loadout.rackArmes().length === 1 ? 'Arme' : 'Attaque' }}</span>
+          @if (loadout.canCast()) {
+            <!-- Un sorcier : attaquer, ou lancer un sort à la place -->
+            <span class="tas-segm tas-segm--mini" role="group" aria-label="Ce qu’il fait de son action">
+              <button type="button" class="tas-seg" [attr.aria-pressed]="true"><b>Attaque</b></button>
+              <button type="button" class="tas-seg" [attr.aria-pressed]="false" [disabled]="flow.attaqueEngagee()" matTooltip="Lancer un sort au lieu d’attaquer" (click)="loadout.setMode('sort')"><b>Sort</b></button>
+            </span>
+          }
           @if (loadout.armeNom(); as nom) {
             <em [matTooltip]="nom">{{ nom }}</em>
           }
@@ -270,6 +296,7 @@
             <span class="tas-note" matTooltip="Il lui faut deux vraies armes légères ou moyennes, tenues d’une main.">il en faut deux légères ou moyennes</span>
           }
         </div>
+      }
       }
     }
   </div>

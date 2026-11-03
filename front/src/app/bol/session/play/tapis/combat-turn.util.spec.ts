@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cartesRelevees, commencerTour, retirerDuCombat, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {appliquerEvenement, effetAssomme, effetCoupPrecis, effetParalyse, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
+import {appliquerEvenement, effetActionPerdue, effetAssomme, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, effetsDeLaFrise, effetsDeTour, effetStabilise, modificateursPour, perdSonAction} from './combat-effects.util';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
   return {
@@ -704,5 +704,95 @@ describe('combatOutcome with a rival who fled', () => {
 
     expect(combatOutcome([KALENA, rival, mook], [])).toBeNull();
     expect(combatOutcome([KALENA, rival, mook], ['pnj-3'])).toBe('victoire');
+  });
+});
+
+describe('retirerDuCombat', () => {
+  it('excludes the card: it no longer plays nor counts, and its effects go with it', () => {
+    const order = ordered(KALENA, PRETRE, RORK);
+    const surPretre: CombatEffect = {...effetStabilise('pnj-7'), id: 'e-1'};
+    const visantPretre: CombatEffect = {...defended('hero-1', 'e-2'), cible: 'pnj-7'};
+    const garde: CombatEffect = defended('hero-2', 'e-3');
+    const avant = etat(1, [], [surPretre, visantPretre, garde]);
+
+    const apres = retirerDuCombat(avant, 'pnj-7');
+
+    expect(apres.exclus).toEqual(['pnj-7']);
+    expect(apres.fuis).toEqual([]);
+    expect(apres.effets).toEqual([garde]);
+    expect(turnState(order, apres).statuses.get('pnj-7')).toBe('skipped');
+    expect(raisonHorsJeu(PRETRE, apres)).toBe('retiré');
+    expect(combatOutcome([KALENA, PRETRE], apres.exclus)).toBe('victoire');
+  });
+
+  it('does nothing for a card already out of this combat', () => {
+    const dejaRetire = retirerDuCombat(etat(1), 'pnj-7');
+    expect(retirerDuCombat(dejaRetire, 'pnj-7')).toBe(dejaRetire);
+  });
+
+  it('a rival who fled stays « enfui »', () => {
+    expect(raisonHorsJeu(PRETRE, {...etat(1), exclus: ['pnj-7'], fuis: ['pnj-7']})).toBe('enfui');
+  });
+});
+
+describe('endTurn : action perdue (juste une égratignure)', () => {
+  const order = ordered(KALENA, PRETRE, RORK);
+  const perdue: CombatEffect = {...effetActionPerdue('pnj-7'), id: 'e-1'};
+
+  it('skips the turn of the card that lost its action: it has played, and the frieze says why until its next turn', () => {
+    const apres = endTurn(order, etat(1, [], [perdue]), [], () => 'e-2');
+
+    expect(turnState(order, apres).activeKey).toBe('hero-2');
+    expect(apres.joues).toEqual(['hero-1', 'pnj-7']);
+    expect(perdSonAction(apres.effets, 'pnj-7')).toBe(false);
+    expect(effetsDeLaFrise(apres.effets, 'pnj-7')).toEqual(['a perdu son action (juste une égratignure) · jusqu’à son prochain tour']);
+
+    // Le round suivant, son tour revient : la trace tombe.
+    const round2 = endTurn(order, endTurn(order, apres));
+    expect(round2.round).toBe(2);
+    expect(turnState(order, round2).activeKey).toBe('pnj-7');
+    expect(effetsDeLaFrise(round2.effets, 'pnj-7')).toEqual([]);
+  });
+
+  it('keeps a malus die « at his next action » for the action he really takes', () => {
+    const malus: CombatEffect = {...effetRenversement('pnj-7'), id: 'e-3'};
+    const apres = endTurn(order, etat(1, [], [perdue, malus]), [], () => 'e-2');
+    expect(apres.effets.map((e) => e.id)).toContain('e-3');
+  });
+
+  it('starts the next round when the skipped card was the last to play', () => {
+    const perdueRork: CombatEffect = {...effetActionPerdue('hero-2'), id: 'e-1'};
+    const apres = endTurn(order, etat(1, ['hero-1'], [perdueRork]), [], () => 'e-2');
+    expect(apres.round).toBe(2);
+    expect(turnState(order, apres).activeKey).toBe('hero-1');
+    expect(perdSonAction(apres.effets, 'hero-2')).toBe(false);
+  });
+
+  it('commencerTour skips the active card when it lost its action, and changes nothing otherwise', () => {
+    const avant = etat(1, [], [{...effetActionPerdue('hero-1'), id: 'e-1'}]);
+    const apres = commencerTour(order, avant, () => 'e-2');
+    expect(turnState(order, apres).activeKey).toBe('pnj-7');
+    expect(apres.joues).toEqual(['hero-1']);
+    const rien = etat(1);
+    expect(commencerTour(order, rien)).toBe(rien);
+  });
+});
+
+describe('cartesRelevees', () => {
+  const tombe: CombatEffect = {...effetInconscient('hero-1'), id: 'e-1'};
+
+  it('a hero back above 0 after being down is raised: his fall traces can go', () => {
+    const avant = new Map([['hero-1', 0]]);
+    expect(cartesRelevees(avant, [card('hero', 1, {vitaliteCourante: 5})], [tombe])).toEqual(['hero-1']);
+  });
+
+  it('not while he is still down, nor without a trace, nor when he never went down (a save that comes back before the wound)', () => {
+    expect(cartesRelevees(new Map([['hero-1', -2]]), [card('hero', 1, {vitaliteCourante: 0})], [tombe])).toEqual([]);
+    expect(cartesRelevees(new Map([['hero-1', 0]]), [card('hero', 1, {vitaliteCourante: 5})], [])).toEqual([]);
+    expect(cartesRelevees(new Map([['hero-1', 7]]), [card('hero', 1, {vitaliteCourante: 7})], [{...effetAssomme('hero-1'), id: 'e-2'}])).toEqual([]);
+  });
+
+  it('a card seen for the first time standing with a fall trace is raised (an old table)', () => {
+    expect(cartesRelevees(new Map(), [card('hero', 1, {vitaliteCourante: 5})], [tombe])).toEqual(['hero-1']);
   });
 });

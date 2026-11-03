@@ -20,6 +20,10 @@
       }
       <button type="button" class="acd-chip" [attr.aria-pressed]="healerIndex() === null" (click)="healerIndex.set(null)">Personne</button>
     </div>
+    <p class="acd-note">
+      Les jours suivants, chaque blessé récupère 1 point par jour ; le soigneur peut faire chaque jour un jet d'action Moyenne (esprit + sa
+      carrière de soins) : réussi, son blessé en récupère 2 ce jour-là (livre p. 66).
+    </p>
   }
 
   @if (rows().length > 0) {

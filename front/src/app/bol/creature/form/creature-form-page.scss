@@ -1,3 +1,9 @@
 :host {
   display: block;
 }
+
+// Sous la fiche générale : la case qui fait d'une créature un mort-vivant (force vitale, « détruit » à 0 en combat).
+.cfp-mort-vivant {
+  display: block;
+  margin-top: 0.75rem;
+}

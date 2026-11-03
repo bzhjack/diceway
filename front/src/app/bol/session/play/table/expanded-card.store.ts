@@ -45,6 +45,12 @@ export class ExpandedCardStore {
     return card !== null && this.combat.canFlee(card);
   });
 
+  /** La carte dépliée est en combat, et le MJ peut l'en retirer. */
+  private readonly expandedCanWithdraw = computed(() => {
+    const card = this.expandedCard();
+    return card !== null && this.combat.canWithdraw(card);
+  });
+
   /** Données de la carte dépliée, chargées au dépliage — `null` pendant le chargement. */
   private readonly expandedHero = signal<ExpandedHeroData | null>(null);
 
@@ -83,9 +89,11 @@ export class ExpandedCardStore {
       statblock: this.expandedStatblock,
       returnUrl: this.table.returnUrl,
       canFlee: this.expandedCanFlee,
+      canWithdraw: this.expandedCanWithdraw,
       changed: (change) => this.table.onTableChanged(change),
       remove: (card) => this.askRemoveCard(card),
       flee: (card) => this.askFlee(card),
+      withdraw: (card) => this.askWithdraw(card),
       toggleArmure: (event) => this.onArmureToggled(event),
       toggleArme: (event) => this.onArmeToggled(event),
     };
@@ -244,6 +252,25 @@ export class ExpandedCardStore {
     ).subscribe((confirmed) => {
       if (confirmed) {
         this.combat.flee(card);
+      }
+    });
+  }
+
+  /** « Retirer du combat » depuis la carte : confirmé, la carte reste sur la table mais ne joue plus et ne compte plus pour l'issue. */
+  private askWithdraw(card: TapisCard): void {
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Retirer du combat',
+        message: `${card.nom} quitte ce combat : il ne joue plus, ne peut plus être visé et ne compte plus pour l'issue ; ses effets en cours tombent. Sa fiche reste sur la table, et il revient en jeu après le combat.`,
+        confirmLabel: 'Retirer du combat',
+      },
+      {width: '420px'},
+    ).subscribe((confirmed) => {
+      if (confirmed) {
+        this.combat.withdraw(card);
+        // La carte ne joue plus : elle se replie, l'écran de combat revient.
+        this.foldCard();
       }
     });
   }

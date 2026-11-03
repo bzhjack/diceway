@@ -6,6 +6,7 @@ import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
+import {RessourceChange} from '../../models/magie-combat.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {TurnAssistantComponent} from '../tapis/turn-assistant';
 
@@ -40,6 +41,8 @@ export class CombatBoardComponent {
   readonly canRescue = input(false);
   /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, en horde. */
   readonly hordeMates = input<readonly TapisCard[]>([]);
+  /** Les cartes encore en combat et debout : un prêtre leur donne un dé de foi. */
+  readonly visibles = input<readonly TapisCard[]>([]);
 
   readonly delayRequested = output<void>();
   /** `true` quand la fin du tour suit un coup qu'on vient de conclure (voir l'assistant). */
@@ -62,6 +65,8 @@ export class CombatBoardComponent {
   readonly vitaliteAdjusted = output<VitaliteChange>();
   /** Points d'héroïsme dépensés par la cible pour se défendre (parade in extremis, « Juste une égratignure »). */
   readonly targetHeroismeAdjusted = output<HeroismeChange>();
+  /** Points de foi ou de pouvoir dépensés ou rendus par la carte active ou sa cible. */
+  readonly ressourceAdjusted = output<RessourceChange>();
 
   /** « Fin du tour » au clavier : l'assistant retient d'abord un coup qui a touché sans être appliqué. */
   requestEndTurn(): void {

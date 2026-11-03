@@ -83,12 +83,19 @@
     }
   </span>
   <span class="tas-acts">
+    @if (cible.canParry() && cible.parryItems().length > 1) {
+      <!-- Bouclier et arme : le MJ choisit ce qui est interposé, et brisé -->
+      <span class="tas-segm tas-segm--mini" role="group" [attr.aria-label]="'Ce que ' + turn.target()?.nom + ' interpose en parade'">
+        <button type="button" class="tas-seg" [attr.aria-pressed]="cible.parryWith() === 'bouclier'" (click)="cible.parryWith.set('bouclier')"><b>Bouclier</b></button>
+        <button type="button" class="tas-seg" [attr.aria-pressed]="cible.parryWith() === 'arme'" (click)="cible.parryWith.set('arme')"><b>Arme</b></button>
+      </span>
+    }
     @if (cible.canParry()) {
       <button
         type="button"
         class="tas-act tas-act--foe"
-        [matTooltip]="turn.target()?.nom + ' : parade in extremis, pour ' + turn.unPointCible() + '. Son bouclier ou son arme se brise, il ne subit pas de dégâts.'"
-        [attr.aria-label]="'Parade in extremis de ' + turn.target()?.nom + ', pour ' + turn.unPointCible()"
+        [matTooltip]="turn.target()?.nom + ' : parade in extremis, pour ' + turn.unPointCible() + '. ' + (cible.parryWith() === 'bouclier' ? 'Son bouclier' : 'Son arme') + ' se brise, il ne subit pas de dégâts.'"
+        [attr.aria-label]="'Parade in extremis de ' + turn.target()?.nom + ' avec ' + (cible.parryWith() === 'bouclier' ? 'son bouclier' : 'son arme') + ', pour ' + turn.unPointCible()"
         (click)="flow.parry()"
       >
         <ng-container *ngTemplateOutlet="targetFace" />
@@ -115,13 +122,21 @@
   }
 } @else if (attack.attackVerdict(); as v) {
   <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
-  @if (v.tone === 'echec') {
+  @if (v.tone === 'echec' && attack.carnageRemaining() > 0) {
+    <!-- Carnage pris deux fois : la première attaque qu'il donne a raté, la seconde reste à porter -->
+    <span class="tas-wait">Raté, mais le Carnage donne encore {{ attack.carnageRemaining() }} {{ attack.carnageRemaining() > 1 ? 'attaques' : 'attaque' }} : même cible, ou une autre.</span>
+    <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.nextCarnageAttack()">Attaque suivante (Carnage)</button>
+  } @else if (v.tone === 'echec') {
     <span class="tas-wait">Pas de dégâts : le coup est raté.</span>
     <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.requestEndTurn()">Fin du tour</button>
   } @else {
     <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
     <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.concludeWithoutDamage()">{{ attack.carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
   }
+} @else if (loadout.sortMode() && !flow.hitSummary() ? attack.sortVerdict() : null; as v) {
+  <!-- Le sort est parti : raté, ou sans dégâts à lancer ; il ne reste qu'à finir le tour -->
+  <span class="tas-wait">{{ v.hit ? (loadout.sortModel().blessant ? 'Vise sa cible pour appliquer les dégâts du sort.' : 'Le sort ne blesse pas : le MJ décrit son effet, ou le pose en effet (✦).') : 'Pas d’effet : le sort a échoué.' }}</span>
+  <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.requestEndTurn()">Fin du tour</button>
 } @else if (flow.hitSummary(); as hit) {
   <div class="tas-issue">
   <span class="tas-verdict" aria-live="polite">
@@ -181,11 +196,15 @@
   }
 } @else {
   <!-- Avant le coup, ce que l'arme peut faire à cette cible : la colonne annonce la fourchette. -->
-  @if (turn.target() && !loadout.defenseTotale() && !turn.actionPerdue()) {
+  @if (turn.target() && !loadout.defenseTotale() && !turn.actionPerdue() && (!loadout.sortMode() || loadout.sortModel().blessant)) {
     <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damage.damageSum()" />
   }
-  <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
-  @if (damage.intangible() && !loadout.defenseTotale()) {
+  @if (loadout.sortMode()) {
+    <span class="tas-wait">{{ loadout.sortModel().blessant ? 'Si le sort réussit : ' + loadout.sortDegats() + ', sans vigueur ni armure.' : 'Ce sort ne blesse pas.' }}</span>
+  } @else {
+    <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
+  }
+  @if (damage.intangible() && !loadout.defenseTotale() && !loadout.sortMode()) {
     <ng-container *ngTemplateOutlet="intangible" />
   }
 }
@@ -193,9 +212,9 @@
 <!-- Ce que les pouvoirs des démons changent au coup : la cible intangible, la cible vulnérable (dégâts doublés), le poison de l'attaquant.
      `$implicit` : le coup n'est pas encore appliqué (après, seul le poison reste à régler). -->
 <ng-template #pouvoirs let-avant>
-  @if ((avant && (damage.intangible() || damage.vulnerabilite())) || damage.poison()) {
+  @if ((avant && ((damage.intangible() && !damage.sort()) || damage.vulnerabilite())) || damage.poison()) {
     <div class="tas-pouvoirs" role="group" aria-label="Pouvoirs en jeu">
-      @if (avant && damage.intangible()) {
+      @if (avant && damage.intangible() && !damage.sort()) {
         <ng-container *ngTemplateOutlet="intangible" />
       }
       @if (avant && damage.vulnerabilite(); as v) {

@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {CARRIERE_MEDECIN_ID} from '../bol-rules.constants';
-import {bestHealingCareer, medicalCareAmount, rescueDifficulty} from './rescue.util';
+import {bestHealingCareer, medicalCareAmount, peutSecourir, rescueDifficulty} from './rescue.util';
+import {TapisCard} from './models/tapis.model';
 
 describe('rescueDifficulty', () => {
   it('starts from Moyenne and gets one level harder per negative point', () => {
@@ -31,5 +32,21 @@ describe('medicalCareAmount', () => {
     expect(medicalCareAmount(9, 10, 3)).toBe(1);
     expect(medicalCareAmount(10, 10, 2)).toBe(0);
     expect(medicalCareAmount(-3, 10, 2)).toBe(2);
+  });
+});
+
+describe('peutSecourir', () => {
+  const carte = (kind: TapisCard['kind'], camp: TapisCard['camp']): Pick<TapisCard, 'kind' | 'camp'> => ({kind, camp});
+
+  it('a hero or a PNJ of the heroes’ camp can rescue a dying hero, or tend the wounded after the fight', () => {
+    expect(peutSecourir(carte('hero', 'heros'))).toBe(true);
+    expect(peutSecourir(carte('pnj', 'heros'))).toBe(true);
+  });
+
+  it('not their adversaries, nor a creature or a demon', () => {
+    expect(peutSecourir(carte('pnj', 'adversaires'))).toBe(false);
+    expect(peutSecourir(carte('hero', 'adversaires'))).toBe(false);
+    expect(peutSecourir(carte('creature', 'heros'))).toBe(false);
+    expect(peutSecourir(carte('demon', 'heros'))).toBe(false);
   });
 });

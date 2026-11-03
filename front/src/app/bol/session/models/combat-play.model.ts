@@ -19,6 +19,11 @@ export interface PlayCombatStats {
   readonly protection: string | null;
   /** Points de vilénie d'un PNJ rival : ils servent comme des points d'héroïsme. Absent (ou null) pour les autres. */
   readonly vilenie?: number | null;
+  /** Esprit de la carte (copié à la table) : un sort qui agit sur son esprit le subit en malus. Null pour un héros, lu sur sa fiche. */
+  readonly esprit?: number | null;
+  /** Points de foi et de pouvoir de la ligne d'un PNJ ; absents pour les autres (un héros les dépense sur sa fiche). */
+  readonly foi?: number | null;
+  readonly pouvoir?: number | null;
   /** Capacités ou pouvoirs qui donnent un dé de bonus (« Attaque féroce », « Armes améliorées ») ou de malus (« Attaque timide ») à
    * toutes ses attaques. */
   readonly attaqueAvantages?: readonly string[];

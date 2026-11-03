@@ -7,6 +7,10 @@ import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.mod
 import {egratignure} from '../../heroisme-spend.util';
 import {HEROIC_OPTIONS} from '../../combat-resolution.util';
 import {AppliedHit} from '../../models/combat-attack.model';
+import {MassacrePietailleDialogComponent} from '../massacre-pietaille-dialog/massacre-pietaille-dialog';
+import {MassacrePietailleDialogData, MassacrePietailleResult} from '../../models/massacre-pietaille-dialog.model';
+import {candidatsMassacre} from './options-heroiques.util';
+import {PIETAILLE} from './combat-turn.util';
 import {TapisCard} from '../../models/tapis.model';
 import {StationState, PlayedAttack} from '../../models/turn-assistant.model';
 import {TurnContextStore} from './turn-context.store';
@@ -27,11 +31,21 @@ export class TurnFlowStore {
   private readonly dialog = inject(MatDialog);
 
   /** L'attaque est lancée ou jouée : il est trop tard pour retarder, secourir ou se mettre en défense totale. */
-  readonly attaqueEngagee = computed(() => this.attack.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null);
+  readonly attaqueEngagee = computed(() => this.attack.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null || this.sortLance());
+
+  /** Le sort de ce tour est lancé (payé) : il ne se règle plus, et l'attaque n'est plus possible. */
+  readonly sortLance = computed(() => this.attack.sortPaid() > 0 || this.attack.sortAuto());
 
   /** Il reste à choisir qui viser : les cartes des cibles prennent toute la largeur, l'attaque et les dégâts attendent. */
   readonly choixCible = computed(
-    () => !this.played() && !this.turn.target() && this.turn.targets().length > 0 && !this.loadout.defenseTotale() && !this.turn.actionPerdue(),
+    () =>
+      !this.played() &&
+      !this.turn.target() &&
+      this.turn.targets().length > 0 &&
+      !this.loadout.defenseTotale() &&
+      !this.turn.actionPerdue() &&
+      // Un sort qui ne vise personne (une invocation, une illusion) se lance sans cible.
+      (!this.loadout.sortMode() || (this.loadout.sortVise() && !this.sortLance())),
   );
 
   /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
@@ -57,9 +71,13 @@ export class TurnFlowStore {
     if (this.damage.hasDamageStep() || this.turn.actionPerdue()) {
       return false;
     }
+    if (this.loadout.sortMode()) {
+      return this.attack.sortVerdict() !== null;
+    }
     const verdict = this.attack.attackVerdict();
     if (verdict) {
-      return verdict.tone === 'echec' || !this.attack.carnagePicked();
+      // Une attaque de Carnage ratée, quand une autre reste due : la ligne propose l'attaque suivante, « Fin du tour » reste en haut.
+      return verdict.tone === 'echec' ? this.attack.carnageRemaining() === 0 : !this.attack.carnagePicked();
     }
     return this.hitSummary() !== null && this.attack.carnageOwed() === 0;
   });
@@ -74,6 +92,12 @@ export class TurnFlowStore {
     // Défense totale : pas de jet, tout se joue sur « Fin du tour », en or sur la ligne de l'attaquant.
     if (this.loadout.defenseTotale()) {
       return ['todo', 'todo', 'todo'];
+    }
+    if (this.loadout.sortMode()) {
+      const vise = this.turn.target() !== null || !this.loadout.sortVise();
+      const lance = this.attack.sortVerdict() !== null;
+      const finit = lance && !this.damage.hasDamageStep();
+      return [vise || lance ? 'done' : 'cur', lance ? 'done' : vise ? 'cur' : 'todo', this.damage.hasDamageStep() || finit ? 'cur' : 'todo'];
     }
     const aimed = this.turn.target() !== null;
     const rolled = this.attack.attackVerdict() !== null;
@@ -99,6 +123,14 @@ export class TurnFlowStore {
     if (!hit) {
       return null;
     }
+    if (hit.massacre) {
+      const n = hit.massacre.length;
+      return {
+        title: `${n} hors de combat`,
+        detail: n > 0 ? `Massacrer la piétaille : ${hit.massacre.join(', ')}.` : 'Massacrer la piétaille : personne ne tombe.',
+        scratch: '',
+      };
+    }
     const title = hit.parried === 'sbire' ? 'Bouclier humain' : hit.parried ? 'Paré' : `${hit.damage} ${hit.damage > 1 ? 'dégâts' : 'dégât'}`;
     const detail =
       hit.parried === 'sbire'
@@ -107,7 +139,7 @@ export class TurnFlowStore {
           ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
           : `appliqués à ${hit.target.nom}.`;
     const scratch = hit.scratch
-      ? `Juste une égratignure : ${hit.scratch.die} au d6B, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
+      ? `Juste une égratignure : ${hit.scratch.die} au d6B, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action : son tour sera sauté.`
       : '';
     return {title, detail, scratch};
   });
@@ -133,6 +165,14 @@ export class TurnFlowStore {
       this.loadout.gmDie();
       this.loadout.brawl();
       untracked(() => this.resetRoll());
+    });
+
+    // Une autre carte active, ou le passage de l'attaque au sort : le sort du tour repart de zéro. Une cible changée après le sort, elle,
+    // ne le défait pas : il est payé.
+    effect(() => {
+      this.turn.cardKey();
+      this.loadout.mode();
+      untracked(() => this.attack.resetSort());
     });
 
     // Une autre cible désignée sur le plateau après le coup joué : c'est une autre attaque, le coup joué s'efface. Une cible tombée, elle,
@@ -194,6 +234,84 @@ export class TurnFlowStore {
     this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
   }
 
+  /** Le sort est lancé : ses points de pouvoir sont payés une fois, au premier jet (ou sans jet, pour un charme automatique). Un sort du
+   * 3e cercle coûte en plus 1 point de pouvoir définitif (livre p. 154) : c'est à reporter sur la fiche. */
+  private payerSort(): void {
+    if (this.sortLance()) {
+      return;
+    }
+    const cout = this.loadout.sortCout().total;
+    this.attack.sortPaid.set(cout);
+    this.turn.ajusterRessource(this.turn.card(), 'pouvoir', -cout);
+  }
+
+  /** Le sort peut partir : il en a le pouvoir, et sa cible est choisie s'il lui en faut une. */
+  readonly sortPret = computed(() => this.sortLance() || (this.loadout.sortPayable() && (!this.loadout.sortVise() || this.turn.target() !== null) && this.attack.sortModifier() !== null));
+
+  /** Lance les dés du sort à l'écran (relancés par la faveur divine, sans repayer). */
+  async rollSort(): Promise<void> {
+    if (this.turn.rolling() || !this.sortPret()) {
+      return;
+    }
+    this.payerSort();
+    this.attack.clearSortDice();
+    const net = this.loadout.netDice();
+    const count = this.loadout.diceCount();
+    const values = await this.turn.throwDice(`${count}d6`, count);
+    this.attack.sortRolledDice.set(count > 2 ? values : null);
+    this.attack.sortDice.set(keepBestOrWorstTwo(values, net));
+    this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
+  }
+
+  /** Le total des deux dés du sort, lancés à table. Une case vidée avant tout résultat rend le pouvoir payé : le sort n'est pas parti. */
+  onSortInput(raw: string): void {
+    if (raw.trim() === '') {
+      if (this.attack.sortDiceSum() !== null && !this.attack.sortCritique()) {
+        this.attack.clearSortDice();
+        this.rembourserSort();
+      }
+      return;
+    }
+    const total = parseDiceTotal(raw);
+    if (total === null || !this.sortPret()) {
+      return;
+    }
+    this.payerSort();
+    this.attack.sortDice.set(null);
+    this.attack.sortRolledDice.set(null);
+    this.attack.sortManual.set(total);
+    this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
+  }
+
+  /** Un charme automatique : payé, et il agit, sans jet. */
+  castWithoutRoll(): void {
+    if (!this.sortPret()) {
+      return;
+    }
+    this.payerSort();
+    this.attack.sortAuto.set(true);
+    this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
+  }
+
+  /** Le sort n'est pas parti (sa case vidée, ou « Annuler » d'un charme) : son pouvoir est rendu. */
+  rembourserSort(): void {
+    const paye = this.attack.sortPaid();
+    if (paye > 0) {
+      this.turn.ajusterRessource(this.turn.card(), 'pouvoir', paye);
+    }
+    this.attack.resetSort();
+  }
+
+  /** Faveur divine sur un sort raté : 1 point d'héroïsme, et les dés se relancent — à table ou à l'écran ; le sort n'est pas repayé. */
+  sortFavor(): void {
+    if (!this.attack.canSortFavor()) {
+      return;
+    }
+    this.turn.heroismeAdjusted.emit(-1);
+    this.attack.clearSortDice();
+    this.turn.focusAfterRender(() => this.turn.attackInput());
+  }
+
   /** Le MJ retire un effet : le registre l'oublie, et le jet déjà fait (modificateurs figés) perd sa puce et recalcule son total. */
   removeEffect(id: string): void {
     this.attack.frozenTerms.update((termes) => (termes ? sansTerme(termes, id) : termes));
@@ -248,10 +366,26 @@ export class TurnFlowStore {
     }
   }
 
-  apply(): void {
+  /** « Appliquer » : les dégâts vont à la cible. `then` passe une fois le coup conclu (pas s'il est abandonné). */
+  apply(then: () => void = () => undefined): void {
     const target = this.turn.target();
     const damage = this.damage.damage();
     if (!target || damage === null) {
+      return;
+    }
+    if (this.attack.picks().includes('pietaille') && target.rang === PIETAILLE) {
+      this.massacre(target, damage, then);
+      return;
+    }
+    if (this.loadout.sortMode()) {
+      // Les dégâts du sort : le sort reste écrit sur sa ligne, il ne reste qu'à finir le tour.
+      const hit = {target, damage, unarmed: false};
+      this.turn.damageApplied.emit(hit);
+      this.attack.sortDamageDone.set(true);
+      this.damage.resetRoll();
+      this.lastHit.set(hit);
+      this.turn.focusAfterRender(() => this.turn.endButton());
+      then();
       return;
     }
     this.freezePlayed(target);
@@ -261,6 +395,47 @@ export class TurnFlowStore {
     this.resetRoll();
     this.lastHit.set(hit);
     this.turn.focusAfterRender(() => (this.attack.carnageOwed() > 0 ? this.turn.attackInput() : this.turn.endButton()));
+    then();
+  }
+
+  /** « Massacrer la piétaille » (livre p. 59) : les dégâts du coup sont le nombre de piétailles mises hors de combat. Le dialogue propose
+   * qui tombe — la cible, puis les autres piétailles debout de son camp — et le MJ coche ou décoche ; chacune est mise hors de combat.
+   * Fermé sans appliquer, le coup reste à conclure. */
+  private massacre(target: TapisCard, damage: number, then: () => void): void {
+    const candidats = candidatsMassacre(target, this.turn.targets());
+    const attaquant = this.turn.card().nom;
+    this.dialog
+      .open<MassacrePietailleDialogComponent, MassacrePietailleDialogData, MassacrePietailleResult>(MassacrePietailleDialogComponent, {
+        width: 'min(440px, 94vw)',
+        data: {attaquantNom: attaquant, degats: damage, candidats},
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result || this.turn.target()?.key !== target.key) {
+          return;
+        }
+        const tombes = candidats.filter((card) => result.tombes.includes(card.key));
+        this.freezePlayed(target);
+        this.conclude(target);
+        for (const card of tombes) {
+          this.turn.damageApplied.emit({target: card, damage: Math.max(1, card.vitaliteCourante ?? card.vitaliteMax ?? 1), unarmed: false});
+        }
+        this.resetRoll();
+        this.lastHit.set({target, damage: 0, unarmed: false, massacre: tombes.map((card) => card.nom)});
+        this.turn.focusAfterRender(() => (this.attack.carnageOwed() > 0 ? this.turn.attackInput() : this.turn.endButton()));
+        then();
+      });
+  }
+
+  /** Carnage pris deux fois : l'attaque qu'il donne a raté, la suivante reste due. Celle-ci compte, et le jet s'efface pour la suivante
+   * (contre la même cible, ou une autre). */
+  nextCarnageAttack(): void {
+    if (this.attack.carnageRemaining() === 0) {
+      return;
+    }
+    this.attack.carnageOwed.update((owed) => Math.max(0, owed - 1));
+    this.resetRoll();
+    this.turn.focusAfterRender(() => this.turn.attackInput() ?? this.cible.firstPick());
   }
 
   /** Fige le coup qui se conclut, avant que le jet s'efface (cf. `PlayedAttack`). */
@@ -294,15 +469,15 @@ export class TurnFlowStore {
     this.turn.focusAfterRender(() => this.turn.attackInput() ?? this.cible.firstPick());
   }
 
-  /** Parade in extremis : la cible dépense 1 point d'héroïsme (ou de vilénie) et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
+  /** Parade in extremis : la cible dépense 1 point d'héroïsme (ou de vilénie) et interpose son bouclier ou son arme (au choix quand elle a les deux), qui est brisé ; le
    * coup ne fait pas de dégâts, et ses options héroïques non plus. Un Carnage garde son attaque de plus. */
   parry(): void {
     const target = this.turn.target();
     if (!target || !this.cible.canParry()) {
       return;
     }
-    const stats = this.turn.targetStats();
-    const bouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0 || (stats?.bouclierDefenseToutes ?? 0) > 0;
+    // Ce qu'elle interpose : son bouclier, ou son arme quand elle a les deux et que le MJ l'a choisie.
+    const bouclier = this.cible.parryWith() === 'bouclier';
     this.turn.targetHeroismeAdjusted.emit({card: target, delta: -1});
     this.turn.effectAdded.emit(effetParade(target.key, bouclier));
     this.freezePlayed(target);
@@ -399,7 +574,8 @@ export class TurnFlowStore {
       return;
     }
     const target = this.turn.target();
-    if (!target || !this.attack.verdict()?.hit) {
+    const touche = this.loadout.sortMode() ? this.damage.hasDamageStep() : !!this.attack.verdict()?.hit;
+    if (!target || !touche) {
       this.turn.endTurnRequested.emit(false);
       return;
     }
@@ -411,13 +587,14 @@ export class TurnFlowStore {
       })
       .afterClosed()
       .subscribe((choice) => {
+        if (choice === 'apply' && this.damage.hasDamageStep()) {
+          // Le tour finit une fois le coup conclu (après le dialogue du massacre, s'il y en a un).
+          this.apply(() => this.turn.endTurnRequested.emit(true));
+          return;
+        }
         if (choice === 'apply') {
-          if (this.damage.hasDamageStep()) {
-            this.apply();
-          } else {
-            this.conclude(target);
-            this.resetRoll();
-          }
+          this.conclude(target);
+          this.resetRoll();
         }
         if (choice) {
           this.turn.endTurnRequested.emit(choice === 'apply');

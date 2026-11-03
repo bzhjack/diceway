@@ -12,6 +12,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RideauEtat, RideauRythme, SceneCarton} from '../../models/theatre.model';
 import {RideauComponent} from '../theatre/rideau';
 import {PointsStepperComponent} from './points-stepper';
+import {DeFoiComponent} from './de-foi';
+import {TasSortFormComponent} from './tas-sort-form';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
@@ -26,7 +28,7 @@ const NOM_TENUE_MS = 700;
 /** Qui joue : une ligne lue de gauche à droite, sans popover pour préparer le coup — sa vie et ses points, ses chiffres, ce que dit le MJ, sa posture, ses armes, puis ce qu'il peut faire au lieu d'attaquer et la fin de son tour. */
 @Component({
   selector: 'bol-tas-attaquant',
-  imports: [RideauComponent, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, DwArmeIconComponent, DwValueStepperComponent, DwPopoverDirective, CombattantCarteComponent, EffectsListComponent, PointsStepperComponent],
+  imports: [RideauComponent, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, DwArmeIconComponent, DwValueStepperComponent, DwPopoverDirective, CombattantCarteComponent, EffectsListComponent, PointsStepperComponent, DeFoiComponent, TasSortFormComponent],
   templateUrl: './tas-attaquant.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

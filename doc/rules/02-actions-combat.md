@@ -96,6 +96,8 @@ Récupération des points d'héroïsme : tous les points utilisés sont récupé
 | Massacrer la piétaille | Les dégâts infligés représentent le nombre d'adversaires de type piétaille mis hors combat (pas forcément tués). |
 | Renversement | Jeter l'adversaire à terre (taille max. supérieure d'une catégorie à la vôtre). L'adversaire qui se relève subit un dé de malus à sa prochaine action. |
 
+> Dans l'application, les options impossibles contre la cible sont grisees : Renversement contre une cible plus grande de plus d'une categorie (heros, PNJ et demons comptent comme de taille Moyenne), Desarmement contre une cible sans arme en main (une creature ou un demon frappe de ses armes naturelles : interpretation), Massacrer la pietaille quand la cible n'est pas de la pietaille (interpretation : le livre dit « si vous combattez de la pietaille »). Une carriere peut appuyer la feinte d'un rival comme celle d'un heros : le livre cree les rivaux comme des heros (p. 66).
+
 ## Jet de réaction
 
 Le combat se divise en rounds de quelques secondes : à chaque round, un personnage fait une action (tirer, frapper, parer, lancer une arme…).
@@ -300,6 +302,10 @@ Soins médicaux (carrière de soin adaptée) :
 
 - Récupération immédiate de `rang du soigneur` en vitalité.
 - Puis jet d'action Moyenne (chaque jour) pour doubler le rythme : récupère 2 vitalités par jour.
+
+> Un soigneur et ses blesses (livre p. 65-66) : le livre dit que les soins font recuperer immediatement « a un blesse » le rang du soigneur, puis que le soigneur peut faire chaque jour un jet d'action Moyenne (+0) qui double la guerison du blesse (2 points par jour). Il ne dit pas combien de blesses un meme soigneur peut soigner apres un combat (interpretation : l'application le laisse soigner tous les blesses coches, sans limite). L'application ne suit pas les jours : le jet quotidien est rappele dans la boite « Apres combat ».
+>
+> Qui secourt (livre p. 66) : « un autre heros ou un PNJ » ; l'application laisse un heros ou un PNJ du camp des heros secourir a son tour. Le jet de secours est un jet d'action : le MJ peut y accorder un de de bonus ou imposer un de de malus.
 
 > L'aggravation de difficulté par point de vitalité négatif est décrite par le livre pour le jet de **stabilisation** (cf. Secourir un mourant) ; le jet quotidien de doublement est donné en difficulté Moyenne (0) sans aggravation (interprétation : le livre ne traite pas le cas d'un blessé stabilisé encore dans les négatifs ; l'application, `front/src/app/bol/session/rescue.util.ts`, n'aggrave que la stabilisation).
 

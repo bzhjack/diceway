@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {aDejaFeinte, appliquerEvenement, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {desDeFoi, effetDeFoi, aDejaFeinte, appliquerEvenement, aUneTraceDeChute, dureeLibre, dureesLibres, effetActionSautee, effetAssomme, effetLibre, effetsDeLaFrise, sansTracesDeChute, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -459,5 +459,116 @@ describe('effetParalyse', () => {
     expect(estParalyse(appliquerEvenement(effets, {type: 'retrait-manuel', id: 'e-1'}), 'hero-1')).toBe(false);
     expect(estParalyse(effets, 'hero-2')).toBe(false);
     expect(sommeModificateurs(modificateursPour(effets, {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0}))).toBe(0);
+  });
+});
+
+describe('effetLibre', () => {
+  it('a defence or protection effect plays when its bearer is attacked; attack and damage when he attacks', () => {
+    expect(effetLibre({porteur: 'hero-1', libelle: 'à couvert', stat: 'defense', valeur: 2, duree: {type: 'fin-round'}})).toEqual({
+      origine: 'manuel',
+      libelle: 'à couvert',
+      porteur: 'hero-1',
+      stat: 'defense',
+      valeur: 2,
+      quand: 'subie',
+      duree: {type: 'fin-round'},
+      manuel: true,
+    });
+    expect(effetLibre({porteur: 'pnj-7', libelle: '', stat: 'protection', valeur: -1, duree: {type: 'combat'}})).toMatchObject({quand: 'subie', libelle: 'protection'});
+    expect(effetLibre({porteur: 'pnj-7', libelle: '  ', stat: 'attaque', valeur: -2, duree: {type: 'rounds', restants: 3}})).toMatchObject({quand: 'attaque', libelle: 'attaque', duree: {type: 'rounds', restants: 3}});
+    expect(effetLibre({porteur: 'pnj-7', libelle: 'rage', stat: 'degats', valeur: 1, duree: {type: 'debut-tour-porteur'}})).toMatchObject({quand: 'attaque', stat: 'degats'});
+  });
+
+  it('enters the rolls like the other effects', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetLibre({porteur: 'hero-1', libelle: 'à couvert', stat: 'defense', valeur: 2, duree: {type: 'fin-round'}})}, () => 'e-1');
+    expect(sommeModificateurs(modificateursPour(effets, ctx()))).toBe(-2);
+  });
+
+  it('an action effect is a malus die on his next rolls, whatever the value', () => {
+    const cree = effetLibre({porteur: 'hero-1', libelle: '', stat: 'action', valeur: 3, duree: {type: 'combat'}});
+    expect(cree).toMatchObject({stat: 'action', valeur: -1, libelle: 'dé de malus', duree: {type: 'combat'}});
+    expect(doitUnDeDeMalus([{...cree, id: 'e-1'}], 'hero-1')).toBe(true);
+  });
+
+  it('keeps the value within −20 and +20 and the label within 60 characters', () => {
+    const cree = effetLibre({porteur: 'hero-1', libelle: 'x'.repeat(80), stat: 'attaque', valeur: 40, duree: {type: 'combat'}});
+    expect(cree.valeur).toBe(20);
+    expect(cree.libelle).toHaveLength(60);
+    expect(normalizeEffets([{...cree, id: 'e-1'}])).toHaveLength(1);
+  });
+
+  it('a number of attacks suffered is only offered for defence, the only effect they use up', () => {
+    expect(dureesLibres('defense').map((d) => d.type)).toContain('usages');
+    expect(dureesLibres('attaque').map((d) => d.type)).not.toContain('usages');
+    expect(dureesLibres('action').map((d) => d.type)).toEqual(['action-porteur', 'fin-round', 'debut-tour-porteur', 'rounds', 'combat']);
+  });
+});
+
+describe('sansTracesDeChute', () => {
+  it('forgets that a hero passed out, was stabilised or knocked out, once he is back on his feet', () => {
+    const effets = [
+      {...effetInconscient('hero-1'), id: 'e-1'},
+      {...effetStabilise('hero-1'), id: 'e-2'},
+      {...effetAssomme('hero-1'), id: 'e-3'},
+      {...effetDegatsMainsNues('hero-1', 3), id: 'e-4'},
+      {...effetInconscient('hero-2'), id: 'e-5'},
+    ];
+    expect(aUneTraceDeChute(effets, 'hero-1')).toBe(true);
+    const apres = sansTracesDeChute(effets, ['hero-1']);
+    expect(apres.map((e) => e.id)).toEqual(['e-4', 'e-5']);
+    expect(aSombre(apres, 'hero-1')).toBe(false);
+    expect(aStabilise(apres, 'hero-1')).toBe(false);
+    expect(aUneTraceDeChute(apres, 'hero-1')).toBe(false);
+  });
+
+  it('returns the same list when there is nothing to forget', () => {
+    const effets = [{...effetInconscient('hero-2'), id: 'e-1'}];
+    expect(sansTracesDeChute(effets, ['hero-1'])).toBe(effets);
+  });
+});
+
+describe('effetActionSautee', () => {
+  it('is a trace shown on the frieze until the turn of its bearer comes back', () => {
+    const trace = {...effetActionSautee('hero-1'), id: 'e-1'};
+    expect(trace).toMatchObject({porteur: 'hero-1', valeur: 0, duree: {type: 'debut-tour-porteur'}});
+    expect(perdSonAction([trace], 'hero-1')).toBe(false);
+    expect(effetsDeLaFrise([trace, effet({id: 'e-2', origine: BOUCLIER_DEPENSE, valeur: 0})], 'hero-1')).toEqual(['a perdu son action (juste une égratignure) · jusqu’à son prochain tour']);
+    expect(effetsDeLaFrise([effet()], 'hero-1')).toEqual(['posture défensive · jusqu’à son prochain tour']);
+  });
+});
+
+describe('dureeLibre', () => {
+  it('counts rounds and attacks suffered from 1 to 20, the other durations have no number', () => {
+    expect(dureeLibre('rounds', 3)).toEqual({type: 'rounds', restants: 3});
+    expect(dureeLibre('usages', 40)).toEqual({type: 'usages', restants: 20});
+    expect(dureeLibre('usages', 0)).toEqual({type: 'usages', restants: 1});
+    expect(dureeLibre('combat', 5)).toEqual({type: 'combat'});
+  });
+});
+
+describe('effetDeFoi / desDeFoi (livre p. 146)', () => {
+  it("gives a bonus or a malus die to the next action of the card, named after the priest", () => {
+    expect(effetDeFoi('pnj-7', 'malus', 'Bellys')).toEqual({
+      origine: 'de-foi-malus', libelle: 'dé de malus (foi de Bellys)', porteur: 'pnj-7', stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true,
+    });
+    expect(effetDeFoi('hero-1', 'bonus', 'Bellys')).toMatchObject({origine: 'de-foi-bonus', libelle: 'dé de bonus (foi de Bellys)', valeur: 1});
+  });
+
+  it('counts the faith dice a card owes, which stack', () => {
+    const effets = [
+      {...effetDeFoi('hero-1', 'bonus', 'A'), id: 'e-1'},
+      {...effetDeFoi('hero-1', 'bonus', 'B'), id: 'e-2'},
+      {...effetDeFoi('hero-1', 'malus', 'C'), id: 'e-3'},
+      {...effetDeFoi('pnj-2', 'malus', 'A'), id: 'e-4'},
+    ];
+    expect(desDeFoi(effets, 'hero-1')).toEqual({bonus: 2, malus: 1});
+    expect(desDeFoi(effets, 'creature-3')).toEqual({bonus: 0, malus: 0});
+  });
+
+  it('falls at the end of the next turn of its bearer, and survives a reload', () => {
+    const effets = [{...effetDeFoi('hero-1', 'bonus', 'A'), id: 'e-1'}];
+    expect(appliquerEvenement(effets, {type: 'fin-tour', carte: 'hero-1', crees: []})).toEqual([]);
+    expect(normalizeEffets(effets)).toEqual(effets);
+    expect(doitUnDeDeMalus([{...effetDeFoi('hero-1', 'malus', 'A'), id: 'e-1'}], 'hero-1')).toBe(false);
   });
 });

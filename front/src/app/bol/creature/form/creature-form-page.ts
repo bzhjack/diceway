@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
+import {applyEach, FieldTree, form, FormField, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
@@ -35,6 +36,7 @@ function creatureFormDefaults(): CreatureFormModel {
     degats: '0',
     protection: '0',
     avatar: null,
+    mort_vivant: false,
     capacites: [],
   };
 }
@@ -87,9 +89,11 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
   selector: 'bol-creature-form-page',
   imports: [
     DwFormHeaderComponent,
+    FormField,
     MatCard,
     MatCardContent,
     MatButtonModule,
+    MatCheckboxModule,
     MatIconModule,
     EntityGeneralComponent,
     CreatureCapacitesComponent,
@@ -227,6 +231,7 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
       degats: creature.degats,
       protection: creature.protection,
       avatar: creature.avatar,
+      mort_vivant: creature.mort_vivant ?? false,
       capacites: creature.capacites.map((capacite) => ({
         id: capacite.capacite_id,
         detail: capacite.detail || null,

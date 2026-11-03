@@ -1,0 +1,115 @@
+<span class="tas-lbl" id="tas-l2">Le sort</span>
+@if (turn.actionPerdue()) {
+  <p class="tas-note">{{ turn.card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet (ⓘ) pour le laisser agir.</p>
+} @else if (loadout.sortSansJet()) {
+  <!-- Un charme automatique : pas de jet, il suffit de le payer -->
+  <span class="tas-goal">
+    <b>Auto</b>
+    <span><small>sans jet</small></span>
+  </span>
+  <span class="tas-stack">
+    @if (!flow.sortLance()) {
+      <button mat-flat-button type="button" class="tas-apply" [disabled]="!flow.sortPret()" (click)="flow.castWithoutRoll()">Lancer le charme · {{ loadout.sortCout().total }} pts</button>
+    }
+  </span>
+} @else if (attack.sortGoal(); as goal) {
+  <span class="tas-goal">
+    <b>{{ goal.big }}</b>
+    <span>
+      <em [class]="'tas-chance tas-chance--' + (goal.chance >= 50 ? 'good' : goal.chance >= 25 ? 'mid' : 'low')">{{ goal.chance }} %</em>
+      <small>{{ goal.small }}</small>
+    </span>
+  </span>
+  <span class="tas-stack">
+    <span class="tas-r1">
+      <!-- Le total des deux dés lancés à table ; le bouton les lance à l'écran. Le premier jet paie le sort. -->
+      <span class="tas-entry">
+        <input
+          #attackInput
+          class="tas-total"
+          type="text"
+          inputmode="numeric"
+          maxlength="2"
+          autocomplete="off"
+          placeholder="total"
+          [attr.aria-label]="'Total des deux dés du sort lancés à table' + (flow.sortLance() ? '' : ', le premier jet dépense ' + loadout.sortCout().total + ' points de pouvoir')"
+          [value]="attack.sortDiceSum() ?? ''"
+          [disabled]="turn.rolling() || !flow.sortPret()"
+          (focus)="attackInput.select()"
+          (input)="flow.onSortInput(attackInput.value)"
+          (blur)="turn.restoreInput(attackInput, attack.sortDiceSum())"
+        />
+        <button
+          type="button"
+          class="tas-dice-btn"
+          [disabled]="turn.rolling() || !flow.sortPret()"
+          [attr.aria-label]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran pour le sort'"
+          [matTooltip]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'"
+          (click)="flow.rollSort()"
+        >
+          <mat-icon svgIcon="gi-dice" />
+        </button>
+      </span>
+      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attack.sortRowDice()" [total]="attack.sortDiceSum()" [slots]="loadout.diceCount()" />
+      <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="turn.rolling() || flow.sortLance()" [attr.inert]="turn.rolling() || flow.sortLance() ? '' : null">
+        <div class="tas-mj-row">
+          <button type="button" class="tas-chip tas-chip--de tas-chip--bonus" [attr.aria-pressed]="loadout.gmDie() === 'bonus'" aria-label="Dé de bonus du MJ" matTooltip="Dé de bonus, quand les circonstances aident : 3d6, on garde les deux meilleurs" (click)="loadout.toggleGmDie('bonus')">
+            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
+          </button>
+          <button type="button" class="tas-chip tas-chip--de tas-chip--malus" [attr.aria-pressed]="loadout.gmDie() === 'malus'" aria-label="Dé de malus du MJ" matTooltip="Dé de malus, quand les circonstances gênent : 3d6, on garde les deux moins bons" (click)="loadout.toggleGmDie('malus')">
+            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
+          </button>
+          <dw-value-stepper [(value)]="loadout.freeModifier" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet de sort" />
+        </div>
+        <span class="tas-tag">Le MJ</span>
+      </div>
+    </span>
+    <dw-roll-sum aria-label="Calcul du sort" [pending]="attack.sortTotal() === null" [terms]="attack.sortSum()" />
+  </span>
+} @else {
+  <span class="tas-wait">Un sort sur l’esprit : choisis d’abord sa cible.</span>
+}
+
+@if (!turn.actionPerdue()) {
+  <div class="tas-issue">
+    <span class="tas-verdict" aria-live="polite">
+      @if (turn.rolling()) {
+        <span class="tas-wait">Les dés roulent…</span>
+      } @else if (attack.sortVerdict(); as v) {
+        <b [class]="'tas-verdict-title tas-verdict-title--' + v.tone">{{ v.title }}</b>
+        <span>{{ v.detail }}</span>
+      } @else if (!loadout.sortPayable()) {
+        <b class="tas-verdict-title tas-verdict-title--echec">Pas assez de pouvoir</b>
+        <span>Il en faut {{ loadout.sortCout().total }}, il en a {{ turn.attacker()?.magie?.pouvoir ?? 0 }}.</span>
+      } @else if (loadout.sortVise() && !turn.target()) {
+        <span class="tas-wait">Choisis la cible du sort.</span>
+      } @else {
+        <span class="tas-wait">{{ loadout.sortSansJet() ? 'Un clic le lance.' : 'Tape le total, ou lance à l’écran.' }}</span>
+      }
+    </span>
+    <!-- L'héroïsme sur le jet de sort : relancer un sort raté (sans le repayer), accepter un échec critique -->
+    <span class="tas-acts">
+      @if (!turn.rolling()) {
+        @if (attack.canSortCritique()) {
+          <button type="button" class="tas-act tas-act--critique" [attr.aria-pressed]="attack.sortCritique()" matTooltipPosition="above" matTooltip="Échec critique : le sort se retourne contre lui, et il gagne 1 point d’héroïsme" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="attack.toggleSortCritique()">
+            <mat-icon svgIcon="skull" aria-hidden="true" /> <span class="tas-cost">+1 <span class="tas-gem" aria-hidden="true"></span></span>
+          </button>
+        }
+        @if (attack.canSortFavor()) {
+          <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance les dés du sort, sans le repayer" [attr.aria-label]="'Faveur divine : relancer les dés du sort pour ' + turn.unPointAttaquant()" (click)="flow.sortFavor()">
+            <mat-icon svgIcon="gi-reroll" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+          </button>
+        }
+      }
+    </span>
+  </div>
+  <p class="tas-sort-notes">
+    <span>Coût {{ loadout.sortCoutDetail() }} {{ flow.sortLance() ? '· payé' : '' }}</span>
+    @if (loadout.sortModel().cercle === 3) {
+      <span>· 3e cercle : 1 point de pouvoir perdu pour toujours (ou 1 point d’attribut), à reporter sur la fiche.</span>
+    }
+    @if (turn.target() && turn.targetStats()?.magie?.resistantMagie) {
+      <span>· {{ turn.target()?.nom }}, résistant à la magie : sur un 6 au d6, le sort est sans effet.</span>
+    }
+  </p>
+}

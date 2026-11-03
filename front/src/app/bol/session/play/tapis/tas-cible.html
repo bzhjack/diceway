@@ -24,14 +24,19 @@
     <!-- Sa vitalité et ses points sous ses chiffres, comme pour celui qui joue -->
     <div class="tas-cible-regl">
       <div class="tas-vit">
-        <dw-value-stepper [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
-        <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
+        <dw-value-stepper [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="turn.targetVitaliteLabel() + ' de ' + t.nom" [heart]="true" />
+        <span class="tas-tag">{{ turn.targetVitaliteLabel() }} /{{ t.vitaliteMax ?? '—' }}</span>
       </div>
       @if (cible.pointsCible(); as pts) {
         <div class="tas-vit">
           <bol-points-stepper [kind]="t.kind" [points]="pts.points" [nom]="t.nom" (stepped)="turn.targetHeroismeAdjusted.emit({card: t, delta: $event})" />
           <span class="tas-tag">{{ pts.titre }}</span>
         </div>
+      }
+      <!-- Un prêtre visé peut, sans attendre son tour, imposer un dé de malus à son agresseur (livre p. 146) -->
+      @let foi = turn.targetStats()?.magie?.foi ?? null;
+      @if (foi !== null) {
+        <bol-de-foi [pretre]="t" [foi]="foi" [visibles]="turn.visibles()" (stepped)="turn.ajusterRessource(t, 'foi', $event)" (donne)="turn.donnerDeFoi(t, $event.porteur, $event.sens)" />
       }
     </div>
     <div ccActions class="tas-target-actions">

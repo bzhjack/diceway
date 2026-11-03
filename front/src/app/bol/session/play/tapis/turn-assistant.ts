@@ -7,10 +7,12 @@ import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
+import {RessourceChange} from '../../models/magie-combat.model';
 import {TasAttaqueComponent} from './tas-attaque';
 import {TasAttaquantComponent} from './tas-attaquant';
 import {TasCibleComponent} from './tas-cible';
 import {TasDegatsComponent} from './tas-degats';
+import {TasSortComponent} from './tas-sort';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
@@ -28,7 +30,7 @@ import {TurnFlowStore} from './turn-flow.store';
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [TasAttaquantComponent, TasCibleComponent, TasAttaqueComponent, TasDegatsComponent],
+  imports: [TasAttaquantComponent, TasCibleComponent, TasAttaqueComponent, TasSortComponent, TasDegatsComponent],
   // L'état du tour, une instance par assistant : ses quatre blocs le partagent.
   providers: [TurnContextStore, TurnLoadoutStore, TurnAttackStore, TurnDamageStore, TurnCibleStore, TurnFlowStore],
   templateUrl: './turn-assistant.html',
@@ -65,6 +67,8 @@ export class TurnAssistantComponent {
   readonly canRescue = input(false);
   /** Les piétailles de son camp qui peuvent se joindre à l'attaque de la carte active, une piétaille : elles attaquent en horde. */
   readonly hordeMates = input<readonly TapisCard[]>([]);
+  /** Les êtres que la carte active peut voir, des deux camps : un prêtre leur donne un dé de foi. */
+  readonly visibles = input<readonly TapisCard[]>([]);
 
   readonly choiceChanged = output<AttackChoice | null>();
   /** Les piétailles engagées dans la horde : leur tour finit avec celui de la carte active. */
@@ -92,10 +96,13 @@ export class TurnAssistantComponent {
   readonly vitaliteAdjusted = output<VitaliteChange>();
   /** Points d'héroïsme dépensés par la cible, un héros : parade in extremis, « Juste une égratignure ». */
   readonly targetHeroismeAdjusted = output<HeroismeChange>();
+  /** Points de foi (un dé de foi) ou de pouvoir (un sort) dépensés ou rendus par l'attaquant ou la cible. */
+  readonly ressourceAdjusted = output<RessourceChange>();
 
   protected readonly turn = inject(TurnContextStore);
   protected readonly loadout = inject(TurnLoadoutStore);
   protected readonly flow = inject(TurnFlowStore);
+  protected readonly attack = inject(TurnAttackStore);
 
   constructor() {
     this.turn.connect(this);

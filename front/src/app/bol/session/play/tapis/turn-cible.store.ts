@@ -1,4 +1,4 @@
-import {afterNextRender, computed, effect, ElementRef, inject, Injectable, signal} from '@angular/core';
+import {afterNextRender, computed, effect, ElementRef, inject, Injectable, linkedSignal, signal} from '@angular/core';
 import {descriptionEffet, libelleDuree, modificateursPour, sommeModificateurs} from './combat-effects.util';
 import {sbireBouclier} from '../../combat-attack.util';
 import {attackBonus, computeAttackTotal, resolvePostureAttackModifier} from '../../combat-resolution.util';
@@ -9,6 +9,8 @@ import {parFiche} from '../theatre/theatre.util';
 import {sansNumero} from '../../reaction-roll.util';
 import {StatTile, LifeBar, TargetGroup} from '../../models/turn-assistant.model';
 import {protectionTile, sideOf, pointsAffiches} from './turn-assistant.util';
+import {objetsDeParade} from './options-heroiques.util';
+import {ObjetDeParade} from '../../models/combat-attack.model';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
@@ -28,8 +30,11 @@ export class TurnCibleStore {
     if (!stats) {
       return [];
     }
-    const armorIgnored = this.loadout.choice()?.special?.slug === 'armor-chink';
+    const armorIgnored = !this.loadout.sortMode() && this.loadout.choice()?.special?.slug === 'armor-chink';
+    // Contre un sort, son esprit : un sort qui agit sur l'esprit le subit en malus (livre p. 148).
+    const esprit: StatTile[] = this.loadout.sortMode() ? [{label: 'Esprit', value: this.turn.signed(stats.magie?.esprit ?? 0), ...(this.loadout.sortModel().espritCible ? {tone: 'up' as const} : {})}] : [];
     return [
+      ...esprit,
       {label: 'Défense', value: String(stats.defense)},
       armorIgnored ? {label: 'Armure ignorée', value: '0', tone: 'up'} : protectionTile(stats.protectionText, stats.protection),
     ];
@@ -130,7 +135,17 @@ export class TurnCibleStore {
   readonly targetHeroisme = computed(() => this.turn.targetStats()?.heroisme ?? 0);
 
   /** Parade in extremis (02-actions-combat.md, « Points d'héroïsme ») : un coup qui touche un héros ou un rival, pas encore appliqué. */
-  readonly canParry = computed(() => this.damage.hasDamageStep() && this.targetHeroisme() > 0);
+  // Contre un sort, ni parade in extremis ni bouclier humain : le livre ne les donne que contre un coup (interprétation).
+  readonly canParry = computed(() => this.damage.hasDamageStep() && !this.loadout.sortMode() && this.targetHeroisme() > 0);
+
+  /** Ce que la cible peut interposer dans une parade in extremis : son bouclier, son arme, ou les deux (le choix est alors proposé). */
+  readonly parryItems = computed(() => objetsDeParade(this.turn.targetStats()));
+
+  /** Ce qu'elle interpose, et qui sera brisé : son bouclier d'office s'il en a un, sinon son arme ; le MJ peut choisir l'autre. */
+  readonly parryWith = linkedSignal<{readonly key: string | null; readonly items: string}, ObjetDeParade>({
+    source: () => ({key: this.turn.targetKey(), items: this.parryItems().join(',')}),
+    computation: () => this.parryItems()[0],
+  });
 
   /** Le sbire qui peut servir de bouclier humain au rival visé : une piétaille encore debout de son camp. */
   readonly sbire = computed(() => {
@@ -140,7 +155,7 @@ export class TurnCibleStore {
 
   /** « Bouclier humain » (04-pnj-creatures-demons.md, « Points de vilenie ») : un coup qui touche un rival qui a de la vilénie et un
    * sbire à ses côtés. */
-  readonly canHumanShield = computed(() => this.damage.hasDamageStep() && this.targetHeroisme() > 0 && this.sbire() !== null);
+  readonly canHumanShield = computed(() => this.damage.hasDamageStep() && !this.loadout.sortMode() && this.targetHeroisme() > 0 && this.sbire() !== null);
 
   constructor() {
     // Les flèches de la ligne des cibles suivent sa taille (fenêtre, panneau) et son contenu (cibles qui changent).

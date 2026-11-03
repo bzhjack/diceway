@@ -1,3 +1,4 @@
+import {RessourcesMagiques} from './magie-combat.model';
 import {TapisCard} from './tapis.model';
 
 /** Dé de dégâts d'une arme ou d'une créature : d3, d6, d6 de malus (garder le moins bon de 2d6) ou de bonus. */
@@ -38,11 +39,17 @@ export interface ResolvedCombatStats {
   readonly bouclierDefenseToutes: number;
   /** Porte un bouclier (équipé pour un héros ; un PNJ porte tout ce qu'il possède) : l'autre main est prise. */
   readonly bouclier?: boolean;
+  /** Tient une arme en main (une arme équipée pour un héros, toutes celles d'un PNJ) : on peut la lui faire lâcher (désarmement) ou
+   * l'interposer (parade in extremis). `false` pour une créature ou un démon ; absent quand on ne sait pas. */
+  readonly arme?: boolean;
   /** L'arme nommée par son avantage « Arme favorite » (héros ou PNJ) : dé de bonus quand il attaque avec elle ; `null` sans. */
   readonly armeFavorite?: string | null;
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;
+  /** Sa magie : son esprit, sa foi, son pouvoir et son rang de sorcier, le surcoût de son armure (livre p. 146-148). Absente tant
+   * qu'on ne la connaît pas. */
+  readonly magie?: RessourcesMagiques;
   /** Capacités ou pouvoirs d'une créature ou d'un démon qui donnent un dé de bonus ou de malus à toutes ses attaques. */
   readonly attaqueAvantages?: readonly string[];
   readonly attaqueDesavantages?: readonly string[];
@@ -54,6 +61,9 @@ export interface VitaliteChange {
   readonly delta: number;
 }
 
+/** Ce qu'une cible interpose dans une parade in extremis, et qui est brisé. */
+export type ObjetDeParade = 'bouclier' | 'arme';
+
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
 export interface AppliedHit {
   readonly target: TapisCard;
@@ -62,11 +72,13 @@ export interface AppliedHit {
   readonly unarmed: boolean;
   /** Paré in extremis par la cible (1 point d'héroïsme ou de vilénie) : ce qu'elle a interposé, et qui est brisé ; `sbire` pour le
    * « bouclier humain » d'un rival, dont le sbire encaisse le coup. */
-  readonly parried?: 'bouclier' | 'arme' | 'sbire';
+  readonly parried?: ObjetDeParade | 'sbire';
   /** Le sbire qui a servi de bouclier humain. */
   readonly sbire?: string;
   /** « Juste une égratignure » (1 point d'héroïsme) : le dé gardé du d6B, et la vitalité rendue (plafonnée aux dégâts du coup). */
   readonly scratch?: {readonly die: number; readonly healed: number};
+  /** « Massacrer la piétaille » : les piétailles mises hors de combat par le coup, à la place des dégâts. */
+  readonly massacre?: readonly string[];
 }
 
 /** Des points d'héroïsme dépensés (négatif) ou gagnés par une carte qui n'est pas l'attaquant : la cible qui pare ou encaisse. */

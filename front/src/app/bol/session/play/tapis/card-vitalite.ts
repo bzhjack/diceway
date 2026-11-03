@@ -18,7 +18,7 @@ import {TapisKind} from '../../models/tapis.model';
       (valueChange)="onChange($event)"
       [min]="0"
       [max]="max() ?? undefined"
-      [ariaLabel]="'Vitalité de ' + nom() + ' ' + label()"
+      [ariaLabel]="label() + ' de ' + nom()"
       [heart]="true"
     />
   `,

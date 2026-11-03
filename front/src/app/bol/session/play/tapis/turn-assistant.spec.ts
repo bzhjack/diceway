@@ -4,7 +4,13 @@ import {BolArmeModel, BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {TapisCard} from '../../models/tapis.model';
+import {RessourceChange, RessourcesMagiques} from '../../models/magie-combat.model';
+import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
+import {effetDeFoi} from './combat-effects.util';
+import {MatDialog} from '@angular/material/dialog';
+import {of} from 'rxjs';
 import {TurnAssistantComponent} from './turn-assistant';
+import {MassacrePietailleDialogData} from '../../models/massacre-pietaille-dialog.model';
 
 function carte(over: Partial<TapisCard> = {}): TapisCard {
   return {
@@ -79,6 +85,8 @@ describe('TurnAssistantComponent', () => {
     horde: [] as (readonly string[])[],
     effects: [] as string[],
     removed: [] as string[],
+    ressources: [] as RessourceChange[],
+    nouveaux: [] as NewEffect[],
   };
 
   async function rendre(inputs: Record<string, unknown> = {}): Promise<void> {
@@ -97,6 +105,8 @@ describe('TurnAssistantComponent', () => {
     c.hordeChanged.subscribe((v) => events.horde.push(v));
     c.effectAdded.subscribe((v) => events.effects.push(v.origine));
     c.effectRemoved.subscribe((v) => events.removed.push(v));
+    c.ressourceAdjusted.subscribe((v) => events.ressources.push(v));
+    c.effectAdded.subscribe((v) => events.nouveaux.push(v));
     const all: Record<string, unknown> = {card: carte(), attacker: stats(), combatOptions: OPTIONS, armes: [arme(1)], ownedArmes: [arme(1)], ...inputs};
     for (const [name, value] of Object.entries(all)) {
       fixture.componentRef.setInput(name, value);
@@ -423,6 +433,99 @@ describe('TurnAssistantComponent', () => {
     });
   });
 
+  describe('les options de succès héroïque', () => {
+    it('Carnage pris deux fois : la première attaque ratée, la seconde reste due', async () => {
+      await viser();
+      await saisirAttaque('12');
+      await cliquer('Succès légendaire');
+      await cliquer(/^\s*Carnage/);
+      await cliquer(/^\s*Carnage/);
+      await saisirDegats('4');
+      await cliquer('Appliquer');
+
+      await saisirAttaque('5');
+      expect(texte()).toContain('le Carnage donne encore 1 attaque');
+      await cliquer('Attaque suivante (Carnage)');
+      expect(texte()).not.toContain('Raté');
+
+      await saisirAttaque('5');
+      expect(texte()).not.toContain('le Carnage donne encore');
+      await cliquer('Fin du tour');
+      expect(events.endTurn).toEqual([false]);
+    });
+
+    it('le renversement est interdit contre une cible trop grande, et l’infobulle dit pourquoi', async () => {
+      const troll = carte({key: 'creature-3', kind: 'creature', camp: 'adversaires', pivotId: 3, nom: 'Troll', rang: 'Coriace', taille: 6, joueur: null, heroisme: null});
+      await viser({targets: [troll], target: troll, targetStats: stats({herosId: null, heroisme: null, arme: false})});
+      await saisirAttaque('12');
+
+      const renversement = bouton(/Renversement/);
+      expect(renversement.getAttribute('aria-disabled')).toBe('true');
+      expect(renversement.getAttribute('aria-label')).toContain('dépasse Grimar');
+      expect(bouton(/Désarmement/).getAttribute('aria-disabled')).toBe('true');
+      renversement.click();
+      await stable();
+      expect(renversement.getAttribute('aria-pressed')).toBe('false');
+      expect(bouton(/Coup dévastateur/).getAttribute('aria-disabled')).toBeNull();
+    });
+  });
+
+  describe('la parade in extremis', () => {
+    const heroCible = carte({key: 'hero-2', pivotId: 2, sourceId: 'h2', camp: 'adversaires', nom: 'Axel', heroisme: 1});
+    const segment = (nom: string) => [...element.querySelectorAll<HTMLButtonElement>('.tas-seg')].find((b) => (b.textContent ?? '').trim() === nom);
+
+    it('avec un bouclier et une arme, le MJ choisit ce qui est brisé', async () => {
+      await viser({targets: [heroCible], target: heroCible, targetStats: stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: true})});
+      await saisirAttaque('8');
+      expect(segment('Bouclier')!.getAttribute('aria-pressed')).toBe('true');
+
+      segment('Arme')!.click();
+      await stable();
+      await cliquer('Parade in extremis');
+
+      expect(events.effects).toEqual(['arme-brisee']);
+      expect(texte()).toContain('son arme, qui est brisée');
+    });
+
+    it('sans arme en main, son bouclier, sans choix', async () => {
+      await viser({targets: [heroCible], target: heroCible, targetStats: stats({herosId: 'h2', heroisme: 1, bouclier: true, arme: false})});
+      await saisirAttaque('8');
+      expect(segment('Arme')).toBeUndefined();
+      await cliquer('Parade in extremis');
+      expect(events.effects).toEqual(['sans-bouclier']);
+    });
+  });
+
+  describe('massacrer la piétaille', () => {
+    const bandit = (n: number) => carte({key: `pnj-${n}`, kind: 'pnj', camp: 'adversaires', pivotId: n, nom: `Bandit #${n}`, rang: 'Piétaille', joueur: null, heroisme: null, vitaliteCourante: 2, vitaliteMax: 2});
+
+    it('propose qui tombe, la cible d’abord, et met hors de combat ceux que le MJ garde', async () => {
+      let recu: MassacrePietailleDialogData | null = null;
+      TestBed.overrideProvider(MatDialog, {
+        useValue: {
+          open: (_: unknown, config: {data: MassacrePietailleDialogData}) => {
+            recu = config.data;
+            return {afterClosed: () => of({tombes: ['pnj-6', 'pnj-5']})};
+          },
+        },
+      });
+      await viser({targets: [bandit(5), bandit(6), bandit(7)], target: bandit(6), targetStats: stats({herosId: null, heroisme: null})});
+      await saisirAttaque('12');
+      await cliquer('Massacrer la piétaille');
+      await saisirDegats('2');
+      await cliquer('Appliquer');
+
+      // 2 au dé, +2 vigueur, −1 protection : 3 piétailles.
+      expect(recu!.degats).toBe(3);
+      expect(recu!.candidats.map((c) => c.key)).toEqual(['pnj-6', 'pnj-5', 'pnj-7']);
+      expect(events.applied.map((hit) => [hit.target.key, hit.damage])).toEqual([
+        ['pnj-6', 2],
+        ['pnj-5', 2],
+      ]);
+      expect(texte()).toContain('2 hors de combat');
+    });
+  });
+
   describe('la horde', () => {
     const pietaille = (n: number) => carte({key: `pnj-${n}`, kind: 'pnj', camp: 'adversaires', pivotId: n, nom: `Squelette #${n}`, rang: 'Piétaille', joueur: null, heroisme: null});
 
@@ -510,6 +613,125 @@ describe('TurnAssistantComponent', () => {
       } finally {
         vi.useRealTimers();
       }
+    });
+  });
+
+  describe('la sorcellerie (livre p. 148-153)', () => {
+    const magie = (over: Partial<RessourcesMagiques> = {}): RessourcesMagiques => ({
+      esprit: 2,
+      foi: null,
+      pouvoir: 12,
+      sorcier: 2,
+      surcoutArmure: 1,
+      magieRoisSorciers: false,
+      resistantMagie: false,
+      ...over,
+    });
+    const sorcier = (over: Partial<RessourcesMagiques> = {}) => stats({magie: magie(over)});
+    const cibleEsprit = (esprit: number) => stats({herosId: null, heroisme: null, magie: {...magie(), esprit, pouvoir: null, sorcier: null}});
+
+    it('un sorcier lance un sort au lieu d’attaquer : 2d6 + esprit + sorcier, et le premier jet paie le sort, armure comprise', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+
+      // 1er cercle : 5 points, +1 pour l'armure légère ; +2 esprit, +2 sorcier, Moyenne : il faut 5 aux dés.
+      expect(texte()).toContain('6 pts de pouvoir');
+      expect(texte()).toContain('5+');
+      await saisirAttaque('6');
+
+      expect(texte()).toContain('Le sort agit');
+      expect(events.ressources).toEqual([{card: carte(), ressource: 'pouvoir', delta: -6}]);
+      expect(events.rolled).toEqual([]);
+      expect(texte()).toContain('Le sort ne blesse pas');
+      await cliquer('Fin du tour');
+      expect(events.endTurn).toEqual([false]);
+    });
+
+    it('un sort qui blesse passe aux dégâts : d6, sans vigueur ni protection', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Blesse');
+      await saisirAttaque('7');
+      await saisirDegats('4');
+
+      expect(texte()).toContain('4 dégâts');
+      await cliquer('Appliquer 4');
+      expect(events.applied).toEqual([{target: cible, damage: 4, unarmed: false}]);
+      await cliquer('Fin du tour');
+      expect(events.endTurn).toEqual([false]);
+    });
+
+    it('un sort sur l’esprit retranche l’esprit de la cible', async () => {
+      await viser({attacker: sorcier(), targetStats: cibleEsprit(3)});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Sur l’esprit');
+
+      // +2 +2 −3 : il faut 8 aux dés.
+      expect(texte()).toContain('8+');
+      expect(texte()).toContain('esprit de Kalzatan');
+    });
+
+    it('un sort raté dépense le pouvoir ; vider la case avant de le valider le rend', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      await saisirAttaque('3');
+
+      expect(texte()).toContain('Le sort échoue');
+      await saisirAttaque('');
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6, 6]);
+    });
+
+    it('sans assez de pouvoir, le jet reste fermé', async () => {
+      await viser({attacker: sorcier({pouvoir: 4})});
+      await cliquer(/^ *Sort *null$/);
+
+      expect(texte()).toContain('Pas assez de pouvoir');
+      expect(element.querySelector<HTMLInputElement>('input[aria-label^="Total des deux dés du sort"]')!.disabled).toBe(true);
+    });
+
+    it('le 2e cercle coûte 10 points, et une condition en plus en retire 1', async () => {
+      await viser({attacker: sorcier({surcoutArmure: 0})});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('2e cercle');
+      expect(texte()).toContain('10 pts de pouvoir');
+      expect(texte()).toContain('Difficile');
+
+      element.querySelector<HTMLButtonElement>('.tas-sortf-cond dw-value-stepper button:last-of-type')!.click();
+      await stable();
+      expect(texte()).toContain('9 pts de pouvoir');
+    });
+
+    it('une carte sans pouvoir n’a pas de sort', async () => {
+      await viser();
+
+      expect(() => bouton(/^ *Sort *null$/)).toThrow();
+    });
+  });
+
+  describe('la foi (livre p. 146)', () => {
+    it('un prêtre donne un dé de bonus : le dé attend la prochaine action, et 1 point de foi est dépensé', async () => {
+      await viser({attacker: stats({magie: {esprit: 1, foi: 2, pouvoir: null, sorcier: null, surcoutArmure: 0, magieRoisSorciers: false, resistantMagie: false}}), visibles: [carte(), cible]});
+      expect(texte()).toContain('Foi');
+
+      await cliquer('Dé de foi');
+      const item = (libelle: string) => [...document.querySelectorAll<HTMLButtonElement>('[mat-menu-item]')].find((b) => (b.textContent ?? '').includes(libelle))!;
+      item('Dé de malus à').click();
+      await stable();
+      item('Kalzatan').click();
+      await stable();
+
+      expect(events.nouveaux).toEqual([effetDeFoi('pnj-7', 'malus', 'Grimar')]);
+      expect(events.ressources).toEqual([{card: carte(), ressource: 'foi', delta: -1}]);
+    });
+
+    it('un dé de foi dû entre dans le jet d’attaque, en plus du dé du MJ', async () => {
+      const effets: CombatEffect[] = [{...effetDeFoi('hero-1', 'bonus', 'Bellys'), id: 'e-1'}];
+      await viser({effets});
+
+      expect(texte()).toContain('Foi : 1 dé de bonus à cette action.');
+      expect(texte()).toContain('2d6B');
+      await cliquer('Dé de bonus du MJ');
+      expect(element.querySelector('input[aria-label^="Total des deux dés"]')?.getAttribute('aria-label')).toContain('gardés');
     });
   });
 

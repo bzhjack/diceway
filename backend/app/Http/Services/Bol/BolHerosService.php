@@ -126,6 +126,20 @@ class BolHerosService
         return $heros->fresh();
     }
 
+    /** Dépense ou rend des points de foi (`foi`) ou de pouvoir (`pouvoir`) sur la fiche d'un héros, bornés à 0 : à la table, comme son
+     * héroïsme (livre p. 146 et 148). Null si la fiche est introuvable ou la ressource inconnue. */
+    public function adjustRessource(string $herosId, string $userId, string $ressource, int $delta): ?BolHeros
+    {
+        $heros = in_array($ressource, ['foi', 'pouvoir'], true) ? BolHeros::where('id', $herosId)->where('user_id', $userId)->first() : null;
+        if (!$heros) {
+            return null;
+        }
+
+        $heros->update([$ressource => max(0, (int) $heros->{$ressource} + $delta)]);
+
+        return $heros->fresh();
+    }
+
     /** Avantage « Arme favorite » (bol_avantage.id). */
     private const AVANTAGE_ARME_FAVORITE = 6;
 

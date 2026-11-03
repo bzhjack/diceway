@@ -10,6 +10,8 @@ import {ResolvedCombatStats} from '../../models/combat-attack.model';
 import {DwRollSumTerm} from '../../../../shared/models/roll-sum.model';
 import {StatTile, AttackGoal, AttackVerdict} from '../../models/turn-assistant.model';
 import {signedTerm, pointsAffiches, sumTermOf} from './turn-assistant.util';
+import {optionHeroiqueBloquee} from './options-heroiques.util';
+import {issueSort, modificateurSort} from '../../magie-combat.util';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 
@@ -19,7 +21,12 @@ export class TurnAttackStore {
   private readonly turn = inject(TurnContextStore);
   private readonly loadout = inject(TurnLoadoutStore);
 
-  readonly heroicOptions = HEROIC_OPTIONS;
+  /** Les options de succès héroïque, chacune avec la raison qui l'interdit contre cette cible (taille pour le renversement, arme en main
+   * pour le désarmement, piétaille pour le massacre) ; `blocked` est `null` pour une option possible. */
+  readonly heroicOptions = computed(() => {
+    const contexte = {attaquant: this.turn.card(), cible: this.turn.target(), cibleArme: this.turn.targetStats()?.arme};
+    return HEROIC_OPTIONS.map((option) => ({...option, blocked: optionHeroiqueBloquee(option.slug, contexte)}));
+  });
 
   /** La feinte de ce jet a été notée sur la cible : l'avertissement ne vaut que pour une nouvelle tentative. */
   readonly feintNoted = signal(false);
@@ -48,6 +55,16 @@ export class TurnAttackStore {
     }
     const totale = this.loadout.defenseTotale();
     const posture = (totale ? 2 : (POSTURE_DEFENSE[this.loadout.effectiveOption()?.slug ?? ''] ?? 0)) + (POSTURE_DEFENSE[this.loadout.effectiveSpecial()?.slug ?? ''] ?? 0);
+    const magie = stats.magie;
+    if (this.loadout.sortMode() && magie && !totale) {
+      // Un sort : ce qui compte, c'est son esprit et son rang de sorcier ; ses dégâts sont ceux du sort.
+      return [
+        {label: 'Esprit', value: this.turn.signed(magie.esprit)},
+        {label: 'Sorcier', value: this.turn.signed(magie.sorcier ?? 0)},
+        {label: 'Défense', value: String(stats.defense + posture), ...(posture === 0 ? {} : {tone: posture > 0 ? ('up' as const) : ('down' as const)})},
+        {label: 'Dégâts', value: this.loadout.sortModel().blessant ? this.loadout.sortDegats() : '—', tone: 'hot'},
+      ];
+    }
     const reglages = this.loadout.postureModifier() + sommeModificateurs(this.loadout.extraAttackTerms());
     const attaque = attackBonus(stats, this.loadout.isTir(), this.loadout.brawl()) + (this.turn.legendaryBonus() ? 1 : 0) + reglages;
     const enPlus = sommeModificateurs(this.loadout.extraDamageTerms());
@@ -274,6 +291,9 @@ export class TurnAttackStore {
     return counts;
   });
 
+  /** Les attaques que le Carnage doit encore après celle-ci, quand elle a raté : un Carnage pris deux fois garde sa seconde attaque. */
+  readonly carnageRemaining = computed(() => (this.attackVerdict()?.tone === 'echec' ? Math.max(0, this.carnageOwed() - 1) : 0));
+
   /** Le coup se conclut sur un Carnage : une nouvelle attaque suit, le tour ne finit pas. */
   readonly carnagePicked = computed(() => this.picks().includes('carnage'));
 
@@ -309,6 +329,174 @@ export class TurnAttackStore {
       }
     }
   });
+
+  // ── Le jet de sort (livre p. 148) : 2d6 + esprit + sorcier ± difficulté, moins l'esprit de la cible pour un sort qui agit sur son esprit ;
+  // réussite à 9, comme tout jet d'action. Ses dés sont à part de ceux de l'attaque.
+
+  readonly sortDice = signal<readonly [number, number] | null>(null);
+
+  readonly sortRolledDice = signal<readonly number[] | null>(null);
+
+  readonly sortManual = signal<number | null>(null);
+
+  /** Un charme automatique a été lancé, sans jet. */
+  readonly sortAuto = signal(false);
+
+  /** Les points de pouvoir payés pour le sort de ce tour ; 0 tant qu'il n'est pas lancé. */
+  readonly sortPaid = signal(0);
+
+  /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */
+  readonly sortCritique = signal(false);
+
+  /** Les dégâts du sort ont été appliqués : il ne reste qu'à finir le tour. */
+  readonly sortDamageDone = signal(false);
+
+  readonly sortDiceSum = computed(() => {
+    const d = this.sortDice();
+    return d ? d[0] + d[1] : this.sortManual();
+  });
+
+  private readonly sortNatural = computed<readonly [number, number] | null>(() => {
+    const d = this.sortDice();
+    if (d) {
+      return d;
+    }
+    const manual = this.sortManual();
+    return manual === 2 ? [1, 1] : manual === 12 ? [6, 6] : null;
+  });
+
+  /** L'esprit de la cible, en malus d'un sort qui agit sur son esprit ; `null` pour un autre sort. `undefined` : il faut d'abord la viser. */
+  private readonly espritCible = computed<number | null | undefined>(() => {
+    if (!this.loadout.sortModel().espritCible) {
+      return null;
+    }
+    const stats = this.turn.targetStats();
+    return this.turn.target() && stats ? (stats.magie?.esprit ?? 0) : undefined;
+  });
+
+  /** Ce qui s'ajoute aux deux dés du jet de sort, modificateur du MJ compris ; `null` tant qu'il manque la cible d'un sort sur l'esprit. */
+  readonly sortModifier = computed(() => {
+    const magie = this.turn.attacker()?.magie;
+    const espritCible = this.espritCible();
+    if (!magie || espritCible === undefined) {
+      return null;
+    }
+    const jet = {esprit: magie.esprit, sorcier: magie.sorcier ?? 0, difficulte: this.loadout.sortDifficulte().valeur ?? 0, espritCible};
+    return modificateurSort(jet) + this.loadout.freeModifier();
+  });
+
+  readonly sortGoal = computed<AttackGoal | null>(() => {
+    const modifier = this.sortModifier();
+    return modifier === null ? null : this.goalFor(modifier);
+  });
+
+  readonly sortTotal = computed(() => {
+    const sum = this.sortDiceSum();
+    const modifier = this.sortModifier();
+    return sum === null || modifier === null ? null : sum + modifier;
+  });
+
+  readonly sortRowDice = computed<readonly DiceRowDie[] | null>(() => {
+    const all = this.sortRolledDice();
+    if (all) {
+      const kept = keptDiceIndexes(all, this.loadout.netDice());
+      return all.map((value, index) => ({value, dropped: !kept.includes(index)}));
+    }
+    const pair = this.sortNatural();
+    return pair ? [{value: pair[0]}, {value: pair[1]}] : null;
+  });
+
+  /** L'addition du jet de sort : les dés, l'esprit, le rang de sorcier, la difficulté, l'esprit de la cible, le modificateur du MJ ; le seuil,
+   * puis le total. */
+  readonly sortSum = computed<readonly DwRollSumTerm[]>(() => {
+    const magie = this.turn.attacker()?.magie;
+    if (!magie) {
+      return [];
+    }
+    const dice = this.sortDiceSum();
+    const kept = this.keptDice();
+    const terms: DwRollSumTerm[] = [{value: dice === null ? (kept ?? '2d6') : `${dice}`, caption: dice === null ? 'dés' : (kept ?? 'dés'), tone: 'dice'}];
+    const add = (value: number, caption: string): void => {
+      if (value !== 0) {
+        terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
+      }
+    };
+    add(magie.esprit, 'esprit');
+    add(magie.sorcier ?? 0, 'sorcier');
+    add(this.loadout.sortDifficulte().valeur ?? 0, this.loadout.sortDifficulte().label.toLowerCase());
+    const espritCible = this.espritCible();
+    if (typeof espritCible === 'number') {
+      add(-espritCible, `esprit de ${this.turn.target()?.nom ?? 'la cible'}`);
+    }
+    add(this.loadout.freeModifier(), 'modificateur');
+    const total = this.sortTotal();
+    terms.push(total === null ? {value: `≥ ${ATTACK_THRESHOLD}`, caption: 'seuil', tone: 'total'} : {value: `= ${total}`, caption: `pour ${ATTACK_THRESHOLD}`, tone: 'total'});
+    return terms;
+  });
+
+  /** Ce que disent les dés du sort. Un double 6 qui dépasse le seuil est un succès héroïque, pour les héros et leurs alliés. */
+  private readonly sortBase = computed<InitiativeResultat | null>(() => {
+    if (this.sortAuto()) {
+      return 'reussite';
+    }
+    const total = this.sortTotal();
+    const sum = this.sortDiceSum();
+    if (total === null || sum === null) {
+      return null;
+    }
+    return issueSort(this.sortNatural(), sum, total, this.turn.heroicAllowed());
+  });
+
+  /** Le verdict du sort. Les points de pouvoir sont dépensés quoi qu'il arrive (interprétation : le livre ne dit rien d'un sort raté). */
+  readonly sortVerdict = computed<(AttackVerdict & {readonly hit: boolean}) | null>(() => {
+    const base = this.sortBase();
+    const total = this.sortTotal();
+    if (base === null) {
+      return null;
+    }
+    if (this.sortAuto()) {
+      return {title: 'Le charme agit', detail: 'Automatique : sans jet.', tone: 'reussite', hit: true};
+    }
+    const natural2 = this.sortNatural()?.[0] === 1 && this.sortNatural()?.[1] === 1;
+    switch (base) {
+      case 'heroique':
+        return {title: 'Succès héroïque', detail: 'Double 6 : le sort agit, et le MJ en renforce l’effet.', tone: 'heroique', hit: true};
+      case 'reussite':
+        return {title: 'Le sort agit', detail: total !== null && total > ATTACK_THRESHOLD ? `réussi de ${total - ATTACK_THRESHOLD}` : 'tout juste', tone: 'reussite', hit: true};
+      default:
+        if (this.sortCritique()) {
+          return {title: 'Échec critique', detail: 'Double 1 : le sort se retourne contre lui, et 1 point d’héroïsme gagné.', tone: 'echec', hit: false};
+        }
+        return {title: 'Le sort échoue', detail: natural2 ? 'Double 1 : échec automatique. Le pouvoir est dépensé.' : `il manquait ${ATTACK_THRESHOLD - (total ?? 0)} ; le pouvoir est dépensé.`, tone: 'echec', hit: false};
+    }
+  });
+
+  /** Faveur divine sur un sort raté : 1 point pour relancer les dés, sans repayer le sort. */
+  readonly canSortFavor = computed(() => this.sortBase() === 'echec' && !this.sortCritique() && !this.sortAuto() && (this.heroisme() ?? 0) > 0);
+
+  /** Un héros qui sort un double 1 peut en faire un échec critique, qui lui rapporte 1 point d'héroïsme. */
+  readonly canSortCritique = computed(() => this.turn.card().kind === 'hero' && this.heroisme() !== null && this.sortBase() === 'echec' && this.sortNatural()?.[0] === 1 && this.sortNatural()?.[1] === 1);
+
+  toggleSortCritique(): void {
+    this.turn.heroismeAdjusted.emit(this.sortCritique() ? -1 : 1);
+    this.sortCritique.update((chosen) => !chosen);
+  }
+
+  /** Oublie les dés du sort (pas ce qu'il a coûté). */
+  clearSortDice(): void {
+    this.sortDice.set(null);
+    this.sortRolledDice.set(null);
+    this.sortManual.set(null);
+  }
+
+  /** Oublie le sort du tour : à une nouvelle carte active, ou quand il passe de l'attaque au sort. */
+  resetSort(): void {
+    this.clearSortDice();
+    this.sortAuto.set(false);
+    this.sortPaid.set(0);
+    this.sortCritique.set(false);
+    this.sortDamageDone.set(false);
+  }
 
   goalFor(modifier: number): AttackGoal {
     const net = this.loadout.netDice();
@@ -347,6 +535,9 @@ export class TurnAttackStore {
 
   /** Prend ou retire une option de succès héroïque (cf. `toggleHeroicPick`). */
   pickHeroic(slug: HeroicSlug): void {
+    if (this.heroicOptions().find((option) => option.slug === slug)?.blocked) {
+      return;
+    }
     this.picks.update((picks) => toggleHeroicPick(picks, slug, this.picksMax()));
   }
 

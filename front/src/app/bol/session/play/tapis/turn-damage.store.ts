@@ -31,9 +31,19 @@ export class TurnDamageStore {
   /** Le dé de dégâts a été lancé à l'écran (ses faces sont connues), pas tapé à table. */
   private readonly damageRolled = signal(false);
 
+  /** Un sort qui blesse (livre p. 150) : ses dégâts sont ceux de sa puissance, sans vigueur ni protection d'armure (interprétation : le
+   * livre les inflige « automatiquement »). Le MJ peut saisir une protection à la main. */
+  readonly sort = computed(() => this.loadout.sortMode());
+
+  /** Les dégâts du coup : ceux de l'arme ou du profil, ou ceux du sort. */
+  private readonly degats = computed(() => (this.sort() ? this.loadout.sortDegats() : this.loadout.degats()));
+
+  /** À mains nues : jamais pour un sort. */
+  private readonly unarmed = computed(() => !this.sort() && this.loadout.unarmed());
+
   /** Les dégâts de l'arme ou du profil, lus en entier (dé, multiplicateur, modificateur, ou valeur fixe) ; `null` pour des dégâts
    * spéciaux, dont le MJ tape le total. */
-  private readonly damageSpec = computed(() => parseDamage(this.loadout.degats()));
+  private readonly damageSpec = computed(() => parseDamage(this.degats()));
 
   /** La fourchette des dégâts possibles (« 2 à 7 »), en tête de leur ligne ; `null` pour des dégâts spéciaux, tapés tels quels. */
   readonly damageSpan = computed(() => {
@@ -74,12 +84,15 @@ export class TurnDamageStore {
   readonly protectionDraft = signal('');
 
   private readonly protection = computed(() => {
-    if (this.loadout.choice()?.special?.slug === 'armor-chink') {
+    if (!this.sort() && this.loadout.choice()?.special?.slug === 'armor-chink') {
       return 0;
     }
     const manual = this.protectionManual();
     if (manual !== null) {
       return manual;
+    }
+    if (this.sort()) {
+      return 0;
     }
     const die = this.protectionDie();
     const face = this.protectionFace();
@@ -89,7 +102,7 @@ export class TurnDamageStore {
   /** La vigueur ajoutée aux dégâts ; aucune pour une horde, dont les d6M sont les dégâts du groupe. */
   private readonly vigueur = computed(() => {
     const a = this.turn.attacker();
-    return a && this.loadout.hordeSize() === 0 ? vigueurBonus(a, this.loadout.isTir(), this.loadout.unarmed()) : 0;
+    return a && !this.sort() && this.loadout.hordeSize() === 0 ? vigueurBonus(a, this.loadout.isTir(), this.loadout.unarmed()) : 0;
   });
 
   /** Nombre de coups dévastateurs pris : +6 dégâts chacun. */
@@ -177,17 +190,21 @@ export class TurnDamageStore {
   readonly dieNote = computed(() => {
     const spec = this.damageSpec();
     if (spec === null) {
-      return `${this.loadout.degats()} : voir la fiche, et tape le total`;
+      return `${this.degats()} : voir la fiche, et tape le total`;
     }
     if (spec.fixed !== null) {
-      return `${this.loadout.degats()} : dégâts fixes, sans jet`;
+      return `${this.degats()} : dégâts fixes, sans jet`;
     }
     const times = spec.multiplier > 1 ? `, multiplié par ${spec.multiplier}` : '';
     const plus = spec.modifier !== 0 ? `, ${signedTerm(spec.modifier)}` : '';
-    return `${this.loadout.degats()} : ${DIE_NOTES[this.die()]}${times}${plus}`;
+    return `${this.sort() ? 'Sort, ' : ''}${this.degats()} : ${DIE_NOTES[this.die()]}${times}${plus}`;
   });
 
-  readonly hasDamageStep = computed(() => !!this.attack.verdict()?.hit && !this.attack.picks().includes('desarmement'));
+  readonly hasDamageStep = computed(() =>
+    this.sort()
+      ? !!this.attack.sortVerdict()?.hit && this.loadout.sortModel().blessant && this.turn.target() !== null && !this.attack.sortDamageDone()
+      : !!this.attack.verdict()?.hit && !this.attack.picks().includes('desarmement'),
+  );
 
   /** Plus grand nombre à taper dans la case des dégâts : la face du dé (3 pour un d3, 6 sinon), ou le total de dégâts spéciaux. */
   readonly damageMax = computed(() => (this.specialDamage() ? 99 : damageDieMax(this.die())));
@@ -209,7 +226,7 @@ export class TurnDamageStore {
     } else if (spec.fixed !== null) {
       terms.push({value: `${spec.fixed}`, caption: 'fixes', tone: 'dice'});
     } else {
-      terms.push({value: face === null ? this.loadout.degats() : `${face}`, caption: 'dé', tone: 'dice'});
+      terms.push({value: face === null ? this.degats() : `${face}`, caption: this.sort() ? 'sort' : 'dé', tone: 'dice'});
       if (spec.multiplier > 1) {
         terms.push({value: `×${spec.multiplier}`, caption: 'taille', tone: 'plus'});
       }
@@ -217,7 +234,10 @@ export class TurnDamageStore {
     }
     add(this.vigueur(), 'vigueur');
     add(devastatingBonus(this.devastating()), this.devastating() > 1 ? `dévastateur ×${this.devastating()}` : 'dévastateur');
-    if (this.loadout.choice()?.special?.slug === 'armor-chink') {
+    if (this.sort() && this.protectionManual() === null) {
+      // Toujours affichée : c'est elle qu'on clique pour saisir une protection.
+      terms.push({value: '0', caption: 'protection (sort)', tone: 'minus', editable: true});
+    } else if (!this.sort() && this.loadout.choice()?.special?.slug === 'armor-chink') {
       terms.push({value: '0', caption: 'armure ignorée', tone: 'dice'});
     } else {
       const protection = this.protection();
@@ -250,7 +270,7 @@ export class TurnDamageStore {
 
   readonly frozenDamageTerms = signal<readonly ModifierTerm[] | null>(null);
 
-  private readonly damageEffectTerms = computed(() => [...(this.frozenDamageTerms() ?? this.liveDamageTerms()), ...this.loadout.extraDamageTerms()]);
+  private readonly damageEffectTerms = computed(() => [...(this.frozenDamageTerms() ?? this.liveDamageTerms()), ...(this.sort() ? [] : this.loadout.extraDamageTerms())]);
 
   /** La vie de la cible choisie, en chiffres : ce qu'il lui reste, et où le coup en cours la fait tomber (`after`, `null` sans dégâts). */
   readonly targetLife = computed(() => {
@@ -258,7 +278,7 @@ export class TurnDamageStore {
     const current = target?.vitaliteCourante ?? null;
     const damage = this.damage();
     // Une bagarre à mains nues ne fait pas passer sous 0 : la cible est assommée.
-    const after = current !== null && damage !== null && damage > 0 ? (this.loadout.unarmed() ? Math.min(current, Math.max(0, current - damage)) : current - damage) : null;
+    const after = current !== null && damage !== null && damage > 0 ? (this.unarmed() ? Math.min(current, Math.max(0, current - damage)) : current - damage) : null;
     return {current, max: target?.vitaliteMax ?? null, after, loss: after === null || current === null ? 0 : current - after, out: after !== null && after <= 0};
   });
 

@@ -114,6 +114,19 @@ class BolHerosController extends Controller
         return response()->json($heros);
     }
 
+    /** Points de foi ou de pouvoir dépensés (ou rendus) à la table : un dé de foi, un sort. */
+    public function adjustRessource(Request $request, string $id)
+    {
+        $data = $request->validate(['ressource' => 'required|in:foi,pouvoir', 'delta' => 'required|integer|between:-30,30']);
+        $heros = $this->bolHerosService->adjustRessource($id, Auth::id(), $data['ressource'], $data['delta']);
+
+        if (!$heros) {
+            return response()->json(['error' => 'Hero not found'], 404);
+        }
+
+        return response()->json($heros);
+    }
+
     /** Nomme (ou retire, avec une arme vide) l'arme favorite d'une fiche : l'étoile de la liste d'armes. */
     public function armeFavorite(Request $request, string $id)
     {

@@ -170,6 +170,44 @@
     }
   }
 
+  // Les dés de foi qu'il doit à cette action.
+  .tas-head-notes .tas-note--foi {
+    color: var(--dw-color-foi);
+  }
+
+  // Son pouvoir de sorcier, sous le mot « Pouvoir », en violet pâle.
+  .tas-vit--pouvoir .tas-tag {
+    color: var(--dw-color-pouvoir);
+  }
+
+  // Le sort, à la place des armes : sa puissance, sa difficulté, ses conditions, s'il blesse, s'il vise l'esprit — sur une ou deux rangées.
+  .tas-sortf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.5rem;
+
+    .tas-chip {
+      min-height: 1.7rem;
+    }
+  }
+
+  .tas-sortf-cond {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    small {
+      color: var(--dw-surface-700);
+      font-size: 0.7rem;
+    }
+  }
+
+  // Une difficulté hors de celles que le livre donne à cette puissance : permise, mais signalée.
+  .tas-sortf-hors {
+    border-style: dashed;
+  }
+
   .tas-deux .tas-note {
     color: var(--dw-surface-700);
     font-size: 0.7rem;

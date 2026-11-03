@@ -16,5 +16,7 @@ export interface CreatureFormModel {
   degats: string;
   protection: string;
   avatar: string | null;
+  /** Mort-vivant : sa vitalité est une force vitale, et à 0 il est détruit (04-pnj-creatures-demons.md, « Force vitale »). */
+  mort_vivant: boolean;
   capacites: DetailDraft[];
 }

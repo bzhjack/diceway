@@ -38,6 +38,8 @@
           (heroismeAdjusted)="heroismeAdjusted.emit($event)"
           (vitaliteAdjusted)="vitaliteAdjusted.emit($event)"
           (targetHeroismeAdjusted)="targetHeroismeAdjusted.emit($event)"
+          [visibles]="visibles()"
+          (ressourceAdjusted)="ressourceAdjusted.emit($event)"
         />
       } @else {
         <p class="cb-nobody">Plus personne ne peut jouer.</p>

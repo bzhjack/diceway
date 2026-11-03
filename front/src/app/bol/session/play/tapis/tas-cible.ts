@@ -11,11 +11,12 @@ import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnDamageStore} from './turn-damage.store';
 import {TurnCibleStore} from './turn-cible.store';
 import {TurnFlowStore} from './turn-flow.store';
+import {DeFoiComponent} from './de-foi';
 
 /** La cible : avant de viser, une carte par cible sur une ligne ; choisie, il ne reste que sa carte, avec ses chiffres, sa vie réglable et ses effets. */
 @Component({
   selector: 'section[bol-tas-cible]',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, DwValueStepperComponent, ActeurComponent, CombattantCarteComponent, PointsStepperComponent],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, DwValueStepperComponent, ActeurComponent, CombattantCarteComponent, PointsStepperComponent, DeFoiComponent],
   templateUrl: './tas-cible.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

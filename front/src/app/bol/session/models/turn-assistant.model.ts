@@ -92,3 +92,11 @@ export interface PlayedAttack {
   /** Les options prises sur un succès héroïque ou légendaire, en clair. */
   readonly picks: string | null;
 }
+
+/** Ce qu'il faut savoir du coup pour dire si une option de succès héroïque est possible : qui frappe, qui est visé, et si la cible tient une
+ * arme (`undefined` : on ne sait pas). */
+export interface OptionHeroiqueContexte {
+  readonly attaquant: TapisCard;
+  readonly cible: TapisCard | null;
+  readonly cibleArme: boolean | undefined;
+}

@@ -1,6 +1,7 @@
 import {CARRIERE_MEDECIN_ID} from '../bol-rules.constants';
 import {ACTION_DIFFICULTIES, DEFAULT_ACTION_DIFFICULTY} from './action-roll.util';
 import {ActionDifficulty, ActionRollCarriere} from './models/action-roll.model';
+import {TapisCard} from './models/tapis.model';
 
 /** Difficulté du jet pour stabiliser un mourant (02-actions-combat.md, « Secourir un mourant ») : Moyenne, aggravée d'un niveau par point
  * de vitalité négatif (−3 → Très difficile, −4), sans aller au-delà de la plus haute. */
@@ -18,4 +19,10 @@ export function bestHealingCareer(carrieres: readonly ActionRollCarriere[]): Act
  * vitalité, sans dépasser son maximum. */
 export function medicalCareAmount(vitalite: number, vitaliteMax: number, rang: number): number {
   return Math.max(0, Math.min(rang, vitaliteMax - vitalite));
+}
+
+/** Qui peut secourir un mourant à son tour, ou soigner les blessés après le combat (02-actions-combat.md, « Secourir un mourant » : « un
+ * autre héros ou un PNJ ») : un héros ou un PNJ du camp des héros. */
+export function peutSecourir(card: Pick<TapisCard, 'kind' | 'camp'>): boolean {
+  return card.camp === 'heros' && (card.kind === 'hero' || card.kind === 'pnj');
 }

@@ -63,6 +63,9 @@ Equivalent des `points d'heroisme` pour les rivaux (le livre ne fixe pas de nomb
 - `Bouclier humain`: utiliser un PNJ pietaille qui l'entoure comme bouclier humain pour absorber les degats d'une attaque. Fonctionne comme `parade in extremis`.
 - `Fuite opportune`: permet au rival de s'echapper quand la situation tourne mal (porte derobee, diversion, disparition subite), meme s'il semblait perdu. Combine avec `defier la mort`, un rival peut meme echapper a une mort apparente. Necessite une occasion narrative.
 - Cout de la `Fuite opportune` (interpretation): le livre ne donne pas de nombre; l'application la compte `1` point de vilenie, comme les options des points d'heroisme.
+- Regeneration (interpretation): l'application rend le point au debut de chaque round; un coup precis contre ce demon tombe au debut du deuxieme round qui suit le coup.
+- Poison (interpretation): heros et PNJ comptent comme de taille moyenne; la paralysie dure jusqu'a ce que le MJ retire l'effet (le livre: mort dans l'heure sans nouveau jet reussi).
+- Vulnerabilite (interpretation): l'application double les degats du coup apres la protection.
 
 ## Gabarits de creatures
 

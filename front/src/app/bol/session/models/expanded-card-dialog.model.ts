@@ -15,10 +15,14 @@ export interface ExpandedCardDialogData {
   readonly returnUrl: Signal<string | null>;
   /** La carte ouverte est un rival en combat qui peut encore prendre la fuite. */
   readonly canFlee: Signal<boolean>;
+  /** La carte ouverte est en combat : le MJ peut l'en retirer. */
+  readonly canWithdraw: Signal<boolean>;
   readonly changed: (change: TableChange) => void;
   readonly remove: (card: TapisCard) => void;
   /** « Fuite opportune » : demande confirmation, puis le rival quitte le combat. */
   readonly flee: (card: TapisCard) => void;
+  /** « Retirer du combat » : demande confirmation, puis la carte quitte le combat (elle reste sur la table). */
+  readonly withdraw: (card: TapisCard) => void;
   readonly toggleArmure: (event: {card: TapisCard; armureId: number}) => void;
   readonly toggleArme: (event: {card: TapisCard; armeId: number}) => void;
 }

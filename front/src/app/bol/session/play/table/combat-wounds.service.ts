@@ -7,9 +7,9 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {maybePromptDefierLaMort} from '../defier-la-mort-dialog/defier-la-mort.util';
 import {shouldPromptDefierLaMort} from '../../combat-resolution.util';
-import {herosMourants, horsCombat} from '../tapis/combat-turn.util';
+import {cartesRelevees, herosMourants, horsCombat} from '../tapis/combat-turn.util';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {aSombre, appliquerEvenement, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, idAleatoire} from '../tapis/combat-effects.util';
+import {aSombre, appliquerEvenement, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, idAleatoire, sansTracesDeChute} from '../tapis/combat-effects.util';
 import {RescueDialogComponent} from '../rescue-dialog/rescue-dialog';
 import {RescueDialogData, RescueResult} from '../../models/rescue-dialog.model';
 import {MeleePietailleDialogComponent} from '../melee-pietaille-dialog/melee-pietaille-dialog';
@@ -36,7 +36,28 @@ export class CombatWoundsService {
   /** Le dernier round vu : un nouveau round propose aux héros restés à 0 de reprendre leurs esprits. `null` hors combat et au chargement. */
   private lastRound: number | null = null;
 
+  /** La vitalité de chaque carte à la dernière lecture de la table en combat : un héros qui repasse au-dessus de 0 est relevé. */
+  private vitalitesVues: ReadonlyMap<string, number> = new Map();
+
   constructor() {
+    // Un héros relevé (soigné, revenu à lui) oublie sa chute : s'il retombe dans ce combat, on lui redemande de reprendre ses esprits,
+    // il perd de nouveau 1 point par round s'il est mourant, et un coup d'arme ne le laisse plus « assommé ».
+    effect(() => {
+      const enCombat = this.table.mode() === 'combat';
+      const cards = this.table.cards();
+      const effets = this.combat.etat().effets;
+      untracked(() => {
+        const relevees = enCombat ? cartesRelevees(this.vitalitesVues, cards, effets) : [];
+        this.vitalitesVues = enCombat ? new Map(cards.filter((card) => card.vitaliteCourante !== null).map((card) => [card.key, card.vitaliteCourante!])) : new Map();
+        if (relevees.length > 0) {
+          this.combat.saveEtat((etat) => {
+            const restants = sansTracesDeChute(etat.effets, relevees);
+            return restants === etat.effets ? etat : {...etat, effets: restants};
+          });
+        }
+      });
+    });
+
     // Un nouveau round commence : un héros resté à 0 de vitalité sombre dans l'inconscience, ou dépense 1 PH pour reprendre ses esprits ;
     // un héros mourant perd 1 de vitalité ; un démon qui se régénère en reprend 1.
     effect(() => {
@@ -215,8 +236,9 @@ export class CombatWoundsService {
     );
   }
 
-  /** « Secourir » : le héros actif tente de stabiliser un allié mourant (02-actions-combat.md, « Secourir un mourant »), à la place de
-   * son attaque. Réussi, le mourant ne perd plus de vitalité ; dans tous les cas, le tour se termine. */
+  /** « Secourir » : le héros actif, ou un PNJ allié, tente de stabiliser un allié mourant (02-actions-combat.md, « Secourir un mourant » :
+   * « un autre héros ou un PNJ »), à la place de son attaque. Réussi, le mourant ne perd plus de vitalité ; dans tous les cas, le tour se
+   * termine. Un PNJ n'a pas d'héroïsme à dépenser en faveur divine. */
   onRescue(): void {
     const rescuer = this.combat.activeCard();
     const patients = this.combat.rescuePatients();
@@ -234,7 +256,7 @@ export class CombatWoundsService {
                 rescuerNom: rescuer.nom,
                 herosId: rescuer.sourceId!,
                 esprit: hero.attributs.esprit,
-                heroisme: hero.ressources.heroisme,
+                heroisme: rescuer.kind === 'hero' ? hero.ressources.heroisme : 0,
                 carrieres: heroDetails(hero).carrieres,
                 patients: patients.map((card) => ({key: card.key, nom: card.nom, vitalite: card.vitaliteCourante ?? 0})),
               },

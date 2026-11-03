@@ -146,6 +146,9 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         degats: p.armes?.[0]?.degats ?? (p.rang === 'pietaille' ? '1' : null),
         protection: null,
         vilenie: p.vilenie_courante ?? null,
+        esprit: p.esprit,
+        foi: p.foi_courante ?? null,
+        pouvoir: p.pouvoir_courant ?? null,
       },
     });
   }
@@ -172,6 +175,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         defense: c.defense,
         degats: c.degats,
         protection: c.protection,
+        esprit: c.esprit,
         ...attackDiceAbilities((c.capacites ?? []).map((capacite) => capacite.capacite)),
       },
     });
@@ -200,6 +204,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         defense: d.defense,
         degats: demonDegats(d.degats, d.rang, pouvoirs),
         protection: demonProtection(pouvoirs),
+        esprit: d.esprit,
         ...attackDiceAbilities(pouvoirs),
       },
     });

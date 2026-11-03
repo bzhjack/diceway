@@ -1,19 +1,21 @@
 import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {cartesVisibles} from '../../magie-combat.util';
 import {EMPTY, switchMap, tap} from 'rxjs';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {AttackChoice} from '../../models/attack-options.model';
-import {bloqueeCeRound, cibleAuHasard, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
+import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
 import {fuir, peutFuir} from '../tapis/fuite-opportune.util';
 import {disponibiliteMelee, pietailleDebout} from '../tapis/melee-pietaille.util';
 import {MeleeCamps, MeleeDisponibilite} from '../../models/melee-pietaille.model';
 import {NewEffect} from '../../models/combat-effect.model';
 import {EtatSaver} from '../etat-saver';
-import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from '../tapis/combat-effects.util';
+import {appliquerEvenement, effetsDeLaFrise, effetsDeTour, idAleatoire} from '../tapis/combat-effects.util';
 import {EtatCombat} from '../../models/combat-turn.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {findCard} from '../tapis/tapis.util';
+import {peutSecourir} from '../../rescue.util';
 import {TapisCard} from '../../models/tapis.model';
 import {TableStore} from './table.store';
 
@@ -75,9 +77,7 @@ export class CombatTurnStore {
       tier: tier,
       locked: bloqueeCeRound(lockedRound1, round),
       ally: card.kind !== 'hero' && card.camp === 'heros',
-      effets: this.etat()
-        .effets.filter((e) => e.porteur === card.key && e.valeur !== 0)
-        .map((e) => `${libelleEffet(e)} · ${libelleDuree(e.duree)}`),
+      effets: effetsDeLaFrise(this.etat().effets, card.key),
       horsCombat: raisonHorsJeu(card, this.etat()),
     }));
   });
@@ -115,15 +115,19 @@ export class CombatTurnStore {
 
   readonly selectedTarget = computed(() => this.targets().find((card) => card.key === this.targetKey()) ?? null);
 
+  /** Les êtres qu'un prêtre peut voir, pour un dé de foi (livre p. 146) : les cartes encore en combat et debout, des deux camps. */
+  readonly visibles = computed(() => (this.table.mode() === 'combat' ? cartesVisibles(this.table.cards(), this.etat().exclus) : []));
+
   // Des valeurs simples, pas les cartes : la table rechargée refait des cartes identiques, qui ne doivent pas relancer la lecture.
   readonly activeKey = computed(() => (this.table.mode() === 'combat' ? this.turn().activeKey : null));
 
   readonly targetKeys = computed(() => this.targets().map((card) => card.key).join(','));
 
-  /** Les héros mourants (ni stabilisés, ni retirés du combat) qu'un héros actif peut tenter de secourir à son tour. */
+  /** Les héros mourants (ni stabilisés, ni retirés du combat) que la carte active — un héros, ou un PNJ allié — peut tenter de secourir à
+   * son tour. */
   readonly rescuePatients = computed(() => {
     const active = this.activeCard();
-    if (active?.kind !== 'hero' || active.camp !== 'heros') {
+    if (!active || !peutSecourir(active)) {
       return [];
     }
     return herosMourants(this.table.cards(), this.etat()).filter((card) => card.camp === 'heros' && card.key !== active.key);
@@ -152,11 +156,12 @@ export class CombatTurnStore {
   );
 
   constructor() {
-    // Une carte devient active (après « Retarder », un retrait, le début du combat…) : ses effets « jusqu'à son prochain tour » tombent.
+    // Une carte devient active (après « Retarder », un retrait, le début du combat…) : ses effets « jusqu'à son prochain tour » tombent,
+    // et son tour est sauté si elle a perdu son action (« Juste une égratignure »).
     effect(() => {
       const key = this.turn().activeKey;
       if (key !== null) {
-        untracked(() => this.saveEtat((etat) => debutDeTour(etat, key)));
+        untracked(() => this.saveEtat((etat) => commencerTour(this.orderedCards(), etat, idAleatoire)));
       }
     });
 
@@ -235,6 +240,24 @@ export class CombatTurnStore {
       },
       error: (error: unknown) => this.table.notifyError(error, 'Impossible de dépenser la vilénie.'),
     });
+  }
+
+  /** Le MJ peut retirer du combat une carte qui y est encore (ni retirée, ni enfuie). */
+  canWithdraw(card: TapisCard): boolean {
+    return this.table.mode() === 'combat' && !this.etat().exclus.includes(card.key);
+  }
+
+  /** « Retirer du combat » (`retirerDuCombat`) : la carte reste sur la table mais ne joue plus et ne compte plus ; si c'était la cible, elle
+   * ne l'est plus. Si c'était la carte active, la main passe. */
+  withdraw(card: TapisCard): void {
+    if (!this.canWithdraw(card)) {
+      return;
+    }
+    if (this.targetKey() === card.key) {
+      this.targetKey.set(null);
+    }
+    this.saveEtat((etat) => retirerDuCombat(etat, card.key));
+    this.snackBar.open(`${card.nom} est retiré du combat : il ne joue plus et ne compte plus pour l'issue.`, undefined, {duration: 4500});
   }
 
   /** La mêlée de piétaille de ce round est résolue : elle ne se rejoue qu'au round suivant. */

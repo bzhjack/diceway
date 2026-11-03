@@ -3,7 +3,7 @@ import {firstValueFrom, of} from 'rxjs';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {estArmeFavorite} from '../shared/arme/arme-favorite.util';
-import {armeFavoriteDe, bonusPeauDure, dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
+import {armeFavoriteDe, bonusPeauDure, dualStrikeDegats, equippedProtection, feinteAvecCarrieres, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
 import {TapisCard} from './models/tapis.model';
 import {PlayToken} from './models/combat-play.model';
 
@@ -123,6 +123,25 @@ describe('resolveAttackStats — un PNJ porte tout ce qu’il possède', () => {
     expect(stats.protectionText).toBe('d6-2(2)');
   });
 
+  it('dépense la foi et le pouvoir de sa ligne de table, et paie le surcoût de toutes ses armures', async () => {
+    const sorcier = {
+      ...fiche,
+      attributs: {agilite: 1, agilite_effective: 0, esprit: 3},
+      ressources: {foi: 0, pouvoir: 13},
+      carrieres: [{carriere_id: 24, value: 3}],
+      traits: [],
+      armures: [{equipee: false, armure: {protection: 'd6-2(2)', categorie: 'armure', pts_de_pouvoir: '+2'}}],
+    } as unknown as BolHerosModel;
+    const ligne = {...token, combat: {...token.combat, esprit: 3, pouvoir: 8, foi: null}} as unknown as PlayToken;
+    const stats = await firstValueFrom(resolveAttackStats(ligne, {heros: () => of(sorcier)} as unknown as BolHerosService));
+    expect(stats.magie).toEqual({esprit: 3, foi: null, pouvoir: 8, sorcier: 3, surcoutArmure: 2, magieRoisSorciers: false, resistantMagie: false});
+  });
+
+  it('une créature n’a que son esprit, qu’un sort sur l’esprit lui oppose', async () => {
+    const loup = {kind: 'creature', combat: {sourceId: 'c1', esprit: -2, attaque: 2, defense: 1, degats: 'd6', protection: null}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(loup, service))).magie).toMatchObject({esprit: -2, pouvoir: null, sorcier: null});
+  });
+
   it('porte son bouclier, même rangé comme « non équipé »', async () => {
     expect((await firstValueFrom(resolveAttackStats(token, service))).bouclier).toBe(true);
   });
@@ -223,5 +242,50 @@ describe('arme favorite (avantage : dé de bonus avec cette arme)', () => {
     expect(estArmeFavorite('Kriss', 'Dague')).toBe(false);
     expect(estArmeFavorite(null, 'Kriss')).toBe(false);
     expect(estArmeFavorite('Kriss', null)).toBe(false);
+  });
+});
+
+describe('feinteAvecCarrieres', () => {
+  it('a hero or a rival PNJ (created like a hero) can lend a career to a feint', () => {
+    expect(feinteAvecCarrieres({kind: 'hero', rang: null})).toBe(true);
+    expect(feinteAvecCarrieres({kind: 'pnj', rang: 'Rival'})).toBe(true);
+  });
+
+  it('not a tough or a mook PNJ, nor a creature or a demon', () => {
+    expect(feinteAvecCarrieres({kind: 'pnj', rang: 'Coriace'})).toBe(false);
+    expect(feinteAvecCarrieres({kind: 'pnj', rang: 'Piétaille'})).toBe(false);
+    expect(feinteAvecCarrieres({kind: 'creature', rang: 'Rival'})).toBe(false);
+    expect(feinteAvecCarrieres({kind: 'demon', rang: 'Rival'})).toBe(false);
+  });
+});
+
+describe('resolveAttackStats — une arme en main (désarmement, parade in extremis)', () => {
+  const base = {
+    attributs: {vigueur: 1, agilite: 1, agilite_effective: 1},
+    combat: {melee: 1, tir: 0, defense_effective: 1},
+    ressources: {heroisme: 2},
+    armures: [],
+    traits: [],
+    equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null, bouclier_defense_toutes: 0},
+  };
+  const epee = (equipee: boolean) => ({id: 1, arme_id: 1, equipee, arme: {id: 1, arme: 'Épée', type: 'M', degats: 'd6', portee: null, notes: null}});
+  const service = (armes: unknown[]) => ({heros: () => of({...base, armes} as unknown as BolHerosModel)}) as unknown as BolHerosService;
+
+  it('a hero holds a weapon when one is equipped', async () => {
+    const hero = {kind: 'hero', combat: {sourceId: 'h1'}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(hero, service([epee(true)])))).arme).toBe(true);
+    expect((await firstValueFrom(resolveAttackStats(hero, service([epee(false)])))).arme).toBe(false);
+  });
+
+  it('a PNJ holds all the weapons he owns', async () => {
+    const pnj = {kind: 'pnj', combat: {sourceId: 'p1', agilite: 1, vigueur: 1, melee: 1, tir: 0, attaque: null, defense: 1, degats: 'd6', protection: null}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(pnj, service([epee(false)])))).arme).toBe(true);
+    expect((await firstValueFrom(resolveAttackStats(pnj, service([])))).arme).toBe(false);
+  });
+
+  it('a creature or a demon fights with its natural weapons: nothing to disarm', async () => {
+    const creature = {kind: 'creature', combat: {sourceId: 'c1', agilite: 0, vigueur: 0, melee: 0, tir: 0, attaque: 2, defense: 1, degats: 'd6', protection: null}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(creature, service([])))).arme).toBe(false);
+    expect((await firstValueFrom(resolveAttackStats({...creature, kind: 'demon'} as PlayToken, service([])))).arme).toBe(false);
   });
 });

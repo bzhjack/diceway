@@ -1,11 +1,13 @@
 import {afterNextRender, computed, ElementRef, inject, Injectable, Injector, linkedSignal, signal, WritableSignal} from '@angular/core';
-import {perdSonAction} from './combat-effects.util';
+import {effetDeFoi, perdSonAction} from './combat-effects.util';
+import {RessourceMagique, SensDeFoi} from '../../models/magie-combat.model';
 import {libellePoints} from '../../combat-attack.util';
 import {rollD6} from '../../combat-resolution.util';
 import {TapisCard} from '../../models/tapis.model';
 import type {TurnAssistantComponent} from './turn-assistant';
 import {TurnPopover} from '../../models/turn-assistant.model';
 import {sideOf} from './turn-assistant.util';
+import {libelleVitalite} from './pouvoirs-combat.util';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -49,11 +51,18 @@ export class TurnContextStore {
 
   readonly hordeMates = computed(() => this.host.hordeMates());
 
+  readonly visibles = computed(() => this.host.visibles());
+
   /** La vitalité de l'attaquant et celle de la cible, chacune sur son cœur : elles suivent la table, et chaque pas est signalé à la
    * page. */
   readonly vitaliteShown = linkedSignal(() => this.card().vitaliteCourante ?? 0);
 
   readonly targetVitaliteShown = linkedSignal(() => this.target()?.vitaliteCourante ?? 0);
+
+  /** « Vitalité », ou « Force vitale » pour un mort-vivant : sous le cœur de l'attaquant et sous celui de la cible. */
+  readonly vitaliteLabel = computed(() => libelleVitalite(this.card()));
+
+  readonly targetVitaliteLabel = computed(() => libelleVitalite(this.target() ?? {}));
 
   /** Un héros peut descendre sous 0 (mourant) ; les autres s'arrêtent à 0. */
   readonly vitaliteMin = computed(() => (this.card().kind === 'hero' ? -20 : 0));
@@ -168,6 +177,24 @@ export class TurnContextStore {
 
   get targetHeroismeAdjusted() {
     return this.host.targetHeroismeAdjusted;
+  }
+
+  get ressourceAdjusted() {
+    return this.host.ressourceAdjusted;
+  }
+
+  /** Des points de foi ou de pouvoir dépensés (négatif) ou rendus par une carte : la page les enregistre. */
+  ajusterRessource(card: TapisCard, ressource: RessourceMagique, delta: number): void {
+    if (delta !== 0) {
+      this.ressourceAdjusted.emit({card, ressource, delta});
+    }
+  }
+
+  /** « Dé de foi » (livre p. 146) : le prêtre dépense 1 point de foi, et le dé de bonus ou de malus attend la prochaine action de la carte
+   * choisie. */
+  donnerDeFoi(pretre: TapisCard, porteur: TapisCard, sens: SensDeFoi): void {
+    this.effectAdded.emit(effetDeFoi(porteur.key, sens, pretre.nom));
+    this.ajusterRessource(pretre, 'foi', -1);
   }
 
   /** Lance `count` d6 sur le plateau 3D (ou au hasard s'il est absent ou échoue) et renvoie leurs valeurs. */

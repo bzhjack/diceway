@@ -5,7 +5,7 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolCombatReferenceService} from '../../../services/bol-combat-reference.service';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {resolveAttackStats} from '../../combat-attack.util';
+import {feinteAvecCarrieres, resolveAttackStats} from '../../combat-attack.util';
 import {ActionRollCarriere} from '../../models/action-roll.model';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {equippedArmes} from '../../../shared/arme/arme-equipee';
@@ -14,6 +14,7 @@ import {appliquerEvenement, idAleatoire} from '../tapis/combat-effects.util';
 import {HeroismeChange, ResolvedCombatStats} from '../../models/combat-attack.model';
 import {heroDetails} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
+import {RessourceChange} from '../../models/magie-combat.model';
 import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
 
@@ -48,8 +49,14 @@ export class CombatStatsStore {
   /** Toutes les armes du héros actif, équipées ou non — pour l'arme secondaire du combat à deux armes. */
   readonly activeOwnedArmes = signal<readonly BolHerosArmeModel[]>([]);
 
-  /** Carrières du héros dont c'est le tour : le MJ peut en laisser une aider une manœuvre ou une feinte. */
+  /** Carrières du héros, ou du rival, dont c'est le tour : le MJ peut en laisser une aider une manœuvre ou une feinte. */
   readonly activeCarrieres = signal<readonly ActionRollCarriere[]>([]);
+
+  /** La fiche dont les carrières servent aux feintes de la carte active : un héros, ou un rival (une fiche de héros, elle aussi). */
+  private readonly feinteSourceId = computed(() => {
+    const active = this.combat.activeCard();
+    return active && feinteAvecCarrieres(active) ? active.sourceId : null;
+  });
 
   /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes — il les a toutes en main. */
   readonly assistantArmes = computed<readonly BolHerosArmeModel[]>(() => {
@@ -155,7 +162,6 @@ export class CombatStatsStore {
       const herosId = this.activeHeroId();
       this.activeArmes.set([]);
       this.activeOwnedArmes.set([]);
-      this.activeCarrieres.set([]);
       if (!herosId) {
         return;
       }
@@ -163,6 +169,23 @@ export class CombatStatsStore {
         .heros(herosId)
         .pipe(take(1))
         .subscribe((hero) => this.showIfActive(herosId, hero));
+    });
+
+    // Carrières du héros ou du rival dont c'est le tour, pour ses feintes.
+    effect(() => {
+      const sourceId = this.feinteSourceId();
+      this.activeCarrieres.set([]);
+      if (!sourceId) {
+        return;
+      }
+      this.herosService
+        .heros(sourceId)
+        .pipe(take(1))
+        .subscribe((fiche) => {
+          if (this.feinteSourceId() === sourceId) {
+            this.activeCarrieres.set(heroDetails(fiche).carrieres);
+          }
+        });
     });
   }
 
@@ -230,6 +253,42 @@ export class CombatStatsStore {
         this.table.notifyError(error, "Impossible de mettre à jour l'héroïsme.");
       },
     });
+  }
+
+  /** Des points de foi (un dé de foi) ou de pouvoir (un sort) dépensés ou rendus par une carte : affichés tout de suite sur l'attaquant
+   * ou la cible, enregistrés (sur la fiche d'un héros, comme son héroïsme ; sur la ligne d'un PNJ, comme sa vilénie), et repris si
+   * l'enregistrement échoue. */
+  onRessourceAdjusted(change: RessourceChange): void {
+    const {card, ressource, delta} = change;
+    const sessionId = this.table.sessionId();
+    const herosId = card.kind === 'hero' ? card.sourceId : null;
+    if ((card.kind === 'hero' && !herosId) || (card.kind === 'pnj' && !sessionId) || (card.kind !== 'hero' && card.kind !== 'pnj')) {
+      return;
+    }
+    const shift = (by: number): void => {
+      const update = (stats: ResolvedCombatStats | null): ResolvedCombatStats | null => {
+        const magie = stats?.magie;
+        const courant = magie?.[ressource];
+        return stats && magie && courant !== null && courant !== undefined ? {...stats, magie: {...magie, [ressource]: Math.max(0, courant + by)}} : stats;
+      };
+      if (this.combat.activeCard()?.key === card.key) {
+        this.attackerStats.update(update);
+      }
+      if (this.combat.selectedTarget()?.key === card.key) {
+        this.targetStats.update(update);
+      }
+    };
+    shift(delta);
+    const message = ressource === 'foi' ? 'Impossible de mettre à jour la foi.' : 'Impossible de mettre à jour le pouvoir.';
+    const onError = (error: unknown): void => {
+      shift(-delta);
+      this.table.notifyError(error, message);
+    };
+    if (herosId) {
+      this.herosService.adjustRessource(herosId, ressource, delta).subscribe({error: onError});
+      return;
+    }
+    this.fightSessionService.adjustPnjRessource(sessionId!, card.pivotId, ressource, delta).subscribe({next: (session) => this.table.session.set(session), error: onError});
   }
 
   /** Vilénie d'un rival dépensée ou rendue pendant un jet : affichée tout de suite (`shift`), enregistrée sur sa ligne de session, puis

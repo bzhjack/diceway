@@ -1,4 +1,5 @@
-import {CombatEffect, EffectDuration, EffectEvent, EffectIdGenerator, EffectStat, EffectWhen, ModifierTerm, NewEffect, RollContext, TurnChoice} from '../../models/combat-effect.model';
+import {SensDeFoi} from '../../models/magie-combat.model';
+import {CombatEffect, DureeLibre, EffectDuration, EffectEvent, EffetLibreSaisie, EffectIdGenerator, EffectStat, EffectWhen, ModifierTerm, NewEffect, RollContext, TurnChoice} from '../../models/combat-effect.model';
 
 /** Effet d'une posture sur la défense de son porteur (le bonus d'attaque vient du référentiel de combat). */
 export const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, offensive: -1, intrepid: -2, 'dual-parry': 1};
@@ -19,6 +20,9 @@ const FEINTE = 'feinte';
 const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
 const DE_MALUS = 'de-malus';
+/** Un dé de foi accordé ou imposé à la prochaine action de la carte (livre p. 146). */
+const DE_FOI_BONUS = 'de-foi-bonus';
+const DE_FOI_MALUS = 'de-foi-malus';
 /** La carte est paralysée par le poison d'un démon : elle ne joue plus tant que le MJ ne retire pas l'effet. */
 const PARALYSE = 'paralyse';
 
@@ -419,13 +423,34 @@ export function effetSurpris(porteur: string): NewEffect {
   return {origine: SANS_BOUCLIER, libelle: 'surpris', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: true};
 }
 
-/** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
 /** La carte perd son action (« Juste une égratignure » : se remettre du coup lui coûte sa prochaine action) : elle ne fait que finir
  * son tour, et l'effet tombe avec lui. */
 export function perdSonAction(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === ACTION_PERDUE);
 }
 
+/** Un dé de foi (livre p. 146) : sans jet, pour 1 point de foi, un prêtre ou un druide accorde un dé de bonus, ou impose un dé de
+ * malus, à un être qu'il voit, pour une tâche précise : sa prochaine action. Ces dés se cumulent entre eux et avec le dé du MJ. */
+export function effetDeFoi(porteur: string, sens: SensDeFoi, pretre: string): NewEffect {
+  return {
+    origine: sens === 'bonus' ? DE_FOI_BONUS : DE_FOI_MALUS,
+    libelle: `dé de ${sens} (foi de ${pretre})`,
+    porteur,
+    stat: 'action',
+    valeur: sens === 'bonus' ? 1 : -1,
+    quand: 'attaque',
+    duree: {type: 'action-porteur'},
+    manuel: true,
+  };
+}
+
+/** Les dés de foi que la carte doit à sa prochaine action : ceux de bonus et ceux de malus. */
+export function desDeFoi(effets: readonly CombatEffect[], carte: string): {readonly bonus: number; readonly malus: number} {
+  const siens = effets.filter((effet) => effet.porteur === carte);
+  return {bonus: siens.filter((effet) => effet.origine === DE_FOI_BONUS).length, malus: siens.filter((effet) => effet.origine === DE_FOI_MALUS).length};
+}
+
+/** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
 export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === DE_MALUS);
 }
@@ -438,12 +463,92 @@ export function effetParade(porteur: string, bouclier: boolean): NewEffect {
     : {origine: 'arme-brisee', libelle: 'arme brisée', porteur, stat: 'action', valeur: 0, quand: 'subie', duree: {type: 'combat'}, manuel: true};
 }
 
-/** La carte perd sa prochaine action (« Juste une égratignure », ou posé à la main). */
 /** Origine de l'effet « perd sa prochaine action » (« Juste une égratignure », ou posé à la main). */
 const ACTION_PERDUE = 'egratignure';
+/** Trace : le tour de la carte a été sauté, son action perdue ; elle reste sur la frise jusqu'à ce que son tour revienne. */
+const ACTION_SAUTEE = 'action-sautee';
 
+/** La carte perd sa prochaine action (« Juste une égratignure », ou posé à la main) : son tour sera sauté quand il viendra. */
 export function effetActionPerdue(porteur: string): NewEffect {
   return {origine: ACTION_PERDUE, libelle: 'perd sa prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
+}
+
+/** Son tour est venu et a été sauté : l'action perdue est consommée, la frise dit pourquoi jusqu'à son prochain tour. */
+export function effetActionSautee(porteur: string): NewEffect {
+  return {origine: ACTION_SAUTEE, libelle: 'a perdu son action (juste une égratignure)', porteur, stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'debut-tour-porteur'}, manuel: false};
+}
+
+/** L'action perdue est consommée : son tour vient d'être sauté. Les autres effets « à sa prochaine action » (dé de malus d'un
+ * renversement) attendent l'action qu'il fera vraiment. */
+export function sansActionPerdue(effets: readonly CombatEffect[], carte: string): readonly CombatEffect[] {
+  return effets.filter((effet) => !(effet.porteur === carte && effet.origine === ACTION_PERDUE));
+}
+
+/** Ce que la frise dit des effets d'une carte, en infobulle : ceux qui ont une valeur, et la trace d'un tour sauté. */
+export function effetsDeLaFrise(effets: readonly CombatEffect[], carte: string): readonly string[] {
+  return effets
+    .filter((effet) => effet.porteur === carte && (effet.valeur !== 0 || effet.origine === ACTION_SAUTEE))
+    .map((effet) => `${libelleEffet(effet)} · ${libelleDuree(effet.duree)}`);
+}
+
+/** Les traces d'une chute : il a sombré, a été stabilisé, ou assommé. */
+const TRACES_DE_CHUTE: readonly string[] = [INCONSCIENT, STABILISE, ASSOMME];
+
+/** Vrai si la carte porte une trace de chute (sombré, stabilisé, assommé). */
+export function aUneTraceDeChute(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && TRACES_DE_CHUTE.includes(effet.origine));
+}
+
+/** Les cartes relevées (vitalité repassée au-dessus de 0) oublient leur chute : retombées dans le même combat, les règles s'appliquent
+ * de nouveau (la question « Reprendre ses esprits », la perte d'un point par round du mourant, l'inconscience d'un coup d'arme). Rend
+ * la même liste s'il n'y a rien à oublier. */
+export function sansTracesDeChute(effets: readonly CombatEffect[], cartes: readonly string[]): readonly CombatEffect[] {
+  const restants = effets.filter((effet) => !(cartes.includes(effet.porteur) && TRACES_DE_CHUTE.includes(effet.origine)));
+  return restants.length === effets.length ? effets : restants;
+}
+
+const LIBELLE_STAT: Readonly<Record<EffectStat, string>> = {attaque: 'attaque', defense: 'défense', degats: 'dégâts', protection: 'protection', action: 'dé de malus'};
+
+/** Un effet libre, posé par le MJ : la défense et la protection jouent quand le porteur est attaqué, l'attaque et les dégâts quand il
+ * attaque. Un effet d'action est un dé de malus à ses jets, quelle que soit la valeur saisie. Sans nom, il prend celui de sa statistique. */
+export function effetLibre(saisie: EffetLibreSaisie): NewEffect {
+  const libelle = saisie.libelle.trim().slice(0, 60) || LIBELLE_STAT[saisie.stat];
+  const base = {porteur: saisie.porteur, duree: saisie.duree, manuel: true} as const;
+  if (saisie.stat === 'action') {
+    return {...base, origine: DE_MALUS, libelle, stat: 'action', valeur: -1, quand: 'attaque'};
+  }
+  return {
+    ...base,
+    origine: 'manuel',
+    libelle,
+    stat: saisie.stat,
+    valeur: Math.max(-20, Math.min(20, Math.trunc(saisie.valeur))),
+    quand: saisie.stat === 'defense' || saisie.stat === 'protection' ? 'subie' : 'attaque',
+  };
+}
+
+/** Les durées d'un effet libre. « N attaques subies » ne vaut que pour la défense : seuls ces effets s'usent quand on les attaque. */
+export function dureesLibres(stat: EffectStat): readonly DureeLibre[] {
+  const action: DureeLibre = {type: 'action-porteur', libelle: 'sa prochaine action', compte: false};
+  const durees: DureeLibre[] = [
+    {type: 'fin-round', libelle: 'fin du round', compte: false},
+    {type: 'debut-tour-porteur', libelle: 'son prochain tour', compte: false},
+    {type: 'rounds', libelle: 'rounds', compte: true},
+    {type: 'combat', libelle: 'fin du combat', compte: false},
+  ];
+  if (stat === 'action') {
+    return [action, ...durees];
+  }
+  return stat === 'defense' ? [...durees.slice(0, 3), {type: 'usages', libelle: 'attaques subies', compte: true}, durees[3]] : durees;
+}
+
+/** La durée choisie, en effet : un nombre (1 à 20) pour les rounds et les attaques subies. */
+export function dureeLibre(type: EffectDuration['type'], nombre: number): EffectDuration {
+  const restants = Math.max(1, Math.min(20, Math.trunc(nombre)));
+  if (type === 'rounds' || type === 'usages') {
+    return {type, restants};
+  }
+  return {type};
 }
 
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */

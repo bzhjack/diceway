@@ -1,8 +1,11 @@
 import {computed, effect, inject, Injectable, linkedSignal} from '@angular/core';
+import {form, max, min} from '@angular/forms/signals';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ModifierTerm} from '../../models/combat-effect.model';
 import {netDiceModifier} from '../../action-roll.util';
-import {doitUnDeDeMalus, POSTURE_DEFENSE} from './combat-effects.util';
+import {desDeFoi, doitUnDeDeMalus, POSTURE_DEFENSE} from './combat-effects.util';
+import {changerCercle, cercleSort, CERCLES_SORT, coutSort, degatsSort, difficulteSort, DIFFICULTES_SORT, pouvoirSuffisant, saisieSortParDefaut, sortSansJet} from '../../magie-combat.util';
+import {CercleSort, SortSaisie} from '../../models/magie-combat.model';
 import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
@@ -418,14 +421,117 @@ export class TurnLoadoutStore {
     return [...bonus.map((nom) => `${nom} : dé de bonus`), ...malus.map((nom) => `${nom} : dé de malus`)].join(' · ');
   });
 
-  /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant) : ils s'annulent un pour un
-   * (02-actions-combat.md). */
+  /** Les dés de foi que la carte active doit à sa prochaine action (livre p. 146) : ils entrent dans son jet, d'attaque ou de sort, et
+   * se cumulent avec le dé du MJ. */
+  readonly faithDice = computed(() => desDeFoi(this.turn.effets(), this.turn.card().key));
+
+  /** Ce que dit l'assistant des dés de foi qu'elle doit, sous ses chiffres ; `null` sans dé de foi. */
+  readonly faithNote = computed(() => {
+    const {bonus, malus} = this.faithDice();
+    const parts = [...(bonus > 0 ? [`${bonus} dé${bonus > 1 ? 's' : ''} de bonus`] : []), ...(malus > 0 ? [`${malus} dé${malus > 1 ? 's' : ''} de malus`] : [])];
+    return parts.length > 0 ? `Foi : ${parts.join(' et ')} à cette action.` : null;
+  });
+
+  /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant, dés de foi) : ils s'annulent un pour un
+   * (02-actions-combat.md). Un sort ne prend que le dé du MJ, la foi et la « Magie des Rois-Sorciers » (livre p. 42). */
   readonly netDice = computed(() => {
     const a = this.turn.attacker();
-    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
-    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
+    const foi = this.faithDice();
+    if (this.sortMode()) {
+      return netDiceModifier((this.gmDie() === 'bonus' ? 1 : 0) + foi.bonus + (a?.magie?.magieRoisSorciers ? 1 : 0), (this.gmDie() === 'malus' ? 1 : 0) + foi.malus);
+    }
+    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0) + foi.bonus;
+    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0) + foi.malus;
     return netDiceModifier(avantages, desavantages);
   });
+
+  // ── La sorcellerie (livre p. 148-157) : au lieu d'attaquer, un sorcier lance un sort. Pas de catalogue : le joueur décrit l'effet, le MJ
+  // en fixe la puissance et la difficulté ; l'assistant calcule le coût et le jet.
+
+  /** La carte a des points de pouvoir à dépenser : un sorcier (même à 0 point, pour qu'on le voie). */
+  readonly canCast = computed(() => (this.turn.attacker()?.magie?.pouvoir ?? null) !== null);
+
+  /** Ce qu'il fait de son action : attaquer, ou lancer un sort. Il repart sur l'attaque à chaque nouvelle carte active. */
+  readonly mode = linkedSignal<string, 'attaque' | 'sort'>({source: () => this.turn.cardKey(), computation: () => 'attaque'});
+
+  /** Il lance un sort ce tour-ci. */
+  readonly sortMode = computed(() => this.canCast() && this.mode() === 'sort');
+
+  /** Le sort, tel que le MJ le règle : 1er cercle, Moyenne, la seule condition obligatoire, sans dégâts — à chaque nouvelle carte. */
+  readonly sortModel = linkedSignal<string, SortSaisie>({source: () => this.turn.cardKey(), computation: () => saisieSortParDefaut()});
+
+  readonly sortForm = form(this.sortModel, (path) => {
+    min(path.conditions, 1);
+    max(path.conditions, 12);
+  });
+
+  readonly cercles = CERCLES_SORT;
+
+  readonly sortCercle = computed(() => cercleSort(this.sortModel().cercle));
+
+  readonly sortDifficulte = computed(() => difficulteSort(this.sortModel().difficulte));
+
+  /** Les crans de difficulté qu'il peut prendre : « automatique » n'est que pour un charme. */
+  private readonly difficultesPossibles = computed(() => DIFFICULTES_SORT.filter((d) => d.valeur !== null || this.sortModel().cercle === 0));
+
+  readonly sortDifficultePremiere = computed(() => this.difficultesPossibles()[0]?.slug === this.sortModel().difficulte);
+
+  readonly sortDifficulteDerniere = computed(() => this.difficultesPossibles().at(-1)?.slug === this.sortModel().difficulte);
+
+  /** La difficulté est l'une de celles que le livre donne à cette puissance. */
+  readonly sortDifficulteHabituelle = computed(() => this.sortCercle().difficultes.includes(this.sortModel().difficulte));
+
+  /** Le coût du sort, surcoût de l'armure compris (livre p. 148-153). */
+  readonly sortCout = computed(() => coutSort(this.sortModel(), this.turn.attacker()?.magie?.surcoutArmure ?? 0));
+
+  /** Il a de quoi le payer. */
+  readonly sortPayable = computed(() => pouvoirSuffisant(this.turn.attacker()?.magie?.pouvoir ?? null, this.sortCout().total));
+
+  /** Les dégâts d'un sort qui blesse, selon sa puissance. */
+  readonly sortDegats = computed(() => degatsSort(this.sortModel().cercle));
+
+  /** Un charme automatique : pas de jet. */
+  readonly sortSansJet = computed(() => sortSansJet(this.sortModel()));
+
+  /** Le sort a besoin d'une cible : il blesse, ou agit sur un esprit. */
+  readonly sortVise = computed(() => this.sortModel().blessant || this.sortModel().espritCible);
+
+  /** Le coût en clair, pour la ligne du sort : « 5 − 1 (conditions) + 2 (armure) = 6 ». */
+  readonly sortCoutDetail = computed(() => {
+    const cout = this.sortCout();
+    const parts = [`${cout.base}`, ...(cout.reduction > 0 ? [`− ${cout.reduction} (conditions)`] : []), ...(cout.armure > 0 ? [`+ ${cout.armure} (armure)`] : [])];
+    return parts.length > 1 ? `${parts.join(' ')} = ${cout.total}` : `${cout.total}`;
+  });
+
+  setMode(mode: 'attaque' | 'sort'): void {
+    this.mode.set(mode);
+  }
+
+  setCercle(cercle: CercleSort): void {
+    this.sortModel.update((saisie) => changerCercle(saisie, cercle));
+  }
+
+  /** Un cran plus facile (−1) ou plus difficile (+1) sur l'échelle. */
+  stepDifficulte(delta: number): void {
+    const crans = this.difficultesPossibles();
+    const index = crans.findIndex((d) => d.slug === this.sortModel().difficulte);
+    const next = crans[Math.max(0, Math.min(crans.length - 1, index + delta))];
+    if (next) {
+      this.sortForm.difficulte().value.set(next.slug);
+    }
+  }
+
+  setCoutCharme(cout: number): void {
+    this.sortForm.coutCharme().value.set(cout);
+  }
+
+  toggleSortBlessant(): void {
+    this.sortForm.blessant().value.update((v) => !v);
+  }
+
+  toggleSortEsprit(): void {
+    this.sortForm.espritCible().value.update((v) => !v);
+  }
 
   /** Nombre de dés du jet d'attaque : deux, plus un par dé de bonus ou de malus qui reste. */
   readonly diceCount = computed(() => 2 + Math.abs(this.netDice()));

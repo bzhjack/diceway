@@ -79,3 +79,19 @@ export interface TurnChoice {
 
 /** Produit l'identifiant d'un effet à créer, vu la liste déjà là. */
 export type EffectIdGenerator = (effets: readonly CombatEffect[]) => string;
+
+/** Ce que le MJ règle dans un effet libre (« + Effet ») : son nom, la statistique, la valeur et la durée. */
+export interface EffetLibreSaisie {
+  readonly porteur: string;
+  readonly libelle: string;
+  readonly stat: EffectStat;
+  readonly valeur: number;
+  readonly duree: EffectDuration;
+}
+
+/** Une durée proposée pour un effet libre ; `compte` : elle se règle en nombre (rounds, attaques subies). */
+export interface DureeLibre {
+  readonly type: EffectDuration['type'];
+  readonly libelle: string;
+  readonly compte: boolean;
+}

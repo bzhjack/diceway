@@ -352,6 +352,38 @@ class BolFightSessionService
     }
 
     /**
+     * Points de foi ou de pouvoir d'un PNJ posé à la table : ceux de sa fiche (livre p. 146 et 148) ; `null` sans réserve.
+     */
+    public static function ressourceInitiale(?int $fiche): ?int
+    {
+        return $fiche !== null && $fiche > 0 ? $fiche : null;
+    }
+
+    /** Points de foi ou de pouvoir après une dépense (négatif) ou un gain : jamais sous zéro ; qui n'en a pas n'en gagne pas. */
+    public static function ressourceSuivante(?int $courante, int $delta): ?int
+    {
+        return $courante === null ? null : max(0, $courante + $delta);
+    }
+
+    /**
+     * Dépense ou rend des points de foi (`foi`) ou de pouvoir (`pouvoir`) à un PNJ de la table : un dé de foi, un sort. Null si la
+     * session ou la ligne est introuvable.
+     */
+    public function adjustPnjRessource(string $sessionId, string $userId, int $pivotId, string $ressource, int $delta): ?BolFightSession
+    {
+        $colonne = ['foi' => 'foi_courante', 'pouvoir' => 'pouvoir_courant'][$ressource] ?? null;
+        $session = $colonne ? BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first() : null;
+        $row = $session ? BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->first() : null;
+        if (!$row) {
+            return null;
+        }
+
+        $row->update([$colonne => self::ressourceSuivante($row->{$colonne}, $delta)]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
      * Dépense ou rend des points de vilénie à un PNJ rival de la table. Null si la session ou la ligne est introuvable.
      */
     public function adjustVilenie(string $sessionId, string $userId, int $pivotId, int $delta): ?BolFightSession
@@ -715,6 +747,8 @@ class BolFightSessionService
             'rang'              => $this->rangFromType($pnj->type),
             'vitalite_courante' => $pnj->vitalite,
             'vilenie_courante'  => self::vilenieInitiale($this->rangFromType($pnj->type), $pnj->vilenie),
+            'foi_courante'      => self::ressourceInitiale($pnj->foi),
+            'pouvoir_courant'   => self::ressourceInitiale($pnj->pouvoir),
         ] + $this->pnjSnapshot($pnj));
     }
 
