@@ -237,6 +237,17 @@ class BolCombatStateTest extends TestCase
         $this->assertSame(2, $merged['melee']);
     }
 
+    public function test_merge_never_brings_back_a_rival_who_fled(): void
+    {
+        // L'état envoyé a été calculé avant la fuite (enregistrée à part, avec sa dépense de vilénie) : il ne l'efface pas.
+        $existing = ['round' => 2, 'joues' => [], 'effets' => [], 'exclus' => ['pnj-3'], 'fuis' => ['pnj-3'], 'melee' => null];
+
+        $merged = BolCombatState::merge(['round' => 2, 'joues' => ['hero-1'], 'exclus' => ['creature-4'], 'fuis' => ['pnj-5']], $existing);
+
+        $this->assertSame(['pnj-5', 'pnj-3'], $merged['fuis']);
+        $this->assertSame(['creature-4', 'pnj-5', 'pnj-3'], $merged['exclus']);
+    }
+
     public function test_merge_lets_the_update_record_an_escape_and_a_mook_melee(): void
     {
         $existing = ['round' => 2, 'joues' => [], 'effets' => [], 'exclus' => [], 'fuis' => [], 'melee' => null];

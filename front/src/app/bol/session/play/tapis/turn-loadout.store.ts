@@ -4,7 +4,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ModifierTerm} from '../../models/combat-effect.model';
 import {netDiceModifier} from '../../action-roll.util';
 import {desDeFoi, doitUnDeDeMalus, POSTURE_DEFENSE} from './combat-effects.util';
-import {changerCercle, cercleSort, CERCLES_SORT, coutSort, degatsSort, difficulteSort, DIFFICULTES_SORT, pouvoirSuffisant, saisieSortParDefaut, sortSansJet} from '../../magie-combat.util';
+import {changerCercle, cercleSort, CERCLES_SORT, coutSort, degatsSort, difficulteSort, DIFFICULTES_SORT, pouvoirSuffisant, saisieSortParDefaut, sortPayeCeRound, sortSansJet} from '../../magie-combat.util';
 import {CercleSort, SortSaisie} from '../../models/magie-combat.model';
 import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
@@ -451,8 +451,16 @@ export class TurnLoadoutStore {
   /** La carte a des points de pouvoir à dépenser : un sorcier (même à 0 point, pour qu'on le voie). */
   readonly canCast = computed(() => (this.turn.attacker()?.magie?.pouvoir ?? null) !== null);
 
-  /** Ce qu'il fait de son action : attaquer, ou lancer un sort. Il repart sur l'attaque à chaque nouvelle carte active. */
-  readonly mode = linkedSignal<string, 'attaque' | 'sort'>({source: () => this.turn.turnKey(), computation: () => 'attaque'});
+  /** Le sort de ce tour a déjà été payé, d'après la trace qu'il a laissée dans l'état du combat (la page a pu être rechargée depuis). */
+  private readonly sortDejaPaye = computed(() => sortPayeCeRound(this.turn.effets(), this.turn.card().key).points > 0);
+
+  /** Ce qu'il fait de son action : attaquer, ou lancer un sort. Il repart sur l'attaque à chaque nouvelle carte active — sur le sort quand
+   * celui de ce tour est déjà payé (page rechargée en plein tour), ou dès que sa trace arrive. */
+  readonly mode = linkedSignal<{readonly key: string; readonly paye: boolean}, 'attaque' | 'sort'>({
+    source: () => ({key: this.turn.turnKey(), paye: this.sortDejaPaye()}),
+    computation: (source, previous) =>
+      previous && previous.source.key === source.key && !(source.paye && !previous.source.paye) ? previous.value : source.paye ? 'sort' : 'attaque',
+  });
 
   /** Il lance un sort ce tour-ci. */
   readonly sortMode = computed(() => this.canCast() && this.mode() === 'sort');

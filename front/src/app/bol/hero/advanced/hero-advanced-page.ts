@@ -50,6 +50,7 @@ import {
   combatBudgetErrors,
   desavantageIdsDuHeros,
   desavantagesGeneraux,
+  vigueurEffective,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
 import {HeroAdvancedRegionComponent} from './region/region.component';
@@ -433,15 +434,19 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       .reduce((sum, armure) => sum + armure.malusInitiative, 0),
   );
 
-  // E13 : arme lourde (d6B) avec vigueur négative.
+  // E13 : arme lourde (d6B) avec vigueur négative, la vigueur de la fiche (bonus de traits compris).
   protected readonly warnHeavyArme = computed(
-    () => Number(this.vigueurValue()) < 0 && this.selectedArmes().some((arme) => arme.degats?.startsWith('d6B')),
+    () =>
+      vigueurEffective(Number(this.vigueurValue()), this.modifiers()) < 0 &&
+      this.selectedArmes().some((arme) => arme.degats?.startsWith('d6B')),
   );
 
-  // Armure lourde avec vigueur négative : interdite par le livre (p. 52) ; même avertissement que l'arme lourde, sans bloquer.
+  // Armure lourde avec moins de 0 en vigueur (bonus de traits compris) : interdite par le livre (p. 52) ; même avertissement que l'arme
+  // lourde, sans bloquer.
   protected readonly warnHeavyArmure = computed(() =>
     armureLourdeInterdite(
       Number(this.vigueurValue()),
+      this.modifiers(),
       this.selectedArmures().map((armure) => armure.id),
     ),
   );
@@ -654,7 +659,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       });
     }
 
-    // R-ILLETTRE : un illettré ne choisit pas de carrière qui exige d'être lettré (livre p. 45). Tout désavantage Illettré compte, général,
+    // R-ILLETTRE : un illettré ne choisit pas de carrière qui exige d'être lettré (livre p. 44). Tout désavantage Illettré compte, général,
     // régional (le cas courant : 9 régions le proposent, sous le même id du catalogue) ou de carrière.
     for (const carriereId of carrieresLettreesPourIllettre(desavantageIdsDuHeros(this.selectedTraitsDraft()), selectedIds)) {
       warnings.push({

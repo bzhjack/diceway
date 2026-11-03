@@ -7,6 +7,7 @@ import {TapisCard} from '../../models/tapis.model';
 import {RessourceChange, RessourcesMagiques} from '../../models/magie-combat.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {effetDeFoi} from './combat-effects.util';
+import {effetSortPaye} from '../../magie-combat.util';
 import {MatDialog} from '@angular/material/dialog';
 import {of} from 'rxjs';
 import {TurnAssistantComponent} from './turn-assistant';
@@ -740,6 +741,7 @@ describe('TurnAssistantComponent', () => {
     });
 
     const caseSort = () => element.querySelector<HTMLInputElement>('input[aria-label^="Total des deux dés du sort"]')!;
+    const desDuSort = /d6 à l’écran pour/;
 
     it('un échec critique accepté se défait quand le total est retapé : le point d’héroïsme est repris', async () => {
       await viser({attacker: sorcier()});
@@ -767,7 +769,7 @@ describe('TurnAssistantComponent', () => {
       await cliquer('Appliquer 4');
 
       expect(caseSort().disabled).toBe(true);
-      expect(bouton(/Lancer \dd6 à l’écran pour le sort/).disabled).toBe(true);
+      expect(bouton(desDuSort).disabled).toBe(true);
       await saisirAttaque('');
       await saisirAttaque('8');
 
@@ -804,6 +806,119 @@ describe('TurnAssistantComponent', () => {
       expect(caseSort().disabled).toBe(false);
       await saisirAttaque('7');
       expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
+    });
+
+    it('un sort raté relancé à l’écran est un nouveau sort : il se paie de nouveau ; la faveur divine relance sans le repayer', async () => {
+      // Tous les dés à 1 : double 1, le sort échoue.
+      const hasard = vi.spyOn(Math, 'random').mockReturnValue(0);
+      try {
+        await viser({attacker: sorcier()});
+        await cliquer(/^ *Sort *null$/);
+        await cliquer(desDuSort);
+        expect(texte()).toContain('Le sort échoue');
+        expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
+
+        await cliquer(desDuSort);
+        expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
+
+        await cliquer('Faveur divine');
+        await cliquer(desDuSort);
+        expect(events.heroisme).toEqual([-1]);
+        expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
+      } finally {
+        hasard.mockRestore();
+      }
+    });
+
+    it('sans de quoi payer un nouveau sort, les dés ne se relancent plus après un résultat', async () => {
+      const hasard = vi.spyOn(Math, 'random').mockReturnValue(0);
+      try {
+        await viser({attacker: sorcier({pouvoir: 6})});
+        await cliquer(/^ *Sort *null$/);
+        await cliquer(desDuSort);
+        // La page a enregistré le débit : il ne lui reste rien.
+        fixture.componentRef.setInput('attacker', sorcier({pouvoir: 0}));
+        await stable();
+
+        expect(bouton(desDuSort).disabled).toBe(true);
+        expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
+      } finally {
+        hasard.mockRestore();
+      }
+    });
+
+    it('changer d’adversaire après le jet du sort le remet à zéro, comme l’attaque : le sort lancé est perdu, un nouveau se paie', async () => {
+      const autre = carte({key: 'pnj-8', kind: 'pnj', camp: 'adversaires', pivotId: 8, sourceId: '16', nom: 'Thurgal', joueur: null, heroisme: null});
+      await viser({attacker: sorcier(), targets: [cible, autre]});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Blesse');
+      await saisirAttaque('7');
+      // La page renvoie la trace du sort payé, enregistrée dans l'état du combat.
+      const trace = events.nouveaux.find((effet) => effet.origine === 'sort-paye');
+      expect(trace).toBeDefined();
+      fixture.componentRef.setInput('effets', [{...trace!, id: 'e-1'}]);
+      await stable();
+
+      await cliquer('Changer d’adversaire');
+      fixture.componentRef.setInput('target', null);
+      await stable();
+      fixture.componentRef.setInput('target', autre);
+      await stable();
+
+      expect(element.querySelector('input[aria-label^="Dé de dégâts"]')).toBeNull();
+      expect(texte()).not.toContain('Le sort agit');
+      expect(texte()).not.toContain('· payé');
+      expect(events.removed).toEqual(['e-1']);
+      expect(texte()).toContain('le sort lancé contre l’ancienne cible est perdu');
+      // Il a coûté l'action : pas d'attaque à la place.
+      expect(bouton(/^ *Attaque *null$/).disabled).toBe(true);
+      await saisirAttaque('7');
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
+    });
+
+    it('le sort payé laisse une trace dans l’état du combat, et la vider la retire avec le remboursement', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      await saisirAttaque('3');
+
+      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 6)]);
+      fixture.componentRef.setInput('effets', [{...effetSortPaye('hero-1', 6), id: 'e-1'}]);
+      await stable();
+      await saisirAttaque('');
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6, 6]);
+      expect(events.removed).toEqual(['e-1']);
+    });
+
+    it('la page rechargée en plein tour après un sort payé : l’assistant le dit, et le jet ne redébite pas', async () => {
+      // Le pouvoir est déjà débité (il ne lui reste rien) ; l'assistant, neuf, ne sait du sort que sa trace.
+      await viser({attacker: sorcier({pouvoir: 0}), round: 2, effets: [{...effetSortPaye('hero-1', 6), id: 'e-1'}]});
+
+      expect(texte()).toContain('6 pts déjà payés ce tour-ci');
+      expect(texte()).not.toContain('Pas assez de pouvoir');
+      expect(bouton(/^ *Attaque *null$/).disabled).toBe(true);
+      await saisirAttaque('7');
+
+      expect(texte()).toContain('Le sort agit');
+      expect(events.ressources).toEqual([]);
+    });
+
+    it('rechargée, un sort plus cher ne débite que la différence', async () => {
+      await viser({attacker: sorcier({pouvoir: 10}), effets: [{...effetSortPaye('hero-1', 6), id: 'e-1'}]});
+      await cliquer('2e cercle');
+      // 10 + 1 pour l'armure : 5 de plus que les 6 déjà payés.
+      await saisirAttaque('9');
+
+      expect(events.ressources.map((r) => r.delta)).toEqual([-5]);
+      expect(events.removed).toEqual(['e-1']);
+      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 11)]);
+    });
+
+    it('la trace d’une autre carte ne vaut rien pour ce tour', async () => {
+      await viser({attacker: sorcier(), effets: [{...effetSortPaye('pnj-7', 6), id: 'e-1'}]});
+      await cliquer(/^ *Sort *null$/);
+      await saisirAttaque('7');
+
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
     });
 
     it('une carte sans pouvoir n’a pas de sort', async () => {

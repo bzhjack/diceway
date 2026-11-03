@@ -24,7 +24,8 @@
   </span>
   <span class="tas-stack">
     <span class="tas-r1">
-      <!-- Le total des deux dés lancés à table ; le bouton les lance à l'écran. Le premier jet paie le sort. -->
+      <!-- Le total des deux dés lancés à table (retapé, il se corrige sans repayer) ; le bouton les lance à l'écran. Le premier jet paie le
+           sort ; les dés relancés après un résultat sont un nouveau sort, qui se paie. -->
       <span class="tas-entry">
         <input
           #attackInput
@@ -34,7 +35,7 @@
           maxlength="2"
           autocomplete="off"
           placeholder="total"
-          [attr.aria-label]="'Total des deux dés du sort lancés à table' + (flow.sortLance() ? '' : ', le premier jet dépense ' + loadout.sortCout().total + ' points de pouvoir')"
+          [attr.aria-label]="'Total des deux dés du sort lancés à table' + (flow.sortLance() ? '' : ', le premier jet dépense ' + attack.sortADebiter() + ' points de pouvoir')"
           [value]="attack.sortDiceSum() ?? ''"
           [disabled]="turn.rolling() || !flow.sortPret() || attack.sortDamageDone()"
           (focus)="attackInput.select()"
@@ -44,9 +45,13 @@
         <button
           type="button"
           class="tas-dice-btn"
-          [disabled]="turn.rolling() || !flow.sortPret() || attack.sortDamageDone()"
-          [attr.aria-label]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran pour le sort'"
-          [matTooltip]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'"
+          [disabled]="turn.rolling() || !flow.desSortPrets()"
+          [attr.aria-label]="
+            flow.nouveauSort()
+              ? 'Relancer ' + loadout.diceCount() + 'd6 à l’écran pour un nouveau sort, qui coûte ' + loadout.sortCout().total + ' points de pouvoir'
+              : 'Lancer ' + loadout.diceCount() + 'd6 à l’écran pour le sort'
+          "
+          [matTooltip]="flow.nouveauSort() ? 'Nouveau sort : ' + loadout.sortCout().total + ' pts de pouvoir de plus' : 'Lancer ' + loadout.diceCount() + 'd6 à l’écran'"
           (click)="flow.rollSort()"
         >
           <mat-icon svgIcon="gi-dice" />
@@ -80,9 +85,9 @@
       } @else if (attack.sortVerdict(); as v) {
         <b [class]="'tas-verdict-title tas-verdict-title--' + v.tone">{{ v.title }}</b>
         <span>{{ v.detail }}</span>
-      } @else if (!loadout.sortPayable()) {
+      } @else if (!attack.sortPayable()) {
         <b class="tas-verdict-title tas-verdict-title--echec">Pas assez de pouvoir</b>
-        <span>Il en faut {{ loadout.sortCout().total }}, il en a {{ turn.attacker()?.magie?.pouvoir ?? 0 }}.</span>
+        <span>Il en faut {{ attack.sortADebiter() }}, il en a {{ turn.attacker()?.magie?.pouvoir ?? 0 }}.</span>
       } @else if (loadout.sortVise() && !turn.target()) {
         <span class="tas-wait">Choisis la cible du sort.</span>
       } @else {
@@ -107,6 +112,13 @@
   </div>
   <p class="tas-sort-notes">
     <span>Coût {{ loadout.sortCoutDetail() }} {{ flow.sortLance() ? '· payé' : '' }}</span>
+    @if (attack.sortPerdu() && !flow.sortLance()) {
+      <span>· le sort lancé contre l’ancienne cible est perdu : un nouveau se paie.</span>
+    }
+    @if (attack.sortCredit(); as credit) {
+      <!-- La page a été rechargée après que le sort de ce tour a été payé : le jet ne redébite pas ces points. -->
+      <span>· {{ credit }} {{ credit > 1 ? 'pts déjà payés' : 'pt déjà payé' }} ce tour-ci, avant le rechargement de la page : le jet ne les redébite pas.</span>
+    }
     @if (loadout.sortModel().cercle === 3) {
       <span>· 3e cercle : 1 point de pouvoir perdu pour toujours (ou 1 point d’attribut), à reporter sur la fiche.</span>
     }

@@ -93,7 +93,8 @@ class BolCombatState
     /**
      * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage, les effets, les fuites
      * et la mêlée de piétaille ne sont pas réécrits par un état envoyé sans eux, et la vitalité de départ ne vient que du démarrage (le front
-     * ne peut pas la changer).
+     * ne peut pas la changer). Un rival enfui le reste : la fuite est enregistrée à part, avec sa dépense de vilénie
+     * (`BolFightSessionService::fuiteOpportune`), et un état calculé avant elle ne la défait pas.
      *
      * @param array<string, mixed> $envoye
      * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, fuis: array<int, string>, melee: int|null}
@@ -103,7 +104,7 @@ class BolCombatState
         $garde = self::normalize($existant);
         $envoye['exclus'] ??= $garde['exclus'];
         $envoye['effets'] ??= $garde['effets'];
-        $envoye['fuis'] ??= $garde['fuis'];
+        $envoye['fuis'] = [...self::keys($envoye['fuis'] ?? null), ...$garde['fuis']];
         if (!array_key_exists('melee', $envoye)) {
             $envoye['melee'] = $garde['melee'];
         }

@@ -10,7 +10,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | --- | --- | --- |
 | Mise en production : migrations du 2026-11-02 et du 2026-11-03, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
 | Combat : script navigateur rejouable pour l'héroïsme | 2 | S |
-| Revue globale du 2026-11-03 : environ 25 mineurs à trier | 3 bis | M |
+| Revue globale du 2026-11-03 : une vingtaine de mineurs à trier | 3 bis | M |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
@@ -31,7 +31,7 @@ Sans objet tant que l'appli ne les gère pas : la progression par XP (double co�
    - `2026_11_02_180000_add_mort_vivant_to_bol_creature` : la case « mort-vivant » des créatures, cochée pour les morts-vivants du catalogue ;
    - `2026_11_03_100000_add_foi_and_pouvoir_to_bol_fight_session_pnj` : la foi et le pouvoir des PNJ posés aux tables (dé de foi, sorts), remplis d'après leur fiche.
 
-   La première ajoute une colonne aux tables de jeu et la remplit d'après leur scène en cours ; les cinq suivantes ne touchent que le catalogue (fiches sans compte) et n'ajoutent rien si on les relance ; la septième supprime des tables dont l'appli ne se sert plus, la huitième ajoute une colonne aux créatures, et la dernière deux colonnes aux PNJ des tables. Le `docker cp` de `routes/api.php` est nécessaire : l'accueil, la foi et le pouvoir, la clôture et la réouverture des tables ont de nouvelles routes.
+   La première ajoute une colonne aux tables de jeu et la remplit d'après leur scène en cours ; les cinq suivantes ne touchent que le catalogue (fiches sans compte) et n'ajoutent rien si on les relance ; la septième supprime des tables dont l'appli ne se sert plus, la huitième ajoute une colonne aux créatures, et la dernière deux colonnes aux PNJ des tables. Le `docker cp` de `routes/api.php` est nécessaire : l'accueil, la foi et le pouvoir, la clôture et la réouverture des tables, la Fuite opportune ont de nouvelles routes.
    Ensuite `php artisan cache:clear`, puis `php artisan up`. Les `down()` des migrations `120000` et `160000` défont aussi des lignes qui existaient avant elles : ne pas compter sur un retour en arrière pour ces deux-là.
 2. Portraits : `docker exec -u www-data diceway php artisan bol:extract-portraits` (voir `CLAUDE.md`, section Portraits).
 3. **Après** la mise en production des portraits : supprimer la table `bol_portrait_backup` et les options `--restore` / `--forget-originals` de `bol:extract-portraits` (S).
@@ -61,7 +61,7 @@ Toutes les règles de combat du livre sont gérées (le détail et les limites c
 
 ## 3 bis. Revue globale du 2026-11-03
 
-Environ 25 mineurs restent ouverts, listés dans `2026-11-03-revue-globale.md` § 5 (à trier quand on y reviendra).
+Une vingtaine de mineurs restent ouverts, listés dans `2026-11-03-revue-globale.md` § 5 (à trier quand on y reviendra).
 
 ## 4. Code
 

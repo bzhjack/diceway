@@ -11,7 +11,7 @@ import {DwRollSumTerm} from '../../../../shared/models/roll-sum.model';
 import {StatTile, AttackGoal, AttackVerdict} from '../../models/turn-assistant.model';
 import {signedTerm, pointsAffiches, sumTermOf} from './turn-assistant.util';
 import {optionHeroiqueBloquee} from './options-heroiques.util';
-import {issueSort, modificateurSort} from '../../magie-combat.util';
+import {issueSort, modificateurSort, pouvoirSuffisant, sortPayeCeRound} from '../../magie-combat.util';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 
@@ -350,6 +350,26 @@ export class TurnAttackStore {
 
   /** Les dégâts du sort ont été appliqués : il ne reste qu'à finir le tour. */
   readonly sortDamageDone = signal(false);
+
+  /** La trace « sort payé » de cette carte dans l'état du combat (cf. `effetSortPaye`) : elle survit à la page rechargée. */
+  readonly sortTrace = computed(() => sortPayeCeRound(this.turn.effets(), this.turn.card().key));
+
+  /** Un sort lancé ce tour-ci a été perdu : la cible a changé après son jet. Il a coûté l'action : l'attaque, la défense totale, le retard
+   * restent fermés ; un nouveau sort se paie. */
+  readonly sortPerdu = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => false});
+
+  /** L'assistant a déjà payé (ou rendu) un sort ce tour-ci : la trace qui reste est la sienne, elle ne fait plus crédit. */
+  readonly sortCreditPris = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => false});
+
+  /** Le pouvoir payé pour le sort de ce tour avant que l'assistant reparte de zéro (page rechargée en plein tour) : le prochain jet ne le
+   * redébite pas. */
+  readonly sortCredit = computed(() => (this.sortCreditPris() || this.sortPaid() > 0 || this.sortAuto() ? 0 : this.sortTrace().points));
+
+  /** Ce que le premier jet du sort débitera : son coût, moins ce qui a déjà été payé avant un rechargement. */
+  readonly sortADebiter = computed(() => Math.max(0, this.loadout.sortCout().total - this.sortCredit()));
+
+  /** Il a de quoi payer le sort, compte tenu de ce qui est déjà payé. */
+  readonly sortPayable = computed(() => pouvoirSuffisant(this.turn.attacker()?.magie?.pouvoir ?? null, this.sortADebiter()));
 
   readonly sortDiceSum = computed(() => {
     const d = this.sortDice();

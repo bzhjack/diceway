@@ -7,12 +7,14 @@
   addLabel="Ajouter l'arme"
   (added)="armeAdded.emit($event.id)"
 >
-  @if (warnHeavy()) {
-    <div class="dw-field-warning mb-3">
-      Arme lourde (d6B) — Vigueur négative : le personnage subit un malus au combat. Vérifiez la
-      cohérence avec les règles.
-    </div>
-  }
+  <!-- Région live toujours présente : l'avertissement y apparaît et est annoncé, sans bloquer l'activation. -->
+  <div role="status">
+    @if (warnHeavy()) {
+      <p class="dw-field-warning hap-armes-warning">
+        Arme lourde (d6B) — Vigueur négative : le personnage ne peut pas la manier (p. 14 et 63).
+      </p>
+    }
+  </div>
 
   <bol-arme-list
     [armes]="armes()"

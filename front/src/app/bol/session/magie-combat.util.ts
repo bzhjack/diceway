@@ -1,7 +1,8 @@
 import {AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, CARRIERE_PRETRE_ID, CARRIERE_SORCIER_ID} from '../bol-rules.constants';
 import {BolHerosArmureModel} from '../models/bol-armure.model';
 import {BolHerosModel} from '../models/bol-heros.model';
-import {CercleSort, CercleSortInfo, CoutSort, DifficulteSort, RessourcesMagiques, SortSaisie} from './models/magie-combat.model';
+import {CercleSort, CercleSortInfo, CoutSort, DifficulteSort, RessourcesMagiques, SortPaye, SortSaisie} from './models/magie-combat.model';
+import {CombatEffect, NewEffect} from './models/combat-effect.model';
 import {TapisCard} from './models/tapis.model';
 import {ATTACK_THRESHOLD, suggestedAttackResult} from './combat-resolution.util';
 
@@ -115,6 +116,33 @@ export function sortSansJet(saisie: SortSaisie): boolean {
 /** Il reste assez de points de pouvoir pour payer le sort. */
 export function pouvoirSuffisant(pouvoir: number | null, cout: number): boolean {
   return pouvoir !== null && pouvoir >= cout;
+}
+
+/** Origine de la trace « sort payé ». */
+const SORT_PAYE = 'sort-paye';
+
+/** Trace, dans l'état du combat, du pouvoir payé pour le sort que la carte lance à son tour : la page rechargée en plein tour la relit, et
+ * l'assistant, reparti de zéro, ne redébite pas ces points (cf. `sortPayeCeRound`). Elle tombe à la fin du round ; une trace (valeur 0) ne
+ * pèse sur aucun jet, et le MJ la voit (et peut la retirer) parmi les effets en cours. Les points sont dans son libellé, seul champ libre que
+ * l'état du combat garde. */
+export function effetSortPaye(porteur: string, points: number): NewEffect {
+  return {
+    origine: SORT_PAYE,
+    libelle: `sort payé (${points} ${points > 1 ? 'pts' : 'pt'} de pouvoir)`,
+    porteur,
+    stat: 'action',
+    valeur: 0,
+    quand: 'attaque',
+    duree: {type: 'fin-round'},
+    manuel: true,
+  };
+}
+
+/** Le pouvoir que la carte a déjà payé pour son sort ce round, d'après ses traces « sort payé » (la dernière posée fait foi). */
+export function sortPayeCeRound(effets: readonly CombatEffect[], carte: string): SortPaye {
+  const traces = effets.filter((effet) => effet.porteur === carte && effet.origine === SORT_PAYE);
+  const points = Number(traces.at(-1)?.libelle?.match(/(\d+) pts? de pouvoir/)?.[1] ?? 0);
+  return {points, ids: traces.map((effet) => effet.id)};
 }
 
 /** Le surcoût en points de pouvoir de l'armure portée (« +2 » d'une armure moyenne, livre p. 52 et 148) ; `toutCompte` : un PNJ porte

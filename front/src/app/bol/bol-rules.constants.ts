@@ -26,17 +26,16 @@ export const AVANTAGE_PEAU_DURE_ID = 39;
 /** Armure lourde (catalogue, catégorie `armure`) — interdite avec une vigueur négative (livre p. 52). */
 export const ARMURE_LOURDE_ID = 4;
 
-/** Illettré — ne sait ni lire ni écrire et « ne peut pas choisir de carrière exigeant d'être lettré » (livre p. 45). */
+/** Illettré — « vous ne savez ni lire ni écrire, et ne pouvez pas choisir de carrière exigeant d'être lettré » (livre p. 44). */
 export const DESAVANTAGE_ILLETTRE_ID = 17;
-/** Carrières qui exigent d'être lettré. Le livre nomme Scribe, Médecin (« tous se doivent de savoir lire et écrire ») et Prêtre (« des
- * lettrés ») ; Alchimiste et Sorcier le sont dans la pratique : le livre les interdit aux Céruléens, qui n'ont pas d'écriture, comme
- * le scribe et le médecin. Le livre n'en donne pas de liste : à compléter au besoin. */
+/** Carrières que le livre dit lettrées, et elles seules : « les carrières spécifiquement désignées comme étant des carrières de lettré
+ * (scribe, médecin, alchimiste, prêtre, etc.) » (p. 47, Déchiffrer un texte). Le sorcier n'y est pas : il n'en serait que par déduction
+ * (carrière interdite aux Céruléens, sans écriture, p. 21), qui ne suffit pas à bloquer un illettré. */
 export const CARRIERES_LETTREES: readonly number[] = [
-  CARRIERE_ALCHIMISTE_ID,
-  CARRIERE_MEDECIN_ID,
-  CARRIERE_PRETRE_ID,
-  22, // Scribe
-  CARRIERE_SORCIER_ID,
+  CARRIERE_ALCHIMISTE_ID, // p. 47
+  CARRIERE_MEDECIN_ID, // p. 47 ; p. 32 : « tous se doivent bien sûr de savoir lire et écrire »
+  CARRIERE_PRETRE_ID, // p. 47 ; p. 36 : « ce sont des lettrés »
+  22, // Scribe — p. 47 ; p. 36 : « il va sans dire que les scribes savent lire et écrire »
 ];
 
 /** Récupération rapide — 1 point de vitalité de plus récupéré après un combat. */

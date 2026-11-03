@@ -6,7 +6,7 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {AttackChoice} from '../../models/attack-options.model';
 import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, poserEffet, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
-import {fuir, peutFuir} from '../tapis/fuite-opportune.util';
+import {peutFuir} from '../tapis/fuite-opportune.util';
 import {disponibiliteMelee, pietailleDebout} from '../tapis/melee-pietaille.util';
 import {MeleeCamps, MeleeDisponibilite} from '../../models/melee-pietaille.model';
 import {NewEffect} from '../../models/combat-effect.model';
@@ -218,29 +218,30 @@ export class CombatTurnStore {
       });
   }
 
-  /** Un rival peut-il prendre la fuite (« Fuite opportune ») : en combat, s'il a encore de la vilénie et n'a pas déjà quitté le combat. */
+  /** Un rival peut-il prendre la fuite (« Fuite opportune ») : en combat, un rival adverse qui a encore de la vilénie et n'a pas déjà quitté
+   * le combat. */
   canFlee(card: TapisCard): boolean {
     return this.table.mode() === 'combat' && peutFuir(card, this.etat());
   }
 
   /** « Fuite opportune » (04-pnj-creatures-demons.md, « Points de vilenie ») : le rival dépense 1 point de vilénie et quitte le combat. Il ne
-   * joue plus, ne se vise plus et ne compte plus pour l'issue ; la frise le dit « enfui », sa fiche reste sur la table. La vilénie est
-   * dépensée d'abord : si elle ne peut pas l'être, il reste. */
+   * joue plus, ne se vise plus et ne compte plus pour l'issue ; la frise le dit « enfui », sa fiche reste sur la table. Le serveur fait les
+   * deux en une seule transaction : si l'appel échoue, rien n'a changé, la vilénie est intacte et le rival reste. Un état du combat
+   * enregistré ensuite sans la fuite ne la défait pas (le serveur garde les rivaux enfuis). */
   flee(card: TapisCard): void {
     const sessionId = this.table.sessionId();
     if (!sessionId || !this.canFlee(card)) {
       return;
     }
-    this.fightSessionService.adjustVilenie(sessionId, card.pivotId, -1).subscribe({
+    this.fightSessionService.fuiteOpportune(sessionId, card.pivotId).subscribe({
       next: (session) => {
         this.table.session.set(session);
         if (this.targetKey() === card.key) {
           this.targetKey.set(null);
         }
-        this.saveEtat((etat) => fuir(etat, card.key));
         this.snackBar.open(`${card.nom} prend la fuite (−1 vilénie) : il quitte le combat.`, undefined, {duration: 5000});
       },
-      error: (error: unknown) => this.table.notifyError(error, 'Impossible de dépenser la vilénie.'),
+      error: (error: unknown) => this.table.notifyError(error, `${card.nom} n'a pas pu prendre la fuite : sa vilénie n'est pas dépensée.`),
     });
   }
 

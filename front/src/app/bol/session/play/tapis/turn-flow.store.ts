@@ -18,6 +18,7 @@ import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
 import {TurnDamageStore} from './turn-damage.store';
 import {TurnCibleStore} from './turn-cible.store';
+import {effetSortPaye} from '../../magie-combat.util';
 
 /** Le déroulé du coup, de bout en bout : ce qui fait passer d'une étape à l'autre (le jet, l'application, la parade, la fin du tour), le coup joué qui reste écrit, et les cases allumées. */
 @Injectable()
@@ -30,8 +31,11 @@ export class TurnFlowStore {
 
   private readonly dialog = inject(MatDialog);
 
-  /** L'attaque est lancée ou jouée : il est trop tard pour retarder, secourir ou se mettre en défense totale. */
-  readonly attaqueEngagee = computed(() => this.attack.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null || this.sortLance());
+  /** L'attaque est lancée ou jouée (ou le sort payé, même avant que la page soit rechargée) : il est trop tard pour retarder, secourir ou se
+   * mettre en défense totale. */
+  readonly attaqueEngagee = computed(
+    () => this.attack.attackVerdict() !== null || this.played() !== null || this.lastHit() !== null || this.sortLance() || this.attack.sortPerdu() || this.attack.sortCredit() > 0,
+  );
 
   /** Le sort de ce tour est lancé (payé) : il ne se règle plus, et l'attaque n'est plus possible. */
   readonly sortLance = computed(() => this.attack.sortPaid() > 0 || this.attack.sortAuto());
@@ -169,11 +173,25 @@ export class TurnFlowStore {
     });
 
     // Un autre tour (une autre carte active, ou la même au round suivant), ou le passage de l'attaque au sort : le sort du tour repart de
-    // zéro. Une cible changée après le sort, elle, ne le défait pas : il est payé.
+    // zéro.
     effect(() => {
       this.turn.turnKey();
       this.loadout.mode();
       untracked(() => this.attack.resetSort());
+    });
+
+    // Une autre cible après le jet d'un sort qui vise : comme le jet d'attaque, le jet ne vaut plus. Le sort lancé contre l'ancienne cible
+    // est perdu (son pouvoir reste dépensé, sa trace tombe) ; contre la nouvelle, c'est un nouveau sort, qui se paie. Ses dégâts appliqués,
+    // il a agi : il reste tel quel.
+    effect(() => {
+      this.turn.targetKey();
+      untracked(() => {
+        if (this.sortLance() && this.loadout.sortVise() && !this.attack.sortDamageDone()) {
+          this.noterSortPaye(0);
+          this.attack.resetSort();
+          this.attack.sortPerdu.set(true);
+        }
+      });
     });
 
     // Une autre cible désignée sur le plateau après le coup joué : c'est une autre attaque, le coup joué s'efface. Une cible tombée, elle,
@@ -235,15 +253,36 @@ export class TurnFlowStore {
     this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
   }
 
-  /** Le sort est lancé : ses points de pouvoir sont payés une fois, au premier jet (ou sans jet, pour un charme automatique). Un sort du
-   * 3e cercle coûte en plus 1 point de pouvoir définitif (livre p. 154) : c'est à reporter sur la fiche. */
-  private payerSort(): void {
-    if (this.sortLance()) {
+  /** Le sort est lancé : ses points de pouvoir sont payés une fois, au premier jet (ou sans jet, pour un charme automatique) — sauf
+   * `nouveau` sort, relancé après un résultat, qui se paie de nouveau. Ce qui a été payé avant que la page soit rechargée n'est pas
+   * redébité : seul un sort plus cher débite la différence. Le paiement laisse sa trace dans l'état du combat. Un sort du 3e cercle coûte en
+   * plus 1 point de pouvoir définitif (livre p. 154) : c'est à reporter sur la fiche. */
+  private payerSort(nouveau = false): void {
+    if (this.sortLance() && !nouveau) {
       return;
     }
     const cout = this.loadout.sortCout().total;
-    this.attack.sortPaid.set(cout);
-    this.turn.ajusterRessource(this.turn.card(), 'pouvoir', -cout);
+    const credit = this.attack.sortCredit();
+    const paye = Math.max(cout, credit);
+    this.attack.sortCreditPris.set(true);
+    this.attack.sortPaid.set(paye);
+    this.turn.ajusterRessource(this.turn.card(), 'pouvoir', -Math.max(0, cout - credit));
+    this.noterSortPaye(paye);
+  }
+
+  /** Tient à jour la trace « sort payé » de la carte (cf. `effetSortPaye`) : les anciennes tombent, la nouvelle dit ce qui est payé ; aucune
+   * pour 0 (sort rendu, ou perdu). */
+  private noterSortPaye(points: number): void {
+    const trace = this.attack.sortTrace();
+    if (points > 0 && trace.ids.length === 1 && trace.points === points) {
+      return;
+    }
+    for (const id of trace.ids) {
+      this.turn.effectRemoved.emit(id);
+    }
+    if (points > 0) {
+      this.turn.effectAdded.emit(effetSortPaye(this.turn.card().key, points));
+    }
   }
 
   /** Le sort peut partir : il en a le pouvoir, et sa cible est choisie s'il lui en faut une. Pas en défense totale : le round entier passe
@@ -251,15 +290,23 @@ export class TurnFlowStore {
   readonly sortPret = computed(
     () =>
       !this.loadout.defenseTotale() &&
-      (this.sortLance() || (this.loadout.sortPayable() && (!this.loadout.sortVise() || this.turn.target() !== null) && this.attack.sortModifier() !== null)),
+      (this.sortLance() || (this.attack.sortPayable() && (!this.loadout.sortVise() || this.turn.target() !== null) && this.attack.sortModifier() !== null)),
   );
 
-  /** Lance les dés du sort à l'écran (relancés par la faveur divine, sans repayer). */
+  /** Le résultat du sort est sur sa ligne : relancer ses dés à l'écran, c'est lancer un nouveau sort, qui se paie (la faveur divine, elle,
+   * efface d'abord le résultat, et ses dés ne repaient rien). Le total tapé à table, lui, se corrige sans repayer. */
+  readonly nouveauSort = computed(() => this.attack.sortVerdict() !== null && !this.attack.sortAuto());
+
+  /** Les dés du sort peuvent partir à l'écran : un nouveau sort, il faut de quoi le payer en entier. */
+  readonly desSortPrets = computed(() => this.sortPret() && !this.attack.sortDamageDone() && (!this.nouveauSort() || this.loadout.sortPayable()));
+
+  /** Lance les dés du sort à l'écran : le premier jet paie le sort, un jet après un résultat en paie un nouveau ; les dés relancés par la
+   * faveur divine ne repaient rien. */
   async rollSort(): Promise<void> {
-    if (this.turn.rolling() || !this.sortPret() || this.attack.sortDamageDone()) {
+    if (this.turn.rolling() || !this.desSortPrets()) {
       return;
     }
-    this.payerSort();
+    this.payerSort(this.nouveauSort());
     this.attack.oublierSortCritique();
     this.attack.clearSortDice();
     const net = this.loadout.netDice();
@@ -313,6 +360,7 @@ export class TurnFlowStore {
     const paye = this.attack.sortPaid();
     if (paye > 0) {
       this.turn.ajusterRessource(this.turn.card(), 'pouvoir', paye);
+      this.noterSortPaye(0);
     }
     this.attack.resetSort();
   }

@@ -9,7 +9,9 @@ import {
   coutSort,
   degatsSort,
   difficulteSort,
+  effetSortPaye,
   issueSort,
+  sortPayeCeRound,
   DIFFICULTES_SORT,
   modificateurSort,
   pouvoirSuffisant,
@@ -181,5 +183,23 @@ describe('issueSort', () => {
   it('makes a double 6 above the threshold a heroic success, for the heroes and their allies only', () => {
     expect(issueSort([6, 6], 12, 14, true)).toBe('heroique');
     expect(issueSort([6, 6], 12, 14, false)).toBe('reussite');
+  });
+});
+
+describe('la trace du sort payé', () => {
+  it('reads the points paid by the card, the last trace counting, and lists the traces to remove', () => {
+    const effets = [
+      {...effetSortPaye('hero-1', 6), id: 'e-1'},
+      {...effetSortPaye('pnj-7', 1), id: 'e-2'},
+      {...effetSortPaye('hero-1', 11), id: 'e-3'},
+    ];
+
+    expect(sortPayeCeRound(effets, 'hero-1')).toEqual({points: 11, ids: ['e-1', 'e-3']});
+    expect(sortPayeCeRound(effets, 'pnj-7')).toEqual({points: 1, ids: ['e-2']});
+    expect(sortPayeCeRound(effets, 'pnj-8')).toEqual({points: 0, ids: []});
+  });
+
+  it('is a trace until the end of the round: it weighs on no roll', () => {
+    expect(effetSortPaye('hero-1', 6)).toMatchObject({valeur: 0, stat: 'action', duree: {type: 'fin-round'}, libelle: 'sort payé (6 pts de pouvoir)'});
   });
 });

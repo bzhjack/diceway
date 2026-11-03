@@ -44,7 +44,13 @@
         <mat-icon svgIcon="gi-sheet" />
       </button>
       @if (!flow.played()) {
-        <button type="button" class="tas-ib" aria-label="Changer d’adversaire" matTooltip="Changer d’adversaire" (click)="cible.changeTarget()">
+        <button
+          type="button"
+          class="tas-ib"
+          aria-label="Changer d’adversaire"
+          [matTooltip]="flow.sortLance() && loadout.sortVise() ? 'Changer d’adversaire : le sort lancé est perdu, contre un autre il faudra le repayer' : 'Changer d’adversaire'"
+          (click)="cible.changeTarget()"
+        >
           <mat-icon>swap_horiz</mat-icon>
         </button>
       }

@@ -4,6 +4,7 @@ namespace App\Http\Services\Bol;
 
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
+use App\Exceptions\Bol\FuiteImpossibleException;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
@@ -13,6 +14,7 @@ use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolFightSessionPnj;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolScenario;
+use Illuminate\Support\Facades\DB;
 
 class BolFightSessionService
 {
@@ -481,6 +483,45 @@ class BolFightSessionService
         $row->update(['vilenie_courante' => self::vilenieSuivante($row->vilenie_courante, $delta)]);
 
         return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
+     * « Fuite opportune » (livre p. 135) : un rival adverse dépense 1 point de vilénie et quitte le combat (il rejoint `exclus` et `fuis`
+     * de l'état du combat). Les deux sont enregistrés dans une même transaction : jamais la vilénie dépensée sans que le rival soit parti,
+     * ni l'inverse. Null si la session (de ce compte) ou la ligne est introuvable.
+     *
+     * @throws FuiteImpossibleException hors combat, pour qui n'est pas un rival adverse, sans vilénie, ou déjà hors de ce combat
+     */
+    public function fuiteOpportune(string $sessionId, string $userId, int $pivotId): ?BolFightSession
+    {
+        $trouvee = DB::transaction(function () use ($sessionId, $userId, $pivotId): bool {
+            $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->lockForUpdate()->first();
+            $row = $session ? BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->lockForUpdate()->first() : null;
+            if (!$row) {
+                return false;
+            }
+
+            $etat = BolCombatState::normalize($session->etat_combat);
+            $cle = "pnj-{$row->id}";
+            $raison = match (true) {
+                $session->statut !== 'combat'          => "La table n'est pas en combat.",
+                $row->rang !== 'rival'                 => 'Seul un rival peut prendre la fuite ainsi.',
+                $row->camp !== 'adversaires'           => 'Un rival allié des héros ne prend pas la fuite ainsi.',
+                ($row->vilenie_courante ?? 0) < 1      => "Ce rival n'a plus de point de vilénie.",
+                in_array($cle, $etat['exclus'], true)  => 'Ce rival a déjà quitté le combat.',
+                default                                => null,
+            };
+            if ($raison !== null) {
+                throw new FuiteImpossibleException($raison);
+            }
+
+            $row->update(['vilenie_courante' => self::vilenieSuivante($row->vilenie_courante, -1)]);
+            $session->update(['etat_combat' => BolCombatState::normalize([...$etat, 'fuis' => [...$etat['fuis'], $cle]])]);
+
+            return true;
+        });
+
+        return $trouvee ? $this->getSessionWithRelations($sessionId) : null;
     }
 
     /**

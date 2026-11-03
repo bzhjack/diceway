@@ -77,6 +77,7 @@ describe('SessionPlayPageComponent', () => {
     setCamp: vi.fn(),
     removeCombatant: vi.fn(),
     adjustVilenie: vi.fn(),
+    fuiteOpportune: vi.fn(),
   };
   const dialogOpen = vi.fn();
 
@@ -227,18 +228,19 @@ describe('SessionPlayPageComponent', () => {
       expect(combat.canFlee(rival)).toBe(true);
     });
 
-    it('fuir dépense 1 point de vilénie, retire le rival du combat et la frise le dit enfui', async () => {
+    it('fuir dépense 1 point de vilénie et retire le rival du combat en un seul appel, et la frise le dit enfui', async () => {
       await rendre(avecRival(2));
-      service.adjustVilenie.mockReturnValue(of(avecRival(1)));
+      service.updateCombatState.mockClear();
+      service.fuiteOpportune.mockReturnValue(of(avecRival(1, {etat_combat: etat({exclus: ['pnj-9'], fuis: ['pnj-9']})})));
       const rival = table.cards().find((card) => card.key === 'pnj-9')!;
 
       combat.flee(rival);
       await stable();
 
-      expect(service.adjustVilenie).toHaveBeenCalledWith('s1', 9, -1);
-      const envoye = service.updateCombatState.mock.calls.at(-1)![1] as EtatCombatDto;
-      expect(envoye.exclus).toContain('pnj-9');
-      expect(envoye.fuis).toEqual(['pnj-9']);
+      // Le serveur dépense la vilénie et enregistre la fuite ensemble : ni dépense ni état du combat envoyés à part.
+      expect(service.fuiteOpportune).toHaveBeenCalledExactlyOnceWith('s1', 9);
+      expect(service.adjustVilenie).not.toHaveBeenCalled();
+      expect(service.updateCombatState.mock.calls.some(([, envoye]) => (envoye as EtatCombatDto).fuis?.includes('pnj-9'))).toBe(false);
       expect(combat.turnEntries().find((entry) => entry.key === 'pnj-9')?.horsCombat).toBe('enfui');
       expect(combat.canFlee(table.cards().find((card) => card.key === 'pnj-9')!)).toBe(false);
     });
@@ -251,7 +253,18 @@ describe('SessionPlayPageComponent', () => {
       await stable();
 
       expect(combat.canFlee(rival)).toBe(false);
-      expect(service.adjustVilenie).not.toHaveBeenCalled();
+      expect(service.fuiteOpportune).not.toHaveBeenCalled();
+    });
+
+    it('un rival allié des héros ne fuit pas ainsi', async () => {
+      await rendre(session({pnjs: [pnjRow(7, 10) as never, pnjRow(9, 0, 'heros', 'rival', 2) as never]}));
+      const allie = table.cards().find((card) => card.key === 'pnj-9')!;
+
+      combat.flee(allie);
+      await stable();
+
+      expect(combat.canFlee(allie)).toBe(false);
+      expect(service.fuiteOpportune).not.toHaveBeenCalled();
     });
   });
 

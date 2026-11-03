@@ -15,7 +15,7 @@ import {
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolCatalogService} from './bol-catalog.service';
 import {HeroCreationWarning, AttributModifier} from '../models/bol-heros-state.model';
-import {desavantagesGeneraux} from '../hero/advanced/create.validators';
+import {desavantagesGeneraux, vigueurEffective} from '../hero/advanced/create.validators';
 
 @Injectable({
   providedIn: 'root',
@@ -174,8 +174,7 @@ export class BolHerosStateService {
       modifiers.push({attr: 'heroisme', value: -this.heroismCost()});
     }
     // Vitalité = 10 + vigueur : la vigueur avec ses bonus de traits (Vigueur céruléenne : +1 vigueur, donc +1 vitalité).
-    const bonusVigueur = modifiers.filter((modifier) => modifier.attr === 'vigueur').reduce((total, modifier) => total + Number(modifier.value), 0);
-    const vigueur = (this.currentHeros()?.attributs.vigueur ?? 0) + bonusVigueur;
+    const vigueur = vigueurEffective(this.currentHeros()?.attributs.vigueur ?? 0, modifiers);
     if (vigueur !== 0) {
       modifiers.push({attr: 'vitalite', value: vigueur});
     }

@@ -100,6 +100,11 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/vilenie`, {delta}));
   }
 
+  /** « Fuite opportune » : le rival adverse dépense 1 point de vilénie et quitte le combat. Le serveur fait les deux ensemble (ou aucun). */
+  fuiteOpportune(sessionId: string, pivotId: number): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/fuite`, {}));
+  }
+
   /** Points de foi ou de pouvoir d'un PNJ de la table dépensés (négatif) ou rendus, sur sa ligne. */
   adjustPnjRessource(sessionId: string, pivotId: number, ressource: RessourceMagique, delta: number): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/ressource`, {ressource, delta}));

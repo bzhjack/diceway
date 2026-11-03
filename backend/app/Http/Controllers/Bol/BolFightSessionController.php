@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bol;
 
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
+use App\Exceptions\Bol\FuiteImpossibleException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolFightSessionService;
 use App\Http\Services\Bol\BolSceneDistribution;
@@ -118,6 +119,22 @@ class BolFightSessionController extends Controller
         $data = $request->validate(['delta' => 'required|integer|between:-10,10']);
 
         $session = $this->fightSessionService->adjustVilenie($id, Auth::id(), $pivotId, $data['delta']);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
+    /** « Fuite opportune » : le rival adverse dépense 1 point de vilénie et quitte le combat, les deux en une seule fois. */
+    public function fuiteOpportune(string $id, int $pivotId)
+    {
+        try {
+            $session = $this->fightSessionService->fuiteOpportune($id, Auth::id(), $pivotId);
+        } catch (FuiteImpossibleException $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);

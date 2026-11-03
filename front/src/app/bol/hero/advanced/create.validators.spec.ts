@@ -10,6 +10,7 @@ import {
   combatBudgetErrors,
   desavantageIdsDuHeros,
   desavantagesGeneraux,
+  vigueurEffective,
 } from './create.validators';
 import {
   automaticLanguageIdsForRegion,
@@ -388,29 +389,54 @@ describe('R-CARR-RESERVEE — carrieresReserveesHorsOrigine : une carrière rés
   });
 });
 
-describe('R-ARMURE-LOURDE — armureLourdeInterdite : pas d’armure lourde avec une vigueur négative (p. 52)', () => {
+describe('vigueurEffective : la vigueur de la fiche, bonus et malus de traits compris', () => {
+  it('ajoute les modificateurs de vigueur (Vigueur céruléenne : +1)', () => {
+    expect(vigueurEffective(-1, [{attr: 'vigueur', value: 1}])).toBe(0);
+    expect(vigueurEffective(2, [{attr: 'vigueur', value: 1}, {attr: 'vigueur', value: -1}])).toBe(2);
+  });
+
+  it('ignore les modificateurs des autres attributs et ressources', () => {
+    expect(vigueurEffective(-1, [{attr: 'agilite', value: 1}, {attr: 'heroisme', value: -1}])).toBe(-1);
+    expect(vigueurEffective(1, [])).toBe(1);
+  });
+});
+
+describe('R-ARMURE-LOURDE — armureLourdeInterdite : pas d’armure lourde avec moins de 0 en vigueur (p. 52)', () => {
   const ARMURE_LEGERE = 2;
   const ARMURE_MOYENNE = 3;
   const ARMURE_LOURDE = 4;
   const CASQUE = 5;
+  const VIGUEUR_CERULEENNE = {attr: 'vigueur', value: 1};
 
   it('signale une armure lourde quand la vigueur est négative', () => {
-    expect(armureLourdeInterdite(-1, [ARMURE_LOURDE])).toBe(true);
-    expect(armureLourdeInterdite(-1, [CASQUE, ARMURE_LOURDE])).toBe(true);
+    expect(armureLourdeInterdite(-1, [], [ARMURE_LOURDE])).toBe(true);
+    expect(armureLourdeInterdite(-1, [], [CASQUE, ARMURE_LOURDE])).toBe(true);
   });
 
   it('accepte l’armure lourde à partir de vigueur 0', () => {
-    expect(armureLourdeInterdite(0, [ARMURE_LOURDE])).toBe(false);
-    expect(armureLourdeInterdite(2, [ARMURE_LOURDE])).toBe(false);
+    expect(armureLourdeInterdite(0, [], [ARMURE_LOURDE])).toBe(false);
+    expect(armureLourdeInterdite(2, [], [ARMURE_LOURDE])).toBe(false);
+  });
+
+  it('lit la vigueur effective : -1 relevée à 0 par Vigueur céruléenne porte l’armure lourde', () => {
+    expect(armureLourdeInterdite(-1, [VIGUEUR_CERULEENNE], [ARMURE_LOURDE])).toBe(false);
+  });
+
+  it('lit la vigueur effective : un malus de vigueur qui la fait passer sous 0 interdit l’armure lourde', () => {
+    expect(armureLourdeInterdite(0, [{attr: 'vigueur', value: -1}], [ARMURE_LOURDE])).toBe(true);
+  });
+
+  it('ne compte pas les bonus des autres attributs', () => {
+    expect(armureLourdeInterdite(-1, [{attr: 'agilite', value: 1}], [ARMURE_LOURDE])).toBe(true);
   });
 
   it('ne dit rien des autres armures, du casque ni de l’absence d’armure', () => {
-    expect(armureLourdeInterdite(-1, [ARMURE_LEGERE, ARMURE_MOYENNE, CASQUE])).toBe(false);
-    expect(armureLourdeInterdite(-1, [])).toBe(false);
+    expect(armureLourdeInterdite(-1, [], [ARMURE_LEGERE, ARMURE_MOYENNE, CASQUE])).toBe(false);
+    expect(armureLourdeInterdite(-1, [], [])).toBe(false);
   });
 });
 
-describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit pas une carrière qui exige d’être lettré (p. 45)', () => {
+describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit pas une carrière qui exige d’être lettré (p. 44)', () => {
   const ILLETTRE = 17;
   const ALCHIMISTE = 1;
   const MEDECIN = 14;
@@ -421,8 +447,13 @@ describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit
   const AUTRE_DESAVANTAGE = 33;
 
   it('signale chaque carrière lettrée choisie par un illettré, dans l’ordre des carrières', () => {
-    expect(carrieresLettreesPourIllettre([ILLETTRE], [SCRIBE, SOLDAT, ALCHIMISTE, SORCIER])).toEqual([SCRIBE, ALCHIMISTE, SORCIER]);
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [SCRIBE, SOLDAT, ALCHIMISTE])).toEqual([SCRIBE, ALCHIMISTE]);
     expect(carrieresLettreesPourIllettre([AUTRE_DESAVANTAGE, ILLETTRE], [MEDECIN, PRETRE])).toEqual([MEDECIN, PRETRE]);
+  });
+
+  it('ne bloque que ce que le livre dit lettré (p. 47 : scribe, médecin, alchimiste, prêtre) : pas le sorcier, lettré par déduction seulement', () => {
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [SORCIER])).toEqual([]);
+    expect(carrieresLettreesPourIllettre([ILLETTRE], [SORCIER, ALCHIMISTE])).toEqual([ALCHIMISTE]);
   });
 
   it('ne dit rien sans le désavantage Illettré', () => {

@@ -1,7 +1,7 @@
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -118,5 +118,74 @@ describe('CombatTurnStore : le début de tour ne passe que quand la main change'
     TestBed.tick();
 
     expect(store.etat().effets.map((effet) => effet.libelle)).toEqual(['à couvert']);
+  });
+});
+
+describe('CombatTurnStore : « Fuite opportune »', () => {
+  let store: CombatTurnStore;
+  let session: ReturnType<typeof signal<BolFightSessionModel | null>>;
+  const fuiteOpportune = vi.fn();
+  const adjustVilenie = vi.fn();
+  const updateCombatState = vi.fn();
+  const notifyError = vi.fn();
+  const rival: TapisCard = {...card('pnj', 7), rang: 'Rival', badge: 'Rival', vilenie: 2};
+  const rivalAllie: TapisCard = {...card('pnj', 8), camp: 'heros', rang: 'Rival', badge: 'Allié', vilenie: 2};
+
+  beforeEach(() => {
+    TestBed.resetTestingModule();
+    session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: {round: 2, joues: [], effets: [], exclus: [], fuis: [], melee: null}} as unknown as BolFightSessionModel);
+    for (const fn of [fuiteOpportune, adjustVilenie, updateCombatState, notifyError]) {
+      fn.mockReset();
+    }
+    updateCombatState.mockImplementation((_id: string, etat: Partial<EtatCombat>) => of({...session(), etat_combat: {depart: {}, ...etat}}));
+    TestBed.configureTestingModule({
+      providers: [
+        CombatTurnStore,
+        {
+          provide: TableStore,
+          useValue: {session, cards: signal([card('hero', 1), rival, rivalAllie]), board: signal({tokens: []}), mode: signal('combat'), sessionId: signal('s1'), notifyError},
+        },
+        {provide: BolFightSessionService, useValue: {fuiteOpportune, adjustVilenie, updateCombatState}},
+        {provide: BolHerosService, useValue: {}},
+        {provide: MatSnackBar, useValue: {open: vi.fn()}},
+      ],
+    });
+    store = TestBed.inject(CombatTurnStore);
+    TestBed.tick();
+    updateCombatState.mockClear();
+  });
+
+  it("n'est pas proposée à un rival allié des héros", () => {
+    expect(store.canFlee(rival)).toBe(true);
+    expect(store.canFlee(rivalAllie)).toBe(false);
+
+    store.flee(rivalAllie);
+
+    expect(fuiteOpportune).not.toHaveBeenCalled();
+  });
+
+  it('dépense la vilénie et fait partir le rival en un seul appel, dont la réponse fait foi', () => {
+    const apres = {...session(), etat_combat: {round: 2, joues: [], effets: [], exclus: ['pnj-7'], fuis: ['pnj-7'], melee: null}} as unknown as BolFightSessionModel;
+    fuiteOpportune.mockReturnValue(of(apres));
+
+    store.flee(rival);
+    TestBed.tick();
+
+    expect(fuiteOpportune).toHaveBeenCalledExactlyOnceWith('s1', 7);
+    expect(adjustVilenie).not.toHaveBeenCalled();
+    expect(updateCombatState).not.toHaveBeenCalled();
+    expect(store.etat().fuis).toEqual(['pnj-7']);
+  });
+
+  it("en cas d'échec, prévient le MJ et laisse le rival au combat", () => {
+    fuiteOpportune.mockReturnValue(throwError(() => new Error('réseau')));
+
+    store.flee(rival);
+    TestBed.tick();
+
+    expect(notifyError).toHaveBeenCalledOnce();
+    expect(adjustVilenie).not.toHaveBeenCalled();
+    expect(store.etat().fuis).toEqual([]);
+    expect(store.etat().exclus).toEqual([]);
   });
 });

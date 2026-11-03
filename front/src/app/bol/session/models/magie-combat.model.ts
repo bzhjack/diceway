@@ -71,3 +71,10 @@ export interface RessourceChange {
   readonly ressource: RessourceMagique;
   readonly delta: number;
 }
+
+/** Ce que la trace « sort payé » de l'état du combat dit d'une carte : les points de pouvoir payés pour son sort de ce round (0 sans trace),
+ * et les identifiants des traces à retirer quand le sort est remboursé, perdu ou repayé. */
+export interface SortPaye {
+  readonly points: number;
+  readonly ids: readonly string[];
+}

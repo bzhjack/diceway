@@ -5,6 +5,7 @@ import {
   CARRIERES_RESERVEES,
   DESAVANTAGE_ILLETTRE_ID,
 } from '../../bol-rules.constants';
+import {AttributModifier} from '../../models/bol-heros-state.model';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {ValidationIssue, AttributsValues, CombatValues} from '../models/create-validators.model';
 
@@ -95,9 +96,16 @@ export function carrieresReserveesHorsOrigine(
   );
 }
 
-/** R-ARMURE-LOURDE : avec une vigueur négative, pas d'armure lourde (livre p. 52) ; `armureIds` : les armures du catalogue choisies. */
-export function armureLourdeInterdite(vigueur: number, armureIds: readonly number[]): boolean {
-  return vigueur < 0 && armureIds.includes(ARMURE_LOURDE_ID);
+/** La vigueur de la fiche : la vigueur répartie plus les modificateurs de vigueur des traits (`traitsModifiers` : Vigueur céruléenne
+ * +1…), celle que l'activation enregistre et dont la vitalité découle. */
+export function vigueurEffective(vigueur: number, modifiers: readonly AttributModifier[]): number {
+  return modifiers.filter((modifier) => modifier.attr === 'vigueur').reduce((total, modifier) => total + Number(modifier.value), vigueur);
+}
+
+/** R-ARMURE-LOURDE : « les personnages ayant moins de 0 en vigueur ne peuvent pas porter d'armure lourde » (livre p. 52) ; la vigueur
+ * du personnage, bonus de traits compris (`vigueurEffective`). `armureIds` : les armures du catalogue choisies. */
+export function armureLourdeInterdite(vigueur: number, modifiers: readonly AttributModifier[], armureIds: readonly number[]): boolean {
+  return vigueurEffective(vigueur, modifiers) < 0 && armureIds.includes(ARMURE_LOURDE_ID);
 }
 
 /** Les ids du catalogue de tous les désavantages d'un héros : général, régional (`pivot.desavantage_id`) ou de carrière portent le même id. */
@@ -105,7 +113,7 @@ export function desavantageIdsDuHeros(traits: readonly Pick<BolHerosTraitsModel,
   return traits.filter((trait) => trait.type === 'D').map((trait) => Number(trait.traitable_id));
 }
 
-/** R-ILLETTRE : un illettré ne peut pas choisir de carrière exigeant d'être lettré (livre p. 45) ; les carrières lettrées choisies, dans
+/** R-ILLETTRE : un illettré ne peut pas choisir de carrière exigeant d'être lettré (livre p. 44) ; les carrières lettrées choisies, dans
  * l'ordre de `carriereIds`. `desavantageIds` : tous les désavantages du héros (`desavantageIdsDuHeros`), Illettré pris dans la liste
  * générale, comme désavantage régional ou de carrière. */
 export function carrieresLettreesPourIllettre(desavantageIds: readonly number[], carriereIds: readonly number[]): number[] {
