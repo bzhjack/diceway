@@ -197,7 +197,7 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 ## 9. Limites connues
 
-Ce qui reste à faire est dans `doc/plans/2026-11-02-reste-a-faire.md` (section 2), dont le script navigateur rejouable pour l'héroïsme en combat. S'y ajoutent :
+Toutes les règles de combat du livre sont gérées ; `doc/plans/2026-11-02-reste-a-faire.md` (section 2) ne garde que le script navigateur rejouable pour l'héroïsme. Les limites qui restent :
 
 - pas d'annonce vocale des effets expirés ;
 - pas d'annulation d'un « Retirer du combat » : la carte revient en jeu après le combat, ou par un nouveau jet de réaction ;

@@ -9,7 +9,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | Sujet | Section | Effort |
 | --- | --- | --- |
 | Mise en production : migrations du 2026-11-02 et du 2026-11-03, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
-| Combat : script navigateur rejouable pour l'héroïsme | 2, point 17 | S |
+| Combat : script navigateur rejouable pour l'héroïsme | 2 | S |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
@@ -33,23 +33,15 @@ Sans objet tant que l'appli ne les gère pas : la progression par XP (double co�
 2. Portraits : `docker exec -u www-data diceway php artisan bol:extract-portraits` (voir `CLAUDE.md`, section Portraits).
 3. **Après** la mise en production des portraits : supprimer la table `bol_portrait_backup` et les options `--restore` / `--forget-originals` de `bol:extract-portraits` (S).
 
-## 2. Combat : les règles du livre pas encore gérées
+## 2. Combat
 
-Sources des règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons.md`, `05-alchimie-foi-sorcellerie.md` (vérifiables dans `doc/pdf-text/`).
+Toutes les règles de combat du livre sont gérées (le détail et les limites connues sont dans `2026-10-13-combat-etat-des-lieux.md`). Reste un outil :
 
-### Synthèse
+- **Script rejouable de l'héroïsme** (S) : un script navigateur, comme `front/scripts/e2e-petit-bouclier.mjs`, qui rejoue l'héroïsme en combat.
 
-| # | Sujet | État | Effort | Lot |
-| --- | --- | --- | --- | --- |
-| 17 | Script rejouable de l'héroïsme | Confort | S | au fil de l'eau |
+### Question à trancher
 
-#### 17. Script rejouable de l'héroïsme
-
-- Script navigateur rejouable (comme `front/scripts/e2e-petit-bouclier.mjs`) pour l'héroïsme en combat.
-
-### Questions à trancher
-
-1. **Barre de commande en combat** : depuis le 2026-11-02, `/` y trouve aussi les cartes de la table (ajouté pour ouvrir la carte d'un rival à terre et lancer sa « Fuite opportune »). À garder, ou à limiter aux actions comme avant ?
+- **Barre de commande en combat** : depuis le 2026-11-02, `/` y trouve aussi les cartes de la table (ajouté pour ouvrir la carte d'un rival à terre et lancer sa « Fuite opportune »). À garder, ou à limiter aux actions comme avant ?
 
 ### Hors périmètre du combat
 
