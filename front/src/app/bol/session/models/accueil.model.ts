@@ -22,6 +22,8 @@ export interface AccueilSagaResume {
   joues: number;
   total: number;
   suite: AccueilChapitre | null;
+  /** Le mot du bouton de la suite : « Commencer » une saga dont rien n'est joué ni sur la table, sinon « Continuer ». */
+  action: 'Commencer' | 'Continuer';
   resume: string;
   teinte: number;
   anneau: string;

@@ -104,6 +104,7 @@ describe('AccueilPageComponent', () => {
     const suite = sagas[0].querySelector<HTMLAnchorElement>('.acc-saga-suite')!;
     expect(suite.getAttribute('href')).toBe('/session/new?scenario=p2');
     expect(suite.getAttribute('aria-label')).toBe("Continuer Perle du Beshaar : 2. De sable et d'eau, sur une nouvelle table");
+    expect(sagas[1].querySelector('.acc-saga-suite-label')?.textContent).toBe('Commencer');
     expect(sagas[0].querySelector('svg')?.getAttribute('aria-label')).toBe('0 chapitres joués sur 2');
   });
 

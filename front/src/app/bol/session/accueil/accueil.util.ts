@@ -143,6 +143,7 @@ export function sagaResumes(sagas: readonly AccueilSaga[]): AccueilSagaResume[] 
       joues,
       total,
       suite,
+      action: joues === 0 && !enCours ? 'Commencer' : 'Continuer',
       resume: enCours
         ? `Sur la table ce soir · ${avancement(joues, total)}`
         : suite === null ? 'Saga achevée' : joues === 0 ? 'Pas encore commencée' : avancement(joues, total),

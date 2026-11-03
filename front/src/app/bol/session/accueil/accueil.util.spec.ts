@@ -150,6 +150,12 @@ describe('sagaResumes', () => {
     expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencée');
   });
 
+  it('commence une saga pas encore commencée ; continue une saga entamée ou sur la table', () => {
+    expect(resume('Le Dieu voilé').action).toBe('Commencer');
+    expect(resume('Perle du Beshaar', ['p1']).action).toBe('Continuer');
+    expect(resume('Perle du Beshaar', [], 'p1').action).toBe('Continuer');
+  });
+
   it('dit la saga sur la table, et achevée quand tout est joué', () => {
     // Le compteur reste dit en toutes lettres quand la saga est sur la table : l'anneau seul ne s'explique pas.
     expect(resume('Perle du Beshaar', ['p2'], 'p1').resume).toBe('Sur la table ce soir · 1 chapitre joué sur 3');

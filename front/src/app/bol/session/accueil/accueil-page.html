@@ -118,10 +118,10 @@
                     class="acc-saga-suite"
                     routerLink="/session/new"
                     [queryParams]="{scenario: suite.id}"
-                    [attr.aria-label]="'Continuer ' + (saga.nom ?? 'hors saga') + ' : ' + suite.libelle + ', sur une nouvelle table'"
+                    [attr.aria-label]="saga.action + ' ' + (saga.nom ?? 'hors saga') + ' : ' + suite.libelle + ', sur une nouvelle table'"
                   >
                     <span class="acc-saga-suite-texte">
-                      <span class="acc-saga-suite-label">Continuer</span>
+                      <span class="acc-saga-suite-label">{{ saga.action }}</span>
                       <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
                     </span>
                     <mat-icon aria-hidden="true">arrow_forward</mat-icon>

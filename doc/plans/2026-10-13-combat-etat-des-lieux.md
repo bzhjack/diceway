@@ -74,7 +74,7 @@ Les pouvoirs sont recopiés sur la carte à la table (`pouvoirs-combat.util.ts`,
 - **Régénération** : au début de chaque round, un démon debout reprend 1 de vitalité, sans dépasser son maximum ; la table l'annonce (`regenerationsDuRound`, `CombatWoundsService`). Un coup précis contre lui ne dure que 2 rounds.
 - **Intangible** : quand il est la cible, la carte « Les dégâts » prévient que seules la sorcellerie et l'alchimie le blessent ; le MJ décide.
 - **Poison** : quand le démon touche une cible de taille moyenne ou moins (héros et PNJ comptent comme moyens), la carte « Les dégâts » rappelle le jet de vigueur Difficile (−2) et propose « Paralysé ».
-- **Vulnérabilité** : sa carte montre sa faiblesse (« Vulnérable : feu (dégâts doublés) ») ; quand il est la cible, « Dégâts doublés » double les dégâts du coup.
+- **Vulnérabilité** : sur sa carte, une icône ronde (cœur brisé) à côté de son rang ; son texte entier est dans son nom (infobulle, lecteurs d'écran) et, au clic, dans un popover avec la règle du livre (un élément lui inflige des dégâts doublés, une chose d'ordinaire inoffensive des dégâts normaux) ; ce que la faiblesse a de propre au démon (un point d'héroïsme, une statuette à briser…) reste au MJ. Quand il est la cible, « Dégâts doublés » double les dégâts du coup.
 - **Avertissements** : les pouvoirs marqués « à prévenir » (Poison, Intangible) s'affichent sur sa carte, à côté de son rang.
 - **Morts-vivants** (case « Mort-vivant » de la fiche de créature, `bol_creature.mort_vivant`) : leurs cartes disent « Force vitale » ; à 0, la frise dit « détruit ».
 - **Cuirassé** et **Armure** donnent leur protection, d6 (4) et d6-2 (2).
@@ -218,6 +218,7 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Mêlée de piétaille** : marquée faite pour le round dès la première perte enregistrée ; interrompue, elle ne se rejoue pas.
 - **Début de round** : il ne se joue que sur l'écran dont l'enregistrement a fait passer le round (`roundCommenceIci`) : un second écran ouvert sur la table ne le rejoue pas.
 - **File d'enregistrement** : un appel de la table qui ne répond pas en 15 s échoue avec le message habituel, et la file repart.
+- **Zone des armes** : une carte sans arme (créature, démon, PNJ sans arme) frappe d'une case comme les armes, déjà choisie : son icône (une patte, un démon, sinon une épée ; `TurnContextStore.attaqueIcone`) et ses dégâts dessous. Le coup joué garde la case de l'arme utilisée (ou celle-là), sélectionnée et figée, au lieu d'une plaque ; le titre reste « Attaque » pour une carte sans arme.
 - **Clavier** : Échap dégage les dés restés à l'écran, comme un clic (démarrage du combat, table) ; après un lancer de dés au clavier, le focus revient au bouton qui l'a lancé (`rendreLeFocus`, `shared/dice-3d/focus.util.ts`).
 
 ## 9. Limites connues
