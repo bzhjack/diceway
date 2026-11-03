@@ -10,14 +10,14 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | --- | --- | --- |
 | Mise en production : migrations du 2026-11-02 et du 2026-11-03, extraction des portraits, puis nettoyage de `bol_portrait_backup` | 1 | S |
 | Combat : script navigateur rejouable pour l'héroïsme | 2 | S |
-| Revue globale du 2026-11-03 : une vingtaine de mineurs à trier | 3 bis | M |
+| Revue globale du 2026-11-03 : 23 mineurs à trier | 3 bis | M |
 | Code : dette suivie par le lint (couleurs en dur, `::ng-deep`, clavier, `$any()`) | 4 | M |
 
 Sans objet tant que l'appli ne les gère pas : la progression par XP (double coût de Non-combattant, désavantage des rangs de sorcier gagnés plus tard) et les races (listes des kalukans).
 
 ## 1. Mise en production
 
-À faire sur le serveur, dans cet ordre (précautions relevées par la revue globale du 2026-11-03, `2026-11-03-revue-globale.md` § 3) :
+À faire sur le serveur, dans cet ordre (avec les précautions relevées par la revue globale du 2026-11-03) :
 
 0. **Avant tout** : sauvegarder la base, et vérifier que `bol_scenario_heros`, `bol_scenario_pnj`, `bol_scenario_creature` et `bol_scenario_demon` sont vides (`COUNT(*)`) — la migration `170000` les supprime et son `down()` les recrée vides. Puis `php artisan down` : entre le `git pull` et `migrate`, le code tourne déjà sur une base qui n'a pas ses nouvelles colonnes (erreurs 500), et les nouvelles routes manquent tant que `routes/api.php` n'est pas copié.
 1. `docker cp backend/routes/api.php …` (le conteneur ne monte que `app/` et `database/`), puis `php artisan migrate`, qui passe dans l'ordre :
@@ -61,7 +61,7 @@ Toutes les règles de combat du livre sont gérées (le détail et les limites c
 
 ## 3 bis. Revue globale du 2026-11-03
 
-Une vingtaine de mineurs restent ouverts, listés dans `2026-11-03-revue-globale.md` § 5 (à trier quand on y reviendra).
+23 mineurs restent ouverts, listés dans `2026-11-03-revue-globale.md` ; aucun ne bloque la mise en production.
 
 ## 4. Code
 

@@ -1,69 +1,40 @@
-# Revue globale avant la mise en production
+# Revue globale : mineurs restants
 
-Date : 2026-11-03. Périmètre : les 20 commits depuis `9f3911c5` (218 fichiers, environ 10 000 lignes) — accueil et seuil, frise sans menu, règles de création de héros et validation serveur, corrections du catalogue par migrations, suppression de 7 tables, mêlée de piétaille et Fuite opportune, pouvoirs des démons et morts-vivants, 10 corrections de l'assistant de combat, foi et sorcellerie en combat.
+Date : 2026-11-03. Revue des 20 commits depuis `9f3911c5`, avant la mise en production. Ce fichier ne garde que ce qui reste ouvert : les constats corrigés (les 11 importants, la clôture des tables et 19 mineurs) en sont retirés et restent dans l'historique git. Les précautions de déploiement relevées par la revue sont dans `2026-11-02-reste-a-faire.md`, § 1.
 
-Quatre relectures en lecture seule, une par zone : backend, tapis de combat (`play/tapis/`), reste de la table (`play/` hors tapis), hors combat (accueil, seuil, création, fiches). Les tests ciblés lancés pendant la relecture passent tous ; les constats sont des cas que les tests ne couvrent pas.
+Aucun de ces points ne bloque la mise en production.
 
-**Bilan : aucun constat critique** (pas de perte de données, pas de faille entre comptes, pas de migration dangereuse). **11 importants**, environ 40 mineurs.
+## Backend
 
-**Corrigé le 2026-11-03** : les 11 importants (§ 1), les 5 mineurs du § 2 et la clôture des tables (§ 4), puis deux passes sur les mineurs du § 5 (14 points), chacun avec un test qui reproduit le constat. Vérifications sur l'ensemble : build, 1 047 tests front, lint (suppressions inchangées), 238 tests backend. Restent les précautions de déploiement (§ 3, reportées dans le plan) et les mineurs du § 5.
+- La validation serveur des héros ne couvre que l'écran de création avancée, pas le formulaire principal.
+- Les règles Illettré et armure lourde ne sont vérifiées que par le front (`BolHerosRequest` ne les connaît pas).
+- L'ajustement de la foi ou du pouvoir d'un héros n'est pas atomique.
+- La vilénie de table d'un PNJ n'est jamais recalculée quand sa fiche change, même s'il change de rang.
+- L'import de scénario ne connaît pas `mort_vivant`.
+- La migration des PNJ aux armes régionales cherche les armes par leur nom sans se limiter au catalogue.
+- Ids 3001/3002 des capacités ajoutées : sans collision, mais à surveiller si le seeder repasse.
 
-## 1. Constats importants (corrigés le 2026-11-03)
+## Tapis de combat
 
-| # | Zone | Constat | Où | Correction proposée |
-| --- | --- | --- | --- | --- |
-| I1 | Tapis | Une carte qui joue deux tours de suite (retardée au round N, première au round N+1) garde l'état de son tour précédent : un sorcier retrouve son sort « payé », ne peut ni relancer de sort ni attaquer, et peut relancer l'ancien sort gratuitement | `turn-loadout.store.ts` (`mode`, `sortModel`), `turn-flow.store.ts` (`resetSort`), `combat-board.html` (même instance d'assistant) | Donner une identité au tour (round + carte + nombre de cartes qui ont joué) et l'utiliser comme source des remises à zéro, au lieu de la seule clé de carte ; ou recréer l'assistant à chaque tour |
-| I2 | Tapis | Une carte paralysée est sautée sans compter comme ayant joué : si le MJ retire la paralysie pendant le tour d'un adversaire, elle prend la main au milieu de ce tour, et l'adversaire rejoue ensuite un tour complet ; ses effets « jusqu'à son prochain tour » ne tombent jamais | `combat-turn.util.ts` (`isSkipped`, `commencerTour`) | Traiter la carte paralysée comme une action perdue : son tour est sauté et compté (« paralysé, tour sauté »), ses effets de début de tour s'appliquent ; la libérer ne lui rend la main qu'au round suivant |
-| I3 | Tapis | L'échec critique d'un sort survit à un nouveau jet : le +1 en héroïsme reste acquis, et le verdict « Échec critique » s'affiche à tort | `turn-flow.store.ts` (`rollSort`, `onSortInput`), `turn-attack.store.ts` (`toggleSortCritique`) | Avant tout nouveau jet ou total, annuler l'échec critique précédent (−1 héroïsme), comme le fait déjà l'attaque |
-| I4 | Tapis | Vider la case du sort après en avoir appliqué les dégâts rembourse les points et rouvre une ligne de dégâts : le sort peut blesser deux fois pour un seul coût | `turn-flow.store.ts` (`onSortInput('')` → `rembourserSort`), `tas-sort.html` | Figer la case, le bouton de dés et la faveur une fois les dégâts du sort appliqués ; ne rembourser que si aucun effet du sort n'a été appliqué |
-| I5 | Table | Le début de tour repasse à chaque réponse du serveur, pas seulement quand la main change : « Perd sa prochaine action » posé sur la carte qui joue saute son tour en cours ; un effet libre « jusqu'à son prochain tour » posé sur elle est effacé aussitôt (défaut déjà présent avant) | `combat-turn.store.ts` (effet qui lit `turn().activeKey`) | Faire dépendre l'effet de la seule clé de la carte active (un `computed` de type chaîne), ou retenir le couple (round, carte) déjà traité |
-| I6 | Table | « Retirer du combat » puis « Nouveau jet de réaction » : la carte retirée revient, et les états qui durent tout le combat tombent (paralysé, sombré, stabilisé — le mourant se remet à saigner —, action perdue, coup précis, dégâts à mains nues) | `start-combat-page.ts` (exclusions vides au nouveau jet), `BolCombatState::nouveauJet` (remplace `exclus`, vide `effets`) | Préremplir les exclusions du nouveau jet avec les cartes retirées (et enfuies) ; garder dans `nouveauJet` les effets dont la durée est le combat |
-| I7 | Serveur | Un PNJ prêtre ou sorcier qui a 0 point sur sa fiche est posé à la table sans réserve (`null`) : le « + » du MJ ne fait rien, sans message (beaucoup de prêtres importés : Nirmus, l'oracle de Nemmereth, Dame Cassa…) | `BolFightSessionService::ressourceInitiale` / `ressourceSuivante`, `createPnjRow`, remplissage de la migration `2026_11_03_100000` | Partir de 0 quand le PNJ a la carrière (prêtre pour la foi, sorcier pour le pouvoir) ; une correction positive du MJ crée la réserve si elle manque ; test « un prêtre sans points reçoit un point à la main » |
-| I8 | Accueil | **Aucune table n'est jamais clôturée** (statut `terminee`) : l'accueil montre toujours la dernière table comme ouverte, la saga dit « Sur la table ce soir » pour toujours, et chaque « Continuer » ajoute une table ouverte de plus | `BolAccueilService` (table ouverte = la plus récente `libre`/`combat`), aucune action de clôture | **Fonction à ajouter**, voir § 4 |
-| I9 | Accueil | Un chapitre joué sans charger de scène (table ouverte sur le scénario, partie improvisée) n'est jamais compté comme joué : « Continuer » repropose le même chapitre | `BolAccueilService::scenariosJoues` (ne lit que `scenes_jouees`) | Compter aussi le `scenario_id` des tables du compte (au moins celles qui ne sont pas la table ouverte) |
-| I10 | Seuil | La présélection des héros arrive avant le catalogue : « Ouvrir la table » est actif alors qu'aucun héros n'est encore affiché, et un clic crée une table vide ; si le chargement du catalogue échoue, l'écran reste bloqué | `session-new-page.ts` (`canLaunch`), `combat-selection.service.ts` (`loadCatalog` sans gestion d'erreur) | `canLaunch` exige un catalogue chargé et au moins un héros résolu ; gérer l'erreur du catalogue |
-| I11 | Création | L'avertissement Illettré ignore l'Illettré pris comme désavantage régional, le cas courant (9 régions le proposent) : Illettré + Scribe ou Médecin ne donne aucun avertissement | `hero-advanced-page.ts` (filtre `region_id <= 0`) | Considérer tout désavantage Illettré (id 17), régional, général ou de carrière |
+- La posture compte en défense pendant un sort.
+- Le massacre envoie ses mises hors de combat en parallèle.
+- Le dé de foi peut être imposé après le jet de l'attaquant.
+- Après un rechargement, les réglages du sort (cercle, difficulté) ne reviennent pas : le MJ les règle de nouveau, sans redébit.
+- Si l'enregistrement de la trace « sort payé » échoue, un rechargement ne la retrouve pas.
+- Une carte paralysée qui avait aussi « Perd sa prochaine action » perdra encore cette action une fois libérée.
+- « Rendre la main » à une carte qui s'est posé « Perd sa prochaine action » pendant son tour lui fait sauter ce tour rouvert (l'action perdue est déjà armée).
 
-## 2. Mineurs corrigés en même temps (un MJ les verrait)
+## Table
 
-| # | Constat | Où | Correction proposée |
-| --- | --- | --- | --- |
-| m1 | Une carte paralysée compte « debout » pour l'issue du combat et pour la mêlée : si le dernier adversaire est paralysé, aucune victoire n'est annoncée | `combat-turn.util.ts` (`combatOutcome`), `melee-pietaille.util.ts` (`pietailleDebout`) | Compter une carte paralysée comme hors de combat pour l'issue et la mêlée |
-| m2 | « Après combat » propose (et coche) des soigneurs morts, à 0 ou inconscients, PNJ alliés compris | `combat-end.service.ts` | Exclure les soigneurs hors de combat |
-| m3 | « Enregistrer la table » dans les coulisses range la scène dans le scénario du filtre, et ce filtre ne suit pas `scenario_id` : la sauvegarde peut ramener la table à un ancien scénario sans le dire | `scene-strip.ts`, `scene-list.ts` | Faire suivre le filtre au `scenario_id` de la table quand il change |
-| m4 | La migration des avantages de terrain ne vide pas les caches : les anciens textes restent affichés jusqu'à une heure | `2026_11_02_140000_terrain_advantages_name_their_terrain.php` | Vider `bol_avantages_all` et `bol_regions_all` dans `up()` et `down()` (en production, `php artisan cache:clear` après `migrate` couvre aussi le cas) |
-| m5 | Un sorcier peut prendre la défense totale et lancer un sort dans le même tour (« Fin du tour » lui donne en plus +2 en défense) | `tas-attaquant.html`, `turn-flow.store.ts` (`sortPret`) | Pas de sort en défense totale, comme pour l'attaque |
+- Une piétaille qui a perdu son action peut rejoindre une horde.
+- Une mêlée interrompue à moitié peut se rejouer dans le même round.
+- Le début de round se rejoue sur un second écran ouvert sur la même table.
+- La file d'enregistrement n'a pas de délai d'expiration.
 
-## 3. Pour le déploiement (reporté dans `2026-11-02-reste-a-faire.md`, § 1 « Mise en production »)
+## Hors combat
 
-- **Maintenance pendant la migration** : `app/` est monté en direct, donc entre le `git pull` et `migrate`, poser un PNJ ou une créature, créer une table renvoient une erreur 500 (colonnes absentes), et `/bol/accueil` répond 404 tant que `routes/api.php` n'est pas copié. Passer en `php artisan down`, copier `routes/api.php`, `migrate`, `cache:clear`, puis `php artisan up`.
-- **Avant la migration `2026_11_02_170000`** (suppression de 7 tables) : vérifier en production que `bol_scenario_heros`, `bol_scenario_pnj`, `bol_scenario_creature` et `bol_scenario_demon` sont vides (`COUNT(*)`), et faire une sauvegarde de la base. L'ancien code pouvait les remplir ; leur `down()` les recrée vides.
-- Les `down()` des migrations `120000` et `160000` défont aussi des lignes qui existaient avant elles : ne pas compter sur un retour en arrière pour ces deux-là.
-
-## 4. La clôture des tables (I8, faite le 2026-11-03)
-
-- un bouton « Clore la table » dans le menu de la table (et sur le bandeau de l'accueil), avec une confirmation ;
-- la table passe au statut `terminee` : elle disparaît du bandeau « Table ouverte » de l'accueil et du bouton « Continuer » ;
-- elle reste dans « Mes sessions », d'où on peut toujours la rouvrir ;
-- clore une table en combat termine d'abord le combat, sans les soins d'après combat (la confirmation le dit), puis la clôt (décidé le 2026-11-03) ;
-- réalisé : routes `PATCH /bol/fight-session/{id}/close` et `/reopen`, bouton dans le menu de la table (retour à l'accueil) et sur le bandeau de l'accueil, étiquette « Close » et « Reprendre » dans « Mes sessions ».
-- limite : une table rouverte ne revient au bandeau de l'accueil que si c'est la plus récemment créée (l'accueil trie par date de création).
-
-## 5. Autres mineurs, laissés pour plus tard
-
-Corrigés le 2026-11-03 (première passe) : une scène « On improvise » ne touche plus au scénario de la table ; enregistrer la fiche d'un PNJ met à jour la table (stats, armes, foi, pouvoir — sans rendre ce qui est dépensé) ; l'accueil n'affirme plus « Aucune table ouverte » ni « Pas encore de compagnie » pendant le chargement ou après une erreur ; le seuil prévient quand le scénario du lien est introuvable ; le choix « Arme » de la parade tient ; « Perd sa prochaine action » posé sur la carte active vise son prochain tour. Deuxième passe : la liste des carrières lettrées s'en tient au livre (Alchimiste, Médecin, Prêtre, Scribe : le Sorcier en sort) ; les avertissements d'arme et d'armure lourdes lisent la vigueur avec ses bonus, et celui de l'arme dit qu'on ne peut pas la manier (p. 14 et 63) ; un sort relancé à l'écran est un nouveau sort, payé (la faveur divine relance sans repayer) ; changer de cible après le jet d'un sort le perd ; un sort payé laisse une trace (`sort-paye`) qui évite de le repayer après un rechargement ; la Fuite opportune est réservée aux rivaux adverses et passe par une seule route serveur, en transaction.
-
-Ajoutés à la relecture des corrections : une carte paralysée qui avait aussi « Perd sa prochaine action » perdra encore cette action une fois libérée ; après un échec de rechargement du catalogue, le seuil reste bloqué jusqu'à « Réessayer ». Ajoutés pendant la passe des mineurs : la vilénie de table d'un PNJ n'est jamais recalculée quand sa fiche change, même s'il change de rang ; « Rendre la main » à une carte qui s'est posé « Perd sa prochaine action » pendant son tour lui fait sauter ce tour rouvert (l'action perdue est déjà armée).
-
-- **Backend** : la validation serveur des héros ne couvre que l'écran de création avancée, pas le formulaire principal ; l'ajustement de la foi ou du pouvoir d'un héros n'est pas atomique ; l'import de scénario ne connaît pas `mort_vivant` ; la migration des PNJ aux armes régionales cherche les armes par leur nom sans se limiter au catalogue ; ids 3001/3002 des capacités ajoutées, sans collision mais à surveiller si le seeder repasse.
-- **Tapis** : la posture compte en défense pendant un sort ; le massacre envoie ses mises hors de combat en parallèle ; dé de foi imposé après le jet de l'attaquant ; après un rechargement, les réglages du sort (cercle, difficulté) ne reviennent pas (le MJ les règle de nouveau, sans redébit) ; si l'enregistrement de la trace « sort payé » échoue, un rechargement ne la retrouve pas.
-- **Table** : une piétaille qui a perdu son action peut rejoindre une horde ; une mêlée interrompue à moitié peut se rejouer dans le même round ; le début de round se rejoue sur un second écran ouvert sur la même table, et la file d'enregistrement n'a pas de délai d'expiration.
-- **Hors combat** : le seuil charge tout l'accueil pour deux champs ; un service racine importe un util de page ; les règles Illettré et armure lourde ne sont vérifiées que par le front (`BolHerosRequest` ne les connaît pas) ; la teinte de la table ouverte se perd si la casse du nom de saga diffère.
-
-## 6. Vérifié et sain
-
-- Propriété des données : aucune route nouvelle ou modifiée ne laisse lire ou écrire la fiche, la table ou le scénario d'un autre compte ; l'accueil ne lit que le compte connecté.
-- Validation des héros : le front et `BolHerosRequest` appliquent les mêmes règles (brouillon et héros actif, budgets de Non-combattant, plafonds) ; les bonus d'avantages ne s'appliquent qu'une fois à l'activation.
-- Migrations de données : idempotentes, limitées au catalogue (`user_id` nul), sans dépendre des ids locaux.
-- `BolCombatState` garde les nouveaux champs de l'état du combat (`fuis`, `melee`).
-- Règle des six stores de l'assistant (`CLAUDE.md`) respectée ; méthodes d'API supprimées sans référence restante ; `mort_vivant` transmis jusqu'à la carte de la table ; navigation, jetons de couleur, images et accessibilité de l'accueil en ordre.
+- Une table rouverte ne revient au bandeau de l'accueil que si c'est la plus récemment créée (l'accueil trie par date de création).
+- Après un échec de rechargement du catalogue, le seuil reste bloqué jusqu'à « Réessayer ».
+- Le seuil charge tout l'accueil pour deux champs.
+- Un service racine importe un util de page.
+- La teinte de la table ouverte se perd si la casse du nom de saga diffère.
