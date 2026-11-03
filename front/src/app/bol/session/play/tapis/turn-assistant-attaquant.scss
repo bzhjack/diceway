@@ -521,12 +521,18 @@
       white-space: nowrap;
     }
 
-    &:hover:not([aria-disabled='true']) {
+    &:hover:not([aria-disabled='true'], .tas-pick--fige) {
       border-color: var(--dw-forge-hot);
       color: var(--dw-forge-hot-text);
     }
 
-    &[aria-pressed='true'] {
+    // L'arme du coup joué : sélectionnée, mais plus un bouton.
+    &.tas-pick--fige {
+      cursor: default;
+    }
+
+    &[aria-pressed='true'],
+    &.tas-pick--fige {
       border-color: var(--dw-color-legendary);
       background: var(--dw-color-legendary);
       box-shadow: none;

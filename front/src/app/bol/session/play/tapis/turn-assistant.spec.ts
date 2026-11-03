@@ -285,6 +285,20 @@ describe('TurnAssistantComponent', () => {
       expect(focus().textContent).toContain('Fin du tour');
     });
 
+    it('le coup joué garde la case de son arme, sélectionnée et figée, au lieu d’une plaque', async () => {
+      await viser();
+      await saisirAttaque('8');
+      await saisirDegats('4');
+
+      await cliquer('Appliquer');
+
+      const zone = element.querySelector('.tas-zone--armes')!;
+      expect(zone.querySelector('.tas-played')).toBeNull();
+      const fige = zone.querySelector('.tas-pick--fige');
+      expect(fige?.getAttribute('aria-label')).toMatch(/, d\d/);
+      expect(zone.querySelector('button')).toBeNull();
+    });
+
     it('une cible choisie donne la main à la case du jet', async () => {
       await rendre({targets: [cible]});
       element.querySelector<HTMLButtonElement>('.tas-cible button')!.click();

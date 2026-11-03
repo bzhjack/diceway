@@ -198,11 +198,25 @@
        pour une piétaille). Le coup joué : son arme, figée. -->
   <div class="tas-zone tas-zone--armes">
     @if (flow.played(); as p) {
-      <div class="tas-cap"><span>Arme</span></div>
-      <span class="tas-played">
-        <b>{{ p.arme ?? 'Dégâts' }}</b>
-        <em>{{ p.degats }}</em>
-      </span>
+      <!-- Comme avant le coup : la case de l'arme, sélectionnée, mais figée (rien ne se choisit plus) -->
+      <div class="tas-cap">
+        <span>Arme</span>
+        @if (p.arme) {
+          <em [matTooltip]="p.arme">{{ p.arme }}</em>
+        }
+      </div>
+      @if (p.arme) {
+        <ul class="tas-picks tas-picks--arme" aria-label="Arme du coup joué">
+          <li>
+            <span class="tas-pick tas-pick--arme tas-pick--fige" role="img" [attr.aria-label]="p.arme + ', ' + p.degats" matTooltip="Le coup est joué : son arme est figée">
+              <span class="tas-med tas-med--arme" aria-hidden="true"><dw-arme-icon [nom]="p.arme" /></span>
+              <em aria-hidden="true">{{ p.degats }}</em>
+            </span>
+          </li>
+        </ul>
+      } @else {
+        <span class="tas-fixed"><span class="tas-label">Dégâts</span> {{ p.degats }}</span>
+      }
     } @else {
       @if (loadout.sortMode()) {
       <!-- Un sorcier lance un sort au lieu d'attaquer : le sort se règle ici, à la place des armes -->
