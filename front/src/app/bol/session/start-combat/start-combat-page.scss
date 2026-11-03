@@ -1,13 +1,11 @@
 // Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc porté par l'élément de la page ou par des classes
 // `scd-*` qui lui sont propres. Les dés roulent en couche de fond sur toute la page (même pattern que le jet d'action).
 
-// Place pour le cadre de fer de l'app et son filet de bronze (`body::before` et `body::after` dans `styles/_barbare.scss`, 10 px + 2 px),
-// dessinés par-dessus les pages : sans elle, le haut de l'en-tête passerait dessous.
+// Toute la hauteur de la fenêtre.
 bol-start-combat-page {
   display: block;
   box-sizing: border-box;
   height: 100dvh;
-  padding: 12px;
 }
 
 // Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté. Le fond : de la

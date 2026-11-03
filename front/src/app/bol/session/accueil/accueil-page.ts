@@ -139,7 +139,7 @@ export class AccueilPageComponent {
   protected ouvrirTable(scenarioId: string | null = null): void {
     this.dialog.open<OpenTableDialogComponent, OpenTableData, boolean>(OpenTableDialogComponent, {
       data: {scenarioId, accueil: this.data()},
-      width: 'min(760px, 94vw)',
+      width: 'min(1120px, 94vw)',
       maxWidth: '94vw',
       ariaLabelledBy: 'otd-titre',
       autoFocus: 'first-heading',

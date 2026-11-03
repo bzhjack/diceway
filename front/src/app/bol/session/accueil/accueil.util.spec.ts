@@ -154,9 +154,9 @@ describe('sagaResumes', () => {
     });
   });
 
-  it('commence une saga pas encore commencée par son premier chapitre', () => {
+  it('commence un scénario pas encore commencé par son premier chapitre', () => {
     expect(resume('Le Dieu voilé').suite).toMatchObject({id: 'dvi', action: 'Commencer'});
-    expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencée');
+    expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencé');
   });
 
   it('dit « Reste à jouer », pas « Continuer », pour un chapitre sauté avant le dernier joué', () => {
@@ -182,10 +182,10 @@ describe('sagaResumes', () => {
     expect(perle.resume).toBe('Table ouverte · 1 chapitre joué sur 3');
   });
 
-  it('dit une saga achevée quand tout est joué', () => {
+  it('dit un scénario achevé quand tout est joué', () => {
     const achevee = resume('Chroniques lémuriennes', ['clm', 'clt']);
     expect(achevee.suite).toBeNull();
-    expect(achevee.resume).toBe('Saga achevée');
+    expect(achevee.resume).toBe('Scénario achevé');
   });
 
   it('parle de scénarios, sans ordre ni saga, hors saga', () => {

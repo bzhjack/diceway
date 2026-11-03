@@ -178,18 +178,7 @@
   --bar-leather-glow:   #4a3523;
   --bar-leather-top:    #241a12;
   --bar-leather-bottom: #130d08;
-  // Le cadre de fer de l'écran, ses rivets, son ombre…
-  --bar-rivet-light:  #c9b79a;
-  --bar-rivet-mid:    #6b6258;
-  --bar-iron-dark:    #1d1a17; // le fond d'un rivet et le bas du cadre
-  --bar-frame-light:  #6a655d;
-  --bar-frame-mid:    #3b3733;
-  --bar-frame-shadow: #14110f;
-  --bar-mask:         #000; // un masque opaque : seul son alpha compte
-  // … et le même en fer martelé, sur les pages de la forge.
-  --bar-forge-rivet-light:  #e6c58c;
-  --bar-forge-rivet-dark:   #2b1c0c;
-  --bar-forge-frame-shadow: #0c0806;
+  --bar-mask: #000; // un masque opaque : seul son alpha compte
   // La forge : le fond des dialogues et des listes déroulantes (`_forge-page.scss`).
   --dw-forge-overlay-surface: #171009;
   // Un dé rouge (`dw-die-face`, `dw-dice-row`) : sa face en dégradé, son chant, ses points.

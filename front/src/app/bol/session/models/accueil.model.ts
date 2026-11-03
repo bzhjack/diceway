@@ -72,7 +72,7 @@ export interface AccueilSceneRepere {
 }
 
 /**
- * La table ouverte, pour le bandeau : le fil de l'histoire (la saga, ou « One shot », ou « Sans scénario » ; le chapitre ; la scène),
+ * La table ouverte, pour le bandeau : le fil de l'histoire (le scénario, ou « One shot », ou « Sans scénario » ; le chapitre ; la scène),
  * son titre (le sien, sinon le nom du chapitre, sinon sa date), la scène en cours et la barre des scènes du chapitre. `filAriane` le
  * redit en une ligne, pour la barre compacte.
  */

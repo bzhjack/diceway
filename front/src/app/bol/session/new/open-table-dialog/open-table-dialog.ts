@@ -4,6 +4,7 @@ import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of, switchMap, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
@@ -12,11 +13,15 @@ import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
-import {accueilSagas, sagaResumes, situerScenario, tableOuverte, teinteDeSaga} from '../../accueil/accueil.util';
+import {accueilSagas, ONE_SHOT, sagaResumes, situerScenario, tableOuverte, teinteDeSaga} from '../../accueil/accueil.util';
+import {ChapitreEtat} from '../../models/accueil.model';
 import {OpenTableData, OpenTableEtape} from '../../models/open-table.model';
 import {findScenario} from '../../scenario.util';
 import {CombatantPickerDialogComponent} from '../combatant-picker-dialog/combatant-picker-dialog';
 import {enumerer} from '../open-table.util';
+
+/** L'état d'un chapitre à côté de son nom, dans le menu « Changer de chapitre » ; rien pour un chapitre à jouer. */
+const ETAT_DANS_LE_MENU: Record<ChapitreEtat, string | null> = {joue: 'joué', 'en-cours': 'sur la table', prochain: 'le prochain', 'a-jouer': null};
 
 /**
  * « Ouvrir une table », en dialogue sur l'accueil : l'histoire (le chapitre choisi sur l'accueil, ou une partie improvisée), puis qui est à
@@ -25,7 +30,7 @@ import {enumerer} from '../open-table.util';
  */
 @Component({
   selector: 'bol-open-table-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, RouterLink],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RouterLink],
   templateUrl: './open-table-dialog.html',
   styleUrl: './open-table-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,14 +88,35 @@ export class OpenTableDialogComponent {
     return {...situe, teinte: teinteDeSaga(sagaResumes(accueilSagas(scenarios, new Set(), null, null), null), situe.saga)};
   });
 
+  /**
+   * Le menu « Changer de chapitre » : une entrée par saga (les one shots en dernier), et dans chacune ses chapitres dans l'ordre, avec
+   * leur état comme sur l'accueil ; le chapitre choisi est coché.
+   */
+  protected readonly menuSagas = computed(() => {
+    const accueil = this.accueil();
+    if (!accueil) {
+      return [];
+    }
+    const sagas = accueilSagas(accueil.scenarios, new Set(accueil.scenarios_joues), accueil.table?.scenario_id ?? null, accueil.scenario_recent_id);
+    return sagas.map((saga) => ({
+      nom: saga.nom ?? ONE_SHOT,
+      chapitres: saga.chapitres.map((chapitre) => ({
+        id: chapitre.id,
+        libelle: chapitre.libelle,
+        etat: ETAT_DANS_LE_MENU[chapitre.etat],
+        choisi: chapitre.id === this.scenarioId(),
+      })),
+    }));
+  });
+
   /** Un chapitre demandé que le compte n'a pas : le dialogue le dit, et la table s'ouvre sans lui. Rien tant que l'accueil n'a pas répondu. */
   protected readonly scenarioPerdu = computed(() => {
     if (!this.scenarioId() || this.loadingAccueil() || this.scenario()) {
       return null;
     }
     return this.accueil()
-      ? 'Ce chapitre est introuvable : la table s’ouvrira sans scénario.'
-      : 'Impossible de charger le chapitre : la table s’ouvrira sans scénario.';
+      ? 'Ce chapitre est introuvable : la partie sera improvisée.'
+      : 'Impossible de charger le chapitre : la partie sera improvisée.';
   });
 
   /** La table déjà ouverte, que l'ouverture de celle-ci clôt. */
@@ -143,6 +169,10 @@ export class OpenTableDialogComponent {
 
   protected reloadCatalog(): void {
     this.selection.loadCatalog();
+  }
+
+  protected choisirChapitre(id: string): void {
+    this.scenarioId.set(id);
   }
 
   protected improviser(): void {

@@ -142,8 +142,9 @@ export class SceneListComponent {
 
   protected newScenario(): void {
     promptDialog(this.dialog, {
-      title: 'Nouveau scénario',
-      label: 'Titre du scénario',
+      title: 'Nouveau chapitre',
+      // Un chapitre se range dans son scénario par son titre ; seul, c'est un one shot.
+      label: 'Titre : « Scénario — Chapitre »',
       maxLength: SCENE_TITLE_MAX,
       confirmLabel: 'Créer',
     }).subscribe((raw) => {
@@ -151,7 +152,7 @@ export class SceneListComponent {
       if (!titre) {
         return;
       }
-      this.run(this.scenarioService.create({titre}), 'Impossible de créer le scénario.', (scenario) => {
+      this.run(this.scenarioService.create({titre}), 'Impossible de créer le chapitre.', (scenario) => {
         if (scenario.id) {
           this.scenarios.update((list) => [...list, {id: scenario.id!, titre: scenario.titre}]);
           this.selectedScenario.set(scenario.id);

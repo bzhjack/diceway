@@ -1,10 +1,7 @@
 import {ChangeDetectionStrategy, Component, effect, input, signal} from '@angular/core';
 
-/** Le cadre de fer de l'app (10 px et son filet de 2 px) couvre le haut de l'écran : un en-tête passé dessous est déjà sorti. */
-const CADRE_PX = 12;
-
 /**
- * Une barre fine, collée en haut de l'écran sous le cadre de fer, qui remplace l'en-tête d'une page une fois qu'il est sorti de l'écran :
+ * Une barre fine, collée en haut de l'écran, qui remplace l'en-tête d'une page une fois qu'il est sorti de l'écran :
  * un titre court à gauche, les boutons projetés à droite. Cachée, elle est inerte (ni focus ni lecteur d'écran). L'hôte ne prend aucune
  * place dans la page : seule la barre, fixe, se voit.
  */
@@ -39,9 +36,8 @@ export class DwCompactBarComponent {
         this.visible.set(false);
         return;
       }
-      const observateur = new IntersectionObserver(
-        ([entree]) => this.visible.set(entree.target.isConnected && !entree.isIntersecting && entree.boundingClientRect.top < CADRE_PX),
-        {rootMargin: `-${CADRE_PX}px 0px 0px 0px`},
+      const observateur = new IntersectionObserver(([entree]) =>
+        this.visible.set(entree.target.isConnected && !entree.isIntersecting && entree.boundingClientRect.top < 0),
       );
       observateur.observe(entete);
       onCleanup(() => observateur.disconnect());

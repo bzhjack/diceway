@@ -40,7 +40,7 @@
   border: 1px solid var(--bar-outline);
 }
 
-// ── Fond et cadre de toute l'app ────────────────────────────────────────────────────────────────────
+// ── Fond de toute l'app ─────────────────────────────────────────────────────────────────────────────
 // Cuir sombre éclairé par deux torches dans les angles du haut, fixe derrière les pages.
 html {
   background-color: var(--dw-surface-0) !important;
@@ -52,56 +52,4 @@ body {
     radial-gradient(45% 35% at 100% 0, rgba(232, 135, 58, 0.2), transparent 70%) fixed,
     radial-gradient(50% 40% at 50% 55%, var(--bar-leather-glow), transparent 75%) fixed,
     linear-gradient(var(--bar-leather-top), var(--bar-leather-bottom)) fixed;
-}
-
-// Cadre de fer noirci, strié, qui entoure l'écran, avec un rivet à chaque coin et un filet de bronze à l'intérieur.
-// Le calque est fixe et ne capte aucun clic ; il reste sous les dialogues et les menus (z-index des overlays : 1000).
-body::before,
-body::after {
-  content: '';
-  position: fixed;
-  pointer-events: none;
-  z-index: 900;
-}
-
-body::before {
-  inset: 0;
-  padding: 10px;
-  background:
-    radial-gradient(circle at 35% 30%, var(--bar-rivet-light), var(--bar-rivet-mid) 45%, var(--bar-iron-dark)) 1px 1px / 9px 9px no-repeat,
-    radial-gradient(circle at 35% 30%, var(--bar-rivet-light), var(--bar-rivet-mid) 45%, var(--bar-iron-dark)) calc(100% - 1px) 1px / 9px 9px no-repeat,
-    radial-gradient(circle at 35% 30%, var(--bar-rivet-light), var(--bar-rivet-mid) 45%, var(--bar-iron-dark)) 1px calc(100% - 1px) / 9px 9px no-repeat,
-    radial-gradient(circle at 35% 30%, var(--bar-rivet-light), var(--bar-rivet-mid) 45%, var(--bar-iron-dark)) calc(100% - 1px) calc(100% - 1px) / 9px 9px no-repeat,
-    repeating-linear-gradient(0deg, transparent 0 22px, rgba(0, 0, 0, 0.33) 22px 23px),
-    linear-gradient(160deg, var(--bar-frame-light), var(--bar-frame-mid) 40%, var(--bar-iron-dark));
-  // Seul l'anneau de 10 px est dessiné : le centre est évidé par le masque.
-  -webkit-mask: linear-gradient(var(--bar-mask) 0 0) content-box, linear-gradient(var(--bar-mask) 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(var(--bar-mask) 0 0) content-box exclude, linear-gradient(var(--bar-mask) 0 0);
-}
-
-body::after {
-  inset: 10px;
-  border: 2px solid var(--bar-bronze);
-  box-shadow: 0 0 0 2px var(--bar-frame-shadow), inset 0 0 70px rgba(0, 0, 0, 0.55);
-}
-
-// La forge : sur la table, le jet de réaction, les fiches et les bibliothèques, le cadre est en fer martelé, le filet en bronze chaud.
-body:has(bol-session-play-page, bol-start-combat-page, .dw-page)::before {
-  --forge-frame-rivet: radial-gradient(circle at 35% 28%, var(--bar-forge-rivet-light), var(--bar-bronze) 42%, var(--bar-forge-rivet-dark) 72%);
-
-  background:
-    var(--forge-frame-rivet) 1px 1px / 9px 9px no-repeat,
-    var(--forge-frame-rivet) calc(100% - 1px) 1px / 9px 9px no-repeat,
-    var(--forge-frame-rivet) 1px calc(100% - 1px) / 9px 9px no-repeat,
-    var(--forge-frame-rivet) calc(100% - 1px) calc(100% - 1px) / 9px 9px no-repeat,
-    var(--dw-forge-iron) 0 0 / 320px;
-}
-
-body:has(bol-session-play-page, bol-start-combat-page, .dw-page)::after {
-  border-color: var(--dw-forge-bronze);
-  box-shadow:
-    0 0 0 2px var(--bar-forge-frame-shadow),
-    inset 0 0 80px rgba(0, 0, 0, 0.65),
-    inset 0 0 0 1px rgba(255, 214, 160, 0.08);
 }

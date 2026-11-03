@@ -58,6 +58,12 @@ docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>
 - Re-importing updates what the file created (`bol_import_ref`), without duplicates, but **overwrites** sheets edited in the app since.
 - Check what is already imported: `docker exec diceway php artisan tinker --execute='echo json_encode(DB::table("bol_import_ref")->select("saga", DB::raw("count(*) n"))->groupBy("saga")->get());'`
 
+## Vocabulary (UI)
+
+What the screens call things — keep to these words in any visible text:
+- **Scénario** › **Chapitre** › **Scène**. A scénario (« Perle du Beshaar ») is not a record: it is the title prefix of its chapters (`Scénario — Chapitre`, the `saga` key of the import). A chapitre is a `BolScenario`; a scène, a `BolScene`. A `BolScenario` without prefix is a **one shot**.
+- **Table**: a `BolFightSession` (never « session » in the UI; a table without chapter is a « partie improvisée »). **Compagnie**: the heroes at the table.
+
 ## Business rules & reference data
 
 When a task touches game rules, character creation, equipment, careers, languages, traits, or activation:

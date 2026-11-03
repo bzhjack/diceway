@@ -23,8 +23,8 @@ import {acteLabel} from './theatre.util';
       </h1>
     </div>
 
-    <nav #nav class="sca-nav" aria-label="Scènes du scénario">
-      <dw-scroller class="sca-scroller" label="Scènes du scénario">
+    <nav #nav class="sca-nav" aria-label="Scènes du chapitre">
+      <dw-scroller class="sca-scroller" label="Scènes du chapitre">
         <ol class="sca-actes">
           @for (acte of store.acts(); track acte.scene.id) {
             <li class="sca-li">
@@ -52,7 +52,7 @@ import {acteLabel} from './theatre.util';
               </button>
             </li>
           } @empty {
-            <li class="sca-vide">Aucune scène dans ce scénario.</li>
+            <li class="sca-vide">Aucune scène dans ce chapitre.</li>
           }
         </ol>
       </dw-scroller>

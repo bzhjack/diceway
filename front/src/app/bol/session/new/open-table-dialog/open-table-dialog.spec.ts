@@ -124,6 +124,32 @@ describe('OpenTableDialogComponent', () => {
       expect(preselectHeroes).toHaveBeenCalledWith(['h1']);
     });
 
+    it('« Changer de chapitre » propose les chapitres de chaque saga, sans quitter le dialogue', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, scenarios_joues: ['p2']}});
+      const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
+
+      bouton('Changer de chapitre').click();
+      await stable();
+      items().find((b) => b.textContent?.includes('Perle du Beshaar'))!.click();
+      await stable();
+
+      const chapitres = items().filter((b) => /^\d\./.test(b.textContent?.trim().replace(/^check\s*/, '') ?? ''));
+      expect(chapitres.map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+        '1. Sacrilège à Satarla',
+        "2. De sable et d'eau · joué",
+        "3. Le tombeau d'Urzûlzalinaar · le prochain",
+        "4. Le réveil de l'Ébranleur",
+        'check5. Tolometh, choisi',
+      ]);
+
+      chapitres[2].click();
+      await stable();
+
+      expect(fermer).not.toHaveBeenCalled();
+      expect(texte('.otd-chapitre-nom')).toBe("Le tombeau d'Urzûlzalinaar");
+      expect(texte('.otd-chapitre-place')).toBe('Perle du Beshaar › Chapitre 3 sur 5');
+    });
+
     it('« Improviser » retire le chapitre : la table s’ouvre sans scénario', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 

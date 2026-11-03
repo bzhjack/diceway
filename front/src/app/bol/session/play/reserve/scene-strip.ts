@@ -23,7 +23,7 @@ import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
   imports: [MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule],
   template: `
     <mat-form-field subscriptSizing="dynamic" class="scs-scenario">
-      <mat-label>Scénario</mat-label>
+      <mat-label>Chapitre</mat-label>
       <mat-select id="scs-scenario-select" [value]="selectedScenario() ?? noScenario" (selectionChange)="selectScenario($event)">
         <mat-option [value]="noScenario">On improvise</mat-option>
         @for (scenario of sortedScenarios(); track scenario.id) {
@@ -32,7 +32,7 @@ import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
       </mat-select>
     </mat-form-field>
 
-    <ul class="scs-scenes" role="list" aria-label="Scènes du scénario">
+    <ul class="scs-scenes" role="list" aria-label="Scènes du chapitre">
       @for (scene of visibleScenes(); track scene.id; let index = $index) {
         <li>
           <button

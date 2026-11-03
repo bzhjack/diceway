@@ -205,7 +205,7 @@ function resumeDeSaga(suite: AccueilSagaSuite | null, joues: number, total: numb
     return `Table ouverte · ${enToutesLettres}`;
   }
   if (suite === null) {
-    return horsSaga ? 'Tout est joué' : 'Saga achevée';
+    return horsSaga ? 'Tout est joué' : 'Scénario achevé';
   }
   if (joues > 0) {
     return enToutesLettres;
@@ -213,7 +213,7 @@ function resumeDeSaga(suite: AccueilSagaSuite | null, joues: number, total: numb
   if (horsSaga) {
     return total > 1 ? `${total} scénarios à jouer` : '1 scénario à jouer';
   }
-  return 'Pas encore commencée';
+  return 'Pas encore commencé';
 }
 
 /**

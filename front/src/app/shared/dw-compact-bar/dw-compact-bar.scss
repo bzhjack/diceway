@@ -5,10 +5,10 @@
   display: contents;
 }
 
-// Sous le cadre de fer de l'app, au-dessus de la page mais sous les menus et les dialogues ; elle glisse depuis le haut.
+// En haut de l'écran, au-dessus de la page mais sous les menus et les dialogues ; elle glisse depuis le haut.
 .dw-cb {
   position: fixed;
-  inset: 12px 12px auto;
+  inset: 0 0 auto;
   z-index: 50;
   padding: 0.45rem 1rem;
   border-bottom: 1px solid var(--dw-forge-bronze);

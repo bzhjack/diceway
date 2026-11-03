@@ -67,9 +67,6 @@
 // (surfaces brunes, métaux `--bar-*`, jetons Material) sont dans `styles/_barbare.scss`, partagées avec les
 // dialogues et messages, qui sont rendus hors de la page. Ici, les fonds de la table.
 .cp-page--barbare {
-  // Place pour le cadre de fer de l'app (`body::before` dans `styles/_barbare.scss`).
-  padding: 10px;
-
   .cp-table {
     position: relative;
     overflow: hidden;
