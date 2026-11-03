@@ -1,0 +1,368 @@
+@use 'styles/forge-mixins' as forge;
+
+:host {
+  display: block;
+}
+
+// ── L'en-tête : le médaillon, « Nouvelle table », la question (ou la confirmation), et de quoi fermer ─────────────────────────────
+.otd-tete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem 0.5rem 1.5rem;
+}
+
+.otd-tete-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.otd-icone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  @include forge.medallion;
+
+  .mat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+.otd-surtitre {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--dw-forge-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.otd-titre {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 4px var(--dw-forge-shade);
+}
+
+.otd-contenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  // Le contenu de Material laisse peu d'air en haut : l'en-tête est déjà là.
+  padding-top: 0.75rem !important;
+  color: var(--dw-forge-bone);
+}
+
+// ── Une autre table est ouverte : ce qu'elle est, et que l'ouvrir ici la clôt ────────────────────────────────────────────────────
+.otd-deja {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-warn) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-color-warn) 12%, var(--dw-forge-recess));
+}
+
+.otd-deja-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--dw-forge-warning-text);
+
+  .mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+  }
+}
+
+.otd-deja-table,
+.otd-deja-texte {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.otd-deja-table strong {
+  color: var(--dw-forge-hot-text);
+}
+
+.otd-lien {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  font-weight: 700;
+  color: var(--dw-forge-gold);
+
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+}
+
+// ── Les deux étapes : l'histoire, puis qui est à table ───────────────────────────────────────────────────────────────────────────
+.otd-etape {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.otd-etape-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--dw-color-rival);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.otd-numero {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
+  color: var(--dw-forge-recess);
+  font-size: 0.85rem;
+  letter-spacing: 0;
+}
+
+.otd-compte {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dw-forge-bone);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+// Le chapitre de la future table, à la couleur et sur l'image de sa saga (`dw-saga--N`, comme sa carte sur l'accueil).
+.otd-chapitre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
+  border-radius: 12px;
+  @include forge.recess;
+}
+
+.otd-vignette {
+  flex: none;
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid var(--saga);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, transparent, rgba(20, 13, 8, 0.5)),
+    var(--saga-image) center 35% / cover;
+}
+
+.otd-chapitre-texte {
+  display: flex;
+  flex: 1 1 14rem;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.otd-chapitre-place {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--saga-clair);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.otd-chapitre-nom {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.85rem;
+  line-height: 1;
+  color: var(--dw-forge-hot-text);
+  overflow-wrap: anywhere;
+}
+
+.otd-chapitre-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+// ── Les héros à table : une pastille chacun (portrait, nom, « × »), et la pastille pointillée pour en ajouter ────────────────────
+.otd-heros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.otd-heros-pastille {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-bonus) 45%, transparent);
+  border-radius: var(--dw-radius-pill);
+  @include forge.recess;
+
+  img {
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 2px solid var(--dw-color-bonus);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.otd-heros-nom {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.otd-heros-retirer {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 50%;
+  @include forge.stud-face;
+  color: var(--dw-forge-stud-text);
+  cursor: pointer;
+
+  &:hover {
+    @include forge.stud-hot;
+  }
+
+  .mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+}
+
+.otd-ajout {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px dashed var(--dw-forge-bronze);
+  border-radius: var(--dw-radius-pill);
+  background: transparent;
+  color: var(--dw-forge-gold);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
+  }
+}
+
+.otd-heros-retirer,
+.otd-ajout {
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+.otd-note {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--dw-forge-bronze-text);
+
+  a {
+    color: var(--dw-forge-gold);
+  }
+}
+
+.otd-alerte {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--dw-color-warn);
+  border-radius: 7px;
+  color: var(--dw-forge-warning-text);
+  font-size: 0.9rem;
+  @include forge.recess;
+}
+
+.otd-alerte--action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+// ── La confirmation : ce que la clôture de l'autre table fait ────────────────────────────────────────────────────────────────────
+.otd-confirmation {
+  font-size: 1rem;
+  line-height: 1.55;
+
+  p {
+    margin: 0 0 0.5rem;
+  }
+
+  // La remise à zéro globale retire les puces : on les remet, c'est une liste à lire.
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  strong {
+    color: var(--dw-forge-hot-text);
+  }
+}
+
+// ── Le pied : la future table en une ligne, et « Ouvrir la table » à la fin de la lecture ─────────────────────────────────────────
+.otd-pied {
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem 1.25rem !important;
+  border-top: 1px solid var(--dw-forge-bronze-dim);
+}
+
+.otd-resume {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.otd-resume-texte {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dw-forge-hot-text);
+}
+
+.otd-resume-cloture {
+  font-size: 0.88rem;
+  color: var(--dw-forge-warning-text);
+}

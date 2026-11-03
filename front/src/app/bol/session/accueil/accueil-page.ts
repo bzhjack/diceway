@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {BolAccueilComptes, BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
@@ -11,6 +12,8 @@ import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
+import {OpenTableData} from '../models/open-table.model';
+import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
 import {accueilSagas, ONE_SHOT, sagaResumes, tableOuverte, teinteDeSaga} from './accueil.util';
 
 interface AccueilBibliotheque {
@@ -45,6 +48,9 @@ export class AccueilPageComponent {
   private readonly accueilService = inject(BolAccueilService);
   private readonly closeTable = inject(CloseTableService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   protected readonly data = signal<BolAccueilModel | null>(null);
   protected readonly error = signal(false);
@@ -85,6 +91,16 @@ export class AccueilPageComponent {
 
   constructor() {
     this.charger();
+    // `/session/new` (le menu du compte, la palette de la table, le retour de « Créer un héros ») mène ici avec `?table=nouvelle` : le
+    // dialogue s'ouvre, et l'adresse redevient celle de l'accueil.
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      if (params.get('table') !== 'nouvelle') {
+        return;
+      }
+      const scenario = params.get('scenario');
+      void this.router.navigate([], {queryParams: {table: null, scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
+      this.ouvrirTable(scenario);
+    });
     // Le carrousel n'existe qu'une fois l'accueil arrivé ; sa largeur change avec la fenêtre.
     effect((onCleanup) => {
       const rail = this.rail()?.nativeElement;
@@ -116,6 +132,18 @@ export class AccueilPageComponent {
     const ecart = parseFloat(getComputedStyle(rail).columnGap) || 0;
     const doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
     rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
+  }
+
+  /** Le dialogue « Ouvrir une table », sur ce chapitre (null : on improvise), avec ce que l'accueil a déjà lu ; la table ouverte, il mène
+   * à elle. */
+  protected ouvrirTable(scenarioId: string | null = null): void {
+    this.dialog.open<OpenTableDialogComponent, OpenTableData, boolean>(OpenTableDialogComponent, {
+      data: {scenarioId, accueil: this.data()},
+      width: 'min(760px, 94vw)',
+      maxWidth: '94vw',
+      ariaLabelledBy: 'otd-titre',
+      autoFocus: 'first-heading',
+    });
   }
 
   /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte, son chapitre compte comme joué). */

@@ -20,13 +20,13 @@ export interface AccueilSaga {
  * saga est jouée), « Jouer » un scénario hors saga, qui n'a pas d'ordre. */
 export type AccueilSagaAction = 'Reprendre' | 'Commencer' | 'Continuer' | 'Reste à jouer' | 'Jouer';
 
-/** Le bouton d'une saga : le chapitre qu'il nomme, et où il mène (la table ouverte, ou `/session/new` sur ce chapitre). */
+/** Le bouton d'une saga : le chapitre qu'il nomme, et où il mène : `route`, la table ouverte à reprendre ; null, le dialogue « Ouvrir une
+ * table » sur ce chapitre. */
 export interface AccueilSagaSuite {
   id: string;
   libelle: string;
   action: AccueilSagaAction;
-  route: string[];
-  queryParams: Record<string, string> | null;
+  route: string[] | null;
   ariaLabel: string;
 }
 
@@ -50,6 +50,16 @@ export interface AccueilSagaResume {
   avancement: string;
   resume: string;
   teinte: number;
+}
+
+/** Où se place un scénario : sa saga (null hors saga), ce qu'on en dit (« Perle du Beshaar », ou « One shot »), son chapitre (« Chapitre 5
+ * sur 5 », « Introduction » ; `chapitreCourt` : « Chapitre 5 ») et son nom, sans numéro. */
+export interface ScenarioSitue {
+  saga: string | null;
+  histoire: string;
+  chapitre: string | null;
+  chapitreCourt: string | null;
+  nom: string;
 }
 
 /** Où en est une scène du chapitre de la table ouverte. */

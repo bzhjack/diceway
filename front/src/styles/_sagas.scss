@@ -1,0 +1,32 @@
+// Une couleur et une image d'ambiance par teinte de saga (`AccueilSagaResume.teinte`) : sa carte et le fil de la table ouverte sur l'accueil,
+// son chapitre dans le dialogue « Ouvrir une table ». Les images sont prises parmi celles des bibliothèques, en attendant une illustration
+// par saga. 0 : les one shots.
+.dw-saga--0 {
+  --saga: var(--dw-forge-bronze);
+  --saga-clair: var(--dw-forge-bronze-text);
+  --saga-image: url('/assets/bol/quest.jpg');
+}
+
+.dw-saga--1 {
+  --saga: var(--dw-saga-1);
+  --saga-clair: var(--dw-saga-1-clair);
+  --saga-image: url('/assets/bol/header-pnj.webp');
+}
+
+.dw-saga--2 {
+  --saga: var(--dw-saga-2);
+  --saga-clair: var(--dw-saga-2-clair);
+  --saga-image: url('/assets/bol/header-demons.webp');
+}
+
+.dw-saga--3 {
+  --saga: var(--dw-saga-3);
+  --saga-clair: var(--dw-saga-3-clair);
+  --saga-image: url('/assets/bol/header-combat.webp');
+}
+
+.dw-saga--4 {
+  --saga: var(--dw-saga-4);
+  --saga-clair: var(--dw-saga-4-clair);
+  --saga-image: url('/assets/bol/header-creatures.webp');
+}

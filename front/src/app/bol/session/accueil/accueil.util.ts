@@ -10,6 +10,7 @@ import {
   AccueilTableOuverte,
   ChapitreEtat,
   SceneEtat,
+  ScenarioSitue,
 } from '../models/accueil.model';
 import {findScenario} from '../scenario.util';
 
@@ -153,7 +154,7 @@ function avancement(joues: number, total: number, unite: 'chapitre' | 'scénario
 
 /**
  * Le bouton d'une saga. Sa saga est-elle sur la table ouverte : il la reprend, sur son chapitre (le bandeau et la carte disent alors la même
- * chose). Sinon il ouvre une nouvelle table sur le chapitre `prochain`, à défaut sur le premier à jouer, qui précède alors le dernier joué :
+ * chose). Sinon il ouvre le dialogue « Ouvrir une table » sur le chapitre `prochain`, à défaut sur le premier à jouer, qui précède alors le dernier joué :
  * « Reste à jouer », pas « Continuer ». Aucun : la saga est achevée.
  */
 function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): AccueilSagaSuite | null {
@@ -165,7 +166,6 @@ function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): 
       libelle: enCours.libelle,
       action: 'Reprendre',
       route: ['/session', tableId, 'play'],
-      queryParams: null,
       ariaLabel: `Reprendre ${enCours.libelle}, ${nom}, sur la table ouverte`,
     };
   }
@@ -180,8 +180,7 @@ function suiteDeSaga(saga: AccueilSaga, joues: number, tableId: string | null): 
     id: chapitre.id,
     libelle: chapitre.libelle,
     action,
-    route: ['/session/new'],
-    queryParams: {scenario: chapitre.id},
+    route: null,
     ariaLabel: `${action} ${chapitre.libelle}, ${nom}, sur une nouvelle table`,
   };
 }
@@ -256,22 +255,35 @@ export function teinteDeSaga(resumes: readonly AccueilSagaResume[], saga: string
   return resumes.find((resume) => resume.nom !== null && cleDeSaga(resume.nom) === cle)?.teinte ?? 0;
 }
 
+/** Où se place un scénario parmi ceux du compte : sa saga et son chapitre, d'après son numéro et le nombre de chapitres de la saga. */
+export function situerScenario(scenario: BolAccueilScenario, scenarios: readonly BolAccueilScenario[]): ScenarioSitue {
+  const {saga, libelle} = decouper(scenario.titre);
+  if (saga === null) {
+    return {saga: null, histoire: ONE_SHOT, chapitre: null, chapitreCourt: null, nom: libelle};
+  }
+  const numerotation = numeroter(libelle);
+  const total = scenarios.filter((s) => cleDeSaga(decouper(s.titre).saga ?? '') === cleDeSaga(saga)).length;
+  return {
+    saga,
+    histoire: saga,
+    chapitre: numerotation.numero ? `Chapitre ${numerotation.numero} sur ${total}` : numerotation.intro ? 'Introduction' : null,
+    chapitreCourt: numerotation.numero ? `Chapitre ${numerotation.numero}` : numerotation.intro ? 'Introduction' : null,
+    nom: numerotation.nom,
+  };
+}
+
 const ETAT_SCENE: Record<SceneEtat, string> = {jouee: 'jouée', 'en-cours': 'en cours', 'a-jouer': 'à jouer'};
 
 /**
  * La table ouverte pour le bandeau : le fil de l'histoire (la saga de son scénario, « One shot » pour un scénario hors saga, « Sans
- * scénario » quand on improvise ; le chapitre d'après son numéro et le nombre de chapitres de la saga ; la scène en cours et sa place),
- * son titre (le sien, sinon le nom du chapitre, sinon sa date) et la barre des scènes du chapitre.
+ * scénario » quand on improvise ; le chapitre ; la scène en cours et sa place), son titre (le sien, sinon le nom du chapitre, sinon sa
+ * date) et la barre des scènes du chapitre.
  */
 export function tableOuverte(table: BolAccueilTable, scenarios: readonly BolAccueilScenario[]): AccueilTableOuverte {
   const scenario = findScenario(scenarios, table.scenario_id);
-  const decoupe = scenario ? decouper(scenario.titre) : null;
-  const saga = decoupe?.saga ?? null;
-  const numerotation = saga !== null && decoupe ? numeroter(decoupe.libelle) : null;
-  const total = saga === null ? 0 : scenarios.filter((s) => cleDeSaga(decouper(s.titre).saga ?? '') === cleDeSaga(saga)).length;
-  const chapitreCourt = numerotation?.numero ? `Chapitre ${numerotation.numero}` : numerotation?.intro ? 'Introduction' : null;
-  const titre = table.titre?.trim() ? table.titre : (numerotation?.nom ?? decoupe?.libelle ?? tableTitre(table, scenarios));
-  const histoire = saga ?? (scenario ? ONE_SHOT : 'Sans scénario');
+  const situe = scenario ? situerScenario(scenario, scenarios) : null;
+  const titre = table.titre?.trim() ? table.titre : (situe?.nom ?? tableTitre(table, scenarios));
+  const histoire = situe?.histoire ?? 'Sans scénario';
 
   const jouees = new Set(table.scenes_jouees);
   const scenes = table.scenes.map((scene, i): AccueilSceneRepere => {
@@ -284,16 +296,16 @@ export function tableOuverte(table: BolAccueilTable, scenarios: readonly BolAccu
 
   return {
     id: table.id,
-    saga,
+    saga: situe?.saga ?? null,
     histoire,
-    chapitre: numerotation?.numero ? `Chapitre ${numerotation.numero} sur ${total}` : chapitreCourt,
+    chapitre: situe?.chapitre ?? null,
     scene: enCours ? `Scène ${indexEnCours + 1} sur ${scenes.length}` : null,
     titre,
     sceneEnCours: enCours?.titre ?? null,
     enCombat: table.statut === 'combat',
     scenes,
     scenesJouees: scenes.length ? `${nbJouees} ${nbJouees > 1 ? 'scènes jouées' : 'scène jouée'} sur ${scenes.length}` : null,
-    filAriane: [histoire, chapitreCourt ?? titre, enCours ? `Scène ${indexEnCours + 1} · ${enCours.titre}` : null]
+    filAriane: [histoire, situe?.chapitreCourt ?? titre, enCours ? `Scène ${indexEnCours + 1} · ${enCours.titre}` : null]
       .filter((partie): partie is string => partie !== null)
       .join(' › '),
   };

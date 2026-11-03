@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilScenario, BolAccueilTable} from '../../models/bol-accueil.model';
-import {accueilSagas, sagaResumes, tableOuverte, tableTitre, teinteDeSaga} from './accueil.util';
+import {accueilSagas, sagaResumes, situerScenario, tableOuverte, tableTitre, teinteDeSaga} from './accueil.util';
 
 const S: BolAccueilScenario[] = [
   {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
@@ -149,8 +149,7 @@ describe('sagaResumes', () => {
       id: 'p10',
       libelle: '10. Épilogue',
       action: 'Continuer',
-      route: ['/session/new'],
-      queryParams: {scenario: 'p10'},
+      route: null,
       ariaLabel: 'Continuer 10. Épilogue, Perle du Beshaar, sur une nouvelle table',
     });
   });
@@ -177,7 +176,6 @@ describe('sagaResumes', () => {
       libelle: '1. Sacrilège à Satarla',
       action: 'Reprendre',
       route: ['/session', 't1', 'play'],
-      queryParams: null,
       ariaLabel: 'Reprendre 1. Sacrilège à Satarla, Perle du Beshaar, sur la table ouverte',
     });
     // Le compteur reste dit en toutes lettres : les pastilles seules ne s'expliquent pas.
@@ -217,6 +215,26 @@ describe('sagaResumes', () => {
     ]);
     expect(resume('Le Dieu voilé').reperes.map((r) => r.marque)).toEqual(['Intro', '1']);
     expect(resume('Chroniques lémuriennes').reperes.map((r) => r.marque)).toEqual(['L', 'M']);
+  });
+});
+
+describe('situerScenario', () => {
+  const situer = (id: string) => situerScenario(S.find((s) => s.id === id)!, S);
+
+  it('place un chapitre dans sa saga, d’après son numéro', () => {
+    expect(situer('p2')).toEqual({
+      saga: 'Perle du Beshaar',
+      histoire: 'Perle du Beshaar',
+      chapitre: 'Chapitre 2 sur 3',
+      chapitreCourt: 'Chapitre 2',
+      nom: "De sable et d'eau",
+    });
+  });
+
+  it('nomme l’introduction, garde le libellé d’un chapitre sans numéro, et dit « One shot » hors saga', () => {
+    expect(situer('dvi')).toMatchObject({chapitre: 'Introduction', nom: 'La colère de Nemmereth'});
+    expect(situer('clm')).toMatchObject({chapitre: null, nom: 'Mariage amer'});
+    expect(situer('ps')).toEqual({saga: null, histoire: 'One shot', chapitre: null, chapitreCourt: null, nom: 'premier scénario'});
   });
 });
 

@@ -1,4 +1,5 @@
-import {Routes} from '@angular/router';
+import {inject} from '@angular/core';
+import {Router, Routes} from '@angular/router';
 import {authGuard} from './core/auth/auth.guard';
 import {pendingChangesGuard} from './core/pending-changes.guard';
 import {publicOnlyGuard} from './core/auth/public-only.guard';
@@ -86,10 +87,13 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
+    // « Ouvrir une table » est un dialogue de l'accueil : cette adresse (menu du compte, palette de la table, retour de « Créer un héros »)
+    // y mène, avec son chapitre, et l'accueil l'ouvre.
     path: 'session/new',
-    loadComponent: () =>
-      import('./bol/session/new/session-new-page').then((module) => module.SessionNewPageComponent),
-    canActivate: [authGuard],
+    redirectTo: ({queryParams}) => {
+      const scenario: unknown = queryParams['scenario'];
+      return inject(Router).createUrlTree(['/'], {queryParams: {table: 'nouvelle', scenario: typeof scenario === 'string' ? scenario : null}});
+    },
   },
   {
     path: 'session/:id/play',

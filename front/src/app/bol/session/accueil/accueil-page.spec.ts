@@ -2,12 +2,15 @@ import {provideHttpClient} from '@angular/common/http';
 import {ApplicationRef, ChangeDetectionStrategy, Component} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
-import {provideRouter} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {provideRouter, Router} from '@angular/router';
+import {RouterTestingHarness} from '@angular/router/testing';
 import {NEVER, Observable, of, throwError} from 'rxjs';
 import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
+import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
 import {AccueilPageComponent} from './accueil-page';
 
 /** Le menu du compte tire l'authentification Google : il a ses propres tests. */
@@ -46,6 +49,9 @@ const DATA: BolAccueilModel = {
 
 describe('AccueilPageComponent', () => {
   const clore = vi.fn(() => of(true));
+  const open = vi.fn();
+
+  beforeEach(() => open.mockClear());
 
   /** `suivante` : la réponse des lectures d'après la première. */
   async function rendre(reponse: Observable<BolAccueilModel> = of(DATA), suivante = reponse): Promise<HTMLElement> {
@@ -57,6 +63,7 @@ describe('AccueilPageComponent', () => {
         provideHttpClient(),
         {provide: BolAccueilService, useValue: {accueil}},
         {provide: CloseTableService, useValue: {clore}},
+        {provide: MatDialog, useValue: {open}},
       ],
     });
     TestBed.overrideComponent(AccueilPageComponent, {remove: {imports: [AccountMenuComponent]}, add: {imports: [AccountMenuStubComponent]}});
@@ -92,10 +99,10 @@ describe('AccueilPageComponent', () => {
     );
     const teinteDeLaCarte = [...page.querySelectorAll('.acc-saga')]
       .find((carte) => carte.textContent?.includes('Perle du Beshaar'))!
-      .className.match(/acc-teinte--(\d)/)![1];
+      .className.match(/dw-saga--(\d)/)![1];
 
     expect(teinteDeLaCarte).not.toBe('0');
-    expect(page.querySelector('.acc-fil-histoire')?.classList).toContain(`acc-teinte--${teinteDeLaCarte}`);
+    expect(page.querySelector('.acc-fil-histoire')?.classList).toContain(`dw-saga--${teinteDeLaCarte}`);
   });
 
   it('clôt la table ouverte depuis le bandeau, puis relit l’accueil', async () => {
@@ -130,9 +137,12 @@ describe('AccueilPageComponent', () => {
     const reprise = sagas[0].querySelector<HTMLAnchorElement>('.acc-saga-suite')!;
     expect(reprise.getAttribute('href')).toBe('/session/t1/play');
     expect(reprise.getAttribute('aria-label')).toBe('Reprendre 1. Sacrilège à Satarla, Perle du Beshaar, sur la table ouverte');
-    const suite = sagas[1].querySelector<HTMLAnchorElement>('.acc-saga-suite')!;
-    expect(suite.getAttribute('href')).toBe('/session/new?scenario=dv1');
+    const suite = sagas[1].querySelector<HTMLButtonElement>('button.acc-saga-suite')!;
     expect(suite.querySelector('.acc-saga-suite-label')?.textContent).toBe('Commencer');
+
+    suite.click();
+
+    expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: {scenarioId: 'dv1', accueil: DATA}}));
   });
 
   it('compte les fiches de chaque bibliothèque et ne propose de créer que des fiches', async () => {
@@ -151,9 +161,32 @@ describe('AccueilPageComponent', () => {
     const page = await rendre(of({...DATA, table: null}));
 
     expect(page.querySelector('.acc-soir-titre')?.textContent).toContain('Aucune table ouverte');
-    expect(page.querySelector<HTMLAnchorElement>('.acc-soir a[href="/session/new"]')).not.toBeNull();
     expect(page.querySelector('.acc-soir nav')).toBeNull();
     expect(page.querySelector('.acc-compagnie-titre')?.textContent).toBe('La dernière compagnie');
+
+    [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Ouvrir une table'))!.click();
+
+    expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: expect.objectContaining({scenarioId: null})}));
+  });
+
+  it('ouvre le dialogue quand on y arrive par /session/new (?table=nouvelle), puis rend son adresse à l’accueil', async () => {
+    TestBed.configureTestingModule({
+      imports: [MatIconTestingModule],
+      providers: [
+        provideRouter([{path: '', component: AccueilPageComponent}]),
+        provideHttpClient(),
+        {provide: BolAccueilService, useValue: {accueil: () => of(DATA)}},
+        {provide: CloseTableService, useValue: {clore}},
+        {provide: MatDialog, useValue: {open}},
+      ],
+    });
+    TestBed.overrideComponent(AccueilPageComponent, {remove: {imports: [AccountMenuComponent]}, add: {imports: [AccountMenuStubComponent]}});
+
+    await RouterTestingHarness.create('/?table=nouvelle&scenario=p2');
+
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: expect.objectContaining({scenarioId: 'p2'})}));
+    expect(TestBed.inject(Router).url).toBe('/');
   });
 
   it('sans compagnie, n’en montre pas', async () => {
@@ -173,7 +206,7 @@ describe('AccueilPageComponent', () => {
     const bandeau = page.querySelector('.acc-soir')!;
 
     expect(bandeau.textContent).not.toContain('Aucune table ouverte');
-    expect(bandeau.querySelector('a[href="/session/new"]')).toBeNull();
+    expect([...bandeau.querySelectorAll('button')].some((b) => b.textContent?.includes('Ouvrir une table'))).toBe(false);
     expect(bandeau.getAttribute('aria-busy')).toBe('true');
     expect(bandeau.querySelector('[role="status"]')?.textContent).toContain('Chargement');
   });

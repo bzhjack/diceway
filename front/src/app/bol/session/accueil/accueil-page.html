@@ -6,9 +6,9 @@
         <mat-icon>play_arrow</mat-icon> Reprendre
       </a>
     }
-    <a mat-stroked-button routerLink="/session/new">
+    <button mat-stroked-button type="button" (click)="ouvrirTable()">
       <mat-icon>add</mat-icon> Nouvelle table
-    </a>
+    </button>
     <bol-account-menu />
   </dw-compact-bar>
 
@@ -19,9 +19,9 @@
         <h1 class="acc-titre">Que joue-t-on ce soir ?</h1>
       </div>
       <div class="acc-entete-actions">
-        <a mat-stroked-button routerLink="/session/new">
+        <button mat-stroked-button type="button" (click)="ouvrirTable()">
           <mat-icon>add</mat-icon> Nouvelle table
-        </a>
+        </button>
         <bol-account-menu />
       </div>
     </header>
@@ -35,7 +35,7 @@
         @if (table(); as table) {
           <nav aria-label="Où en est l'histoire">
             <ol class="acc-fil">
-              <li class="acc-fil-histoire" [class]="'acc-teinte--' + tableTeinte()">
+              <li class="acc-fil-histoire" [class]="'dw-saga--' + tableTeinte()">
                 <span class="acc-fil-feu" aria-hidden="true"></span>
                 Table ouverte · {{ table.histoire }}
               </li>
@@ -92,9 +92,9 @@
           <p class="acc-soir-texte">Ouvre une table sur un chapitre ci-dessous, ou pour improviser.</p>
           <ng-container [ngTemplateOutlet]="compagnieTpl" [ngTemplateOutletContext]="{$implicit: 'La dernière compagnie'}" />
           <div>
-            <a mat-flat-button routerLink="/session/new">
+            <button mat-flat-button type="button" (click)="ouvrirTable()">
               <mat-icon>add</mat-icon> Ouvrir une table
-            </a>
+            </button>
           </div>
         }
       </div>
@@ -125,6 +125,14 @@
       }
     </ng-template>
 
+    <ng-template #suiteTpl let-suite>
+      <span class="acc-saga-suite-texte">
+        <span class="acc-saga-suite-label">{{ suite.action }}</span>
+        <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
+      </span>
+      <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+    </ng-template>
+
     <!-- En cas d'erreur, le bandeau le dit (avec « Mes tables ») : pas de section Sagas vide. Les sagas défilent de côté, en carrousel. -->
     @if (!error()) {
       <section aria-labelledby="acc-sagas-titre">
@@ -152,7 +160,7 @@
         } @else {
           <ul #rail id="acc-rail" class="acc-sagas" (scroll)="mesurerRail()">
             @for (saga of sagas(); track saga.nom) {
-              <li class="acc-saga" [class]="'acc-teinte--' + saga.teinte">
+              <li class="acc-saga" [class]="'dw-saga--' + saga.teinte">
                 <div class="acc-saga-tete">
                   <h3 class="acc-saga-nom">{{ saga.nom ?? oneShot }}</h3>
                   <ol class="acc-reperes" [attr.aria-label]="saga.nom ? 'Les chapitres de ' + saga.nom : 'Les one shots'">
@@ -165,13 +173,16 @@
                   <p class="acc-saga-resume">{{ saga.resume }}</p>
                 </div>
                 @if (saga.suite; as suite) {
-                  <a class="acc-saga-suite" [routerLink]="suite.route" [queryParams]="suite.queryParams" [attr.aria-label]="suite.ariaLabel">
-                    <span class="acc-saga-suite-texte">
-                      <span class="acc-saga-suite-label">{{ suite.action }}</span>
-                      <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
-                    </span>
-                    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
-                  </a>
+                  <!-- La table ouverte se reprend par un lien ; un autre chapitre ouvre le dialogue « Ouvrir une table ». -->
+                  @if (suite.route; as route) {
+                    <a class="acc-saga-suite" [routerLink]="route" [attr.aria-label]="suite.ariaLabel">
+                      <ng-container [ngTemplateOutlet]="suiteTpl" [ngTemplateOutletContext]="{$implicit: suite}" />
+                    </a>
+                  } @else {
+                    <button type="button" class="acc-saga-suite" [attr.aria-label]="suite.ariaLabel" (click)="ouvrirTable(suite.id)">
+                      <ng-container [ngTemplateOutlet]="suiteTpl" [ngTemplateOutletContext]="{$implicit: suite}" />
+                    </button>
+                  }
                 }
               </li>
             } @empty {
