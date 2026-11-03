@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import type DiceBox from '@3d-dice/dice-box';
 import type { DiceBoxRollResult } from '@3d-dice/dice-box';
+import {rendreLeFocus} from './focus.util';
 
 let nextDiceHostId = 0;
 
@@ -59,13 +60,19 @@ export class DiceBoxHostComponent {
   }
 
   async rollNotation(notation: string): Promise<DiceBoxRollResult[]> {
-    await this.ensureReady();
+    // Le bouton qui lance est désactivé pendant le lancer : on lui rendra le focus ensuite.
+    const focusAvant = document.activeElement;
+    try {
+      await this.ensureReady();
 
-    if (!this.box) {
-      throw new Error('Dice box is not available');
+      if (!this.box) {
+        throw new Error('Dice box is not available');
+      }
+
+      return await this.box.roll(notation);
+    } finally {
+      rendreLeFocus(focusAvant);
     }
-
-    return this.box.roll(notation);
   }
 
   private async ensureReady(): Promise<void> {

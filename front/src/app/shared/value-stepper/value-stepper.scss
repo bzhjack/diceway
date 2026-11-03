@@ -8,10 +8,12 @@
   &__btn {
     width: 1.2rem;
     height: 1.2rem;
-    border: 1px solid var(--dw-border);
+    // Habillage réglable par le parent (`--vs-btn-*`), sans percer l'encapsulation : la table y met ses clous de bronze.
+    border: 1px solid var(--vs-btn-border, var(--dw-border));
     border-radius: 50%;
-    background: transparent;
-    color: var(--dw-surface-500);
+    background: var(--vs-btn-bg, transparent);
+    box-shadow: var(--vs-btn-shadow, none);
+    color: var(--vs-btn-color, var(--dw-surface-500));
     font-size: 0.8rem;
     font-weight: 700;
     line-height: 1;

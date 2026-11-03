@@ -31,11 +31,11 @@ import {TapisKind} from '../../models/tapis.model';
     }
 
     // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement.
-    dw-value-stepper ::ng-deep .vs__btn {
-      border-color: var(--dw-forge-bronze-dim);
-      background: var(--dw-forge-stud);
-      box-shadow: var(--dw-forge-stud-shadow);
-      color: var(--dw-forge-bronze-text);
+    dw-value-stepper {
+      --vs-btn-border: var(--dw-forge-bronze-dim);
+      --vs-btn-bg: var(--dw-forge-stud);
+      --vs-btn-shadow: var(--dw-forge-stud-shadow);
+      --vs-btn-color: var(--dw-forge-bronze-text);
     }
 
     .ivt-label {
