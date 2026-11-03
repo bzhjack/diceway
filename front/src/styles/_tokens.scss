@@ -141,4 +141,84 @@
   --radius-lg:      28px;
   --radius-md:      16px;
   --radius-sm:      12px;
+
+  // ── Couleurs sorties des feuilles : thème, styles globaux et primitives partagées (`src/styles/`, `src/app/shared/`) ──
+  // Le fond et le texte de base du document, sous le thème (`_reset.scss`, `_diceway.scss`).
+  --dw-base-bg:   #000;
+  --dw-base-text: #fff;
+  // Thème barbare (`_barbare.scss`) : ce que Material pose sur le bronze, et ses filets.
+  --bar-on-primary:        #1a1203; // texte sur l'or d'un bouton plein
+  --bar-primary-container: #4a2f0f; // fond d'un élément sélectionné (onglet, puce)
+  --bar-outline:           #6b4a16; // filet de bronze : bouton en contour, dialogue, message
+  // Les métaux des cartes : clair, moyen, sombre, par type de combattant et par attribut.
+  --bar-bronze: #8c6a2f;
+  --bar-ember: #e8873a;
+  --bar-pj-1: #e0c48a;
+  --bar-pj-2: #a8762a;
+  --bar-pj-3: #4a2f0f;
+  --bar-pnj-1: #d8dde3;
+  --bar-pnj-2: #8b949e;
+  --bar-pnj-3: #3a4047;
+  --bar-creature-1: #e8a57a;
+  --bar-creature-2: #a04a1c;
+  --bar-creature-3: #3d1608;
+  --bar-demon-1: #e08a8a;
+  --bar-demon-2: #8f1d1d;
+  --bar-demon-3: #2e0707;
+  --bar-d-1: #e0c48a;
+  --bar-d-2: #a8762a;
+  --bar-d-3: #4a2f0f;
+  --bar-f-1: #cfd5db;
+  --bar-f-2: #6b737c;
+  --bar-f-3: #2c3238;
+  --bar-v-1: #e06a5a;
+  --bar-v-2: #9b1c1c;
+  --bar-v-3: #3d0808;
+  // Le fond de l'app : du cuir, une lueur au centre.
+  --bar-leather-glow:   #4a3523;
+  --bar-leather-top:    #241a12;
+  --bar-leather-bottom: #130d08;
+  // Le cadre de fer de l'écran, ses rivets, son ombre…
+  --bar-rivet-light:  #c9b79a;
+  --bar-rivet-mid:    #6b6258;
+  --bar-iron-dark:    #1d1a17; // le fond d'un rivet et le bas du cadre
+  --bar-frame-light:  #6a655d;
+  --bar-frame-mid:    #3b3733;
+  --bar-frame-shadow: #14110f;
+  --bar-mask:         #000; // un masque opaque : seul son alpha compte
+  // … et le même en fer martelé, sur les pages de la forge.
+  --bar-forge-rivet-light:  #e6c58c;
+  --bar-forge-rivet-dark:   #2b1c0c;
+  --bar-forge-frame-shadow: #0c0806;
+  // La forge : le fond des dialogues et des listes déroulantes (`_forge-page.scss`).
+  --dw-forge-overlay-surface: #171009;
+  // Un dé rouge (`dw-die-face`, `dw-dice-row`) : sa face en dégradé, son chant, ses points.
+  --dw-die-red-light: #cc3b30;
+  --dw-die-red-dark:  #8a1812;
+  --dw-die-red-edge:  #560d09;
+  --dw-die-pip:       #fff3e0;
+  // Le fond d'un en-tête de bibliothèque, sous son illustration (`dw-library-header`).
+  --dw-library-header-bg: #12100a;
+
+  // ── Couleurs sorties des feuilles : la table de jeu (`bol/session/`) ──
+  --dw-table-dark:         #1a120b; // le haut de la colonne de l'assistant de tour ; le sombre où se fond le bord d'un acteur
+  --dw-table-panel:        #17110c; // sous le fer d'un panneau : les coulisses, la lecture d'une scène
+  --dw-table-actor:        #1c1510; // le fond d'un acteur du théâtre
+  --dw-table-portrait-top: #120c07; // le haut du portrait d'un héros de la compagnie
+  --dw-table-gauge-track:  #000; // le fond d'une barre de vie (compagnie, acteur, carte de combat)
+  --dw-table-wound:        #7f1d1d; // le rouge sombre : hachures d'une blessure à venir, pointe de la gemme d'un adversaire
+  --dw-table-gem-gold-tip: #8a5a12; // la pointe de la gemme d'un allié
+  --dw-table-stud-top:     #3a2913; // le bronze bombé d'un détail de héros (carrières, traits…), en haut…
+  --dw-table-stud-bottom:  #1a1007; // … et en bas
+  --dw-table-stud-value:   #f0c869; // sa valeur
+  --dw-table-foe-ring:     #b4534b; // l'anneau d'un adversaire dans la frise
+
+  // ── Couleurs sorties des feuilles : fiches, cartes et formulaires (le reste de `bol/`) ──
+  --dw-card-tag-amber:        #fbbf24; // étiquette ambre sous le portrait d'une carte (créature)
+  --dw-card-tag-rose:         #fb7185; // étiquette rose sous le portrait d'une carte (démon)
+  --dw-card-tag-slate:        #9c8763; // étiquette neutre sous le portrait d'une carte (pas `--dw-surface-500`, que la forge redéfinit)
+  --dw-gauge-pv:              #e5413a; // icône de la vitalité, sur une carte
+  --dw-intendance-header-bg:  #12100a; // fond de l'en-tête de l'intendance, sous son image
+  --dw-region-pin-active:     #ec2222; // l'épingle de la région choisie, sur la carte du monde
+  --dw-trait-career:          #fcd34d; // badge d'un trait lié à une carrière
 }

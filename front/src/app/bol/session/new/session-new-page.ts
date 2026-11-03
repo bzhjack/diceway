@@ -11,7 +11,7 @@ import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
-import {findScenario} from '../accueil/accueil.util';
+import {findScenario} from '../scenario.util';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 

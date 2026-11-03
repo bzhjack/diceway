@@ -11,6 +11,15 @@ class BolHerosRequest extends FormRequest
     /** bol_desavantage.id de « Non-combattant » : 6 points de carrières au lieu de 4, 2 points de combat au lieu de 4 (p. 45). */
     private const NON_COMBATTANT = 33;
 
+    /** bol_desavantage.id de « Illettré » : pas de carrière exigeant d'être lettré (p. 44). */
+    private const ILLETTRE = 17;
+
+    /**
+     * Les carrières que le livre dit lettrées, et elles seules (p. 47, « Déchiffrer un texte ») : Alchimiste, Médecin, Prêtre, Scribe.
+     * Même liste que `CARRIERES_LETTREES` du front (`bol-rules.constants.ts`) ; le Sorcier n'en est pas.
+     */
+    private const CARRIERES_LETTREES = [1 => 'Alchimiste', 14 => 'Médecin', 21 => 'Prêtre', 22 => 'Scribe'];
+
     // Brouillon : les budgets de création (p. 13-16). Seul le brouillon les subit.
     private const BUDGET_ATTRIBUTS = 4;
     private const BUDGET_COMBAT = 4;
@@ -60,14 +69,17 @@ class BolHerosRequest extends FormRequest
 
     public function withValidator(Validator $validator): void
     {
-        if (!$this->isDraft()) {
-            return;
-        }
-
         $validator->after(function (Validator $v) {
-            $this->validateAttributs($v);
-            $this->validateCarrieres($v);
-            $this->validateCombat($v);
+            if ($this->isDraft()) {
+                $this->validateAttributs($v);
+                $this->validateCarrieres($v);
+                $this->validateCombat($v);
+
+                return;
+            }
+
+            // Comme le front : un brouillon peut encore porter l'incohérence (simple avertissement), l'activation la refuse.
+            $this->validateIllettre($v);
         });
     }
 
@@ -97,6 +109,43 @@ class BolHerosRequest extends FormRequest
         }
 
         return false;
+    }
+
+    /** Illettré, qu'il soit général, régional ou de carrière : tous portent le même id du catalogue. */
+    private function isIllettre(): bool
+    {
+        $traits = $this->input('traits');
+        if (!is_array($traits)) {
+            return false;
+        }
+
+        foreach ($traits as $trait) {
+            if (
+                is_array($trait)
+                && ($trait['type'] ?? null) === 'D'
+                && (int) ($trait['traitable_id'] ?? $trait['id'] ?? 0) === self::ILLETTRE
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function validateIllettre(Validator $v): void
+    {
+        $carrieres = $this->input('carrieres');
+        if (!is_array($carrieres) || !$this->isIllettre()) {
+            return;
+        }
+
+        foreach ($carrieres as $carriere) {
+            // Même lecture de l'id que l'enregistrement (`BolHerosService::syncRelations`).
+            $id = is_array($carriere) ? (int) ($carriere['carriere_id'] ?? $carriere['id'] ?? 0) : (int) $carriere;
+            if (isset(self::CARRIERES_LETTREES[$id])) {
+                $v->errors()->add('carrieres', 'Illettré : la carrière ' . self::CARRIERES_LETTREES[$id] . ' exige de savoir lire et écrire.');
+            }
+        }
     }
 
     /** Les valeurs envoyées d'un groupe (`attributs`, `combat`), entières ; vide si le groupe est absent. */

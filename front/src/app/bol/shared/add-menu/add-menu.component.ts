@@ -1,4 +1,18 @@
-import {ChangeDetectionStrategy, Component, Signal, computed, input, output, signal} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  Signal,
+  ViewEncapsulation,
+  afterNextRender,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
+import {A11yModule, CdkTrapFocus} from '@angular/cdk/a11y';
 import {form, FormField} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -31,6 +45,7 @@ export function addMenuOptions<T extends {id?: number | string | null}>(
 @Component({
   selector: 'bol-add-menu',
   imports: [
+    A11yModule,
     FormField,
     MatButtonModule,
     MatFormFieldModule,
@@ -43,6 +58,8 @@ export function addMenuOptions<T extends {id?: number | string | null}>(
   templateUrl: './add-menu.component.html',
   styleUrl: './add-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // Le menu s'ouvre dans un overlay : ses styles doivent l'atteindre (voir la feuille).
+  encapsulation: ViewEncapsulation.None,
 })
 export class AddMenuComponent {
   readonly options = input.required<readonly AddMenuOption[]>();
@@ -62,6 +79,39 @@ export class AddMenuComponent {
   protected readonly selectedField = form(this.selectedId);
   protected readonly detail = signal('');
   protected readonly detailField = form(this.detail);
+
+  private readonly injector = inject(Injector);
+  private readonly contentTrap = viewChild.required(CdkTrapFocus);
+
+  /** Le dernier clic sur « + » venait du clavier (Entrée, Espace : un clic sans compte de clics). */
+  private openedByKeyboard = false;
+
+  protected noteOpening(event: MouseEvent): void {
+    this.openedByKeyboard = event.detail === 0;
+  }
+
+  /**
+   * Ouvert au clavier, le menu n'a pas d'élément de menu où poser le focus : `mat-menu` le laisse sur le bouton « + ». Il entre
+   * dans le premier champ. À la souris, rien ne change.
+   */
+  protected onMenuOpened(): void {
+    this.reset();
+    afterNextRender(
+      () => {
+        if (this.openedByKeyboard) {
+          this.contentTrap().focusTrap.focusFirstTabbableElement();
+        }
+      },
+      {injector: this.injector},
+    );
+  }
+
+  /** Tab passe d'un champ à l'autre du menu au lieu de le fermer (`mat-menu` se ferme sur Tab). */
+  protected keepOpenOnTab(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      event.stopPropagation();
+    }
+  }
 
   protected reset(): void {
     this.selectedId.set(null);

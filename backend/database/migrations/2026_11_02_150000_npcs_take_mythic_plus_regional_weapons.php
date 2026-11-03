@@ -5,7 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 
 /** Les PNJ du livre passent aux armes régionales de Mythic+ : l'arc long de Tyrus, le khastok et le kriss du livre de base sont devenus des
  * armes à part (`2026_10_19_100000_add_mythic_plus_reference_data`). L'assassin halakhi garde sa dague pour ses couteaux de lancer. Seuls
- * les PNJ du catalogue (`user_id` nul) changent ; le seeder porte les mêmes armes. Armes et PNJ sont retrouvés par leur nom. */
+ * les PNJ du catalogue (`user_id` nul) changent ; le seeder porte les mêmes armes. Armes et PNJ sont retrouvés par leur nom, dans le catalogue
+ * seulement. */
 return new class extends Migration
 {
     /** PNJ => [arme remplacée (null : on ajoute), arme régionale]. */
@@ -29,12 +30,20 @@ return new class extends Migration
         }
     }
 
+    /** L'arme du catalogue (`user_id` nul) de ce nom : une arme homonyme créée par un compte n'est jamais prise. */
+    private function armeDuCatalogue(string $nom): ?int
+    {
+        $id = DB::table('bol_arme')->whereNull('user_id')->where('arme', $nom)->value('id');
+
+        return $id === null ? null : (int) $id;
+    }
+
     /** Remplace l'arme `$de` du PNJ par `$vers` ; sans `$de`, ajoute `$vers` ; sans `$vers`, retire `$de`. */
     private function basculer(string $pnj, ?string $de, ?string $vers): void
     {
         $herosId = DB::table('bol_heros')->whereNull('user_id')->where('type', '!=', 'H')->where('nom', $pnj)->value('id');
-        $deId = $de === null ? null : DB::table('bol_arme')->where('arme', $de)->value('id');
-        $versId = $vers === null ? null : DB::table('bol_arme')->where('arme', $vers)->value('id');
+        $deId = $de === null ? null : $this->armeDuCatalogue($de);
+        $versId = $vers === null ? null : $this->armeDuCatalogue($vers);
         if ($herosId === null || ($de !== null && $deId === null) || ($vers !== null && $versId === null)) {
             return;
         }

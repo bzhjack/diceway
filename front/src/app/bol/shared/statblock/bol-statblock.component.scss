@@ -3,9 +3,9 @@
 // Couleur du métal (anneau du médaillon, pastilles), selon le type du personnage. La fiche elle-même est de la forge : de la suie,
 // et la lueur de la braise qui descend du bandeau.
 :host {
-  --bs-metal-1: var(--bar-pnj-1, #d8dde3);
-  --bs-metal-2: var(--bar-pnj-2, #8b949e);
-  --bs-metal-3: var(--bar-pnj-3, #3a4047);
+  --bs-metal-1: var(--bar-pnj-1);
+  --bs-metal-2: var(--bar-pnj-2);
+  --bs-metal-3: var(--bar-pnj-3);
   --bs-kind: var(--dw-color-pnj);
   display: block;
   width: min(64rem, 94vw);
@@ -20,23 +20,23 @@
 }
 
 :host(.bs--hero) {
-  --bs-metal-1: var(--bar-pj-1, #e0c48a);
-  --bs-metal-2: var(--bar-pj-2, #a8762a);
-  --bs-metal-3: var(--bar-pj-3, #4a2f0f);
+  --bs-metal-1: var(--bar-pj-1);
+  --bs-metal-2: var(--bar-pj-2);
+  --bs-metal-3: var(--bar-pj-3);
   --bs-kind: var(--dw-color-reussite);
 }
 
 :host(.bs--creature) {
-  --bs-metal-1: var(--bar-creature-1, #e8a57a);
-  --bs-metal-2: var(--bar-creature-2, #a04a1c);
-  --bs-metal-3: var(--bar-creature-3, #3d1608);
+  --bs-metal-1: var(--bar-creature-1);
+  --bs-metal-2: var(--bar-creature-2);
+  --bs-metal-3: var(--bar-creature-3);
   --bs-kind: var(--dw-color-creature);
 }
 
 :host(.bs--demon) {
-  --bs-metal-1: var(--bar-demon-1, #e08a8a);
-  --bs-metal-2: var(--bar-demon-2, #8f1d1d);
-  --bs-metal-3: var(--bar-demon-3, #2e0707);
+  --bs-metal-1: var(--bar-demon-1);
+  --bs-metal-2: var(--bar-demon-2);
+  --bs-metal-3: var(--bar-demon-3);
   --bs-kind: var(--dw-color-demon);
 }
 
@@ -130,7 +130,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--bs-kind);
-  text-shadow: 0 1px 2px #000, 0 0 18px rgba(232, 135, 58, 0.25);
+  text-shadow: 0 1px 2px var(--dw-forge-shade), 0 0 18px rgba(232, 135, 58, 0.25);
   // Une capitale à l'initiale de chaque mot : « bogomit » → « Bogomit ».
   text-transform: capitalize;
 }
@@ -190,15 +190,15 @@
   padding-bottom: 0.1rem;
   font: 400 1.2rem 'Muse Display Harmony', 'Muse Sans', serif;
   letter-spacing: 0;
-  color: #fff;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  color: var(--dw-forge-white);
+  text-shadow: -1px -1px 0 var(--dw-forge-shade), 1px -1px 0 var(--dw-forge-shade), -1px 1px 0 var(--dw-forge-shade), 1px 1px 0 var(--dw-forge-shade);
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
+    background: linear-gradient(160deg, var(--bar-v-1), var(--bar-v-2) 55%, var(--bar-v-3));
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 28S2 18.5 2 9.5C2 5 5.5 2 9.5 2c3 0 5.5 1.8 6.5 4.5C17 3.8 19.5 2 22.5 2 26.5 2 30 5 30 9.5 30 18.5 16 28 16 28z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
   }
 }
@@ -269,7 +269,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--dw-forge-gold);
-  text-shadow: 0 1px 2px #000;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
 .bs-tiles {

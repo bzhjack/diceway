@@ -5,7 +5,7 @@ import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model
 import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
-import {SceneActionsService} from '../../scene-actions.service';
+import {SceneActionsService} from '../scene-list/scene-actions.service';
 import {SceneStageStore} from './scene-stage.store';
 
 function scene(id: string, scenarioId: string | null, ordre: number): BolSceneModel {

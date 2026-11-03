@@ -1,13 +1,15 @@
-:host {
+// Sans encapsulation : le menu et la liste du select vivent dans des overlays, hors du composant. Chaque règle est donc
+// rattachée à son overlay (`.tam-panel`, `.mat-mdc-option`), avec la même spécificité qu'avant.
+bol-trait-add-menu {
   display: contents;
 }
 
-::ng-deep .tam-panel.mat-mdc-menu-panel {
+.tam-panel.mat-mdc-menu-panel {
   width: 300px;
   max-width: 300px;
 }
 
-.tam-content {
+.tam-panel .tam-content {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -15,13 +17,16 @@
   padding: 0.75rem;
 }
 
-.tam-option {
+// L'option, dans la liste du select et dans son déclencheur fermé (qui est dans le menu).
+.mat-mdc-option .tam-option,
+.tam-panel .tam-option {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
 }
 
-.tam-icon-region {
+.mat-mdc-option .tam-icon-region,
+.tam-panel .tam-icon-region {
   flex-shrink: 0;
   height: 0.85rem;
   width: 0.85rem;

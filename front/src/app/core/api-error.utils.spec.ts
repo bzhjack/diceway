@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {extractApiErrorMessage, extractApiErrors} from './api-error.utils';
+import {extractApiErrorMessage, extractApiErrors, extractApiErrorText} from './api-error.utils';
 
 describe('extractApiErrors', () => {
   it('returns the fallback when the error has no payload', () => {
@@ -38,5 +38,16 @@ describe('extractApiErrorMessage', () => {
   it('returns the fallback for unknown errors', () => {
     expect(extractApiErrorMessage(42, 'fallback')).toBe('fallback');
     expect(extractApiErrorMessage({error: {}}, 'fallback')).toBe('fallback');
+  });
+});
+
+describe('extractApiErrorText', () => {
+  it('joins every validation message, so that no reason is hidden', () => {
+    const error = {error: {errors: {attributs: ['La somme des attributs ne peut pas dépasser 4.'], combat: ['Une seule aptitude de combat peut être négative.']}}};
+    expect(extractApiErrorText(error, 'fallback')).toBe('La somme des attributs ne peut pas dépasser 4. Une seule aptitude de combat peut être négative.');
+  });
+
+  it('returns the fallback for unknown errors', () => {
+    expect(extractApiErrorText(42, 'fallback')).toBe('fallback');
   });
 });

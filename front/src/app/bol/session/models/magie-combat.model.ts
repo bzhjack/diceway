@@ -73,8 +73,11 @@ export interface RessourceChange {
 }
 
 /** Ce que la trace « sort payé » de l'état du combat dit d'une carte : les points de pouvoir payés pour son sort de ce round (0 sans trace),
- * et les identifiants des traces à retirer quand le sort est remboursé, perdu ou repayé. */
+ * les identifiants des traces à retirer quand le sort est remboursé, perdu ou repayé, les réglages du sort (`null` si la trace ne les dit
+ * pas) et le libellé de la dernière trace. */
 export interface SortPaye {
   readonly points: number;
   readonly ids: readonly string[];
+  readonly reglages: SortSaisie | null;
+  readonly libelle: string | null;
 }

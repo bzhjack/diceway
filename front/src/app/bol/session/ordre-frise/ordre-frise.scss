@@ -199,7 +199,7 @@ button.ofr-c {
   border-style: solid;
   border-color: var(--dw-color-legendary);
   background: var(--dw-color-legendary);
-  color: #1c1200;
+  color: var(--dw-forge-ink);
 }
 
 // L'anneau dit le résultat d'un héros, ou le camp des autres.
@@ -225,7 +225,7 @@ button.ofr-c {
 }
 
 .ofr-c--adversaire {
-  --ofr-ring: #b4534b;
+  --ofr-ring: var(--dw-table-foe-ring);
 }
 
 // Il ne joue pas au round 1 : anneau en pointillés et médaillon hachuré ; le trait de son groupe en pointillés.

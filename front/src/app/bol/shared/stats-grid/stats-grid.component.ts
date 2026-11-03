@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation, computed, input} from '@angular/core';
 import {Field, FieldTree, FormField} from '@angular/forms/signals';
 import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
 import {StatGroup} from '../models/stats-grid.model';
@@ -9,6 +9,9 @@ import {StatGroup} from '../models/stats-grid.model';
   templateUrl: './stats-grid.component.html',
   styleUrl: './stats-grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // La feuille règle aussi les compteurs enfants : elle est portée par `.hs-scope` plutôt qu'encapsulée.
+  encapsulation: ViewEncapsulation.None,
+  host: {class: 'hs-scope'},
 })
 export class StatsGridComponent {
   readonly form = input.required<FieldTree<Record<string, number>>>();

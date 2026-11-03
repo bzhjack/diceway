@@ -140,6 +140,12 @@ export class CombatTurnStore {
     return token?.tier === 'legendaire';
   });
 
+  /** Le round que cet écran vient de faire commencer, une fois la session à jour : c'est lui qui en joue le début (mourants, démons qui se
+   * régénèrent, héros à 0 : `CombatWoundsService`). Un nouveau round reçu dans une session (un second écran ouvert sur la même table)
+   * n'y passe pas : son début est déjà joué par l'écran qui l'a commencé. Un objet neuf à chaque fois, pour qu'un combat suivant qui
+   * atteint le même numéro de round soit annoncé aussi. */
+  readonly roundCommenceIci = signal<{readonly round: number} | null>(null);
+
   /** Enregistre l'état du combat en série (cf. `EtatSaver`) ; la réponse porte la session à jour : l'affichage suit la base. */
   private readonly etatSaver = new EtatSaver(
     () => this.etat(),
@@ -148,9 +154,17 @@ export class CombatTurnStore {
       if (!sessionId || this.table.mode() !== 'combat') {
         return EMPTY;
       }
+      const roundAvant = this.etat().round;
       return this.fightSessionService
         .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus], fuis: [...next.fuis], melee: next.melee})
-        .pipe(tap((session) => this.table.session.set(session)));
+        .pipe(
+          tap((session) => {
+            this.table.session.set(session);
+            if (next.round > roundAvant) {
+              this.roundCommenceIci.set({round: next.round});
+            }
+          }),
+        );
     },
     (error) => this.table.notifyError(error, "Impossible d'enregistrer l'état du combat."),
   );
@@ -263,9 +277,10 @@ export class CombatTurnStore {
     this.snackBar.open(`${card.nom} est retiré du combat : il ne joue plus et ne compte plus pour l'issue.`, undefined, {duration: 4500});
   }
 
-  /** La mêlée de piétaille de ce round est résolue : elle ne se rejoue qu'au round suivant. */
+  /** La mêlée de piétaille de ce round est résolue (ou commencée) : elle ne se rejoue qu'au round suivant. Déjà retenue, rien n'est
+   * enregistré de nouveau. */
   recordMelee(): void {
-    this.saveEtat((etat) => ({...etat, melee: etat.round}));
+    this.saveEtat((etat) => (etat.melee === etat.round ? etat : {...etat, melee: etat.round}));
   }
 
   /** « Retarder » : la carte active joue en dernier ce round. */

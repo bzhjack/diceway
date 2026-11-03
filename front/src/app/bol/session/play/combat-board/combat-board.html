@@ -3,7 +3,8 @@
   <app-dice-box-host [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
 </div>
 
-<div class="cb-main" (click)="assistant()?.dismissDice()">
+<!-- Un clic n'importe où, ou Échap, dégage les dés 3D restés posés. Ce conteneur n'est pas une commande : `role="presentation"`. -->
+<div class="cb-main" role="presentation" (click)="assistant()?.dismissDice()" (keydown.escape)="assistant()?.dismissDice()">
   <div class="cb-play">
     <section class="cb-assistant" aria-label="Assistant de tour">
       @if (activeCard(); as active) {

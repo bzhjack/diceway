@@ -23,8 +23,8 @@
   height: var(--dw-die-size);
   padding: 0 0.3rem;
   border-radius: 6px;
-  background: linear-gradient(145deg, #cc3b30, #8a1812);
-  box-shadow: 0 2px 0 #560d09;
-  color: #fff3e0;
+  background: linear-gradient(145deg, var(--dw-die-red-light), var(--dw-die-red-dark));
+  box-shadow: 0 2px 0 var(--dw-die-red-edge);
+  color: var(--dw-die-pip);
   font: 400 1.1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
 }

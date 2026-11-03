@@ -2,6 +2,7 @@
   <div class="pal-field">
     <mat-icon aria-hidden="true">search</mat-icon>
     <input
+      #palInput
       id="pal-input"
       class="pal-input"
       type="text"
@@ -16,7 +17,7 @@
       [attr.aria-expanded]="count() > 0"
       [attr.aria-activedescendant]="activeId()"
       [value]="query()"
-      (input)="setQuery($any($event.target).value)"
+      (input)="setQuery(palInput.value)"
       (keydown.arrowdown)="move(1, $event)"
       (keydown.arrowup)="move(-1, $event)"
       (keydown.enter)="runActive($event)"
@@ -31,10 +32,13 @@
           <div
             class="pal-option"
             role="option"
+            tabindex="-1"
             [id]="result.id"
             [class.pal-option--active]="result.id === activeId()"
             [attr.aria-selected]="result.id === activeId()"
             (click)="run(result)"
+            (keydown.enter)="run(result)"
+            (keydown.space)="run(result)"
             (mousemove)="activate(result)"
           >
             <span [class]="'pal-dot pal-dot--' + result.kind"></span>

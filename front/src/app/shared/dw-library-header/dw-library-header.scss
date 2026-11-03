@@ -4,7 +4,7 @@
 
 // Bannière illustrée optionnelle — même traitement que workspace-header.
 .dw-lh-card--image {
-  background-color: #12100a;
+  background-color: var(--dw-library-header-bg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;

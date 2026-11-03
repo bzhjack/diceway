@@ -29,13 +29,14 @@
     <mat-form-field subscriptSizing="dynamic" class="rsv-search">
       <mat-icon matPrefix>search</mat-icon>
       <input
+        #searchInput
         id="rsv-search-input"
         matInput
         type="search"
         placeholder="Rechercher"
         aria-label="Rechercher dans la réserve"
         [value]="query()"
-        (input)="setQuery($any($event.target).value)"
+        (input)="setQuery(searchInput.value)"
       />
     </mat-form-field>
 

@@ -37,12 +37,9 @@
 
 // Une rangée de cartes : elle prend la largeur de ses cartes et défile avec ses chevrons (`dw-scroller`) quand la place manque. Sans
 // débordement, les chevrons ne gardent pas leur place : les cartes restent au bord.
+// Sans rien à faire défiler, ses chevrons disparaissent (`_table-globale.scss`).
 .cmp-rang {
   flex: 0 1 auto;
-
-  ::ng-deep .dws-chevron--hidden {
-    display: none;
-  }
 }
 
 // Les héros restent tous visibles tant qu'il reste de quoi montrer un allié entre ses chevrons : ce sont les alliés qui cèdent la place.
@@ -97,7 +94,7 @@
   overflow: hidden;
   border: 0;
   border-radius: 6px 6px 0 0;
-  background: linear-gradient(#120c07, transparent);
+  background: linear-gradient(var(--dw-table-portrait-top), transparent);
   cursor: pointer;
 
   img {
@@ -106,7 +103,7 @@
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    mask-image: linear-gradient(#000 78%, transparent);
+    mask-image: linear-gradient(var(--bar-mask) 78%, transparent);
   }
 
   &:hover {
@@ -250,7 +247,7 @@
   height: 5px;
   overflow: hidden;
   border-radius: 3px;
-  background: #000;
+  background: var(--dw-table-gauge-track);
   box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
 
   i {

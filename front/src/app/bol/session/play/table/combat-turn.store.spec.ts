@@ -121,6 +121,54 @@ describe('CombatTurnStore : le début de tour ne passe que quand la main change'
   });
 });
 
+describe('CombatTurnStore : le début de round n’est joué que par l’écran qui l’a commencé', () => {
+  let store: CombatTurnStore;
+  let session: ReturnType<typeof signal<BolFightSessionModel | null>>;
+  const updateCombatState = vi.fn();
+
+  beforeEach(() => {
+    TestBed.resetTestingModule();
+    session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: {round: 2, joues: [], effets: [], exclus: [], fuis: [], melee: null}} as unknown as BolFightSessionModel);
+    updateCombatState.mockReset();
+    updateCombatState.mockImplementation((_id: string, etat: Partial<EtatCombat>) => of({...session(), etat_combat: {depart: {}, ...etat}}));
+    TestBed.configureTestingModule({
+      providers: [
+        CombatTurnStore,
+        {
+          provide: TableStore,
+          useValue: {session, cards: signal([card('hero', 1), card('pnj', 7)]), board: signal({tokens: []}), mode: signal('combat'), sessionId: signal('s1'), notifyError: vi.fn()},
+        },
+        {provide: BolFightSessionService, useValue: {updateCombatState}},
+        {provide: BolHerosService, useValue: {}},
+        {provide: MatSnackBar, useValue: {open: vi.fn()}},
+      ],
+    });
+    store = TestBed.inject(CombatTurnStore);
+    TestBed.tick();
+  });
+
+  it('annonce le round que son propre enregistrement fait commencer, une fois la session à jour', () => {
+    expect(store.roundCommenceIci()).toBeNull();
+    store.onEndTurn();
+    TestBed.tick();
+    expect(store.roundCommenceIci()).toBeNull();
+
+    store.onEndTurn();
+    TestBed.tick();
+
+    expect(store.etat().round).toBe(3);
+    expect(store.roundCommenceIci()).toEqual({round: 3});
+  });
+
+  it('n’annonce rien quand le nouveau round arrive dans une session reçue (un second écran sur la même table)', () => {
+    session.set({...session(), etat_combat: {round: 3, joues: [], effets: [], exclus: [], fuis: [], melee: null}} as unknown as BolFightSessionModel);
+    TestBed.tick();
+
+    expect(store.etat().round).toBe(3);
+    expect(store.roundCommenceIci()).toBeNull();
+  });
+});
+
 describe('CombatTurnStore : « Fuite opportune »', () => {
   let store: CombatTurnStore;
   let session: ReturnType<typeof signal<BolFightSessionModel | null>>;

@@ -79,15 +79,15 @@ body:has(.dw-page) .cdk-overlay-container {
   --mat-form-field-outlined-input-text-color: var(--dw-forge-bone);
   --mat-select-enabled-trigger-text-color: var(--dw-forge-bone);
   --mat-select-enabled-arrow-color: var(--dw-forge-bronze-text);
-  --mat-select-panel-background-color: #171009;
-  --mat-dialog-container-color: #171009;
+  --mat-select-panel-background-color: var(--dw-forge-overlay-surface);
+  --mat-dialog-container-color: var(--dw-forge-overlay-surface);
   --mat-dialog-subhead-color: var(--dw-forge-name);
   --mat-dialog-supporting-text-color: var(--dw-forge-bone);
   --mat-button-outlined-outline-color: var(--dw-forge-bronze);
   --mat-button-outlined-label-text-color: var(--dw-forge-bronze-text);
   --dw-border: var(--dw-forge-bronze-edge);
   --dw-color-legendary: var(--dw-forge-gold);
-  --dw-surface-100: #171009;
+  --dw-surface-100: var(--dw-forge-overlay-surface);
   --dw-surface-500: var(--dw-forge-stud-text);
   --dw-surface-600: var(--dw-forge-stud-text);
   --dw-surface-700: var(--dw-forge-bone);

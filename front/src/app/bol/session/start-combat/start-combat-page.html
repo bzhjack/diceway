@@ -1,5 +1,5 @@
-<!-- Un clic n'importe où dégage les dés 3D restés posés sur la page. -->
-<div class="scd-shell" (click)="dismissDice()">
+<!-- Un clic n'importe où, ou Échap, dégage les dés 3D restés posés sur la page. Ce conteneur n'est pas une commande : `role="presentation"`. -->
+<div class="scd-shell" role="presentation" (click)="dismissDice()" (keydown.escape)="dismissDice()">
   <!-- Le canvas de dés mesure son conteneur à la création : ne l'instancier qu'une fois le panneau
        à sa taille finale (liste des héros chargée), sinon il se fige sur une résolution minuscule
        et déforme les dés une fois étiré en CSS. -->

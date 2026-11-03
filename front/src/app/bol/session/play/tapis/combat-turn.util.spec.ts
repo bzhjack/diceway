@@ -646,6 +646,11 @@ describe('horde', () => {
     expect(endTurn(order, etat(1, ['hero-1']), [], undefined, ['pnj-12'])).toEqual(etat(2));
   });
 
+  it('n’offre pas une piétaille qui a perdu son action : son tour sera sauté, elle ne peut pas attaquer en horde', () => {
+    const perdue: CombatEffect = {...effetActionPerdue('pnj-12'), id: 'e-1'};
+    expect(hordeMates(ordered(B1, B2, B3), etat(1, [], [perdue])).map((c) => c.key)).toEqual(['pnj-13']);
+  });
+
   it('drops the effects an engaged piétaille kept until its next turn', () => {
     const order = ordered(B1, B2, KALENA);
     expect(endTurn(order, etat(1, [], [defended('pnj-12')]), [], undefined, ['pnj-12']).effets).toEqual([]);
@@ -825,6 +830,36 @@ describe('poserEffet : « Perd sa prochaine action » posé sur la carte qui jou
   });
 });
 
+describe('giveBackTurn : action perdue posée pendant son tour', () => {
+  const order = ordered(KALENA, PRETRE, RORK);
+  let n = 10;
+  const ids = () => `e-${++n}`;
+
+  it('le tour rendu n’est pas sauté : l’action perdue vise de nouveau le tour suivant', () => {
+    const pose = poserEffet(order, etat(1), effetActionPerdue('hero-1'), ids);
+    const fini = endTurn(order, pose, [], ids);
+    expect(perdSonAction(fini.effets, 'hero-1')).toBe(true);
+
+    const rendu = commencerTour(order, giveBackTurn(fini, 'hero-1'), ids);
+    expect(turnState(order, rendu).activeKey).toBe('hero-1');
+    expect(rendu.joues).toEqual([]);
+    expect(perdSonAction(rendu.effets, 'hero-1')).toBe(false);
+
+    // Son tour rouvert fini, l'action perdue coûte bien le suivant.
+    const refini = endTurn(order, rendu, [], ids);
+    expect(perdSonAction(refini.effets, 'hero-1')).toBe(true);
+    const round2 = endTurn(order, endTurn(order, refini, [], ids), [], ids);
+    expect(round2.round).toBe(2);
+    expect(round2.joues).toEqual(['hero-1']);
+    expect(turnState(order, round2).activeKey).toBe('pnj-7');
+  });
+
+  it('ne touche pas l’action perdue d’une carte à qui on ne rend pas la main', () => {
+    const perdue: CombatEffect = {...effetActionPerdue('pnj-7'), id: 'e-1'};
+    expect(perdSonAction(giveBackTurn(etat(1, ['hero-1'], [perdue]), 'hero-1').effets, 'pnj-7')).toBe(true);
+  });
+});
+
 describe('cartesRelevees', () => {
   const tombe: CombatEffect = {...effetInconscient('hero-1'), id: 'e-1'};
 
@@ -886,6 +921,22 @@ describe('carte paralysée : son tour est sauté et compté', () => {
     expect(apres.round).toBe(2);
     expect(turnState(order, apres).activeKey).toBe('hero-1');
     expect(apres.effets.map((e) => e.id)).not.toContain('e-3');
+  });
+
+  it('son tour sauté pour paralysie consomme aussi son action perdue : libérée, elle joue son tour suivant', () => {
+    const perdue: CombatEffect = {...effetActionPerdue('hero-1'), id: 'e-3'};
+    const malus: CombatEffect = {...effetRenversement('hero-1'), id: 'e-4'};
+
+    const apres = commencerTour(order, etat(2, [], [paralyseKalena, perdue, malus]), () => 'e-2');
+    expect(apres.joues).toEqual(['hero-1']);
+    expect(perdSonAction(apres.effets, 'hero-1')).toBe(false);
+    // Le dé de malus attend l'action qu'elle fera vraiment.
+    expect(apres.effets.map((e) => e.id)).toContain('e-4');
+
+    const liberee: EtatCombat = {...apres, effets: appliquerEvenement(apres.effets, {type: 'retrait-manuel', id: 'e-1'})};
+    const round3 = endTurn(order, endTurn(order, liberee));
+    expect(round3.round).toBe(3);
+    expect(turnState(order, round3).activeKey).toBe('hero-1');
   });
 
   it('does not spin rounds when the only cards left standing are paralysed', () => {

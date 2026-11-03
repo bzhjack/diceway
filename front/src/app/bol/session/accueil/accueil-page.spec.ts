@@ -60,6 +60,22 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector<HTMLAnchorElement>('.acc-soir a')?.getAttribute('href')).toBe('/session/t1/play');
   });
 
+  it('garde la teinte de la saga de la table ouverte quand son scénario en écrit le nom dans une autre casse', async () => {
+    const page = await rendre(
+      of({
+        ...DATA,
+        table: {...DATA.table!, scenario_id: 'p3'},
+        scenarios: [...DATA.scenarios, {id: 'p3', titre: 'PERLE DU BESHAAR — 3. La casse'}],
+      }),
+    );
+    const teinteDeLaCarte = [...page.querySelectorAll('.acc-saga')]
+      .find((carte) => carte.textContent?.includes('Perle du Beshaar'))!
+      .className.match(/acc-teinte--(\d)/)![1];
+
+    expect(teinteDeLaCarte).not.toBe('0');
+    expect(page.querySelector('.acc-etiquette')?.classList).toContain(`acc-teinte--${teinteDeLaCarte}`);
+  });
+
   it('clôt la table ouverte depuis le bandeau, puis relit l’accueil', async () => {
     const page = await rendre(of(DATA), of({...DATA, table: null, scenarios_joues: ['p1']}));
     const bouton = [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Clore la table'))!;

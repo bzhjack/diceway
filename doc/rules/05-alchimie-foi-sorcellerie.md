@@ -111,6 +111,7 @@ Les points gagnes restent limites par la reserve maximale (rang).
 
 - Le de de foi porte sur la prochaine action de la cible : il tombe a la fin de son prochain tour (interpretation : le livre dit « une tache specifique ou une courte activite »).
 - Plusieurs des de foi, et le de du MJ, se cumulent (`02-actions-combat.md` : deux avantages, 4d6) ; un de bonus et un de malus s'annulent.
+- Un pretre vise impose son de de malus a son agresseur avant le jet de celui-ci : dans l'exemple du druide (p. 146), Krongar « s'apprete a jeter sa lance », puis jette 3 des. Une fois le jet de l'attaquant fait (attaque ou sort), ou son coup joue, le de de foi de la cible se ferme ; il se rouvre si le jet est efface, ou avant l'attaque suivante d'un Carnage.
 - Les points d'un heros se depensent sur sa fiche, comme son heroisme ; ceux d'un PNJ sur sa ligne de table, partie de sa fiche (il peut etre pose en plusieurs exemplaires).
 - Le domaine du dieu n'est pas verifie : c'est au MJ.
 
@@ -182,7 +183,8 @@ Pas de catalogue de sorts : le joueur decrit l'effet, le MJ en fixe la puissance
 - Les points de pouvoir sont depenses au premier jet, que le sort reussisse ou non (interpretation : le livre ne dit rien d'un sort rate ; l'alchimie, elle, perd ses points sur un echec, p. 140). Vider la case du jet avant de passer a autre chose les rend.
 - Relancer les des a l'ecran apres un resultat, c'est lancer un nouveau sort : il se paie de nouveau. La faveur divine (1 point d'heroisme, p. 58) relance sans repayer. Retaper le total des des lances a table le corrige, sans repayer.
 - Changer de cible apres le jet d'un sort qui vise remet le jet a zero, comme pour l'attaque : le sort lance est perdu (son pouvoir reste depense, il a coute l'action) ; contre la nouvelle cible, un nouveau sort se paie.
-- Le paiement laisse une trace « sort paye » dans l'etat du combat (jusqu'a la fin du round, visible parmi les effets en cours) : la page rechargee en plein tour revient sur le sort, dit ce qui est deja paye, et ne le redebite pas (un sort plus cher ne debite que la difference).
+- Le paiement laisse une trace « sort paye » dans l'etat du combat (jusqu'a la fin du round, visible parmi les effets en cours), qui dit les points payes et les reglages du sort (« sort paye 6 pts · 1er cercle a −1, 2 cond., blesse, esprit » : la difficulte par son modificateur) : la page rechargee en plein tour revient sur le sort tel qu'il etait regle, dit ce qui est deja paye, et ne le redebite pas (un sort plus cher ne debite que la difference).
+- Pendant un sort, ni posture ni manoeuvre : ce sont des options d'attaque (p. 65 : « +1 au jet d'attaque, mais [...] -1 en defense »), et un sort est un jet d'action esprit + sorcier (p. 148), pas une attaque. Elles ne comptent ni au jet ni en defense, et reviennent s'il repasse a l'attaque ; la defense totale, elle, remplace le sort.
 - Degats d'un sort qui blesse : le de de sa puissance, sans vigueur ni protection d'armure (interpretation de « automatiquement », p. 151 ; le MJ peut saisir une protection a la main). `d6` au 1er cercle (p. 150), `1` pour un charme (« Douleur »), `d6 x2` au 2e cercle et `d6 x3` au 3e (interpretation : le livre ne chiffre pas ; meme echelle que les creations alchimiques legendaires et mythiques qui blessent, p. 142-144).
 - Contre un sort, ni parade in extremis ni bouclier humain (interpretation : le livre ne les donne que contre un coup).
 - Succes heroique sur un sort : le MJ en renforce l'effet (interpretation : pas d'option de succes heroique de combat).

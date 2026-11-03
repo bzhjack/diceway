@@ -10,7 +10,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
-import {SceneActionsService} from '../../scene-actions.service';
+import {SceneActionsService} from '../scene-list/scene-actions.service';
 import {NO_SCENARIO, scenarioFilterFor, scenesOf} from '../scene-list/scene.util';
 import {SceneManagerDialogComponent} from './scene-manager-dialog';
 import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';

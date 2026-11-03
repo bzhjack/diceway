@@ -25,7 +25,9 @@ class BolAccueilService
             ->get(['id', 'titre', 'statut', 'scenario_id', 'scenes_jouees', 'created_at', 'updated_at']);
         $scenarios = BolScenario::where('user_id', $userId)->get(['id', 'titre']);
 
-        $ouverte = $sessions->whereIn('statut', self::OUVERTES)->sortByDesc('created_at')->first();
+        // La table ouverte la plus récemment active (pas la plus récemment créée) : une table rouverte (`reopenSession` la touche)
+        // revient au bandeau ; une table close, elle, n'est plus ouverte, si récente que soit sa clôture.
+        $ouverte = $sessions->whereIn('statut', self::OUVERTES)->sortByDesc('updated_at')->first();
         $derniere = $sessions->sortByDesc('created_at')->first();
         $touchee = $sessions->whereNotNull('scenario_id')->sortByDesc('updated_at')->first();
 

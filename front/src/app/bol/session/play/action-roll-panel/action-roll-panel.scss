@@ -90,7 +90,7 @@ bol-action-roll-panel {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--dw-forge-gold);
-  text-shadow: 0 1px 2px #000;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
 
   // Le numéro de l'étape : une pièce de bronze.
   span {
@@ -102,7 +102,7 @@ bol-action-roll-panel {
     border-radius: 50%;
     background: var(--dw-forge-coin);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-    color: #1c1200;
+    color: var(--dw-forge-ink);
     letter-spacing: 0;
     text-shadow: none;
   }
@@ -196,10 +196,10 @@ bol-action-roll-panel {
     border-color: var(--dw-color-legendary);
     background: var(--dw-color-legendary);
     box-shadow: none;
-    color: #1c1200;
+    color: var(--dw-forge-ink);
 
     b {
-      color: #1c1200;
+      color: var(--dw-forge-ink);
     }
   }
 }
@@ -214,13 +214,13 @@ bol-action-roll-panel {
 .ard-chip--bonus[aria-pressed='true'] {
   border-color: var(--dw-color-reussite);
   background: var(--dw-color-reussite);
-  color: #041a0d;
+  color: var(--dw-forge-on-reussite);
 }
 
 .ard-chip--malus[aria-pressed='true'] {
   border-color: var(--dw-color-echec);
   background: var(--dw-color-echec);
-  color: #2a0505;
+  color: var(--dw-forge-on-echec);
 }
 
 // ── Le plateau ───────────────────────────────────────────────────────────────────────────────────
@@ -292,7 +292,7 @@ bol-action-roll-panel {
   b {
     font: 400 4rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-forge-bone);
-    text-shadow: 0 2px 8px #000, 0 0 22px rgba(232, 135, 58, 0.28);
+    text-shadow: 0 2px 8px var(--dw-forge-shade), 0 0 22px rgba(232, 135, 58, 0.28);
   }
 
   i {
@@ -341,7 +341,7 @@ bol-action-roll-panel {
 }
 
 .ard-ring-bg {
-  stroke: #2a1c12;
+  stroke: var(--dw-surface-200);
 }
 
 // La jauge de chances, comme du bronze chauffé.
@@ -371,10 +371,10 @@ bol-action-roll-panel {
   // En longueur, pas en % : un padding en % se calcule sur la largeur du conteneur et écraserait la face.
   padding: calc(var(--ard-die) * 0.16);
   border-radius: 11px;
-  background: linear-gradient(145deg, #cc3b30, #8a1812);
+  background: linear-gradient(145deg, var(--dw-die-red-light), var(--dw-die-red-dark));
   box-shadow:
     inset 0 0 0 2px rgba(255, 255, 255, 0.12),
-    0 4px 0 #560d09,
+    0 4px 0 var(--dw-die-red-edge),
     0 8px 14px rgba(0, 0, 0, 0.5);
 }
 
@@ -391,7 +391,7 @@ bol-action-roll-panel {
   align-items: center;
   justify-content: center;
   padding: 0;
-  color: #fff3e0;
+  color: var(--dw-die-pip);
   font: 400 2.2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
 }
 
@@ -406,7 +406,7 @@ bol-action-roll-panel {
   span {
     max-width: 22rem;
     font-size: 1rem;
-    color: #efe2c8;
+    color: var(--dw-forge-bone-dim);
   }
 }
 
@@ -432,7 +432,7 @@ bol-action-roll-panel {
   border: 1px solid var(--dw-color-legendary);
   border-radius: var(--dw-radius-pill);
   background: var(--dw-color-legendary);
-  color: #1c1200;
+  color: var(--dw-forge-ink);
   font: inherit;
   font-size: 1.2rem;
   font-weight: 800;
@@ -440,7 +440,7 @@ bol-action-roll-panel {
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--dw-color-legendary) 85%, #fff);
+    background: color-mix(in srgb, var(--dw-color-legendary) 85%, var(--dw-forge-white));
   }
 
   &:disabled {
@@ -494,7 +494,7 @@ bol-action-roll-panel {
   &[aria-pressed='true'] {
     border-style: solid;
     background: var(--dw-color-legendary);
-    color: #1c1200;
+    color: var(--dw-forge-ink);
 
     .ard-gem {
       background: currentColor;
@@ -536,9 +536,9 @@ bol-action-roll-panel {
   }
 
   &[aria-pressed='true'] {
-    border-color: #b3261e;
+    border-color: var(--dw-forge-out-edge);
     background: var(--dw-forge-critique);
-    color: #fff;
+    color: var(--dw-forge-white);
   }
 }
 
@@ -554,7 +554,7 @@ bol-action-roll-panel {
   &[aria-pressed='true'] {
     border-color: var(--dw-color-succes-legendaire);
     background: var(--dw-color-succes-legendaire);
-    color: #1d0b33;
+    color: var(--dw-forge-on-legendaire);
   }
 }
 
@@ -586,7 +586,7 @@ bol-action-roll-panel {
   border: 2px solid var(--dw-forge-bronze);
   border-radius: 7px;
   @include forge.recess;
-  color: #ffe9bd;
+  color: var(--dw-forge-total);
   font: inherit;
   font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
@@ -677,10 +677,10 @@ bol-action-roll-panel {
       border-left-color: var(--ard-tone);
       background: var(--dw-color-legendary);
       box-shadow: none;
-      color: #1c1200;
+      color: var(--dw-forge-ink);
 
       b {
-        color: #1c1200;
+        color: var(--dw-forge-ink);
       }
     }
   }

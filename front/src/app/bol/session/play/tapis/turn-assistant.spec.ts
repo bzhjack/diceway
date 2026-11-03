@@ -4,10 +4,11 @@ import {BolArmeModel, BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {TapisCard} from '../../models/tapis.model';
-import {RessourceChange, RessourcesMagiques} from '../../models/magie-combat.model';
+import {RessourceChange, RessourcesMagiques, SortSaisie} from '../../models/magie-combat.model';
+import {AttackChoice} from '../../models/attack-options.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {effetDeFoi} from './combat-effects.util';
-import {effetSortPaye} from '../../magie-combat.util';
+import {effetSortPaye, saisieSortParDefaut} from '../../magie-combat.util';
 import {MatDialog} from '@angular/material/dialog';
 import {of} from 'rxjs';
 import {TurnAssistantComponent} from './turn-assistant';
@@ -881,8 +882,8 @@ describe('TurnAssistantComponent', () => {
       await cliquer(/^ *Sort *null$/);
       await saisirAttaque('3');
 
-      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 6)]);
-      fixture.componentRef.setInput('effets', [{...effetSortPaye('hero-1', 6), id: 'e-1'}]);
+      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 6, saisieSortParDefaut())]);
+      fixture.componentRef.setInput('effets', [{...effetSortPaye('hero-1', 6, saisieSortParDefaut()), id: 'e-1'}]);
       await stable();
       await saisirAttaque('');
       expect(events.ressources.map((r) => r.delta)).toEqual([-6, 6]);
@@ -891,7 +892,7 @@ describe('TurnAssistantComponent', () => {
 
     it('la page rechargée en plein tour après un sort payé : l’assistant le dit, et le jet ne redébite pas', async () => {
       // Le pouvoir est déjà débité (il ne lui reste rien) ; l'assistant, neuf, ne sait du sort que sa trace.
-      await viser({attacker: sorcier({pouvoir: 0}), round: 2, effets: [{...effetSortPaye('hero-1', 6), id: 'e-1'}]});
+      await viser({attacker: sorcier({pouvoir: 0}), round: 2, effets: [{...effetSortPaye('hero-1', 6, saisieSortParDefaut()), id: 'e-1'}]});
 
       expect(texte()).toContain('6 pts déjà payés ce tour-ci');
       expect(texte()).not.toContain('Pas assez de pouvoir');
@@ -903,18 +904,55 @@ describe('TurnAssistantComponent', () => {
     });
 
     it('rechargée, un sort plus cher ne débite que la différence', async () => {
-      await viser({attacker: sorcier({pouvoir: 10}), effets: [{...effetSortPaye('hero-1', 6), id: 'e-1'}]});
+      await viser({attacker: sorcier({pouvoir: 10}), effets: [{...effetSortPaye('hero-1', 6, saisieSortParDefaut()), id: 'e-1'}]});
       await cliquer('2e cercle');
       // 10 + 1 pour l'armure : 5 de plus que les 6 déjà payés.
       await saisirAttaque('9');
 
       expect(events.ressources.map((r) => r.delta)).toEqual([-5]);
       expect(events.removed).toEqual(['e-1']);
-      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 11)]);
+      expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 11, {...saisieSortParDefaut(), cercle: 2, difficulte: 'difficile'})]);
+    });
+
+    it('rechargée, l’assistant revient sur le sort tel qu’il était réglé : puissance, difficulté, conditions, blesse, sur l’esprit', async () => {
+      const reglage: SortSaisie = {cercle: 2, difficulte: 'tres-difficile', conditions: 3, coutCharme: 1, blessant: true, espritCible: true};
+      await viser({attacker: sorcier({pouvoir: 0}), targetStats: cibleEsprit(1), effets: [{...effetSortPaye('hero-1', 10, reglage), id: 'e-1'}]});
+
+      const presse = (libelle: string | RegExp) => bouton(libelle).getAttribute('aria-pressed');
+      expect(presse('2e cercle')).toBe('true');
+      expect(texte()).toContain('Très difficile');
+      expect(element.querySelector<HTMLInputElement>('.tas-sortf-cond input')?.value).toBe('3');
+      expect(presse('Blesse')).toBe('true');
+      expect(presse('Sur l’esprit')).toBe('true');
+      // 10 − 2 (conditions) + 1 (armure) : 9 points, couverts par les 10 déjà payés.
+      expect(texte()).toContain('9 pts de pouvoir');
+      await saisirAttaque('12');
+      expect(events.ressources).toEqual([]);
+    });
+
+    it('un sort n’est pas une attaque (livre p. 65 et 148) : la posture choisie ne pèse ni sur sa défense ni sur son jet', async () => {
+      const choix: (AttackChoice | null)[] = [];
+      await viser({attacker: sorcier()});
+      fixture.componentInstance.choiceChanged.subscribe((c) => choix.push(c));
+      const defense = () => [...element.querySelectorAll('bol-tas-attaquant .tas-tile')].find((t) => t.querySelector('span')?.textContent?.trim() === 'Défense')?.querySelector('b')?.textContent?.trim();
+      await cliquer('Offensive');
+      expect(choix.at(-1)?.posture?.slug).toBe('offensive');
+      expect(defense()).toBe('0');
+
+      await cliquer(/^ *Sort *null$/);
+
+      expect(choix.at(-1)?.posture ?? null).toBeNull();
+      expect(defense()).toBe('1');
+      expect(bouton('Défensive').getAttribute('aria-disabled')).toBe('true');
+      await cliquer('Défensive');
+      expect(choix.at(-1)?.posture ?? null).toBeNull();
+      // Revenu à l'attaque, sa posture compte de nouveau.
+      await cliquer(/^ *Attaque *null$/);
+      expect(choix.at(-1)?.posture?.slug).toBe('offensive');
     });
 
     it('la trace d’une autre carte ne vaut rien pour ce tour', async () => {
-      await viser({attacker: sorcier(), effets: [{...effetSortPaye('pnj-7', 6), id: 'e-1'}]});
+      await viser({attacker: sorcier(), effets: [{...effetSortPaye('pnj-7', 6, saisieSortParDefaut()), id: 'e-1'}]});
       await cliquer(/^ *Sort *null$/);
       await saisirAttaque('7');
 
@@ -942,6 +980,24 @@ describe('TurnAssistantComponent', () => {
 
       expect(events.nouveaux).toEqual([effetDeFoi('pnj-7', 'malus', 'Grimar')]);
       expect(events.ressources).toEqual([{card: carte(), ressource: 'foi', delta: -1}]);
+    });
+
+    it('un prêtre visé impose son dé de malus avant le jet de son agresseur, pas après : le dé de foi se ferme, et dit pourquoi', async () => {
+      const pretre = stats({herosId: null, heroisme: null, magie: {esprit: 1, foi: 2, pouvoir: null, sorcier: null, surcoutArmure: 0, magieRoisSorciers: false, resistantMagie: false}});
+      await viser({targetStats: pretre, visibles: [carte(), cible]});
+      expect(bouton('Dé de foi').getAttribute('aria-disabled')).toBeNull();
+
+      await saisirAttaque('7');
+
+      const deFoi = bouton('Dé de foi');
+      expect(deFoi.getAttribute('aria-disabled')).toBe('true');
+      expect(deFoi.getAttribute('aria-label')).toContain('avant le jet');
+      deFoi.click();
+      await stable();
+      expect(document.querySelectorAll('[mat-menu-item]').length).toBe(0);
+      // Le jet effacé, il peut de nouveau l'imposer.
+      await saisirAttaque('');
+      expect(bouton('Dé de foi').getAttribute('aria-disabled')).toBeNull();
     });
 
     it('un dé de foi dû entre dans le jet d’attaque, en plus du dé du MJ', async () => {

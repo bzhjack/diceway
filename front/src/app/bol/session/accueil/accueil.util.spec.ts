@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilScenario, BolAccueilTable} from '../../models/bol-accueil.model';
-import {accueilSagas, findScenario, sagaResumes, tableOuverte, tableTitre} from './accueil.util';
+import {accueilSagas, sagaResumes, tableOuverte, tableTitre, teinteDeSaga} from './accueil.util';
 
 const S: BolAccueilScenario[] = [
   {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
@@ -134,17 +134,6 @@ describe('tableTitre', () => {
   });
 });
 
-describe('findScenario', () => {
-  it('trouve le scénario par son id', () => {
-    expect(findScenario(S, 'p2')).toBe(S[0]);
-  });
-
-  it('renvoie null pour un id inconnu ou absent', () => {
-    expect(findScenario(S, 'zz')).toBeNull();
-    expect(findScenario(S, null)).toBeNull();
-  });
-});
-
 describe('sagaResumes', () => {
   const resume = (nom: string | null, joues: string[] = [], enCours: string | null = null) =>
     sagaResumes(accueilSagas(S, new Set(joues), enCours, null)).find((r) => r.nom === nom)!;
@@ -196,5 +185,29 @@ describe('tableOuverte', () => {
 
   it('sans scénario, tombe sur la date', () => {
     expect(tableOuverte(table({scenario_id: null}), S)).toEqual({id: 't', saga: null, titre: 'Table du 2 novembre'});
+  });
+});
+
+describe('teinteDeSaga', () => {
+  // Un chapitre dont la saga est écrite dans une autre casse : il rejoint « Perle du Beshaar » (le premier titre vu donne le nom).
+  const AVEC_CASSE: BolAccueilScenario[] = [...S, {id: 'pc', titre: 'PERLE DU BESHAAR — 3. La casse'}];
+  const resumes = sagaResumes(accueilSagas(AVEC_CASSE, new Set(), null, null));
+  const table: BolAccueilTable = {id: 't', titre: null, statut: 'libre', scenario_id: 'pc', created_at: '2026-11-02T10:00:00Z'};
+
+  it('garde la teinte de la saga de la table ouverte quand la casse de son nom diffère', () => {
+    const saga = tableOuverte(table, AVEC_CASSE).saga;
+
+    expect(saga).toBe('PERLE DU BESHAAR');
+    expect(teinteDeSaga(resumes, saga)).toBe(3);
+    expect(teinteDeSaga(resumes, 'perle du beshaar')).toBe(3);
+  });
+
+  it('donne la teinte d’une saga de même nom exact', () => {
+    expect(teinteDeSaga(resumes, 'Le Dieu voilé')).toBe(2);
+  });
+
+  it('ne donne aucune teinte sans saga, ou pour une saga inconnue', () => {
+    expect(teinteDeSaga(resumes, null)).toBe(0);
+    expect(teinteDeSaga(resumes, 'Saga inconnue')).toBe(0);
   });
 });

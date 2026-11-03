@@ -69,3 +69,15 @@ export function traitEntriesSignal(
       .filter((entry): entry is TraitEntry => entry !== null),
   );
 }
+
+/** Un trait tel que l'API l'enregistre : sa précision, sa région et sa marque « de carrière » se gardent (la sauvegarde les remplaçait). */
+export function traitPayload(trait: TraitDraft): Record<string, unknown> {
+  return {
+    id: trait.id,
+    traitable_id: trait.id,
+    type: trait.type,
+    detail: trait.detail ?? null,
+    region_id: trait.region_id ?? null,
+    carriere: trait.carriere ?? false,
+  };
+}

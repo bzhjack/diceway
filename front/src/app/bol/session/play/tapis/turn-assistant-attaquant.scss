@@ -92,7 +92,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px #000;
+    text-shadow: 0 1px 2px var(--dw-forge-shade);
 
     // Un nom trop long se coupe, pour que le titre tienne sur sa ligne : il est entier en infobulle.
     > em {
@@ -153,7 +153,7 @@
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px #000;
+    text-shadow: 0 1px 2px var(--dw-forge-shade);
     white-space: nowrap;
   }
 
@@ -410,11 +410,13 @@
       color: var(--dw-surface-600);
     }
 
-    &:hover:not(:disabled) b {
+    &:hover:not(:disabled, [aria-disabled='true']) b {
       color: var(--dw-forge-hot-text);
     }
 
-    &:disabled {
+    // Une posture fermée pendant un sort reste focalisable, pour que son infobulle dise pourquoi.
+    &:disabled,
+    &[aria-disabled='true'] {
       opacity: 0.4;
       cursor: default;
     }
@@ -424,7 +426,7 @@
 
       b,
       small {
-        color: #1c1200;
+        color: var(--dw-forge-ink);
       }
     }
   }
@@ -467,10 +469,10 @@
       border-color: var(--dw-color-legendary);
       background: var(--dw-color-legendary);
       box-shadow: none;
-      color: #1c1200;
+      color: var(--dw-forge-ink);
 
       em {
-        color: #1c1200;
+        color: var(--dw-forge-ink);
       }
     }
   }
@@ -478,13 +480,13 @@
   .tas-mj .tas-chip.tas-chip--bonus[aria-pressed='true'] {
     border-color: var(--dw-color-reussite);
     background: var(--dw-color-reussite);
-    color: #041a0d;
+    color: var(--dw-forge-on-reussite);
   }
 
   .tas-mj .tas-chip.tas-chip--malus[aria-pressed='true'] {
     border-color: var(--dw-color-echec);
     background: var(--dw-color-echec);
-    color: #2a0505;
+    color: var(--dw-forge-on-echec);
   }
 
   // Les armes : une case par arme, le symbole dedans, ses dégâts dessous ; autant de rangs qu'il en faut.
@@ -528,10 +530,10 @@
       border-color: var(--dw-color-legendary);
       background: var(--dw-color-legendary);
       box-shadow: none;
-      color: #1c1200;
+      color: var(--dw-forge-ink);
 
       em {
-        color: #1c1200;
+        color: var(--dw-forge-ink);
       }
     }
 
@@ -578,7 +580,7 @@
     border-radius: 50%;
     background: var(--dw-forge-coin);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-    color: #1c1200;
+    color: var(--dw-forge-ink);
     font-size: 0.62rem;
     font-weight: 800;
     line-height: 1;

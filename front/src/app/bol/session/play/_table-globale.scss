@@ -1,0 +1,42 @@
+// La table de jeu, hors des composants : ce que leurs feuilles encapsulées ne peuvent pas atteindre sans `::ng-deep` (le dedans d'un
+// composant Material ou partagé, un panneau rendu dans le calque des overlays). Chargée par `styles.scss`, donc globale : chaque règle
+// part de l'élément du composant qui la demande, et garde au moins la spécificité de la règle qu'elle surcharge.
+
+// `bol-combat-board` : la couche des dés 3D couvre tout l'écran de combat. Le fond et la bordure propres à `dw-dice-box-host`
+// (habituellement un panneau dédié) sont neutralisés : les dés roulent par-dessus la table.
+bol-combat-board .cb-dice .dw-dice-box-host {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+  border: none;
+  background: transparent;
+}
+
+// `bol-compagnie` : rien à faire défiler, les chevrons de `dw-scroller` disparaissent au lieu de garder leur place.
+bol-compagnie .cmp-rang .dws-chevron--hidden {
+  display: none;
+}
+
+// `bol-reserve` : les onglets sont étroits (trois par ligne), leur libellé serré dans un toggle plus bas que celui de Material…
+bol-reserve .rsv-tabs .mat-button-toggle-label-content {
+  padding: 0 0.3rem;
+  font-size: 0.74rem;
+  line-height: 2rem;
+  letter-spacing: 0.03em;
+}
+
+// … et le champ de recherche est un cuir sombre, plus arrondi que son contour.
+bol-reserve .rsv-search .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+  background: var(--dw-surface-0);
+  border-radius: 8px;
+}
+
+// `bol-hero-details` : le panneau de ses menus (`class="hd-menu"`) est une plaque de fer, comme les panneaux du jet.
+.hd-menu.mat-mdc-menu-panel {
+  min-width: 15rem;
+  max-width: 22rem;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 7px;
+  background: var(--dw-forge-plate);
+}

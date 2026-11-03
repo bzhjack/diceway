@@ -74,12 +74,12 @@
     position: relative;
     overflow: hidden;
     border-radius: 6px;
-    box-shadow: inset 0 0 0 2px #0b0705, inset 0 0 70px #000;
+    box-shadow: inset 0 0 0 2px var(--dw-surface-0), inset 0 0 70px var(--dw-forge-shade);
     background:
       radial-gradient(45% 35% at 0% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
       radial-gradient(45% 35% at 100% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
-      radial-gradient(50% 40% at 50% 55%, #4a3523, transparent 75%),
-      linear-gradient(#241a12, #130d08);
+      radial-gradient(50% 40% at 50% 55%, var(--bar-leather-glow), transparent 75%),
+      linear-gradient(var(--bar-leather-top), var(--bar-leather-bottom));
   }
 }
 
@@ -107,7 +107,7 @@
   width: 21rem;
   max-width: 85vw;
   border-left: 2px solid var(--dw-forge-bronze);
-  background: var(--dw-forge-iron) 0 0 / 420px, #17110c;
+  background: var(--dw-forge-iron) 0 0 / 420px, var(--dw-table-panel);
   // Il passe au-dessus des cartes : une ombre portée l'en détache.
   box-shadow:
     inset 8px 0 14px -8px rgba(0, 0, 0, 0.8),

@@ -1,7 +1,7 @@
 import {RessourceMagique} from '../session/models/magie-combat.model';
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap, throwError, timeout} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
 import {
   BolFightSessionAddCombatantPayload,
@@ -16,6 +16,9 @@ import {
 } from '../models/bol-fight-session.model';
 import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 
+/** Délai d'un appel sur la table : passé ce délai sans réponse, l'appel échoue (comme une erreur réseau) et la file repart. */
+export const DELAI_APPEL_TABLE_MS = 15_000;
+
 @Injectable({providedIn: 'root'})
 export class BolFightSessionService {
   private readonly http = inject(HttpClient);
@@ -28,13 +31,16 @@ export class BolFightSessionService {
   }
 
   /** Les appels sur une table partent un à un : l'API les traite en parallèle, et une écriture doublée par une autre renverrait
-   * une table sans elle. Chaque réponse porte ainsi tout ce qui la précède et peut remplacer la session sans autre requête. */
+   * une table sans elle. Chaque réponse porte ainsi tout ce qui la précède et peut remplacer la session sans autre requête. Un appel
+   * sans réponse au bout de `DELAI_APPEL_TABLE_MS` est abandonné : il échoue comme une erreur réseau, sans corps (l'appelant affiche son
+   * message habituel), et la file repart au lieu de rester bloquée derrière lui. */
   private inOrder<T>(call: Observable<T>): Observable<T> {
     return defer(() => {
       const result = new AsyncSubject<T>();
       // Pas `tap(result)` : `tap` appellerait aussi `subscribe` sur le sujet, et son erreur partirait sans personne pour la recevoir.
       this.calls.next(
         call.pipe(
+          timeout({first: DELAI_APPEL_TABLE_MS, with: () => throwError(() => new HttpErrorResponse({status: 0, statusText: 'Délai dépassé'}))}),
           tap({
             next: (value) => result.next(value),
             error: (error: unknown) => result.error(error),

@@ -42,20 +42,16 @@ class BolHerosController extends Controller
     }
 
     /**
-     * Création d'un hero
+     * Création d'un héros, depuis le formulaire principal ou l'éditeur avancé : les mêmes règles de création (`BolHerosRequest`).
      */
-    public function create(Request $request)
+    public function create(BolHerosRequest $request)
     {
-        $request->validate(['nom' => 'required|max:255', 'joueur' => 'required|max:255']);
         return response($this->bolHerosService->create($request->input()));
     }
 
-    /**
-     * Mise à jour d'un hero
-     */
     public function createAdvanced(BolHerosRequest $request)
     {
-        return response($this->bolHerosService->create($request->input()));
+        return $this->create($request);
     }
 
     public function updateAdvanced(BolHerosRequest $request)
@@ -63,7 +59,10 @@ class BolHerosController extends Controller
         return $this->update($request);
     }
 
-    public function update(Request $request)
+    /**
+     * Mise à jour d'un héros, depuis le formulaire principal ou l'éditeur avancé.
+     */
+    public function update(BolHerosRequest $request)
     {
         $hero = $this->bolHerosService->update($request->input());
         if ($hero === null) {

@@ -89,18 +89,18 @@
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
 
   &--amber {
-    color: #fbbf24;
-    border: 1px solid #fbbf24;
+    color: var(--dw-card-tag-amber);
+    border: 1px solid var(--dw-card-tag-amber);
   }
 
   &--rose {
-    color: #fb7185;
-    border: 1px solid #fb7185;
+    color: var(--dw-card-tag-rose);
+    border: 1px solid var(--dw-card-tag-rose);
   }
 
   &--slate {
-    color: #9c8763;
-    border: 1px solid #9c8763;
+    color: var(--dw-card-tag-slate);
+    border: 1px solid var(--dw-card-tag-slate);
   }
 }
 
@@ -165,10 +165,8 @@
   padding: 0;
   @include forge.stud;
 
-  ::ng-deep .mat-mdc-button-touch-target {
-    width: 26px;
-    height: 26px;
-  }
+  // La zone de clic suit la taille du clou (jeton Material, au lieu de percer le bouton).
+  --mat-icon-button-touch-target-size: 26px;
 
   .mat-icon {
     font-size: 15px;
@@ -223,7 +221,7 @@
 }
 
 .entity-gauge--pv .mat-icon {
-  color: #e5413a;
+  color: var(--dw-gauge-pv);
 }
 
 .entity-gauge--ph .mat-icon {
@@ -261,21 +259,21 @@
 // Portrait rond dans un anneau métallique dont la couleur suit l'accent de la carte : bronze (héros, PNJ),
 // rouille (créature), rouge sang (démon). L'étiquette (taille, rang) chevauche le bas de l'anneau.
 .entity-card {
-  --ec-metal-1: var(--bar-pj-1, #e0c48a);
-  --ec-metal-2: var(--bar-pj-2, #a8762a);
-  --ec-metal-3: var(--bar-pj-3, #4a2f0f);
+  --ec-metal-1: var(--bar-pj-1);
+  --ec-metal-2: var(--bar-pj-2);
+  --ec-metal-3: var(--bar-pj-3);
 }
 
 .entity-card--accent-amber {
-  --ec-metal-1: var(--bar-creature-1, #e8a57a);
-  --ec-metal-2: var(--bar-creature-2, #a04a1c);
-  --ec-metal-3: var(--bar-creature-3, #3d1608);
+  --ec-metal-1: var(--bar-creature-1);
+  --ec-metal-2: var(--bar-creature-2);
+  --ec-metal-3: var(--bar-creature-3);
 }
 
 .entity-card--accent-rose {
-  --ec-metal-1: var(--bar-demon-1, #e08a8a);
-  --ec-metal-2: var(--bar-demon-2, #8f1d1d);
-  --ec-metal-3: var(--bar-demon-3, #2e0707);
+  --ec-metal-1: var(--bar-demon-1);
+  --ec-metal-2: var(--bar-demon-2);
+  --ec-metal-3: var(--bar-demon-3);
 }
 
 .entity-card__portrait {

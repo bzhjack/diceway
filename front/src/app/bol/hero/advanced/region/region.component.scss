@@ -45,7 +45,7 @@
   height: 14px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 2px solid #fde68a;
+  border: 2px solid var(--dw-color-legendary-muted);
   background: rgba(69, 26, 3, 0.65);
   cursor: pointer;
   padding: 0;
@@ -54,7 +54,7 @@
   &:hover,
   &:focus-visible {
     transform: translate(-50%, -50%) scale(1.4);
-    border-color: #fff;
+    border-color: var(--dw-forge-white);
   }
 }
 
@@ -63,8 +63,8 @@
 }
 
 .hrg-pin--active {
-  border-color: #ec2222;
-  background: #ec2222;
+  border-color: var(--dw-region-pin-active);
+  background: var(--dw-region-pin-active);
   transform: translate(-50%, -50%) scale(1.3);
 
   &:hover,
@@ -123,7 +123,7 @@
 .hrg-region-row--active {
   background: var(--dw-color-legendary);
   border-color: var(--dw-color-legendary);
-  color: #1c1200;
+  color: var(--dw-forge-ink);
   font-weight: 700;
 
   &:hover {
@@ -151,7 +151,7 @@
 
 .hrg-tag--active {
   background: var(--dw-color-legendary) !important;
-  color: #1c1200 !important;
+  color: var(--dw-forge-ink) !important;
 }
 
 .hrg-empty-region {
@@ -172,7 +172,7 @@
   border: 1px solid rgba(251, 191, 36, 0.3);
   background: rgba(69, 26, 3, 0.15);
   font-size: 0.875rem;
-  color: #fde68a;
+  color: var(--dw-forge-warning-text);
 }
 
 .hrg-neutral-box {

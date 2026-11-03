@@ -4,7 +4,7 @@
   --lec-tete-h: 3rem;
   --lec-titre-h: calc(2.6rem * var(--lec-k, 1));
   // Le fond du pupitre, et de ses titres collés, opaques pour que le texte passe dessous sans se voir.
-  --lec-fond: var(--dw-forge-iron) 0 0 / 420px, #17110c;
+  --lec-fond: var(--dw-forge-iron) 0 0 / 420px, var(--dw-table-panel);
   position: relative;
   display: flex;
   flex-direction: column;

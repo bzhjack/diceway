@@ -5,13 +5,22 @@
   [matTooltip]="triggerLabel()"
   #trigger="matMenuTrigger"
   [matMenuTriggerFor]="menu"
-  (menuOpened)="reset()"
+  (click)="noteOpening($event)"
+  (menuOpened)="onMenuOpened()"
 >
   <mat-icon>add</mat-icon>
 </button>
 
 <mat-menu #menu="matMenu" class="dw-add-menu-panel">
-  <div class="dw-add-menu-content" (click)="$event.stopPropagation()">
+  <!-- Ce conteneur n'est pas une commande (role="presentation") : il garde le menu ouvert. Un clic dans le contenu fermerait le menu, et
+       Tab aussi (mat-menu se ferme sur Tab) : Tab circule entre les champs et le bouton (cdkTrapFocus), Échap ferme. -->
+  <div
+    class="dw-add-menu-content"
+    role="presentation"
+    cdkTrapFocus
+    (click)="$event.stopPropagation()"
+    (keydown)="keepOpenOnTab($event)"
+  >
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>{{ label() }}</mat-label>
       <mat-select [formField]="selectedField">

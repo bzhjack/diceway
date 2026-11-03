@@ -393,6 +393,17 @@ class BolFightSessionService
         return $rang === 'rival' ? max(0, (int) $vilenieFiche) : null;
     }
 
+    /**
+     * Points de vilénie d'une ligne de table après un changement de la fiche du PNJ (rang ou vilénie) : la vilénie de départ de la
+     * fiche (`vilenieInitiale`) sert de maximum, comme la foi et le pouvoir (`ressourceRecalee`). Qui n'est plus rival n'en a plus ;
+     * une ligne qui n'en avait pas (le PNJ devient rival) reçoit celle de la fiche ; sinon ce qui reste est seulement ramené au nouveau
+     * maximum, jamais rendu. Un rival à 0 sur sa fiche garde les points donnés à la main.
+     */
+    public static function vilenieRecalee(?int $courante, string $rang, ?int $vilenieFiche): ?int
+    {
+        return self::ressourceRecalee($courante, self::vilenieInitiale($rang, $vilenieFiche));
+    }
+
     /** Points de vilénie après une dépense (négatif) ou un gain : jamais sous zéro ; qui n'en a pas n'en gagne pas. */
     public static function vilenieSuivante(?int $courante, int $delta): ?int
     {
@@ -924,7 +935,7 @@ class BolFightSessionService
      * Répercute sur les tables un changement de la fiche d'un PNJ : ses statistiques, son initiative et ses armes sont
      * recopiées dans chaque ligne où il est posé, avec son rang. Le camp, le surnom et la vitalité courante ne bougent pas
      * (la vitalité est seulement ramenée au nouveau maximum si elle le dépasse). La foi et le pouvoir de table suivent la fiche
-     * de la même façon (`ressourceRecalee`).
+     * de la même façon (`ressourceRecalee`), et la vilénie aussi, selon le rang (`vilenieRecalee`).
      */
     public function refreshPnjSnapshots(string $pnjId): void
     {
@@ -940,12 +951,14 @@ class BolFightSessionService
         }
 
         $snapshot = $this->pnjSnapshot($pnj);
+        $rang = $this->rangFromType($pnj->type);
         $foi = self::foiInitiale($pnj);
         $pouvoir = self::pouvoirInitial($pnj);
         foreach ($rows as $row) {
             $row->update($snapshot + [
-                'rang'              => $this->rangFromType($pnj->type),
+                'rang'              => $rang,
                 'vitalite_courante' => min((int) $row->vitalite_courante, (int) $pnj->vitalite),
+                'vilenie_courante'  => self::vilenieRecalee($row->vilenie_courante, $rang, $pnj->vilenie),
                 'foi_courante'      => self::ressourceRecalee($row->foi_courante, $foi),
                 'pouvoir_courant'   => self::ressourceRecalee($row->pouvoir_courant, $pouvoir),
             ]);

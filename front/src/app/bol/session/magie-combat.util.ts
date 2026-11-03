@@ -121,14 +121,68 @@ export function pouvoirSuffisant(pouvoir: number | null, cout: number): boolean 
 /** Origine de la trace « sort payé ». */
 const SORT_PAYE = 'sort-paye';
 
-/** Trace, dans l'état du combat, du pouvoir payé pour le sort que la carte lance à son tour : la page rechargée en plein tour la relit, et
- * l'assistant, reparti de zéro, ne redébite pas ces points (cf. `sortPayeCeRound`). Elle tombe à la fin du round ; une trace (valeur 0) ne
- * pèse sur aucun jet, et le MJ la voit (et peut la retirer) parmi les effets en cours. Les points sont dans son libellé, seul champ libre que
- * l'état du combat garde. */
-export function effetSortPaye(porteur: string, points: number): NewEffect {
+/** Les noms courts des puissances, dans le libellé de la trace. */
+const CERCLES_COURTS = ['charme', '1er cercle', '2e cercle', '3e cercle'] as const;
+
+/** Une difficulté par son modificateur, « +1 », « 0 » ou « −2 » ; « auto » sans jet. Chaque cran a le sien (p. 151). */
+function difficulteCourte(slug: string): string {
+  const valeur = difficulteSort(slug).valeur;
+  if (valeur === null) {
+    return 'auto';
+  }
+  return `à ${valeur > 0 ? `+${valeur}` : valeur < 0 ? `−${-valeur}` : '0'}`;
+}
+
+function difficulteDuTexte(texte: string | undefined): string | null {
+  if (texte === 'auto') {
+    return 'automatique';
+  }
+  const valeur = Number(texte?.match(/^à ([+−-]?\d+)$/)?.[1]?.replace('−', '-') ?? Number.NaN);
+  return DIFFICULTES_SORT.find((d) => d.valeur === valeur)?.slug ?? null;
+}
+
+/** Le libellé de la trace : les points payés, puis les réglages du sort, en clair et assez court pour les 60 caractères que l'état du
+ * combat garde d'un libellé (`BolCombatState`) : « sort payé 6 pts · 1er cercle à −1, 2 cond., blesse, esprit », « sort payé 2 pts ·
+ * charme de 2, auto ». La difficulté s'y lit à son modificateur. */
+function libelleSortPaye(points: number, saisie: SortSaisie): string {
+  const puissance =
+    saisie.cercle === 0
+      ? [`charme de ${saisie.coutCharme}`, difficulteCourte(saisie.difficulte)]
+      : [`${CERCLES_COURTS[saisie.cercle]} ${difficulteCourte(saisie.difficulte)}`, `${saisie.conditions} cond.`];
+  const reglages = [...puissance, ...(saisie.blessant ? ['blesse'] : []), ...(saisie.espritCible ? ['esprit'] : [])];
+  return `sort payé ${points} ${points > 1 ? 'pts' : 'pt'} · ${reglages.join(', ')}`;
+}
+
+/** Les réglages du sort relus dans le libellé de sa trace ; `null` s'il ne les dit pas (trace d'avant, libellé retouché). */
+function reglagesDuLibelle(libelle: string): SortSaisie | null {
+  const [tete, ...reste] = libelle.split(' · ')[1]?.split(', ') ?? [];
+  const charme = tete?.match(/^charme de ([12])$/);
+  const cercle = tete?.match(/^(1er|2e|3e) cercle (.+)$/);
+  const options = new Set(reste);
+  const blessant = options.delete('blesse');
+  const espritCible = options.delete('esprit');
+  const [suite] = [...options];
+  if (charme) {
+    const difficulte = difficulteDuTexte(suite);
+    return difficulte && options.size === 1 ? {cercle: 0, difficulte, conditions: 1, coutCharme: Number(charme[1]), blessant, espritCible} : null;
+  }
+  const conditions = Number(suite?.match(/^(\d+) cond\.$/)?.[1] ?? Number.NaN);
+  const difficulte = difficulteDuTexte(cercle?.[2]);
+  if (!cercle || !difficulte || options.size !== 1 || !(conditions >= 1)) {
+    return null;
+  }
+  const rang: CercleSort = cercle[1] === '1er' ? 1 : cercle[1] === '2e' ? 2 : 3;
+  return {cercle: rang, difficulte, conditions, coutCharme: 1, blessant, espritCible};
+}
+
+/** Trace, dans l'état du combat, du pouvoir payé pour le sort que la carte lance à son tour, et de ses réglages : la page rechargée en plein
+ * tour la relit, et l'assistant, reparti de zéro, revient sur ce sort tel qu'il était réglé et ne redébite pas ces points (cf.
+ * `sortPayeCeRound`). Elle tombe à la fin du round ; une trace (valeur 0) ne pèse sur aucun jet, et le MJ la voit (et peut la retirer)
+ * parmi les effets en cours. Points et réglages sont dans son libellé, seul champ libre que l'état du combat garde. */
+export function effetSortPaye(porteur: string, points: number, saisie: SortSaisie): NewEffect {
   return {
     origine: SORT_PAYE,
-    libelle: `sort payé (${points} ${points > 1 ? 'pts' : 'pt'} de pouvoir)`,
+    libelle: libelleSortPaye(points, saisie),
     porteur,
     stat: 'action',
     valeur: 0,
@@ -138,11 +192,13 @@ export function effetSortPaye(porteur: string, points: number): NewEffect {
   };
 }
 
-/** Le pouvoir que la carte a déjà payé pour son sort ce round, d'après ses traces « sort payé » (la dernière posée fait foi). */
+/** Le pouvoir que la carte a déjà payé pour son sort ce round, et les réglages de ce sort, d'après ses traces « sort payé » (la dernière
+ * posée fait foi). Une trace laissée avant que ses réglages y soient gardés ne donne que ses points. */
 export function sortPayeCeRound(effets: readonly CombatEffect[], carte: string): SortPaye {
   const traces = effets.filter((effet) => effet.porteur === carte && effet.origine === SORT_PAYE);
-  const points = Number(traces.at(-1)?.libelle?.match(/(\d+) pts? de pouvoir/)?.[1] ?? 0);
-  return {points, ids: traces.map((effet) => effet.id)};
+  const libelle = traces.at(-1)?.libelle ?? null;
+  const points = Number(libelle?.match(/^sort payé \(?(\d+) pts?/)?.[1] ?? 0);
+  return {points, ids: traces.map((effet) => effet.id), reglages: libelle ? reglagesDuLibelle(libelle) : null, libelle};
 }
 
 /** Le surcoût en points de pouvoir de l'armure portée (« +2 » d'une armure moyenne, livre p. 52 et 148) ; `toutCompte` : un PNJ porte

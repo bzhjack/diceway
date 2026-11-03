@@ -2,13 +2,13 @@ import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {map, Observable, of, switchMap, take, tap} from 'rxjs';
-import {promptDialog} from '../../shared/dw-prompt-dialog/dw-prompt-dialog';
-import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../models/bol-scene.model';
-import {BolFightSessionService} from '../services/bol-fight-session.service';
-import {BolSceneService} from '../services/bol-scene.service';
-import {SceneLoadDialogComponent} from './play/scene-list/scene-load-dialog';
-import {SceneLoadDialogData} from './models/scene-load-dialog.model';
-import {loadMessage, needsLoadChoice, normalizeTitre, SCENE_TITLE_MAX} from './play/scene-list/scene.util';
+import {promptDialog} from '../../../../shared/dw-prompt-dialog/dw-prompt-dialog';
+import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../../../models/bol-scene.model';
+import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {BolSceneService} from '../../../services/bol-scene.service';
+import {SceneLoadDialogComponent} from './scene-load-dialog';
+import {SceneLoadDialogData} from '../../models/scene-load-dialog.model';
+import {loadMessage, needsLoadChoice, normalizeTitre, SCENE_TITLE_MAX} from './scene.util';
 
 /** Les deux gestes sur les scènes qui touchent la table, partagés par l'onglet Scènes et la barre de
  * commande pour qu'ils fassent exactement la même chose : dialogues, appel réseau, message. Chaque

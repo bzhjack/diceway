@@ -126,7 +126,7 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--dw-forge-name);
-    text-shadow: 0 1px 3px #000;
+    text-shadow: 0 1px 3px var(--dw-forge-shade);
   }
 
   // La case et les dés, la formule dessous.

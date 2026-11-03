@@ -10,7 +10,7 @@ import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
-import {ANNEAU_RAYON, accueilSagas, sagaResumes, tableOuverte} from './accueil.util';
+import {ANNEAU_RAYON, accueilSagas, sagaResumes, tableOuverte, teinteDeSaga} from './accueil.util';
 
 interface AccueilBibliotheque {
   readonly cle: keyof BolAccueilComptes;
@@ -63,10 +63,7 @@ export class AccueilPageComponent {
   });
 
   /** La teinte de la saga de la table ouverte, pour son étiquette ; 0 sans saga. */
-  protected readonly tableTeinte = computed(() => {
-    const saga = this.table()?.saga ?? null;
-    return saga === null ? 0 : (this.sagas().find((resume) => resume.nom === saga)?.teinte ?? 0);
-  });
+  protected readonly tableTeinte = computed(() => teinteDeSaga(this.sagas(), this.table()?.saga ?? null));
 
   protected readonly compagnie = computed(() =>
     (this.data()?.compagnie ?? []).map((heros) => ({...heros, portrait: usableAvatar(heros.avatar), initiale: heros.nom.charAt(0).toUpperCase()})),

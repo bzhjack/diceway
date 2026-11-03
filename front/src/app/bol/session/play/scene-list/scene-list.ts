@@ -14,7 +14,7 @@ import {promptDialog} from '../../../../shared/dw-prompt-dialog/dw-prompt-dialog
 import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
-import {SceneActionsService} from '../../scene-actions.service';
+import {SceneActionsService} from './scene-actions.service';
 import {openSceneEditor} from '../theatre/scene-editor-dialog/scene-editor-dialog';
 import {
   distributionSummary,

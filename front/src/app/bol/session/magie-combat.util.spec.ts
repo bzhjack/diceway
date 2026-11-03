@@ -189,17 +189,42 @@ describe('issueSort', () => {
 describe('la trace du sort payé', () => {
   it('reads the points paid by the card, the last trace counting, and lists the traces to remove', () => {
     const effets = [
-      {...effetSortPaye('hero-1', 6), id: 'e-1'},
-      {...effetSortPaye('pnj-7', 1), id: 'e-2'},
-      {...effetSortPaye('hero-1', 11), id: 'e-3'},
+      {...effetSortPaye('hero-1', 6, saisie()), id: 'e-1'},
+      {...effetSortPaye('pnj-7', 1, saisie({cercle: 0, difficulte: 'automatique'})), id: 'e-2'},
+      {...effetSortPaye('hero-1', 11, saisie({cercle: 2, difficulte: 'difficile'})), id: 'e-3'},
     ];
 
-    expect(sortPayeCeRound(effets, 'hero-1')).toEqual({points: 11, ids: ['e-1', 'e-3']});
-    expect(sortPayeCeRound(effets, 'pnj-7')).toEqual({points: 1, ids: ['e-2']});
-    expect(sortPayeCeRound(effets, 'pnj-8')).toEqual({points: 0, ids: []});
+    expect(sortPayeCeRound(effets, 'hero-1')).toMatchObject({points: 11, ids: ['e-1', 'e-3'], reglages: saisie({cercle: 2, difficulte: 'difficile'})});
+    expect(sortPayeCeRound(effets, 'pnj-7')).toMatchObject({points: 1, ids: ['e-2']});
+    expect(sortPayeCeRound(effets, 'pnj-8')).toEqual({points: 0, ids: [], reglages: null, libelle: null});
   });
 
-  it('is a trace until the end of the round: it weighs on no roll', () => {
-    expect(effetSortPaye('hero-1', 6)).toMatchObject({valeur: 0, stat: 'action', duree: {type: 'fin-round'}, libelle: 'sort payé (6 pts de pouvoir)'});
+  it('is a trace until the end of the round: it weighs on no roll, and says what was paid and how the spell was set', () => {
+    expect(effetSortPaye('hero-1', 6, saisie())).toMatchObject({valeur: 0, stat: 'action', duree: {type: 'fin-round'}, libelle: 'sort payé 6 pts · 1er cercle à 0, 1 cond.'});
+    expect(effetSortPaye('hero-1', 2, saisie({cercle: 0, difficulte: 'automatique', coutCharme: 2, blessant: true}))).toMatchObject({libelle: 'sort payé 2 pts · charme de 2, auto, blesse'});
+  });
+
+  it('gives back the settings of the spell it was paid for: power, difficulty, conditions, wounding, on the mind (page reloaded)', () => {
+    const reglages = [
+      saisie(),
+      saisie({cercle: 1, difficulte: 'tres-facile', conditions: 12, blessant: true, espritCible: true}),
+      saisie({cercle: 2, difficulte: 'tres-difficile', conditions: 3, espritCible: true}),
+      saisie({cercle: 3, difficulte: 'heroique', conditions: 5, blessant: true}),
+      saisie({cercle: 0, difficulte: 'automatique', coutCharme: 2}),
+      saisie({cercle: 0, difficulte: 'facile', coutCharme: 1, blessant: true, espritCible: true}),
+    ];
+
+    for (const reglage of reglages) {
+      const effet = effetSortPaye('hero-1', 18, reglage);
+      // L'état du combat ne garde que 60 caractères de libellé (BolCombatState) : tout doit y tenir.
+      expect(effet.libelle!.length).toBeLessThanOrEqual(60);
+      expect(sortPayeCeRound([{...effet, id: 'e-1'}], 'hero-1')).toMatchObject({points: 18, reglages: reglage});
+    }
+  });
+
+  it('still reads the points of a trace left before the settings were kept, without settings', () => {
+    const ancienne = {...effetSortPaye('hero-1', 6, saisie()), libelle: 'sort payé (6 pts de pouvoir)', id: 'e-1'};
+
+    expect(sortPayeCeRound([ancienne], 'hero-1')).toMatchObject({points: 6, ids: ['e-1'], reglages: null});
   });
 });

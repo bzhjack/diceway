@@ -18,6 +18,6 @@
 }
 
 html {
-  background-color: #000 !important;
-  color: #fff;
+  background-color: var(--dw-base-bg) !important;
+  color: var(--dw-base-text);
 }

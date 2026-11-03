@@ -137,7 +137,7 @@
 .cc-nom {
   font: 400 1.5rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
   color: var(--dw-forge-name);
-  text-shadow: 0 1px 3px #000;
+  text-shadow: 0 1px 3px var(--dw-forge-shade);
 }
 
 .cc-chance {
@@ -154,7 +154,7 @@
   height: 5px;
   overflow: hidden;
   border-radius: 999px;
-  background: #000;
+  background: var(--dw-table-gauge-track);
   box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
 
   i,
@@ -171,7 +171,7 @@
   }
 
   u {
-    background: repeating-linear-gradient(45deg, var(--dw-color-echec), var(--dw-color-echec) 4px, #7f1d1d 4px, #7f1d1d 8px);
+    background: repeating-linear-gradient(45deg, var(--dw-color-echec), var(--dw-color-echec) 4px, var(--dw-table-wound) 4px, var(--dw-table-wound) 8px);
   }
 }
 

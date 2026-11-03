@@ -55,3 +55,11 @@ export function extractApiErrorMessage(
 ): string {
   return extractApiErrors(error, fallback)[0];
 }
+
+/** Tous les messages de l'erreur en un texte : un refus du serveur pour plusieurs raisons (budgets d'un brouillon…) les dit toutes. */
+export function extractApiErrorText(
+  error: unknown,
+  fallback = 'Une erreur est survenue.',
+): string {
+  return extractApiErrors(error, fallback).join(' ');
+}

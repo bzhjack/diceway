@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {extractApiErrorMessage, extractApiErrorText} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/models/pending-changes-guard.model';
 import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
@@ -126,7 +126,7 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar:
         },
         error: (error: unknown) => {
           this.errorMessage.set(
-            extractApiErrorMessage(error, this.editMode() ? this.labels.updateError : this.labels.createError),
+            extractApiErrorText(error, this.editMode() ? this.labels.updateError : this.labels.createError),
           );
         },
       });

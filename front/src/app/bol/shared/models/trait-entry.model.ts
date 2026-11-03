@@ -6,4 +6,6 @@ export interface TraitDraft {
   detail?: string | null;
   /** Région qui a proposé le trait (avantage régional) ; `null` pour un trait général. */
   region_id?: number | null;
+  /** Désavantage pris avec une carrière : la marque se garde à la sauvegarde. */
+  carriere?: boolean;
 }

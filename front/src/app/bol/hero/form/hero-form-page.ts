@@ -15,6 +15,7 @@ import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
 import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {TraitDraft} from '../../shared/models/trait-entry.model';
+import {traitPayload} from '../../shared/trait/trait-entry.utils';
 import {BolCharacterFormPageBase} from '../../shared/form/character-form-page.base';
 import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
 import {applyArmureEquipToggle, referencedIds, toggleEquipee} from '../../shared/form/form-selection';
@@ -329,6 +330,7 @@ export class HeroFormPageComponent extends BolCharacterFormPageBase<HeroFormMode
         type: trait.type,
         detail: trait.detail ?? null,
         region_id: trait.region_id ?? null,
+        carriere: Boolean(trait.carriere),
       })),
     });
   }
@@ -372,15 +374,7 @@ export class HeroFormPageComponent extends BolCharacterFormPageBase<HeroFormMode
       carriere_id: carriere.id,
       value: carriere.value,
     }));
-    // La précision et la région d'un trait (arme favorite, avantage régional) se gardent : la sauvegarde les remplaçait par null.
-    const traits = rawValue.traits.map((trait) => ({
-      id: trait.id,
-      traitable_id: trait.id,
-      type: trait.type,
-      detail: trait.detail ?? null,
-      region_id: trait.region_id ?? null,
-      carriere: false,
-    }));
+    const traits = rawValue.traits.map((trait) => traitPayload(trait));
     const armes = rawValue.armes.map((arme) => ({
       id: arme.id,
       arme_id: arme.id,

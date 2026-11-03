@@ -6,7 +6,7 @@ import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, differerActionPerdue, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, effetTourSauteParalyse, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, differerActionPerdue, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, effetTourSauteParalyse, estParalyse, nextEffectId, normalizeEffets, perdSonAction, redifererActionsPerdues, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
@@ -268,8 +268,9 @@ export function commencerTour(ordered: readonly OrderedCard[], etat: EtatCombat,
 
 /** Le tour d'une carte paralysée est passé quand la main va à une carte placée après elle dans l'ordre, ou quand le round s'achève : elle
  * compte comme ayant joué ce round (sa paralysie levée en plein round ne lui rend la main qu'au round suivant), ses effets « jusqu'à son
- * prochain tour » tombent, et une trace le dit sur la frise. Sa paralysie reste, ainsi que ses effets « à sa prochaine action ». Rend le même
- * état s'il n'y a rien à changer. */
+ * prochain tour » tombent, et une trace le dit sur la frise. Ce tour sauté est une action perdue : celle qu'elle devait (« Juste une
+ * égratignure ») est consommée avec lui, et ne lui coûtera pas le tour qui suit sa libération. Sa paralysie reste, ainsi que ses autres
+ * effets « à sa prochaine action » (dé de malus). Rend le même état s'il n'y a rien à changer. */
 function passerLesParalyses(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   const avant = activeKey === null ? ordered : ordered.slice(0, ordered.findIndex((entry) => entry.card.key === activeKey));
@@ -287,7 +288,7 @@ function passerLesParalyses(ordered: readonly OrderedCard[], etat: EtatCombat, g
     return etat;
   }
   const effets = passees.reduce<readonly CombatEffect[]>((liste, key) => {
-    const sansTour = appliquerEvenement(liste, {type: 'debut-tour', carte: key});
+    const sansTour = sansActionPerdue(appliquerEvenement(liste, {type: 'debut-tour', carte: key}), key);
     return [...sansTour, {...effetTourSauteParalyse(key), id: genererId(sansTour)}];
   }, etat.effets);
   return {...etat, joues: [...etat.joues, ...passees], effets};
@@ -345,7 +346,8 @@ export function effetsDerives(ordered: readonly OrderedCard[], round: number): C
 export const PIETAILLE = 'Piétaille';
 
 /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, quand elle-même est une piétaille : celles de son camp qui
- * n'ont pas encore joué ce round et peuvent jouer (04-pnj-creatures-demons.md, « Règle de horde » ; livre p. 132). Vide sinon. */
+ * n'ont pas encore joué ce round et peuvent jouer (04-pnj-creatures-demons.md, « Règle de horde » ; livre p. 132), sauf celles qui ont
+ * perdu leur action : leur tour sera sauté. Vide sinon. */
 export function hordeMates(ordered: readonly OrderedCard[], etat: EtatCombat): readonly TapisCard[] {
   const state = turnState(ordered, etat);
   const active = ordered.find((entry) => entry.card.key === state.activeKey)?.card;
@@ -354,7 +356,7 @@ export function hordeMates(ordered: readonly OrderedCard[], etat: EtatCombat): r
   }
   return ordered
     .map((entry) => entry.card)
-    .filter((card) => card.rang === PIETAILLE && card.camp === active.camp && state.statuses.get(card.key) === 'upcoming');
+    .filter((card) => card.rang === PIETAILLE && card.camp === active.camp && state.statuses.get(card.key) === 'upcoming' && !perdSonAction(etat.effets, card.key));
 }
 
 /** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. Elle se cumule avec la
@@ -368,7 +370,8 @@ export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat, 
 }
 
 /** « Rendre la main » : une carte qui a joué redevient jouable ce round. Ce que son tour avait fait naître (défense totale, posture) est
- * annulé avec lui — sinon elle pourrait attaquer en gardant le +2. */
+ * annulé avec lui — sinon elle pourrait attaquer en gardant le +2. « Perd sa prochaine action », posé pendant ce tour et armé à sa fin,
+ * vise de nouveau le tour d'après (`redifererActionsPerdues`) : le tour rouvert n'est pas sauté. */
 export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   if (!etat.joues.includes(key)) {
     return etat;
@@ -376,7 +379,10 @@ export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   return {
     ...etat,
     joues: etat.joues.filter((played) => played !== key),
-    effets: etat.effets.filter((effet) => !(effet.porteur === key && (effet.duree.type === 'debut-tour-porteur' || (effet.duree.type === 'usages' && effet.duree.expireAuTour === true)))),
+    effets: redifererActionsPerdues(
+      etat.effets.filter((effet) => !(effet.porteur === key && (effet.duree.type === 'debut-tour-porteur' || (effet.duree.type === 'usages' && effet.duree.expireAuTour === true)))),
+      key,
+    ),
   };
 }
 

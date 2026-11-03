@@ -14,7 +14,7 @@ import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
-import {SceneActionsService} from '../scene-actions.service';
+import {SceneActionsService} from './scene-list/scene-actions.service';
 import {SessionPlayPageComponent} from './session-play-page';
 import {CombatTurnStore} from './table/combat-turn.store';
 import {CombatWoundsService} from './table/combat-wounds.service';
@@ -206,14 +206,32 @@ describe('SessionPlayPageComponent', () => {
       expect(dialogOpen).toHaveBeenCalledTimes(1);
     });
 
-    it('un nouveau round fait saigner un héros mourant', async () => {
+    it('un nouveau round commencé sur cet écran fait saigner un héros mourant', async () => {
+      await rendre(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never}));
+      service.applyDamage.mockClear();
+
+      // Le serveur rend la table telle qu'elle est (le round en cours compris).
+      service.applyDamage.mockImplementation(() => of(table.session()));
+      service.fightSession.mockImplementation(() => of(table.session()));
+
+      // Le héros 2 puis le PNJ jouent : le round 2 commence.
+      combat.onEndTurn();
+      await stable();
+      combat.onEndTurn();
+      await stable();
+
+      expect(combat.etat().round).toBe(2);
+      expect(service.applyDamage).toHaveBeenCalledExactlyOnceWith('s1', 'hero', 1, -1);
+    });
+
+    it('un nouveau round reçu dans la session (un second écran sur la même table) ne refait pas saigner le mourant', async () => {
       await rendre(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never}));
       service.applyDamage.mockClear();
 
       table.session.set(session({heros: [heroRow(1, -2), heroRow(2, 10)] as never, etat_combat: etat({round: 2})}));
       await stable();
 
-      expect(service.applyDamage).toHaveBeenCalledWith('s1', 'hero', 1, -1);
+      expect(service.applyDamage).not.toHaveBeenCalled();
     });
   });
 

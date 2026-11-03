@@ -12,7 +12,7 @@
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 999px;
   // Du bronze bombé, comme les clous du bandeau.
-  background: linear-gradient(180deg, #3a2913, #1a1007);
+  background: linear-gradient(180deg, var(--dw-table-stud-top), var(--dw-table-stud-bottom));
   box-shadow:
     inset 0 1px 0 rgba(255, 225, 170, 0.22),
     0 2px 3px rgba(0, 0, 0, 0.6);
@@ -31,7 +31,7 @@
   }
 
   b {
-    color: #f0c869;
+    color: var(--dw-table-stud-value);
     font-variant-numeric: tabular-nums;
   }
 
@@ -53,16 +53,9 @@
   }
 }
 
-// Le panneau d'un `mat-menu` vit hors du composant : `::ng-deep` pour le dimensionner.
-::ng-deep .hd-menu.mat-mdc-menu-panel {
-  min-width: 15rem;
-  max-width: 22rem;
-  // Une plaque de fer, comme les panneaux du jet.
-  border: 1px solid var(--dw-forge-bronze);
-  border-radius: 7px;
-  background: var(--dw-forge-plate);
-}
+// Le panneau d'un `mat-menu` (`hd-menu`) vit hors du composant, dans le calque des overlays : `_table-globale.scss` le dimensionne.
 
+// Le contenu de ce panneau, lui, est rendu par ce gabarit.
 .hd-panel {
   padding: 0.6rem 0.8rem 0.7rem;
   outline: none;

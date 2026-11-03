@@ -182,6 +182,31 @@ class BolScenarioImportPlanTest extends TestCase
         $this->assertContains('personnages.hippocampe.degats : obligatoire', $errors);
     }
 
+    public function test_a_creature_may_be_undead(): void
+    {
+        $data = $this->data();
+        $data['personnages']['hippocampe']['mort_vivant'] = true;
+
+        $plan = BolScenarioImportPlan::fromArray($data, $this->catalog());
+
+        $this->assertTrue($plan->personnages['hippocampe']['fields']['mort_vivant']);
+    }
+
+    public function test_a_creature_is_not_undead_unless_the_file_says_so(): void
+    {
+        $plan = BolScenarioImportPlan::fromArray($this->data(), $this->catalog());
+
+        $this->assertFalse($plan->personnages['hippocampe']['fields']['mort_vivant']);
+    }
+
+    public function test_undead_is_true_or_false(): void
+    {
+        $data = $this->data();
+        $data['personnages']['hippocampe']['mort_vivant'] = 'oui';
+
+        $this->assertContains('personnages.hippocampe.mort_vivant : true ou false', $this->errors($data));
+    }
+
     public function test_distribution_gives_one_entry_per_pnj_and_a_lot_per_creature(): void
     {
         $entries = [

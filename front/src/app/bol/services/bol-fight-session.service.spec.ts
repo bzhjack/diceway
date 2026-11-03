@@ -1,9 +1,10 @@
 import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {extractApiErrorMessage} from '../../core/api-error.utils';
 import {BolFightSessionModel} from '../models/bol-fight-session.model';
-import {BolFightSessionService} from './bol-fight-session.service';
+import {BolFightSessionService, DELAI_APPEL_TABLE_MS} from './bol-fight-session.service';
 
 const session: BolFightSessionModel = {id: 's', titre: null, statut: 'combat'};
 
@@ -49,6 +50,29 @@ describe('BolFightSessionService', () => {
 
     expect(errors).toEqual([500]);
     expect(next).toEqual(session);
+  });
+
+  it('fait échouer un appel resté sans réponse au bout du délai, avec le message habituel, et laisse partir le suivant', () => {
+    vi.useFakeTimers();
+    try {
+      const errors: string[] = [];
+      let next: BolFightSessionModel | null = null;
+      service.applyDamage('s', 'hero', 1, -2).subscribe({error: (error: unknown) => errors.push(extractApiErrorMessage(error, 'Impossible d’appliquer les dégâts.'))});
+      service.setCamp('s', 'pnj', 2, 'heros').subscribe((value) => (next = value));
+
+      const damage = http.expectOne((request) => request.url.endsWith('/damage'));
+      vi.advanceTimersByTime(DELAI_APPEL_TABLE_MS - 1);
+      expect(errors).toEqual([]);
+      http.expectNone((request) => request.url.endsWith('/camp'));
+
+      vi.advanceTimersByTime(1);
+      expect(errors).toEqual(['Impossible d’appliquer les dégâts.']);
+      expect(damage.cancelled).toBe(true);
+      http.expectOne((request) => request.url.endsWith('/camp')).flush(session);
+      expect(next).toEqual(session);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('sends nothing before the subscription, and each subscription once', () => {

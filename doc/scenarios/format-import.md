@@ -92,10 +92,14 @@ Un personnage est soit une fiche créée pour le scénario, soit une référence
   "kind": "creature", "nom": "Hippocampe géant", "taille": "Moyenne",   // la taille donne le rang
   "vigueur": 0, "agilite": 1, "esprit": 0, "attaque": 1, "defense": 0,
   "vitalite": 6, "degats": "d6M", "protection": "1",
+  "mort_vivant": false,                                                 // facultatif
   "capacites": [{ "nom": "Attaque spéciale", "detail": "souffle dans la conque : alerte générale" }],
   "commentaire": "…"
 }
 ```
+
+- **Mort-vivant :** `"mort_vivant": true` pour une créature qui a une force vitale au lieu d'une vitalité (Bestiaire, p. 127) :
+  l'écran de combat écrit alors « Force vitale » et « détruit ». Facultatif, `false` par défaut ; `true` ou `false` seulement.
 
 **Démon :**
 

@@ -41,7 +41,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
   // Le camp de l'attaquant (vert pour un héros ou un allié, rouge pour un adversaire) colore son liseré, son médaillon, son nom et sa pastille.
   .tas {
     --tas-side: var(--dw-color-reussite);
-    --tas-side-ink: #041a0d;
+    --tas-side-ink: var(--dw-forge-on-reussite);
     container: tas / inline-size;
     display: flex;
     flex: 1;
@@ -56,7 +56,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
 
   .tas.tas--foe {
     --tas-side: var(--dw-color-echec-forte);
-    --tas-side-ink: #2a0505;
+    --tas-side-ink: var(--dw-forge-on-echec);
   }
 
   // Un bouton ⓘ : un cercle, le nombre d'effets en pastille sur son coin.
@@ -128,7 +128,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
   }
 
   .tas-chance--mid {
-    color: #e8b04a;
+    color: var(--dw-forge-chance-mid);
   }
 
   .tas-chance--low {
@@ -151,7 +151,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     box-sizing: border-box;
     border-radius: 999px;
     background: var(--dw-color-legendary);
-    color: #1c1200;
+    color: var(--dw-forge-ink);
     font-size: 0.74rem;
     font-variant-numeric: tabular-nums;
     line-height: 1;
@@ -437,7 +437,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
       border-color: var(--dw-color-legendary);
       // Or uni, comme le bouton « Fin du tour » : pas de dégradé.
       background: var(--dw-color-legendary);
-      color: #1c1200;
+      color: var(--dw-forge-ink);
 
       // Sur l'or, le détail (« d6B ») reste lisible : pas d'estompage, qui le ferait passer sous le contraste AA.
       em {
@@ -456,13 +456,13 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
   .tas-chip--bonus[aria-pressed='true'] {
     border-color: var(--dw-color-reussite);
     background: var(--dw-color-reussite);
-    color: #041a0d;
+    color: var(--dw-forge-on-reussite);
   }
 
   .tas-chip--malus[aria-pressed='true'] {
     border-color: var(--dw-color-echec);
     background: var(--dw-color-echec);
-    color: #2a0505;
+    color: var(--dw-forge-on-echec);
   }
 
   // Options du succès héroïque : en pointillés dorés tant qu'aucune n'est choisie.
@@ -658,7 +658,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
 
   .tas-verdict-title {
     font: 400 2.1rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
-    text-shadow: 0 1px 3px #000;
+    text-shadow: 0 1px 3px var(--dw-forge-shade);
   }
 
   .tas-verdict-title {
@@ -678,12 +678,12 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     flex: none;
     width: 0.6rem;
     height: 0.8rem;
-    background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+    background: linear-gradient(160deg, var(--dw-color-legendary-muted), var(--dw-color-legendary) 55%, var(--dw-table-gem-gold-tip));
     clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
   }
 
   .tas-gem.tas-gem--foe {
-    background: linear-gradient(160deg, #fecaca, var(--dw-color-echec-forte) 55%, #7f1d1d);
+    background: linear-gradient(160deg, var(--dw-color-danger-muted), var(--dw-color-echec-forte) 55%, var(--dw-table-wound));
   }
 
   // Le héros a obtenu un succès légendaire au jet de réaction : son +1 aux attaques, rappelé sous son nom.
@@ -742,10 +742,10 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
       border-color: var(--dw-color-legendary);
       box-shadow: none;
       background: var(--dw-color-legendary);
-      color: #1c1200;
+      color: var(--dw-forge-ink);
 
       .tas-gem {
-        background: #1c1200;
+        background: var(--dw-forge-ink);
       }
     }
   }
@@ -818,7 +818,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     &[aria-pressed='true'] {
       border-color: var(--dw-color-echec-forte);
       background: var(--dw-color-echec-forte);
-      color: #fff;
+      color: var(--dw-forge-white);
 
       .tas-gem {
         background: currentColor;
@@ -833,7 +833,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     &[aria-pressed='true'] {
       border-color: var(--dw-color-succes-legendaire);
       background: var(--dw-color-succes-legendaire);
-      color: #1d0b33;
+      color: var(--dw-forge-on-legendaire);
 
       .tas-gem {
         background: currentColor;

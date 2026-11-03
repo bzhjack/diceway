@@ -62,7 +62,7 @@
   overflow: hidden;
   border: 1px solid var(--dw-border);
   border-radius: 6px;
-  background: linear-gradient(#241a12, #130d08);
+  background: linear-gradient(var(--bar-leather-top), var(--bar-leather-bottom));
 }
 
 .sed-apercu-img {

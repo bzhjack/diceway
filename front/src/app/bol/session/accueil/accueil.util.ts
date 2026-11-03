@@ -1,5 +1,6 @@
 import {BolAccueilScenario, BolAccueilTable} from '../../models/bol-accueil.model';
 import {AccueilChapitre, AccueilSaga, AccueilSagaResume, AccueilTableOuverte} from '../models/accueil.model';
+import {findScenario} from '../scenario.util';
 
 const SEPARATEUR = ' — ';
 
@@ -19,6 +20,12 @@ function decouper(titre: string): Decoupe {
     }
   }
   return {saga: null, libelle: titre};
+}
+
+/** La clé d'une saga : son nom sans tenir compte de la casse (« Perle du Beshaar » et « PERLE DU BESHAAR » sont la même saga). Les accents
+ * comptent : « Éveil » et « Eveil » restent deux sagas. */
+function cleDeSaga(nom: string): string {
+  return nom.toLocaleLowerCase('fr');
 }
 
 /** Introduction d'abord, puis les chapitres numérotés par numéro, puis le reste par ordre alphabétique. */
@@ -68,7 +75,7 @@ export function accueilSagas(
       horsSaga.chapitres.push(chapitre);
       continue;
     }
-    const cle = saga.toLocaleLowerCase('fr');
+    const cle = cleDeSaga(saga);
     const groupe = groupes.get(cle) ?? {nom: saga, chapitres: []};
     groupe.chapitres.push(chapitre);
     groupes.set(cle, groupe);
@@ -104,10 +111,6 @@ export function tableTitre(table: BolAccueilTable, scenarios: readonly BolAccuei
   return `Table du ${date}`;
 }
 
-export function findScenario(scenarios: readonly BolAccueilScenario[], id: string | null): BolAccueilScenario | null {
-  return id === null ? null : (scenarios.find((s) => s.id === id) ?? null);
-}
-
 /** Rayon de l'anneau d'avancement d'une saga, dans un `viewBox` de 64. */
 export const ANNEAU_RAYON = 27;
 
@@ -140,6 +143,16 @@ export function sagaResumes(sagas: readonly AccueilSaga[]): AccueilSagaResume[] 
       anneau: `${((circonference * joues) / Math.max(1, total)).toFixed(1)} ${circonference.toFixed(1)}`,
     };
   });
+}
+
+/** La teinte d'une saga (celle de la table ouverte), retrouvée comme les chapitres sont groupés : sans tenir compte de la casse, car le nom
+ * d'une saga est celui du premier titre vu et le scénario de la table peut l'écrire autrement. 0 sans saga ou pour une saga inconnue. */
+export function teinteDeSaga(resumes: readonly AccueilSagaResume[], saga: string | null): number {
+  if (saga === null) {
+    return 0;
+  }
+  const cle = cleDeSaga(saga);
+  return resumes.find((resume) => resume.nom !== null && cleDeSaga(resume.nom) === cle)?.teinte ?? 0;
 }
 
 /** La table ouverte pour le bandeau : la saga de son scénario au-dessus, son titre (le sien, sinon le chapitre, sinon sa date) en grand. */

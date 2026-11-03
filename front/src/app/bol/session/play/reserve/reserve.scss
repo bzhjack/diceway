@@ -56,27 +56,22 @@
 
   // Chaque onglet est un toggle séparé, comme les puces de l'assistant de tour : rectangle cerclé, or uni une fois allumé (couleurs
   // du thème des bascules, `_material-button-theme.scss`).
-  ::ng-deep .mat-button-toggle {
+  // Les `mat-button-toggle` sont dans ce gabarit : leurs classes d'hôte se ciblent sans percer l'encapsulation. Leur libellé, lui, est
+  // dans le composant Material : `_table-globale.scss`.
+  .mat-button-toggle {
     border: 1px solid var(--dw-border);
     border-radius: var(--dw-radius-toggle);
     background: var(--dw-surface-0);
     font-weight: 700;
   }
 
-  ::ng-deep .mat-button-toggle + .mat-button-toggle {
+  .mat-button-toggle + .mat-button-toggle {
     border-left: 1px solid var(--dw-border);
   }
 
-  ::ng-deep .mat-button-toggle-checked {
+  .mat-button-toggle-checked {
     border-color: var(--dw-color-legendary);
     background: var(--dw-color-legendary);
-  }
-
-  ::ng-deep .mat-button-toggle-label-content {
-    padding: 0 0.3rem;
-    font-size: 0.74rem;
-    line-height: 2rem;
-    letter-spacing: 0.03em;
   }
 }
 
@@ -87,11 +82,7 @@
   --mat-form-field-outlined-hover-outline-color: var(--bar-bronze, var(--dw-surface-500));
   --mat-form-field-outlined-focus-outline-color: var(--bar-ember, var(--dw-color-legendary));
   --mat-form-field-outlined-label-text-color: var(--dw-surface-500);
-
-  ::ng-deep .mdc-text-field--outlined {
-    background: var(--dw-surface-0);
-    border-radius: 8px;
-  }
+  // Son fond et ses coins : `_table-globale.scss`.
 }
 
 // La liste : une ligne par personnage, qui défile verticalement.
@@ -117,9 +108,9 @@
 
 .rsv-row {
   --rsv-kind: var(--dw-color-reussite);
-  --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
+  --rsv-metal-1: var(--bar-pj-1);
   --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
-  --rsv-metal-3: var(--bar-pj-3, #92620a);
+  --rsv-metal-3: var(--bar-pj-3);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -152,21 +143,21 @@
 
 .rsv-row--pnj {
   --rsv-kind: var(--dw-color-pnj);
-  --rsv-metal-1: var(--bar-pnj-1, #d6c3a0);
-  --rsv-metal-2: var(--bar-pnj-2, #9c8763);
-  --rsv-metal-3: var(--bar-pnj-3, #3d2b1c);
+  --rsv-metal-1: var(--bar-pnj-1);
+  --rsv-metal-2: var(--bar-pnj-2);
+  --rsv-metal-3: var(--bar-pnj-3);
 }
 .rsv-row--creature {
   --rsv-kind: var(--dw-color-creature);
-  --rsv-metal-1: var(--bar-creature-1, #fed7aa);
-  --rsv-metal-2: var(--bar-creature-2, #d97706);
-  --rsv-metal-3: var(--bar-creature-3, #78350f);
+  --rsv-metal-1: var(--bar-creature-1);
+  --rsv-metal-2: var(--bar-creature-2);
+  --rsv-metal-3: var(--bar-creature-3);
 }
 .rsv-row--demon {
   --rsv-kind: var(--dw-color-demon);
-  --rsv-metal-1: var(--bar-demon-1, #fecdd3);
-  --rsv-metal-2: var(--bar-demon-2, #be123c);
-  --rsv-metal-3: var(--bar-demon-3, #4c0519);
+  --rsv-metal-1: var(--bar-demon-1);
+  --rsv-metal-2: var(--bar-demon-2);
+  --rsv-metal-3: var(--bar-demon-3);
 }
 
 // Déjà à table : grisée et non glissable.
@@ -251,9 +242,9 @@
 
 .rsv-ghost-art {
   --rsv-kind: var(--dw-color-reussite);
-  --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
+  --rsv-metal-1: var(--bar-pj-1);
   --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
-  --rsv-metal-3: var(--bar-pj-3, #92620a);
+  --rsv-metal-3: var(--bar-pj-3);
   box-sizing: border-box;
   display: flex;
   align-items: center;

@@ -149,6 +149,36 @@ class BolMagieCombatTest extends TestCase
         $this->patchJson("/api/bol/heros/{$pretre->id}/ressource", ['ressource' => 'vitalite', 'delta' => 1])->assertStatus(422);
     }
 
+    /**
+     * Deux dépenses simultanées (deux écrans sur la même table) : la seconde s'enregistre entre la lecture et l'écriture de la première.
+     * L'ajustement se fait en base, d'un seul ordre : aucune des deux dépenses ne se perd.
+     */
+    public function test_deux_depenses_simultanees_de_foi_ou_de_pouvoir_d_un_heros_comptent_toutes_les_deux(): void
+    {
+        foreach (['foi' => 5, 'pouvoir' => 12] as $ressource => $depart) {
+            $pretre = $this->fiche('H', [$ressource => $depart]);
+            $concurrente = true;
+            BolHeros::retrieved(function (BolHeros $lu) use (&$concurrente, $pretre, $ressource): void {
+                if ($concurrente && $lu->id === $pretre->id) {
+                    $concurrente = false;
+                    DB::table('bol_heros')->where('id', $pretre->id)->decrement($ressource);
+                }
+            });
+
+            $this->patchJson("/api/bol/heros/{$pretre->id}/ressource", ['ressource' => $ressource, 'delta' => -2])->assertOk();
+
+            $this->assertSame($depart - 3, $pretre->fresh()->{$ressource}, $ressource);
+        }
+    }
+
+    public function test_une_depense_atomique_ne_descend_pas_sous_zero_et_un_gain_s_ajoute(): void
+    {
+        $pretre = $this->fiche('H', ['foi' => 2]);
+
+        $this->patchJson("/api/bol/heros/{$pretre->id}/ressource", ['ressource' => 'foi', 'delta' => -5])->assertOk()->assertJsonPath('ressources.foi', 0);
+        $this->patchJson("/api/bol/heros/{$pretre->id}/ressource", ['ressource' => 'foi', 'delta' => 3])->assertOk()->assertJsonPath('ressources.foi', 3);
+    }
+
     public function test_un_autre_compte_ne_touche_pas_a_la_foi_d_un_heros(): void
     {
         $autre = User::factory()->create();
@@ -164,6 +194,30 @@ class BolMagieCombatTest extends TestCase
         $this->postJson('/api/bol/pnj/update', $champs + [
             'id' => $pnj->id, 'nom' => $pnj->nom, 'carrieres' => $carrieres, 'armes' => [], 'armures' => [], 'langues' => [], 'traits' => [],
         ])->assertOk();
+    }
+
+    public function test_la_vilenie_de_table_suit_le_rang_et_la_vilenie_de_la_fiche(): void
+    {
+        $garde = $this->fiche('C', ['vitalite' => 10, 'vilenie' => 0]);
+        $table = $this->table();
+        $ligne = app(BolFightSessionService::class)->createPnjRow($table->id, $garde->id, 'adversaires');
+        $this->assertNull($ligne->fresh()->vilenie_courante);
+
+        // Le coriace devient rival : sa ligne reçoit la vilénie de sa fiche.
+        $this->enregistrerFiche($garde, ['vitalite' => 10, 'type' => 'R', 'vilenie' => 3]);
+        $this->assertSame('rival', $ligne->fresh()->rang);
+        $this->assertSame(3, $ligne->fresh()->vilenie_courante);
+
+        // Il en dépense, puis sa fiche monte à 5 : ce qui est dépensé n'est pas rendu ; puis elle descend à 1 : ramenée à 1.
+        $ligne->update(['vilenie_courante' => 2]);
+        $this->enregistrerFiche($garde, ['vitalite' => 10, 'type' => 'R', 'vilenie' => 5]);
+        $this->assertSame(2, $ligne->fresh()->vilenie_courante);
+        $this->enregistrerFiche($garde, ['vitalite' => 10, 'type' => 'R', 'vilenie' => 1]);
+        $this->assertSame(1, $ligne->fresh()->vilenie_courante);
+
+        // Il n'est plus rival : plus de vilénie.
+        $this->enregistrerFiche($garde, ['vitalite' => 10, 'type' => 'C', 'vilenie' => 1]);
+        $this->assertNull($ligne->fresh()->vilenie_courante);
     }
 
     public function test_un_pnj_devenu_pretre_sur_sa_fiche_recoit_sa_foi_a_la_table(): void

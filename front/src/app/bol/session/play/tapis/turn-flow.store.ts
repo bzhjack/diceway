@@ -40,6 +40,21 @@ export class TurnFlowStore {
   /** Le sort de ce tour est lancé (payé) : il ne se règle plus, et l'attaque n'est plus possible. */
   readonly sortLance = computed(() => this.attack.sortPaid() > 0 || this.attack.sortAuto());
 
+  /** Un prêtre visé ne peut plus imposer de dé de foi à son agresseur : le dé s'annonce avant le jet (livre p. 146 : le druide perturbe
+   * Krongar « qui s'apprête à jeter sa lance », et Krongar jette ensuite 3 dés). Le jet fait — attaque ou sort, payé même avant un
+   * rechargement —, ou le coup joué, le dé de foi de la cible se ferme ; il se rouvre si le jet est effacé, ou pour l'attaque suivante d'un
+   * Carnage. `null` tant qu'il est ouvert, sinon ce que dit son infobulle. */
+  readonly deFoiCibleVerrou = computed(() => {
+    const jetFait =
+      this.attack.attackVerdict() !== null ||
+      this.attack.sortVerdict() !== null ||
+      this.sortLance() ||
+      this.attack.sortCredit() > 0 ||
+      this.played() !== null ||
+      (this.lastHit() !== null && this.attack.carnageOwed() === 0);
+    return jetFait ? `Trop tard : le jet de ${this.turn.card().nom} est fait, et un dé de foi s’impose avant le jet (livre p. 146)` : null;
+  });
+
   /** Il reste à choisir qui viser : les cartes des cibles prennent toute la largeur, l'attaque et les dégâts attendent. */
   readonly choixCible = computed(
     () =>
@@ -270,18 +285,20 @@ export class TurnFlowStore {
     this.noterSortPaye(paye);
   }
 
-  /** Tient à jour la trace « sort payé » de la carte (cf. `effetSortPaye`) : les anciennes tombent, la nouvelle dit ce qui est payé ; aucune
-   * pour 0 (sort rendu, ou perdu). */
+  /** Tient à jour la trace « sort payé » de la carte (cf. `effetSortPaye`) : les anciennes tombent, la nouvelle dit ce qui est payé et
+   * comment le sort est réglé ; aucune pour 0 (sort rendu, ou perdu). */
   private noterSortPaye(points: number): void {
     const trace = this.attack.sortTrace();
-    if (points > 0 && trace.ids.length === 1 && trace.points === points) {
+    const nouvelle = points > 0 ? effetSortPaye(this.turn.card().key, points, this.loadout.sortModel()) : null;
+    // La même trace (mêmes points, mêmes réglages) est déjà posée : rien à refaire.
+    if (nouvelle && trace.ids.length === 1 && trace.libelle === nouvelle.libelle) {
       return;
     }
     for (const id of trace.ids) {
       this.turn.effectRemoved.emit(id);
     }
-    if (points > 0) {
-      this.turn.effectAdded.emit(effetSortPaye(this.turn.card().key, points));
+    if (nouvelle) {
+      this.turn.effectAdded.emit(nouvelle);
     }
   }
 

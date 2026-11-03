@@ -33,10 +33,17 @@
           <span class="tas-tag">{{ pts.titre }}</span>
         </div>
       }
-      <!-- Un prêtre visé peut, sans attendre son tour, imposer un dé de malus à son agresseur (livre p. 146) -->
+      <!-- Un prêtre visé peut, sans attendre son tour, imposer un dé de malus à son agresseur (livre p. 146) : avant son jet, pas après -->
       @let foi = turn.targetStats()?.magie?.foi ?? null;
       @if (foi !== null) {
-        <bol-de-foi [pretre]="t" [foi]="foi" [visibles]="turn.visibles()" (stepped)="turn.ajusterRessource(t, 'foi', $event)" (donne)="turn.donnerDeFoi(t, $event.porteur, $event.sens)" />
+        <bol-de-foi
+          [pretre]="t"
+          [foi]="foi"
+          [visibles]="turn.visibles()"
+          [verrou]="flow.deFoiCibleVerrou()"
+          (stepped)="turn.ajusterRessource(t, 'foi', $event)"
+          (donne)="turn.donnerDeFoi(t, $event.porteur, $event.sens)"
+        />
       }
     </div>
     <div ccActions class="tas-target-actions">

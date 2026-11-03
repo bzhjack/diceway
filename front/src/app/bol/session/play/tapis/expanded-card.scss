@@ -7,9 +7,9 @@
 .exc {
   --exc-kind: var(--dw-color-reussite);
   // Métal de l'anneau et du cadre, selon le type : clair → moyen → sombre (mêmes que la face repliée).
-  --exc-metal-1: var(--bar-pj-1, #f1e3b4);
+  --exc-metal-1: var(--bar-pj-1);
   --exc-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
-  --exc-metal-3: var(--bar-pj-3, #92620a);
+  --exc-metal-3: var(--bar-pj-3);
   width: min(21rem, 92vw);
   // La forge, comme le jet de réaction : de la suie, et la lueur de la braise qui descend du bandeau.
   border: 1px solid var(--dw-forge-bronze);
@@ -29,21 +29,21 @@
 
 .exc--pnj {
   --exc-kind: var(--dw-color-pnj);
-  --exc-metal-1: var(--bar-pnj-1, #d6c3a0);
-  --exc-metal-2: var(--bar-pnj-2, #9c8763);
-  --exc-metal-3: var(--bar-pnj-3, #3d2b1c);
+  --exc-metal-1: var(--bar-pnj-1);
+  --exc-metal-2: var(--bar-pnj-2);
+  --exc-metal-3: var(--bar-pnj-3);
 }
 .exc--creature {
   --exc-kind: var(--dw-color-creature);
-  --exc-metal-1: var(--bar-creature-1, #fed7aa);
-  --exc-metal-2: var(--bar-creature-2, #d97706);
-  --exc-metal-3: var(--bar-creature-3, #78350f);
+  --exc-metal-1: var(--bar-creature-1);
+  --exc-metal-2: var(--bar-creature-2);
+  --exc-metal-3: var(--bar-creature-3);
 }
 .exc--demon {
   --exc-kind: var(--dw-color-demon);
-  --exc-metal-1: var(--bar-demon-1, #fecdd3);
-  --exc-metal-2: var(--bar-demon-2, #be123c);
-  --exc-metal-3: var(--bar-demon-3, #4c0519);
+  --exc-metal-1: var(--bar-demon-1);
+  --exc-metal-2: var(--bar-demon-2);
+  --exc-metal-3: var(--bar-demon-3);
 }
 
 // Héros : la carte s'élargit pour que le jet d'action tienne sur trois colonnes (cf. la requête de
@@ -55,7 +55,7 @@
 
   .exc-name {
     color: var(--dw-forge-name);
-    text-shadow: 0 1px 2px #000, 0 0 18px rgba(232, 135, 58, 0.25);
+    text-shadow: 0 1px 2px var(--dw-forge-shade), 0 0 18px rgba(232, 135, 58, 0.25);
   }
 }
 
@@ -164,7 +164,7 @@
 }
 
 .exc-icon-btn--danger:hover {
-  --mat-icon-button-icon-color: #fff;
+  --mat-icon-button-icon-color: var(--dw-forge-white);
   background: var(--dw-forge-critique);
 }
 

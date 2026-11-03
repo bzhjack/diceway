@@ -97,3 +97,34 @@ input[type='number'] {
     height: 100%;
   }
 }
+
+// ── Une entrée de liste repliable (`dw-collapsible-row`) ─────────────────────────
+// Typographie du contenu projeté dans [row-summary]/[row-body] (armes, armures, langues, carrières, traits…) : ce contenu garde le scope
+// de la liste qui l'écrit, pas celui de `dw-collapsible-row`, d'où une feuille globale.
+.dw-entry-label {
+  font-weight: 600;
+  color: var(--dw-forge-bone);
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dw-entry-meta {
+  align-self: stretch;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  color: var(--dw-forge-stud-text);
+}
+
+.dw-entry-detail-title {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--dw-forge-gold);
+}
+
+.dw-entry-delete-btn {
+  color: var(--dw-forge-verdict-echec) !important;
+  margin-top: 0.35rem;
+}

@@ -8,7 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-/** Les PNJ du catalogue passent aux armes régionales de Mythic+ ; un PNJ de compte du même nom n'est pas touché. */
+/** Les PNJ du catalogue passent aux armes régionales de Mythic+ ; un PNJ de compte du même nom n'est pas touché, une arme de compte du
+ * même nom n'est jamais prise. */
 class BolNpcRegionalWeaponsTest extends TestCase
 {
     use RefreshDatabase;
@@ -18,12 +19,21 @@ class BolNpcRegionalWeaponsTest extends TestCase
     /** @var array<string, int> */
     private array $armes = [];
 
+    /** @var array<string, int> Armes homonymes d'un compte, créées avant celles du catalogue (leur id est plus petit). */
+    private array $armesDeCompte = [];
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $proprietaire = User::factory()->create();
+        foreach (['Arc', 'Arc de guerre de Tyrus', 'Kriss', 'Arme d’hast', 'Khastok'] as $arme) {
+            $this->armesDeCompte[$arme] = DB::table('bol_arme')->insertGetId(['arme' => $arme, 'type' => 'M', 'degats' => 'd3', 'user_id' => $proprietaire->id]);
+        }
+        // Les armes de Mythic+ sont déjà au catalogue (posées par leur migration) : on reprend celles-là.
         foreach (['Arc', 'Arc de guerre de Tyrus', 'Dague', 'Kriss', 'Arme d’hast', 'Khastok'] as $arme) {
-            $this->armes[$arme] = DB::table('bol_arme')->insertGetId(['arme' => $arme, 'type' => 'M', 'degats' => 'd6']);
+            $this->armes[$arme] = (int) (DB::table('bol_arme')->whereNull('user_id')->where('arme', $arme)->value('id')
+                ?? DB::table('bol_arme')->insertGetId(['arme' => $arme, 'type' => 'M', 'degats' => 'd6']));
         }
     }
 
@@ -63,6 +73,25 @@ class BolNpcRegionalWeaponsTest extends TestCase
         $this->migration()->up();
 
         $this->assertSame(['Arme d’hast'], $this->armesDe($sien));
+    }
+
+    public function test_the_weapons_are_taken_from_the_catalogue_only(): void
+    {
+        $archer = $this->pnj('Archer de Tyrus', ['Arc']);
+        $assassin = $this->pnj('Assassin halakhi', []);
+        $garde = $this->pnj('Garde jemadar', ['Arme d’hast']);
+
+        $this->migration()->up();
+
+        $this->assertSame([$this->armes['Arc de guerre de Tyrus']], $this->armeIdsDe($archer));
+        $this->assertSame([$this->armes['Kriss']], $this->armeIdsDe($assassin));
+        $this->assertSame([$this->armes['Khastok']], $this->armeIdsDe($garde));
+    }
+
+    /** @return list<int> */
+    private function armeIdsDe(string $herosId): array
+    {
+        return DB::table('bol_heros_arme')->where('heros_id', $herosId)->pluck('arme_id')->map(fn ($id) => (int) $id)->all();
     }
 
     private function migration(): object

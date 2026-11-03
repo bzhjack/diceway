@@ -506,6 +506,15 @@ function armerActionsPerdues(effets: readonly CombatEffect[], porteur?: string):
   return effets.some(armer) ? effets.map((effet) => (armer(effet) ? {...effet, origine: ACTION_PERDUE} : effet)) : effets;
 }
 
+/** « Rendre la main » à une carte : son tour rouvert est celui qu'elle a déjà joué, et l'action perdue armée à sa fin (`armerActionsPerdues`)
+ * redevient différée, pour qu'elle ne lui coûte pas ce tour mais le suivant. Le registre ne dit pas qui l'a posée : une action perdue
+ * qu'un adversaire lui aurait infligée depuis est différée de même — elle n'est jamais perdue, elle vaut pour son tour d'après. Rend la
+ * même liste s'il n'y en a aucune. */
+export function redifererActionsPerdues(effets: readonly CombatEffect[], carte: string): readonly CombatEffect[] {
+  const armee = (effet: CombatEffect) => effet.porteur === carte && effet.origine === ACTION_PERDUE;
+  return effets.some(armee) ? effets.map((effet) => (armee(effet) ? {...effet, origine: ACTION_PERDUE_DIFFEREE} : effet)) : effets;
+}
+
 /** L'action perdue est consommée : son tour vient d'être sauté. Les autres effets « à sa prochaine action » (dé de malus d'un
  * renversement) attendent l'action qu'il fera vraiment. */
 export function sansActionPerdue(effets: readonly CombatEffect[], carte: string): readonly CombatEffect[] {

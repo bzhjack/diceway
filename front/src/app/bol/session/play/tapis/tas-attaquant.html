@@ -133,7 +133,16 @@
         </div>
         <span class="tas-segm">
           @for (o of loadout.postureChoices(); track o.slug) {
-            <button type="button" class="tas-seg" [attr.aria-pressed]="loadout.posturePressed() === o.slug" [disabled]="o.slug === 'total' && flow.attaqueEngagee()" [matTooltip]="o.hint" (click)="loadout.selectOption(o.slug)">
+            @let fermee = loadout.postureFermee(o.slug);
+            <button
+              type="button"
+              class="tas-seg"
+              [attr.aria-pressed]="loadout.posturePressed() === o.slug"
+              [attr.aria-disabled]="fermee || null"
+              [disabled]="o.slug === 'total' && flow.attaqueEngagee()"
+              [matTooltip]="fermee ? loadout.sansPostureHint : o.hint"
+              (click)="loadout.selectOption(o.slug)"
+            >
               <b>{{ o.name }}</b>
               <small>{{ o.effect }}</small>
             </button>
@@ -154,7 +163,15 @@
           </div>
           <div class="tas-chips">
             @for (o of loadout.manoeuvres(); track o.slug) {
-              <button type="button" class="tas-chip" [attr.aria-pressed]="loadout.effectiveSpecial()?.slug === o.slug" [disabled]="loadout.defenseTotale()" [matTooltip]="o.note" (click)="loadout.toggleSpecial(o.slug)">{{ loadout.specialName(o) }}</button>
+              <button
+                type="button"
+                class="tas-chip"
+                [attr.aria-pressed]="loadout.effectiveSpecial()?.slug === o.slug"
+                [attr.aria-disabled]="loadout.sansPosture() || null"
+                [disabled]="loadout.defenseTotale()"
+                [matTooltip]="loadout.sansPosture() ? loadout.sansPostureHint : o.note"
+                (click)="loadout.toggleSpecial(o.slug)"
+              >{{ loadout.specialName(o) }}</button>
             }
             @for (c of loadout.usefulCarrieres(); track c.label) {
               <button

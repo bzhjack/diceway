@@ -209,10 +209,19 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Sort relancé** : relancer les dés d'un sort à l'écran est un nouveau sort, payé en entier ; la faveur divine relance sans repayer. Changer de cible après le jet perd le sort (le pouvoir reste dépensé), comme l'attaque remet son jet à zéro.
 - **Sort payé et rechargement** : le paiement laisse une trace `sort-paye` (valeur 0, jusqu'à la fin du round) ; après un rechargement, l'assistant revient sur le sort et ne redébite pas ce qui est déjà payé (seulement la différence pour un sort plus cher).
 - **Fuite opportune** : réservée aux rivaux adverses (`camp === 'adversaires'`) ; une seule route serveur (`PATCH …/combatant/pnj/{pivotId}/fuite`) dépense la vilénie et fait fuir le rival dans une transaction ; `BolCombatState::merge` ne fait jamais revenir un rival enfui.
+- **Posture pendant un sort** : ni posture ni manœuvre ne comptent pendant un sort (livre p. 65 et 148), ni au jet ni en défense ; elles sont fermées dans l'assistant et reviennent si le sorcier repasse à l'attaque. La défense totale reste proposée.
+- **Dé de foi de la cible** : il s'annonce avant le jet (livre p. 146) ; une fois le jet de l'attaquant fait, il est fermé, avec la raison (`deFoiCibleVerrou`).
+- **Réglages du sort** : la trace `sort-paye` garde aussi les réglages (cercle, difficulté, conditions, blesse, sur l'esprit), encodés dans son libellé ; un rechargement les restaure.
+- **Paralysé** : le tour sauté pour paralysie consomme aussi une action perdue.
+- **Rendre la main** : re-diffère les actions perdues armées de la carte ; le tour rendu se joue, le suivant est sauté.
+- **Horde** : une piétaille qui a perdu son action ne peut pas rejoindre une horde.
+- **Mêlée de piétaille** : marquée faite pour le round dès la première perte enregistrée ; interrompue, elle ne se rejoue pas.
+- **Début de round** : il ne se joue que sur l'écran dont l'enregistrement a fait passer le round (`roundCommenceIci`) : un second écran ouvert sur la table ne le rejoue pas.
+- **File d'enregistrement** : un appel de la table qui ne répond pas en 15 s échoue avec le message habituel, et la file repart.
 
 ## 9. Limites connues
 
-Toutes les règles de combat du livre sont gérées ; `doc/plans/2026-11-02-reste-a-faire.md` (section 2) ne garde que le script navigateur rejouable pour l'héroïsme. Les limites qui restent :
+Toutes les règles de combat du livre sont gérées. Les limites qui restent :
 
 - pas d'annonce vocale des effets expirés ;
 - pas d'annulation d'un « Retirer du combat » : la carte revient en jeu après le combat, ou par un nouveau jet de réaction ;
@@ -222,7 +231,17 @@ Toutes les règles de combat du livre sont gérées ; `doc/plans/2026-11-02-rest
 - le dé de foi ne se donne que depuis la ligne de qui joue ou la carte de sa cible : un prêtre qui n'est ni l'un ni l'autre attend son tour (ou le MJ pose un dé de malus avec « + Effet » et corrige la foi à la main) ;
 - la condition d'incantation « blessures » n'est pas appliquée d'office (le MJ corrige la vitalité du sorcier), ni la perte définitive d'un point de pouvoir au 3e cercle (rappelée seulement) ;
 - un sort ne vise que les cartes d'en face : un sort sur un allié (« Peau écailleuse ») se pose en effet à la main ;
-- les points de pouvoir et de foi ne reviennent pas tout seuls (midi, minuit, temple) : le MJ corrige la fiche.
+- les points de pouvoir et de foi ne reviennent pas tout seuls (midi, minuit, temple) : le MJ corrige la fiche ;
+- « Rendre la main » re-diffère toutes les actions perdues armées de la carte, y compris une infligée par un adversaire pendant le tour rendu (le registre ne garde pas qui a posé l'effet) : elle coûte le tour suivant ;
+- le dé de foi d'un prêtre qui joue n'est pas fermé après son propre jet (il sert aussi à aider un allié) ;
+- si la réponse de l'enregistrement qui fait passer le round se perd alors que le serveur l'a bien gardé, aucun écran ne joue le début de round ; si l'enregistrement de la trace « sort payé » échoue, un rechargement ne la retrouve pas (la table signale l'erreur).
+
+Hors du périmètre du combat :
+
+- **Guerre terrestre et navale** (`03-guerre.md`) : un autre système (valeur d'armée, jets de bataille, manœuvres navales), à traiter comme un module à part.
+- **Déplacement sur quadrillage** : le livre le laisse facultatif et abstrait ; un jet d'agilité via le jet d'action suffit.
+- **Fabrication alchimique** : hors combat ; l'usage d'une préparation en combat se traite comme un effet posé à la main.
+- **Journal complet des événements et annulation d'un coup**.
 
 ## 10. Où c'est dans le code
 

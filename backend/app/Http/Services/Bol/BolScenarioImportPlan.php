@@ -253,6 +253,12 @@ final class BolScenarioImportPlan
         foreach (['vigueur', 'agilite', 'esprit', 'attaque', 'defense'] as $key) {
             $fields[$key] = $this->int($perso, $key, $path, -5, 20, 0);
         }
+        // Un mort-vivant a une force vitale au lieu d'une vitalité (Bestiaire, p. 127) ; faux si le fichier ne le dit pas.
+        $mortVivant = $perso['mort_vivant'] ?? false;
+        if (!is_bool($mortVivant)) {
+            $this->error("$path.mort_vivant", 'true ou false');
+        }
+        $fields['mort_vivant'] = $mortVivant === true;
 
         return ['kind' => 'creature', 'catalogue_id' => null, 'fields' => $fields, 'capacites' => $this->details($perso, 'capacites', 'capacite', $path)];
     }

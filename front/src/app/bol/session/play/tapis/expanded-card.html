@@ -1,4 +1,4 @@
-<div #root (click)="dismissDice()" [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
+<div #root (click)="dismissDice()" (keydown.escape)="dismissDice()" [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
   @if (card().kind === 'hero') {
     <!-- Héros : un bandeau (portrait, identité et détails, vitalité et héroïsme, statistiques de combat, boutons), puis le jet
          d'action en mode libre sur toute la largeur. -->

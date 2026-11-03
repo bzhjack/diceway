@@ -30,7 +30,7 @@
   &[aria-pressed='true'] {
     border-color: var(--dw-color-legendary);
     background: var(--dw-color-legendary);
-    color: #1c1200;
+    color: var(--dw-forge-ink);
   }
 
   &[aria-disabled='true'] {

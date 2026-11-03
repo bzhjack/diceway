@@ -110,36 +110,4 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Typographie du contenu projeté dans [row-summary]/[row-body] (armes, armures,
-// langues, carrières, traits…). ::ng-deep est nécessaire : le contenu projeté
-// garde l'attribut de scope du composant appelant, pas celui de dw-collapsible-row,
-// donc du CSS scope classique ne le matcherait jamais.
-::ng-deep {
-  .dw-entry-label {
-    font-weight: 600;
-    color: var(--dw-forge-bone);
-    font-size: 0.875rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .dw-entry-meta {
-    align-self: stretch;
-    margin: 0;
-    font-size: 0.75rem;
-    line-height: 1.5rem;
-    color: var(--dw-forge-stud-text);
-  }
-
-  .dw-entry-detail-title {
-    font-weight: 700;
-    font-size: 0.75rem;
-    color: var(--dw-forge-gold);
-  }
-
-  .dw-entry-delete-btn {
-    color: var(--dw-forge-verdict-echec) !important;
-    margin-top: 0.35rem;
-  }
-}
+// La typographie du contenu projeté (`.dw-entry-*`) est dans `src/styles/_form.scss`.

@@ -23,13 +23,15 @@ interface DonDeFoi {
   template: `
     <span class="dfo-row">
       <dw-value-stepper [value]="foi()" (valueChange)="stepped.emit($event - foi())" [min]="0" [ariaLabel]="'Points de foi de ' + pretre().nom" />
+      <!-- Fermé par un verrou, il reste focalisable (aria-disabled, que le menu respecte) : son infobulle dit pourquoi. -->
       <button
         type="button"
         class="dfo-btn"
         [disabled]="foi() <= 0"
+        [attr.aria-disabled]="verrou() !== null || null"
         [matMenuTriggerFor]="choix"
-        aria-label="Dé de foi"
-        [matTooltip]="foi() > 0 ? 'Dé de foi : 1 point, sans jet, un dé de bonus ou de malus à la prochaine action d’un être visible' : 'Plus de foi : il faut retourner au temple'"
+        [attr.aria-label]="verrou() === null ? 'Dé de foi' : 'Dé de foi. ' + verrou()"
+        [matTooltip]="aide()"
       >
         <mat-icon svgIcon="gi-favor" aria-hidden="true" />
       </button>
@@ -83,7 +85,7 @@ interface DonDeFoi {
         height: 1.15rem;
       }
 
-      &:hover:not(:disabled) {
+      &:hover:not(:disabled, [aria-disabled='true']) {
         border-color: var(--dw-color-foi);
         box-shadow: var(--dw-forge-stud-glow);
       }
@@ -93,7 +95,8 @@ interface DonDeFoi {
         outline-offset: 1px;
       }
 
-      &:disabled {
+      &:disabled,
+      &[aria-disabled='true'] {
         opacity: 0.4;
         cursor: default;
       }
@@ -107,9 +110,18 @@ export class DeFoiComponent {
   readonly foi = input.required<number>();
   /** Les êtres qu'il voit, des deux camps. */
   readonly visibles = input<readonly TapisCard[]>([]);
+  /** Pourquoi le dé de foi ne se donne pas maintenant (le jet qu'il viserait est déjà fait) ; `null` s'il se donne. */
+  readonly verrou = input<string | null>(null);
   /** Une correction de ses points à la main : −1 ou +1. */
   readonly stepped = output<number>();
   readonly donne = output<DonDeFoi>();
+
+  protected readonly aide = computed(() => {
+    if (this.foi() <= 0) {
+      return 'Plus de foi : il faut retourner au temple';
+    }
+    return this.verrou() ?? 'Dé de foi : 1 point, sans jet, un dé de bonus ou de malus à la prochaine action d’un être visible';
+  });
 
   /** Avec lui, même s'il n'est plus dans la liste (une carte à 0 peut encore prier). */
   private readonly tous = computed(() => {

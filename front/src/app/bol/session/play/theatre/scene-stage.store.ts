@@ -6,7 +6,7 @@ import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
-import {SceneActionsService} from '../../scene-actions.service';
+import {SceneActionsService} from '../scene-list/scene-actions.service';
 import {scenesOf} from '../scene-list/scene.util';
 import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
 import {CARTON_RYTHME, cartonTenue, sceneActs} from './theatre.util';

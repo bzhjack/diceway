@@ -207,11 +207,20 @@ export class TurnLoadoutStore {
     return this.isDualWieldSelected() ? `${main} + ${this.effectiveOffHand()?.arme?.arme ?? ''}` : main;
   });
 
-  /** La posture retenue sur l'échelle (« Aucune » par défaut). */
+  /** La posture retenue sur l'échelle (« Aucune » par défaut, et pendant un sort : `sansPosture`). */
   readonly effectiveOption = computed(() => {
     const list = this.scalePostures();
-    return list.find((o) => o.slug === this.selectedOptionSlug()) ?? list.find((o) => o.slug === 'none') ?? list[0] ?? null;
+    const choisie = this.sansPosture() ? null : list.find((o) => o.slug === this.selectedOptionSlug());
+    return choisie ?? list.find((o) => o.slug === 'none') ?? list[0] ?? null;
   });
+
+  /** Il lance un sort : les postures et les manœuvres sont des options d'attaque (livre p. 65), qui échangent de l'attaque contre de la
+   * défense ; un sort est un jet d'action esprit + sorcier (p. 148), pas une attaque. Elles ne comptent donc ni au jet ni en défense, et
+   * reviennent s'il repasse à l'attaque. La défense totale, elle, reste : elle remplace le sort. */
+  readonly sansPosture = computed(() => this.sortMode() && !this.defenseTotale());
+
+  /** Pourquoi la posture n'est pas proposée pendant un sort. */
+  readonly sansPostureHint = 'Un sort n’est pas une attaque : pas de posture ni de manœuvre (livre p. 65 et 148).';
 
   /** Les trois postures simples plus « Aucune », dans l'ordre de l'échelle. */
   private readonly scalePostures = computed(() =>
@@ -227,9 +236,9 @@ export class TurnLoadoutStore {
   /** Les manœuvres, sous la posture : les options spéciales autres que le combat à deux armes, réglé avec les armes. */
   readonly manoeuvres = computed(() => this.specialPostures().filter((o) => !DUAL_WIELD_SLUGS.has(o.slug)));
 
-  /** L'option spéciale cochée, ou `null`. En défense totale, seule la parade à deux armes reste : elle s'y cumule. */
+  /** L'option spéciale cochée, ou `null`. En défense totale, seule la parade à deux armes reste : elle s'y cumule. Aucune pendant un sort. */
   readonly effectiveSpecial = computed(() => {
-    const special = this.specialPostures().find((o) => o.slug === this.selectedSpecialSlug()) ?? null;
+    const special = this.sansPosture() ? null : (this.specialPostures().find((o) => o.slug === this.selectedSpecialSlug()) ?? null);
     return this.defenseTotale() && special?.slug !== 'dual-parry' ? null : special;
   });
 
@@ -257,6 +266,9 @@ export class TurnLoadoutStore {
   readonly postureNote = computed(() => {
     if (this.defenseTotale()) {
       return 'pas d’attaque ce round';
+    }
+    if (this.sansPosture()) {
+      return 'pas de posture pour un sort';
     }
     if (this.postureSlug() === 'intrepid') {
       return 'perd son bouclier ce round';
@@ -451,8 +463,11 @@ export class TurnLoadoutStore {
   /** La carte a des points de pouvoir à dépenser : un sorcier (même à 0 point, pour qu'on le voie). */
   readonly canCast = computed(() => (this.turn.attacker()?.magie?.pouvoir ?? null) !== null);
 
-  /** Le sort de ce tour a déjà été payé, d'après la trace qu'il a laissée dans l'état du combat (la page a pu être rechargée depuis). */
-  private readonly sortDejaPaye = computed(() => sortPayeCeRound(this.turn.effets(), this.turn.card().key).points > 0);
+  /** La trace du sort de ce tour dans l'état du combat (la page a pu être rechargée depuis qu'il a été payé). */
+  private readonly sortTrace = computed(() => sortPayeCeRound(this.turn.effets(), this.turn.card().key));
+
+  /** Le sort de ce tour a déjà été payé, d'après sa trace. */
+  private readonly sortDejaPaye = computed(() => this.sortTrace().points > 0);
 
   /** Ce qu'il fait de son action : attaquer, ou lancer un sort. Il repart sur l'attaque à chaque nouvelle carte active — sur le sort quand
    * celui de ce tour est déjà payé (page rechargée en plein tour), ou dès que sa trace arrive. */
@@ -465,8 +480,13 @@ export class TurnLoadoutStore {
   /** Il lance un sort ce tour-ci. */
   readonly sortMode = computed(() => this.canCast() && this.mode() === 'sort');
 
-  /** Le sort, tel que le MJ le règle : 1er cercle, Moyenne, la seule condition obligatoire, sans dégâts — à chaque nouvelle carte. */
-  readonly sortModel = linkedSignal<string, SortSaisie>({source: () => this.turn.turnKey(), computation: () => saisieSortParDefaut()});
+  /** Le sort, tel que le MJ le règle : 1er cercle, Moyenne, la seule condition obligatoire, sans dégâts — à chaque nouvelle carte. Quand le
+   * sort de ce tour est déjà payé (page rechargée en plein tour), ou dès que sa trace arrive, il reprend les réglages qu'elle a gardés. */
+  readonly sortModel = linkedSignal<{readonly key: string; readonly reglages: SortSaisie | null}, SortSaisie>({
+    source: () => ({key: this.turn.turnKey(), reglages: this.sortTrace().reglages}),
+    computation: (source, previous) =>
+      previous && previous.source.key === source.key && !(source.reglages && !previous.source.reglages) ? previous.value : (source.reglages ?? saisieSortParDefaut()),
+  });
 
   readonly sortForm = form(this.sortModel, (path) => {
     min(path.conditions, 1);
@@ -649,6 +669,9 @@ export class TurnLoadoutStore {
 
   /** Une option spéciale se coche et se décoche, sans toucher à la posture ; cocher l'une décoche l'autre. */
   toggleSpecial(slug: string): void {
+    if (this.sansPosture()) {
+      return;
+    }
     const next = this.effectiveSpecial()?.slug === slug ? null : slug;
     this.selectedSpecialSlug.set(next);
     if (!DUAL_WIELD_SLUGS.has(next ?? '')) {
@@ -687,8 +710,16 @@ export class TurnLoadoutStore {
     this.deuxMainsChoisi.update((on) => !on);
   }
 
+  /** Un segment de l'échelle qui ne se choisit pas : une posture, pendant un sort (seules « Aucune » et la défense totale restent). */
+  postureFermee(slug: string): boolean {
+    return this.sansPosture() && slug !== DEFENSE_TOTALE && slug !== 'none';
+  }
+
   /** Choisit un segment de l'échelle. La défense totale renonce à la cible visée : il n'y a plus de jet. */
   selectOption(slug: string): void {
+    if (this.postureFermee(slug)) {
+      return;
+    }
     this.selectedOptionSlug.set(slug);
     if (slug === DEFENSE_TOTALE && this.turn.target()) {
       this.turn.targetSelected.emit(null);

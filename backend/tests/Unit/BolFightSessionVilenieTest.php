@@ -26,4 +26,19 @@ class BolFightSessionVilenieTest extends TestCase
     {
         $this->assertNull(BolFightSessionService::vilenieSuivante(null, 1));
     }
+
+    public function test_vilenie_recalee_suit_le_rang_et_le_maximum_de_la_fiche(): void
+    {
+        // Devenu rival : la ligne qui n'en avait pas reçoit celle de la fiche.
+        $this->assertSame(3, BolFightSessionService::vilenieRecalee(null, 'rival', 3));
+        // N'est plus rival : plus de vilénie.
+        $this->assertNull(BolFightSessionService::vilenieRecalee(2, 'coriace', 3));
+        $this->assertNull(BolFightSessionService::vilenieRecalee(null, 'pietaille', 3));
+        // Maximum abaissé : ramenée au maximum ; relevé : ce qui est dépensé n'est pas rendu.
+        $this->assertSame(2, BolFightSessionService::vilenieRecalee(3, 'rival', 2));
+        $this->assertSame(1, BolFightSessionService::vilenieRecalee(1, 'rival', 5));
+        // Un rival sans vilénie sur sa fiche : les points donnés à la main par le MJ restent, comme la foi et le pouvoir.
+        $this->assertSame(2, BolFightSessionService::vilenieRecalee(2, 'rival', 0));
+        $this->assertSame(0, BolFightSessionService::vilenieRecalee(null, 'rival', null));
+    }
 }

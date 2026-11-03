@@ -13,6 +13,7 @@ use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BolHerosService
 {
@@ -116,28 +117,29 @@ class BolHerosService
     /** Ajuste l'héroïsme d'un héros (delta positif ou négatif), borné à 0 minimum. */
     public function adjustHeroisme(string $herosId, string $userId, int $delta): ?BolHeros
     {
-        $heros = BolHeros::where('id', $herosId)->where('user_id', $userId)->first();
-        if (!$heros) {
-            return null;
-        }
-
-        $heros->update(['heroisme' => max(0, $heros->heroisme + $delta)]);
-
-        return $heros->fresh();
+        return $this->ajusterEnBase($herosId, $userId, 'heroisme', $delta);
     }
 
     /** Dépense ou rend des points de foi (`foi`) ou de pouvoir (`pouvoir`) sur la fiche d'un héros, bornés à 0 : à la table, comme son
      * héroïsme (livre p. 146 et 148). Null si la fiche est introuvable ou la ressource inconnue. */
     public function adjustRessource(string $herosId, string $userId, string $ressource, int $delta): ?BolHeros
     {
-        $heros = in_array($ressource, ['foi', 'pouvoir'], true) ? BolHeros::where('id', $herosId)->where('user_id', $userId)->first() : null;
-        if (!$heros) {
-            return null;
-        }
+        return in_array($ressource, ['foi', 'pouvoir'], true) ? $this->ajusterEnBase($herosId, $userId, $ressource, $delta) : null;
+    }
 
-        $heros->update([$ressource => max(0, (int) $heros->{$ressource} + $delta)]);
+    /**
+     * Ajoute `delta` à une réserve de la fiche d'un héros du compte, bornée à 0, en un seul ordre UPDATE calculé par la base : deux
+     * ajustements simultanés (deux écrans sur la même table) s'additionnent au lieu que le second écrase le premier, ce que ferait une
+     * lecture puis une écriture. `$colonne` vient d'une liste fermée, jamais de la requête. Null si la fiche est introuvable.
+     */
+    private function ajusterEnBase(string $herosId, string $userId, string $colonne, int $delta): ?BolHeros
+    {
+        $somme = "COALESCE({$colonne}, 0) + ({$delta})";
+        $modifiees = BolHeros::where('id', $herosId)
+            ->where('user_id', $userId)
+            ->update([$colonne => DB::raw("CASE WHEN {$somme} < 0 THEN 0 ELSE {$somme} END")]);
 
-        return $heros->fresh();
+        return $modifiees > 0 ? BolHeros::find($herosId) : null;
     }
 
     /** Avantage « Arme favorite » (bol_avantage.id). */

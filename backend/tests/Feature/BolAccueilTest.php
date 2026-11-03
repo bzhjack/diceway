@@ -55,6 +55,32 @@ class BolAccueilTest extends TestCase
         $this->assertNotEmpty($response->json('table.created_at'));
     }
 
+    public function test_a_reopened_table_comes_back_as_the_open_table(): void
+    {
+        $ancienne = $this->tableSession('terminee');
+        $this->travel(1)->minutes();
+        $recente = $this->tableSession('libre');
+        $this->travel(1)->minutes();
+
+        $this->patchJson("/api/bol/fight-session/{$ancienne->id}/reopen")->assertOk();
+
+        // Rouvrir touche la table : c'est la plus récemment active, même créée avant l'autre.
+        $this->assertTrue($ancienne->fresh()->updated_at->greaterThan($recente->fresh()->updated_at));
+        $this->assertSame($ancienne->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+    }
+
+    public function test_a_table_closed_last_does_not_come_back_as_the_open_table(): void
+    {
+        $ouverte = $this->tableSession('libre');
+        $this->travel(1)->minutes();
+        $close = $this->tableSession('libre');
+        $this->travel(1)->minutes();
+
+        $this->patchJson("/api/bol/fight-session/{$close->id}/close")->assertOk();
+
+        $this->assertSame($ouverte->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+    }
+
     public function test_describes_the_open_table(): void
     {
         $scenario = $this->scenario('Le Dieu voilé — Introduction');

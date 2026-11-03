@@ -61,6 +61,29 @@ class BolUndeadCreaturesTest extends TestCase
         return BolFightSession::create(['titre' => 'Table', 'statut' => 'libre', 'user_id' => $this->user->id]);
     }
 
+    public function test_an_imported_creature_keeps_its_undead_flag(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'import');
+        file_put_contents($file, json_encode([
+            'saga' => 'essai',
+            'scenario' => ['cle' => 'ch1', 'titre' => 'Essai'],
+            'personnages' => [
+                'momie' => ['kind' => 'creature', 'nom' => 'Momie', 'taille' => 'Moyenne', 'vitalite' => 8, 'degats' => 'd6', 'mort_vivant' => true],
+                'loup' => ['kind' => 'creature', 'nom' => 'Loup', 'taille' => 'Moyenne', 'vitalite' => 5, 'degats' => 'd6'],
+            ],
+            'scenes' => [],
+        ]));
+
+        try {
+            $this->artisan('bol:import-scenario', ['fichier' => $file, '--user' => $this->user->email])->assertSuccessful();
+        } finally {
+            unlink($file);
+        }
+
+        $this->assertTrue(BolCreature::where('nom', 'Momie')->sole()->mort_vivant);
+        $this->assertFalse(BolCreature::where('nom', 'Loup')->sole()->mort_vivant);
+    }
+
     public function test_up_marks_the_undead_of_the_catalogue_and_their_copies_at_the_tables(): void
     {
         $migration = $this->migration();

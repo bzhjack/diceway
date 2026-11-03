@@ -9,7 +9,7 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {CombatantKind} from '../../../models/combat-selection.model';
-import {SceneActionsService} from '../../scene-actions.service';
+import {SceneActionsService} from '../scene-list/scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from '../add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from '../command-palette/command-palette';
 import {PaletteActionId, PaletteCommand, PaletteContext} from '../../models/command-palette.model';

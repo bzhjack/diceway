@@ -12,6 +12,6 @@ body {
 
 body {
   font-family: 'Muse Sans', -apple-system, Roboto, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
-  color: #fff;
-  background: #000;
+  color: var(--dw-base-text);
+  background: var(--dw-base-bg);
 }

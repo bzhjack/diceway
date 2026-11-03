@@ -1,7 +1,7 @@
 import {effect, inject, Injectable, untracked} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {catchError, concatMap, EMPTY, forkJoin, from, last, map, of, switchMap} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, last, map, of, switchMap, tap} from 'rxjs';
 import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -33,9 +33,6 @@ export class CombatWoundsService {
   private readonly combat = inject(CombatTurnStore);
   private readonly stats = inject(CombatStatsStore);
 
-  /** Le dernier round vu : un nouveau round propose aux héros restés à 0 de reprendre leurs esprits. `null` hors combat et au chargement. */
-  private lastRound: number | null = null;
-
   /** La vitalité de chaque carte à la dernière lecture de la table en combat : un héros qui repasse au-dessus de 0 est relevé. */
   private vitalitesVues: ReadonlyMap<string, number> = new Map();
 
@@ -59,13 +56,12 @@ export class CombatWoundsService {
     });
 
     // Un nouveau round commence : un héros resté à 0 de vitalité sombre dans l'inconscience, ou dépense 1 PH pour reprendre ses esprits ;
-    // un héros mourant perd 1 de vitalité ; un démon qui se régénère en reprend 1.
+    // un héros mourant perd 1 de vitalité ; un démon qui se régénère en reprend 1. Seulement sur l'écran qui a fait commencer le round
+    // (`roundCommenceIci`) : un second écran ouvert sur la même table, qui le reçoit dans une session, ne le rejoue pas.
     effect(() => {
-      const round = this.table.mode() === 'combat' ? this.combat.etat().round : null;
+      const commence = this.combat.roundCommenceIci();
       untracked(() => {
-        const previous = this.lastRound;
-        this.lastRound = round;
-        if (round !== null && previous !== null && round > previous) {
+        if (commence !== null && this.table.mode() === 'combat' && commence.round === this.combat.etat().round) {
           this.askUnconsciousHeroes();
           this.regenerateDemons();
         }
@@ -282,7 +278,9 @@ export class CombatWoundsService {
 
   /** « Mêlée de piétaille » (04-pnj-creatures-demons.md, « Règle de horde ») : une fois par round, quand les deux camps ont de la piétaille
    * debout, le dialogue tire les pertes de chaque camp et le MJ coche qui tombe. « Appliquer » met chacune à 0 de vitalité (hors de combat)
-   * et retient que la mêlée de ce round est faite. La piétaille garde ses tours pour attaquer les héros en horde. */
+   * et retient que la mêlée de ce round est faite, dès la première perte enregistrée : interrompue ensuite (erreur réseau), elle ne se
+   * rejoue pas en doublant les pertes ; le MJ ajuste à la main celles qui manquent. La piétaille garde ses tours pour attaquer les héros
+   * en horde. */
   onPietailleMelee(): void {
     const sessionId = this.table.sessionId();
     if (!sessionId || this.combat.meleeDisponibilite() !== 'disponible') {
@@ -309,6 +307,7 @@ export class CombatWoundsService {
         from(tombes)
           .pipe(
             concatMap((card) => this.fightSessionService.applyDamage(sessionId, card.kind, card.pivotId, -Math.max(1, card.vitaliteCourante ?? card.vitaliteMax ?? 1))),
+            tap(() => this.combat.recordMelee()),
             last(),
           )
           .subscribe({
@@ -318,7 +317,7 @@ export class CombatWoundsService {
             },
             error: (error: unknown) => {
               this.table.loadSession(sessionId);
-              this.table.notifyError(error, "Impossible d'appliquer les pertes de la mêlée.");
+              this.table.notifyError(error, "Impossible d'appliquer toutes les pertes de la mêlée : ajustez à la main la vitalité de celles qui manquent.");
             },
           });
       });

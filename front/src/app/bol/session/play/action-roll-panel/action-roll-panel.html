@@ -202,7 +202,7 @@
           step="1"
           placeholder="2-12"
           [value]="manualTotal() ?? ''"
-          (input)="onManualTotalInput($any($event.target).value)"
+          (input)="onManualTotalInput(manualInput.value)"
           (keydown.enter)="submitManualTotal()"
         />
         <button type="button" class="ard-manual-btn" aria-label="Valider le total des dés lancés à table" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">

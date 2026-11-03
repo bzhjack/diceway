@@ -8,6 +8,7 @@ use App\Models\Bol\BolHeros;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -76,8 +77,11 @@ class BolPortraitTest extends TestCase
     {
         $hero = $this->hero();
 
+        // Comme le formulaire l'envoie : nom et joueur aussi à la racine, que la validation des héros (`BolHerosRequest`) exige.
         $response = $this->postJson('/api/bol/heros/update', [
             'id' => $hero->id,
+            'nom' => 'Fiche',
+            'joueur' => 'Joueur',
             'active' => true,
             'attributs' => ['vigueur' => 1, 'agilite' => 1, 'esprit' => 1, 'aura' => 1],
             'combat' => ['initiative' => 1, 'melee' => 1, 'tir' => 1, 'defense' => 1],
@@ -135,7 +139,7 @@ class BolPortraitTest extends TestCase
         $this->get('/api/bol/portraits/..%2F..%2F.env')->assertNotFound();
     }
 
-    public function test_extraction_turns_stored_images_into_files_and_keeps_the_originals(): void
+    public function test_extraction_turns_stored_images_into_files(): void
     {
         $hero = $this->legacyHero(self::DATA_URL);
         $untouched = $this->legacyHero('/assets/bol/empty-avatar.jpg');
@@ -150,7 +154,6 @@ class BolPortraitTest extends TestCase
         $this->assertSame($updatedAt, DB::table('bol_heros')->where('id', $hero)->value('updated_at'));
         $this->assertSame('/assets/bol/empty-avatar.jpg', DB::table('bol_heros')->where('id', $untouched)->value('avatar'));
         $this->assertSame('data:image/png;base64,pas-une-image', DB::table('bol_heros')->where('id', $unreadable)->value('avatar'));
-        $this->assertSame(self::DATA_URL, DB::table('bol_portrait_backup')->where('owner_id', $hero)->value('avatar'));
     }
 
     public function test_extraction_can_be_run_again(): void
@@ -158,10 +161,11 @@ class BolPortraitTest extends TestCase
         $hero = $this->legacyHero(self::DATA_URL);
 
         $this->artisan('bol:extract-portraits')->assertSuccessful();
+        $url = DB::table('bol_heros')->where('id', $hero)->value('avatar');
         $this->artisan('bol:extract-portraits')->assertSuccessful();
 
-        $this->assertSame(1, DB::table('bol_portrait_backup')->count());
-        $this->assertSame(self::DATA_URL, DB::table('bol_portrait_backup')->where('owner_id', $hero)->value('avatar'));
+        $this->assertSame($url, DB::table('bol_heros')->where('id', $hero)->value('avatar'));
+        $this->assertCount(1, Storage::disk('public')->files('portraits'));
     }
 
     public function test_a_dry_run_writes_nothing(): void
@@ -171,34 +175,15 @@ class BolPortraitTest extends TestCase
         $this->artisan('bol:extract-portraits', ['--dry-run' => true])->assertSuccessful();
 
         $this->assertSame(self::DATA_URL, DB::table('bol_heros')->where('id', $hero)->value('avatar'));
-        $this->assertSame(0, DB::table('bol_portrait_backup')->count());
         $this->assertSame([], Storage::disk('public')->files('portraits'));
     }
 
-    public function test_restore_puts_the_originals_back_unless_the_sheet_changed(): void
+    public function test_the_originals_are_no_longer_kept_aside(): void
     {
-        $kept = $this->legacyHero(self::DATA_URL);
-        $changed = $this->legacyHero(self::DATA_URL);
-        $this->artisan('bol:extract-portraits')->assertSuccessful();
-        DB::table('bol_heros')->where('id', $changed)->update(['avatar' => '/assets/bol/autre.jpg']);
-
-        $this->artisan('bol:extract-portraits', ['--restore' => true])->assertSuccessful();
-
-        $this->assertSame(self::DATA_URL, DB::table('bol_heros')->where('id', $kept)->value('avatar'));
-        $this->assertSame('/assets/bol/autre.jpg', DB::table('bol_heros')->where('id', $changed)->value('avatar'));
-        $this->assertSame(1, DB::table('bol_portrait_backup')->count());
-    }
-
-    public function test_forgetting_the_originals_asks_first(): void
-    {
-        $this->legacyHero(self::DATA_URL);
-        $this->artisan('bol:extract-portraits')->assertSuccessful();
-
-        $this->artisan('bol:extract-portraits', ['--forget-originals' => true])->expectsConfirmation('Effacer 1 originaux ? Le retour en arrière ne sera plus possible.', 'no')->assertFailed();
-        $this->assertSame(1, DB::table('bol_portrait_backup')->count());
-
-        $this->artisan('bol:extract-portraits', ['--forget-originals' => true])->expectsConfirmation('Effacer 1 originaux ? Le retour en arrière ne sera plus possible.', 'yes')->assertSuccessful();
-        $this->assertSame(0, DB::table('bol_portrait_backup')->count());
+        $this->assertFalse(Schema::hasTable('bol_portrait_backup'));
+        $options = \Illuminate\Support\Facades\Artisan::all()['bol:extract-portraits']->getDefinition();
+        $this->assertFalse($options->hasOption('restore'));
+        $this->assertFalse($options->hasOption('forget-originals'));
     }
 
     public function test_pruning_removes_the_file_of_a_replaced_portrait_and_keeps_the_current_one(): void
