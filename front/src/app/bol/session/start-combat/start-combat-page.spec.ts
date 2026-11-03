@@ -160,6 +160,26 @@ describe('StartCombatPageComponent', () => {
     expect(texte()).toContain('Lancer pour tous');
   });
 
+  it('un nouveau jet en plein combat garde hors du combat les cartes retirées et les rivaux enfuis', async () => {
+    const enCombat = session({
+      statut: 'combat',
+      etat_combat: {round: 3, joues: [], effets: [], exclus: ['pnj-7', 'pnj-8'], fuis: ['pnj-8']},
+      pnjs: [
+        {id: 7, pnj_id: 'p7', camp: 'adversaires', rang: 'coriace', nom: 'Kalzatan', surnom: null, initiative: 1, vitalite_max: 10, vitalite_courante: 10, armes: []},
+        {id: 8, pnj_id: 'p8', camp: 'adversaires', rang: 'rival', nom: 'Thuran', surnom: null, initiative: 1, vitalite_max: 10, vitalite_courante: 10, armes: []},
+        {id: 9, pnj_id: 'p9', camp: 'adversaires', rang: 'coriace', nom: 'Garde', surnom: null, initiative: 0, vitalite_max: 10, vitalite_courante: 10, armes: []},
+      ],
+    } as unknown as Partial<BolFightSessionModel>);
+    await rendre(enCombat, {reroll: '1'});
+
+    await saisir(0, '9');
+    await saisir(1, '8');
+    boutonDemarrer().click();
+    await stable();
+
+    expect(startCombat).toHaveBeenCalledWith('s1', ['pnj-7', 'pnj-8']);
+  });
+
   it('une session déjà en combat renvoie à la table, sauf pour un nouveau jet', async () => {
     await rendre(session({statut: 'combat'}));
     expect(navigate).toHaveBeenCalled();

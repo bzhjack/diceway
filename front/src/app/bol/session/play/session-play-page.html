@@ -11,6 +11,7 @@
     <bol-session-header
       [mode]="table.mode()"
       [titre]="table.headerTitle()"
+      [sessionId]="table.sessionId()"
       (startCombat)="commands.openStartCombat()"
       (endCombat)="ending.askEndCombat()"
       (searchRequested)="commands.openPalette()"
@@ -96,6 +97,7 @@
             #combatBoard
             [effets]="combat.effetsAffiches()"
             [activeCard]="combat.activeCard()"
+            [round]="combat.etat().round"
             [armes]="stats.assistantArmes()"
             [ownedArmes]="stats.activeOwnedArmes()"
             [combatOptions]="stats.combatOptions()"

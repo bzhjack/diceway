@@ -114,6 +114,7 @@ describe('tableTitre', () => {
   const table = (extra: Partial<BolAccueilTable>): BolAccueilTable => ({
     id: 't1',
     titre: null,
+    statut: 'libre',
     scenario_id: null,
     created_at: '2026-11-02T12:00:00',
     ...extra,
@@ -183,7 +184,7 @@ describe('sagaResumes', () => {
 });
 
 describe('tableOuverte', () => {
-  const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({id: 't', titre: null, scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z', ...over});
+  const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({id: 't', titre: null, statut: 'libre', scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z', ...over});
 
   it('met la saga au-dessus et le chapitre en titre', () => {
     expect(tableOuverte(table(), S)).toEqual({id: 't', saga: 'Perle du Beshaar', titre: '1. Sacrilège à Satarla'});

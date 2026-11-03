@@ -82,6 +82,8 @@ export class CombatSelectionService {
 
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
+  /** Le dernier chargement du catalogue a échoué : le catalogue gardé (peut-être vide) n'est pas à jour. */
+  readonly loadFailed = signal(false);
 
   private readonly initialDraft = restoreDraft();
   readonly combatants = signal<readonly SelectedCombatant[]>(this.initialDraft.combatants);
@@ -108,61 +110,69 @@ export class CombatSelectionService {
     }
 
     this.loading.set(true);
+    this.loadFailed.set(false);
     forkJoin({
       heroes: this.herosService.heroes(),
       pnjs: this.pnjService.pnjs(),
       creatures: this.creaturesService.creatures(),
       demons: this.demonsService.demons(),
-    }).subscribe(({heroes, pnjs, creatures, demons}) => {
-      const entries: CombatCatalogEntry[] = [
-        ...heroes
-          .filter((h) => h.id)
-          .map((h) => ({
-            catalogId: `hero:${h.id}`,
-            kind: 'hero' as const,
-            sourceId: h.id!,
-            nom: h.origines.nom ?? 'Héros',
-            vitalite: h.ressources.vitalite,
-            avatar: heroImage(h),
-            raw: h,
-          })),
-        ...pnjs
-          .filter((p) => p.id)
-          .map((p) => ({
-            catalogId: `pnj:${p.id}`,
-            kind: 'pnj' as const,
-            sourceId: p.id!,
-            nom: p.origines.nom ?? 'PNJ',
-            vitalite: p.ressources.vitalite,
-            avatar: pnjImage(p),
-            raw: p,
-          })),
-        ...creatures
-          .filter((c) => c.id)
-          .map((c) => ({
-            catalogId: `creature:${c.id}`,
-            kind: 'creature' as const,
-            sourceId: c.id!,
-            nom: c.nom,
-            vitalite: c.vitalite,
-            avatar: creatureImage(c),
-            raw: c,
-          })),
-        ...demons
-          .filter((d) => d.id)
-          .map((d) => ({
-            catalogId: `demon:${d.id}`,
-            kind: 'demon' as const,
-            sourceId: d.id!,
-            nom: d.nom,
-            vitalite: d.vitalite,
-            avatar: demonImage(d),
-            raw: d,
-          })),
-      ];
+    }).subscribe({
+      next: ({heroes, pnjs, creatures, demons}) => {
+        const entries: CombatCatalogEntry[] = [
+          ...heroes
+            .filter((h) => h.id)
+            .map((h) => ({
+              catalogId: `hero:${h.id}`,
+              kind: 'hero' as const,
+              sourceId: h.id!,
+              nom: h.origines.nom ?? 'Héros',
+              vitalite: h.ressources.vitalite,
+              avatar: heroImage(h),
+              raw: h,
+            })),
+          ...pnjs
+            .filter((p) => p.id)
+            .map((p) => ({
+              catalogId: `pnj:${p.id}`,
+              kind: 'pnj' as const,
+              sourceId: p.id!,
+              nom: p.origines.nom ?? 'PNJ',
+              vitalite: p.ressources.vitalite,
+              avatar: pnjImage(p),
+              raw: p,
+            })),
+          ...creatures
+            .filter((c) => c.id)
+            .map((c) => ({
+              catalogId: `creature:${c.id}`,
+              kind: 'creature' as const,
+              sourceId: c.id!,
+              nom: c.nom,
+              vitalite: c.vitalite,
+              avatar: creatureImage(c),
+              raw: c,
+            })),
+          ...demons
+            .filter((d) => d.id)
+            .map((d) => ({
+              catalogId: `demon:${d.id}`,
+              kind: 'demon' as const,
+              sourceId: d.id!,
+              nom: d.nom,
+              vitalite: d.vitalite,
+              avatar: demonImage(d),
+              raw: d,
+            })),
+        ];
 
-      this.catalog.set(entries);
-      this.loading.set(false);
+        this.catalog.set(entries);
+        this.loading.set(false);
+      },
+      // Sans cela `loading` restait levé pour toujours : plus aucun rechargement possible, et rien pour le dire à l'écran.
+      error: () => {
+        this.loading.set(false);
+        this.loadFailed.set(true);
+      },
     });
   }
 

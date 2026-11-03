@@ -141,6 +141,13 @@
   text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
+// Reprendre la table (l'action principale, en or) et la clore (secondaire, cerclée).
+.acc-soir-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
 // Une tuile de fer : la compagnie, les erreurs.
 .acc-tuile {
   border: 1px solid var(--dw-forge-bronze-dim);

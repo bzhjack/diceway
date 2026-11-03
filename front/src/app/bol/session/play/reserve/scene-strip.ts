@@ -11,7 +11,7 @@ import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.mode
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from '../../scene-actions.service';
-import {NO_SCENARIO, scenesOf} from '../scene-list/scene.util';
+import {NO_SCENARIO, scenarioFilterFor, scenesOf} from '../scene-list/scene.util';
 import {SceneManagerDialogComponent} from './scene-manager-dialog';
 import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
 
@@ -171,6 +171,15 @@ export class SceneStripComponent {
   constructor() {
     this.reload(true);
 
+    // Le scénario de la table change (scène d'un autre scénario chargée, enregistrement) : le filtre le suit, pour que « Enregistrer la
+    // table » ne range pas la scène sous un ancien scénario. Le MJ peut ensuite en choisir un autre dans le filtre.
+    effect(() => {
+      const scenarioId = this.scenarioId();
+      if (!untracked(() => this.loading())) {
+        this.selectedScenario.set(scenarioFilterFor(scenarioId, untracked(this.knownScenarioIds)));
+      }
+    });
+
     // La scène courante peut avoir été créée ailleurs (barre de commande, dialogue de gestion) :
     // si elle n'est pas dans la liste, celle-ci est rechargée.
     effect(() => {
@@ -193,8 +202,7 @@ export class SceneStripComponent {
         );
         const known = this.knownScenarioIds();
         if (selectCurrent) {
-          const scenarioId = this.scenarioId();
-          this.selectedScenario.set(scenarioId && known.has(scenarioId) ? scenarioId : null);
+          this.selectedScenario.set(scenarioFilterFor(this.scenarioId(), known));
         } else if (this.selectedScenario() && !known.has(this.selectedScenario()!)) {
           // Le scénario affiché a été supprimé depuis le dialogue de gestion.
           this.selectedScenario.set(null);

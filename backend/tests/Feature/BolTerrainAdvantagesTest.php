@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -40,6 +41,21 @@ class BolTerrainAdvantagesTest extends TestCase
         $migration->up();
 
         $this->assertSame('Texte du MJ', DB::table('bol_avantage')->where('avantage', 'Montagnard')->value('de_bonus_domaine'));
+    }
+
+    public function test_up_and_down_clear_the_cached_advantages_and_regions(): void
+    {
+        $migration = require database_path(self::MIGRATION);
+
+        foreach (['up', 'down'] as $sens) {
+            Cache::put('bol_avantages_all', 'liste périmée', 3600);
+            Cache::put('bol_regions_all', 'liste périmée', 3600);
+
+            $migration->{$sens}();
+
+            $this->assertFalse(Cache::has('bol_avantages_all'), $sens);
+            $this->assertFalse(Cache::has('bol_regions_all'), $sens);
+        }
     }
 
     public function test_the_seeder_carries_the_same_texts(): void

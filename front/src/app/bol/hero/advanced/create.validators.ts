@@ -5,6 +5,7 @@ import {
   CARRIERES_RESERVEES,
   DESAVANTAGE_ILLETTRE_ID,
 } from '../../bol-rules.constants';
+import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {ValidationIssue, AttributsValues, CombatValues} from '../models/create-validators.model';
 
 
@@ -99,8 +100,14 @@ export function armureLourdeInterdite(vigueur: number, armureIds: readonly numbe
   return vigueur < 0 && armureIds.includes(ARMURE_LOURDE_ID);
 }
 
+/** Les ids du catalogue de tous les désavantages d'un héros : général, régional (`pivot.desavantage_id`) ou de carrière portent le même id. */
+export function desavantageIdsDuHeros(traits: readonly Pick<BolHerosTraitsModel, 'type' | 'traitable_id'>[]): number[] {
+  return traits.filter((trait) => trait.type === 'D').map((trait) => Number(trait.traitable_id));
+}
+
 /** R-ILLETTRE : un illettré ne peut pas choisir de carrière exigeant d'être lettré (livre p. 45) ; les carrières lettrées choisies, dans
- * l'ordre de `carriereIds`. `desavantageIds` : les désavantages généraux du héros (un désavantage régional a d'autres ids). */
+ * l'ordre de `carriereIds`. `desavantageIds` : tous les désavantages du héros (`desavantageIdsDuHeros`), Illettré pris dans la liste
+ * générale, comme désavantage régional ou de carrière. */
 export function carrieresLettreesPourIllettre(desavantageIds: readonly number[], carriereIds: readonly number[]): number[] {
   return desavantageIds.includes(DESAVANTAGE_ILLETTRE_ID) ? carriereIds.filter((id) => CARRIERES_LETTREES.includes(id)) : [];
 }

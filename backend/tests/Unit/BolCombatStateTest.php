@@ -261,4 +261,29 @@ class BolCombatStateTest extends TestCase
         $this->assertSame(3, $state['melee']);
         $this->assertSame(['hero-1' => 9], $state['depart']);
     }
+
+    public function test_a_new_reaction_roll_keeps_the_effects_that_last_beyond_the_turn(): void
+    {
+        $effet = fn (string $id, string $origine, string $porteur, array $duree, array $extra = []) => [
+            'id' => $id, 'origine' => $origine, 'porteur' => $porteur, 'stat' => 'action', 'valeur' => 0, 'quand' => 'subie', 'duree' => $duree, 'manuel' => false,
+        ] + $extra;
+        $enCours = BolCombatState::normalize(['round' => 3, 'joues' => ['hero-1'], 'effets' => [
+            $effet('e-1', 'paralyse', 'hero-1', ['type' => 'combat']),
+            $effet('e-2', 'stabilise', 'hero-2', ['type' => 'combat']),
+            $effet('e-3', 'egratignure', 'pnj-5', ['type' => 'action-porteur']),
+            $effet('e-4', 'de-malus', 'demon-6', ['type' => 'rounds', 'restants' => 2]),
+            $effet('e-5', 'manuel', 'hero-1', ['type' => 'usages', 'restants' => 2]),
+            $effet('e-6', 'defense-totale', 'hero-1', ['type' => 'debut-tour-porteur']),
+            $effet('e-7', 'parade', 'hero-2', ['type' => 'usages', 'restants' => 1, 'expireAuTour' => true]),
+            $effet('e-8', 'bouclier-depense', 'hero-2', ['type' => 'fin-round']),
+            $effet('e-9', 'mains-nues', 'creature-4', ['type' => 'combat']),
+            $effet('e-10', 'feinte', 'hero-2', ['type' => 'combat'], ['cible' => 'creature-4']),
+        ]]);
+
+        $state = BolCombatState::nouveauJet($enCours, ['creature-4']);
+
+        // Ce qui dure le combat, des rounds ou des attaques, ou attend l'action de la carte, reste ; ce qui tient au tour ou au round en
+        // cours tombe, comme les effets portés par une carte que le nouveau jet laisse hors du combat ou qui la visent.
+        $this->assertSame(['e-1', 'e-2', 'e-3', 'e-4', 'e-5'], array_column($state['effets'], 'id'));
+    }
 }

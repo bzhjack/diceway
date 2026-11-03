@@ -1,11 +1,12 @@
 import {provideHttpClient} from '@angular/common/http';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ApplicationRef, ChangeDetectionStrategy, Component} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {provideRouter} from '@angular/router';
-import {of, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
+import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {AccueilPageComponent} from './accueil-page';
 
@@ -14,7 +15,7 @@ import {AccueilPageComponent} from './accueil-page';
 class AccountMenuStubComponent {}
 
 const DATA: BolAccueilModel = {
-  table: {id: 't1', titre: null, scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z'},
+  table: {id: 't1', titre: null, statut: 'libre', scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z'},
   scenarios: [
     {id: 'p1', titre: 'Perle du Beshaar — 1. Sacrilège à Satarla'},
     {id: 'p2', titre: "Perle du Beshaar — 2. De sable et d'eau"},
@@ -31,10 +32,19 @@ const DATA: BolAccueilModel = {
 };
 
 describe('AccueilPageComponent', () => {
-  async function rendre(reponse = of(DATA)): Promise<HTMLElement> {
+  const clore = vi.fn(() => of(true));
+
+  /** `suivante` : la réponse des lectures d'après la première. */
+  async function rendre(reponse: Observable<BolAccueilModel> = of(DATA), suivante = reponse): Promise<HTMLElement> {
+    const accueil = vi.fn(() => suivante).mockReturnValueOnce(reponse);
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
-      providers: [provideRouter([]), provideHttpClient(), {provide: BolAccueilService, useValue: {accueil: () => reponse}}],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        {provide: BolAccueilService, useValue: {accueil}},
+        {provide: CloseTableService, useValue: {clore}},
+      ],
     });
     TestBed.overrideComponent(AccueilPageComponent, {remove: {imports: [AccountMenuComponent]}, add: {imports: [AccountMenuStubComponent]}});
     const fixture = TestBed.createComponent(AccueilPageComponent);
@@ -48,6 +58,17 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-etiquette')?.textContent).toContain('Table ouverte · Perle du Beshaar');
     expect(page.querySelector('.acc-soir-titre')?.textContent).toContain('1. Sacrilège à Satarla');
     expect(page.querySelector<HTMLAnchorElement>('.acc-soir a')?.getAttribute('href')).toBe('/session/t1/play');
+  });
+
+  it('clôt la table ouverte depuis le bandeau, puis relit l’accueil', async () => {
+    const page = await rendre(of(DATA), of({...DATA, table: null, scenarios_joues: ['p1']}));
+    const bouton = [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Clore la table'))!;
+
+    bouton.click();
+    await TestBed.inject(ApplicationRef).whenStable();
+
+    expect(clore).toHaveBeenCalledWith({id: 't1', enCombat: false});
+    expect(page.querySelector('.acc-soir-titre')?.textContent).toContain('Aucune table ouverte');
   });
 
   it('nomme la compagnie, avec un portrait quand le héros en a un', async () => {

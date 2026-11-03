@@ -16,6 +16,10 @@ use App\Models\Bol\BolScenario;
 
 class BolFightSessionService
 {
+    /** Les carrières qui donnent une réserve à la table (bol_carriere, comme `CARRIERE_PRETRE_ID` et `CARRIERE_SORCIER_ID` du front). */
+    private const CARRIERE_PRETRE = 21;
+    private const CARRIERE_SORCIER = 24;
+
     public function createSession(string $userId, array $data): ?BolFightSession
     {
         $data['heros'] = $this->accessibles($userId, BolHeros::class, $data['heros'] ?? [], 'heroId');
@@ -220,9 +224,51 @@ class BolFightSessionService
             return null;
         }
 
-        BolFightSessionHeros::where('fight_session_id', $sessionId)->update(['initiative_resultat' => null]);
+        $this->quitterLeCombat($session, 'libre');
 
-        $session->update(['statut' => 'libre', 'ordre_manuel' => null, 'etat_combat' => null]);
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Fin d'un combat : plus de jet de réaction, d'ordre réordonné ni d'état du tour ; la session passe au `statut` donné. */
+    private function quitterLeCombat(BolFightSession $session, string $statut): void
+    {
+        BolFightSessionHeros::where('fight_session_id', $session->id)->update(['initiative_resultat' => null]);
+
+        $session->update(['statut' => $statut, 'ordre_manuel' => null, 'etat_combat' => null]);
+    }
+
+    /**
+     * Clôt la table : elle passe `terminee`, quitte l'accueil (bandeau « Table ouverte », chapitre « sur la table ce soir ») et reste
+     * dans les sessions du compte. Une table en combat le termine d'abord, comme « Terminer », sans les soins d'après combat (qui se
+     * choisissent à l'écran). Null si la table est introuvable.
+     */
+    public function closeSession(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        if ($session->statut === 'combat') {
+            $this->quitterLeCombat($session, 'terminee');
+        } else {
+            $session->update(['statut' => 'terminee']);
+        }
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Rouvre une table close (« Reprendre » depuis les sessions) : elle redevient `libre` ; une table encore ouverte ne change pas. */
+    public function reopenSession(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        if ($session->statut === 'terminee') {
+            $session->update(['statut' => 'libre']);
+        }
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -352,17 +398,38 @@ class BolFightSessionService
     }
 
     /**
-     * Points de foi ou de pouvoir d'un PNJ posé à la table : ceux de sa fiche (livre p. 146 et 148) ; `null` sans réserve.
+     * Points de foi ou de pouvoir d'un PNJ posé à la table : ceux de sa fiche (livre p. 146 et 148) ; 0 pour qui a la carrière sans
+     * points sur sa fiche (un prêtre de rang 1 ou plus pour la foi, un sorcier pour le pouvoir), que le MJ peut alors remplir ;
+     * `null` sans réserve.
      */
-    public static function ressourceInitiale(?int $fiche): ?int
+    public static function ressourceInitiale(?int $fiche, bool $aLaCarriere = false): ?int
     {
-        return $fiche !== null && $fiche > 0 ? $fiche : null;
+        if ($fiche !== null && $fiche > 0) {
+            return $fiche;
+        }
+
+        return $aLaCarriere ? 0 : null;
     }
 
-    /** Points de foi ou de pouvoir après une dépense (négatif) ou un gain : jamais sous zéro ; qui n'en a pas n'en gagne pas. */
+    /**
+     * Points de foi ou de pouvoir après une dépense (négatif) ou un gain : jamais sous zéro. Sans réserve, une dépense n'en crée pas,
+     * mais un gain donné par le MJ en crée une (une ligne posée avant que la table ne parte de 0 pour un prêtre ou un sorcier).
+     */
     public static function ressourceSuivante(?int $courante, int $delta): ?int
     {
-        return $courante === null ? null : max(0, $courante + $delta);
+        if ($courante === null) {
+            return $delta > 0 ? $delta : null;
+        }
+
+        return max(0, $courante + $delta);
+    }
+
+    /** Le rang d'une carrière sur la fiche d'un PNJ (carrières chargées) ; `null` sans la carrière. */
+    private static function rangDeCarriere(BolHeros $pnj, int $carriereId): ?int
+    {
+        $entree = $pnj->carrieres->first(fn ($c) => (int) $c->carriere_id === $carriereId);
+
+        return $entree ? (int) $entree->value : null;
     }
 
     /**
@@ -734,7 +801,7 @@ class BolFightSessionService
 
     public function createPnjRow(string $sessionId, string $pnjId, ?string $camp, ?string $surnom = null): ?BolFightSessionPnj
     {
-        $pnj = BolHeros::with('armes.arme')->find($pnjId);
+        $pnj = BolHeros::with('armes.arme', 'carrieres')->find($pnjId);
         if (!$pnj) {
             return null;
         }
@@ -747,8 +814,8 @@ class BolFightSessionService
             'rang'              => $this->rangFromType($pnj->type),
             'vitalite_courante' => $pnj->vitalite,
             'vilenie_courante'  => self::vilenieInitiale($this->rangFromType($pnj->type), $pnj->vilenie),
-            'foi_courante'      => self::ressourceInitiale($pnj->foi),
-            'pouvoir_courant'   => self::ressourceInitiale($pnj->pouvoir),
+            'foi_courante'      => self::ressourceInitiale($pnj->foi, (self::rangDeCarriere($pnj, self::CARRIERE_PRETRE) ?? 0) > 0),
+            'pouvoir_courant'   => self::ressourceInitiale($pnj->pouvoir, self::rangDeCarriere($pnj, self::CARRIERE_SORCIER) !== null),
         ] + $this->pnjSnapshot($pnj));
     }
 

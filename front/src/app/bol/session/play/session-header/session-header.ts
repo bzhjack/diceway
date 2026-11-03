@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
+import {TableAClore} from '../../../shared/models/close-table.model';
 import {TurnOrderInterrupter} from '../../models/turn-order.model';
 import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 
@@ -19,12 +20,19 @@ import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 export class SessionHeaderComponent {
   readonly mode = input.required<'libre' | 'combat'>();
   readonly titre = input<string | null>(null);
+  /** La table : son menu compte propose de la clore. */
+  readonly sessionId = input<string | null>(null);
   /** Les coulisses (la réserve) sont ouvertes — mode libre seulement. */
   readonly coulissesOpen = input(false);
   /** En combat : les héros qui ont retardé leur action ce round, chacun peut l'interrompre pour agir tout de suite. */
   readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
   /** En combat : la « Mêlée de piétaille », absente sans piétaille debout des deux côtés, grisée une fois faite ce round. */
   readonly melee = input<MeleeDisponibilite>('absente');
+
+  protected readonly tableAClore = computed<TableAClore | null>(() => {
+    const id = this.sessionId();
+    return id ? {id, enCombat: this.mode() === 'combat'} : null;
+  });
 
   readonly startCombat = output<void>();
   readonly endCombat = output<void>();

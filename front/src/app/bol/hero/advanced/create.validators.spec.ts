@@ -8,6 +8,7 @@ import {
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
+  desavantageIdsDuHeros,
   desavantagesGeneraux,
 } from './create.validators';
 import {
@@ -432,6 +433,40 @@ describe('R-ILLETTRE — carrieresLettreesPourIllettre : un illettré ne choisit
   it('ne dit rien d’un illettré sans carrière lettrée', () => {
     expect(carrieresLettreesPourIllettre([ILLETTRE], [SOLDAT, 12])).toEqual([]);
     expect(carrieresLettreesPourIllettre([ILLETTRE], [])).toEqual([]);
+  });
+
+  describe('desavantageIdsDuHeros : tout désavantage compte, régional, général ou de carrière (id du catalogue partout)', () => {
+    const VALGARD = 19;
+
+    it('Illettré pris comme désavantage régional, puis Scribe : signalé', () => {
+      const traits = [{type: 'D' as const, traitable_id: ILLETTRE, region_id: VALGARD, carriere: false}];
+
+      expect(carrieresLettreesPourIllettre(desavantageIdsDuHeros(traits), [SCRIBE])).toEqual([SCRIBE]);
+    });
+
+    it('Illettré régional, puis Médecin : signalé', () => {
+      const traits = [{type: 'D' as const, traitable_id: ILLETTRE, region_id: VALGARD, carriere: false}];
+
+      expect(carrieresLettreesPourIllettre(desavantageIdsDuHeros(traits), [MEDECIN])).toEqual([MEDECIN]);
+    });
+
+    it('Illettré général ou de carrière : toujours signalé', () => {
+      const general = [{type: 'D' as const, traitable_id: ILLETTRE, region_id: null, carriere: false}];
+      const deCarriere = [{type: 'D' as const, traitable_id: ILLETTRE, region_id: null, carriere: true}];
+
+      expect(carrieresLettreesPourIllettre(desavantageIdsDuHeros(general), [SCRIBE])).toEqual([SCRIBE]);
+      expect(carrieresLettreesPourIllettre(desavantageIdsDuHeros(deCarriere), [SCRIBE])).toEqual([SCRIBE]);
+    });
+
+    it('ne prend que les désavantages : un avantage de même id n’est pas Illettré', () => {
+      const traits = [
+        {type: 'A' as const, traitable_id: ILLETTRE, region_id: null, carriere: false},
+        {type: 'D' as const, traitable_id: AUTRE_DESAVANTAGE, region_id: VALGARD, carriere: false},
+      ];
+
+      expect(desavantageIdsDuHeros(traits)).toEqual([AUTRE_DESAVANTAGE]);
+      expect(carrieresLettreesPourIllettre(desavantageIdsDuHeros(traits), [SCRIBE])).toEqual([]);
+    });
   });
 });
 

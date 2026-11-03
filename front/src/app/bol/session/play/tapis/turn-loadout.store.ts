@@ -40,16 +40,16 @@ export class TurnLoadoutStore {
    * improvisée. */
   readonly displayArmes = computed(() => (this.hasMakeshiftWeapons() ? [...this.turn.armes(), MAINS_NUES, ARME_IMPROVISEE] : this.turn.armes()));
 
-  // La source est la clé de la carte (`cardKey`), pas la carte : la table rechargée repasse une carte identique mais neuve, qui remettrait
-  // ces choix à zéro — et, avec eux, le jet en cours.
-  private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.turn.cardKey(), computation: () => null});
+  // La source est la clé du tour (`turnKey` : le round et la clé de la carte), pas la carte : la table rechargée repasse une carte identique
+  // mais neuve, qui remettrait ces choix à zéro — et, avec eux, le jet en cours.
+  private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.turn.turnKey(), computation: () => null});
 
-  private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.turn.turnKey(), computation: () => null});
 
   /** L'option spéciale (défaut de l'armure, deux armes), à part de la posture : les deux se cumulent. */
-  private readonly selectedSpecialSlug = linkedSignal<string, string | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly selectedSpecialSlug = linkedSignal<string, string | null>({source: () => this.turn.turnKey(), computation: () => null});
 
-  private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.turn.turnKey(), computation: () => null});
 
   /** Les armes lourdes que l'attaquant ne peut pas manier : toutes, s'il a moins de 0 en vigueur (02-actions-combat.md, « Dégâts »). */
   private readonly heavyForbidden = computed<ReadonlySet<number | undefined>>(() =>
@@ -72,7 +72,7 @@ export class TurnLoadoutStore {
   });
 
   /** Bagarre à mains nues (livre p. 62, au choix du MJ) : la vigueur remplace l'agilité dans le bonus d'attaque. */
-  private readonly brawlChosen = linkedSignal<string, boolean>({source: () => this.turn.cardKey(), computation: () => false});
+  private readonly brawlChosen = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => false});
 
   readonly canBrawl = computed(() => this.unarmed() && this.turn.attacker()?.attaque === null);
 
@@ -80,7 +80,7 @@ export class TurnLoadoutStore {
 
   /** Arme polyvalente (Mythic+, « d6 ou d6B ») : maniée à deux mains — d'office, sauf en combat à deux armes —, elle frappe avec son
    * second dé. */
-  private readonly deuxMainsChoisi = linkedSignal<string, boolean>({source: () => this.turn.cardKey(), computation: () => true});
+  private readonly deuxMainsChoisi = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => true});
 
   readonly polyvalente = computed(() => estPolyvalente(this.effectiveArme()?.arme?.degats) && !this.isDualWieldSelected());
 
@@ -99,22 +99,22 @@ export class TurnLoadoutStore {
   readonly degatsDeuxMains = computed(() => degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, true));
 
   /** Modificateur libre du MJ au jet d'attaque (circonstances), comme sur le jet d'action : il repart de 0 à chaque carte active. */
-  readonly freeModifier = linkedSignal({source: () => this.turn.cardKey(), computation: () => 0});
+  readonly freeModifier = linkedSignal({source: () => this.turn.turnKey(), computation: () => 0});
 
   /** « Carrières et combat » (02-actions-combat.md) : pour une manœuvre ou une feinte décrite par le joueur, le MJ peut ajouter le rang
    * d'une carrière au jet d'attaque ou aux dégâts, jamais aux deux. */
   readonly usefulCarrieres = computed(() => this.turn.carrieres().filter((c) => c.value > 0));
 
-  private readonly careerLabel = linkedSignal<string, string | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly careerLabel = linkedSignal<string, string | null>({source: () => this.turn.turnKey(), computation: () => null});
 
-  readonly careerOn = linkedSignal<string, 'attaque' | 'degats'>({source: () => this.turn.cardKey(), computation: () => 'attaque'});
+  readonly careerOn = linkedSignal<string, 'attaque' | 'degats'>({source: () => this.turn.turnKey(), computation: () => 'attaque'});
 
   readonly career = computed(() => this.usefulCarrieres().find((c) => c.label === this.careerLabel()) ?? null);
 
   /** Règle de horde (04-pnj-creatures-demons.md ; livre p. 132) : des piétailles qui attaquent ensemble la même cible ne font qu'une
    * attaque, à +1 par piétaille impliquée, et infligent d6M si elle touche. Le MJ coche celles qui se joignent à la carte active ;
    * le choix repart de zéro à chaque nouvelle carte active. */
-  private readonly hordeChosen = linkedSignal<string, readonly string[]>({source: () => this.turn.cardKey(), computation: () => []});
+  private readonly hordeChosen = linkedSignal<string, readonly string[]>({source: () => this.turn.turnKey(), computation: () => []});
 
   /** Les piétailles engagées avec la carte active — celles qui peuvent encore jouer. */
   readonly horde = computed(() => (this.defenseTotale() ? [] : this.turn.hordeMates().filter((card) => this.hordeChosen().includes(card.key))));
@@ -342,7 +342,7 @@ export class TurnLoadoutStore {
   /** Mêlée ou tir, quand l'arme permet les deux : repart de la préférence du combattant à chaque nouvelle carte active, pas à chaque
    * relecture de ses statistiques. */
   readonly useTir = linkedSignal<{readonly key: string; readonly tir: boolean}, boolean>({
-    source: () => ({key: this.turn.cardKey(), tir: this.prefersTir()}),
+    source: () => ({key: this.turn.turnKey(), tir: this.prefersTir()}),
     computation: (source) => source.tir,
   });
 
@@ -367,7 +367,7 @@ export class TurnLoadoutStore {
   });
 
   /** Facteur de portée d'un tir (livre p. 62) : courte d'office, et il repart de là à chaque nouvelle carte active. */
-  readonly rangeIndex = linkedSignal<string, number>({source: () => this.turn.cardKey(), computation: () => DEFAULT_RANGE_INDEX});
+  readonly rangeIndex = linkedSignal<string, number>({source: () => this.turn.turnKey(), computation: () => DEFAULT_RANGE_INDEX});
 
   readonly rangeFactors = RANGE_FACTORS;
 
@@ -400,7 +400,7 @@ export class TurnLoadoutStore {
    * l'autre. À chaque nouvelle carte active il repart de zéro — ou du dé de malus, si la carte en doit un à sa prochaine action ; il
    * suit aussi cet effet quand on le pose ou qu'on le retire en cours de tour. */
   readonly gmDie = linkedSignal<{readonly key: string; readonly malus: boolean}, 'bonus' | 'malus' | null>({
-    source: () => ({key: this.turn.cardKey(), malus: this.malusDieOwed()}),
+    source: () => ({key: this.turn.turnKey(), malus: this.malusDieOwed()}),
     computation: (source) => (source.malus ? 'malus' : null),
   });
 
@@ -452,13 +452,13 @@ export class TurnLoadoutStore {
   readonly canCast = computed(() => (this.turn.attacker()?.magie?.pouvoir ?? null) !== null);
 
   /** Ce qu'il fait de son action : attaquer, ou lancer un sort. Il repart sur l'attaque à chaque nouvelle carte active. */
-  readonly mode = linkedSignal<string, 'attaque' | 'sort'>({source: () => this.turn.cardKey(), computation: () => 'attaque'});
+  readonly mode = linkedSignal<string, 'attaque' | 'sort'>({source: () => this.turn.turnKey(), computation: () => 'attaque'});
 
   /** Il lance un sort ce tour-ci. */
   readonly sortMode = computed(() => this.canCast() && this.mode() === 'sort');
 
   /** Le sort, tel que le MJ le règle : 1er cercle, Moyenne, la seule condition obligatoire, sans dégâts — à chaque nouvelle carte. */
-  readonly sortModel = linkedSignal<string, SortSaisie>({source: () => this.turn.cardKey(), computation: () => saisieSortParDefaut()});
+  readonly sortModel = linkedSignal<string, SortSaisie>({source: () => this.turn.turnKey(), computation: () => saisieSortParDefaut()});
 
   readonly sortForm = form(this.sortModel, (path) => {
     min(path.conditions, 1);

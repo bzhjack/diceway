@@ -102,6 +102,22 @@
   font-size: 0.9rem;
 }
 
+// Le catalogue n'a pas répondu : le dit, avec de quoi réessayer à côté.
+.snp-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--dw-color-echec);
+  border-radius: 7px;
+  color: var(--dw-forge-bone);
+  font-size: 0.9rem;
+  @include forge.recess;
+}
+
 .snp-hero-list {
   display: flex;
   flex-wrap: wrap;

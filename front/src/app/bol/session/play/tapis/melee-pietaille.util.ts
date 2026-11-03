@@ -2,12 +2,12 @@ import {EtatCombat} from '../../models/combat-turn.model';
 import {MeleeCamps, MeleeDe, MeleeDisponibilite, MeleeJet, MeleeParCamp} from '../../models/melee-pietaille.model';
 import {TapisCard} from '../../models/tapis.model';
 import {rawDamage} from '../../combat-resolution.util';
-import {isOut, PIETAILLE} from './combat-turn.util';
+import {PIETAILLE, tientDebout} from './combat-turn.util';
 
-/** La piétaille encore debout de chaque camp (ni hors de combat, ni exclue), dans l'ordre des cartes reçues — l'ordre de jeu. Celle du camp
+/** La piétaille encore debout de chaque camp (ni hors de combat, ni paralysée, ni exclue), dans l'ordre des cartes reçues — l'ordre de jeu. Celle du camp
  * des héros, ce sont leurs suivants (04-pnj-creatures-demons.md, « Règle de horde » ; livre p. 132). */
 export function pietailleDebout(cards: readonly TapisCard[], etat: EtatCombat): MeleeCamps {
-  const debout = cards.filter((card) => card.rang === PIETAILLE && !isOut(card) && !etat.exclus.includes(card.key));
+  const debout = cards.filter((card) => card.rang === PIETAILLE && tientDebout(card, etat.effets) && !etat.exclus.includes(card.key));
   return {
     heros: debout.filter((card) => card.camp === 'heros'),
     adversaires: debout.filter((card) => card.camp === 'adversaires'),

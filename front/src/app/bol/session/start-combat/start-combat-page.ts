@@ -42,6 +42,7 @@ import {heroDetails, isLowVitalite, vitalitePercent} from '../play/tapis/tapis.u
 import {CombatEffect} from '../models/combat-effect.model';
 import {InitiativeKind} from '../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../play/tapis/combat-effects.util';
+import {normalizeEtat} from '../play/tapis/combat-turn.util';
 import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
 import {OrdreFriseComponent} from '../ordre-frise/ordre-frise';
 import {REACTION_BONUS_TRAIT_LABEL, REACTION_MALUS_TRAIT_LABEL, REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
@@ -384,6 +385,11 @@ export class StartCombatPageComponent {
           if (session.statut !== 'libre' && !(this.data.reroll && session.statut === 'combat')) {
             this.close();
             return;
+          }
+          // Un nouveau jet en plein combat part des cartes déjà hors du combat (retirées par le MJ, rivaux enfuis) : elles n'y reviennent
+          // que si le MJ les y remet.
+          if (!refresh && session.statut === 'combat') {
+            this.excluded.set(new Set(normalizeEtat(session.etat_combat).exclus));
           }
           this.where.set([session.titre, session.scene?.titre].filter((part): part is string => !!part).join(' · '));
           // Mêmes portraits que sur la table (`combat-play.util.ts`) : celui de la fiche, sinon l'image du catalogue.

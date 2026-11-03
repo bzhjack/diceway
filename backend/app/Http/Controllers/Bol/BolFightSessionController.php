@@ -210,6 +210,28 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function close(string $id)
+    {
+        $session = $this->fightSessionService->closeSession($id, Auth::id());
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
+    public function reopen(string $id)
+    {
+        $session = $this->fightSessionService->reopenSession($id, Auth::id());
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function updateHeroInitiative(Request $request, string $id, int $herosPivotId)
     {
         $pivot = $this->fightSessionService->updateHeroInitiative(

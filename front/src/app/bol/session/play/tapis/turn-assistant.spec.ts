@@ -701,6 +701,73 @@ describe('TurnAssistantComponent', () => {
       expect(texte()).toContain('9 pts de pouvoir');
     });
 
+    const caseSort = () => element.querySelector<HTMLInputElement>('input[aria-label^="Total des deux dés du sort"]')!;
+
+    it('un échec critique accepté se défait quand le total est retapé : le point d’héroïsme est repris', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      // « 2 » se lit comme un double 1 : le sort échoue, le héros peut en faire un échec critique.
+      await saisirAttaque('2');
+      await cliquer('Échec critique : gagner 1 point d’héroïsme');
+      expect(events.heroisme).toEqual([1]);
+
+      await saisirAttaque('3');
+
+      expect(events.heroisme).toEqual([1, -1]);
+      expect(texte()).not.toContain('Échec critique');
+      expect(texte()).toContain('Le sort échoue');
+      // Le sort n'est pas repayé.
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
+    });
+
+    it('les dégâts du sort appliqués, sa case se fige : la vider ne rend pas le pouvoir et ne rouvre pas les dégâts', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Blesse');
+      await saisirAttaque('7');
+      await saisirDegats('4');
+      await cliquer('Appliquer 4');
+
+      expect(caseSort().disabled).toBe(true);
+      expect(bouton(/Lancer \dd6 à l’écran pour le sort/).disabled).toBe(true);
+      await saisirAttaque('');
+      await saisirAttaque('8');
+
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
+      expect(element.querySelector('input[aria-label^="Dé de dégâts"]')).toBeNull();
+      expect(events.applied).toHaveLength(1);
+    });
+
+    it('en défense totale, pas de sort : sa case reste fermée', async () => {
+      await viser({attacker: sorcier()});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Déf. totale');
+
+      expect(texte()).toContain('Pas de sort ce round');
+      expect(texte()).toContain('Pas de dégâts ce round');
+      expect(element.querySelector('input[aria-label^="Total des deux dés du sort"]')).toBeNull();
+      expect(events.ressources).toEqual([]);
+    });
+
+    it('la même carte qui rejoue au round suivant (elle avait retardé) repart d’un tour neuf : son sort n’est plus payé', async () => {
+      await viser({attacker: sorcier(), round: 1});
+      await cliquer(/^ *Sort *null$/);
+      await cliquer('Blesse');
+      await saisirAttaque('7');
+      await saisirDegats('4');
+      await cliquer('Appliquer 4');
+
+      fixture.componentRef.setInput('round', 2);
+      await stable();
+
+      expect(texte()).not.toContain('· payé');
+      expect(texte()).toContain('L’attaque');
+      await cliquer(/^ *Sort *null$/);
+      expect(caseSort().disabled).toBe(false);
+      await saisirAttaque('7');
+      expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
+    });
+
     it('une carte sans pouvoir n’a pas de sort', async () => {
       await viser();
 

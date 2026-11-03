@@ -45,6 +45,10 @@
 }
 
 .cl-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   margin: 0.15rem 0 0;
   font-size: 0.76rem;
   color: var(--dw-surface-500);

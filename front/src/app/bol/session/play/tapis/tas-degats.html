@@ -199,7 +199,7 @@
   @if (turn.target() && !loadout.defenseTotale() && !turn.actionPerdue() && (!loadout.sortMode() || loadout.sortModel().blessant)) {
     <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damage.damageSum()" />
   }
-  @if (loadout.sortMode()) {
+  @if (loadout.sortMode() && !loadout.defenseTotale()) {
     <span class="tas-wait">{{ loadout.sortModel().blessant ? 'Si le sort réussit : ' + loadout.sortDegats() + ', sans vigueur ni armure.' : 'Ce sort ne blesse pas.' }}</span>
   } @else {
     <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>

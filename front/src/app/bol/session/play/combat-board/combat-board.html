@@ -9,6 +9,7 @@
       @if (activeCard(); as active) {
         <bol-turn-assistant
           [card]="active"
+          [round]="round()"
           [armes]="armes()"
           [ownedArmes]="ownedArmes()"
           [combatOptions]="combatOptions()"

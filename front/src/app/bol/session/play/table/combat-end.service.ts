@@ -7,9 +7,10 @@ import {BolHerosModel} from '../../../models/bol-heros.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {traitsDeRecuperation} from '../../combat-play.util';
-import {combatOutcome, horsCombat} from '../tapis/combat-turn.util';
+import {combatOutcome, horsCombat, tientDebout} from '../tapis/combat-turn.util';
 import {degatsMainsNues} from '../tapis/combat-effects.util';
 import {CombatOutcome} from '../../models/combat-turn.model';
+import {CombatEffect} from '../../models/combat-effect.model';
 import {CombatOutcomeDialogComponent} from '../combat-outcome-dialog/combat-outcome-dialog';
 import {CombatOutcomeDialogData} from '../../models/combat-outcome-dialog.model';
 import {AfterCombatDialogComponent} from '../after-combat-dialog/after-combat-dialog';
@@ -29,8 +30,8 @@ export class CombatEndService {
   private readonly table = inject(TableStore);
   private readonly combat = inject(CombatTurnStore);
 
-  /** Un camp n'a plus personne debout (hors de combat ou retiré du combat) : le combat est gagné ou perdu, une boîte l'annonce. */
-  private readonly combatOutcome = computed(() => (this.table.mode() === 'combat' ? combatOutcome(this.table.cards(), this.combat.etat().exclus) : null));
+  /** Un camp n'a plus personne debout (hors de combat, paralysé ou retiré du combat) : le combat est gagné ou perdu, une boîte l'annonce. */
+  private readonly combatOutcome = computed(() => (this.table.mode() === 'combat' ? combatOutcome(this.table.cards(), this.combat.etat().exclus, this.combat.etat().effets) : null));
 
   /** La dernière issue annoncée : la boîte ne revient que si l'issue change (un héros relevé, puis retombé…). */
   private lastOutcome: CombatOutcome | null = null;
@@ -75,7 +76,7 @@ export class CombatEndService {
             etat: horsCombat(card, effets),
             ...traitsDeRecuperation(fiches.get(card.key)?.traits),
           }));
-          const healers = this.combatHealers(fiches);
+          const healers = this.combatHealers(fiches, effets);
           return this.dialog
             .open<AfterCombatDialogComponent, AfterCombatDialogData, readonly AfterCombatGain[]>(AfterCombatDialogComponent, {width: '600px', data: {wounded, healers}})
             .afterClosed();
@@ -118,10 +119,11 @@ export class CombatEndService {
     );
   }
 
-  /** Les héros et PNJ alliés de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. */
-  private combatHealers(fiches: ReadonlyMap<string, BolHerosModel>): readonly AfterCombatHealer[] {
+  /** Les héros et PNJ alliés de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. Un
+   * soigneur hors de combat (inconscient, mourant, mort) ou paralysé ne soigne personne. */
+  private combatHealers(fiches: ReadonlyMap<string, BolHerosModel>, effets: readonly CombatEffect[]): readonly AfterCombatHealer[] {
     return this.table.cards()
-      .filter((card) => peutSecourir(card))
+      .filter((card) => peutSecourir(card) && tientDebout(card, effets))
       .map((card): AfterCombatHealer | null => {
         const fiche = fiches.get(card.key);
         const carriere = fiche ? bestHealingCareer(heroDetails(fiche).carrieres) : null;

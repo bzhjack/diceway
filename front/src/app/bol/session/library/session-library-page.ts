@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
@@ -15,7 +15,8 @@ import {BolFightSessionSummaryModel} from '../../models/bol-fight-session.model'
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 
-/** Liste des combats lancés par l'utilisateur, avec accès pour reprendre ou supprimer chacun. */
+/** Liste des tables lancées par l'utilisateur, closes comprises, avec accès pour reprendre (une table close est d'abord rouverte) ou
+ * supprimer chacune. */
 @Component({
   selector: 'bol-session-library-page',
   imports: [
@@ -35,6 +36,7 @@ export class SessionLibraryPageComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
   private readonly sessions = refreshableResource(() => this.fightSessionService.fightSessions());
 
   protected readonly searchTerm = signal('');
@@ -45,6 +47,21 @@ export class SessionLibraryPageComponent {
 
   protected readonly totalCount = computed(() => this.sessions.data().length);
   protected readonly visibleCount = computed(() => this.filteredSessions().length);
+
+  /** Retourne à la table ; une table close est d'abord rouverte (`libre`) : elle redevient la table ouverte de l'accueil. */
+  protected reprendre(session: BolFightSessionSummaryModel): void {
+    const ouvrir = () => void this.router.navigate(['/session', session.id, 'play']);
+    if (session.statut !== 'terminee') {
+      ouvrir();
+      return;
+    }
+    this.fightSessionService.reopen(session.id).subscribe({
+      next: ouvrir,
+      error: (error: unknown) => {
+        this.snackBar.open(extractApiErrorMessage(error, 'Impossible de rouvrir la table.'), 'Fermer', {duration: 5000});
+      },
+    });
+  }
 
   protected askDelete(session: BolFightSessionSummaryModel): void {
     confirmDialog(

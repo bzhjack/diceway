@@ -69,6 +69,9 @@ export class TurnAssistantComponent {
   readonly hordeMates = input<readonly TapisCard[]>([]);
   /** Les êtres que la carte active peut voir, des deux camps : un prêtre leur donne un dé de foi. */
   readonly visibles = input<readonly TapisCard[]>([]);
+  /** Le round en cours : avec la carte, il dit quel tour se joue. Une carte qui joue deux tours de suite (dernière au round N après avoir
+   * retardé, première au round N+1) repart ainsi d'un tour neuf. */
+  readonly round = input(0);
 
   readonly choiceChanged = output<AttackChoice | null>();
   /** Les piétailles engagées dans la horde : leur tour finit avec celui de la carte active. */

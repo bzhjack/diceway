@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {EtatCombat} from '../../models/combat-turn.model';
 import {TapisCard} from '../../models/tapis.model';
+import {effetParalyse} from './combat-effects.util';
 import {desDeMelee, disponibiliteMelee, jetDeMelee, lireJetDeMelee, pertesDeMelee, pietailleDebout, tombesParDefaut} from './melee-pietaille.util';
 
 function mook(id: number, camp: TapisCard['camp'], extra: Partial<TapisCard> = {}): TapisCard {
@@ -53,6 +54,14 @@ describe('pietailleDebout', () => {
     const camps = pietailleDebout([hero, coriace, tombe, exclu, BANDIT_1, SUIVANT_1], etat({exclus: ['pnj-23']}));
 
     expect(camps.heros.map((c) => c.key)).toEqual(['pnj-1']);
+    expect(camps.adversaires.map((c) => c.key)).toEqual(['pnj-11']);
+  });
+
+  it('leaves out a paralysed mook: it no longer fights', () => {
+    const paralyse = {...effetParalyse('pnj-12'), id: 'e-1'};
+
+    const camps = pietailleDebout([BANDIT_1, BANDIT_2, SUIVANT_1], etat({effets: [paralyse]}));
+
     expect(camps.adversaires.map((c) => c.key)).toEqual(['pnj-11']);
   });
 

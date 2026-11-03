@@ -1,5 +1,5 @@
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal, untracked} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import {
   NO_SCENARIO,
   normalizeTitre,
   SCENE_TITLE_MAX,
+  scenarioFilterFor,
   scenesOf,
 } from './scene.util';
 
@@ -90,14 +91,23 @@ export class SceneListComponent {
             .map((s) => ({id: s.id, titre: s.titre})),
         );
         // À l'ouverture : le scénario de la table (jamais déduit de la scène courante), sinon « On improvise ».
-        const scenarioId = this.scenarioId();
-        this.selectedScenario.set(scenarioId && this.knownScenarioIds().has(scenarioId) ? scenarioId : null);
+        this.selectedScenario.set(scenarioFilterFor(this.scenarioId(), this.knownScenarioIds()));
         this.loading.set(false);
       },
       error: (error: unknown) => {
         this.loading.set(false);
         this.fail(error, 'Impossible de charger les scènes.');
       },
+    });
+
+    // Le scénario de la table change (scène d'un autre scénario chargée, enregistrement) : le filtre le suit, pour que « Enregistrer la
+    // table » ne range pas la scène sous un ancien scénario. Le MJ peut ensuite en choisir un autre dans le filtre.
+    effect(() => {
+      const scenarioId = this.scenarioId();
+      if (!untracked(() => this.loading())) {
+        this.selectedScenario.set(scenarioFilterFor(scenarioId, untracked(this.knownScenarioIds)));
+        this.expandedId.set(null);
+      }
     });
 
     // La scène courante de la session peut avoir été créée hors de cette liste (barre de commande) :

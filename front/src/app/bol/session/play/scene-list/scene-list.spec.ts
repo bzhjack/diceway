@@ -63,4 +63,54 @@ describe('SceneListComponent : scénario affiché', () => {
 
     expect(saveTable).toHaveBeenCalledWith('s1', null);
   });
+
+  /** Ouvre le sélecteur « Scénario » et clique l'option de ce titre, comme le MJ. */
+  async function choisirScenario(titre: string): Promise<void> {
+    (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>('.mat-mdc-select-trigger')!.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const option = Array.from(document.querySelectorAll<HTMLElement>('mat-option')).find((el) => el.textContent?.trim() === titre)!;
+    option.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  it('le filtre suit le scénario de la table quand il change (scène d’un autre scénario chargée) : l’enregistrement n’y ramène pas l’ancien', async () => {
+    await rendre('X');
+
+    fixture.componentRef.setInput('scenarioId', 'Y');
+    await fixture.whenStable();
+    saveButton().click();
+
+    expect(saveTable).toHaveBeenCalledWith('s1', 'Y');
+  });
+
+  it('le filtre suit aussi une table qui passe à « On improvise »', async () => {
+    await rendre('X');
+
+    fixture.componentRef.setInput('scenarioId', null);
+    await fixture.whenStable();
+    saveButton().click();
+
+    expect(saveTable).toHaveBeenCalledWith('s1', null);
+  });
+
+  it('le MJ peut choisir un autre scénario dans le filtre avant d’enregistrer', async () => {
+    await rendre('X');
+
+    await choisirScenario('Scénario Y');
+    saveButton().click();
+
+    expect(saveTable).toHaveBeenCalledWith('s1', 'Y');
+  });
+
+  it('un scénario de la table inconnu du compte ramène le filtre sur « On improvise »', async () => {
+    await rendre('X');
+
+    fixture.componentRef.setInput('scenarioId', 'Z');
+    await fixture.whenStable();
+    saveButton().click();
+
+    expect(saveTable).toHaveBeenCalledWith('s1', null);
+  });
 });

@@ -8,6 +8,8 @@ export interface BolAccueilScenario {
 export interface BolAccueilTable {
   id: string;
   titre: string | null;
+  /** `combat` : la clore termine d'abord le combat. */
+  statut: 'libre' | 'combat';
   scenario_id: string | null;
   created_at: string;
 }

@@ -54,21 +54,40 @@ class BolCombatState
 
     /**
      * L'état d'un nouveau jet de réaction en plein combat : le round, la vitalité de départ, les rivaux enfuis (toujours exclus) et la mêlée
-     * de piétaille du round sont gardés ; personne n'a encore joué, les effets repartent de zéro et les exclusions sont celles du nouveau jet.
+     * de piétaille du round sont gardés ; personne n'a encore joué, et les exclusions sont celles du nouveau jet (le front y reprend les
+     * cartes déjà hors du combat). Les effets qui durent au-delà du tour restent (paralysie, chute, mains nues, coup précis, action perdue,
+     * dés « à sa prochaine action », effets comptés en rounds ou en attaques) ; ceux qui tiennent au tour ou au round en cours (posture,
+     * défense totale, parade, bouclier dépensé) tombent, comme ceux d'une carte que le nouveau jet laisse hors du combat ou qui la visent.
      *
-     * @param array{round: int, depart: array<string, int>, fuis: array<int, string>, melee: int|null} $enCours l'état normalisé du combat
+     * @param array{round: int, effets: array<int, array<string, mixed>>, depart: array<string, int>, fuis: array<int, string>, melee: int|null} $enCours l'état normalisé du combat
      * @param array<int, string> $exclus clés de carte exclues par le nouveau jet
      * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>, fuis: array<int, string>, melee: int|null}
      */
     public static function nouveauJet(array $enCours, array $exclus): array
     {
+        $horsCombat = self::keys([...self::keys($exclus), ...$enCours['fuis']]);
+        $effets = array_values(array_filter(
+            $enCours['effets'] ?? [],
+            fn (array $effet) => !self::tientAuTour($effet['duree'])
+                && !in_array($effet['porteur'], $horsCombat, true)
+                && !in_array($effet['cible'] ?? null, $horsCombat, true),
+        ));
+
         return self::normalize([
             'round'  => $enCours['round'],
+            'effets' => $effets,
             'exclus' => $exclus,
             'depart' => $enCours['depart'],
             'fuis'   => $enCours['fuis'],
             'melee'  => $enCours['melee'],
         ]);
+    }
+
+    /** Une durée liée au tour ou au round en cours : jusqu'au prochain tour du porteur (posture, défense totale, parade), ou la fin du round. */
+    private static function tientAuTour(array $duree): bool
+    {
+        return in_array($duree['type'], ['debut-tour-porteur', 'fin-round'], true)
+            || ($duree['type'] === 'usages' && ($duree['expireAuTour'] ?? false) === true);
     }
 
     /**

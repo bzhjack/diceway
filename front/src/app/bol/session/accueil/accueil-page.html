@@ -24,10 +24,13 @@
               Table ouverte{{ table.saga ? ' · ' + table.saga : '' }}
             </p>
             <h2 id="acc-soir-titre" class="acc-soir-titre">{{ table.titre }}</h2>
-            <div>
+            <div class="acc-soir-actions">
               <a mat-flat-button [routerLink]="['/session', table.id, 'play']">
                 <mat-icon>play_arrow</mat-icon> Reprendre la table
               </a>
+              <button mat-stroked-button type="button" (click)="clore()">
+                <mat-icon>lock</mat-icon> Clore la table
+              </button>
             </div>
           } @else {
             <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune table ouverte</h2>

@@ -62,9 +62,10 @@ class BolAccueilTest extends TestCase
 
         $table = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
 
-        $this->assertSame(['id', 'titre', 'scenario_id', 'created_at'], array_keys($table));
+        $this->assertSame(['id', 'titre', 'statut', 'scenario_id', 'created_at'], array_keys($table));
         $this->assertSame($session->id, $table['id']);
         $this->assertSame('Table', $table['titre']);
+        $this->assertSame('libre', $table['statut']);
         $this->assertSame($scenario->id, $table['scenario_id']);
         $this->assertSame($session->created_at->toIso8601String(), $table['created_at']);
     }
@@ -101,6 +102,26 @@ class BolAccueilTest extends TestCase
         $joues = $response->json('scenarios_joues');
         $this->assertEqualsCanonicalizing([$a->id, $b->id], $joues);
         $this->assertSame(array_values($joues), $joues);
+    }
+
+    public function test_a_chapter_played_without_loading_a_scene_counts_as_played(): void
+    {
+        $ancien = $this->scenario('Saga — 1. Ancien');
+        $ferme = $this->scenario('Saga — 2. Fermé');
+        $ouvert = $this->scenario('Saga — 3. Ouvert');
+        $etranger = $this->scenario('Étranger', $other = User::factory()->create());
+
+        $this->tableSession('libre', $ancien->id);
+        $this->travel(1)->minutes();
+        $this->tableSession('terminee', $ferme->id);
+        $this->travel(1)->minutes();
+        $this->tableSession('libre', $ouvert->id);
+        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'terminee', 'user_id' => $other->id, 'scenario_id' => $etranger->id]);
+
+        $response = $this->getJson('/api/bol/accueil')->assertOk();
+
+        // La table ouverte est « sur la table ce soir », pas encore jouée ; les autres tables du compte l'ont été.
+        $this->assertEqualsCanonicalizing([$ancien->id, $ferme->id], $response->json('scenarios_joues'));
     }
 
     public function test_no_played_scenario_is_an_empty_list(): void

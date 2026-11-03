@@ -6,6 +6,7 @@ import {
   moveScene,
   needsLoadChoice,
   normalizeTitre,
+  scenarioFilterFor,
   scenesOf,
   tableTitle,
   headerTitle,
@@ -18,6 +19,19 @@ function scene(id: string, scenarioId: string | null, ordre: number, titre = id)
 function entry(kind: BolSceneEntry['kind'], qty: number): BolSceneEntry {
   return {kind, source_id: 'x', qty, positions: []};
 }
+
+describe('scenarioFilterFor', () => {
+  const known = new Set(['s1', 's2']);
+
+  it('shows the scenario of the table when the account knows it', () => {
+    expect(scenarioFilterFor('s2', known)).toBe('s2');
+  });
+
+  it('falls back to « On improvise » (null) for a table without scenario or with an unknown one', () => {
+    expect(scenarioFilterFor(null, known)).toBeNull();
+    expect(scenarioFilterFor('gone', known)).toBeNull();
+  });
+});
 
 describe('scenesOf', () => {
   const scenes = [scene('b', 's1', 1), scene('a', 's1', 0), scene('c', null, 0), scene('d', 's2', 0)];

@@ -125,6 +125,16 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {}));
   }
 
+  /** Clôt la table (`terminee`) ; en combat, le termine d'abord, sans les soins d'après combat. */
+  close(sessionId: string): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/close`, {}));
+  }
+
+  /** Rouvre une table close : elle redevient `libre` (une table encore ouverte ne change pas). */
+  reopen(sessionId: string): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/reopen`, {}));
+  }
+
   /** Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). */
   updateCombatState(sessionId: string, etat: EtatCombatDto): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/etat-combat`, etat));

@@ -82,6 +82,11 @@ export class TurnContextStore {
 
   readonly targetKey = computed(() => this.target()?.key ?? null);
 
+  /** Le tour qui se joue : le round et la carte. Tout ce que le tour règle (arme, posture, mode, sort payé, jet, coup joué) repart de zéro
+   * quand il change, même pour la carte qui vient de jouer : dernière d'un round, elle peut être la première du suivant. Le round ne
+   * change jamais pendant un tour, et la table rechargée le rend identique. */
+  readonly turnKey = computed(() => `${this.host.round()}:${this.cardKey()}`);
+
   readonly rolling = signal(false);
 
   /** La case de saisie de la protection (bloc des dégâts). */
@@ -104,7 +109,7 @@ export class TurnContextStore {
   readonly injector = inject(Injector);
 
   /** Le popover ouvert (les effets en cours), ou aucun ; il se ferme à chaque nouveau tour. */
-  readonly openPop = linkedSignal<string, TurnPopover | null>({source: () => this.cardKey(), computation: () => null});
+  readonly openPop = linkedSignal<string, TurnPopover | null>({source: () => this.turnKey(), computation: () => null});
 
   /** « Juste une égratignure » lui a coûté cette action : il ne peut que finir son tour. Le MJ peut retirer l'effet pour le laisser agir. */
   readonly actionPerdue = computed(() => perdSonAction(this.effets(), this.card().key));

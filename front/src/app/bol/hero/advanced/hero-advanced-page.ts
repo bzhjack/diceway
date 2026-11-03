@@ -48,6 +48,7 @@ import {
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
+  desavantageIdsDuHeros,
   desavantagesGeneraux,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
@@ -653,12 +654,9 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       });
     }
 
-    // R-ILLETTRE : un illettré ne choisit pas de carrière qui exige d'être lettré (livre p. 45). Désavantage général seulement : un
-    // désavantage régional n'a pas les ids du catalogue général.
-    const generalDesavantageIds = this.selectedTraitsDraft()
-      .filter((trait) => trait.type === 'D' && (trait.region_id ?? 0) <= 0)
-      .map((trait) => Number(trait.traitable_id));
-    for (const carriereId of carrieresLettreesPourIllettre(generalDesavantageIds, selectedIds)) {
+    // R-ILLETTRE : un illettré ne choisit pas de carrière qui exige d'être lettré (livre p. 45). Tout désavantage Illettré compte, général,
+    // régional (le cas courant : 9 régions le proposent, sous le même id du catalogue) ou de carrière.
+    for (const carriereId of carrieresLettreesPourIllettre(desavantageIdsDuHeros(this.selectedTraitsDraft()), selectedIds)) {
       warnings.push({
         step: 'Carrières',
         warn: `Illettré : la carrière ${this.carriereFromId(carriereId)?.carriere ?? 'choisie'} exige de savoir lire et écrire.`,

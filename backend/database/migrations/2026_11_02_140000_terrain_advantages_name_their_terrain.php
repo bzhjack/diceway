@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /** Les six avantages de terrain avaient le même domaine de dé de bonus, sans dire où il s'applique. Le livre (chapitre 2, Avantages) le limite à leur
- * terrain et l'exclut du combat ; le seeder porte le même texte. Seul un texte encore d'origine est remplacé. */
+ * terrain et l'exclut du combat ; le seeder porte le même texte. Seul un texte encore d'origine est remplacé. Les avantages sont lus
+ * en cache, seuls et dans les régions : les deux caches sont vidés pour que le nouveau texte s'affiche tout de suite. */
 return new class extends Migration
 {
     private const TERRAINS = [
@@ -26,6 +28,7 @@ return new class extends Migration
                 ->whereIn('de_bonus_domaine', [self::ANCIEN, self::ANCIEN . '.'])
                 ->update(['de_bonus_domaine' => self::nouveau($terrain)]);
         }
+        self::viderLesCaches();
     }
 
     public function down(): void
@@ -36,6 +39,13 @@ return new class extends Migration
                 ->where('de_bonus_domaine', self::nouveau($terrain))
                 ->update(['de_bonus_domaine' => self::ANCIEN . '.']);
         }
+        self::viderLesCaches();
+    }
+
+    private static function viderLesCaches(): void
+    {
+        Cache::forget('bol_avantages_all');
+        Cache::forget('bol_regions_all');
     }
 
     private static function nouveau(string $terrain): string

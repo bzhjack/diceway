@@ -1,4 +1,4 @@
-import {signal} from '@angular/core';
+import {signal, WritableSignal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
@@ -29,12 +29,21 @@ describe('SessionNewPageComponent', () => {
   const accueil = vi.fn();
   const preselectHeroes = vi.fn();
   const launch = vi.fn();
+  const loadCatalog = vi.fn();
+  /** Le catalogue de la bibliothèque : vide tant que le réseau n'a pas répondu, comme le vrai service. */
+  let catalog: WritableSignal<readonly {catalogId: string}[]>;
+  let catalogLoading: WritableSignal<boolean>;
+  let catalogFailed: WritableSignal<boolean>;
   let accueil$: Subject<BolAccueilModel>;
   let harness: RouterTestingHarness;
   let element: HTMLElement;
 
   /** Ouvre le seuil sur `url` ; la réponse de l'accueil n'arrive que quand le test l'envoie, comme le réseau. */
-  async function ouvrir(url: string, heroes = [{catalogId: 'hero:h1', qty: 1}]): Promise<void> {
+  async function ouvrir(url: string, heroes = [{catalogId: 'hero:h1', qty: 1}], catalogResolu = true): Promise<void> {
+    catalog = signal(catalogResolu ? [{catalogId: 'hero:h1'}] : []);
+    catalogLoading = signal(!catalogResolu);
+    catalogFailed = signal(false);
+    loadCatalog.mockReset();
     accueil$ = new Subject<BolAccueilModel>();
     accueil.mockReset();
     accueil.mockReturnValue(accueil$);
@@ -55,9 +64,11 @@ describe('SessionNewPageComponent', () => {
         {
           provide: CombatSelectionService,
           useValue: {
-            loadCatalog: vi.fn(),
+            loadCatalog,
+            loading: catalogLoading,
+            loadFailed: catalogFailed,
             combatants: signal(heroes),
-            entryFor: () => ({nom: 'Grimar', avatar: null}),
+            entryFor: (id: string) => (catalog().some((e) => e.catalogId === id) ? {nom: 'Grimar', avatar: null} : undefined),
             remove: vi.fn(),
             preselectHeroes,
             launch,
@@ -186,6 +197,80 @@ describe('SessionNewPageComponent', () => {
     it('sans héros, reste désactivé même une fois l’accueil arrivé', async () => {
       await ouvrir('/session/new', []);
       await repondre();
+
+      expect(ouvrirLaTable().disabled).toBe(true);
+    });
+  });
+
+  describe('« Ouvrir la table » avant le catalogue', () => {
+    async function catalogueArrive(): Promise<void> {
+      catalog.set([{catalogId: 'hero:h1'}]);
+      catalogLoading.set(false);
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+    }
+
+    it('reste désactivé tant que le catalogue n’a pas résolu les héros présélectionnés, et un clic ne crée rien', async () => {
+      await ouvrir('/session/new', [{catalogId: 'hero:h1', qty: 1}], false);
+      await repondre();
+
+      expect(ouvrirLaTable().disabled).toBe(true);
+      ouvrirLaTable().click();
+      expect(launch).not.toHaveBeenCalled();
+
+      await catalogueArrive();
+
+      expect(ouvrirLaTable().disabled).toBe(false);
+    });
+
+    it('reste désactivé quand la sélection ne contient plus que des fiches disparues de la bibliothèque', async () => {
+      await ouvrir('/session/new', [{catalogId: 'hero:disparu', qty: 1}]);
+      await repondre();
+
+      expect(ouvrirLaTable().disabled).toBe(true);
+    });
+
+    it('ne compte que les héros qu’il affiche', async () => {
+      await ouvrir('/session/new', [{catalogId: 'hero:h1', qty: 1}, {catalogId: 'hero:disparu', qty: 1}]);
+      await repondre();
+
+      expect(element.querySelectorAll('.snp-hero-chip').length).toBe(1);
+      expect(element.querySelector('.snp-heroes-total')?.textContent?.trim()).toBe('1');
+    });
+
+    it('annonce le chargement des héros plutôt que « Aucun héros »', async () => {
+      await ouvrir('/session/new', [{catalogId: 'hero:h1', qty: 1}], false);
+      await repondre();
+
+      expect(element.querySelector('.snp-empty')?.textContent).toContain('Chargement');
+    });
+
+    it('si le catalogue ne charge pas : le dit, laisse « Ouvrir la table » désactivé et propose de réessayer', async () => {
+      await ouvrir('/session/new', [{catalogId: 'hero:h1', qty: 1}], false);
+      await repondre();
+      loadCatalog.mockClear();
+
+      catalogLoading.set(false);
+      catalogFailed.set(true);
+      await harness.fixture.whenStable();
+      harness.detectChanges();
+
+      const alerte = element.querySelector('[role="alert"]');
+      expect(alerte?.textContent).toContain('Impossible de charger');
+      expect(ouvrirLaTable().disabled).toBe(true);
+
+      alerte!.querySelector<HTMLButtonElement>('button')!.click();
+
+      expect(loadCatalog).toHaveBeenCalledTimes(1);
+    });
+
+    it('un rechargement raté n’autorise pas à ouvrir la table sur un catalogue périmé', async () => {
+      await ouvrir('/session/new');
+      await repondre();
+      expect(ouvrirLaTable().disabled).toBe(false);
+
+      catalogFailed.set(true);
+      harness.detectChanges();
 
       expect(ouvrirLaTable().disabled).toBe(true);
     });

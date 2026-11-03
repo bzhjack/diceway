@@ -48,7 +48,55 @@ class BolMagieCombatTest extends TestCase
         $this->assertNull(BolFightSessionService::ressourceInitiale(null));
         $this->assertSame(7, BolFightSessionService::ressourceSuivante(12, -5));
         $this->assertSame(0, BolFightSessionService::ressourceSuivante(2, -5));
-        $this->assertNull(BolFightSessionService::ressourceSuivante(null, 1));
+        $this->assertNull(BolFightSessionService::ressourceSuivante(null, -1));
+    }
+
+    public function test_un_pnj_qui_a_la_carriere_part_de_zero_et_pas_sans_reserve(): void
+    {
+        $this->assertSame(0, BolFightSessionService::ressourceInitiale(0, true));
+        $this->assertSame(0, BolFightSessionService::ressourceInitiale(null, true));
+        $this->assertSame(4, BolFightSessionService::ressourceInitiale(4, true));
+        $this->assertNull(BolFightSessionService::ressourceInitiale(0, false));
+    }
+
+    public function test_un_pretre_sans_points_recoit_un_point_a_la_main(): void
+    {
+        DB::table('bol_carriere')->insert([['id' => 21, 'carriere' => 'Prêtre'], ['id' => 24, 'carriere' => 'Sorcier'], ['id' => 1, 'carriere' => 'Soldat']]);
+        $pretre = $this->fiche('R', ['foi' => 0]);
+        $pretre->carrieres()->create(['carriere_id' => 21, 'value' => 1]);
+        $sorcier = $this->fiche('C', ['pouvoir' => 0]);
+        $sorcier->carrieres()->create(['carriere_id' => 24, 'value' => 0]);
+        $soldat = $this->fiche('C');
+        $soldat->carrieres()->create(['carriere_id' => 1, 'value' => 2]);
+        $table = $this->table();
+        $service = app(BolFightSessionService::class);
+
+        $lignePretre = $service->createPnjRow($table->id, $pretre->id, 'adversaires');
+        $ligneSorcier = $service->createPnjRow($table->id, $sorcier->id, 'adversaires');
+        $ligneSoldat = $service->createPnjRow($table->id, $soldat->id, 'adversaires');
+
+        $this->assertSame(0, $lignePretre->fresh()->foi_courante);
+        $this->assertNull($lignePretre->fresh()->pouvoir_courant);
+        $this->assertSame(0, $ligneSorcier->fresh()->pouvoir_courant);
+        $this->assertNull($ligneSoldat->fresh()->foi_courante);
+
+        $this->patchJson("/api/bol/fight-session/{$table->id}/combatant/pnj/{$lignePretre->id}/ressource", ['ressource' => 'foi', 'delta' => 1])
+            ->assertOk();
+        $this->assertSame(1, $lignePretre->fresh()->foi_courante);
+    }
+
+    public function test_une_ligne_deja_posee_sans_reserve_en_recoit_une_quand_le_mj_en_donne(): void
+    {
+        // Une ligne remplie par la migration 2026_11_03_100000 avant la correction : un prêtre à 0 point y est resté sans réserve.
+        $pretre = $this->fiche('R', ['foi' => 0]);
+        $table = $this->table();
+        $ligne = app(BolFightSessionService::class)->createPnjRow($table->id, $pretre->id, 'adversaires');
+        $ligne->update(['foi_courante' => null]);
+        $url = "/api/bol/fight-session/{$table->id}/combatant/pnj/{$ligne->id}/ressource";
+
+        $this->patchJson($url, ['ressource' => 'foi', 'delta' => -1])->assertOk();
+        $this->assertNull($ligne->fresh()->foi_courante);
+        $this->patchJson($url, ['ressource' => 'foi', 'delta' => 2])->assertOk()->assertJsonPath('pnjs.0.foi_courante', 2);
     }
 
     public function test_un_pnj_pose_a_la_table_part_de_la_foi_et_du_pouvoir_de_sa_fiche(): void

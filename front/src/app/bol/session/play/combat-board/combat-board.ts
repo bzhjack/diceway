@@ -26,6 +26,8 @@ export class CombatBoardComponent {
 
   // Assistant de tour : `null` quand plus personne ne peut jouer
   readonly activeCard = input<TapisCard | null>(null);
+  /** Le round en cours : avec la carte active, il dit quel tour se joue (l'assistant repart de zéro à chaque tour). */
+  readonly round = input(0);
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
   readonly ownedArmes = input<readonly BolHerosArmeModel[]>([]);
   readonly combatOptions = input<readonly BolCombatOptionModel[]>([]);

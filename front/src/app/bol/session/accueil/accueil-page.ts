@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgOptimizedImage} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -7,6 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolAccueilComptes, BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
+import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 import {ANNEAU_RAYON, accueilSagas, sagaResumes, tableOuverte} from './accueil.util';
@@ -29,7 +30,7 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
   {cle: 'sessions', label: 'Sessions', route: '/library/sessions'},
 ];
 
-/** Accueil, sur `/` : la table ouverte à reprendre et la compagnie de la dernière table, puis une carte par saga (son avancement et le
+/** Accueil, sur `/` : la table ouverte à reprendre (ou à clore) et la compagnie de la dernière table, puis une carte par saga (son avancement et le
  * chapitre à jouer ensuite, qui ouvre une nouvelle table), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
 @Component({
   selector: 'bol-accueil-page',
@@ -40,6 +41,8 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
 })
 export class AccueilPageComponent {
   private readonly accueilService = inject(BolAccueilService);
+  private readonly closeTable = inject(CloseTableService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly data = signal<BolAccueilModel | null>(null);
   protected readonly error = signal(false);
@@ -73,9 +76,29 @@ export class AccueilPageComponent {
   });
 
   constructor() {
+    this.charger();
+  }
+
+  /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte, son chapitre compte comme joué). */
+  protected clore(): void {
+    const table = this.data()?.table;
+    if (!table) {
+      return;
+    }
+    this.closeTable
+      .clore({id: table.id, enCombat: table.statut === 'combat'})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((close) => {
+        if (close) {
+          this.charger();
+        }
+      });
+  }
+
+  private charger(): void {
     this.accueilService
       .accueil()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => this.data.set(data),
         error: () => this.error.set(true),

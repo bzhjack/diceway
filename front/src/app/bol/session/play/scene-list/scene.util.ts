@@ -21,6 +21,12 @@ export function scenesOf(
     .sort((left, right) => left.ordre - right.ordre || left.titre.localeCompare(right.titre, 'fr'));
 }
 
+/** Scénario que le filtre des scènes montre pour une table : le sien, s'il est connu du compte, sinon `null` (« On improvise »).
+ * Jamais déduit de la scène courante. */
+export function scenarioFilterFor(tableScenarioId: string | null, knownScenarioIds: ReadonlySet<string>): string | null {
+  return tableScenarioId && knownScenarioIds.has(tableScenarioId) ? tableScenarioId : null;
+}
+
 const KIND_LABELS: Record<SceneEntryKind, readonly [string, string]> = {
   pnj: ['PNJ', 'PNJ'],
   creature: ['créature', 'créatures'],

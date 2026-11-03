@@ -1,6 +1,8 @@
 <span class="tas-lbl" id="tas-l2">Le sort</span>
 @if (turn.actionPerdue()) {
   <p class="tas-note">{{ turn.card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet (ⓘ) pour le laisser agir.</p>
+} @else if (loadout.defenseTotale()) {
+  <p class="tas-note">Pas de sort ce round : il esquive et pare. « Fin du tour » applique le +2.</p>
 } @else if (loadout.sortSansJet()) {
   <!-- Un charme automatique : pas de jet, il suffit de le payer -->
   <span class="tas-goal">
@@ -34,7 +36,7 @@
           placeholder="total"
           [attr.aria-label]="'Total des deux dés du sort lancés à table' + (flow.sortLance() ? '' : ', le premier jet dépense ' + loadout.sortCout().total + ' points de pouvoir')"
           [value]="attack.sortDiceSum() ?? ''"
-          [disabled]="turn.rolling() || !flow.sortPret()"
+          [disabled]="turn.rolling() || !flow.sortPret() || attack.sortDamageDone()"
           (focus)="attackInput.select()"
           (input)="flow.onSortInput(attackInput.value)"
           (blur)="turn.restoreInput(attackInput, attack.sortDiceSum())"
@@ -42,7 +44,7 @@
         <button
           type="button"
           class="tas-dice-btn"
-          [disabled]="turn.rolling() || !flow.sortPret()"
+          [disabled]="turn.rolling() || !flow.sortPret() || attack.sortDamageDone()"
           [attr.aria-label]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran pour le sort'"
           [matTooltip]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'"
           (click)="flow.rollSort()"
@@ -70,7 +72,7 @@
   <span class="tas-wait">Un sort sur l’esprit : choisis d’abord sa cible.</span>
 }
 
-@if (!turn.actionPerdue()) {
+@if (!turn.actionPerdue() && !loadout.defenseTotale()) {
   <div class="tas-issue">
     <span class="tas-verdict" aria-live="polite">
       @if (turn.rolling()) {

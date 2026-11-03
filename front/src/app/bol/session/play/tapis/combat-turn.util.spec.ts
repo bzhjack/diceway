@@ -796,3 +796,74 @@ describe('cartesRelevees', () => {
     expect(cartesRelevees(new Map(), [card('hero', 1, {vitaliteCourante: 5})], [tombe])).toEqual(['hero-1']);
   });
 });
+
+describe('carte paralysée : son tour est sauté et compté', () => {
+  const order = ordered(KALENA, PRETRE, RORK);
+  const paralyseKalena: CombatEffect = {...effetParalyse('hero-1'), id: 'e-1'};
+
+  it('passes its turn: it counts as played, with a trace on the frieze, and the next card plays', () => {
+    const apres = commencerTour(order, etat(2, [], [paralyseKalena]), () => 'e-2');
+
+    expect(apres.joues).toEqual(['hero-1']);
+    expect(turnState(order, apres).activeKey).toBe('pnj-7');
+    expect(turnState(order, apres).statuses.get('hero-1')).toBe('skipped');
+    expect(effetsDeLaFrise(apres.effets, 'hero-1')).toContain('paralysé, tour sauté · jusqu’à son prochain tour');
+  });
+
+  it('freed during the turn of a card that comes after it, it gets the hand back only next round', () => {
+    const pendantLeDemon = commencerTour(order, etat(2, [], [paralyseKalena]), () => 'e-2');
+    const liberee: EtatCombat = {...pendantLeDemon, effets: appliquerEvenement(pendantLeDemon.effets, {type: 'retrait-manuel', id: 'e-1'})};
+
+    expect(turnState(order, liberee).activeKey).toBe('pnj-7');
+    expect(turnState(order, liberee).statuses.get('hero-1')).toBe('played');
+
+    const round3 = endTurn(order, endTurn(order, liberee));
+    expect(round3.round).toBe(3);
+    expect(turnState(order, round3).activeKey).toBe('hero-1');
+    expect(effetsDeLaFrise(round3.effets, 'hero-1')).toEqual([]);
+  });
+
+  it('applies its start-of-turn effects: what lasted until its next turn falls when its turn is passed', () => {
+    const avant = etat(2, [], [paralyseKalena, defended('hero-1', 'e-3')]);
+
+    const apres = commencerTour(order, avant, () => 'e-2');
+
+    expect(apres.effets.map((e) => e.id)).not.toContain('e-3');
+    expect(apres.effets.map((e) => e.id)).toContain('e-1');
+  });
+
+  it('passes a paralysed card that is last in the order before the next round starts', () => {
+    const paralyseRork: CombatEffect = {...effetParalyse('hero-2'), id: 'e-1'};
+    const apres = endTurn(order, etat(1, ['hero-1'], [paralyseRork, defended('hero-2', 'e-3')]), [], () => 'e-2');
+
+    expect(apres.round).toBe(2);
+    expect(turnState(order, apres).activeKey).toBe('hero-1');
+    expect(apres.effets.map((e) => e.id)).not.toContain('e-3');
+  });
+
+  it('does not spin rounds when the only cards left standing are paralysed', () => {
+    const order2 = ordered(KALENA, card('pnj', 7, {vitaliteCourante: 0}));
+
+    const apres = commencerTour(order2, etat(1, [], [paralyseKalena]), () => 'e-2');
+
+    expect(apres.round).toBe(1);
+    expect(apres.joues).toEqual(['hero-1']);
+    expect(turnState(order2, apres).activeKey).toBeNull();
+  });
+});
+
+describe('combatOutcome : une carte paralysée ne tient plus debout', () => {
+  const paralyse = (key: string): CombatEffect => ({...effetParalyse(key), id: `e-${key}`});
+
+  it('is a victory when the last opponent standing is paralysed', () => {
+    expect(combatOutcome([KALENA, PRETRE], [], [paralyse('pnj-7')])).toBe('victoire');
+  });
+
+  it('is a defeat when the last hero standing is paralysed', () => {
+    expect(combatOutcome([KALENA, PRETRE], [], [paralyse('hero-1')])).toBe('defaite');
+  });
+
+  it('goes on while someone else stands in that camp', () => {
+    expect(combatOutcome([KALENA, RORK, PRETRE], [], [paralyse('hero-1')])).toBeNull();
+  });
+});

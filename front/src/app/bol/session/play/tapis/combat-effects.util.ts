@@ -23,7 +23,7 @@ const DE_MALUS = 'de-malus';
 /** Un dé de foi accordé ou imposé à la prochaine action de la carte (livre p. 146). */
 const DE_FOI_BONUS = 'de-foi-bonus';
 const DE_FOI_MALUS = 'de-foi-malus';
-/** La carte est paralysée par le poison d'un démon : elle ne joue plus tant que le MJ ne retire pas l'effet. */
+/** La carte est paralysée par le poison d'un démon : son tour est sauté (et compté) tant que le MJ ne retire pas l'effet. */
 const PARALYSE = 'paralyse';
 
 const POSTURE_ORIGINE: Readonly<Record<string, string>> = {
@@ -476,6 +476,11 @@ export function effetActionPerdue(porteur: string): NewEffect {
 /** Son tour est venu et a été sauté : l'action perdue est consommée, la frise dit pourquoi jusqu'à son prochain tour. */
 export function effetActionSautee(porteur: string): NewEffect {
   return {origine: ACTION_SAUTEE, libelle: 'a perdu son action (juste une égratignure)', porteur, stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'debut-tour-porteur'}, manuel: false};
+}
+
+/** Le tour d'une carte paralysée est venu et a été sauté (la paralysie reste) : la frise dit pourquoi jusqu'à son prochain tour. */
+export function effetTourSauteParalyse(porteur: string): NewEffect {
+  return {...effetActionSautee(porteur), libelle: 'paralysé, tour sauté'};
 }
 
 /** L'action perdue est consommée : son tour vient d'être sauté. Les autres effets « à sa prochaine action » (dé de malus d'un

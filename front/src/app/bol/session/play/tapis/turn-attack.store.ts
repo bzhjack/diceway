@@ -97,10 +97,10 @@ export class TurnAttackStore {
   readonly picks = signal<readonly HeroicSlug[]>([]);
 
   /** Attaques immédiates que la carte doit encore à un Carnage, ce tour-ci. */
-  readonly carnageOwed = linkedSignal<string, number>({source: () => this.turn.cardKey(), computation: () => 0});
+  readonly carnageOwed = linkedSignal<string, number>({source: () => this.turn.turnKey(), computation: () => 0});
 
   /** Un Carnage a été pris ce tour : les attaques qu'il donne se font sans dépenser d'héroïsme. */
-  readonly carnageUsed = linkedSignal<string, boolean>({source: () => this.turn.cardKey(), computation: () => false});
+  readonly carnageUsed = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => false});
 
   /** Il reste un point d'héroïsme à dépenser sur cette attaque. */
   private readonly canSpend = computed(() => (this.heroisme() ?? 0) > 0 && !this.carnageUsed());
@@ -472,7 +472,7 @@ export class TurnAttackStore {
   });
 
   /** Faveur divine sur un sort raté : 1 point pour relancer les dés, sans repayer le sort. */
-  readonly canSortFavor = computed(() => this.sortBase() === 'echec' && !this.sortCritique() && !this.sortAuto() && (this.heroisme() ?? 0) > 0);
+  readonly canSortFavor = computed(() => this.sortBase() === 'echec' && !this.sortCritique() && !this.sortAuto() && !this.sortDamageDone() && (this.heroisme() ?? 0) > 0);
 
   /** Un héros qui sort un double 1 peut en faire un échec critique, qui lui rapporte 1 point d'héroïsme. */
   readonly canSortCritique = computed(() => this.turn.card().kind === 'hero' && this.heroisme() !== null && this.sortBase() === 'echec' && this.sortNatural()?.[0] === 1 && this.sortNatural()?.[1] === 1);
@@ -480,6 +480,15 @@ export class TurnAttackStore {
   toggleSortCritique(): void {
     this.turn.heroismeAdjusted.emit(this.sortCritique() ? -1 : 1);
     this.sortCritique.update((chosen) => !chosen);
+  }
+
+  /** Le jet du sort est refait (relancé, ou son total retapé) : l'échec critique accepté sur l'ancien jet ne vaut plus, son point
+   * d'héroïsme est repris — comme `clearHeroism(true)` pour l'attaque. */
+  oublierSortCritique(): void {
+    if (this.sortCritique()) {
+      this.turn.heroismeAdjusted.emit(-1);
+      this.sortCritique.set(false);
+    }
   }
 
   /** Oublie les dés du sort (pas ce qu'il a coûté). */

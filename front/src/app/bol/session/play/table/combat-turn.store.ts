@@ -157,9 +157,11 @@ export class CombatTurnStore {
 
   constructor() {
     // Une carte devient active (après « Retarder », un retrait, le début du combat…) : ses effets « jusqu'à son prochain tour » tombent,
-    // et son tour est sauté si elle a perdu son action (« Juste une égratignure »).
+    // et son tour est sauté si elle a perdu son action (« Juste une égratignure »). L'effet ne lit que la clé de la carte active : chaque
+    // réponse du serveur refait `turn`, et un effet posé sur la carte qui joue ne doit ni sauter son tour en cours ni tomber aussitôt.
+    // « Fin du tour » passe elle-même par `commencerTour`.
     effect(() => {
-      const key = this.turn().activeKey;
+      const key = this.activeKey();
       if (key !== null) {
         untracked(() => this.saveEtat((etat) => commencerTour(this.orderedCards(), etat, idAleatoire)));
       }

@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
 
@@ -194,6 +194,15 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Dégâts d'un sort** : sans vigueur ni protection (« automatiquement », p. 151) ; d6×2 et d6×3 aux 2e et 3e cercles (le livre ne chiffre que le 1er cercle) ; 1 pour un charme (« Douleur »).
 - **Surcoût de l'armure** : ajouté après le coût minimum du cercle.
 - **Contre un sort** : ni parade in extremis ni bouclier humain ; un succès héroïque renforce l'effet au choix du MJ.
+
+## Mises à jour du 2026-11-03 (revue globale)
+
+- **Paralysé** : le tour d'une carte paralysée est sauté et compté comme joué (« paralysé, tour sauté ») ; libérée en plein round, elle ne rejoue qu'au round suivant ; elle ne compte plus comme debout pour l'issue du combat ni pour la mêlée de piétaille (`passerLesParalyses`, `tientDebout`, `combat-turn.util.ts`).
+- **Début de tour** : il ne se rejoue que quand la main change (`activeKey`, `CombatTurnStore`), pas à chaque réponse du serveur.
+- **Nouveau jet de réaction** : il garde les cartes retirées et les rivaux enfuis, et les effets qui durent tout le combat (`BolCombatState::nouveauJet`).
+- **Sort** : le tour de l'assistant est identifié par le round et la carte (`turnKey`) ; un nouveau jet annule un échec critique accepté ; une fois ses dégâts appliqués, le sort est figé ; pas de sort en défense totale.
+- **Après combat** : seuls les soigneurs en état de soigner sont proposés.
+- **Clore la table** (menu de la table, bandeau de l'accueil) : termine d'abord un combat en cours, sans les soins d'après combat, puis passe la table au statut « terminée » ; « Mes sessions » la marque « Close » et « Reprendre » la rouvre.
 
 ## 9. Limites connues
 

@@ -6,7 +6,7 @@ import {OrdreFriseStep, OrdreFriseTone} from '../../models/ordre-frise.model';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatEffect, EffectIdGenerator, NewEffect} from '../../models/combat-effect.model';
 import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, aUneTraceDeChute, effetActionSautee, effetsDeLAncienFormat, effetsDeTour, effetTourSauteParalyse, estParalyse, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sansActionPerdue} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}, fuis: [], melee: null};
 
@@ -100,10 +100,16 @@ export function isOut(card: TapisCard): boolean {
   return horsCombat(card) !== null;
 }
 
-/** L'issue du combat, dès qu'un camp n'a plus personne debout (hors de combat ou retiré du combat) : plus personne en face à viser.
- * `victoire` si ce sont les adversaires, `defaite` si ce sont les héros et leurs alliés ; `null` tant que les deux camps tiennent. */
-export function combatOutcome(cards: readonly TapisCard[], exclus: readonly string[]): CombatOutcome | null {
-  const standing = (camp: TapisCard['camp']): boolean => cards.some((card) => card.camp === camp && !exclus.includes(card.key) && !isOut(card));
+/** Une carte qui tient debout : ni hors de combat, ni paralysée (le poison d'un démon : elle ne jouera plus de ce combat, sauf si le MJ
+ * retire l'effet). */
+export function tientDebout(card: TapisCard, effets: readonly CombatEffect[]): boolean {
+  return !isOut(card) && !estParalyse(effets, card.key);
+}
+
+/** L'issue du combat, dès qu'un camp n'a plus personne debout (hors de combat, paralysé ou retiré du combat) : plus personne en face à
+ * viser. `victoire` si ce sont les adversaires, `defaite` si ce sont les héros et leurs alliés ; `null` tant que les deux camps tiennent. */
+export function combatOutcome(cards: readonly TapisCard[], exclus: readonly string[], effets: readonly CombatEffect[] = []): CombatOutcome | null {
+  const standing = (camp: TapisCard['camp']): boolean => cards.some((card) => card.camp === camp && !exclus.includes(card.key) && tientDebout(card, effets));
   if (!standing('adversaires')) {
     return 'victoire';
   }
@@ -152,7 +158,8 @@ export function bloqueeCeRound(lockedRound1: boolean, round: number): boolean {
   return round === 1 && lockedRound1;
 }
 
-/** Une carte sautée : hors combat, exclue, bloquée au round 1, ou paralysée (jusqu'à ce que le MJ retire l'effet). */
+/** Une carte sautée : hors combat, exclue, bloquée au round 1, ou paralysée (jusqu'à ce que le MJ retire l'effet ; son tour, quand il
+ * passe, est compté comme joué : `passerLesParalyses`). */
 function isSkipped(entry: OrderedCard, etat: EtatCombat): boolean {
   return isOut(entry.card) || etat.exclus.includes(entry.card.key) || bloqueeCeRound(entry.lockedRound1, etat.round) || estParalyse(etat.effets, entry.card.key);
 }
@@ -210,7 +217,7 @@ export function endTurn(
     joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey, ...engagees],
     effets,
   };
-  return commencerTour(ordered, roundSuivantSiFini(ordered, next), genererId);
+  return commencerTour(ordered, next, genererId, true);
 }
 
 /** S'il ne reste personne à jouer ce round, le suivant commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors
@@ -225,28 +232,65 @@ function roundSuivantSiFini(ordered: readonly OrderedCard[], etat: EtatCombat): 
 
 /** Le tour de la carte active commence : ses effets « jusqu'à son prochain tour » tombent. Si elle a perdu son action (« Juste une
  * égratignure »), son tour est sauté d'office : l'action perdue est consommée, une trace le dit sur la frise jusqu'à son prochain tour, et
- * la main passe à la suivante (au round suivant s'il le faut). Rend le même état s'il n'y a rien à changer. */
-export function commencerTour(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId): EtatCombat {
+ * la main passe à la suivante (au round suivant s'il le faut). Le tour des cartes paralysées passées avant elle est sauté et compté
+ * (`passerLesParalyses`). `finDeTour` : appelé par la fin d'un tour, il commence le round suivant s'il ne reste personne à jouer. Rend
+ * le même état s'il n'y a rien à changer. */
+export function commencerTour(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId, finDeTour = false): EtatCombat {
   let courant = etat;
-  // Chaque saut consomme une action perdue : la boucle s'arrête au plus tard quand il n'y en a plus.
-  for (let garde = 0; garde <= ordered.length * 2; garde++) {
+  let roundSuivant = finDeTour;
+  // Chaque saut consomme une action perdue, chaque carte paralysée ne passe qu'une fois par round, et un round ne commence que si
+  // quelqu'un peut y jouer : la boucle s'arrête vite.
+  for (let garde = 0; garde <= ordered.length * 2 + 2; garde++) {
+    courant = passerLesParalyses(ordered, courant, genererId);
     const active = turnState(ordered, courant).activeKey;
     if (active === null) {
-      return courant;
+      const suivant = roundSuivant ? roundSuivantSiFini(ordered, courant) : courant;
+      if (suivant === courant) {
+        return courant;
+      }
+      courant = suivant;
+      continue;
     }
     const debut = debutDeTour(courant, active);
     if (!perdSonAction(debut.effets, active)) {
       return debut;
     }
     const effets = sansActionPerdue(debut.effets, active);
-    const saute: EtatCombat = {
+    courant = {
       ...debut,
       joues: [...debut.joues, active],
       effets: [...effets, {...effetActionSautee(active), id: genererId(effets)}],
     };
-    courant = roundSuivantSiFini(ordered, saute);
+    roundSuivant = true;
   }
   return courant;
+}
+
+/** Le tour d'une carte paralysée est passé quand la main va à une carte placée après elle dans l'ordre, ou quand le round s'achève : elle
+ * compte comme ayant joué ce round (sa paralysie levée en plein round ne lui rend la main qu'au round suivant), ses effets « jusqu'à son
+ * prochain tour » tombent, et une trace le dit sur la frise. Sa paralysie reste, ainsi que ses effets « à sa prochaine action ». Rend le même
+ * état s'il n'y a rien à changer. */
+function passerLesParalyses(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator): EtatCombat {
+  const activeKey = turnState(ordered, etat).activeKey;
+  const avant = activeKey === null ? ordered : ordered.slice(0, ordered.findIndex((entry) => entry.card.key === activeKey));
+  const passees = avant
+    .filter(
+      (entry) =>
+        estParalyse(etat.effets, entry.card.key) &&
+        !etat.joues.includes(entry.card.key) &&
+        !isOut(entry.card) &&
+        !etat.exclus.includes(entry.card.key) &&
+        !bloqueeCeRound(entry.lockedRound1, etat.round),
+    )
+    .map((entry) => entry.card.key);
+  if (passees.length === 0) {
+    return etat;
+  }
+  const effets = passees.reduce<readonly CombatEffect[]>((liste, key) => {
+    const sansTour = appliquerEvenement(liste, {type: 'debut-tour', carte: key});
+    return [...sansTour, {...effetTourSauteParalyse(key), id: genererId(sansTour)}];
+  }, etat.effets);
+  return {...etat, joues: [...etat.joues, ...passees], effets};
 }
 
 /** « Retirer du combat » : le MJ sort une carte du combat. Elle reste sur la table, mais ne joue plus, ne se vise plus et ne compte plus

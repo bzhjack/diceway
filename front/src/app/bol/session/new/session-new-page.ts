@@ -38,7 +38,21 @@ export class SessionNewPageComponent {
   protected readonly launching = signal(false);
   /** L'accueil n'a pas encore répondu : le scénario demandé n'est pas encore connu, la table ne s'ouvre pas sans lui. */
   protected readonly loadingAccueil = signal(true);
-  protected readonly canLaunch = computed(() => this.selection.combatants().length > 0 && !this.loadingAccueil());
+  /**
+   * Les présents que le catalogue sait nommer. La présélection de l'accueil arrive avant le catalogue : tant qu'une fiche n'y est pas
+   * résolue, elle n'est ni affichée ni comptée, et elle ne suffit pas à ouvrir la table (le payload ne la porterait pas : table vide).
+   */
+  protected readonly present = computed(() =>
+    this.selection.combatants().flatMap((combatant) => this.selection.entryFor(combatant.catalogId) ?? []),
+  );
+  protected readonly canLaunch = computed(
+    () =>
+      this.present().length > 0 &&
+      !this.loadingAccueil() &&
+      !this.selection.loading() &&
+      // Après un chargement raté, le catalogue gardé date d'une autre visite : on ne l'engage pas sans réessai.
+      !this.selection.loadFailed(),
+  );
 
   private readonly accueil = signal<BolAccueilModel | null>(null);
   private readonly requestedScenario = toSignal(this.route.queryParamMap.pipe(map((params) => params.get('scenario'))), {
@@ -69,6 +83,10 @@ export class SessionNewPageComponent {
         // Sans l'accueil, le seuil reste utilisable tel qu'il était : sans scénario, sans présélection.
         error: () => this.loadingAccueil.set(false),
       });
+  }
+
+  protected reloadCatalog(): void {
+    this.selection.loadCatalog();
   }
 
   protected removeScenario(): void {

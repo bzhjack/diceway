@@ -36,29 +36,36 @@
     <div class="dw-section--form snp-heroes">
       <div class="snp-heroes-head">
         <h2>Héros</h2>
-        <span class="snp-heroes-total">{{ selection.combatants().length }}</span>
+        <span class="snp-heroes-total">{{ present().length }}</span>
       </div>
 
-      @if (selection.combatants().length) {
+      @if (selection.loadFailed()) {
+        <div class="snp-error" role="alert">
+          <span>Impossible de charger les héros.</span>
+          <button mat-stroked-button type="button" (click)="reloadCatalog()">Réessayer</button>
+        </div>
+      }
+
+      @if (present().length) {
         <div class="snp-hero-list">
-          @for (combatant of selection.combatants(); track combatant.catalogId) {
-            @if (selection.entryFor(combatant.catalogId); as entry) {
-              <div class="snp-hero-chip">
-                <img dwAvatarFallback [src]="entry.avatar" [alt]="entry.nom" />
-                <span class="snp-hero-name">{{ entry.nom }}</span>
-                <button
-                  type="button"
-                  class="snp-hero-remove"
-                  [attr.aria-label]="'Retirer ' + entry.nom"
-                  (click)="selection.remove(combatant.catalogId)"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-            }
+          @for (entry of present(); track entry.catalogId) {
+            <div class="snp-hero-chip">
+              <img dwAvatarFallback [src]="entry.avatar" [alt]="entry.nom" />
+              <span class="snp-hero-name">{{ entry.nom }}</span>
+              <button
+                type="button"
+                class="snp-hero-remove"
+                [attr.aria-label]="'Retirer ' + entry.nom"
+                (click)="selection.remove(entry.catalogId)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
           }
         </div>
-      } @else {
+      } @else if (selection.loading()) {
+        <p class="snp-empty">Chargement des héros…</p>
+      } @else if (!selection.loadFailed()) {
         <p class="snp-empty">Aucun héros pour l'instant. Ajoute ceux qui jouent ce soir, puis ouvre la table.</p>
       }
 

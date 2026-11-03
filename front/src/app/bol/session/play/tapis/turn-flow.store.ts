@@ -49,10 +49,10 @@ export class TurnFlowStore {
   );
 
   /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
-  private readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.turn.turnKey(), computation: () => null});
 
   /** Le coup joué, figé quand il se conclut (cf. `PlayedAttack`). */
-  private readonly playedAttack = linkedSignal<string, PlayedAttack | null>({source: () => this.turn.cardKey(), computation: () => null});
+  private readonly playedAttack = linkedSignal<string, PlayedAttack | null>({source: () => this.turn.turnKey(), computation: () => null});
 
   /** Le coup joué à montrer : pas quand un Carnage donne une nouvelle attaque, ni une fois une autre attaque commencée. */
   readonly played = computed(() => (this.attack.carnageOwed() === 0 && this.attack.attackVerdict() === null ? this.playedAttack() : null));
@@ -156,10 +156,11 @@ export class TurnFlowStore {
   readonly scratching = linkedSignal<AppliedHit | null, boolean>({source: () => this.lastHit(), computation: () => false});
 
   constructor() {
-    // Un autre attaquant, une autre cible, un autre choix ou un dé du MJ accordé ou retiré : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
-    // rechargée (enregistrement de l'état du combat) en refait un objet identique, qui ne doit pas effacer le jet en cours.
+    // Un autre tour (un autre attaquant, ou le même au round suivant), une autre cible, un autre choix ou un dé du MJ accordé ou retiré :
+    // le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table rechargée (enregistrement de l'état du combat) en refait
+    // un objet identique, qui ne doit pas effacer le jet en cours.
     effect(() => {
-      this.turn.cardKey();
+      this.turn.turnKey();
       this.turn.targetKey();
       this.loadout.choiceKey();
       this.loadout.gmDie();
@@ -167,10 +168,10 @@ export class TurnFlowStore {
       untracked(() => this.resetRoll());
     });
 
-    // Une autre carte active, ou le passage de l'attaque au sort : le sort du tour repart de zéro. Une cible changée après le sort, elle,
-    // ne le défait pas : il est payé.
+    // Un autre tour (une autre carte active, ou la même au round suivant), ou le passage de l'attaque au sort : le sort du tour repart de
+    // zéro. Une cible changée après le sort, elle, ne le défait pas : il est payé.
     effect(() => {
-      this.turn.cardKey();
+      this.turn.turnKey();
       this.loadout.mode();
       untracked(() => this.attack.resetSort());
     });
@@ -245,15 +246,21 @@ export class TurnFlowStore {
     this.turn.ajusterRessource(this.turn.card(), 'pouvoir', -cout);
   }
 
-  /** Le sort peut partir : il en a le pouvoir, et sa cible est choisie s'il lui en faut une. */
-  readonly sortPret = computed(() => this.sortLance() || (this.loadout.sortPayable() && (!this.loadout.sortVise() || this.turn.target() !== null) && this.attack.sortModifier() !== null));
+  /** Le sort peut partir : il en a le pouvoir, et sa cible est choisie s'il lui en faut une. Pas en défense totale : le round entier passe
+   * à esquiver et parer, comme pour l'attaque. */
+  readonly sortPret = computed(
+    () =>
+      !this.loadout.defenseTotale() &&
+      (this.sortLance() || (this.loadout.sortPayable() && (!this.loadout.sortVise() || this.turn.target() !== null) && this.attack.sortModifier() !== null)),
+  );
 
   /** Lance les dés du sort à l'écran (relancés par la faveur divine, sans repayer). */
   async rollSort(): Promise<void> {
-    if (this.turn.rolling() || !this.sortPret()) {
+    if (this.turn.rolling() || !this.sortPret() || this.attack.sortDamageDone()) {
       return;
     }
     this.payerSort();
+    this.attack.oublierSortCritique();
     this.attack.clearSortDice();
     const net = this.loadout.netDice();
     const count = this.loadout.diceCount();
@@ -263,8 +270,12 @@ export class TurnFlowStore {
     this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
   }
 
-  /** Le total des deux dés du sort, lancés à table. Une case vidée avant tout résultat rend le pouvoir payé : le sort n'est pas parti. */
+  /** Le total des deux dés du sort, lancés à table. Une case vidée avant tout résultat rend le pouvoir payé : le sort n'est pas parti. Ses
+   * dégâts appliqués, la case est figée : le sort a agi, il ne se rembourse ni ne se rejoue. */
   onSortInput(raw: string): void {
+    if (this.attack.sortDamageDone()) {
+      return;
+    }
     if (raw.trim() === '') {
       if (this.attack.sortDiceSum() !== null && !this.attack.sortCritique()) {
         this.attack.clearSortDice();
@@ -277,6 +288,7 @@ export class TurnFlowStore {
       return;
     }
     this.payerSort();
+    this.attack.oublierSortCritique();
     this.attack.sortDice.set(null);
     this.attack.sortRolledDice.set(null);
     this.attack.sortManual.set(total);
@@ -293,8 +305,11 @@ export class TurnFlowStore {
     this.turn.focusAfterRender(() => (this.damage.hasDamageStep() ? (this.turn.damageInput() ?? this.turn.applyButton()) : this.turn.endButton()));
   }
 
-  /** Le sort n'est pas parti (sa case vidée, ou « Annuler » d'un charme) : son pouvoir est rendu. */
+  /** Le sort n'est pas parti (sa case vidée, ou « Annuler » d'un charme) : son pouvoir est rendu. Pas une fois ses dégâts appliqués. */
   rembourserSort(): void {
+    if (this.attack.sortDamageDone()) {
+      return;
+    }
     const paye = this.attack.sortPaid();
     if (paye > 0) {
       this.turn.ajusterRessource(this.turn.card(), 'pouvoir', paye);
