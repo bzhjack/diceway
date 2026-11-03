@@ -116,6 +116,9 @@ describe('tableTitre', () => {
     titre: null,
     statut: 'libre',
     scenario_id: null,
+    scene_id: null,
+    scenes: [],
+    scenes_jouees: [],
     created_at: '2026-11-02T12:00:00',
     ...extra,
   });
@@ -135,71 +138,174 @@ describe('tableTitre', () => {
 });
 
 describe('sagaResumes', () => {
-  const resume = (nom: string | null, joues: string[] = [], enCours: string | null = null) =>
-    sagaResumes(accueilSagas(S, new Set(joues), enCours, null)).find((r) => r.nom === nom)!;
+  const resume = (nom: string | null, joues: string[] = [], enCours: string | null = null, scenarios = S) =>
+    sagaResumes(accueilSagas(scenarios, new Set(joues), enCours, null), enCours === null ? null : 't1').find((r) => r.nom === nom)!;
 
-  it('compte les chapitres joués et propose le prochain', () => {
+  it('compte les chapitres joués et continue par le suivant, sur une nouvelle table', () => {
     const perle = resume('Perle du Beshaar', ['p1', 'p2']);
 
     expect(perle).toMatchObject({joues: 2, total: 3, resume: '2 chapitres joués sur 3'});
-    expect(perle.suite?.id).toBe('p10');
+    expect(perle.suite).toEqual({
+      id: 'p10',
+      libelle: '10. Épilogue',
+      action: 'Continuer',
+      route: ['/session/new'],
+      queryParams: {scenario: 'p10'},
+      ariaLabel: 'Continuer 10. Épilogue, Perle du Beshaar, sur une nouvelle table',
+    });
   });
 
-  it('propose le premier chapitre à jouer quand aucun n’est le prochain', () => {
-    expect(resume('Le Dieu voilé').suite?.id).toBe('dvi');
+  it('commence une saga pas encore commencée par son premier chapitre', () => {
+    expect(resume('Le Dieu voilé').suite).toMatchObject({id: 'dvi', action: 'Commencer'});
     expect(resume('Le Dieu voilé').resume).toBe('Pas encore commencée');
   });
 
-  it('commence une saga pas encore commencée ; continue une saga entamée ou sur la table', () => {
-    expect(resume('Le Dieu voilé').action).toBe('Commencer');
-    expect(resume('Perle du Beshaar', ['p1']).action).toBe('Continuer');
-    expect(resume('Perle du Beshaar', [], 'p1').action).toBe('Continuer');
+  it('dit « Reste à jouer », pas « Continuer », pour un chapitre sauté avant le dernier joué', () => {
+    // Joués : le 2 et l'épilogue ; rien après l'épilogue, le 1 reste à jouer.
+    const perle = resume('Perle du Beshaar', ['p2', 'p10']);
+
+    expect(perle.suite).toMatchObject({id: 'p1', action: 'Reste à jouer'});
+    expect(perle.resume).toBe('2 chapitres joués sur 3');
   });
 
-  it('dit la saga sur la table, et achevée quand tout est joué', () => {
-    // Le compteur reste dit en toutes lettres quand la saga est sur la table : l'anneau seul ne s'explique pas.
-    expect(resume('Perle du Beshaar', ['p2'], 'p1').resume).toBe('Sur la table ce soir · 1 chapitre joué sur 3');
+  it('reprend la table ouverte sur son chapitre, au lieu d’en ouvrir une autre plus loin dans la saga', () => {
+    // La table porte le 1 alors que le 2 est joué : la carte dit la même chose que le bandeau, pas « Continuer : Épilogue ».
+    const perle = resume('Perle du Beshaar', ['p1', 'p2'], 'p1');
+
+    expect(perle.suite).toEqual({
+      id: 'p1',
+      libelle: '1. Sacrilège à Satarla',
+      action: 'Reprendre',
+      route: ['/session', 't1', 'play'],
+      queryParams: null,
+      ariaLabel: 'Reprendre 1. Sacrilège à Satarla, Perle du Beshaar, sur la table ouverte',
+    });
+    // Le compteur reste dit en toutes lettres : les pastilles seules ne s'expliquent pas.
+    expect(perle.resume).toBe('Table ouverte · 1 chapitre joué sur 3');
+  });
+
+  it('dit une saga achevée quand tout est joué', () => {
     const achevee = resume('Chroniques lémuriennes', ['clm', 'clt']);
     expect(achevee.suite).toBeNull();
     expect(achevee.resume).toBe('Saga achevée');
   });
 
+  it('parle de scénarios, sans ordre ni saga, hors saga', () => {
+    const un: BolAccueilScenario[] = [{id: 'ps', titre: 'premier scénario'}];
+    const deux: BolAccueilScenario[] = [...un, {id: 'ps2', titre: 'second scénario'}];
+
+    expect(resume(null, [], null, un)).toMatchObject({resume: '1 scénario à jouer', avancement: '0 scénario joué sur 1', suite: {id: 'ps', action: 'Jouer'}});
+    expect(resume(null, [], null, deux).resume).toBe('2 scénarios à jouer');
+    expect(resume(null, ['ps'], null, deux)).toMatchObject({resume: '1 scénario joué sur 2', suite: {id: 'ps2', action: 'Jouer'}});
+    expect(resume(null, ['ps'], null, un).resume).toBe('Tout est joué');
+    expect(resume(null, [], 'ps', un).suite).toMatchObject({action: 'Reprendre', route: ['/session', 't1', 'play']});
+  });
+
   it('donne à chaque saga une teinte stable, dans l’ordre alphabétique, et aucune hors saga', () => {
     const teintes = (recent: string | null) =>
-      Object.fromEntries(sagaResumes(accueilSagas(S, new Set(), null, recent)).map((r) => [r.nom ?? 'hors', r.teinte]));
+      Object.fromEntries(sagaResumes(accueilSagas(S, new Set(), null, recent), null).map((r) => [r.nom ?? 'hors', r.teinte]));
 
     expect(teintes(null)).toEqual({'Chroniques lémuriennes': 1, 'Le Dieu voilé': 2, 'Perle du Beshaar': 3, hors: 0});
     expect(teintes('dv1')).toEqual(teintes(null));
   });
 
-  it('remplit l’anneau à la mesure de l’avancement', () => {
-    const [plein, circonference] = resume('Perle du Beshaar', ['p1', 'p2', 'p10']).anneau.split(' ').map(Number);
-    expect(plein).toBeCloseTo(circonference, 0);
-    expect(Number(resume('Le Dieu voilé').anneau.split(' ')[0])).toBe(0);
+  it('met chaque chapitre en pastille : son numéro, « Intro », sinon son initiale', () => {
+    expect(resume('Perle du Beshaar', ['p2'], 'p1').reperes).toEqual([
+      {marque: '1', etat: 'en-cours', texte: '1. Sacrilège à Satarla : sur la table'},
+      {marque: '2', etat: 'joue', texte: "2. De sable et d'eau : joué"},
+      {marque: '10', etat: 'prochain', texte: '10. Épilogue : à jouer'},
+    ]);
+    expect(resume('Le Dieu voilé').reperes.map((r) => r.marque)).toEqual(['Intro', '1']);
+    expect(resume('Chroniques lémuriennes').reperes.map((r) => r.marque)).toEqual(['L', 'M']);
   });
 });
 
 describe('tableOuverte', () => {
-  const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({id: 't', titre: null, statut: 'libre', scenario_id: 'p1', created_at: '2026-11-02T10:00:00Z', ...over});
+  const SCENES = [
+    {id: 's1', titre: 'La taverne'},
+    {id: 's2', titre: 'Le trajet'},
+    {id: 's3', titre: 'Le temple'},
+    {id: 's4', titre: 'La nuit'},
+  ];
+  const table = (over: Partial<BolAccueilTable> = {}): BolAccueilTable => ({
+    id: 't',
+    titre: null,
+    statut: 'libre',
+    scenario_id: 'p1',
+    scene_id: null,
+    scenes: [],
+    scenes_jouees: [],
+    created_at: '2026-11-02T10:00:00Z',
+    ...over,
+  });
 
-  it('met la saga au-dessus et le chapitre en titre', () => {
-    expect(tableOuverte(table(), S)).toEqual({id: 't', saga: 'Perle du Beshaar', titre: '1. Sacrilège à Satarla'});
+  it('dit où en est l’histoire : la saga, le chapitre sur ceux de la saga, la scène, et le nom du chapitre en titre', () => {
+    const ouverte = tableOuverte(table({statut: 'combat', scenes: SCENES, scene_id: 's4', scenes_jouees: ['s1', 's2', 's4']}), S);
+
+    expect(ouverte).toEqual({
+      id: 't',
+      saga: 'Perle du Beshaar',
+      histoire: 'Perle du Beshaar',
+      chapitre: 'Chapitre 1 sur 3',
+      scene: 'Scène 4 sur 4',
+      titre: 'Sacrilège à Satarla',
+      sceneEnCours: 'La nuit',
+      enCombat: true,
+      scenes: [
+        {etat: 'jouee', texte: 'Scène 1, La taverne : jouée'},
+        {etat: 'jouee', texte: 'Scène 2, Le trajet : jouée'},
+        {etat: 'a-jouer', texte: 'Scène 3, Le temple : à jouer'},
+        {etat: 'en-cours', texte: 'Scène 4, La nuit : en cours'},
+      ],
+      scenesJouees: '2 scènes jouées sur 4',
+      filAriane: 'Perle du Beshaar › Chapitre 1 › Scène 4 · La nuit',
+    });
+  });
+
+  it('nomme l’introduction, et garde le libellé d’un chapitre sans numéro', () => {
+    expect(tableOuverte(table({scenario_id: 'dvi'}), S)).toMatchObject({
+      chapitre: 'Introduction',
+      titre: 'La colère de Nemmereth',
+      scene: null,
+      scenesJouees: null,
+      filAriane: 'Le Dieu voilé › Introduction',
+    });
+    expect(tableOuverte(table({scenario_id: 'clm'}), S)).toMatchObject({chapitre: null, titre: 'Mariage amer', filAriane: 'Chroniques lémuriennes › Mariage amer'});
   });
 
   it('garde le titre donné à la table', () => {
-    expect(tableOuverte(table({titre: 'Soirée chez Lionel'}), S)).toEqual({id: 't', saga: 'Perle du Beshaar', titre: 'Soirée chez Lionel'});
+    expect(tableOuverte(table({titre: 'Soirée chez Lionel'}), S)).toMatchObject({chapitre: 'Chapitre 1 sur 3', titre: 'Soirée chez Lionel'});
   });
 
-  it('sans scénario, tombe sur la date', () => {
-    expect(tableOuverte(table({scenario_id: null}), S)).toEqual({id: 't', saga: null, titre: 'Table du 2 novembre'});
+  it('dit « One shot » hors saga, « Sans scénario » quand on improvise', () => {
+    expect(tableOuverte(table({scenario_id: 'ps'}), S)).toMatchObject({saga: null, histoire: 'One shot', chapitre: null, titre: 'premier scénario'});
+    expect(tableOuverte(table({scenario_id: null}), S)).toMatchObject({
+      saga: null,
+      histoire: 'Sans scénario',
+      titre: 'Table du 2 novembre',
+      filAriane: 'Sans scénario › Table du 2 novembre',
+    });
+  });
+
+  it('ne situe pas une scène qui n’est pas de ce chapitre', () => {
+    expect(tableOuverte(table({scenes: SCENES, scene_id: 'ailleurs'}), S)).toMatchObject({scene: null, sceneEnCours: null});
   });
 });
 
 describe('teinteDeSaga', () => {
   // Un chapitre dont la saga est écrite dans une autre casse : il rejoint « Perle du Beshaar » (le premier titre vu donne le nom).
   const AVEC_CASSE: BolAccueilScenario[] = [...S, {id: 'pc', titre: 'PERLE DU BESHAAR — 3. La casse'}];
-  const resumes = sagaResumes(accueilSagas(AVEC_CASSE, new Set(), null, null));
-  const table: BolAccueilTable = {id: 't', titre: null, statut: 'libre', scenario_id: 'pc', created_at: '2026-11-02T10:00:00Z'};
+  const resumes = sagaResumes(accueilSagas(AVEC_CASSE, new Set(), null, null), null);
+  const table: BolAccueilTable = {
+    id: 't',
+    titre: null,
+    statut: 'libre',
+    scenario_id: 'pc',
+    scene_id: null,
+    scenes: [],
+    scenes_jouees: [],
+    created_at: '2026-11-02T10:00:00Z',
+  };
 
   it('garde la teinte de la saga de la table ouverte quand la casse de son nom diffère', () => {
     const saga = tableOuverte(table, AVEC_CASSE).saga;

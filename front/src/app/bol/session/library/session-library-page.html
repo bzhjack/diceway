@@ -3,11 +3,11 @@
 
     <!-- Header card -->
     <dw-library-header
-      title="Mes sessions"
-      description="Retrouvez les sessions déjà lancées, en combat, ouvertes ou closes, pour reprendre le suivi de l'initiative et des points de vie."
+      title="Mes tables"
+      description="Retrouvez les tables déjà ouvertes, en combat, en cours ou closes, pour reprendre le suivi de l'initiative et des points de vie."
     >
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalCount() }} session{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
+        <dw-tag>{{ totalCount() }} table{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
         @if (visibleCount() !== totalCount()) {
           <dw-tag>{{ visibleCount() }} visibles</dw-tag>
         }
@@ -15,7 +15,7 @@
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
           <button mat-flat-button routerLink="/session/new">
-            <mat-icon>add</mat-icon> Nouvelle session
+            <mat-icon>add</mat-icon> Nouvelle table
           </button>
         </div>
         <button mat-stroked-button routerLink="/">
@@ -26,7 +26,7 @@
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="cl-content-card">
-      <dw-library-toolbar placeholder="Rechercher une session" [withFilters]="false" [(searchTerm)]="searchTerm">
+      <dw-library-toolbar placeholder="Rechercher une table" [withFilters]="false" [(searchTerm)]="searchTerm">
         <dw-tag dwToolbarCount>{{ visibleCount() }} entrées</dw-tag>
       </dw-library-toolbar>
 
@@ -60,9 +60,9 @@
         } @empty {
           <p class="cl-empty">
             @if (totalCount() === 0) {
-              Aucune session pour l'instant — lancez-en une depuis « Nouvelle session ».
+              Aucune table pour l'instant — ouvrez-en une depuis « Nouvelle table ».
             } @else {
-              Aucune session ne correspond à cette recherche.
+              Aucune table ne correspond à cette recherche.
             }
           </p>
         }

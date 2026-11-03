@@ -51,17 +51,9 @@
   gap: 0.5rem;
 }
 
-// ── Le haut : la table ouverte, la compagnie à côté ─────────────────────────────────────────────────────────────────────────────
-.acc-haut {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.1rem;
-}
-
-// La table ouverte : l'illustration du tableau de bord, chauffée par la braise par le bas, sous un voile qui garde le texte lisible.
+// ── La table ouverte : l'illustration du tableau de bord, sous un voile qui garde le texte lisible ─────────────────────────────────
 .acc-soir {
   position: relative;
-  flex: 2 1 36rem;
   min-width: 0;
   min-height: 21rem;
   overflow: hidden;
@@ -83,34 +75,68 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 0.85rem;
+  gap: 1rem;
   height: 100%;
   min-height: 21rem;
   box-sizing: border-box;
   padding: 1.75rem 2rem;
   background:
-    radial-gradient(70% 60% at 30% 110%, rgba(255, 120, 30, 0.55), transparent 70%),
-    linear-gradient(180deg, transparent 0%, rgba(11, 7, 5, 0.45) 50%, rgba(11, 7, 5, 0.92) 100%);
+    radial-gradient(60% 60% at 20% 115%, rgba(255, 120, 30, 0.45), transparent 70%),
+    linear-gradient(90deg, rgba(11, 7, 5, 0.94), rgba(11, 7, 5, 0.78) 50%, rgba(11, 7, 5, 0.25));
+
+  // Sur un téléphone, le texte couvre toute l'image : le voile aussi.
+  @media (max-width: 48rem) {
+    padding: 1.25rem;
+    background: rgba(11, 7, 5, 0.86);
+  }
 }
 
-.acc-etiquette {
-  display: inline-flex;
-  align-self: flex-start;
+// Le fil de l'histoire : la saga (à sa couleur), le chapitre, la scène, séparés par « › ».
+.acc-fil {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
-  border-radius: var(--dw-radius-pill);
-  background: color-mix(in srgb, var(--saga) 18%, transparent);
+  padding: 0;
   font-size: 0.72rem;
   font-weight: 800;
-  color: var(--saga-clair);
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+  list-style: none;
 }
 
-.acc-etiquette-feu {
+.acc-fil-histoire,
+.acc-fil-etape {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--dw-radius-pill);
+}
+
+.acc-fil-histoire {
+  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
+  background: color-mix(in srgb, var(--saga) 18%, transparent);
+  color: var(--saga-clair);
+}
+
+.acc-fil-etape {
+  position: relative;
+  margin-left: 1rem;
+  border: 1px solid rgba(255, 214, 160, 0.45);
+  background: rgba(10, 6, 4, 0.6);
+  color: var(--dw-forge-bone);
+
+  &::before {
+    content: '›' / '';
+    position: absolute;
+    left: -1rem;
+    color: var(--dw-forge-bronze-text);
+  }
+}
+
+.acc-fil-feu {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -141,6 +167,49 @@
   text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
+.acc-soir-scene {
+  color: var(--dw-forge-hot-text);
+}
+
+// La barre des scènes du chapitre : une case par scène, jouée (or), en cours (claire, qui rougeoie) ou à jouer (creuse).
+.acc-scenes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 36rem;
+}
+
+.acc-scenes-barre {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acc-scene {
+  height: 0.6rem;
+  border-radius: 4px;
+  background: rgba(255, 214, 160, 0.18);
+}
+
+.acc-scene--jouee {
+  background: var(--dw-color-legendary);
+}
+
+.acc-scene--en-cours {
+  background: var(--dw-forge-hot-text);
+  box-shadow: 0 0 10px var(--dw-forge-hot);
+}
+
+.acc-scenes-compte {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--dw-forge-bone);
+}
+
 // Reprendre la table (l'action principale, en or) et la clore (secondaire, cerclée).
 .acc-soir-actions {
   display: flex;
@@ -148,21 +217,20 @@
   gap: 0.6rem;
 }
 
-// Une tuile de fer : la compagnie, les erreurs.
-.acc-tuile {
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 16px;
-  @include forge.plate;
-}
-
+// La compagnie, dans le bandeau : un médaillon et un nom par héros, en pastilles.
 .acc-compagnie {
   display: flex;
-  flex: 1 1 20rem;
-  min-width: 0;
-  flex-direction: column;
-  gap: 0.9rem;
-  box-sizing: border-box;
-  padding: 1.35rem 1.25rem 1.1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.acc-compagnie-titre {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--dw-color-bonus);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
 .acc-section-titre {
@@ -179,9 +247,9 @@
 }
 
 .acc-compagnie-liste {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -190,19 +258,19 @@
 .acc-heros {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  min-height: 3.75rem;
+  gap: 0.5rem;
+  min-height: 2.75rem;
   box-sizing: border-box;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-bonus) 40%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--dw-forge-recess) 55%, transparent);
+  padding: 0.25rem 0.9rem 0.25rem 0.25rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-bonus) 45%, transparent);
+  border-radius: var(--dw-radius-pill);
+  background: rgba(10, 6, 4, 0.7);
   color: var(--dw-forge-bone);
   text-decoration: none;
 
   &:hover {
     border-color: var(--dw-forge-hot);
-    background-color: rgba(255, 170, 60, 0.08);
+    background-color: rgba(255, 170, 60, 0.12);
   }
 }
 
@@ -210,15 +278,14 @@
   display: grid;
   flex: none;
   place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.1rem;
+  height: 2.1rem;
   overflow: hidden;
   border: 2px solid var(--dw-color-bonus);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, var(--dw-surface-300), var(--dw-surface-50));
-  box-shadow: 0 0 12px color-mix(in srgb, var(--dw-color-bonus) 45%, transparent);
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   color: var(--dw-forge-hot-text);
 
   img {
@@ -230,9 +297,9 @@
 }
 
 .acc-heros-nom {
-  min-width: 0;
+  max-width: 12rem;
   overflow: hidden;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -251,18 +318,75 @@
   gap: 0.75rem;
 }
 
-// ── Les sagas : une carte chacune, sa couleur et son image, son avancement et le chapitre à jouer ensuite ─────────────────────────
-.acc-sagas {
+// ── Les sagas : un carrousel, une carte chacune (sa couleur et son image, ses chapitres en pastilles, son bouton) ─────────────────
+.acc-sagas-tete {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.1rem;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.acc-legende {
+  // La pastille « joué » de la légende n'a pas de saga : elle prend l'os.
+  --saga: var(--dw-forge-bone);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
   margin: 0;
   padding: 0;
+  font-size: 0.8rem;
+  color: var(--dw-forge-bone);
   list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
+
+.acc-legende-pastille.acc-repere--joue,
+.acc-legende-pastille.acc-repere--en-cours,
+.acc-legende-pastille.acc-repere--a-jouer {
+  width: 0.8rem;
+  min-width: 0;
+  height: 0.8rem;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.acc-rail-boutons {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.acc-sagas {
+  // Les textes réservés aux lecteurs d'écran (`sr-only`, en absolu) se placent dans le carrousel : sans lui, ceux des cartes cachées à
+  // droite élargiraient la page.
+  position: relative;
+  display: flex;
+  gap: 1.1rem;
+  margin: 0;
+  // De quoi voir l'ombre des cartes et le cadre du focus, que le défilement rognerait.
+  padding: 0.2rem 0.2rem 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0.2rem;
+  scrollbar-color: var(--dw-forge-bronze-dim) transparent;
+  scrollbar-width: thin;
+  list-style: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
 
 // Une couleur et une image d'ambiance par teinte de saga (`AccueilSagaResume.teinte`), pour sa carte et pour l'étiquette de la table
-// ouverte ; les images sont prises parmi celles des bibliothèques, en attendant une illustration par saga. 0 : hors saga.
+// ouverte ; les images sont prises parmi celles des bibliothèques, en attendant une illustration par saga. 0 : les one shots.
 .acc-teinte--0 {
   --saga: var(--dw-forge-bronze);
   --saga-clair: var(--dw-forge-bronze-text);
@@ -293,13 +417,13 @@
   --saga-image: url('/assets/bol/header-creatures.webp');
 }
 
+// Un peu plus de trois cartes sur grand écran, une et un bout sur un téléphone : on voit qu'il y en a d'autres.
 .acc-saga {
   display: flex;
-  flex: 1 1 18rem;
+  flex: 0 0 clamp(16.5rem, 30%, 24rem);
   flex-direction: column;
   justify-content: space-between;
   gap: 1.1rem;
-  // Sans lui, la suite (sur une ligne) imposerait sa largeur à la carte, au-delà de l'écran d'un téléphone.
   min-width: 0;
   min-height: 14rem;
   box-sizing: border-box;
@@ -312,48 +436,57 @@
     var(--saga-image) center 30% / cover,
     var(--dw-surface-100);
   box-shadow:
-    0 0 26px color-mix(in srgb, var(--saga) 14%, transparent),
-    0 12px 30px rgba(0, 0, 0, 0.45);
+    0 0 18px color-mix(in srgb, var(--saga) 14%, transparent),
+    0 8px 14px rgba(0, 0, 0, 0.45);
+  scroll-snap-align: start;
 }
 
 .acc-saga-tete {
   display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.acc-anneau {
-  flex: none;
-  width: 4rem;
-  height: 4rem;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.8));
-
-  text {
-    font-family: 'Muse Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    fill: var(--dw-forge-bone);
-  }
-}
-
-.acc-anneau-fond {
-  fill: rgba(10, 6, 4, 0.85);
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 6;
-}
-
-.acc-anneau-plein {
-  fill: none;
-  stroke: var(--saga);
-  stroke-width: 6;
-  stroke-linecap: round;
-}
-
-.acc-saga-texte {
-  display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
+  gap: 0.7rem;
+}
+
+// Les chapitres d'une saga, en pastilles : joué (plein, à sa couleur), sur la table (cerclé d'or, qui rougeoie), à jouer (creux).
+.acc-reperes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acc-repere {
+  display: grid;
+  place-items: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  border-radius: var(--dw-radius-pill);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.acc-repere--joue {
+  border: 1px solid var(--saga);
+  background: var(--saga);
+  color: var(--dw-forge-recess);
+}
+
+.acc-repere--en-cours {
+  border: 2px solid var(--dw-color-legendary);
+  background: rgba(10, 6, 4, 0.85);
+  color: var(--dw-forge-bone);
+  box-shadow: 0 0 12px var(--saga);
+}
+
+.acc-repere--prochain,
+.acc-repere--a-jouer {
+  border: 1px dashed rgba(255, 214, 160, 0.55);
+  background: rgba(10, 6, 4, 0.6);
+  color: var(--dw-forge-bone);
 }
 
 .acc-saga-nom {
@@ -370,7 +503,7 @@
 
 .acc-saga-resume {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--dw-forge-bone);
   text-shadow: 0 1px 2px var(--dw-forge-shade);

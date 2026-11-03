@@ -4,17 +4,29 @@ export interface BolAccueilScenario {
   titre: string;
 }
 
-/** La table ouverte de l'accueil, avec le scénario qu'elle joue (null : on improvise). */
+/** Une scène du scénario de la table ouverte. */
+export interface BolAccueilScene {
+  id: string;
+  titre: string;
+}
+
+/** La table ouverte de l'accueil, avec le scénario qu'elle joue (null : on improvise) et où en est ce chapitre. */
 export interface BolAccueilTable {
   id: string;
   titre: string | null;
   /** `combat` : la clore termine d'abord le combat. */
   statut: 'libre' | 'combat';
   scenario_id: string | null;
+  /** La scène chargée sur la table. */
+  scene_id: string | null;
+  /** Les scènes de son scénario, dans leur ordre (aucune sans scénario). */
+  scenes: BolAccueilScene[];
+  /** Celles de ces scènes déjà passées sur la table. */
+  scenes_jouees: string[];
   created_at: string;
 }
 
-/** Un héros de la dernière table, pour la carte de la compagnie. */
+/** Un héros à table (la table ouverte, sinon la dernière), pour la compagnie. */
 export interface BolAccueilHeros {
   id: string;
   nom: string;
@@ -43,7 +55,7 @@ export interface BolAccueilModel {
   scenario_recent_id: string | null;
   /** Ids des héros de la dernière table. */
   derniers_heros: string[];
-  /** Les mêmes héros, avec leur nom et leur portrait. */
+  /** Les héros de la table ouverte (sinon de la dernière), avec leur nom et leur portrait. */
   compagnie: BolAccueilHeros[];
   comptes: BolAccueilComptes;
 }

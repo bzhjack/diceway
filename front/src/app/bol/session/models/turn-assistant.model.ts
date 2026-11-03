@@ -33,6 +33,9 @@ export interface StatTile {
   readonly tone?: 'up' | 'down' | 'hot';
   /** D'où vient le chiffre, en infobulle. */
   readonly hint?: string;
+  /** Ce que le chiffre ne dit pas (le dé de bonus de l'arme favorite) : une étoile au coin de la tuile le signale, l'infobulle le dit, et
+   * un lecteur d'écran le lit. */
+  readonly note?: string;
   /** Le dé qui peut remplacer le chiffre (protection « d6−2 »), en petit sous lui. */
   readonly sub?: string;
 }

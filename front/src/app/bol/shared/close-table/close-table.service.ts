@@ -7,7 +7,7 @@ import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.ut
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {TableAClore} from '../models/close-table.model';
 
-const APRES = 'Elle quitte l’accueil et reste dans « Mes sessions », d’où vous pourrez la reprendre.';
+const APRES = 'Elle quitte l’accueil et reste dans « Mes tables », d’où vous pourrez la reprendre.';
 
 /** « Clore la table », depuis la table ou le bandeau de l'accueil : une confirmation, puis la table passe `terminee`. Une table en combat
  * le termine d'abord, côté serveur, sans les soins d'après combat (qui se choisissent avec « Terminer »). */

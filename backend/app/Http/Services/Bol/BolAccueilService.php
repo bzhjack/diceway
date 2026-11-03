@@ -12,8 +12,8 @@ use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 
-/** Ce que l'accueil lit d'un compte : sa table ouverte, ses scénarios, leur avancement, les héros de sa dernière table et le nombre de
- * fiches de chaque bibliothèque. */
+/** Ce que l'accueil lit d'un compte : sa table ouverte (et où en est son chapitre), ses scénarios, leur avancement, les héros à table et
+ * le nombre de fiches de chaque bibliothèque. */
 class BolAccueilService
 {
     /** Statuts d'une table encore ouverte : une table au statut `terminee` n'en est plus une. */
@@ -22,7 +22,7 @@ class BolAccueilService
     public function summary(string $userId): array
     {
         $sessions = BolFightSession::where('user_id', $userId)
-            ->get(['id', 'titre', 'statut', 'scenario_id', 'scenes_jouees', 'created_at', 'updated_at']);
+            ->get(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'created_at', 'updated_at']);
         $scenarios = BolScenario::where('user_id', $userId)->get(['id', 'titre']);
 
         // La table ouverte la plus récemment active (pas la plus récemment créée) : une table rouverte (`reopenSession` la touche)
@@ -30,26 +30,54 @@ class BolAccueilService
         $ouverte = $sessions->whereIn('statut', self::OUVERTES)->sortByDesc('updated_at')->first();
         $derniere = $sessions->sortByDesc('created_at')->first();
         $touchee = $sessions->whereNotNull('scenario_id')->sortByDesc('updated_at')->first();
+        // La compagnie est celle qui est à table : la table ouverte, sinon la dernière ouverte.
+        $aTable = $ouverte ?? $derniere;
 
         return [
             'table' => $ouverte ? [
-                'id'          => $ouverte->id,
-                'titre'       => $ouverte->titre,
-                'statut'      => $ouverte->statut,
-                'scenario_id' => $ouverte->scenario_id,
-                'created_at'  => $ouverte->created_at->toIso8601String(),
+                'id'            => $ouverte->id,
+                'titre'         => $ouverte->titre,
+                'statut'        => $ouverte->statut,
+                'scenario_id'   => $ouverte->scenario_id,
+                'scene_id'      => $ouverte->scene_id,
+                'scenes'        => $scenes = $this->scenesDuScenario($userId, $ouverte->scenario_id),
+                'scenes_jouees' => array_values(array_intersect(
+                    array_map('strval', $ouverte->scenes_jouees ?? []),
+                    array_column($scenes, 'id'),
+                )),
+                'created_at'    => $ouverte->created_at->toIso8601String(),
             ] : null,
             'scenarios'          => $scenarios->map(fn (BolScenario $scenario) => ['id' => $scenario->id, 'titre' => $scenario->titre])->values()->all(),
             'scenarios_joues'    => $this->scenariosJoues($userId, $sessions->all(), $scenarios->pluck('id')->all(), $ouverte?->id),
             'scenario_recent_id' => $touchee?->scenario_id,
-            'derniers_heros'     => $herosIds = ($derniere ? $this->herosDeLaTable($userId, $derniere->id) : []),
-            'compagnie'          => $this->compagnie($herosIds),
+            'derniers_heros'     => $derniere ? $this->herosDeLaTable($userId, $derniere->id) : [],
+            'compagnie'          => $this->compagnie($aTable ? $this->herosDeLaTable($userId, $aTable->id) : []),
             'comptes'            => $this->comptes($userId),
         ];
     }
 
     /**
-     * Les héros de la dernière table, dans le même ordre, avec ce qu'il faut pour les montrer.
+     * Les scènes du scénario de la table ouverte, dans leur ordre : de quoi dire où en est le chapitre. Aucune sans scénario.
+     *
+     * @return array<int, array{id: string, titre: string}>
+     */
+    private function scenesDuScenario(string $userId, ?string $scenarioId): array
+    {
+        if ($scenarioId === null) {
+            return [];
+        }
+
+        return BolScene::where('user_id', $userId)
+            ->where('scenario_id', $scenarioId)
+            ->orderBy('ordre')
+            ->get(['id', 'titre', 'lieu'])
+            ->map(fn (BolScene $scene) => ['id' => (string) $scene->id, 'titre' => $scene->titre ?: ($scene->lieu ?: 'Scène sans titre')])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Les héros d'une table, dans le même ordre, avec ce qu'il faut pour les montrer.
      *
      * @param array<int, string> $herosIds
      * @return array<int, array{id: string, nom: string, avatar: ?string}>

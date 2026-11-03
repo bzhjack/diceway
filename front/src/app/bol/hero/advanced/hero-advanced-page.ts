@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {applyEach, FieldTree, FormField, form, min, minLength, required, validate, validateTree} from '@angular/forms/signals';
 import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
@@ -60,6 +60,7 @@ import {ResourceEntry} from '../models/ressources-panel.model';
 import {SectionMessage} from '../models/section-message.model';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
 import {AdvancedTraitDraft, HeroAdvancedFormModel} from '../models/hero-advanced-page.model';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 
 function heroAdvancedFormDefaults(): HeroAdvancedFormModel {
@@ -146,6 +147,7 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-hero-advanced-page',
   imports: [
+    DwCompactBarComponent,
     DwFormHeaderComponent,
     FormField,
     MatButtonModule,
@@ -260,6 +262,9 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
   protected readonly avatarPreview = computed(() => this.model().avatar);
   protected readonly heroNom = computed(() => this.model().nom);
+  /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
+  protected readonly titreCompact = computed(() => `Création avancée · ${this.heroNom().trim() || 'Nouveau héros'}`);
   protected readonly heroJoueur = computed(() => this.model().joueur);
   protected readonly activeValue = computed(() => this.model().active);
   private readonly regionIdValue = computed(() => this.model().region_id);

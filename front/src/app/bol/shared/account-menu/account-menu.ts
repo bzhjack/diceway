@@ -16,8 +16,8 @@ interface AccountMenuLink {
 
 const SESSION_LINKS: readonly AccountMenuLink[] = [
   {label: 'Accueil', icon: 'home', link: '/'},
-  {label: 'Changer de session', icon: 'swap_horiz', link: '/library/sessions'},
-  {label: 'Nouvelle session', icon: 'add', link: '/session/new'},
+  {label: 'Changer de table', icon: 'swap_horiz', link: '/library/sessions'},
+  {label: 'Nouvelle table', icon: 'add', link: '/session/new'},
 ];
 
 const LIBRARY_LINKS: readonly AccountMenuLink[] = [

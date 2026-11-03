@@ -88,7 +88,7 @@ class BolAccueilTest extends TestCase
 
         $table = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
 
-        $this->assertSame(['id', 'titre', 'statut', 'scenario_id', 'created_at'], array_keys($table));
+        $this->assertSame(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'created_at'], array_keys($table));
         $this->assertSame($session->id, $table['id']);
         $this->assertSame('Table', $table['titre']);
         $this->assertSame('libre', $table['statut']);
@@ -176,6 +176,57 @@ class BolAccueilTest extends TestCase
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
         $this->assertSame($a->id, $response->json('scenario_recent_id'));
+    }
+
+    /** Où en est le chapitre de la table : ses scènes dans leur ordre, la scène en cours, et celles déjà passées sur cette table (pas celles
+     * d'un autre scénario ni d'une autre table). */
+    public function test_the_open_table_tells_where_its_chapter_stands(): void
+    {
+        $scenario = $this->scenario('Perle du Beshaar — 1. Sacrilège à Satarla');
+        $autre = $this->scenario('Perle du Beshaar — 2. De sable et d\'eau');
+        $troisieme = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'Le temple', 'ordre' => 2, 'distribution' => []]);
+        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
+        $seconde = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => '', 'lieu' => 'Le trajet', 'ordre' => 1, 'distribution' => []]);
+        $ailleurs = $this->scene($autre->id);
+        $table = $this->tableSession('combat', $scenario->id, [$premiere->id, $ailleurs->id, $seconde->id]);
+        $table->update(['scene_id' => $seconde->id]);
+
+        $reponse = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
+
+        $this->assertSame([
+            ['id' => $premiere->id, 'titre' => 'La taverne'],
+            ['id' => $seconde->id, 'titre' => 'Le trajet'],
+            ['id' => $troisieme->id, 'titre' => 'Le temple'],
+        ], $reponse['scenes']);
+        $this->assertSame($seconde->id, $reponse['scene_id']);
+        $this->assertSame([$premiere->id, $seconde->id], $reponse['scenes_jouees']);
+    }
+
+    public function test_an_improvised_table_has_no_scenes(): void
+    {
+        $this->tableSession('libre');
+
+        $table = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
+
+        $this->assertSame([], $table['scenes']);
+        $this->assertSame([], $table['scenes_jouees']);
+    }
+
+    /** La compagnie est à la table ouverte, même quand une table plus récente a été close depuis. */
+    public function test_company_is_the_open_table_before_a_newer_closed_one(): void
+    {
+        $axel = $this->hero('Axel');
+        $jean = $this->hero('jean');
+        $ouverte = $this->tableSession('libre');
+        $this->seat($ouverte, $axel);
+        $this->travel(1)->minutes();
+        $close = $this->tableSession('terminee');
+        $this->seat($close, $jean);
+
+        $response = $this->getJson('/api/bol/accueil')->assertOk();
+
+        $this->assertSame([$axel->id], array_column($response->json('compagnie'), 'id'));
+        $this->assertSame([$jean->id], $response->json('derniers_heros'));
     }
 
     public function test_last_heroes_are_the_heroes_of_the_newest_session(): void

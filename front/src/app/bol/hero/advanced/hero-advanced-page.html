@@ -75,6 +75,23 @@
                 </button>
               }
             </dw-form-header>
+            <!-- Une fois l'en-tête sorti de l'écran, le même en petit reste en haut : enregistrer et activer sans remonter. -->
+            <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="titreCompact()">
+              @if (warnCount() > 0) {
+                <span class="hap-warn-compact">{{ warnCount() }} avertissement(s)</span>
+              }
+              <button mat-flat-button type="submit" [disabled]="submitDisabled()">
+                <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+                @if (formDirty()) {
+                  <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
+                }
+              </button>
+              @if (!activeValue()) {
+                <button mat-stroked-button type="button" [disabled]="activateDisabled()" (click)="confirmActivation()">
+                  <mat-icon svgIcon="gi-laurels" /> Activer
+                </button>
+              }
+            </dw-compact-bar>
             <!-- ===== FIN EN-TÊTE ===== -->
 
             <div class="grid gap-4">

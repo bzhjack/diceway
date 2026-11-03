@@ -70,7 +70,7 @@ export class TurnAttackStore {
     const enPlus = sommeModificateurs(this.loadout.extraDamageTerms());
     const toneOf = (delta: number) => (delta === 0 ? {} : {tone: delta > 0 ? ('up' as const) : ('down' as const)});
     return [
-      {label: 'Attaque', value: totale ? '—' : this.turn.signed(attaque), hint: this.attackHint(stats), ...(totale ? {} : toneOf(reglages))},
+      {label: 'Attaque', value: totale ? '—' : this.turn.signed(attaque), ...this.attackHintAndNote(stats, totale), ...(totale ? {} : toneOf(reglages))},
       {label: 'Défense', value: String(stats.defense + posture), ...toneOf(posture)},
       // Une créature n'ajoute pas sa vigueur aux dégâts : pas de tuile, pour ne pas laisser croire le contraire.
       ...(stats.attaque === null ? [{label: 'Vigueur', value: this.turn.signed(vigueurBonus(stats, this.loadout.isTir(), this.loadout.unarmed()))}] : []),
@@ -549,6 +549,13 @@ export class TurnAttackStore {
   }
 
   /** De quoi est fait le bonus d'attaque, en infobulle sur sa tuile : « Agilité +2, équipement −3, mêlée +2 ». */
+  /** L'infobulle de la tuile d'attaque, et le dé de bonus de l'arme favorite qu'elle signale (pas en défense totale : pas d'attaque). */
+  private attackHintAndNote(a: ResolvedCombatStats, totale: boolean): Pick<StatTile, 'hint' | 'note'> {
+    const hint = this.attackHint(a);
+    const note = totale ? null : this.loadout.armeFavoriteNote();
+    return note ? {hint: `${hint} · ${note}`, note} : {hint};
+  }
+
   private attackHint(a: ResolvedCombatStats): string {
     if (a.attaque !== null) {
       return 'Attaque de la créature, tout compris';

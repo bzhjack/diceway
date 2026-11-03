@@ -315,6 +315,28 @@
     }
   }
 
+  // Une étoile d'or au coin : l'infobulle en dit plus que le chiffre (l'arme favorite donne un dé de bonus à l'attaque).
+  .tas-head .tas-tile--note {
+    position: relative;
+
+    &::after {
+      content: '★' / '';
+      position: absolute;
+      top: -0.4rem;
+      right: -0.4rem;
+      display: grid;
+      place-items: center;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      background: var(--dw-color-legendary);
+      box-shadow: 0 0 6px -1px var(--dw-color-legendary);
+      color: var(--dw-forge-recess);
+      font-size: 0.62rem;
+      line-height: 1;
+    }
+  }
+
   .tas-head .tas-tile--down {
     border-color: var(--dw-forge-heat-echec);
     box-shadow:

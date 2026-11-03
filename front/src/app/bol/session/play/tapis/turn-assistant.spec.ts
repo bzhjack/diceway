@@ -10,6 +10,7 @@ import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {effetDeFoi} from './combat-effects.util';
 import {effetSortPaye, saisieSortParDefaut} from '../../magie-combat.util';
 import {MatDialog} from '@angular/material/dialog';
+import {MatTooltip} from '@angular/material/tooltip';
 import {of} from 'rxjs';
 import {TurnAssistantComponent} from './turn-assistant';
 import {MassacrePietailleDialogData} from '../../models/massacre-pietaille-dialog.model';
@@ -251,6 +252,31 @@ describe('TurnAssistantComponent', () => {
       await stable();
 
       expect(texte()).toContain('Raté');
+    });
+  });
+
+  describe('l’arme favorite', () => {
+    const tuile = (label: string) =>
+      [...element.querySelectorAll<HTMLElement>('bol-tas-attaquant .tas-tile')].find((t) => t.querySelector('span')?.textContent?.trim() === label);
+
+    it('marque d’une étoile la tuile d’attaque, qui dit son dé de bonus en infobulle, sans phrase sous les chiffres', async () => {
+      await rendre({attacker: stats({armeFavorite: 'Épée'})});
+
+      const attaque = tuile('Attaque')!;
+      expect(attaque.classList).toContain('tas-tile--note');
+      expect(attaque.querySelector('.sr-only')?.textContent).toBe('Arme favorite (Épée) : dé de bonus avec cette arme.');
+      expect(fixture.debugElement.query((d) => d.nativeElement === attaque).injector.get(MatTooltip).message).toBe(
+        'Agilité +1, mêlée +2 · Arme favorite (Épée) : dé de bonus avec cette arme.',
+      );
+      expect(tuile('Dégâts')!.classList).not.toContain('tas-tile--note');
+      expect(element.querySelector('.tas-head-notes')?.textContent ?? '').not.toContain('Arme favorite');
+    });
+
+    it('rien avec une autre arme', async () => {
+      await rendre({attacker: stats({armeFavorite: 'Hache'})});
+
+      expect(tuile('Attaque')!.classList).not.toContain('tas-tile--note');
+      expect(tuile('Attaque')!.querySelector('.sr-only')).toBeNull();
     });
   });
 

@@ -419,7 +419,7 @@ export class TurnLoadoutStore {
   /** Il attaque avec son arme favorite (avantage « Arme favorite », livre p. 40) : un dé de bonus, sans que le MJ ait à y penser. */
   private readonly avecArmeFavorite = computed(() => estArmeFavorite(this.turn.attacker()?.armeFavorite ?? null, this.effectiveArme()?.arme?.arme ?? null));
 
-  /** Ce que dit l'assistant du dé de l'arme favorite, sous le dé du MJ ; `null` avec une autre arme. */
+  /** Ce que dit l'assistant du dé de l'arme favorite, dans l'infobulle de la tuile d'attaque et du seuil ; `null` avec une autre arme. */
   readonly armeFavoriteNote = computed(() =>
     this.avecArmeFavorite() ? `Arme favorite (${this.turn.attacker()?.armeFavorite}) : dé de bonus avec cette arme.` : null,
   );

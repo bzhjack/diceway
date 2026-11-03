@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -9,8 +9,9 @@ import {BolAccueilService} from '../../services/bol-accueil.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
-import {ANNEAU_RAYON, accueilSagas, sagaResumes, tableOuverte, teinteDeSaga} from './accueil.util';
+import {accueilSagas, ONE_SHOT, sagaResumes, tableOuverte, teinteDeSaga} from './accueil.util';
 
 interface AccueilBibliotheque {
   readonly cle: keyof BolAccueilComptes;
@@ -27,14 +28,15 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
   {cle: 'demons', label: 'Démons', route: '/library/demons', creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
   {cle: 'armes', label: 'Armes', route: '/library/weapons'},
   {cle: 'armures', label: 'Armures', route: '/library/armors'},
-  {cle: 'sessions', label: 'Sessions', route: '/library/sessions'},
+  {cle: 'sessions', label: 'Tables', route: '/library/sessions'},
 ];
 
-/** Accueil, sur `/` : la table ouverte à reprendre (ou à clore) et la compagnie de la dernière table, puis une carte par saga (son avancement et le
- * chapitre à jouer ensuite, qui ouvre une nouvelle table), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
+/** Accueil, sur `/` : la table ouverte (où en est l'histoire, saga › chapitre › scène, et la compagnie qui y est assise) à reprendre ou à
+ * clore, puis les sagas en carrousel (leurs chapitres en pastilles et leur bouton : la table ouverte quand elle porte un de leurs chapitres,
+ * sinon le chapitre à jouer, sur une nouvelle table), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent, AvatarFallbackDirective],
+  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,12 +50,19 @@ export class AccueilPageComponent {
   protected readonly error = signal(false);
   /** L'accueil n'a pas encore répondu : on ne sait pas encore s'il y a une table ouverte. */
   protected readonly chargement = computed(() => this.data() === null && !this.error());
-  protected readonly anneauRayon = ANNEAU_RAYON;
+  protected readonly oneShot = ONE_SHOT;
+  /** Le carrousel des sagas est à son début, à sa fin (les deux : tout tient, sans flèches). */
+  protected readonly railDebut = signal(true);
+  protected readonly railFin = signal(true);
+  private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
 
   protected readonly sagas = computed(() => {
     const data = this.data();
     return data
-      ? sagaResumes(accueilSagas(data.scenarios, new Set(data.scenarios_joues), data.table?.scenario_id ?? null, data.scenario_recent_id))
+      ? sagaResumes(
+          accueilSagas(data.scenarios, new Set(data.scenarios_joues), data.table?.scenario_id ?? null, data.scenario_recent_id),
+          data.table?.id ?? null,
+        )
       : [];
   });
 
@@ -76,6 +85,37 @@ export class AccueilPageComponent {
 
   constructor() {
     this.charger();
+    // Le carrousel n'existe qu'une fois l'accueil arrivé ; sa largeur change avec la fenêtre.
+    effect((onCleanup) => {
+      const rail = this.rail()?.nativeElement;
+      if (!rail || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observateur = new ResizeObserver(() => this.mesurerRail());
+      observateur.observe(rail);
+      onCleanup(() => observateur.disconnect());
+    });
+  }
+
+  protected mesurerRail(): void {
+    const rail = this.rail()?.nativeElement;
+    if (!rail) {
+      return;
+    }
+    this.railDebut.set(rail.scrollLeft <= 1);
+    this.railFin.set(rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 1);
+  }
+
+  /** Une carte de plus ou de moins ; le magnétisme du carrousel la cale contre le bord. */
+  protected defiler(sens: 1 | -1): void {
+    const rail = this.rail()?.nativeElement;
+    if (!rail) {
+      return;
+    }
+    const carte = rail.firstElementChild instanceof HTMLElement ? rail.firstElementChild.offsetWidth : rail.clientWidth;
+    const ecart = parseFloat(getComputedStyle(rail).columnGap) || 0;
+    const doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
   }
 
   /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte, son chapitre compte comme joué). */

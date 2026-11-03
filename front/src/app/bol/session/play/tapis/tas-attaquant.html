@@ -56,23 +56,23 @@
     <div class="tas-chiffres">
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attack.attackerTiles(); track tile.label) {
-          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'" [class.tas-tile--hot]="tile.tone === 'hot'" [matTooltip]="tile.hint ?? ''">
+          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'" [class.tas-tile--hot]="tile.tone === 'hot'" [class.tas-tile--note]="tile.note" [matTooltip]="tile.hint ?? ''">
             <b>{{ tile.value }}</b>
             @if (tile.sub) {
               <small>{{ tile.sub }}</small>
             }
             <span>{{ tile.label }}</span>
+            @if (tile.note) {
+              <span class="sr-only">{{ tile.note }}</span>
+            }
           </div>
         }
       </div>
     </div>
-    @if (turn.legendaryBonus() || turn.attacker()?.armeFavorite || loadout.abilityDice() || loadout.faithNote()) {
+    @if (turn.legendaryBonus() || loadout.abilityDice() || loadout.faithNote()) {
       <p class="tas-head-notes">
         @if (turn.legendaryBonus()) {
           <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
-        }
-        @if (loadout.armeFavoriteNote(); as note) {
-          <span class="tas-note">{{ note }}</span>
         }
         @if (loadout.abilityDice()) {
           <span class="tas-note">{{ loadout.abilityDice() }}, à chaque attaque.</span>

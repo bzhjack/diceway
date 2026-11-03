@@ -11,6 +11,18 @@
   color: var(--dw-forge-hot-text);
 }
 
+// Les avertissements, redits dans la barre compacte ; sur un téléphone, la place va aux boutons.
+.hap-warn-compact {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-forge-hot-text);
+  white-space: nowrap;
+
+  @media (max-width: 40rem) {
+    display: none;
+  }
+}
+
 .hap-step-eyebrow {
   margin: 0;
   font-size: 0.75rem;
