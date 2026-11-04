@@ -85,6 +85,12 @@ export class TurnFlowStore {
   /** La couleur de la ligne de l'attaque : celle du jet en cours, ou du coup joué. */
   readonly attackTone = computed(() => (this.attack.attackVerdict() ?? this.played()?.verdict)?.tone ?? null);
 
+  /** La carte des dégâts n'apparaît qu'une fois le jet d'attaque (ou de sort) fait : avant, elle n'aurait rien à proposer. Elle porte ensuite
+   * le dé, « Appliquer » et, après un coup raté ou joué, « Fin du tour ». */
+  readonly degatsVisibles = computed(
+    () => this.damage.hasDamageStep() || this.attack.attackVerdict() !== null || this.hitSummary() !== null || (this.loadout.sortMode() && this.attack.sortVerdict() !== null),
+  );
+
   /** « Fin du tour » est le bouton or de la ligne des dégâts (coup raté, désarmement, coup joué) : celui du bandeau s'efface alors. */
   readonly endTurnInLine = computed(() => {
     if (this.damage.hasDamageStep() || this.turn.actionPerdue()) {

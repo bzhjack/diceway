@@ -275,7 +275,7 @@ class BolFightSessionController extends Controller
             return response()->json(['error' => 'Not found'], 404);
         }
 
-        return response()->json($session);
+        return response()->json($this->sceneService->chargerLaPremiereScene(Auth::id(), $session));
     }
 
     public function updateHeroInitiative(Request $request, string $id, int $herosPivotId)

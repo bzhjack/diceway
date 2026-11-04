@@ -203,6 +203,59 @@ class BolCompagnieTest extends TestCase
         $this->patchJson("/api/bol/fight-session/{$id}/jouer")->assertOk()->assertJsonPath('scene_id', $seconde->id);
     }
 
+    /** Arriver à la table d'une partie sans scène chargée charge la première de son chapitre, avec ses figurants. */
+    public function test_entering_a_partie_without_scene_loads_the_first_one(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $allie = $this->hero('Allié', 'C');
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'Le temple', 'ordre' => 1, 'distribution' => []]);
+        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $allie->id, 'qty' => 1, 'camp' => 'adversaires'],
+        ]]);
+        $partie = BolFightSession::create(['titre' => 'Ancienne', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'jouee_le' => now()]);
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/jouer")->assertOk()->assertJsonPath('scene_id', $premiere->id);
+
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $partie->id)->count());
+
+        // Y revenir ne recharge pas les figurants.
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/jouer")->assertOk()->assertJsonPath('scene_id', $premiere->id);
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $partie->id)->count());
+    }
+
+    /** Une partie improvisée qui a reçu un scénario depuis charge sa première scène en arrivant à la table. */
+    public function test_an_improvised_partie_given_a_scenario_loads_its_first_scene_on_entering(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
+        $id = $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id])->assertOk()->json('id');
+        $this->patchJson("/api/bol/fight-session/{$id}/scenario", ['scenario_id' => $ch1->id])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$id}/jouer")->assertOk()->assertJsonPath('scene_id', $scene->id);
+    }
+
+    /** En combat, on ne charge pas de scène (le serveur le refuse) : arriver à la table ne change rien, et ne fait pas d'erreur. */
+    public function test_entering_a_partie_in_combat_loads_nothing(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
+        $partie = BolFightSession::create(['titre' => 'En combat', 'statut' => 'combat', 'user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'jouee_le' => now()]);
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
+    }
+
+    /** Sans chapitre, ou sur un chapitre sans scène, il n'y a rien à charger en arrivant à la table. */
+    public function test_entering_a_partie_with_no_scene_to_load_changes_nothing(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $improvisee = BolFightSession::create(['titre' => 'A', 'statut' => 'libre', 'user_id' => $this->user->id, 'jouee_le' => now()]);
+        $sansScene = BolFightSession::create(['titre' => 'B', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'jouee_le' => now()]);
+
+        $this->patchJson("/api/bol/fight-session/{$improvisee->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
+        $this->patchJson("/api/bol/fight-session/{$sansScene->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
+    }
+
     /** Une compagnie joue plusieurs scénarios ; deux compagnies, le même ; mais une compagnie ne joue pas deux fois le même scénario. */
     public function test_a_company_plays_several_scenarios_but_each_only_once(): void
     {

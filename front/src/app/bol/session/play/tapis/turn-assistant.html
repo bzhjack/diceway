@@ -23,9 +23,11 @@
       <li bol-tas-attaque [class]="'tas-line tas-line--' + flow.stations()[1] + (flow.attackTone() ? ' tas-line--' + flow.attackTone() : '')" aria-labelledby="tas-l2"></li>
     }
 
-    <!-- 2 · Les dégâts : la fourchette ; la case et le dé, la formule dessous ; ce que le coup fera à la cible ; en bout de ligne, ce que la
+    <!-- 2 · Les dégâts, une fois le jet d'attaque fait : la case et le dé, la formule dessous ; ce que le coup fera à la cible ; en bout de ligne, ce que la
          cible peut y opposer (de ses points, son portrait sur le bouton) et « Appliquer ». Puis l'égratignure, le Carnage ou la fin du tour. -->
-    <li bol-tas-degats [class]="'tas-line tas-line--' + flow.stations()[2]" aria-labelledby="tas-l3"></li>
+    @if (flow.degatsVisibles()) {
+      <li bol-tas-degats [class]="'tas-line tas-line--' + flow.stations()[2]" aria-labelledby="tas-l3"></li>
+    }
   </ol>
   </div>
 </div>

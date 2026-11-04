@@ -13,7 +13,7 @@ import {TurnDamageStore} from './turn-damage.store';
 import {TurnCibleStore} from './turn-cible.store';
 import {TurnFlowStore} from './turn-flow.store';
 
-/** Les dégâts : la fourchette, la case et le dé, la formule, ce que le coup fera à la cible et ce qu'elle peut y opposer, puis « Appliquer » ou la fin du tour. */
+/** Les dégâts, une fois le jet d'attaque fait : la case et le dé, la formule, ce que le coup fera à la cible et ce qu'elle peut y opposer, puis « Appliquer » ou la fin du tour. */
 @Component({
   selector: 'li[bol-tas-degats]',
   imports: [NgTemplateOutlet, MatButtonModule, MatIconModule, MatTooltipModule, DwDiceRowComponent, AvatarFallbackDirective, DwRollSumComponent, DwRollSumEditableDirective],

@@ -123,7 +123,8 @@ export class TableStore {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
   }
 
-  /** On arrive à la table : elle devient la dernière partie jouée (l'accueil la montre en tête), puis elle se charge. */
+  /** On arrive à la table : elle devient la dernière partie jouée (l'accueil la montre en tête) et, sans scène, charge la première de son
+   * chapitre ; puis elle se lit, après, dans la même file d'appels : `loadSession` voit donc cette scène. */
   entrer(id: string): void {
     this.fightSessionService.jouer(id).pipe(take(1)).subscribe({error: () => undefined});
     this.loadSession(id);

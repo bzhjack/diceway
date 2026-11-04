@@ -141,7 +141,8 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
   }
 
-  /** On entre à la table : elle devient la dernière partie jouée. Aucune autre partie n'en est touchée. */
+  /** On entre à la table : elle devient la dernière partie jouée, et charge la première scène de son chapitre si elle n'en a aucune. Aucune
+   * autre partie n'en est touchée. */
   jouer(sessionId: string): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/jouer`, {}));
   }

@@ -45,7 +45,7 @@ export class TurnDamageStore {
    * spéciaux, dont le MJ tape le total. */
   private readonly damageSpec = computed(() => parseDamage(this.degats()));
 
-  /** La fourchette des dégâts possibles (« 2 à 7 »), en tête de leur ligne ; `null` pour des dégâts spéciaux, tapés tels quels. */
+  /** La fourchette des dégâts possibles (« 2 à 7 »), au bout de leur addition tant que le dé n'est pas tombé ; `null` pour des dégâts spéciaux, tapés tels quels. */
   readonly damageSpan = computed(() => {
     const spec = this.damageSpec();
     if (spec === null) {

@@ -210,11 +210,14 @@ class BolSceneService
     }
 
     /**
-     * Une partie qui commence : la première scène de son chapitre de départ se charge, avec ses figurants. Sans chapitre ou sans scène, la
-     * partie reste telle quelle.
+     * Une partie sans scène chargée, qu'elle commence ou qu'on arrive à sa table : la première scène de son chapitre se charge, avec ses
+     * figurants. Une partie qui a déjà sa scène n'y perd rien ; en combat, sans chapitre ou sans scène, elle reste telle quelle.
      */
     public function chargerLaPremiereScene(string $userId, BolFightSession $partie): BolFightSession
     {
+        if ($partie->scene_id !== null || $partie->statut !== 'libre') {
+            return $partie;
+        }
         $scene = $partie->scenario_id === null ? null : BolScene::where('user_id', $userId)
             ->where('scenario_id', $partie->scenario_id)
             ->orderBy('ordre')

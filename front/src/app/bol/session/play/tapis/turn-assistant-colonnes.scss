@@ -52,10 +52,14 @@
       min-width: 0;
     }
 
+    // La hauteur du chiffre de `.tas-goal` : une carte qui n'en a pas (les dégâts) garde son contenu aligné sur ses voisines.
     > .tas-lbl {
+      display: flex;
       grid-column: 1;
       grid-row: 1;
+      align-items: center;
       align-self: center;
+      min-height: 2.05rem;
     }
 
     > .tas-goal {
