@@ -239,11 +239,10 @@ class BolFightSessionService
     }
 
     /**
-     * Passe la partie sur un autre chapitre de son scénario (« Changer de chapitre » de sa carte) : mêmes héros, même état ; ses scènes
-     * déjà jouées restent jouées, l'ancien chapitre compte comme joué pour elle. Une partie improvisée reçoit ici son scénario. Un
+     * Pose la partie sur ce chapitre, sans toucher à ce qui est sur sa table : `BolSceneService::changerDeChapitre` s'occupe du reste. Un
      * chapitre d'un autre scénario, d'un autre compte, ou `null` pour une partie liée : `false`. `null` si la table n'est pas du compte.
      */
-    public function changerChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
+    public function poserSurChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session) {
@@ -255,6 +254,21 @@ class BolFightSessionService
             return false;
         }
         $session->update(['scenario_id' => $chapitre]);
+
+        return $session;
+    }
+
+    /** Le MJ dit que la partie a fini son scénario, ou se ravise. `false` pour une partie improvisée ; `null` si la table n'est pas du compte. */
+    public function marquerScenarioTermine(string $sessionId, string $userId, bool $termine): BolFightSession|false|null
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+        if ($session->scenario_id === null) {
+            return false;
+        }
+        $session->update(['scenario_termine' => $termine]);
 
         return $this->getSessionWithRelations($sessionId);
     }

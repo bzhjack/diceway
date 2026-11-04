@@ -3,6 +3,7 @@ import {ApplicationRef, ChangeDetectionStrategy, Component} from '@angular/core'
 import {TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {provideRouter, Router} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
 import {NEVER, Observable, of, throwError} from 'rxjs';
@@ -41,6 +42,7 @@ const DATA: BolAccueilModel = {
       ],
       scenes_jouees: ['s1', 's2'],
       chapitres_joues: [],
+      scenario_termine: false,
       figurants: 0,
       heros: [
         {id: 'h1', nom: 'Axel', avatar: null},
@@ -58,6 +60,7 @@ const DATA: BolAccueilModel = {
       scenes: [],
       scenes_jouees: [],
       chapitres_joues: ['p1'],
+      scenario_termine: false,
       figurants: 0,
       heros: [{id: 'h3', nom: 'Balaram', avatar: null}],
     },
@@ -72,6 +75,7 @@ const DATA: BolAccueilModel = {
       scenes: [],
       scenes_jouees: [],
       chapitres_joues: [],
+      scenario_termine: false,
       figurants: 0,
       heros: [],
     },
@@ -88,15 +92,17 @@ describe('AccueilPageComponent', () => {
   const open = vi.fn();
   const changerChapitre = vi.fn();
   const supprimer = vi.fn();
+  const marquer = vi.fn();
   let accueil: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    for (const espion of [open, changerChapitre, supprimer]) {
+    for (const espion of [open, changerChapitre, supprimer, marquer]) {
       espion.mockReset();
     }
     open.mockReturnValue({afterClosed: () => of(true)});
     changerChapitre.mockReturnValue(of({}));
     supprimer.mockReturnValue(of(true));
+    marquer.mockReturnValue(of({}));
   });
 
   function configurer(providers: unknown[] = []): void {
@@ -106,8 +112,9 @@ describe('AccueilPageComponent', () => {
         provideRouter([{path: '', component: AccueilPageComponent}]),
         provideHttpClient(),
         {provide: BolAccueilService, useValue: {accueil}},
-        {provide: BolFightSessionService, useValue: {changerChapitre, delete: supprimer}},
+        {provide: BolFightSessionService, useValue: {changerChapitre, delete: supprimer, marquerScenarioTermine: marquer}},
         {provide: MatDialog, useValue: {open}},
+        {provide: MatSnackBar, useValue: {open: vi.fn()}},
         ...providers,
       ],
     });
@@ -334,6 +341,51 @@ describe('AccueilPageComponent', () => {
 
     expect(item('Le Dieu voilé')).toBeDefined();
     expect(item('Perle du Beshaar')).toBeUndefined();
+  });
+
+  it('le MJ marque le scénario terminé depuis le menu de la carte, puis l’accueil se relit', async () => {
+    const page = await rendre();
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+
+    item('Marquer le scénario terminé').click();
+    await stable();
+
+    expect(marquer).toHaveBeenCalledWith('t1', true);
+    expect(accueil).toHaveBeenCalledTimes(2);
+  });
+
+  it('une carte terminée le dit, et permet de se raviser', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, scenario_termine: true} : p))}));
+    expect(texte(cartes(page)[0].querySelector('.acc-partie-reprendre-titre'))).toBe('Scénario terminé');
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+
+    expect(item('Marquer le scénario terminé')).toBeUndefined();
+    item('Scénario pas encore terminé').click();
+    await stable();
+
+    expect(marquer).toHaveBeenCalledWith('t1', false);
+  });
+
+  it('une partie improvisée n’a pas de scénario à marquer', async () => {
+    const page = await rendre();
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
+    await stable();
+
+    expect(item('Marquer le scénario terminé')).toBeUndefined();
+  });
+
+  it('si le marquage échoue, le dit', async () => {
+    const page = await rendre();
+    marquer.mockReturnValue(throwError(() => new Error('réseau')));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+
+    item('Marquer le scénario terminé').click();
+    await stable();
+
+    expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledTimes(1);
   });
 
   it('« Supprimer la partie » demande confirmation, supprime, puis relit l’accueil', async () => {

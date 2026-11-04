@@ -41,6 +41,8 @@ export interface BolAccueilPartie {
   scenes_jouees: string[];
   /** Les chapitres que cette partie a joués : quittés pour un autre, ou toutes leurs scènes passées sur cette table. */
   chapitres_joues: string[];
+  /** Le MJ a dit que cette partie a fini son scénario. */
+  scenario_termine: boolean;
   /** Ses héros (du compte, du camp des héros), dans l'ordre où ils ont été posés. */
   heros: BolAccueilHeros[];
   /** Ses adversaires à la table : ce qu'un changement de chapitre retirerait. */

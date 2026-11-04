@@ -41,6 +41,7 @@ const partie = (over: Partial<BolAccueilPartie>): BolAccueilPartie => ({
   scenes: [],
   scenes_jouees: [],
   chapitres_joues: [],
+  scenario_termine: false,
   heros: [],
   figurants: 0,
   ...over,

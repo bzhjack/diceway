@@ -67,7 +67,7 @@ class BolAccueilTest extends TestCase
         $lue = $this->partieLue($partie->id);
 
         $this->assertSame(
-            ['id', 'compagnie_id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros', 'figurants'],
+            ['id', 'compagnie_id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'scenario_termine', 'heros', 'figurants'],
             array_keys($lue),
         );
         $this->assertSame('Les Lames', $lue['titre']);
@@ -124,6 +124,42 @@ class BolAccueilTest extends TestCase
         // Une fois passée à autre chose, elle compte.
         $partie->update(['scene_id' => null]);
         $this->assertSame([$ch1->id], $this->partieLue($partie->id)['chapitres_joues']);
+    }
+
+    /** Plus rien ne se clôt, les parties s'accumulent : le nombre de requêtes de l'accueil ne doit pas suivre leur nombre. */
+    public function test_the_home_page_does_not_query_more_with_more_parties(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $this->scene($ch1->id);
+        $axel = $this->hero('Axel');
+        $requetes = function (): int {
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+            $this->getJson('/api/bol/accueil')->assertOk();
+            DB::disableQueryLog();
+
+            return count(DB::getQueryLog());
+        };
+        $this->seat($this->partie('A', $ch1->id), $axel);
+        $avecUne = $requetes();
+
+        foreach (range(1, 5) as $i) {
+            $this->seat($this->partie("P$i", $ch1->id), $axel);
+        }
+
+        $this->assertSame($avecUne, $requetes());
+    }
+
+    /** Le scénario d'une partie n'est fini que si le MJ l'a dit. */
+    public function test_a_partie_says_if_its_scenario_is_finished(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $partie = $this->partie('A', $ch1->id);
+
+        $this->assertFalse($this->partieLue($partie->id)['scenario_termine']);
+
+        $partie->update(['scenario_termine' => true]);
+        $this->assertTrue($this->partieLue($partie->id)['scenario_termine']);
     }
 
     /** Ce qu'un changement de chapitre retirerait : les adversaires de toute sorte, pas les héros ni leurs alliés. */

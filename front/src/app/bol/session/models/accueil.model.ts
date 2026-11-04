@@ -22,7 +22,7 @@ export interface AccueilHerosCarte {
 /**
  * Une carte de la rangée « Parties » : le nom de la compagnie, son scénario (la saga, le nom d'un one shot, ou « Partie improvisée »), sa
  * teinte, ses chapitres en pastilles (une saga seulement), ses héros, et le chapitre que « Reprendre » nomme (null pour une partie
- * improvisée). `termine` : tous les chapitres du scénario sont joués par elle.
+ * improvisée). `termine` : le MJ a dit qu'elle a fini son scénario.
  */
 export interface AccueilPartie {
   id: string;

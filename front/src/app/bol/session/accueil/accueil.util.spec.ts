@@ -26,6 +26,7 @@ const partie = (over: Partial<BolAccueilPartie> = {}): BolAccueilPartie => ({
   scenes: [],
   scenes_jouees: [],
   chapitres_joues: [],
+  scenario_termine: false,
   heros: [],
   figurants: 0,
   ...over,
@@ -155,11 +156,22 @@ describe('partiesDeLAccueil', () => {
     expect(carte({scenario_id: null}).reprendre).toBeNull();
   });
 
-  it('dit le scénario terminé quand tous ses chapitres sont joués par cette partie', () => {
-    expect(carte({scenario_id: 'p10', chapitres_joues: ['p1', 'p2']}).termine).toBe(false);
-    expect(carte({scenario_id: 'p10', chapitres_joues: ['p1', 'p2', 'p10']}).termine).toBe(true);
-    expect(carte({scenario_id: 'ps', chapitres_joues: ['ps']}).termine).toBe(true);
-    expect(carte({scenario_id: null}).termine).toBe(false);
+  it('le scénario n’est terminé que si le MJ l’a dit, même avec tous ses chapitres joués', () => {
+    expect(carte({scenario_id: 'p10', chapitres_joues: ['p1', 'p2', 'p10']}).termine).toBe(false);
+    expect(carte({scenario_id: 'p10', scenario_termine: true}).termine).toBe(true);
+    expect(carte({scenario_id: 'ps', scenario_termine: true}).termine).toBe(true);
+  });
+
+  it('une partie improvisée n’a rien de terminé', () => {
+    expect(carte({scenario_id: null, scenario_termine: true}).termine).toBe(false);
+  });
+
+  it('un scénario terminé a tous ses chapitres joués, le dernier compris', () => {
+    expect(carte({scenario_id: 'p10', scenario_termine: true}).reperes.map((r) => [r.etat, r.texte])).toEqual([
+      ['joue', '1. Sacrilège à Satarla : joué'],
+      ['joue', "2. De sable et d'eau : joué"],
+      ['joue', '10. Épilogue : joué'],
+    ]);
   });
 
   it('marque la dernière jouée, et garde l’ordre de l’API', () => {

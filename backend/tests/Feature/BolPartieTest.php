@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Bol\BolFightSession;
+use App\Models\Bol\BolSaga;
+use App\Models\Bol\BolScenario;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +66,47 @@ class BolPartieTest extends TestCase
         $this->assertSame('libre', $partie->fresh()->statut);
     }
 
+    /** Le MJ dit que le scénario est fini ; il peut se raviser. */
+    public function test_the_gm_marks_the_scenario_as_finished_and_can_undo_it(): void
+    {
+        $partie = $this->partieSurChapitre();
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/scenario-termine", ['termine' => true])->assertOk()->assertJsonPath('scenario_termine', true);
+        $this->assertTrue($partie->fresh()->scenario_termine);
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/scenario-termine", ['termine' => false])->assertOk()->assertJsonPath('scenario_termine', false);
+        $this->assertFalse($partie->fresh()->scenario_termine);
+    }
+
+    /** Une partie improvisée n'a pas de scénario à finir. */
+    public function test_an_improvised_partie_cannot_be_marked_finished(): void
+    {
+        $partie = $this->partie('libre');
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/scenario-termine", ['termine' => true])->assertUnprocessable();
+        $this->assertFalse((bool) $partie->fresh()->scenario_termine);
+    }
+
+    public function test_marking_finished_answers_404_for_another_account(): void
+    {
+        $etrangere = BolFightSession::create(['titre' => 'Ailleurs', 'statut' => 'libre', 'user_id' => User::factory()->create()->id]);
+
+        $this->patchJson("/api/bol/fight-session/{$etrangere->id}/scenario-termine", ['termine' => true])->assertNotFound();
+    }
+
+    /** Une partie qui passe sur un autre chapitre rejoue : son scénario n'est plus fini. */
+    public function test_changing_chapter_clears_the_finished_mark(): void
+    {
+        $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Perle du Beshaar']);
+        $ch1 = BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => 1, 'titre' => 'Un']);
+        $ch2 = BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => 2, 'titre' => 'Deux']);
+        $partie = BolFightSession::create(['titre' => 'A', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $ch2->id, 'scenario_termine' => true, 'jouee_le' => now()]);
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/scenario", ['scenario_id' => $ch1->id])->assertOk();
+
+        $this->assertFalse($partie->fresh()->scenario_termine);
+    }
+
     /** Les tables closes d'avant redeviennent des parties qu'on reprend, datées de leur dernière activité, et leur clôture ne vaut plus chapitre joué. */
     public function test_the_migration_turns_closed_tables_into_parties(): void
     {
@@ -78,6 +121,13 @@ class BolPartieTest extends TestCase
         $this->assertSame('libre', $partie->statut);
         $this->assertSame('2026-02-02 20:00:00', $partie->jouee_le->format('Y-m-d H:i:s'));
         $this->assertNull($partie->chapitres_quittes);
+    }
+
+    private function partieSurChapitre(): BolFightSession
+    {
+        $chapitre = BolScenario::create(['user_id' => $this->user->id, 'titre' => 'Un ennui mortel']);
+
+        return BolFightSession::create(['titre' => 'A', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $chapitre->id, 'jouee_le' => now()]);
     }
 
     private function partie(string $statut): BolFightSession

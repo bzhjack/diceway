@@ -3,6 +3,7 @@
 namespace App\Http\Services\Bol;
 
 use App\Exceptions\Bol\SceneLoadNotAllowedException;
+use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionCreature;
 use App\Models\Bol\BolFightSessionDemon;
@@ -215,6 +216,22 @@ class BolSceneService
     }
 
     /**
+     * Une nouvelle partie : la compagnie sur ce chapitre, avec sa première scène chargée. Tout ou rien : si la scène ne se charge pas, la partie
+     * n'existe pas. Le verrou sur la compagnie empêche deux demandes simultanées de créer deux parties sur le même scénario.
+     *
+     * @return array{partie: BolFightSession, existante: bool}
+     */
+    public function creerPartie(string $userId, BolCompagnie $compagnie, mixed $scenarioId): array
+    {
+        return DB::transaction(function () use ($userId, $compagnie, $scenarioId) {
+            BolCompagnie::whereKey($compagnie->id)->lockForUpdate()->first();
+            ['partie' => $partie, 'existante' => $existante] = $this->fightSessionService->creerPartie($userId, $compagnie, $scenarioId);
+
+            return ['existante' => $existante, 'partie' => $existante ? $partie : $this->chargerLaPremiereScene($userId, $partie)];
+        });
+    }
+
+    /**
      * Une partie qui n'a encore joué aucune scène, qu'elle commence ou qu'on arrive à sa table : la première scène de son chapitre se charge,
      * avec ses figurants, ajoutés à ce qui est posé. Une partie qui a déjà joué une scène (même supprimée depuis) n'y perd rien : ce qui est
      * sur sa table ne se double pas. En combat, sans chapitre ou sans scène, elle reste telle quelle.
@@ -229,24 +246,33 @@ class BolSceneService
             return $partie;
         }
 
-        return $this->loadIntoSession($userId, $partie->id, $scene->id, 'add')['session'] ?? $partie;
+        return $this->avecLesIgnores($this->loadIntoSession($userId, $partie->id, $scene->id, 'add')) ?? $partie;
     }
 
     /**
      * « Changer de chapitre » : la partie passe sur ce chapitre et charge sa première scène. Les adversaires de l'ancien chapitre partent ; les
      * héros et leurs alliés restent, avec leur état. Une partie improvisée qui reçoit son scénario ne perd rien de ce qui est posé. Sans scène
-     * à charger, la table quitte juste l'ancienne scène ; en combat, seul le chapitre change. Tout ou rien : si la scène ne se charge pas, le
-     * chapitre ne change pas. Mêmes retours que `BolFightSessionService::changerChapitre`.
+     * à charger, la table quitte juste l'ancienne scène. Tout ou rien : si la scène ne se charge pas, le chapitre ne change pas. `false` : ce
+     * chapitre n'est pas du scénario de la partie ; `null` : la table n'est pas du compte.
      *
-     * @throws SceneLoadNotAllowedException si un combat a commencé entre-temps
+     * @throws SceneLoadNotAllowedException en combat : comme une scène, un chapitre attend la fin du combat
      */
     public function changerDeChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
     {
         return DB::transaction(function () use ($sessionId, $userId, $scenarioId) {
-            $ancien = $this->ownedSession($sessionId, $userId)?->scenario_id;
-            $partie = $this->fightSessionService->changerChapitre($sessionId, $userId, $scenarioId);
-            if (!$partie || $partie->scenario_id === $ancien || $partie->statut !== 'libre') {
+            $avant = $this->ownedSession($sessionId, $userId);
+            if (!$avant) {
+                return null;
+            }
+            if ($avant->statut !== 'libre' && $scenarioId !== $avant->scenario_id) {
+                throw new SceneLoadNotAllowedException();
+            }
+            $partie = $this->fightSessionService->poserSurChapitre($sessionId, $userId, $scenarioId);
+            if (!$partie) {
                 return $partie;
+            }
+            if ($partie->scenario_id === $avant->scenario_id) {
+                return $this->fightSessionService->getSessionWithRelations($sessionId);
             }
 
             $scene = $this->premiereScene($userId, $partie->scenario_id);
@@ -256,10 +282,26 @@ class BolSceneService
                 return $this->fightSessionService->getSessionWithRelations($sessionId);
             }
 
-            $mode = $ancien === null ? 'add' : 'replace';
+            $mode = $avant->scenario_id === null ? 'add' : 'replace';
 
-            return $this->loadIntoSession($userId, $sessionId, $scene->id, $mode, garderLesAllies: true)['session'] ?? $partie;
+            return $this->avecLesIgnores($this->loadIntoSession($userId, $sessionId, $scene->id, $mode, garderLesAllies: true));
         });
+    }
+
+    /**
+     * La table après un chargement automatique, qui dit combien de figurants de la scène n'existent plus (`figurants_ignores`) : personne n'a
+     * demandé ce chargement, il faut que l'écran puisse le signaler.
+     *
+     * @param array{session: ?BolFightSession, ignored: int}|null $resultat
+     */
+    private function avecLesIgnores(?array $resultat): ?BolFightSession
+    {
+        $session = $resultat['session'] ?? null;
+        if ($session && $resultat['ignored'] > 0) {
+            $session->setAttribute('figurants_ignores', $resultat['ignored']);
+        }
+
+        return $session;
     }
 
     /** @return array<string, true> les alliés à cette table, par `kind:fiche` */

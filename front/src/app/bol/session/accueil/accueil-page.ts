@@ -236,6 +236,17 @@ export class AccueilPageComponent {
       });
   }
 
+  /** Le MJ dit que la partie a fini son scénario, ou se ravise ; l'accueil se relit. Pas de confirmation : ça se défait d'un clic. */
+  protected marquerTermine(partie: AccueilPartie, termine: boolean): void {
+    this.fightSessionService
+      .marquerScenarioTermine(partie.id, termine)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.charger(),
+        error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de marquer le scénario.'), 'OK', {duration: 6000}),
+      });
+  }
+
   /** « Supprimer la partie » : après confirmation, elle disparaît pour de bon, puis l'accueil se relit. */
   protected supprimer(partie: AccueilPartie): void {
     confirmDialog(

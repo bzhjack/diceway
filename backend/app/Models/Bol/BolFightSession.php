@@ -16,17 +16,21 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'compagnie_id', 'titre', 'statut', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'etat_combat'];
+    protected $fillable = ['user_id', 'compagnie_id', 'titre', 'statut', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'scenario_termine', 'jouee_le', 'etat_combat'];
     protected $hidden = ['created_at', 'updated_at'];
-    protected $casts = ['positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'jouee_le' => 'datetime', 'etat_combat' => 'array'];
+    protected $casts = ['positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'scenario_termine' => 'boolean', 'jouee_le' => 'datetime', 'etat_combat' => 'array'];
 
     /**
      * Une table qui passe d'un chapitre à un autre (« Changer de chapitre », ou une scène d'un autre chapitre chargée) a fini le premier :
-     * il compte désormais comme joué. Passer en partie improvisée ne finit rien.
+     * il compte désormais comme joué. Passer en partie improvisée ne finit rien. Et une partie qui change de chapitre rejoue : son scénario
+     * n'est plus marqué fini.
      */
     protected static function booted(): void
     {
         static::updating(function (BolFightSession $session) {
+            if ($session->isDirty('scenario_id')) {
+                $session->scenario_termine = false;
+            }
             $quitte = $session->getOriginal('scenario_id');
             if (!$session->isDirty('scenario_id') || $quitte === null || $session->scenario_id === null) {
                 return;

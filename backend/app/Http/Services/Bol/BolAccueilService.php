@@ -26,16 +26,18 @@ class BolAccueilService
             ->withCount(['pnjs as figurants_pnj' => $adversaires, 'creatures as figurants_creature' => $adversaires, 'demons as figurants_demon' => $adversaires])
             ->orderByDesc('jouee_le')
             ->orderByDesc('created_at')
-            ->get(['id', 'compagnie_id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'created_at']);
+            ->get(['id', 'compagnie_id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'scenario_termine', 'jouee_le', 'created_at']);
         $scenarios = BolScenario::with('saga:id,titre')->where('user_id', $userId)->get(['id', 'saga_id', 'numero', 'titre']);
-        $scenesParChapitre = BolScene::where('user_id', $userId)->whereNotNull('scenario_id')->get(['id', 'scenario_id'])
+        $scenesParChapitre = BolScene::where('user_id', $userId)->whereNotNull('scenario_id')->orderBy('ordre')->get(['id', 'scenario_id', 'titre', 'lieu'])
             ->groupBy('scenario_id')
-            ->map(fn ($scenes) => $scenes->pluck('id')->map(fn ($id) => (string) $id)->all());
+            ->map(fn ($scenes) => $scenes->map(fn (BolScene $scene) => ['id' => (string) $scene->id, 'titre' => $scene->titre ?: ($scene->lieu ?: 'Scène sans titre')])->values()->all())
+            ->all();
+        $herosParPartie = $this->herosDesTables($userId, $sessions->pluck('id')->all());
         $chapitresDuCompte = $scenarios->pluck('id')->all();
 
         return [
             'derniere'  => $sessions->first()?->id,
-            'parties'   => $sessions->map(fn (BolFightSession $partie) => $this->partie($userId, $partie, $scenesParChapitre->all(), $chapitresDuCompte))
+            'parties'   => $sessions->map(fn (BolFightSession $partie) => $this->partie($partie, $scenesParChapitre, $herosParPartie[$partie->id] ?? [], $chapitresDuCompte))
                 ->values()->all(),
             'compagnies' => $this->compagnieService->liste($userId),
             'scenarios' => $scenarios->map(fn (BolScenario $scenario) => [
@@ -52,13 +54,14 @@ class BolAccueilService
      * Une partie pour l'accueil : où en est son chapitre (ses scènes, celles passées sur cette table), les chapitres qu'elle a joués, et
      * ses héros.
      *
-     * @param array<string, array<int, string>> $scenesParChapitre
-     * @param array<int, string>                $chapitresDuCompte
+     * @param array<string, array<int, array{id: string, titre: string}>> $scenesParChapitre
+     * @param array<int, array{id: string, nom: string, avatar: ?string}>  $heros
+     * @param array<int, string>                                           $chapitresDuCompte
      * @return array<string, mixed>
      */
-    private function partie(string $userId, BolFightSession $partie, array $scenesParChapitre, array $chapitresDuCompte): array
+    private function partie(BolFightSession $partie, array $scenesParChapitre, array $heros, array $chapitresDuCompte): array
     {
-        $scenes = $this->scenesDuScenario($userId, $partie->scenario_id);
+        $scenes = $scenesParChapitre[$partie->scenario_id] ?? [];
 
         return [
             'id'              => $partie->id,
@@ -71,7 +74,8 @@ class BolAccueilService
             'scenes'          => $scenes,
             'scenes_jouees'   => array_values(array_intersect(array_map('strval', $partie->scenes_jouees ?? []), array_column($scenes, 'id'))),
             'chapitres_joues' => $this->chapitresJoues($partie, $scenesParChapitre, $chapitresDuCompte),
-            'heros'           => $this->compagnie($this->herosDeLaTable($userId, $partie->id)),
+            'scenario_termine' => $partie->scenario_termine,
+            'heros'           => $heros,
             // Ce qu'un changement de chapitre retirerait : les héros et leurs alliés restent.
             'figurants'       => $partie->figurants_pnj + $partie->figurants_creature + $partie->figurants_demon,
         ];
@@ -81,8 +85,8 @@ class BolAccueilService
      * Les chapitres joués par cette partie : ceux qu'elle a quittés pour un autre chapitre, et ceux dont toutes les scènes (au moins une)
      * sont passées sur cette table, la scène en cours n'y comptant pas : on y est encore. Ce que jouent les autres parties n'y compte pas.
      *
-     * @param array<string, array<int, string>> $scenesParChapitre
-     * @param array<int, string>                $chapitresDuCompte
+     * @param array<string, array<int, array{id: string, titre: string}>> $scenesParChapitre
+     * @param array<int, string>                                           $chapitresDuCompte
      * @return array<int, string>
      */
     private function chapitresJoues(BolFightSession $partie, array $scenesParChapitre, array $chapitresDuCompte): array
@@ -90,48 +94,12 @@ class BolAccueilService
         $jouees = array_diff(array_map('strval', $partie->scenes_jouees ?? []), [(string) $partie->scene_id]);
         $joues = array_map('strval', $partie->chapitres_quittes ?? []);
         foreach ($scenesParChapitre as $chapitre => $scenes) {
-            if ($scenes !== [] && array_diff($scenes, $jouees) === []) {
+            if ($scenes !== [] && array_diff(array_column($scenes, 'id'), $jouees) === []) {
                 $joues[] = (string) $chapitre;
             }
         }
 
         return array_values(array_intersect($chapitresDuCompte, array_unique($joues)));
-    }
-
-    /**
-     * Les scènes du chapitre d'une partie, dans leur ordre : de quoi dire où en est le chapitre. Aucune sans chapitre.
-     *
-     * @return array<int, array{id: string, titre: string}>
-     */
-    private function scenesDuScenario(string $userId, ?string $scenarioId): array
-    {
-        if ($scenarioId === null) {
-            return [];
-        }
-
-        return BolScene::where('user_id', $userId)
-            ->where('scenario_id', $scenarioId)
-            ->orderBy('ordre')
-            ->get(['id', 'titre', 'lieu'])
-            ->map(fn (BolScene $scene) => ['id' => (string) $scene->id, 'titre' => $scene->titre ?: ($scene->lieu ?: 'Scène sans titre')])
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Les héros d'une table, dans le même ordre, avec ce qu'il faut pour les montrer.
-     *
-     * @param array<int, string> $herosIds
-     * @return array<int, array{id: string, nom: string, avatar: ?string}>
-     */
-    private function compagnie(array $herosIds): array
-    {
-        $heros = BolHeros::whereIn('id', $herosIds)->get(['id', 'nom', 'avatar'])->keyBy('id');
-
-        return array_values(array_filter(array_map(
-            fn (string $id) => isset($heros[$id]) ? ['id' => $id, 'nom' => $heros[$id]->nom, 'avatar' => $heros[$id]->avatar] : null,
-            $herosIds,
-        )));
     }
 
     /**
@@ -155,22 +123,24 @@ class BolAccueilService
     }
 
     /**
-     * Les héros de la table, dans l'ordre où ils y ont été posés : seulement les héros du compte (pas les PNJ ni le
-     * catalogue public, que le seuil ne liste pas) et du camp des héros (pas ceux posés côté adversaires).
+     * Les héros de chaque table, dans l'ordre où ils y ont été posés : seulement les héros du compte (pas les PNJ ni le catalogue public, que le
+     * seuil ne liste pas) et du camp des héros (pas ceux posés côté adversaires). En une lecture pour toutes les tables : elles s'accumulent.
      *
-     * @return array<int, string>
+     * @param array<int, string> $sessionIds
+     * @return array<string, array<int, array{id: string, nom: string, avatar: ?string}>>
      */
-    private function herosDeLaTable(string $userId, string $sessionId): array
+    private function herosDesTables(string $userId, array $sessionIds): array
     {
-        $heros = BolHeros::where('user_id', $userId)->where('type', 'H')->select('id');
+        $fiches = BolHeros::where('user_id', $userId)->where('type', 'H')->get(['id', 'nom', 'avatar'])->keyBy('id');
 
-        return BolFightSessionHeros::where('fight_session_id', $sessionId)
+        return BolFightSessionHeros::whereIn('fight_session_id', $sessionIds)
             ->where('camp', 'heros')
-            ->whereIn('heros_id', $heros)
             ->orderBy('id')
-            ->pluck('heros_id')
-            ->unique()
-            ->values()
+            ->get(['fight_session_id', 'heros_id'])
+            ->groupBy('fight_session_id')
+            ->map(fn ($lignes) => $lignes->pluck('heros_id')->unique()->filter(fn ($id) => isset($fiches[$id]))
+                ->map(fn ($id) => ['id' => $id, 'nom' => $fiches[$id]->nom, 'avatar' => $fiches[$id]->avatar])
+                ->values()->all())
             ->all();
     }
 }

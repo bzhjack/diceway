@@ -68,6 +68,17 @@ class BolCompagnieService
         });
     }
 
+    /** Supprime la compagnie, sauf si elle a encore des parties : ses parties passent avant. */
+    public function supprimer(BolCompagnie $compagnie): bool
+    {
+        if ($compagnie->parties()->exists()) {
+            return false;
+        }
+        $compagnie->delete();
+
+        return true;
+    }
+
     /** @return array{id: string, nom: string, heros: array<int, array{id: string, nom: string, avatar: ?string}>, parties: int} */
     private function resume(BolCompagnie $compagnie): array
     {

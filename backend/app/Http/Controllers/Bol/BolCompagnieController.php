@@ -43,10 +43,9 @@ class BolCompagnieController extends Controller
         if (!$compagnie) {
             return response()->json(['error' => 'Not found'], 404);
         }
-        if ($compagnie->parties()->exists()) {
+        if (!$this->compagnieService->supprimer($compagnie)) {
             return response()->json(['error' => 'Cette compagnie a encore des parties : supprimez-les d’abord.'], 422);
         }
-        $compagnie->delete();
 
         return response()->json(true);
     }

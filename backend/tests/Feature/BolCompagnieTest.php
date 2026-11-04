@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Services\Bol\BolFightSessionService;
 use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
@@ -273,6 +274,36 @@ class BolCompagnieTest extends TestCase
 
         $this->patchJson("/api/bol/fight-session/{$improvisee->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
         $this->patchJson("/api/bol/fight-session/{$sansScene->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
+    }
+
+    /** Si la première scène ne se charge pas, la partie n'est pas créée : on peut réessayer, sans se faire dire qu'elle existe déjà. */
+    public function test_a_failed_first_scene_leaves_no_partie_behind(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $garde = $this->hero('Garde', 'C');
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 1, 'camp' => 'adversaires'],
+        ]]);
+        $this->partialMock(BolFightSessionService::class, fn ($mock) => $mock->shouldReceive('createPnjRow')->andThrow(new \RuntimeException('panne')));
+
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch1->id])->assertServerError();
+
+        $this->assertSame(0, BolFightSession::count());
+    }
+
+    /** La première scène cite une fiche supprimée : la réponse le dit, à la création comme à l'arrivée à la table. */
+    public function test_a_first_scene_tells_how_many_extras_no_longer_exist(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $disparu = ['kind' => 'pnj', 'source_id' => '00000000-0000-0000-0000-000000000000', 'qty' => 1, 'camp' => 'adversaires'];
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => [$disparu]]);
+
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch1->id])->assertOk()->assertJsonPath('figurants_ignores', 1);
+
+        $ancienne = BolFightSession::create(['titre' => 'A', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'jouee_le' => now()]);
+        $this->patchJson("/api/bol/fight-session/{$ancienne->id}/jouer")->assertOk()->assertJsonPath('figurants_ignores', 1);
     }
 
     /** Une compagnie joue plusieurs scénarios ; deux compagnies, le même ; mais une compagnie ne joue pas deux fois le même scénario. */

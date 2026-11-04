@@ -131,6 +131,11 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
   }
 
+  /** Le MJ dit que la partie a fini son scénario, ou se ravise. */
+  marquerScenarioTermine(sessionId: string, termine: boolean): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario-termine`, {termine}));
+  }
+
   /** On entre à la table : elle devient la dernière partie jouée, et charge la première scène de son chapitre si elle n'en a aucune. Aucune
    * autre partie n'en est touchée. */
   jouer(sessionId: string): Observable<BolFightSessionModel> {

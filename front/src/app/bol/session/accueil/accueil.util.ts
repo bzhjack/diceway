@@ -119,7 +119,8 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
   const courant = findScenario(scenarios, partie.scenario_id);
   const chapitres = chapitresDuScenario(courant?.id ?? null, scenarios);
   const joues = new Set(partie.chapitres_joues);
-  const etat = (c: BolAccueilScenario): ChapitreEtat => (c.id === courant?.id ? 'en-cours' : joues.has(c.id) ? 'joue' : 'a-jouer');
+  const termine = courant !== null && partie.scenario_termine;
+  const etat = (c: BolAccueilScenario): ChapitreEtat => (termine || (c.id !== courant?.id && joues.has(c.id)) ? 'joue' : c.id === courant?.id ? 'en-cours' : 'a-jouer');
   const reperes: AccueilRepere[] =
     courant?.saga == null
       ? []
@@ -136,7 +137,7 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
     reperes,
     heros: herosCartes(partie.heros),
     reprendre: courant ? libelleDeChapitre(courant.numero, courant.titre) : null,
-    termine: chapitres.length > 0 && chapitres.every((c) => joues.has(c.id)),
+    termine,
     derniere: partie.id === derniere,
     scenarioId: courant?.id ?? null,
     figurantsARetirer: courant && partie.statut !== 'combat' ? partie.figurants : 0,

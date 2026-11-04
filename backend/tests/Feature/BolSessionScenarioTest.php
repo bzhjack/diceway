@@ -266,8 +266,8 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
     }
 
-    /** En combat, on ne touche pas à la table : seul le chapitre change. */
-    public function test_changing_chapter_in_combat_leaves_the_table_alone(): void
+    /** Pendant un combat, on ne change pas de chapitre, comme on n'y charge pas de scène : rien ne bouge. */
+    public function test_changing_chapter_is_refused_during_a_combat(): void
     {
         [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
         $taverne = $this->sceneAvec($ch1->id, 'La taverne', 0, $this->pnj('Aubergiste'));
@@ -276,12 +276,24 @@ class BolSessionScenarioTest extends TestCase
         $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $taverne->id, 'mode' => 'add'])->assertOk();
         $session->fresh()->update(['statut' => 'combat']);
 
-        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])
-            ->assertOk()
-            ->assertJsonPath('scenario_id', $ch2->id)
-            ->assertJsonPath('scene_id', $taverne->id);
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertStatus(409);
 
+        $fresh = $session->fresh();
+        $this->assertSame($ch1->id, $fresh->scenario_id);
+        $this->assertSame($taverne->id, $fresh->scene_id);
         $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
+    /** La première scène du chapitre cite une fiche supprimée : le changement a lieu, et la réponse le dit. */
+    public function test_changing_chapter_tells_how_many_extras_no_longer_exist(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch2->id, 'titre' => 'Le désert', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => '00000000-0000-0000-0000-000000000000', 'qty' => 1, 'camp' => 'adversaires'],
+        ]]);
+        $session = $this->tableSession($ch1->id);
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertOk()->assertJsonPath('figurants_ignores', 1);
     }
 
     /** Une partie improvisée qui reçoit un scénario charge sa première scène, sans rien retirer de ce qui est posé à la main. */
@@ -380,7 +392,7 @@ class BolSessionScenarioTest extends TestCase
 
     private function sceneOf(?string $scenarioId): BolScene
     {
-        return BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenarioId, 'titre' => 'Scène', 'ordre' => 0, 'distribution' => []]);
+        return $this->sceneAvec($scenarioId, 'Scène', 0, null);
     }
 
     private function scenario(string $titre, ?User $owner = null): BolScenario

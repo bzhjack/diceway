@@ -64,12 +64,12 @@ class BolFightSessionController extends Controller
         if (!$compagnie) {
             return response()->json(['error' => 'Not found'], 404);
         }
-        ['partie' => $partie, 'existante' => $existante] = $this->fightSessionService->creerPartie(Auth::id(), $compagnie, $request->input('scenario_id'));
+        ['partie' => $partie, 'existante' => $existante] = $this->sceneService->creerPartie(Auth::id(), $compagnie, $request->input('scenario_id'));
         if ($existante) {
             return response()->json(['error' => 'Cette compagnie joue déjà ce scénario.', 'partie_id' => $partie->id], 422);
         }
 
-        return response()->json($this->sceneService->chargerLaPremiereScene(Auth::id(), $partie));
+        return response()->json($partie);
     }
 
     public function delete(string $id)
@@ -245,6 +245,21 @@ class BolFightSessionController extends Controller
         }
         if ($session === false) {
             return response()->json(['error' => 'Ce chapitre n’est pas du scénario de la partie.'], 422);
+        }
+
+        return response()->json($session);
+    }
+
+    public function marquerScenarioTermine(Request $request, string $id)
+    {
+        $data = $request->validate(['termine' => 'required|boolean']);
+        $session = $this->fightSessionService->marquerScenarioTermine($id, Auth::id(), $data['termine']);
+
+        if ($session === null) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        if ($session === false) {
+            return response()->json(['error' => 'Une partie improvisée n’a pas de scénario à terminer.'], 422);
         }
 
         return response()->json($session);
