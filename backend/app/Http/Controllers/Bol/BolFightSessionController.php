@@ -8,6 +8,7 @@ use App\Exceptions\Bol\FuiteImpossibleException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolCompagnieService;
 use App\Http\Services\Bol\BolFightSessionService;
+use App\Http\Services\Bol\BolSceneService;
 use App\Http\Services\Bol\BolSceneDistribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,7 @@ class BolFightSessionController extends Controller
     public function __construct(
         private readonly BolFightSessionService $fightSessionService,
         private readonly BolCompagnieService $compagnieService,
+        private readonly BolSceneService $sceneService,
     ) {}
 
     public function getAll()
@@ -66,7 +68,7 @@ class BolFightSessionController extends Controller
             return response()->json(['error' => 'Cette compagnie joue déjà ce scénario.', 'partie_id' => $partie->id], 422);
         }
 
-        return response()->json($partie);
+        return response()->json($this->sceneService->chargerLaPremiereScene(Auth::id(), $partie));
     }
 
     public function delete(string $id)

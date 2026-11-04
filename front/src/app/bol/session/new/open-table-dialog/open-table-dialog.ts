@@ -81,13 +81,13 @@ export class OpenTableDialogComponent {
 
   protected readonly canLaunch = computed(() => this.heros().length > 0 && !this.partieExistante() && !this.launching() && !this.loadingAccueil());
 
-  /** « Choisir un scénario » : les sagas, puis les one shots ; celui du chapitre choisi est coché. */
+  /** « Choisir un scénario » : les sagas, puis les one shots ; celui du chapitre choisi est en gras. */
   protected readonly scenariosAChoisir = computed(() => {
     const courant = new Set(chapitresDuScenario(this.scenarioId(), this.scenarios()).map((c) => c.id));
     return scenariosDuCompte(this.scenarios()).map((choix) => ({...choix, choisi: choix.chapitres.some((c) => courant.has(c.id))}));
   });
 
-  /** « Chapitre de départ » : les chapitres du scénario choisi, rien pour un one shot ; le choisi est coché. */
+  /** « Chapitre de départ » : les chapitres du scénario choisi, rien pour un one shot ; le choisi est en gras. */
   protected readonly chapitresDeDepart = computed(() => {
     if (!this.scenario()?.saga) {
       return [];

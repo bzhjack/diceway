@@ -217,8 +217,10 @@ describe('AccueilPageComponent', () => {
 
     item('Changer de chapitre').click();
     await stable();
-    expect(items().filter((b) => /^\d\./.test(texte(b)?.replace(/^check\s*/, '') ?? '')).map((b) => texte(b))).toEqual([
-      'check1. Sacrilège à Satarla, en cours',
+    expect(document.querySelectorAll('.acc-menu-courant').length).toBe(1);
+    expect(document.querySelector('.acc-menu-courant')?.textContent).toBe('1. Sacrilège à Satarla');
+    expect(items().filter((b) => /^\d\./.test(texte(b) ?? '')).map((b) => texte(b))).toEqual([
+      '1. Sacrilège à Satarla, en cours',
       "2. De sable et d'eau",
     ]);
     item("2. De sable et d'eau").click();
@@ -237,7 +239,7 @@ describe('AccueilPageComponent', () => {
     await stable();
 
     expect(texte(item('1. Sacrilège à Satarla'))).toBe('1. Sacrilège à Satarla · joué');
-    expect(texte(item("2. De sable et d'eau"))).toBe("check2. De sable et d'eau, en cours");
+    expect(texte(item("2. De sable et d'eau"))).toBe("2. De sable et d'eau, en cours");
   });
 
   it('une partie improvisée choisit un scénario, puis un de ses chapitres', async () => {

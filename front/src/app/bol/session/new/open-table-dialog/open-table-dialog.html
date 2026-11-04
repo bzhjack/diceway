@@ -112,28 +112,22 @@
     <button mat-menu-item type="button" (click)="choisirCompagnie(c.id)">{{ c.nom }}</button>
   }
 </mat-menu>
-<!-- « Choisir un scénario » : les sagas, puis les one shots ; la partie part du premier chapitre du scénario choisi. -->
+<!-- « Choisir un scénario » : les sagas, puis les one shots ; la partie part du premier chapitre du scénario choisi, en gras. -->
 <mat-menu #menuScenarios="matMenu">
   @for (scenario of scenariosAChoisir(); track scenario.id) {
     <button mat-menu-item type="button" (click)="choisirScenario(scenario.chapitres)">
-      @if (scenario.choisi) {
-        <mat-icon>check</mat-icon>
-      }
-      <span>{{ scenario.nom }}</span>
+      <span [class.otd-menu-choisi]="scenario.choisi">{{ scenario.nom }}</span>
       @if (scenario.choisi) {
         <span class="sr-only">, choisi</span>
       }
     </button>
   }
 </mat-menu>
-<!-- « Chapitre de départ » : les chapitres du scénario choisi ; le choisi est coché. -->
+<!-- « Chapitre de départ » : les chapitres du scénario choisi ; le choisi est en gras. -->
 <mat-menu #menuChapitres="matMenu">
   @for (chapitre of chapitresDeDepart(); track chapitre.id) {
     <button mat-menu-item type="button" (click)="choisirChapitre(chapitre.id)">
-      @if (chapitre.choisi) {
-        <mat-icon>check</mat-icon>
-      }
-      <span>{{ chapitre.libelle }}</span>
+      <span [class.otd-menu-choisi]="chapitre.choisi">{{ chapitre.libelle }}</span>
       @if (chapitre.choisi) {
         <span class="sr-only">, choisi</span>
       }

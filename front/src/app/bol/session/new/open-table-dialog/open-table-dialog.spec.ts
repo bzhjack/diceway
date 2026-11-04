@@ -171,8 +171,14 @@ describe('OpenTableDialogComponent', () => {
       bouton('Choisir un scénario').click();
       await stable();
       expect(items().map((b) => b.textContent?.trim())).toEqual(['Le Dieu voilé', 'Perle du Beshaar', 'premier scénario']);
+      expect(document.querySelectorAll('.otd-menu-choisi').length).toBe(0);
       item('Le Dieu voilé').click();
       await stable();
+
+      bouton('Choisir un scénario').click();
+      await stable();
+      expect(document.querySelectorAll('.mat-mdc-menu-panel mat-icon').length).toBe(0);
+      expect([...document.querySelectorAll('.otd-menu-choisi')].map((e) => e.textContent)).toEqual(['Le Dieu voilé']);
 
       expect(texte('.otd-chapitre-place')).toBe('Le Dieu voilé › Introduction');
       expect(texte('.otd-chapitre-nom')).toBe('La colère de Nemmereth');
@@ -184,10 +190,13 @@ describe('OpenTableDialogComponent', () => {
       bouton('Chapitre de départ').click();
       await stable();
       expect(items().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
-        'check1. Sacrilège à Satarla, choisi',
+        '1. Sacrilège à Satarla, choisi',
         "2. De sable et d'eau",
         "3. Le tombeau d'Urzûlzalinaar",
       ]);
+      // Le choisi est en gras : ni coche, ni décalage de la ligne.
+      expect(document.querySelectorAll('.mat-mdc-menu-panel mat-icon').length).toBe(0);
+      expect([...document.querySelectorAll('.otd-menu-choisi')].map((e) => e.textContent)).toEqual(['1. Sacrilège à Satarla']);
       item('3. Le tombeau').click();
       await stable();
 

@@ -227,10 +227,7 @@
       <ng-template matMenuContent let-partie="partie" let-chapitres="chapitres">
         @for (chapitre of chapitres; track chapitre.id) {
           <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">
-            @if (chapitre.courant) {
-              <mat-icon>check</mat-icon>
-            }
-            <span>{{ chapitre.libelle }}</span>
+            <span [class.acc-menu-courant]="chapitre.courant">{{ chapitre.libelle }}</span>
             @if (chapitre.courant) {
               <span class="sr-only">, en cours</span>
             }

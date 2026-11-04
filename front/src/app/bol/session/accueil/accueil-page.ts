@@ -186,7 +186,7 @@ export class AccueilPageComponent {
       });
   }
 
-  /** Les chapitres du scénario d'une partie, pour « Changer de chapitre » : le courant est coché, ceux qu'elle a joués sont marqués. Ses
+  /** Les chapitres du scénario d'une partie, pour « Changer de chapitre » : le courant est en gras, ceux qu'elle a joués sont marqués. Ses
    * pastilles sont dans le même ordre (un one shot n'en a pas, et n'a qu'un chapitre, le courant). */
   protected chapitresDe(partie: AccueilPartie): {id: string; libelle: string; courant: boolean; joue: boolean}[] {
     return chapitresDuScenario(partie.scenarioId, this.data()?.scenarios ?? []).map((c, i) => ({

@@ -612,7 +612,11 @@
   text-align: center;
 }
 
-// Le menu est dans un calque : hors de la carte, il reste à ce composant.
+// Le menu est dans un calque : hors de la carte, il reste à ce composant. Le chapitre en cours y est en gras.
+.acc-menu-courant {
+  font-weight: 800;
+}
+
 .acc-menu-etat {
   font-size: 0.8rem;
   color: var(--dw-forge-bone);

@@ -210,6 +210,24 @@ class BolSceneService
     }
 
     /**
+     * Une partie qui commence : la première scène de son chapitre de départ se charge, avec ses figurants. Sans chapitre ou sans scène, la
+     * partie reste telle quelle.
+     */
+    public function chargerLaPremiereScene(string $userId, BolFightSession $partie): BolFightSession
+    {
+        $scene = $partie->scenario_id === null ? null : BolScene::where('user_id', $userId)
+            ->where('scenario_id', $partie->scenario_id)
+            ->orderBy('ordre')
+            ->orderBy('created_at')
+            ->first();
+        if (!$scene) {
+            return $partie;
+        }
+
+        return $this->loadIntoSession($userId, $partie->id, $scene->id, 'add')['session'] ?? $partie;
+    }
+
+    /**
      * Le chapitre qu'une scène chargée ou enregistrée donne à la partie : le sien, s'il est du scénario de la partie (ou si la partie
      * improvise encore). Une scène « On improvise » (sans chapitre) ou d'un autre scénario ne touche pas au chapitre de la partie.
      *

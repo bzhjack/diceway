@@ -340,3 +340,8 @@
   font-weight: 700;
   color: var(--dw-forge-hot-text);
 }
+
+// ── Le choix en cours dans les menus du dialogue : la ligne en gras ──────────────────────────────────────────────────────────────
+.otd-menu-choisi {
+  font-weight: 800;
+}

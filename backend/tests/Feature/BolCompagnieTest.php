@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
+use App\Models\Bol\BolFightSessionPnj;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
@@ -145,6 +146,61 @@ class BolCompagnieTest extends TestCase
 
         $partie->assertJsonPath('titre', 'Les Lames')->assertJsonPath('compagnie_id', $compagnie->id)->assertJsonPath('scenario_id', $ch1->id);
         $this->assertSame([$axel->id], $this->herosDe($partie->json('id')));
+    }
+
+    /** Une partie qui commence charge la première scène de son chapitre de départ : son décor et ses figurants sont en place. */
+    public function test_a_new_partie_loads_the_first_scene_of_its_chapter(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $allie = $this->hero('Allié', 'C');
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'Le temple', 'ordre' => 2, 'distribution' => []]);
+        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $allie->id, 'qty' => 1, 'camp' => 'adversaires'],
+        ]]);
+
+        $partie = $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch1->id])->assertOk();
+
+        $partie->assertJsonPath('scene_id', $premiere->id);
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $partie->json('id'))->count());
+        $this->assertSame([$premiere->id], BolFightSession::find($partie->json('id'))->scenes_jouees);
+        $this->assertSame($ch1->id, BolFightSession::find($partie->json('id'))->scenario_id);
+    }
+
+    /** C'est la première scène du chapitre de départ choisi, pas celle du premier chapitre du scénario. */
+    public function test_a_partie_started_further_loads_the_first_scene_of_that_chapter(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'Avant', 'ordre' => 0, 'distribution' => []]);
+        $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch2->id, 'titre' => 'Ici', 'ordre' => 0, 'distribution' => []]);
+
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch2->id])
+            ->assertOk()
+            ->assertJsonPath('scene_id', $scene->id);
+    }
+
+    /** Sans chapitre, ou sur un chapitre sans scène, il n'y a rien à charger. */
+    public function test_a_partie_without_scene_to_load_starts_empty(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id])->assertOk()->assertJsonPath('scene_id', null);
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch1->id])->assertOk()->assertJsonPath('scene_id', null);
+    }
+
+    /** Reprendre une partie ne recharge rien : seule sa création charge la première scène. */
+    public function test_entering_a_partie_again_keeps_its_current_scene(): void
+    {
+        $compagnie = $this->compagnie('Les Lames', [$this->hero('Axel')]);
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
+        $seconde = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'Le temple', 'ordre' => 1, 'distribution' => []]);
+        $id = $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $compagnie->id, 'scenario_id' => $ch1->id])->assertOk()->json('id');
+        $this->postJson("/api/bol/fight-session/{$id}/load-scene", ['scene_id' => $seconde->id, 'mode' => 'add'])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$id}/jouer")->assertOk()->assertJsonPath('scene_id', $seconde->id);
     }
 
     /** Une compagnie joue plusieurs scénarios ; deux compagnies, le même ; mais une compagnie ne joue pas deux fois le même scénario. */
