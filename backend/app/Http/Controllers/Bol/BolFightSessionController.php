@@ -64,6 +64,9 @@ class BolFightSessionController extends Controller
         if (!$compagnie) {
             return response()->json(['error' => 'Not found'], 404);
         }
+        if ($compagnie->heros()->doesntExist()) {
+            return response()->json(['error' => 'Cette compagnie n’a pas de héros : ajoutez-lui en un d’abord.'], 422);
+        }
         ['partie' => $partie, 'existante' => $existante] = $this->sceneService->creerPartie(Auth::id(), $compagnie, $request->input('scenario_id'));
         if ($existante) {
             return response()->json(['error' => 'Cette compagnie joue déjà ce scénario.', 'partie_id' => $partie->id], 422);

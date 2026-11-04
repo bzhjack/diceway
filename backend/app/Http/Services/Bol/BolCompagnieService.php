@@ -71,12 +71,16 @@ class BolCompagnieService
     /** Supprime la compagnie, sauf si elle a encore des parties : ses parties passent avant. */
     public function supprimer(BolCompagnie $compagnie): bool
     {
-        if ($compagnie->parties()->exists()) {
-            return false;
-        }
-        $compagnie->delete();
+        return DB::transaction(function () use ($compagnie) {
+            // Le même verrou que la création d'une partie : elle ne peut pas arriver entre ce contrôle et la suppression.
+            BolCompagnie::whereKey($compagnie->id)->lockForUpdate()->first();
+            if ($compagnie->parties()->exists()) {
+                return false;
+            }
+            $compagnie->delete();
 
-        return true;
+            return true;
+        });
     }
 
     /** @return array{id: string, nom: string, heros: array<int, array{id: string, nom: string, avatar: ?string}>, parties: int} */

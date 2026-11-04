@@ -127,7 +127,7 @@ class BolSceneService
 
     public function delete(string $userId, string $sceneId): void
     {
-        BolScene::where('id', $sceneId)->where('user_id', $userId)->delete();
+        DB::transaction(fn () => BolScene::where('id', $sceneId)->where('user_id', $userId)->first()?->delete());
     }
 
     /**

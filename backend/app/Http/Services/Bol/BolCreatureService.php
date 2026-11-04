@@ -7,6 +7,7 @@ use App\Models\Bol\BolCreatureCapacite;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class BolCreatureService
 {
@@ -88,7 +89,7 @@ class BolCreatureService
 
     public function delete(BolCreature $creature): void
     {
-        $creature->delete();
+        DB::transaction(fn () => $creature->delete());
         Cache::forget(BolCache::creatures(Auth::id()));
     }
 

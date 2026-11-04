@@ -6,6 +6,8 @@ use App\Models\Bol\BolArme;
 use App\Models\Bol\BolArmure;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
+use App\Models\Bol\BolFightSession;
+use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosArme;
 use App\Models\Bol\BolHerosArmure;
@@ -111,7 +113,15 @@ class BolHerosService
 
     public function delete(BolHeros $heros): void
     {
-        $heros->delete();
+        DB::transaction(fn () => $heros->delete());
+    }
+
+    /** Assis à une table en plein combat ? Sa ligne y disparaîtrait avec sa fiche : le combat doit finir d'abord. */
+    public function enCombat(BolHeros $heros): bool
+    {
+        return BolFightSession::where('statut', 'combat')
+            ->whereIn('id', BolFightSessionHeros::where('heros_id', $heros->id)->select('fight_session_id'))
+            ->exists();
     }
 
     /** Ajuste l'héroïsme d'un héros (delta positif ou négatif), borné à 0 minimum. */

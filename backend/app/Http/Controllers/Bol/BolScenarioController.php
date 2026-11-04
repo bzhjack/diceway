@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolScenarioService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class BolScenarioController extends Controller
@@ -41,7 +42,10 @@ class BolScenarioController extends Controller
 
     public function delete(string $id)
     {
-        $this->scenarioService->delete($id);
+        if (!$this->scenarioService->supprimer($id, (string) Auth::id())) {
+            return response()->json(['message' => 'Une partie joue ce chapitre : changez-la de chapitre ou supprimez-la d’abord.'], 409);
+        }
+
         return response()->json(true);
     }
 }

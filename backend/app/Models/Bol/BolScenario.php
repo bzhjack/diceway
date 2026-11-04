@@ -21,6 +21,25 @@ class BolScenario extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = ['numero' => 'integer'];
 
+    /** Un scénario n'existe que par ses chapitres : il part avec le dernier, qu'on le supprime ou qu'un nouveau titre le range ailleurs. */
+    protected static function booted(): void
+    {
+        $sansChapitre = function (?string $sagaId): void {
+            if ($sagaId !== null && !self::where('saga_id', $sagaId)->exists()) {
+                BolSaga::whereKey($sagaId)->delete();
+            }
+        };
+        static::updated(function (BolScenario $chapitre) use ($sansChapitre): void {
+            if ($chapitre->wasChanged('saga_id')) {
+                $sansChapitre($chapitre->getOriginal('saga_id'));
+            }
+        });
+        static::deleted(function (BolScenario $chapitre) use ($sansChapitre): void {
+            BolImportRef::where('entity_kind', 'scenario')->where('entity_id', $chapitre->id)->delete();
+            $sansChapitre($chapitre->saga_id);
+        });
+    }
+
     public function saga(): BelongsTo
     {
         return $this->belongsTo(BolSaga::class, 'saga_id', 'id');

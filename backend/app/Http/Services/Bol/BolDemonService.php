@@ -7,6 +7,7 @@ use App\Models\Bol\BolDemonPouvoir;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class BolDemonService
 {
@@ -89,7 +90,7 @@ class BolDemonService
 
     public function delete(BolDemon $demon): void
     {
-        $demon->delete();
+        DB::transaction(fn () => $demon->delete());
         Cache::forget(BolCache::demons(Auth::id()));
     }
 

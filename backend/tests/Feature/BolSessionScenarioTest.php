@@ -351,16 +351,6 @@ class BolSessionScenarioTest extends TestCase
         $this->assertNull($table->fresh()->scenario_id);
     }
 
-    public function test_deleting_the_scenario_clears_it_on_the_table(): void
-    {
-        $scenario = $this->scenario('Le Dieu voilé');
-        $session = $this->tableSession($scenario->id);
-
-        $this->deleteJson("/api/bol/scenario/delete/{$scenario->id}")->assertOk();
-
-        $this->assertNull($session->fresh()->scenario_id);
-    }
-
     /** @return array<int, BolScenario> les chapitres 1 à `$n` d'une saga du compte */
     private function saga(string $titre, int $n): array
     {
