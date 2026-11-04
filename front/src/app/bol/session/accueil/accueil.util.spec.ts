@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilModel, BolAccueilPartie, BolAccueilScenario} from '../../models/bol-accueil.model';
-import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosDuCompte, situerScenario, teinteDeScenario} from './accueil.util';
+import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosDuCompte, scenariosLibresPour, situerScenario, teinteDeScenario} from './accueil.util';
 import {chapitre} from '../chapitre.testing';
 
 const S: BolAccueilScenario[] = [
@@ -17,6 +17,7 @@ const S: BolAccueilScenario[] = [
 
 const partie = (over: Partial<BolAccueilPartie> = {}): BolAccueilPartie => ({
   id: 't',
+  compagnie_id: 'c1',
   titre: 'Les Lames de Satarla',
   statut: 'libre',
   jouee_le: '2026-11-04T10:00:00+00:00',
@@ -32,8 +33,9 @@ const partie = (over: Partial<BolAccueilPartie> = {}): BolAccueilPartie => ({
 const accueil = (parties: BolAccueilPartie[], derniere = parties[0]?.id ?? null): BolAccueilModel => ({
   derniere,
   parties,
+  compagnies: [],
   scenarios: S,
-  comptes: {heros: 0, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: parties.length},
+  comptes: {heros: 0, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: parties.length, compagnies: 0},
 });
 
 const carte = (over: Partial<BolAccueilPartie> = {}) => partiesDeLAccueil(accueil([partie(over)]))[0];
@@ -74,6 +76,36 @@ describe('scenariosDuCompte', () => {
       ],
     });
     expect(choix[4]).toEqual({id: 'ps', nom: 'premier scénario', oneShot: true, teinte: 0, chapitres: [{id: 'ps', libelle: 'premier scénario'}]});
+  });
+});
+
+describe('scenariosLibresPour', () => {
+  const noms = (partieId: string, parties: BolAccueilPartie[]) => scenariosLibresPour(partieId, accueil(parties)).map((c) => c.nom);
+  const improvisee = partie({id: 'imp', compagnie_id: 'c1', scenario_id: null});
+
+  it('ne propose pas un scénario que sa compagnie joue déjà, quel que soit le chapitre où elle en est', () => {
+    expect(noms('imp', [improvisee, partie({id: 'a', compagnie_id: 'c1', scenario_id: 'p2'})])).not.toContain('Perle du Beshaar');
+  });
+
+  it('ne propose pas un one shot que sa compagnie joue déjà', () => {
+    expect(noms('imp', [improvisee, partie({id: 'a', compagnie_id: 'c1', scenario_id: 'ps'})])).not.toContain('premier scénario');
+  });
+
+  it('propose ce que joue une autre compagnie', () => {
+    expect(noms('imp', [improvisee, partie({id: 'a', compagnie_id: 'c2', scenario_id: 'p2'})])).toContain('Perle du Beshaar');
+  });
+
+  it('une autre partie improvisée de la compagnie n’enlève rien', () => {
+    const tous = noms('imp', [improvisee]);
+
+    expect(noms('imp', [improvisee, partie({id: 'b', compagnie_id: 'c1', scenario_id: null})])).toEqual(tous);
+    expect(tous).toHaveLength(5);
+  });
+
+  it('une partie sans compagnie garde tous les scénarios', () => {
+    const sans = partie({id: 'imp', compagnie_id: null, scenario_id: null});
+
+    expect(noms('imp', [sans, partie({id: 'a', compagnie_id: null, scenario_id: 'p2'})])).toHaveLength(5);
   });
 });
 

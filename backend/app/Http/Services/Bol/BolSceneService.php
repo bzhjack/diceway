@@ -217,7 +217,7 @@ class BolSceneService
      */
     private function scenarioDeLaScene(BolScene $scene, BolFightSession $session): array
     {
-        return $scene->scenario_id !== null && BolScenario::dansLeScenario($session->scenario_id, $scene->scenario_id)
+        return $scene->scenario_id !== null && $session->peutPasserSur($scene->scenario_id)
             ? ['scenario_id' => $scene->scenario_id]
             : [];
     }

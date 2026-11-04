@@ -10,15 +10,18 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolAccueilComptes, BolAccueilModel} from '../../models/bol-accueil.model';
+import {BolCompagnieModel} from '../../models/bol-compagnie.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
-import {AccueilPartie} from '../models/accueil.model';
-import {OpenTableData} from '../models/open-table.model';
+import {AccueilPartie, AccueilScenarioChoix} from '../models/accueil.model';
+import {CompagnieDialogData} from '../models/compagnie-dialog.model';
+import {OpenTableData, OpenTableResultat} from '../models/open-table.model';
+import {CompagnieDialogComponent} from '../new/compagnie-dialog/compagnie-dialog';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
-import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosDuCompte} from './accueil.util';
+import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosLibresPour} from './accueil.util';
 import {libelleDeChapitre} from '../scenario.util';
 
 interface AccueilBibliotheque {
@@ -36,6 +39,7 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
   {cle: 'demons', label: 'Démons', route: '/library/demons', creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
   {cle: 'armes', label: 'Armes', route: '/library/weapons'},
   {cle: 'armures', label: 'Armures', route: '/library/armors'},
+  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies'},
   {cle: 'sessions', label: 'Parties', route: '/library/sessions'},
 ];
 
@@ -79,8 +83,14 @@ export class AccueilPageComponent {
     return data && derniere ? bandeauDePartie(derniere, data.scenarios) : null;
   });
 
-  /** Les scénarios du compte, pour « Choisir un scénario » d'une partie improvisée. */
-  protected readonly scenarios = computed(() => scenariosDuCompte(this.data()?.scenarios ?? []));
+  /** Pas de partie sans compagnie : « + Partie » attend qu'il y en ait une. */
+  protected readonly aDesCompagnies = computed(() => (this.data()?.compagnies.length ?? 0) > 0);
+
+  /** « Choisir un scénario » d'une partie improvisée : ceux que sa compagnie ne joue pas déjà. */
+  protected scenariosDe(partie: AccueilPartie): AccueilScenarioChoix[] {
+    const data = this.data();
+    return data ? scenariosLibresPour(partie.id, data) : [];
+  }
 
   protected readonly bibliotheques = computed(() => {
     const comptes = this.data()?.comptes ?? null;
@@ -89,15 +99,20 @@ export class AccueilPageComponent {
 
   constructor() {
     this.charger();
-    // `/session/new` (le menu du compte, la palette de la table, le retour de « Créer un héros ») mène ici avec `?table=nouvelle` : le
+    // `/session/new` (le menu du compte, la palette de la table, le retour de « Créer un héros ») mène ici avec `?table=nouvelle` ou `compagnie` : le
     // dialogue s'ouvre, et l'adresse redevient celle de l'accueil.
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
-      if (params.get('table') !== 'nouvelle') {
+      const table = params.get('table');
+      if (table !== 'nouvelle' && table !== 'compagnie') {
         return;
       }
       const scenario = params.get('scenario');
       void this.router.navigate([], {queryParams: {table: null, scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
-      this.nouvellePartie(scenario);
+      if (table === 'compagnie') {
+        this.nouvelleCompagnie();
+      } else {
+        this.nouvellePartie(scenario);
+      }
     });
     // Le carrousel n'existe qu'une fois l'accueil arrivé ; sa largeur change avec la fenêtre.
     effect((onCleanup) => {
@@ -132,16 +147,43 @@ export class AccueilPageComponent {
     rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
   }
 
-  /** Le dialogue « Nouvelle partie », sur ce chapitre (null : à choisir), avec ce que l'accueil a déjà lu. Il mène à la table. */
+  /** Le dialogue « Nouvelle partie » : une compagnie sur un scénario, avec ce que l'accueil a déjà lu. Il mène à la table ; s'il manque une
+   * compagnie, il ramène ici pour en créer une. */
   protected nouvellePartie(scenarioId: string | null = null): void {
-    this.dialog.open<OpenTableDialogComponent, OpenTableData, boolean>(OpenTableDialogComponent, {
-      data: {scenarioId, accueil: this.data()},
-      width: 'min(1120px, 94vw)',
-      maxWidth: '94vw',
-      ariaLabelledBy: 'otd-titre',
-      // La nouvelle partie attend d'abord le nom de sa compagnie.
-      autoFocus: '.otd-nom input',
-    });
+    this.dialog
+      .open<OpenTableDialogComponent, OpenTableData, OpenTableResultat>(OpenTableDialogComponent, {
+        data: {scenarioId, accueil: this.data()},
+        width: 'min(1120px, 94vw)',
+        maxWidth: '94vw',
+        ariaLabelledBy: 'otd-titre',
+        autoFocus: 'first-heading',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resultat) => {
+        if (resultat === 'compagnie') {
+          this.nouvelleCompagnie();
+        }
+      });
+  }
+
+  /** Le dialogue « Nouvelle compagnie » : un nom et des héros. Une fois créée, l'accueil se relit (« + Partie » devient possible). */
+  protected nouvelleCompagnie(): void {
+    this.dialog
+      .open<CompagnieDialogComponent, CompagnieDialogData, BolCompagnieModel>(CompagnieDialogComponent, {
+        data: {compagnie: null},
+        width: 'min(720px, 94vw)',
+        maxWidth: '94vw',
+        ariaLabelledBy: 'otd-titre',
+        autoFocus: '.otd-nom input',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((creee) => {
+        if (creee) {
+          this.charger();
+        }
+      });
   }
 
   /** Les chapitres du scénario d'une partie, pour « Changer de chapitre » : le courant est coché, ceux qu'elle a joués sont marqués. Ses

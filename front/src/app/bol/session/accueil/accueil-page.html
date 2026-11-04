@@ -6,8 +6,8 @@
         <mat-icon>play_arrow</mat-icon> Reprendre
       </a>
     }
-    <button mat-stroked-button type="button" (click)="nouvellePartie()">
-      <mat-icon>add</mat-icon> Nouvelle partie
+    <button mat-stroked-button type="button" (click)="nouvelleCompagnie()">
+      <mat-icon>add</mat-icon> Nouvelle compagnie
     </button>
     <bol-account-menu />
   </dw-compact-bar>
@@ -19,15 +19,15 @@
         <h1 class="acc-titre">Que joue-t-on ce soir ?</h1>
       </div>
       <div class="acc-entete-actions">
-        <button mat-stroked-button type="button" (click)="nouvellePartie()">
-          <mat-icon>add</mat-icon> Nouvelle partie
+        <button mat-stroked-button type="button" (click)="nouvelleCompagnie()">
+          <mat-icon>add</mat-icon> Nouvelle compagnie
         </button>
         <bol-account-menu />
       </div>
     </header>
 
     <!-- La dernière partie jouée, sur l'illustration du tableau de bord : où en est l'histoire, qui y est assis, de quoi la reprendre ; sans
-         partie, de quoi en créer une. Tant que l'accueil n'a pas répondu (ou s'il a échoué), le bandeau n'affirme rien. -->
+         partie, ce qu'il faut pour en lancer une (d'abord une compagnie). Tant que l'accueil n'a pas répondu (ou s'il a échoué), le bandeau n'affirme rien. -->
     <section class="acc-soir" aria-labelledby="acc-soir-titre" [attr.aria-busy]="chargement()">
       <img class="acc-soir-image" ngSrc="assets/bol/dashboard-header.webp" alt="" fill priority />
       <div class="acc-soir-contenu">
@@ -101,12 +101,20 @@
         } @else if (chargement()) {
           <h2 id="acc-soir-titre" class="acc-soir-titre">La partie du soir</h2>
           <p class="acc-soir-texte" role="status">Chargement…</p>
-        } @else {
+        } @else if (aDesCompagnies()) {
           <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune partie</h2>
-          <p class="acc-soir-texte">Crée une partie : le nom de sa compagnie, son scénario et ses héros.</p>
+          <p class="acc-soir-texte">Associe une compagnie à un scénario pour lancer une partie.</p>
           <div>
             <button mat-flat-button type="button" (click)="nouvellePartie()">
-              <mat-icon>add</mat-icon> Nouvelle partie
+              <mat-icon>add</mat-icon> Partie
+            </button>
+          </div>
+        } @else {
+          <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune compagnie</h2>
+          <p class="acc-soir-texte">Il faut d’abord créer une compagnie pour lancer une partie : un nom et ses héros.</p>
+          <div>
+            <button mat-flat-button type="button" (click)="nouvelleCompagnie()">
+              <mat-icon>add</mat-icon> Nouvelle compagnie
             </button>
           </div>
         }
@@ -119,11 +127,13 @@
         <div class="acc-parties-tete">
           <h2 id="acc-parties-titre" class="acc-section-titre">Parties</h2>
           <!-- Chaque pastille dit déjà son état à un lecteur d'écran : la légende ne sert qu'à l'œil. -->
-          <ul class="acc-legende" aria-hidden="true">
-            <li><span class="acc-legende-pastille acc-repere--joue"></span>joué</li>
-            <li><span class="acc-legende-pastille acc-repere--en-cours"></span>en cours</li>
-            <li><span class="acc-legende-pastille acc-repere--a-jouer"></span>à jouer</li>
-          </ul>
+          @if (parties().length) {
+            <ul class="acc-legende" aria-hidden="true">
+              <li><span class="acc-legende-pastille acc-repere--joue"></span>joué</li>
+              <li><span class="acc-legende-pastille acc-repere--en-cours"></span>en cours</li>
+              <li><span class="acc-legende-pastille acc-repere--a-jouer"></span>à jouer</li>
+            </ul>
+          }
           @if (!(railDebut() && railFin())) {
             <div class="acc-rail-boutons">
               <button mat-icon-button type="button" aria-label="Parties précédentes" aria-controls="acc-rail" [disabled]="railDebut()" (click)="defiler(-1)">
@@ -184,9 +194,12 @@
               </li>
             }
             <li class="acc-partie-nouvelle-place">
-              <button type="button" class="acc-partie-nouvelle" (click)="nouvellePartie()">
-                <mat-icon aria-hidden="true">add</mat-icon> Nouvelle partie
+              <button type="button" class="acc-partie-nouvelle" aria-label="Nouvelle partie" [disabled]="!aDesCompagnies()" (click)="nouvellePartie()">
+                <mat-icon aria-hidden="true">add</mat-icon> Partie
               </button>
+              @if (!aDesCompagnies()) {
+                <p class="acc-partie-nouvelle-note">Crée d’abord une compagnie.</p>
+              }
             </li>
           </ul>
         }
@@ -230,12 +243,12 @@
     </mat-menu>
     <mat-menu #menuScenarios="matMenu">
       <ng-template matMenuContent let-partie="partie">
-        @for (scenario of scenarios(); track scenario.id) {
+        @for (scenario of scenariosDe(partie); track scenario.id) {
           <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitresDuScenario" [matMenuTriggerData]="{partie, scenario}">
             {{ scenario.nom }}
           </button>
         } @empty {
-          <p class="acc-menu-vide">Aucun scénario importé.</p>
+          <p class="acc-menu-vide">Aucun autre scénario à lui proposer.</p>
         }
       </ng-template>
     </mat-menu>

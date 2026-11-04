@@ -21,6 +21,7 @@ use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolAccueilController;
+use App\Http\Controllers\Bol\BolCompagnieController;
 use App\Http\Controllers\Bol\BolScenarioController;
 use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
@@ -154,6 +155,10 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
 
     // Scénarios
+    Route::get('/bol/compagnie', [BolCompagnieController::class, 'getAll']);
+    Route::post('/bol/compagnie/create', [BolCompagnieController::class, 'create']);
+    Route::post('/bol/compagnie/update', [BolCompagnieController::class, 'update']);
+    Route::delete('/bol/compagnie/delete/{id}', [BolCompagnieController::class, 'delete']);
     Route::get('/bol/scenario', [BolScenarioController::class, 'getAll']);
     Route::get('/bol/scenario/{id}', [BolScenarioController::class, 'getOne']);
     Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);

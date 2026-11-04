@@ -12,6 +12,10 @@ compagnie se mélangeait à celle d'une autre.
 En arrivant, il choisit la partie que la table est en train de jouer. Une nouvelle partie se prépare en amont : on la crée, on lui donne
 un nom de compagnie et un scénario.
 
+> **Mise à jour du 2026-11-04 : la compagnie est une fiche.** « Nouvelle compagnie » (en haut à droite) ne demande qu'un nom et des héros ;
+> « + Partie » associe une compagnie à un scénario. Une compagnie joue plusieurs scénarios, chacun une fois ; la modifier vaut pour ses
+> prochaines parties. Là où ce document décrit « Nouvelle partie » avec le nom et les héros, cette mise à jour l'emporte. Voir `CLAUDE.md`.
+
 ## Vocabulaire
 
 - **Partie** : une table (`BolFightSession`) vue depuis l'accueil, c'est-à-dire une compagnie (son nom, `titre`) qui joue un scénario.

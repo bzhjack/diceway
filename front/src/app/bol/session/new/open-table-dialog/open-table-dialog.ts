@@ -1,12 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {form, FormField, maxLength, required} from '@angular/forms/signals';
 import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
@@ -14,72 +11,52 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
-import {CombatSelectionService} from '../../../services/combat-selection.service';
-import {chapitresDuScenario, scenariosDuCompte, situerScenario, teinteDeScenario} from '../../accueil/accueil.util';
-import {OpenTableData} from '../../models/open-table.model';
+import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {chapitresDuScenario, herosCartes, scenariosDuCompte, situerScenario, teinteDeScenario} from '../../accueil/accueil.util';
+import {OpenTableData, OpenTableResultat} from '../../models/open-table.model';
 import {findScenario, libelleDeChapitre} from '../../scenario.util';
-import {CombatantPickerDialogComponent} from '../combatant-picker-dialog/combatant-picker-dialog';
 import {enumerer} from '../open-table.util';
 
-/** La colonne `bol_fight_session.titre` : un `string` de 255 caractères. */
-const NOM_MAX = 255;
-
 /**
- * « Nouvelle partie », en dialogue sur l'accueil : le nom de la compagnie (obligatoire), le scénario et son chapitre de départ (ou une
- * partie improvisée), puis qui est à table (aucun héros d'office), puis « Créer la partie », qui mène à sa table. Aucune autre partie n'en
- * est touchée.
+ * « Nouvelle partie », en dialogue sur l'accueil : une compagnie sur un scénario et son chapitre de départ (ou une partie improvisée), puis
+ * « Créer la partie », qui mène à sa table. Elle prend le nom et les héros de sa compagnie. Une compagnie peut jouer plusieurs scénarios,
+ * mais chacun une fois : sur un scénario qu'elle joue déjà, le dialogue propose de reprendre sa partie.
  */
 @Component({
   selector: 'bol-open-table-dialog',
-  imports: [AvatarFallbackDirective, FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule, RouterLink],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RouterLink],
   templateUrl: './open-table-dialog.html',
   styleUrl: './open-table-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpenTableDialogComponent {
   private readonly data = inject<OpenTableData>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject<MatDialogRef<OpenTableDialogComponent, boolean>>(MatDialogRef);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialogRef = inject<MatDialogRef<OpenTableDialogComponent, OpenTableResultat>>(MatDialogRef);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly destroyRef = inject(DestroyRef);
   private readonly accueilService = inject(BolAccueilService);
-  protected readonly selection = inject(CombatSelectionService);
+  private readonly fightSessionService = inject(BolFightSessionService);
 
   protected readonly launching = signal(false);
   private readonly accueil = signal<BolAccueilModel | null>(this.data.accueil ?? null);
-  /** L'accueil n'a pas encore répondu : on ne connaît pas encore les scénarios ; la partie ne se crée pas encore. */
+  /** L'accueil n'a pas encore répondu : on ne connaît ni les compagnies ni les scénarios ; la partie ne se crée pas encore. */
   protected readonly loadingAccueil = signal(!this.data.accueil);
   /** Le chapitre de départ de la future partie : celui demandé ; « Improviser » le retire. */
   protected readonly scenarioId = signal(this.data.scenarioId);
+  private readonly compagnieId = signal<string | null>(null);
 
-  /** Le nom de la compagnie, obligatoire : la partie se retrouve sous lui. Il part vide (le MJ mène plusieurs compagnies). */
-  private readonly nom = signal('');
-  protected readonly nomField = form(this.nom, (path) => {
-    required(path, {message: 'Donnez un nom à la compagnie'});
-    maxLength(path, NOM_MAX, {message: `${NOM_MAX} caractères au plus`});
+  protected readonly compagnies = computed(() => this.accueil()?.compagnies ?? []);
+  /** La compagnie choisie ; la seule du compte, d'office. */
+  protected readonly compagnie = computed(() => {
+    const compagnies = this.compagnies();
+    return compagnies.find((c) => c.id === this.compagnieId()) ?? (compagnies.length === 1 ? compagnies[0] : null);
   });
-  private readonly nomSaisi = computed(() => this.nom().trim());
-  protected readonly nomValide = computed(() => this.nomSaisi().length > 0 && this.nomSaisi().length <= NOM_MAX);
-
-  /**
-   * Les présents que le catalogue sait nommer. Une sélection arrive parfois avant le catalogue : tant qu'une fiche n'y est pas résolue,
-   * elle n'est ni affichée ni comptée, et elle ne suffit pas à créer la partie (la demande ne la porterait pas : table vide).
-   */
-  protected readonly present = computed(() =>
-    this.selection.combatants().flatMap((combatant) => this.selection.entryFor(combatant.catalogId) ?? []),
-  );
-  protected readonly canLaunch = computed(
-    () =>
-      this.present().length > 0 &&
-      this.nomValide() &&
-      !this.launching() &&
-      !this.loadingAccueil() &&
-      !this.selection.loading() &&
-      !this.selection.loadFailed(),
-  );
-  /** Aucun héros affiché, le catalogue chargé : « Créer la partie » est désactivé, le dialogue dit pourquoi. */
-  protected readonly attenteHeros = computed(() => this.present().length === 0 && !this.selection.loading() && !this.selection.loadFailed());
+  protected readonly heros = computed(() => herosCartes(this.compagnie()?.heros ?? []));
+  /** L'accueil a répondu, et le compte n'a aucune compagnie : il faut en créer une d'abord. */
+  protected readonly sansCompagnie = computed(() => this.accueil() !== null && this.compagnies().length === 0);
+  /** L'accueil n'a pas répondu : on ne sait rien des compagnies. */
+  protected readonly accueilPerdu = computed(() => !this.loadingAccueil() && this.accueil() === null);
 
   private readonly scenarios = computed(() => this.accueil()?.scenarios ?? []);
   private readonly scenario = computed(() => findScenario(this.scenarios(), this.scenarioId()));
@@ -89,6 +66,20 @@ export class OpenTableDialogComponent {
     const scenario = this.scenario();
     return scenario ? {...situerScenario(scenario, this.scenarios()), teinte: teinteDeScenario(scenario.id, this.scenarios())} : null;
   });
+
+  /** La partie que la compagnie choisie a déjà sur ce scénario : on la reprend plutôt que d'en créer une autre. Une partie improvisée n'en
+   * empêche aucune. */
+  protected readonly partieExistante = computed(() => {
+    const compagnie = this.compagnie();
+    const chapitres = new Set(chapitresDuScenario(this.scenario()?.id ?? null, this.scenarios()).map((c) => c.id));
+    if (!compagnie || !chapitres.size) {
+      return null;
+    }
+    const partie = this.accueil()?.parties.find((p) => p.compagnie_id === compagnie.id && p.scenario_id !== null && chapitres.has(p.scenario_id));
+    return partie ? {id: partie.id, texte: `${compagnie.nom} joue déjà ${this.chapitre()?.saga ?? this.chapitre()?.nom}.`} : null;
+  });
+
+  protected readonly canLaunch = computed(() => this.heros().length > 0 && !this.partieExistante() && !this.launching() && !this.loadingAccueil());
 
   /** « Choisir un scénario » : les sagas, puis les one shots ; celui du chapitre choisi est coché. */
   protected readonly scenariosAChoisir = computed(() => {
@@ -118,30 +109,25 @@ export class OpenTableDialogComponent {
       : 'Impossible de charger le chapitre : la partie sera improvisée.';
   });
 
-  /** La future partie en une ligne : « Les Lames de Satarla · Tolometh, avec Axel, jadawin et jean » (sans nom saisi, le chapitre seul). */
+  /** La future partie en une ligne : « Les Lames · Tolometh, avec Axel, jadawin et jean ». */
   protected readonly resume = computed(() => {
-    const noms = this.present().map((entry) => entry.nom);
+    const compagnie = this.compagnie();
     const histoire = this.chapitre()?.nom ?? 'Partie improvisée';
-    const nom = this.nomSaisi() ? `${this.nomSaisi()} · ${histoire}` : histoire;
-    return noms.length ? `${nom}, avec ${enumerer(noms)}` : nom;
-  });
-
-  /** Revenir au dialogue (avec son chapitre) après la création d'un héros : `/session/new` rouvre l'accueil et ce dialogue. */
-  protected readonly createHeroState = computed(() => {
-    const scenario = this.scenario();
-    return {returnUrl: scenario ? `/session/new?scenario=${encodeURIComponent(scenario.id)}` : '/session/new'};
+    const noms = this.heros().map((h) => h.nom);
+    if (!compagnie) {
+      return histoire;
+    }
+    return noms.length ? `${compagnie.nom} · ${histoire}, avec ${enumerer(noms)}` : `${compagnie.nom} · ${histoire}`;
   });
 
   constructor() {
-    // Une nouvelle partie est une nouvelle compagnie : aucun héros d'office.
-    this.selection.loadCatalog();
     if (!this.data.accueil) {
       this.chargerAccueil();
     }
   }
 
-  protected reloadCatalog(): void {
-    this.selection.loadCatalog();
+  protected choisirCompagnie(id: string): void {
+    this.compagnieId.set(id);
   }
 
   protected choisirChapitre(id: string): void {
@@ -159,28 +145,24 @@ export class OpenTableDialogComponent {
     this.scenarioId.set(null);
   }
 
-  protected ajouterHeros(): void {
-    this.dialog.open(CombatantPickerDialogComponent, {
-      width: 'min(1024px, 94vw)',
-      maxWidth: '94vw',
-      position: {top: '5vh'},
-      data: {lockKind: 'hero'},
-    });
+  /** Sans compagnie : l'accueil ouvre « Nouvelle compagnie » à la place de ce dialogue. */
+  protected creerUneCompagnie(): void {
+    this.dialogRef.close('compagnie');
   }
 
   /** « Créer la partie » : elle se crée, puis mène à sa table. */
   protected creer(): void {
-    if (!this.canLaunch()) {
+    const compagnie = this.compagnie();
+    if (!compagnie || !this.canLaunch()) {
       return;
     }
     this.launching.set(true);
-    this.selection
-      .launch(this.nomSaisi(), this.scenario()?.id ?? null)
+    this.fightSessionService
+      .creerPartie(compagnie.id, this.scenario()?.id ?? null)
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (session) => {
           this.launching.set(false);
-          this.selection.reset();
           this.dialogRef.close(true);
           if (session.id) {
             void this.router.navigate(['/session', session.id, 'play']);
@@ -203,7 +185,7 @@ export class OpenTableDialogComponent {
           this.accueil.set(data);
           this.loadingAccueil.set(false);
         },
-        // Sans l'accueil, le dialogue reste utilisable, sans chapitre.
+        // Sans l'accueil, on ne connaît aucune compagnie : le dialogue le dit (`accueilPerdu`), sans prétendre que le compte n'en a pas.
         error: () => this.loadingAccueil.set(false),
       });
   }

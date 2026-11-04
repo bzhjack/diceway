@@ -572,6 +572,8 @@
 // La dernière place du carrousel : de quoi créer une partie, en creux.
 .acc-partie-nouvelle-place {
   display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   flex: 0 0 clamp(12rem, 20%, 16rem);
   min-height: 14rem;
   scroll-snap-align: start;
@@ -591,10 +593,23 @@
   font-weight: 800;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--dw-forge-hot);
     background-color: rgba(255, 170, 60, 0.08);
   }
+
+  &:disabled {
+    color: var(--dw-forge-bone);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.acc-partie-nouvelle-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--dw-forge-bone);
+  text-align: center;
 }
 
 // Le menu est dans un calque : hors de la carte, il reste à ce composant.
@@ -611,7 +626,7 @@
 // ── Les bibliothèques : une tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ─────────────────────────────
 .acc-bibliotheques {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
   gap: 0.75rem;
   margin: 0;
   padding: 0;

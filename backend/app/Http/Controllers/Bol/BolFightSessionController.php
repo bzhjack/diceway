@@ -6,6 +6,7 @@ use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Exceptions\Bol\FuiteImpossibleException;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCompagnieService;
 use App\Http\Services\Bol\BolFightSessionService;
 use App\Http\Services\Bol\BolSceneDistribution;
 use Illuminate\Http\Request;
@@ -15,7 +16,10 @@ use Illuminate\Validation\Rule;
 
 class BolFightSessionController extends Controller
 {
-    public function __construct(private readonly BolFightSessionService $fightSessionService) {}
+    public function __construct(
+        private readonly BolFightSessionService $fightSessionService,
+        private readonly BolCompagnieService $compagnieService,
+    ) {}
 
     public function getAll()
     {
@@ -33,7 +37,10 @@ class BolFightSessionController extends Controller
 
     public function create(Request $request)
     {
-        // Une table se crée toujours nommée : c'est sous ce nom qu'elle se retrouve.
+        // Une partie prend le nom et les héros de sa compagnie ; une table sans compagnie (les scripts de test) se crée toujours nommée.
+        if ($request->filled('compagnie_id')) {
+            return $this->creerPartie($request);
+        }
         $request->validate(['titre' => 'required|string|max:255']);
 
         $session = $this->fightSessionService->createSession(Auth::id(), [
@@ -46,6 +53,20 @@ class BolFightSessionController extends Controller
         ]);
 
         return response()->json($session);
+    }
+
+    private function creerPartie(Request $request)
+    {
+        $compagnie = $this->compagnieService->trouver((string) $request->input('compagnie_id'), Auth::id());
+        if (!$compagnie) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        ['partie' => $partie, 'existante' => $existante] = $this->fightSessionService->creerPartie(Auth::id(), $compagnie, $request->input('scenario_id'));
+        if ($existante) {
+            return response()->json(['error' => 'Cette compagnie joue déjà ce scénario.', 'partie_id' => $partie->id], 422);
+        }
+
+        return response()->json($partie);
     }
 
     public function delete(string $id)

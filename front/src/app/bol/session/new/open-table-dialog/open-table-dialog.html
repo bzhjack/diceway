@@ -3,7 +3,7 @@
     <span class="otd-icone" aria-hidden="true"><mat-icon svgIcon="gi-group" /></span>
     <div>
       <p class="otd-surtitre">Nouvelle partie</p>
-      <h2 id="otd-titre" class="otd-titre">Qui est à table ?</h2>
+      <h2 id="otd-titre" class="otd-titre">Qui joue quoi ?</h2>
     </div>
   </div>
   <button mat-icon-button type="button" mat-dialog-close aria-label="Fermer">
@@ -12,19 +12,49 @@
 </header>
 
 <mat-dialog-content class="otd-contenu">
-  <!-- Le nom de la compagnie, obligatoire : la partie se retrouve sous lui. -->
-  <mat-form-field class="otd-nom" subscriptSizing="dynamic">
-    <mat-label>Nom de la compagnie</mat-label>
-    <input matInput autocomplete="off" placeholder="Ex. : les Lames de Satarla" [formField]="nomField" (keydown.enter)="creer()" />
-    <mat-error>{{ nomField().errors()[0]?.message }}</mat-error>
-    @if (!nomValide()) {
-      <mat-hint>« Créer la partie » attend le nom de la compagnie.</mat-hint>
-    }
-  </mat-form-field>
-
   <div class="otd-colonnes">
+    <section class="otd-etape" aria-labelledby="otd-table">
+      <h3 id="otd-table" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">1</span> La compagnie</h3>
+
+      @if (loadingAccueil()) {
+        <p class="otd-note" role="status">Chargement des compagnies…</p>
+      } @else if (accueilPerdu()) {
+        <p class="otd-alerte" role="alert">Impossible de charger les compagnies.</p>
+      } @else if (sansCompagnie()) {
+        <p class="otd-note">Il faut d’abord une compagnie pour lancer une partie : un nom et ses héros.</p>
+        <div>
+          <button mat-stroked-button type="button" (click)="creerUneCompagnie()"><mat-icon>add</mat-icon> Nouvelle compagnie</button>
+        </div>
+      } @else {
+        @if (compagnie(); as c) {
+          <p class="otd-compagnie-nom">{{ c.nom }}</p>
+          @if (heros().length) {
+            <ul class="otd-heros">
+              @for (h of heros(); track h.id) {
+                <li class="otd-heros-pastille">
+                  @if (h.portrait; as portrait) {
+                    <img dwAvatarFallback [src]="portrait" alt="" />
+                  } @else {
+                    <span class="otd-heros-initiale" aria-hidden="true">{{ h.initiale }}</span>
+                  }
+                  <span class="otd-heros-nom">{{ h.nom }}</span>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="otd-alerte" role="alert">Cette compagnie n’a pas de héros : ajoute-lui en depuis la bibliothèque « Compagnies ».</p>
+          }
+        } @else {
+          <p class="otd-note">« Créer la partie » attend une compagnie.</p>
+        }
+        <div>
+          <button mat-stroked-button type="button" [matMenuTriggerFor]="menuCompagnies">{{ compagnie() ? 'Changer de compagnie' : 'Choisir une compagnie' }}</button>
+        </div>
+      }
+    </section>
+
     <section class="otd-etape" aria-labelledby="otd-histoire">
-      <h3 id="otd-histoire" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">1</span> Le scénario</h3>
+      <h3 id="otd-histoire" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">2</span> Le scénario</h3>
       @if (chapitre(); as c) {
         <div class="otd-chapitre" [class]="'dw-saga--' + c.teinte">
           <span class="otd-banniere" aria-hidden="true"></span>
@@ -58,45 +88,14 @@
         }
       }
     </section>
-
-    <section class="otd-etape" aria-labelledby="otd-table">
-      <h3 id="otd-table" class="otd-etape-titre">
-        <span class="otd-numero" aria-hidden="true">2</span> Autour de la table
-        <span class="otd-compte">{{ present().length }} héros</span>
-      </h3>
-
-      @if (selection.loadFailed()) {
-        <div class="otd-alerte otd-alerte--action" role="alert">
-          <span>Impossible de charger les héros.</span>
-          <button mat-stroked-button type="button" (click)="reloadCatalog()">Réessayer</button>
-        </div>
-      }
-
-      @if (present().length) {
-        <ul class="otd-heros">
-          @for (entry of present(); track entry.catalogId) {
-            <li class="otd-heros-pastille">
-              <img dwAvatarFallback [src]="entry.avatar" alt="" />
-              <span class="otd-heros-nom">{{ entry.nom }}</span>
-              <button type="button" class="otd-heros-retirer" [attr.aria-label]="'Retirer ' + entry.nom + ' de la table'" (click)="selection.remove(entry.catalogId)">
-                <mat-icon>close</mat-icon>
-              </button>
-            </li>
-          }
-        </ul>
-      } @else if (selection.loading()) {
-        <p class="otd-note" role="status">Chargement des héros…</p>
-      }
-      <button type="button" class="otd-ajout" (click)="ajouterHeros()"><mat-icon>add</mat-icon> Ajouter un héros</button>
-
-      @if (attenteHeros()) {
-        <p class="otd-note">« Créer la partie » attend au moins un héros.</p>
-      }
-      <p class="otd-note">
-        Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState()" mat-dialog-close>Créer un héros</a>
-      </p>
-    </section>
   </div>
+
+  @if (partieExistante(); as partie) {
+    <div class="otd-deja" role="status">
+      <span>{{ partie.texte }}</span>
+      <a mat-stroked-button [routerLink]="['/session', partie.id, 'play']" mat-dialog-close>Reprendre sa partie</a>
+    </div>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions class="otd-pied">
@@ -108,6 +107,11 @@
   </button>
 </mat-dialog-actions>
 
+<mat-menu #menuCompagnies="matMenu">
+  @for (c of compagnies(); track c.id) {
+    <button mat-menu-item type="button" (click)="choisirCompagnie(c.id)">{{ c.nom }}</button>
+  }
+</mat-menu>
 <!-- « Choisir un scénario » : les sagas, puis les one shots ; la partie part du premier chapitre du scénario choisi. -->
 <mat-menu #menuScenarios="matMenu">
   @for (scenario of scenariosAChoisir(); track scenario.id) {

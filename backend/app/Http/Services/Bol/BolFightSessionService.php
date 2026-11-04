@@ -5,6 +5,7 @@ namespace App\Http\Services\Bol;
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Exceptions\Bol\FuiteImpossibleException;
+use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
@@ -31,6 +32,7 @@ class BolFightSessionService
 
         $session = BolFightSession::create([
             'user_id'     => $userId,
+            'compagnie_id' => $data['compagnie_id'] ?? null,
             'titre'       => $data['titre'] ?? null,
             'statut'      => $this->determineInitialStatut($data),
             'scenario_id' => $this->ownScenarioId($userId, $data['scenario_id'] ?? null),
@@ -43,6 +45,28 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /**
+     * Une nouvelle partie : la compagnie sur un scénario (sans chapitre : on improvise), avec son nom et ses héros d'aujourd'hui. La partie
+     * que la compagnie a déjà sur ce scénario, s'il y en a une, à la place d'en créer une autre.
+     *
+     * @return array{partie: BolFightSession, existante: bool}
+     */
+    public function creerPartie(string $userId, BolCompagnie $compagnie, mixed $scenarioId): array
+    {
+        $chapitre = $this->ownScenarioId($userId, $scenarioId);
+        $existante = $compagnie->partieSurLeScenario($chapitre);
+        if ($existante) {
+            return ['partie' => $existante, 'existante' => true];
+        }
+
+        return ['existante' => false, 'partie' => $this->createSession($userId, [
+            'compagnie_id' => $compagnie->id,
+            'titre'        => $compagnie->nom,
+            'scenario_id'  => $chapitre,
+            'heros'        => $compagnie->heros->map(fn (BolHeros $heros) => ['heroId' => $heros->id, 'camp' => 'heros'])->all(),
+        ])];
     }
 
     /** Le scénario d'une table doit être celui du compte ; un autre, ou un inconnu, est ignoré. */
@@ -253,7 +277,7 @@ class BolFightSessionService
         }
 
         $chapitre = $this->ownScenarioId($userId, $scenarioId);
-        if (!BolScenario::dansLeScenario($session->scenario_id, $chapitre)) {
+        if (!$session->peutPasserSur($chapitre)) {
             return false;
         }
         $session->update(['scenario_id' => $chapitre]);

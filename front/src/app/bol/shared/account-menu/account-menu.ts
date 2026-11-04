@@ -20,6 +20,7 @@ const SESSION_LINKS: readonly AccountMenuLink[] = [
 
 const LIBRARY_LINKS: readonly AccountMenuLink[] = [
   {label: 'Héros', icon: 'person', link: '/library/heroes'},
+  {label: 'Compagnies', icon: 'groups', link: '/library/companies'},
   {label: 'PNJ', icon: 'group', link: '/library/pnjs'},
   {label: 'Créatures', icon: 'pets', link: '/library/creatures'},
   {label: 'Démons', icon: 'bolt', link: '/library/demons'},

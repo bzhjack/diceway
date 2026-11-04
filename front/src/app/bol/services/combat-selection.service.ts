@@ -1,30 +1,15 @@
 import {effect, Injectable, inject, signal} from '@angular/core';
-import {Observable, forkJoin} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {creatureImage} from '../creature/library/creature-card/creature-card.component';
 import {demonImage} from '../demon/library/demon-card/demon-card.component';
 import {heroImage} from '../hero/library/hero-card/hero-card.component';
 import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
-import {BolFightSessionService} from './bol-fight-session.service';
 import {BolHerosService} from './bol-heros.service';
 import {BolPnjService} from './bol-pnj.service';
-import {
-  BolFightSessionCreatePayload,
-  BolFightSessionModel,
-  CombatCamp,
-  InitiativeResultat,
-} from '../models/bol-fight-session.model';
+import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {CombatantKind, CombatCatalogEntry, SelectedCombatant, AmbushState} from '../models/combat-selection.model';
-
-/**
- * Notion de camp mise de côté côté IHM pour l'instant (une seule zone
- * combattants) — le backend l'exige encore, donc on l'assigne par défaut
- * selon le type (héros joueurs -> 'heros', tout le reste -> 'adversaires').
- */
-function defaultCampFor(kind: CombatantKind): CombatCamp {
-  return kind === 'hero' ? 'heros' : 'adversaires';
-}
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
 
@@ -78,7 +63,6 @@ export class CombatSelectionService {
   private readonly pnjService = inject(BolPnjService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly demonsService = inject(BolDemonsService);
-  private readonly fightSessionService = inject(BolFightSessionService);
 
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
@@ -252,35 +236,5 @@ export class CombatSelectionService {
     this.combatants.set([]);
     this.heroInitiative.set(new Map());
     this.ambushState.set(null);
-  }
-
-  launch(titre?: string | null, scenarioId: string | null = null): Observable<BolFightSessionModel> {
-    return this.fightSessionService.create(this.buildCreatePayload(titre, scenarioId));
-  }
-
-  private buildCreatePayload(titre: string | null | undefined, scenarioId: string | null): BolFightSessionCreatePayload {
-    const byKind = (kind: CombatantKind) =>
-      this.combatants().filter((c) => this.entryFor(c.catalogId)?.kind === kind);
-
-    return {
-      titre: titre ?? null,
-      scenario_id: scenarioId,
-      heros: byKind('hero').map((c) => ({
-        heroId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('hero'),
-        resultat: this.heroInitiative().get(c.catalogId) ?? null,
-      })),
-      pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('pnj')})),
-      creatures: byKind('creature').map((c) => ({
-        creatureId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('creature'),
-        qty: c.qty,
-      })),
-      demons: byKind('demon').map((c) => ({
-        demonId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('demon'),
-        qty: c.qty,
-      })),
-    };
   }
 }

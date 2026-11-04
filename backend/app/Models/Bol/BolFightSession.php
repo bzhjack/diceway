@@ -16,7 +16,7 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'etat_combat'];
+    protected $fillable = ['user_id', 'compagnie_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'etat_combat'];
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'jouee_le' => 'datetime', 'etat_combat' => 'array'];
 
@@ -33,6 +33,24 @@ class BolFightSession extends Model
             }
             $session->chapitres_quittes = array_values(array_unique([...($session->chapitres_quittes ?? []), (string) $quitte]));
         });
+    }
+
+    public function compagnie(): BelongsTo
+    {
+        return $this->belongsTo(BolCompagnie::class, 'compagnie_id', 'id');
+    }
+
+    /**
+     * La partie peut-elle passer sur ce chapitre ? Elle reste sur son scénario ; improvisée, elle en prend un, sauf si sa compagnie le joue
+     * déjà dans une autre partie.
+     */
+    public function peutPasserSur(?string $chapitreId): bool
+    {
+        if (!BolScenario::dansLeScenario($this->scenario_id, $chapitreId)) {
+            return false;
+        }
+
+        return $this->scenario_id !== null || $this->compagnie?->partieSurLeScenario($chapitreId) === null;
     }
 
     public function heros(): HasMany

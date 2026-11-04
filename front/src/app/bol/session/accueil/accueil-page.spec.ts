@@ -10,6 +10,7 @@ import {BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
+import {CompagnieDialogComponent} from '../new/compagnie-dialog/compagnie-dialog';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
 import {AccueilPageComponent} from './accueil-page';
 import {chapitre} from '../chapitre.testing';
@@ -20,9 +21,14 @@ class AccountMenuStubComponent {}
 
 const DATA: BolAccueilModel = {
   derniere: 't1',
+  compagnies: [
+    {id: 'c1', nom: 'Les Lames de Satarla', heros: [{id: 'h1', nom: 'Axel', avatar: null}], parties: 1},
+    {id: 'c2', nom: 'Les Fils du Serpent', heros: [{id: 'h3', nom: 'Balaram', avatar: null}], parties: 1},
+  ],
   parties: [
     {
       id: 't1',
+      compagnie_id: 'c1',
       titre: 'Les Lames de Satarla',
       statut: 'libre',
       jouee_le: '2026-11-04T10:00:00+00:00',
@@ -42,6 +48,7 @@ const DATA: BolAccueilModel = {
     },
     {
       id: 't2',
+      compagnie_id: 'c2',
       titre: 'Les Fils du Serpent',
       statut: 'libre',
       jouee_le: '2026-11-03T10:00:00+00:00',
@@ -54,6 +61,7 @@ const DATA: BolAccueilModel = {
     },
     {
       id: 't3',
+      compagnie_id: null,
       titre: null,
       statut: 'libre',
       jouee_le: '2026-11-01T10:00:00+00:00',
@@ -70,7 +78,7 @@ const DATA: BolAccueilModel = {
     chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
     chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
   ],
-  comptes: {heros: 5, pnjs: 196, creatures: 103, demons: 15, armes: 54, armures: 6, sessions: 3},
+  comptes: {heros: 5, pnjs: 196, creatures: 103, demons: 15, armes: 54, armures: 6, sessions: 3, compagnies: 2},
 };
 
 describe('AccueilPageComponent', () => {
@@ -169,15 +177,37 @@ describe('AccueilPageComponent', () => {
     expect(texte(reprendre.querySelector('.acc-partie-reprendre-label'))).toBe('Reprendre');
     expect(texte(reprendre.querySelector('.acc-partie-reprendre-titre'))).toBe("2. De sable et d'eau");
     expect(texte(sansNom.querySelector('.acc-partie-reprendre-titre'))).toBe('Partie improvisée');
-    expect(texte(page.querySelector('.acc-partie-nouvelle'))).toContain('Nouvelle partie');
+    expect(page.querySelector('.acc-partie-nouvelle')?.getAttribute('aria-label')).toBe('Nouvelle partie');
   });
 
-  it('« Nouvelle partie » ouvre le dialogue sans chapitre', async () => {
+  it('« + Partie » ouvre le dialogue qui associe une compagnie à un scénario', async () => {
     const page = await rendre();
 
     page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!.click();
 
     expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: {scenarioId: null, accueil: DATA}}));
+  });
+
+  it('le bouton du haut crée une compagnie, puis l’accueil se relit', async () => {
+    const page = await rendre();
+    const bouton = page.querySelector<HTMLButtonElement>('.acc-entete-actions button')!;
+
+    expect(texte(bouton)).toContain('Nouvelle compagnie');
+    bouton.click();
+    await stable();
+
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
+    expect(accueil).toHaveBeenCalledTimes(2);
+  });
+
+  it('si « Nouvelle partie » dit qu’il faut une compagnie, ouvre « Nouvelle compagnie »', async () => {
+    const page = await rendre();
+    open.mockReturnValueOnce({afterClosed: () => of('compagnie')});
+
+    page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!.click();
+    await stable();
+
+    expect(open).toHaveBeenLastCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
   });
 
   it('« Changer de chapitre » ne propose que les chapitres du scénario de la partie, puis relit l’accueil', async () => {
@@ -225,6 +255,18 @@ describe('AccueilPageComponent', () => {
     expect(changerChapitre).toHaveBeenCalledWith('t3', 'dv1');
   });
 
+  it('« Choisir un scénario » ne propose pas celui que sa compagnie joue déjà', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't3' ? {...p, compagnie_id: 'c1'} : p))}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
+    await stable();
+
+    item('Choisir un scénario').click();
+    await stable();
+
+    expect(item('Le Dieu voilé')).toBeDefined();
+    expect(item('Perle du Beshaar')).toBeUndefined();
+  });
+
   it('« Supprimer la partie » demande confirmation, supprime, puis relit l’accueil', async () => {
     const page = await rendre();
     page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
@@ -255,21 +297,38 @@ describe('AccueilPageComponent', () => {
     const tuiles = [...page.querySelectorAll('.acc-biblio')];
 
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-lien')?.getAttribute('aria-label'))).toEqual([
-      'Héros, 5', 'PNJ, 196', 'Créatures, 103', 'Démons, 15', 'Armes, 54', 'Armures, 6', 'Parties, 3',
+      'Héros, 5', 'PNJ, 196', 'Créatures, 103', 'Démons, 15', 'Armes, 54', 'Armures, 6', 'Compagnies, 2', 'Parties, 3',
     ]);
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-plus')?.getAttribute('aria-label') ?? null)).toEqual([
-      'Créer un héros', 'Créer un PNJ', 'Créer une créature', 'Créer un démon', null, null, null,
+      'Créer un héros', 'Créer un PNJ', 'Créer une créature', 'Créer un démon', null, null, null, null,
     ]);
   });
 
-  it('sans partie, propose d’en créer une', async () => {
+  it('sans compagnie, dit qu’il en faut une pour lancer une partie, et grise « + Partie »', async () => {
+    const page = await rendre(of({...DATA, derniere: null, parties: [], compagnies: []}));
+
+    expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Aucune compagnie');
+    expect(texte(page.querySelector('.acc-soir-texte'))).toContain('Il faut d’abord créer une compagnie pour lancer une partie');
+    expect(page.querySelector('.acc-soir nav')).toBeNull();
+    expect(cartes(page)).toEqual([]);
+    expect(page.querySelector('.acc-legende')).toBeNull();
+    const plus = page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!;
+    expect(plus.disabled).toBe(true);
+    expect(texte(page.querySelector('.acc-partie-nouvelle-note'))).toContain('Crée d’abord une compagnie');
+
+    [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Nouvelle compagnie'))!.click();
+
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.anything());
+  });
+
+  it('avec une compagnie mais sans partie, propose d’en lancer une', async () => {
     const page = await rendre(of({...DATA, derniere: null, parties: []}));
 
     expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Aucune partie');
-    expect(page.querySelector('.acc-soir nav')).toBeNull();
-    expect(cartes(page)).toEqual([]);
+    expect(page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!.disabled).toBe(false);
+    expect(page.querySelector('.acc-partie-nouvelle-note')).toBeNull();
 
-    [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Nouvelle partie'))!.click();
+    [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Partie'))!.click();
 
     expect(open).toHaveBeenCalledWith(OpenTableDialogComponent, expect.objectContaining({data: expect.objectContaining({scenarioId: null})}));
   });
@@ -285,11 +344,21 @@ describe('AccueilPageComponent', () => {
     expect(TestBed.inject(Router).url).toBe('/');
   });
 
+  it('rouvre « Nouvelle compagnie » au retour de la création d’un héros (?table=compagnie)', async () => {
+    accueil = vi.fn(() => of(DATA));
+    configurer();
+
+    await RouterTestingHarness.create('/?table=compagnie');
+
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
+    expect(TestBed.inject(Router).url).toBe('/');
+  });
+
   it('pendant le chargement, le bandeau n’affirme rien : il se dit occupé', async () => {
     const page = await rendre(NEVER);
     const bandeau = page.querySelector('.acc-soir')!;
 
-    expect(bandeau.textContent).not.toContain('Aucune partie');
+    expect(bandeau.textContent).not.toContain('Aucune');
     expect(bandeau.getAttribute('aria-busy')).toBe('true');
     expect(bandeau.querySelector('[role="status"]')?.textContent).toContain('Chargement');
   });

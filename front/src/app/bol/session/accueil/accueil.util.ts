@@ -87,7 +87,16 @@ export function scenariosDuCompte(scenarios: readonly BolAccueilScenario[]): Acc
   return [...choixDeSagas, ...oneShots];
 }
 
-function herosCartes(heros: readonly BolAccueilHeros[]): AccueilHerosCarte[] {
+/** Les scénarios qu'une partie improvisée peut prendre : tous, sauf ceux que sa compagnie joue déjà dans une autre partie (le serveur les refuse). */
+export function scenariosLibresPour(partieId: string, data: BolAccueilModel): AccueilScenarioChoix[] {
+  const compagnieId = data.parties.find((p) => p.id === partieId)?.compagnie_id ?? null;
+  const pris = new Set(
+    compagnieId === null ? [] : data.parties.filter((p) => p.compagnie_id === compagnieId && p.id !== partieId).map((p) => p.scenario_id),
+  );
+  return scenariosDuCompte(data.scenarios).filter((scenario) => !scenario.chapitres.some((chapitre) => pris.has(chapitre.id)));
+}
+
+export function herosCartes(heros: readonly BolAccueilHeros[]): AccueilHerosCarte[] {
   return heros.map((h) => ({id: h.id, nom: h.nom, portrait: usableAvatar(h.avatar), initiale: h.nom.charAt(0).toLocaleUpperCase('fr')}));
 }
 

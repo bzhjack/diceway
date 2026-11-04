@@ -1,3 +1,4 @@
+import {BolCompagnieModel} from './bol-compagnie.model';
 import {BolScenarioSaga} from './bol-scenario.model';
 
 /** Un chapitre de l'accueil : son nom, son numéro et son scénario (null pour un one shot), de quoi l'afficher et l'ouvrir. */
@@ -25,6 +26,8 @@ export interface BolAccueilHeros {
  * partie improvisée) et ce qu'elle en a joué. */
 export interface BolAccueilPartie {
   id: string;
+  /** Sa compagnie ; null pour une table créée sans (les scripts de test). */
+  compagnie_id: string | null;
   titre: string | null;
   statut: 'libre' | 'combat';
   /** La dernière fois qu'on est entré à la table (ISO 8601). */
@@ -52,6 +55,7 @@ export interface BolAccueilComptes {
   armes: number;
   armures: number;
   sessions: number;
+  compagnies: number;
 }
 
 /** Réponse de `GET /api/bol/accueil` : tout ce que le tableau de bord affiche, en une requête. */
@@ -60,6 +64,7 @@ export interface BolAccueilModel {
   derniere: string | null;
   /** Toutes les parties, de la plus récemment jouée à la plus ancienne. */
   parties: BolAccueilPartie[];
+  compagnies: BolCompagnieModel[];
   scenarios: BolAccueilScenario[];
   comptes: BolAccueilComptes;
 }

@@ -1,0 +1,70 @@
+<header class="otd-tete">
+  <div class="otd-tete-titre">
+    <span class="otd-icone" aria-hidden="true"><mat-icon svgIcon="gi-group" /></span>
+    <div>
+      <p class="otd-surtitre">{{ existante ? 'Compagnie' : 'Nouvelle compagnie' }}</p>
+      <h2 id="otd-titre" class="otd-titre">{{ existante ? existante.nom : 'Qui en est ?' }}</h2>
+    </div>
+  </div>
+  <button mat-icon-button type="button" mat-dialog-close aria-label="Fermer">
+    <mat-icon>close</mat-icon>
+  </button>
+</header>
+
+<mat-dialog-content class="otd-contenu">
+  <mat-form-field class="otd-nom" subscriptSizing="dynamic">
+    <mat-label>Nom de la compagnie</mat-label>
+    <input matInput autocomplete="off" placeholder="Ex. : les Lames de Satarla" [formField]="nomField" (keydown.enter)="enregistrer()" />
+    <mat-error>{{ nomField().errors()[0]?.message }}</mat-error>
+    @if (!nomValide()) {
+      <mat-hint>« {{ boutonPrincipal }} » attend le nom de la compagnie.</mat-hint>
+    }
+  </mat-form-field>
+
+  <section class="otd-etape" aria-labelledby="otd-table">
+    <h3 id="otd-table" class="otd-etape-titre">
+      Ses héros
+      <span class="otd-compte">{{ present().length }} héros</span>
+    </h3>
+
+    @if (selection.loadFailed()) {
+      <div class="otd-alerte otd-alerte--action" role="alert">
+        <span>Impossible de charger les héros.</span>
+        <button mat-stroked-button type="button" (click)="reloadCatalog()">Réessayer</button>
+      </div>
+    }
+
+    @if (present().length) {
+      <ul class="otd-heros">
+        @for (entry of present(); track entry.catalogId) {
+          <li class="otd-heros-pastille">
+            <img dwAvatarFallback [src]="entry.avatar" alt="" />
+            <span class="otd-heros-nom">{{ entry.nom }}</span>
+            <button type="button" class="otd-heros-retirer" [attr.aria-label]="'Retirer ' + entry.nom + ' de la compagnie'" (click)="selection.remove(entry.catalogId)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else if (selection.loading()) {
+      <p class="otd-note" role="status">Chargement des héros…</p>
+    }
+    <button type="button" class="otd-ajout" (click)="ajouterHeros()"><mat-icon>add</mat-icon> Ajouter un héros</button>
+
+    @if (attenteHeros()) {
+      <p class="otd-note">« {{ boutonPrincipal }} » attend au moins un héros.</p>
+    }
+    @if (existante) {
+      <p class="otd-note">Ces changements valent pour ses prochaines parties : celles déjà commencées gardent leurs héros, et prennent son nouveau nom.</p>
+    } @else {
+      <p class="otd-note">
+        Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState" mat-dialog-close>Créer un héros</a>
+      </p>
+    }
+  </section>
+</mat-dialog-content>
+
+<mat-dialog-actions class="otd-pied">
+  <div class="otd-resume"></div>
+  <button mat-flat-button type="button" [disabled]="!peutEnregistrer()" (click)="enregistrer()">{{ boutonPrincipal }}</button>
+</mat-dialog-actions>

@@ -68,6 +68,27 @@
   margin-top: 0.4rem;
 }
 
+// ── La compagnie déjà sur ce scénario : ce qu'il en est, et de quoi reprendre sa partie ────────────────────────────────────────────
+.otd-deja {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-warn) 70%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-color-warn) 12%, var(--dw-forge-recess));
+}
+
+.otd-compagnie-nom {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--dw-forge-name);
+}
+
 // ── Les deux étapes, côte à côte : le scénario à gauche, qui est à table à droite ──────────────────────────────────────────────────
 .otd-colonnes {
   display: grid;

@@ -4,6 +4,7 @@ namespace App\Http\Services\Bol;
 
 use App\Models\Bol\BolArme;
 use App\Models\Bol\BolArmure;
+use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
@@ -16,12 +17,14 @@ use App\Models\Bol\BolScene;
  * joués et ses héros), ses scénarios et le nombre de fiches de chaque bibliothèque. */
 class BolAccueilService
 {
+    public function __construct(private readonly BolCompagnieService $compagnieService) {}
+
     public function summary(string $userId): array
     {
         $sessions = BolFightSession::where('user_id', $userId)
             ->orderByDesc('jouee_le')
             ->orderByDesc('created_at')
-            ->get(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'created_at']);
+            ->get(['id', 'compagnie_id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'created_at']);
         $scenarios = BolScenario::with('saga:id,titre')->where('user_id', $userId)->get(['id', 'saga_id', 'numero', 'titre']);
         $scenesParChapitre = BolScene::where('user_id', $userId)->whereNotNull('scenario_id')->get(['id', 'scenario_id'])
             ->groupBy('scenario_id')
@@ -32,6 +35,7 @@ class BolAccueilService
             'derniere'  => $sessions->first()?->id,
             'parties'   => $sessions->map(fn (BolFightSession $partie) => $this->partie($userId, $partie, $scenesParChapitre->all(), $chapitresDuCompte))
                 ->values()->all(),
+            'compagnies' => $this->compagnieService->liste($userId),
             'scenarios' => $scenarios->map(fn (BolScenario $scenario) => [
                 'id'     => $scenario->id,
                 'titre'  => $scenario->titre,
@@ -56,6 +60,7 @@ class BolAccueilService
 
         return [
             'id'              => $partie->id,
+            'compagnie_id'    => $partie->compagnie_id,
             'titre'           => $partie->titre,
             'statut'          => $partie->statut,
             'jouee_le'        => $partie->jouee_le?->toIso8601String(),
@@ -141,6 +146,7 @@ class BolAccueilService
             'armes'     => BolArme::accessibleTo($userId)->count(),
             'armures'   => BolArmure::accessibleTo($userId)->count(),
             'sessions'  => BolFightSession::where('user_id', $userId)->count(),
+            'compagnies' => BolCompagnie::where('user_id', $userId)->count(),
         ];
     }
 

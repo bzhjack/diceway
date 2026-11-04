@@ -5,7 +5,6 @@ import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, 
 import {apiUrl} from '../../core/api-url';
 import {
   BolFightSessionAddCombatantPayload,
-  BolFightSessionCreatePayload,
   BolFightSessionHerosModel,
   BolFightSessionModel,
   BolFightSessionSummaryModel,
@@ -61,8 +60,9 @@ export class BolFightSessionService {
     return this.inOrder(this.http.get<BolFightSessionModel>(`${this.base}/${id}`));
   }
 
-  create(payload: BolFightSessionCreatePayload): Observable<BolFightSessionModel> {
-    return this.http.post<BolFightSessionModel>(`${this.base}/create`, payload);
+  /** Une nouvelle partie : cette compagnie (son nom, ses héros d'aujourd'hui) sur ce chapitre (null : on improvise). */
+  creerPartie(compagnieId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
+    return this.http.post<BolFightSessionModel>(`${this.base}/create`, {compagnie_id: compagnieId, scenario_id: scenarioId});
   }
 
   delete(id: string): Observable<boolean> {

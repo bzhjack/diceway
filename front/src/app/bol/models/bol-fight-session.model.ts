@@ -203,17 +203,6 @@ interface BolFightSessionPnjModel {
   pnj?: {user_id: string | null; origines: {avatar: string | null}};
 }
 
-/** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */
-export interface BolFightSessionCreatePayload {
-  titre?: string | null;
-  /** Scénario de la table dès sa création — absent ou null si on improvise. */
-  scenario_id?: string | null;
-  heros: {heroId: string; camp: CombatCamp; resultat?: InitiativeResultat | null}[];
-  pnjs: {pnjId: string; camp: CombatCamp}[];
-  creatures: {creatureId: string; camp: CombatCamp; qty: number}[];
-  demons: {demonId: string; camp: CombatCamp; qty: number}[];
-}
-
 /** Payload d'ajout d'un seul combattant à une session déjà lancée. */
 export interface BolFightSessionAddCombatantPayload {
   kind: 'hero' | 'pnj' | 'creature' | 'demon';

@@ -41,7 +41,7 @@ class BolAccueilTest extends TestCase
 
         $this->assertNull($response->json('derniere'));
         $this->assertSame([], $response->json('parties'));
-        $this->assertSame(['derniere', 'parties', 'scenarios', 'comptes'], array_keys($response->json()));
+        $this->assertSame(['derniere', 'parties', 'compagnies', 'scenarios', 'comptes'], array_keys($response->json()));
     }
 
     /** Toutes les parties, la plus récemment jouée d'abord ; elle est la `derniere`, quel que soit son statut. */
@@ -66,7 +66,7 @@ class BolAccueilTest extends TestCase
         $lue = $this->partieLue($partie->id);
 
         $this->assertSame(
-            ['id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros'],
+            ['id', 'compagnie_id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros'],
             array_keys($lue),
         );
         $this->assertSame('Les Lames', $lue['titre']);
@@ -229,7 +229,7 @@ class BolAccueilTest extends TestCase
         $apres = $this->getJson('/api/bol/accueil')->assertOk()->json('comptes');
         $ajoutes = array_map(fn (string $cle) => $apres[$cle] - $avant[$cle], array_combine(array_keys($apres), array_keys($apres)));
 
-        $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1], $ajoutes);
+        $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1, 'compagnies' => 0], $ajoutes);
     }
 
 

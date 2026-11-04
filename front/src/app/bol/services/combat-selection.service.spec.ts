@@ -1,11 +1,9 @@
 import {TestBed} from '@angular/core/testing';
 import {Observable, of, throwError} from 'rxjs';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {BolFightSessionCreatePayload, BolFightSessionModel} from '../models/bol-fight-session.model';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
-import {BolFightSessionService} from './bol-fight-session.service';
 import {BolHerosService} from './bol-heros.service';
 import {BolPnjService} from './bol-pnj.service';
 import {CombatSelectionService} from './combat-selection.service';
@@ -27,13 +25,11 @@ function memoryStorage(): Storage {
 
 describe('CombatSelectionService', () => {
   let selection: CombatSelectionService;
-  let payloads: BolFightSessionCreatePayload[];
   let heroes: () => Observable<BolHerosModel[]>;
 
   beforeEach(() => {
     vi.stubGlobal('localStorage', memoryStorage());
     localStorage.clear();
-    payloads = [];
     heroes = () => of([]);
 
     TestBed.configureTestingModule({
@@ -42,29 +38,12 @@ describe('CombatSelectionService', () => {
         {provide: BolPnjService, useValue: {pnjs: () => of([])}},
         {provide: BolCreaturesService, useValue: {creatures: () => of([])}},
         {provide: BolDemonsService, useValue: {demons: () => of([])}},
-        {
-          provide: BolFightSessionService,
-          useValue: {
-            create: (payload: BolFightSessionCreatePayload) => {
-              payloads.push(payload);
-              return of({id: 's1', titre: null, statut: 'libre'} as BolFightSessionModel);
-            },
-          },
-        },
       ],
     });
     selection = TestBed.inject(CombatSelectionService);
   });
 
   afterEach(() => vi.unstubAllGlobals());
-
-  it('launches the table with its scenario', () => {
-    selection.launch(null, 'sc1').subscribe();
-    selection.launch().subscribe();
-
-    expect(payloads[0].scenario_id).toBe('sc1');
-    expect(payloads[1].scenario_id).toBeNull();
-  });
 
   describe('loadCatalog', () => {
     it('lowers loading and flags the failure when a library call fails, instead of staying blocked', () => {

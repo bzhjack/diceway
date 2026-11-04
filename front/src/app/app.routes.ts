@@ -92,7 +92,9 @@ export const routes: Routes = [
     path: 'session/new',
     redirectTo: ({queryParams}) => {
       const scenario: unknown = queryParams['scenario'];
-      return inject(Router).createUrlTree(['/'], {queryParams: {table: 'nouvelle', scenario: typeof scenario === 'string' ? scenario : null}});
+      // Au retour de « Créer un héros » depuis « Nouvelle compagnie », c'est elle qui se rouvre.
+      const table = queryParams['compagnie'] ? 'compagnie' : 'nouvelle';
+      return inject(Router).createUrlTree(['/'], {queryParams: {table, scenario: typeof scenario === 'string' ? scenario : null}});
     },
   },
   {
@@ -112,6 +114,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/session/library/session-library-page').then(
         (module) => module.SessionLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/companies',
+    loadComponent: () =>
+      import('./bol/compagnie/library/compagnie-library-page').then(
+        (module) => module.CompagnieLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },
