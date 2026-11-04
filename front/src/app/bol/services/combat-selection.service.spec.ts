@@ -58,23 +58,6 @@ describe('CombatSelectionService', () => {
 
   afterEach(() => vi.unstubAllGlobals());
 
-  it('preselects the heroes when the selection is empty', () => {
-    selection.preselectHeroes(['h1', 'h2']);
-
-    expect(selection.combatants()).toEqual([
-      {catalogId: 'hero:h1', qty: 1},
-      {catalogId: 'hero:h2', qty: 1},
-    ]);
-  });
-
-  it('never overwrites a selection already started', () => {
-    selection.combatants.set([{catalogId: 'hero:h9', qty: 1}]);
-
-    selection.preselectHeroes(['h1']);
-
-    expect(selection.combatants()).toEqual([{catalogId: 'hero:h9', qty: 1}]);
-  });
-
   it('launches the table with its scenario', () => {
     selection.launch(null, 'sc1').subscribe();
     selection.launch().subscribe();

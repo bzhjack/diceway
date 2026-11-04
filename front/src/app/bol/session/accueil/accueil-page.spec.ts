@@ -40,7 +40,6 @@ const DATA: BolAccueilModel = {
   ],
   scenarios_joues: ['p1'],
   scenario_recent_id: 'p1',
-  derniers_heros: ['h1', 'h2'],
   compagnie: [
     {id: 'h1', nom: 'Axel', avatar: null},
     {id: 'h2', nom: 'jadawin', avatar: '/api/bol/portraits/abc.png'},
@@ -192,7 +191,7 @@ describe('AccueilPageComponent', () => {
   });
 
   it('sans compagnie, n’en montre pas', async () => {
-    const page = await rendre(of({...DATA, table: null, compagnie: [], derniers_heros: []}));
+    const page = await rendre(of({...DATA, table: null, compagnie: []}));
 
     expect(page.querySelector('.acc-compagnie')).toBeNull();
   });

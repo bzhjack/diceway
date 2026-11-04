@@ -48,10 +48,39 @@ export class SessionLibraryPageComponent {
   protected readonly totalCount = computed(() => this.sessions.data().length);
   protected readonly visibleCount = computed(() => this.filteredSessions().length);
 
-  /** Retourne à la table ; une table close est d'abord rouverte (`libre`) : elle redevient la table ouverte de l'accueil. */
+  /**
+   * Retourne à la table. Une seule table est ouverte à la fois : si une autre l'est, elle se clôt d'abord, après confirmation (le serveur
+   * la clôt en rouvrant celle-ci). Une table close est rouverte (`libre`) : elle redevient la table ouverte de l'accueil.
+   */
   protected reprendre(session: BolFightSessionSummaryModel): void {
+    const autres = this.sessions.data().filter((autre) => autre.id !== session.id && autre.statut !== 'terminee');
+    if (!autres.length) {
+      this.rouvrir(session);
+      return;
+    }
+    const enCombat = autres.some((autre) => autre.statut === 'combat');
+    const noms = autres.map((autre) => `« ${autre.titre || 'Table sans nom'} »`).join(', ');
+    confirmDialog(
+      this.dialog,
+      {
+        title: `Reprendre ${session.titre || 'cette table'}`,
+        message:
+          `Une seule table est ouverte à la fois : ${noms} se clôt${enCombat ? ', son combat en cours s’arrête' : ''}. ` +
+          'Elle reste ici, d’où elle se reprend.',
+        confirmLabel: 'Clore et reprendre',
+      },
+      {width: '420px'},
+    ).subscribe((confirme) => {
+      if (confirme) {
+        this.rouvrir(session, true);
+      }
+    });
+  }
+
+  /** Rouvre la table (et clôt les autres) quand elle est close ou qu'une autre est ouverte ; sinon, y va simplement. */
+  private rouvrir(session: BolFightSessionSummaryModel, autresAClore = false): void {
     const ouvrir = () => void this.router.navigate(['/session', session.id, 'play']);
-    if (session.statut !== 'terminee') {
+    if (session.statut !== 'terminee' && !autresAClore) {
       ouvrir();
       return;
     }

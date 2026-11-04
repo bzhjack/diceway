@@ -140,9 +140,6 @@
             <p class="otd-note">« Ouvrir la table » attend au moins un héros.</p>
           }
           <p class="otd-note">
-            @if (compagnieReprise()) {
-              La compagnie de la dernière table, reprise d’office.
-            }
             Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState()" mat-dialog-close>Créer un héros</a>
           </p>
         }

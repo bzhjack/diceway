@@ -144,7 +144,7 @@ export class OpenTableDialogComponent {
     return accueil?.table ? tableOuverte(accueil.table, accueil.scenarios) : null;
   });
 
-  /** Ce que la clôture de la table ouverte fait, dans l'ordre : le combat, le chapitre, et où elle reste. */
+  /** Ce que la clôture de la table ouverte fait, dans l'ordre : le combat, et où elle reste (son chapitre n'en devient pas joué). */
   protected readonly effetsCloture = computed(() => {
     const table = this.accueil()?.table;
     if (!table) {
@@ -152,7 +152,6 @@ export class OpenTableDialogComponent {
     }
     return [
       ...(table.statut === 'combat' ? ['le combat en cours s’arrête'] : []),
-      ...(table.scenario_id ? ['son chapitre compte comme joué'] : []),
       'elle reste dans « Mes tables », d’où elle se reprend',
     ];
   });
@@ -166,8 +165,6 @@ export class OpenTableDialogComponent {
 
   /** En reprise, le chapitre choisi n'est plus celui de la table : elle passera dessus. */
   protected readonly chapitreChange = computed(() => this.reprise && this.scenarioId() !== (this.accueil()?.table?.scenario_id ?? null));
-
-  protected readonly compagnieReprise = computed(() => (this.accueil()?.derniers_heros.length ?? 0) > 0);
 
   /** La future table en une ligne : « Les Lames de Satarla · Tolometh, avec Axel, jadawin, Balaram et jean » (sans nom saisi, le chapitre seul). */
   protected readonly resume = computed(() => {
@@ -198,15 +195,12 @@ export class OpenTableDialogComponent {
   });
 
   constructor() {
-    // Une table reprise garde ses héros : ni catalogue ni présélection.
+    // Une table reprise garde ses héros : pas de catalogue. Une nouvelle table est une nouvelle compagnie : aucun héros d'office.
     if (this.reprise) {
       return;
     }
     this.selection.loadCatalog();
-    const accueil = this.data.accueil;
-    if (accueil) {
-      this.selection.preselectHeroes(accueil.derniers_heros);
-    } else {
+    if (!this.data.accueil) {
       this.chargerAccueil();
     }
   }
@@ -323,10 +317,9 @@ export class OpenTableDialogComponent {
       .subscribe({
         next: (data) => {
           this.accueil.set(data);
-          this.selection.preselectHeroes(data.derniers_heros);
           this.loadingAccueil.set(false);
         },
-        // Sans l'accueil, le dialogue reste utilisable : sans chapitre, sans présélection, sans table à clore.
+        // Sans l'accueil, le dialogue reste utilisable : sans chapitre, sans table à clore.
         error: () => this.loadingAccueil.set(false),
       });
   }

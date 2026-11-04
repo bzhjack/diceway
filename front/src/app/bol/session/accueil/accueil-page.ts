@@ -147,7 +147,7 @@ export class AccueilPageComponent {
     });
   }
 
-  /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte, son chapitre compte comme joué). */
+  /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte). */
   protected clore(): void {
     const table = this.data()?.table;
     if (!table) {

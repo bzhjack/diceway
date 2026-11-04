@@ -22,7 +22,7 @@ class BolAccueilService
     public function summary(string $userId): array
     {
         $sessions = BolFightSession::where('user_id', $userId)
-            ->get(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'created_at', 'updated_at']);
+            ->get(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'created_at', 'updated_at']);
         $scenarios = BolScenario::with('saga:id,titre')->where('user_id', $userId)->get(['id', 'saga_id', 'numero', 'titre']);
 
         // La table ouverte la plus récemment active (pas la plus récemment créée) : une table rouverte (`reopenSession` la touche)
@@ -53,9 +53,8 @@ class BolAccueilService
                 'numero' => $scenario->numero,
                 'saga'   => $scenario->saga ? ['id' => $scenario->saga->id, 'titre' => $scenario->saga->titre] : null,
             ])->values()->all(),
-            'scenarios_joues'    => $this->scenariosJoues($userId, $sessions->all(), $scenarios->pluck('id')->all(), $ouverte?->id),
+            'scenarios_joues'    => $this->scenariosJoues($userId, $sessions->all(), $scenarios->pluck('id')->all()),
             'scenario_recent_id' => $touchee?->scenario_id,
-            'derniers_heros'     => $derniere ? $this->herosDeLaTable($userId, $derniere->id) : [],
             'compagnie'          => $this->compagnie($aTable ? $this->herosDeLaTable($userId, $aTable->id) : []),
             'comptes'            => $this->comptes($userId),
         ];
@@ -117,33 +116,32 @@ class BolAccueilService
     }
 
     /**
-     * Les scénarios joués : ceux dont au moins une scène a été chargée sur une table du compte, ouverte ou terminée, et ceux sur
-     * lesquels une autre table que la table ouverte a été posée (un chapitre joué en improvisant, sans charger de scène). La table
-     * ouverte, elle, est « sur la table ce soir », pas encore jouée. Une scène sans scénario (« On improvise ») n'en désigne aucun.
+     * Les chapitres joués : ceux qu'une table du compte a quittés pour un autre chapitre (elle les a finis), et ceux dont toutes les scènes
+     * ont été chargées sur les tables du compte. Clore une table ne compte pas : un MJ qui mène plusieurs compagnies en clôt une pour en
+     * reprendre une autre, en plein chapitre. Une scène sans scénario (« On improvise ») n'en désigne aucun.
      *
      * @param array<int, BolFightSession> $sessions
      * @param array<int, string>          $scenarioIds les scénarios du compte
      * @return array<int, string>
      */
-    private function scenariosJoues(string $userId, array $sessions, array $scenarioIds, ?string $ouverteId): array
+    private function scenariosJoues(string $userId, array $sessions, array $scenarioIds): array
     {
         $joues = [];
-        $sceneIds = [];
+        $scenesJouees = [];
         foreach ($sessions as $session) {
-            foreach ($session->scenes_jouees ?? [] as $sceneId) {
-                $sceneIds[(string) $sceneId] = true;
+            foreach ($session->chapitres_quittes ?? [] as $scenarioId) {
+                $joues[(string) $scenarioId] = true;
             }
-            if ($session->scenario_id !== null && $session->id !== $ouverteId) {
-                $joues[$session->scenario_id] = true;
+            foreach ($session->scenes_jouees ?? [] as $sceneId) {
+                $scenesJouees[(string) $sceneId] = true;
             }
         }
 
-        if ($sceneIds !== []) {
-            $scenarioParScene = BolScene::where('user_id', $userId)->whereNotNull('scenario_id')->pluck('scenario_id', 'id');
-            foreach (array_keys($sceneIds) as $sceneId) {
-                $scenarioId = $scenarioParScene[$sceneId] ?? null;
-                if ($scenarioId !== null) {
-                    $joues[$scenarioId] = true;
+        if ($scenesJouees !== []) {
+            $scenesParScenario = BolScene::where('user_id', $userId)->whereNotNull('scenario_id')->get(['id', 'scenario_id'])->groupBy('scenario_id');
+            foreach ($scenesParScenario as $scenarioId => $scenes) {
+                if ($scenes->every(fn (BolScene $scene) => isset($scenesJouees[(string) $scene->id]))) {
+                    $joues[(string) $scenarioId] = true;
                 }
             }
         }

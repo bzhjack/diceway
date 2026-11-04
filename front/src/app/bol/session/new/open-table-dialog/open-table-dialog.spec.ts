@@ -35,14 +35,12 @@ const ACCUEIL: BolAccueilModel = {
   ],
   scenarios_joues: [],
   scenario_recent_id: null,
-  derniers_heros: ['h1'],
   compagnie: [],
   comptes: {heros: 1, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 1},
 };
 
 describe('OpenTableDialogComponent', () => {
   const accueil = vi.fn();
-  const preselectHeroes = vi.fn();
   const launch = vi.fn();
   const loadCatalog = vi.fn();
   const closeSession = vi.fn();
@@ -62,7 +60,7 @@ describe('OpenTableDialogComponent', () => {
     catalogLoading = signal(!catalogResolu);
     catalogFailed = signal(false);
     accueil$ = new Subject<BolAccueilModel>();
-    for (const espion of [accueil, preselectHeroes, launch, loadCatalog, closeSession, changer, fermer, snack]) {
+    for (const espion of [accueil, launch, loadCatalog, closeSession, changer, fermer, snack]) {
       espion.mockReset();
     }
     accueil.mockReturnValue(accueil$);
@@ -88,7 +86,6 @@ describe('OpenTableDialogComponent', () => {
             combatants: signal(heroes),
             entryFor: (id: string) => (catalog().some((e) => e.catalogId === id) ? {nom: 'Grimar', avatar: ''} : undefined),
             remove: vi.fn(),
-            preselectHeroes,
             launch,
             reset: vi.fn(),
           },
@@ -133,7 +130,6 @@ describe('OpenTableDialogComponent', () => {
       expect(texte('.otd-chapitre-place')).toBe('Perle du Beshaar › Chapitre 5 sur 5');
       expect(texte('.otd-chapitre-nom')).toBe('Tolometh');
       expect(accueil).not.toHaveBeenCalled();
-      expect(preselectHeroes).toHaveBeenCalledWith(['h1']);
     });
 
     it('« Changer de chapitre » propose les chapitres de chaque saga, sans quitter le dialogue', async () => {
@@ -193,7 +189,6 @@ describe('OpenTableDialogComponent', () => {
       await repondre();
 
       expect(texte('.otd-chapitre-nom')).toBe('Tolometh');
-      expect(preselectHeroes).toHaveBeenCalledWith(['h1']);
       expect(bouton('Ouvrir la table').disabled).toBe(false);
     });
 
@@ -231,7 +226,7 @@ describe('OpenTableDialogComponent', () => {
 
       expect(texte('.otd-deja-table')).toContain('Sacrilège à Satarla');
       expect(texte('.otd-deja-texte')).toBe(
-        'Ouvrir celle-ci la clôt : le combat en cours s’arrête, son chapitre compte comme joué, elle reste dans « Mes tables », d’où elle se reprend.',
+        'Ouvrir celle-ci la clôt : le combat en cours s’arrête, elle reste dans « Mes tables », d’où elle se reprend.',
       );
       expect(texte('.otd-resume-cloture')).toBe('Sacrilège à Satarla sera close.');
 
@@ -243,7 +238,6 @@ describe('OpenTableDialogComponent', () => {
       expect(texte('#otd-titre')).toBe('Clore Sacrilège à Satarla ?');
       expect([...element.querySelectorAll('.otd-confirmation li')].map((li) => li.textContent?.trim())).toEqual([
         'le combat en cours s’arrête',
-        'son chapitre compte comme joué',
         'elle reste dans « Mes tables », d’où elle se reprend',
       ]);
       expect(document.activeElement).toBe(bouton('Clore et ouvrir Les Lames de Satarla'));

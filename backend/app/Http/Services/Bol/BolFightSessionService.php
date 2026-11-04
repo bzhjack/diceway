@@ -277,7 +277,11 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Rouvre une table close (« Reprendre » depuis les sessions) : elle redevient `libre` ; une table encore ouverte ne change pas. */
+    /**
+     * Reprend une table (« Reprendre » depuis « Mes tables ») : une seule table est ouverte à la fois, les autres tables ouvertes du compte
+     * se closent (un combat en cours s'arrête) ; une table close redevient `libre`, une table encore ouverte garde son état. Elle devient
+     * la table de l'accueil.
+     */
     public function reopenSession(string $sessionId, string $userId): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
@@ -285,8 +289,16 @@ class BolFightSessionService
             return null;
         }
 
+        BolFightSession::where('user_id', $userId)
+            ->where('id', '!=', $sessionId)
+            ->whereIn('statut', ['libre', 'combat'])
+            ->pluck('id')
+            ->each(fn (string $autre) => $this->closeSession($autre, $userId));
+
         if ($session->statut === 'terminee') {
             $session->update(['statut' => 'libre']);
+        } else {
+            $session->touch();
         }
 
         return $this->getSessionWithRelations($sessionId);

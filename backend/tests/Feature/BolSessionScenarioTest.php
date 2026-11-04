@@ -53,6 +53,8 @@ class BolSessionScenarioTest extends TestCase
         $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
 
         $this->assertSame($b->id, $session->fresh()->scenario_id);
+        // La table a quitté A pour B : A compte comme joué.
+        $this->assertSame([$a->id], $session->fresh()->chapitres_quittes);
     }
 
     public function test_saving_a_scene_sets_its_scenario(): void
@@ -77,6 +79,7 @@ class BolSessionScenarioTest extends TestCase
         $fresh = $session->fresh();
         $this->assertSame($a->id, $fresh->scenario_id);
         $this->assertSame($scene->id, $fresh->scene_id);
+        $this->assertNull($fresh->chapitres_quittes);
     }
 
     public function test_saving_an_improvised_scene_keeps_the_table_scenario(): void

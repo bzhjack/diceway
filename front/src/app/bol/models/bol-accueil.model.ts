@@ -57,8 +57,6 @@ export interface BolAccueilModel {
   scenarios_joues: string[];
   /** Id du scénario de la table la plus récente (ouverte ou non), s'il y en a un. */
   scenario_recent_id: string | null;
-  /** Ids des héros de la dernière table. */
-  derniers_heros: string[];
   /** Les héros de la table ouverte (sinon de la dernière), avec leur nom et leur portrait. */
   compagnie: BolAccueilHeros[];
   comptes: BolAccueilComptes;

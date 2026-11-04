@@ -56,18 +56,45 @@ class BolAccueilTest extends TestCase
         $this->assertNotEmpty($response->json('table.created_at'));
     }
 
-    public function test_a_reopened_table_comes_back_as_the_open_table(): void
+    /** Reprendre une table la rouvre et clôt l'autre table ouverte (un combat en cours s'arrête) : une seule table ouverte à la fois. */
+    public function test_a_reopened_table_comes_back_as_the_open_table_and_closes_the_other(): void
     {
         $ancienne = $this->tableSession('terminee');
+        $this->travel(1)->minutes();
+        $recente = $this->tableSession('combat');
+        $this->travel(1)->minutes();
+
+        $this->patchJson("/api/bol/fight-session/{$ancienne->id}/reopen")->assertOk();
+
+        $this->assertSame('libre', $ancienne->fresh()->statut);
+        $this->assertSame('terminee', $recente->fresh()->statut);
+        $this->assertSame($ancienne->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+    }
+
+    /** Reprendre une table encore ouverte (deux tables ouvertes d'avant la règle) : elle devient la table de l'accueil, l'autre se clôt. */
+    public function test_reopening_an_open_table_makes_it_the_open_table(): void
+    {
+        $ancienne = $this->tableSession('libre');
         $this->travel(1)->minutes();
         $recente = $this->tableSession('libre');
         $this->travel(1)->minutes();
 
         $this->patchJson("/api/bol/fight-session/{$ancienne->id}/reopen")->assertOk();
 
-        // Rouvrir touche la table : c'est la plus récemment active, même créée avant l'autre.
-        $this->assertTrue($ancienne->fresh()->updated_at->greaterThan($recente->fresh()->updated_at));
+        $this->assertSame('libre', $ancienne->fresh()->statut);
+        $this->assertSame('terminee', $recente->fresh()->statut);
         $this->assertSame($ancienne->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+    }
+
+    /** Reprendre ne touche pas aux tables d'un autre compte. */
+    public function test_reopening_leaves_other_accounts_alone(): void
+    {
+        $table = $this->tableSession('terminee');
+        $autre = BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'libre', 'user_id' => User::factory()->create()->id]);
+
+        $this->patchJson("/api/bol/fight-session/{$table->id}/reopen")->assertOk();
+
+        $this->assertSame('libre', $autre->fresh()->statut);
     }
 
     public function test_a_table_closed_last_does_not_come_back_as_the_open_table(): void
@@ -147,24 +174,43 @@ class BolAccueilTest extends TestCase
         $this->assertSame(array_values($joues), $joues);
     }
 
-    public function test_a_chapter_played_without_loading_a_scene_counts_as_played(): void
+    /** Un chapitre qu'une table quitte pour un autre est joué, même sans y avoir chargé de scène ; clore sa table ne le rend pas joué. */
+    public function test_a_chapter_left_for_another_counts_as_played_not_a_closed_one(): void
     {
-        $ancien = $this->scenario('Saga — 1. Ancien');
-        $ferme = $this->scenario('Saga — 2. Fermé');
-        $ouvert = $this->scenario('Saga — 3. Ouvert');
+        $premier = $this->scenario('Saga — 1. Premier');
+        $second = $this->scenario('Saga — 2. Second');
+        $ferme = $this->scenario('Saga — 3. Fermé');
+        $improvise = $this->scenario('Saga — 4. Laissé pour improviser');
         $etranger = $this->scenario('Étranger', $other = User::factory()->create());
 
-        $this->tableSession('libre', $ancien->id);
-        $this->travel(1)->minutes();
-        $this->tableSession('terminee', $ferme->id);
-        $this->travel(1)->minutes();
-        $this->tableSession('libre', $ouvert->id);
-        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'terminee', 'user_id' => $other->id, 'scenario_id' => $etranger->id]);
+        $table = $this->tableSession('libre', $premier->id);
+        $this->patchJson("/api/bol/fight-session/{$table->id}/scenario", ['scenario_id' => $second->id])->assertOk();
+        $close = $this->tableSession('libre', $ferme->id);
+        $this->patchJson("/api/bol/fight-session/{$close->id}/close")->assertOk();
+        $libre = $this->tableSession('terminee', $improvise->id);
+        $this->patchJson("/api/bol/fight-session/{$libre->id}/scenario", ['scenario_id' => null])->assertOk();
+        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'terminee', 'user_id' => $other->id, 'scenario_id' => $etranger->id, 'chapitres_quittes' => [$etranger->id]]);
 
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
-        // La table ouverte est « sur la table ce soir », pas encore jouée ; les autres tables du compte l'ont été.
-        $this->assertEqualsCanonicalizing([$ancien->id, $ferme->id], $response->json('scenarios_joues'));
+        $this->assertSame([$premier->id], $response->json('scenarios_joues'));
+    }
+
+    /** Un chapitre dont toutes les scènes sont passées sur les tables du compte est joué ; à moitié, il ne l'est pas. */
+    public function test_a_chapter_counts_as_played_once_all_its_scenes_are(): void
+    {
+        $fini = $this->scenario('Saga — 1. Fini');
+        $entame = $this->scenario('Saga — 2. Entamé');
+        $f1 = $this->scene($fini->id);
+        $f2 = $this->scene($fini->id);
+        $e1 = $this->scene($entame->id);
+        $this->scene($entame->id);
+
+        // Les scènes du chapitre fini sont passées sur deux tables (deux compagnies, ou une table reprise).
+        $this->tableSession('terminee', $fini->id, [$f1->id]);
+        $this->tableSession('libre', $entame->id, [$f2->id, $e1->id]);
+
+        $this->assertSame([$fini->id], $this->getJson('/api/bol/accueil')->assertOk()->json('scenarios_joues'));
     }
 
     public function test_no_played_scenario_is_an_empty_list(): void
@@ -174,8 +220,8 @@ class BolAccueilTest extends TestCase
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
         $this->assertSame([], $response->json('scenarios_joues'));
-        $this->assertSame([], $response->json('derniers_heros'));
         $this->assertNull($response->json('scenario_recent_id'));
+        $this->assertArrayNotHasKey('derniers_heros', $response->json());
     }
 
     public function test_recent_scenario_is_the_last_touched_table(): void
@@ -243,10 +289,9 @@ class BolAccueilTest extends TestCase
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
         $this->assertSame([$axel->id], array_column($response->json('compagnie'), 'id'));
-        $this->assertSame([$jean->id], $response->json('derniers_heros'));
     }
 
-    public function test_last_heroes_are_the_heroes_of_the_newest_session(): void
+    public function test_company_is_the_last_table_without_open_one(): void
     {
         $h1 = $this->hero('H1');
         $h2 = $this->hero('H2');
@@ -257,7 +302,7 @@ class BolAccueilTest extends TestCase
         $old = $this->tableSession('terminee');
         $this->seat($old, $h1);
         $this->travel(1)->minutes();
-        $new = $this->tableSession('libre');
+        $new = $this->tableSession('terminee');
         $this->seat($new, $h2);
         $this->seat($new, $pnj);
         $this->seat($new, $foreign);
@@ -265,11 +310,11 @@ class BolAccueilTest extends TestCase
 
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
-        $this->assertSame([$h2->id, $h3->id], $response->json('derniers_heros'));
+        $this->assertSame([$h2->id, $h3->id], array_column($response->json('compagnie'), 'id'));
     }
 
     /** Le seuil ne liste que les héros du compte, du camp des héros : les autres seraient comptés sans qu'on puisse les voir. */
-    public function test_last_heroes_are_the_accounts_own_heroes_on_the_heroes_side(): void
+    public function test_company_is_the_accounts_own_heroes_on_the_heroes_side(): void
     {
         $own = $this->hero('Le mien');
         $rival = $this->hero('Rival');
@@ -284,7 +329,7 @@ class BolAccueilTest extends TestCase
 
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
-        $this->assertSame([$own->id], $response->json('derniers_heros'));
+        $this->assertSame([$own->id], array_column($response->json('compagnie'), 'id'));
     }
 
     public function test_company_names_the_last_heroes_in_their_order_with_their_portrait(): void
@@ -346,7 +391,7 @@ class BolAccueilTest extends TestCase
         $this->assertSame([], $response->json('scenarios'));
         $this->assertSame([], $response->json('scenarios_joues'));
         $this->assertNull($response->json('scenario_recent_id'));
-        $this->assertSame([], $response->json('derniers_heros'));
+        $this->assertSame([], $response->json('compagnie'));
     }
 
     private function scenario(string $titre, ?User $owner = null): BolScenario

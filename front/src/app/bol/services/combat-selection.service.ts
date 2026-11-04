@@ -227,15 +227,6 @@ export class CombatSelectionService {
     this.setHeroInitiative(catalogId, null);
   }
 
-  /** Présélectionne les héros de la dernière table, sans jamais écraser une sélection déjà commencée. */
-  preselectHeroes(heroIds: readonly string[]): void {
-    if (this.combatants().length > 0) {
-      return;
-    }
-
-    this.combatants.set(heroIds.map((id) => ({catalogId: `hero:${id}`, qty: 1})));
-  }
-
   /** Résultat du jet de réaction choisi pour un héros, avant même le lancement du combat. */
   setHeroInitiative(catalogId: string, resultat: InitiativeResultat | null): void {
     this.heroInitiative.update((map) => {
