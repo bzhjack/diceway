@@ -180,6 +180,26 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-partie-nouvelle')?.getAttribute('aria-label')).toBe('Nouvelle partie');
   });
 
+  it('sans légende, chaque pastille donne le nom de son chapitre en bulle', async () => {
+    const page = await rendre();
+
+    expect(page.querySelector('.acc-legende')).toBeNull();
+    const pastille = page.querySelector<HTMLElement>('.acc-partie .acc-repere')!;
+    pastille.dispatchEvent(new MouseEvent('mouseenter'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    await stable();
+
+    expect(document.querySelector('.mat-mdc-tooltip')?.textContent).toContain('1. Sacrilège à Satarla');
+  });
+
+  it('seul le bloc « Reprendre » mène à la table', async () => {
+    const page = await rendre();
+    const carte = cartes(page)[1];
+
+    expect(carte.querySelectorAll('a').length).toBe(1);
+    expect(carte.querySelector('a')?.classList).toContain('acc-partie-reprendre');
+  });
+
   it('« + Partie » ouvre le dialogue qui associe une compagnie à un scénario', async () => {
     const page = await rendre();
 
@@ -313,7 +333,6 @@ describe('AccueilPageComponent', () => {
     expect(texte(page.querySelector('.acc-soir-texte'))).toContain('Il faut d’abord créer une compagnie pour lancer une partie');
     expect(page.querySelector('.acc-soir nav')).toBeNull();
     expect(cartes(page)).toEqual([]);
-    expect(page.querySelector('.acc-legende')).toBeNull();
     const plus = page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!;
     expect(plus.disabled).toBe(true);
     expect(texte(page.querySelector('.acc-partie-nouvelle-note'))).toContain('Crée d’abord une compagnie');

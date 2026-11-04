@@ -125,7 +125,7 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
       ? []
       : chapitres.map((c) => {
           const libelle = libelleDeChapitre(c.numero, c.titre);
-          return {marque: marque(c), etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
+          return {marque: marque(c), libelle, etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
         });
 
   return {

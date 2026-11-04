@@ -135,9 +135,9 @@ describe('partiesDeLAccueil', () => {
 
   it('marque les chapitres de la saga pour cette partie : joué, en cours, à jouer', () => {
     expect(carte({scenario_id: 'p2', chapitres_joues: ['p1']}).reperes).toEqual([
-      {marque: '1', etat: 'joue', texte: '1. Sacrilège à Satarla : joué'},
-      {marque: '2', etat: 'en-cours', texte: "2. De sable et d'eau : en cours"},
-      {marque: '10', etat: 'a-jouer', texte: '10. Épilogue : à jouer'},
+      {marque: '1', libelle: '1. Sacrilège à Satarla', etat: 'joue', texte: '1. Sacrilège à Satarla : joué'},
+      {marque: '2', libelle: "2. De sable et d'eau", etat: 'en-cours', texte: "2. De sable et d'eau : en cours"},
+      {marque: '10', libelle: '10. Épilogue', etat: 'a-jouer', texte: '10. Épilogue : à jouer'},
     ]);
     expect(carte({scenario_id: 'dv1'}).reperes.map((r) => r.marque)).toEqual(['Intro', '1']);
     expect(carte({scenario_id: 'clm'}).reperes.map((r) => r.marque)).toEqual(['L', 'M']);

@@ -5,6 +5,8 @@ export type ChapitreEtat = 'joue' | 'en-cours' | 'a-jouer';
  * d'écran. */
 export interface AccueilRepere {
   marque: string;
+  /** Le nom du chapitre, en bulle au survol : « 1. Sacrilège à Satarla ». */
+  libelle: string;
   etat: ChapitreEtat;
   texte: string;
 }

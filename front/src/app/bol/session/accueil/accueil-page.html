@@ -126,14 +126,6 @@
       <section aria-labelledby="acc-parties-titre">
         <div class="acc-parties-tete">
           <h2 id="acc-parties-titre" class="acc-section-titre">Parties</h2>
-          <!-- Chaque pastille dit déjà son état à un lecteur d'écran : la légende ne sert qu'à l'œil. -->
-          @if (parties().length) {
-            <ul class="acc-legende" aria-hidden="true">
-              <li><span class="acc-legende-pastille acc-repere--joue"></span>joué</li>
-              <li><span class="acc-legende-pastille acc-repere--en-cours"></span>en cours</li>
-              <li><span class="acc-legende-pastille acc-repere--a-jouer"></span>à jouer</li>
-            </ul>
-          }
           @if (!(railDebut() && railFin())) {
             <div class="acc-rail-boutons">
               <button mat-icon-button type="button" aria-label="Parties précédentes" aria-controls="acc-rail" [disabled]="railDebut()" (click)="defiler(-1)">
@@ -170,7 +162,7 @@
                   @if (partie.reperes.length) {
                     <ol class="acc-reperes" [attr.aria-label]="'Les chapitres de ' + partie.scenario + ' pour ' + partie.nom">
                       @for (repere of partie.reperes; track $index) {
-                        <li class="acc-repere" [class]="'acc-repere--' + repere.etat">
+                        <li class="acc-repere" [class]="'acc-repere--' + repere.etat" [matTooltip]="repere.libelle">
                           <span aria-hidden="true">{{ repere.marque }}</span><span class="sr-only">{{ repere.texte }}</span>
                         </li>
                       }

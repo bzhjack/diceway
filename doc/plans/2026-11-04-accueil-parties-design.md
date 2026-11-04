@@ -76,9 +76,9 @@ Chaque carte (option A) :
     scénarios puis de leurs chapitres, une seule fois (ensuite la partie est liée à ce scénario) ;
   - **« Supprimer la partie »**, après confirmation (`dw-confirm-dialog`), irréversible.
 
-La légende au-dessus de la rangée : « joué · en cours · à jouer ».
+Chaque pastille donne le nom de son chapitre en bulle, au survol. Pas de légende.
 
-La carte entière mène à la table (`/session/:id/play`), comme le bouton.
+Seul le bloc « Reprendre » mène à la table (`/session/:id/play`).
 
 ## Progression d'une partie
 

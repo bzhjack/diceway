@@ -4,6 +4,23 @@
   gap: 0.5rem;
 }
 
+// Le camp qui vient de tomber : sa couleur, le même titre que l'ordre du tapis.
+.acd-title--victoire {
+  color: var(--dw-color-reussite);
+}
+
+.acd-title--defaite {
+  color: var(--dw-color-echec);
+}
+
+.acd-issue {
+  font-weight: 700;
+}
+
+.acd-warn {
+  color: var(--dw-color-legendary);
+}
+
 .acd-content {
   display: grid;
   gap: 0.6rem;

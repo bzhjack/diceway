@@ -7,6 +7,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTooltip} from '@angular/material/tooltip';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolAccueilComptes, BolAccueilModel} from '../../models/bol-accueil.model';
@@ -48,7 +49,7 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
  * de chapitre ou les supprimer), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
+  imports: [NgOptimizedImage, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
