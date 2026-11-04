@@ -45,13 +45,13 @@
     }
 
     @if (!reprise) {
-      <!-- Le nom de la table, obligatoire : c'est sous lui qu'elle se retrouve. -->
+      <!-- Le nom de la table, obligatoire : celui de sa compagnie, sous lequel elle se retrouve. -->
       <mat-form-field class="otd-nom" subscriptSizing="dynamic">
-        <mat-label>Nom de la table</mat-label>
-        <input matInput autocomplete="off" placeholder="Ex. : la campagne du jeudi" [formField]="nomField" (keydown.enter)="ouvrir()" />
+        <mat-label>Nom de la compagnie</mat-label>
+        <input matInput autocomplete="off" placeholder="Ex. : les Lames de Satarla" [formField]="nomField" (keydown.enter)="ouvrir()" />
         <mat-error>{{ nomField().errors()[0]?.message }}</mat-error>
         @if (!nomValide()) {
-          <mat-hint>« Ouvrir la table » attend un nom.</mat-hint>
+          <mat-hint>« Ouvrir la table » attend le nom de la compagnie.</mat-hint>
         }
       </mat-form-field>
     }

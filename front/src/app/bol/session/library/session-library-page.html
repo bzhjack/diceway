@@ -34,7 +34,7 @@
         @for (session of filteredSessions(); track session.id) {
           <div class="cl-row">
             <div class="cl-row-main">
-              <p class="cl-row-title">{{ session.titre || 'Session sans titre' }}</p>
+              <p class="cl-row-title">{{ session.titre || 'Table sans nom' }}</p>
               <p class="cl-row-meta">
                 {{ session.heros_count }} héros · {{ session.adversaires_count }} adversaires
                 @if (session.statut === 'terminee') {
@@ -51,7 +51,7 @@
               <button
                 mat-icon-button
                 (click)="askDelete(session)"
-                [attr.aria-label]="'Supprimer ' + (session.titre || 'cette session')"
+                [attr.aria-label]="'Supprimer ' + (session.titre || 'cette table')"
               >
                 <mat-icon svgIcon="gi-trash" />
               </button>

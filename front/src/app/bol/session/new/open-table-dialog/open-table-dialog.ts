@@ -65,10 +65,13 @@ export class OpenTableDialogComponent {
   protected readonly scenarioId = signal(this.data.scenarioId);
   private readonly confirmer = viewChild('confirmer', {read: ElementRef<HTMLButtonElement>});
 
-  /** Le nom de la nouvelle table, obligatoire : c'est sous lui qu'elle se retrouve. Une table reprise garde le sien. */
+  /**
+   * Le nom de la nouvelle table, obligatoire : celui de sa compagnie, sous lequel elle se retrouve dans « Mes tables ». Une nouvelle table
+   * part d'un nom vide (le MJ peut mener plusieurs compagnies) ; une table reprise garde le sien.
+   */
   private readonly nom = signal('');
   protected readonly nomField = form(this.nom, (path) => {
-    required(path, {message: 'Donnez un nom à la table'});
+    required(path, {message: 'Donnez un nom à la compagnie'});
     maxLength(path, NOM_MAX, {message: `${NOM_MAX} caractères au plus`});
   });
   private readonly nomSaisi = computed(() => this.nom().trim());
@@ -166,7 +169,7 @@ export class OpenTableDialogComponent {
 
   protected readonly compagnieReprise = computed(() => (this.accueil()?.derniers_heros.length ?? 0) > 0);
 
-  /** La future table en une ligne : « Les veillées · Tolometh, avec Axel, jadawin, Balaram et jean » (sans nom saisi, le chapitre seul). */
+  /** La future table en une ligne : « Les Lames de Satarla · Tolometh, avec Axel, jadawin, Balaram et jean » (sans nom saisi, le chapitre seul). */
   protected readonly resume = computed(() => {
     const noms = (this.reprise ? this.compagnie() : this.present()).map((entry) => entry.nom);
     const histoire = this.chapitre()?.nom ?? 'Partie improvisée';

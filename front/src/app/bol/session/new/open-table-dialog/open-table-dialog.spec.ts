@@ -119,7 +119,7 @@ describe('OpenTableDialogComponent', () => {
 
   const champNom = () => element.querySelector<HTMLInputElement>('.otd-nom input');
 
-  async function nommer(nom = 'Les veillées'): Promise<void> {
+  async function nommer(nom = 'Les Lames de Satarla'): Promise<void> {
     const input = champNom()!;
     input.value = nom;
     input.dispatchEvent(new Event('input'));
@@ -170,7 +170,7 @@ describe('OpenTableDialogComponent', () => {
       bouton('Ouvrir la table').click();
 
       expect(texte('.otd-chapitre-nom')).toBe('Partie improvisée');
-      expect(launch).toHaveBeenCalledWith('Les veillées', null);
+      expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', null);
     });
 
     it('prévient qu’un chapitre inconnu du compte est introuvable, et laisse ouvrir la table sans lui', async () => {
@@ -216,12 +216,12 @@ describe('OpenTableDialogComponent', () => {
       expect(texte('.otd-resume-texte')).toBe('Tolometh, avec Grimar');
       expect(element.querySelector('.otd-deja')).toBeNull();
       await nommer();
-      expect(texte('.otd-resume-texte')).toBe('Les veillées · Tolometh, avec Grimar');
+      expect(texte('.otd-resume-texte')).toBe('Les Lames de Satarla · Tolometh, avec Grimar');
       bouton('Ouvrir la table').click();
       await stable();
 
       expect(closeSession).not.toHaveBeenCalled();
-      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
+      expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
       expect(fermer).toHaveBeenCalledWith(true);
       expect(TestBed.inject(Router).url).toBe('/session/s9/play');
     });
@@ -246,13 +246,13 @@ describe('OpenTableDialogComponent', () => {
         'son chapitre compte comme joué',
         'elle reste dans « Mes tables », d’où elle se reprend',
       ]);
-      expect(document.activeElement).toBe(bouton('Clore et ouvrir Les veillées'));
+      expect(document.activeElement).toBe(bouton('Clore et ouvrir Les Lames de Satarla'));
 
-      bouton('Clore et ouvrir Les veillées').click();
+      bouton('Clore et ouvrir Les Lames de Satarla').click();
       await stable();
 
       expect(closeSession).toHaveBeenCalledWith('t1');
-      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
+      expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
       expect(closeSession.mock.invocationCallOrder[0]).toBeLessThan(launch.mock.invocationCallOrder[0]);
       expect(TestBed.inject(Router).url).toBe('/session/s9/play');
     });
@@ -278,7 +278,7 @@ describe('OpenTableDialogComponent', () => {
       bouton('Ouvrir la table').click();
       await stable();
 
-      bouton('Clore et ouvrir Les veillées').click();
+      bouton('Clore et ouvrir Les Lames de Satarla').click();
       await stable();
 
       expect(snack).toHaveBeenCalledTimes(1);
@@ -294,7 +294,7 @@ describe('OpenTableDialogComponent', () => {
 
       expect(champNom()!.required).toBe(true);
       expect(bouton('Ouvrir la table').disabled).toBe(true);
-      expect(texte('.otd-nom mat-hint')).toBe('« Ouvrir la table » attend un nom.');
+      expect(texte('.otd-nom mat-hint')).toBe('« Ouvrir la table » attend le nom de la compagnie.');
 
       await nommer('   ');
       expect(bouton('Ouvrir la table').disabled).toBe(true);
@@ -307,11 +307,17 @@ describe('OpenTableDialogComponent', () => {
     it('part sans les blancs autour, et Entrée ouvre la table', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
-      await nommer('  Les veillées  ');
+      await nommer('  Les Lames de Satarla  ');
       champNom()!.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
       await stable();
 
-      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
+      expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
+    });
+
+    it('part vide, même après une table nommée : une nouvelle table est une nouvelle compagnie', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: {...TABLE, titre: 'Les Fils du Serpent'}}});
+
+      expect(champNom()!.value).toBe('');
     });
 
     it('Entrée sans nom n’ouvre rien', async () => {

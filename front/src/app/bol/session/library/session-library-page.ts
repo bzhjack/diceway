@@ -67,8 +67,8 @@ export class SessionLibraryPageComponent {
     confirmDialog(
       this.dialog,
       {
-        title: 'Supprimer ce combat',
-        message: `Voulez-vous supprimer "${session.titre ?? 'ce combat'}" ? Cette action est irréversible.`,
+        title: 'Supprimer cette table',
+        message: `Voulez-vous supprimer "${session.titre || 'cette table'}" ? Cette action est irréversible.`,
         confirmLabel: 'Supprimer',
       },
       {width: '380px'},
