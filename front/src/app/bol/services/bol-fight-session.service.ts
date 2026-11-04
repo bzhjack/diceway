@@ -136,7 +136,8 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {}));
   }
 
-  /** Passe la table sur un autre chapitre (null : on improvise) : mêmes héros, même état. */
+  /** Passe la partie sur un autre chapitre de son scénario, et charge sa première scène : les héros restent, les figurants de l'ancienne
+   * scène partent (une partie improvisée qui reçoit son scénario ne perd rien). */
   changerChapitre(sessionId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
   }

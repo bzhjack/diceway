@@ -255,7 +255,7 @@ class BolFightSessionController extends Controller
 
     public function changerChapitre(Request $request, string $id)
     {
-        $session = $this->fightSessionService->changerChapitre($id, Auth::id(), $request->input('scenario_id'));
+        $session = $this->sceneService->changerDeChapitre($id, Auth::id(), $request->input('scenario_id'));
 
         if ($session === null) {
             return response()->json(['error' => 'Not found'], 404);

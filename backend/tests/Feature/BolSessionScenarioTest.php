@@ -3,6 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Bol\BolFightSession;
+use App\Models\Bol\BolFightSessionHeros;
+use App\Models\Bol\BolFightSessionPnj;
+use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
@@ -149,6 +152,90 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame([$ch1->id], $fresh->chapitres_quittes);
     }
 
+    /** Changer de chapitre charge sa première scène : les figurants de l'ancienne partent, les héros restent. */
+    public function test_changing_chapter_loads_its_first_scene_and_replaces_the_extras(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $aubergiste = $this->pnj('Aubergiste');
+        $garde = $this->pnj('Garde');
+        $taverne = $this->sceneAvec($ch1->id, 'La taverne', 0, $aubergiste);
+        $this->sceneAvec($ch2->id, 'Le temple', 1, null);
+        $desert = $this->sceneAvec($ch2->id, 'Le désert', 0, $garde);
+        $session = $this->tableSession($ch1->id);
+        $heros = BolHeros::create(['nom' => 'Axel', 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'H']);
+        BolFightSessionHeros::create(['fight_session_id' => $session->id, 'heros_id' => $heros->id, 'camp' => 'heros']);
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $taverne->id, 'mode' => 'add'])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])
+            ->assertOk()
+            ->assertJsonPath('scene_id', $desert->id)
+            ->assertJsonPath('scenario_id', $ch2->id);
+
+        $this->assertSame([$garde->id], BolFightSessionPnj::where('fight_session_id', $session->id)->pluck('pnj_id')->all());
+        $this->assertSame(1, BolFightSessionHeros::where('fight_session_id', $session->id)->count());
+        $this->assertSame([$taverne->id, $desert->id], $session->fresh()->scenes_jouees);
+    }
+
+    /** Un chapitre sans scène n'a rien à mettre à la place : la table n'est plus sur l'ancienne scène, mais rien n'en est retiré. */
+    public function test_changing_to_a_chapter_without_scene_keeps_the_extras(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $taverne = $this->sceneAvec($ch1->id, 'La taverne', 0, $this->pnj('Aubergiste'));
+        $session = $this->tableSession($ch1->id);
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $taverne->id, 'mode' => 'add'])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertOk()->assertJsonPath('scene_id', null);
+
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
+    /** Rester sur le même chapitre ne recharge rien. */
+    public function test_choosing_the_same_chapter_changes_nothing(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $this->sceneAvec($ch1->id, 'La taverne', 0, null);
+        $temple = $this->sceneAvec($ch1->id, 'Le temple', 1, $this->pnj('Prêtre'));
+        $session = $this->tableSession($ch1->id);
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $temple->id, 'mode' => 'add'])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch1->id])->assertOk()->assertJsonPath('scene_id', $temple->id);
+
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
+    /** En combat, on ne touche pas à la table : seul le chapitre change. */
+    public function test_changing_chapter_in_combat_leaves_the_table_alone(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $taverne = $this->sceneAvec($ch1->id, 'La taverne', 0, $this->pnj('Aubergiste'));
+        $this->sceneAvec($ch2->id, 'Le désert', 0, null);
+        $session = $this->tableSession($ch1->id);
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $taverne->id, 'mode' => 'add'])->assertOk();
+        $session->fresh()->update(['statut' => 'combat']);
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])
+            ->assertOk()
+            ->assertJsonPath('scenario_id', $ch2->id)
+            ->assertJsonPath('scene_id', $taverne->id);
+
+        $this->assertSame(1, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
+    /** Une partie improvisée qui reçoit un scénario charge sa première scène, sans rien retirer de ce qui est posé à la main. */
+    public function test_an_improvised_partie_given_a_scenario_keeps_what_is_on_the_table(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $garde = $this->pnj('Garde');
+        $improvisee = $this->sceneAvec(null, 'Improvisée', 0, $this->pnj('Marchand'));
+        $desert = $this->sceneAvec($ch1->id, 'Le désert', 0, $garde);
+        $session = $this->tableSession();
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $improvisee->id, 'mode' => 'add'])->assertOk();
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch1->id])->assertOk()->assertJsonPath('scene_id', $desert->id);
+
+        $this->assertSame(2, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
     /** Une partie liée à un scénario n'en change pas, et ne redevient pas improvisée ; un chapitre d'un autre compte n'en est pas un. */
     public function test_refuses_to_move_a_partie_out_of_its_scenario(): void
     {
@@ -208,6 +295,18 @@ class BolSessionScenarioTest extends TestCase
             fn (int $numero) => BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => $numero, 'titre' => "Chapitre $numero"]),
             range(1, $n),
         );
+    }
+
+    private function pnj(string $nom): BolHeros
+    {
+        return BolHeros::create(['nom' => $nom, 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'C']);
+    }
+
+    private function sceneAvec(?string $scenarioId, string $titre, int $ordre, ?BolHeros $figurant): BolScene
+    {
+        return BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenarioId, 'titre' => $titre, 'ordre' => $ordre, 'distribution' => $figurant ? [
+            ['kind' => 'pnj', 'source_id' => $figurant->id, 'qty' => 1, 'camp' => 'adversaires'],
+        ] : []]);
     }
 
     private function sceneOf(?string $scenarioId): BolScene

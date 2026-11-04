@@ -70,13 +70,13 @@
         <mat-icon svgIcon="gi-masks" />
       </button>
       <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="gi-swords" /> Démarrer un combat</button>
+      <a mat-icon-button class="cp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
+        <mat-icon svgIcon="gi-home" />
+      </a>
     } @else {
       <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
       <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon svgIcon="gi-flag" /> Terminer</button>
     }
-    <a mat-icon-button class="cp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
-      <mat-icon svgIcon="gi-return" />
-    </a>
     <bol-account-menu />
   </div>
 

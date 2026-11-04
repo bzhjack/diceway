@@ -218,16 +218,44 @@ class BolSceneService
         if ($partie->scene_id !== null || $partie->statut !== 'libre') {
             return $partie;
         }
-        $scene = $partie->scenario_id === null ? null : BolScene::where('user_id', $userId)
-            ->where('scenario_id', $partie->scenario_id)
-            ->orderBy('ordre')
-            ->orderBy('created_at')
-            ->first();
+        $scene = $this->premiereScene($userId, $partie->scenario_id);
         if (!$scene) {
             return $partie;
         }
 
         return $this->loadIntoSession($userId, $partie->id, $scene->id, 'add')['session'] ?? $partie;
+    }
+
+    /**
+     * « Changer de chapitre » : la partie passe sur ce chapitre et charge sa première scène. Les figurants de l'ancien chapitre partent, les
+     * héros restent ; une partie improvisée qui reçoit son scénario ne perd rien de ce qui est posé. Sans scène à charger, la table quitte
+     * juste l'ancienne scène ; en combat, seul le chapitre change. Mêmes retours que `BolFightSessionService::changerChapitre`.
+     */
+    public function changerDeChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
+    {
+        $ancien = $this->ownedSession($sessionId, $userId)?->scenario_id;
+        $partie = $this->fightSessionService->changerChapitre($sessionId, $userId, $scenarioId);
+        if (!$partie || $partie->scenario_id === $ancien || $partie->statut !== 'libre') {
+            return $partie;
+        }
+
+        $scene = $this->premiereScene($userId, $partie->scenario_id);
+        if (!$scene) {
+            $partie->update(['scene_id' => null]);
+
+            return $this->fightSessionService->getSessionWithRelations($sessionId);
+        }
+
+        return $this->loadIntoSession($userId, $sessionId, $scene->id, $ancien === null ? 'add' : 'replace')['session'] ?? $partie;
+    }
+
+    private function premiereScene(string $userId, ?string $chapitreId): ?BolScene
+    {
+        return $chapitreId === null ? null : BolScene::where('user_id', $userId)
+            ->where('scenario_id', $chapitreId)
+            ->orderBy('ordre')
+            ->orderBy('created_at')
+            ->first();
     }
 
     /**

@@ -15,6 +15,7 @@ const CUSTOM_SVG_ICONS: Record<string, string> = {
   'gi-sheet': '/assets/icons/game-icons/scroll-unfurled.svg',
   'gi-exit': '/assets/icons/game-icons/exit-door.svg',
   'gi-return': '/assets/icons/game-icons/return-arrow.svg',
+  'gi-home': '/assets/icons/game-icons/house.svg',
   'gi-heart': '/assets/icons/game-icons/hearts.svg',
   'gi-info': '/assets/icons/game-icons/info.svg',
   'gi-swords': '/assets/icons/game-icons/crossed-swords.svg',
