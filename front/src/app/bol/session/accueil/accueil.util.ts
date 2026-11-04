@@ -140,7 +140,8 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
     termine,
     derniere: partie.id === derniere,
     scenarioId: courant?.id ?? null,
-    figurantsARetirer: courant && partie.statut !== 'combat' ? partie.figurants : 0,
+    figurantsARetirer: courant ? partie.figurants : 0,
+    enCombat: partie.statut === 'combat',
   };
 }
 

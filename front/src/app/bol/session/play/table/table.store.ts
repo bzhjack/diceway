@@ -5,7 +5,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {buildPlayBoard} from '../../combat-play.util';
-import {headerTitle} from '../scene-list/scene.util';
+import {headerTitle, ignoresMessage} from '../scene-list/scene.util';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from '../table-state.util';
 import {TableChange} from '../../models/table-change.model';
 import {applyTableChange} from '../table-change.util';
@@ -126,7 +126,18 @@ export class TableStore {
   /** On arrive à la table : elle devient la dernière partie jouée (l'accueil la montre en tête) et, sans scène, charge la première de son
    * chapitre ; puis elle se lit, après, dans la même file d'appels : `loadSession` voit donc cette scène. */
   entrer(id: string): void {
-    this.fightSessionService.jouer(id).pipe(take(1)).subscribe({error: () => undefined});
+    this.fightSessionService
+      .jouer(id)
+      .pipe(take(1))
+      .subscribe({
+        next: (session) => {
+          const ignores = ignoresMessage(session.figurants_ignores);
+          if (ignores) {
+            this.snackBar.open(ignores, 'Fermer', {duration: 6000});
+          }
+        },
+        error: () => undefined,
+      });
     this.loadSession(id);
   }
 

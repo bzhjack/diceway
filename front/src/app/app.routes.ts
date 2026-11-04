@@ -94,7 +94,8 @@ export const routes: Routes = [
       const scenario: unknown = queryParams['scenario'];
       // Au retour de « Créer un héros » depuis « Nouvelle compagnie », c'est elle qui se rouvre.
       const table = queryParams['compagnie'] ? 'compagnie' : 'nouvelle';
-      return inject(Router).createUrlTree(['/'], {queryParams: {table, scenario: typeof scenario === 'string' ? scenario : null}});
+      const nom: unknown = queryParams['nom'];
+      return inject(Router).createUrlTree(['/'], {queryParams: {table, scenario: typeof scenario === 'string' ? scenario : null, nom: typeof nom === 'string' ? nom : null}});
     },
   },
   {

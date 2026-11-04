@@ -20,6 +20,17 @@ describe('BolFightSessionService', () => {
 
   afterEach(() => http.verify());
 
+  it('oublie, en supprimant une partie, l’issue de combat retenue pour elle dans ce navigateur', () => {
+    const memoire = new Map([['dw-issue-annoncee:s', 'victoire'], ['dw-issue-annoncee:autre', 'victoire']]);
+    vi.stubGlobal('localStorage', {removeItem: (cle: string) => memoire.delete(cle)});
+
+    service.delete('s').subscribe();
+    http.expectOne((request) => request.url.endsWith('/delete/s')).flush(true);
+    vi.unstubAllGlobals();
+
+    expect([...memoire.keys()]).toEqual(['dw-issue-annoncee:autre']);
+  });
+
   it('sends a table call only once the previous one has returned', () => {
     const received: string[] = [];
     service.applyDamage('s', 'hero', 1, -2).subscribe(() => received.push('damage'));

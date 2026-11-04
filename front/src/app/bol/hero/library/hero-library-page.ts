@@ -48,6 +48,7 @@ export class HeroLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> 
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le héros',
     name: (item) => item.origines.nom ?? 'ce héros',
+    consequence: 'Il quitte aussi ses compagnies et les tables où il est assis.',
     error: 'La suppression du héros a échoué.',
   };
 

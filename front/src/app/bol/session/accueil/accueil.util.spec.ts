@@ -194,10 +194,14 @@ describe('partiesDeLAccueil', () => {
     expect(b.reperes.map((r) => r.etat)).toEqual(['en-cours', 'a-jouer', 'a-jouer']);
   });
 
-  it('annonce ce qu’un changement de chapitre retirerait : rien en combat, ni pour une partie improvisée', () => {
+  it('annonce ce qu’un changement de chapitre retirerait : rien pour une partie improvisée', () => {
     expect(carte({figurants: 2}).figurantsARetirer).toBe(2);
-    expect(carte({figurants: 2, statut: 'combat'}).figurantsARetirer).toBe(0);
     expect(carte({figurants: 2, scenario_id: null}).figurantsARetirer).toBe(0);
+  });
+
+  it('dit si la partie est en plein combat', () => {
+    expect(carte({statut: 'combat'}).enCombat).toBe(true);
+    expect(carte({statut: 'libre'}).enCombat).toBe(false);
   });
 
   it('montre les héros : leur portrait utilisable, sinon leur initiale', () => {

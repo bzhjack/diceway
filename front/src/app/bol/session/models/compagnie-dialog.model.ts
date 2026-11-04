@@ -5,4 +5,6 @@ export interface CompagnieDialogData {
   readonly compagnie: BolCompagnieModel | null;
   /** Au retour de « Créer un héros » : les héros choisis avant d'y aller sont repris ; sinon, une nouvelle compagnie part de zéro. */
   readonly reprendreLaSelection?: boolean;
+  /** Au retour de « Créer un héros » : le nom déjà tapé. */
+  readonly nomEnCours?: string;
 }

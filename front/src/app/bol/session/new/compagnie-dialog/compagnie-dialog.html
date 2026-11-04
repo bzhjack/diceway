@@ -58,7 +58,7 @@
       <p class="otd-note">Ces changements valent pour ses prochaines parties : celles déjà commencées gardent leurs héros, et prennent son nouveau nom.</p>
     } @else {
       <p class="otd-note">
-        Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState" mat-dialog-close (click)="allerCreerUnHeros()">Créer un héros</a>
+        Un nouveau venu ? <a routerLink="/create/hero" [state]="createHeroState()" mat-dialog-close (click)="allerCreerUnHeros()">Créer un héros</a>
       </p>
     }
   </section>

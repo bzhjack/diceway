@@ -202,9 +202,15 @@
     <mat-menu #menuPartie="matMenu">
       <ng-template matMenuContent let-partie="partie">
         @if (partie.scenarioId) {
-          <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitres" [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie)}">
-            <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre</span>
-          </button>
+          @if (partie.enCombat) {
+            <button mat-menu-item type="button" disabled>
+              <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre : combat en cours</span>
+            </button>
+          } @else {
+            <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitres" [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie)}">
+              <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre</span>
+            </button>
+          }
           @if (partie.termine) {
             <button mat-menu-item type="button" (click)="marquerTermine(partie, false)">
               <mat-icon>undo</mat-icon><span>Scénario pas encore terminé</span>
@@ -214,6 +220,10 @@
               <mat-icon svgIcon="gi-flag" /><span>Marquer le scénario terminé</span>
             </button>
           }
+        } @else if (partie.enCombat) {
+          <button mat-menu-item type="button" disabled>
+            <mat-icon>auto_stories</mat-icon><span>Choisir un scénario : combat en cours</span>
+          </button>
         } @else {
           <button mat-menu-item type="button" [matMenuTriggerFor]="menuScenarios" [matMenuTriggerData]="{partie}">
             <mat-icon>auto_stories</mat-icon><span>Choisir un scénario</span>

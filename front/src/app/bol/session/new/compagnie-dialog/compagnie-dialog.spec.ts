@@ -23,7 +23,7 @@ describe('CompagnieDialogComponent', () => {
   let fixture: ComponentFixture<CompagnieDialogComponent>;
   let element: HTMLElement;
 
-  async function ouvrir(compagnie: BolCompagnieModel | null, heros = [{catalogId: 'hero:h1', qty: 1}], reprendreLaSelection = true): Promise<void> {
+  async function ouvrir(compagnie: BolCompagnieModel | null, heros = [{catalogId: 'hero:h1', qty: 1}], reprendreLaSelection = true, nomEnCours?: string): Promise<void> {
     for (const espion of [creer, modifier, fermer, snack, reset, loadCatalog]) {
       espion.mockReset();
     }
@@ -34,7 +34,7 @@ describe('CompagnieDialogComponent', () => {
       imports: [MatIconTestingModule],
       providers: [
         provideRouter([]),
-        {provide: MAT_DIALOG_DATA, useValue: {compagnie, reprendreLaSelection}},
+        {provide: MAT_DIALOG_DATA, useValue: {compagnie, reprendreLaSelection, nomEnCours}},
         {provide: MatDialogRef, useValue: {close: fermer}},
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {provide: MatSnackBar, useValue: {open: snack}},
@@ -143,6 +143,21 @@ describe('CompagnieDialogComponent', () => {
       fixture.destroy();
 
       expect(reset).toHaveBeenCalled();
+    });
+
+    it('au retour de « Créer un héros », reprend le nom déjà tapé', async () => {
+      await ouvrir(null, undefined, true, 'Les Lames');
+
+      expect(champ().value).toBe('Les Lames');
+    });
+
+    it('« Créer un héros » emporte le nom tapé, pour le retour', async () => {
+      await ouvrir(null);
+      await nommer('Les Lames & co');
+
+      const retour = (fixture.componentInstance as unknown as {createHeroState: () => {returnUrl: string}}).createHeroState().returnUrl;
+
+      expect(retour).toBe('/session/new?compagnie=nouvelle&nom=Les%20Lames%20%26%20co');
     });
 
     it('partir créer un héros garde les héros choisis pour le retour', async () => {

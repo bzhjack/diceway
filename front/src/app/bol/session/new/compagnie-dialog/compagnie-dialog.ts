@@ -44,7 +44,7 @@ export class CompagnieDialogComponent {
   protected readonly existante = this.data.compagnie;
   protected readonly enregistrement = signal(false);
 
-  private readonly nom = signal(this.data.compagnie?.nom ?? '');
+  private readonly nom = signal(this.data.compagnie?.nom ?? this.data.nomEnCours ?? '');
   protected readonly nomField = form(this.nom, (path) => {
     required(path, {message: 'Donnez un nom à la compagnie'});
     maxLength(path, NOM_MAX, {message: `${NOM_MAX} caractères au plus`});
@@ -66,8 +66,8 @@ export class CompagnieDialogComponent {
   protected readonly attenteHeros = computed(() => this.present().length === 0 && !this.selection.loading() && !this.selection.loadFailed());
   protected readonly boutonPrincipal = this.existante ? 'Enregistrer' : 'Créer la compagnie';
 
-  /** Revenir à ce dialogue après la création d'un héros : `/session/new` mène à l'accueil, qui le rouvre, avec la sélection commencée. */
-  protected readonly createHeroState = {returnUrl: '/session/new?compagnie=nouvelle'};
+  /** Revenir à ce dialogue après la création d'un héros : `/session/new` mène à l'accueil, qui le rouvre, avec le nom tapé et la sélection commencée. */
+  protected readonly createHeroState = computed(() => ({returnUrl: `/session/new?compagnie=nouvelle&nom=${encodeURIComponent(this.nom())}`}));
   private partiCreerUnHeros = false;
 
   constructor() {

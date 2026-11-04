@@ -87,10 +87,15 @@ export function normalizeTitre(raw: string | null | undefined): string | null {
 
 export function loadMessage(titre: string, ignored: number): string {
   const base = `Scène « ${titre} » chargée.`;
-  if (ignored <= 0) {
-    return base;
+  return ignored > 0 ? `${base} ${ignoresMessage(ignored)}` : base;
+}
+
+/** Ce qu'il faut dire des figurants qu'un chargement de scène a laissés de côté ; rien s'il n'y en a pas. */
+export function ignoresMessage(ignored: number | undefined): string {
+  if (!ignored || ignored <= 0) {
+    return '';
   }
   return ignored === 1
-    ? `${base} 1 personnage a été ignoré (déjà sur la table ou supprimé de la bibliothèque).`
-    : `${base} ${ignored} personnages ont été ignorés (déjà sur la table ou supprimés de la bibliothèque).`;
+    ? '1 personnage a été ignoré (déjà sur la table ou supprimé de la bibliothèque).'
+    : `${ignored} personnages ont été ignorés (déjà sur la table ou supprimés de la bibliothèque).`;
 }

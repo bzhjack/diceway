@@ -1,4 +1,5 @@
 import {RessourceMagique} from '../session/models/magie-combat.model';
+import {browserStorage, ISSUE_ANNONCEE} from '../session/play/table-state.util';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap, throwError, timeout} from 'rxjs';
@@ -66,7 +67,7 @@ export class BolFightSessionService {
   }
 
   delete(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.base}/delete/${id}`);
+    return this.http.delete<boolean>(`${this.base}/delete/${id}`).pipe(tap(() => browserStorage()?.removeItem(ISSUE_ANNONCEE + id)));
   }
 
   addCombatant(sessionId: string, payload: BolFightSessionAddCombatantPayload): Observable<BolFightSessionModel> {

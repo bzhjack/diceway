@@ -93,10 +93,11 @@ describe('AccueilPageComponent', () => {
   const changerChapitre = vi.fn();
   const supprimer = vi.fn();
   const marquer = vi.fn();
+  const snack = vi.fn();
   let accueil: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    for (const espion of [open, changerChapitre, supprimer, marquer]) {
+    for (const espion of [open, changerChapitre, supprimer, marquer, snack]) {
       espion.mockReset();
     }
     open.mockReturnValue({afterClosed: () => of(true)});
@@ -114,7 +115,7 @@ describe('AccueilPageComponent', () => {
         {provide: BolAccueilService, useValue: {accueil}},
         {provide: BolFightSessionService, useValue: {changerChapitre, delete: supprimer, marquerScenarioTermine: marquer}},
         {provide: MatDialog, useValue: {open}},
-        {provide: MatSnackBar, useValue: {open: vi.fn()}},
+        {provide: MatSnackBar, useValue: {open: snack}},
         ...providers,
       ],
     });
@@ -258,6 +259,39 @@ describe('AccueilPageComponent', () => {
 
     expect(changerChapitre).toHaveBeenCalledWith('t1', 'p2');
     expect(accueil).toHaveBeenCalledTimes(2);
+  });
+
+  it('en plein combat, « Changer de chapitre » est grisé et dit pourquoi', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, statut: 'combat' as const} : p))}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+
+    expect(item('Changer de chapitre').disabled).toBe(true);
+    expect(texte(item('Changer de chapitre'))).toContain('combat en cours');
+  });
+
+  it('en plein combat, « Choisir un scénario » est grisé et dit pourquoi', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't3' ? {...p, statut: 'combat' as const} : p))}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
+    await stable();
+
+    expect(item('Choisir un scénario').disabled).toBe(true);
+    expect(texte(item('Choisir un scénario'))).toContain('combat en cours');
+  });
+
+  it('dit si la première scène du nouveau chapitre a laissé des figurants de côté', async () => {
+    const page = await rendre();
+    changerChapitre.mockReturnValue(of({figurants_ignores: 2}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
+    await stable();
+    item('Changer de chapitre').click();
+    await stable();
+    items().find((b) => !b.querySelector('.acc-menu-courant') && /^\d\./.test(texte(b) ?? ''))!.click();
+    await stable();
+    document.querySelectorAll<HTMLButtonElement>('mat-dialog-actions button').forEach((b) => b.click());
+    await stable();
+
+    expect(snack.mock.calls.map((c) => c[0] as string).join()).toContain('2 personnages ont été ignorés');
   });
 
   it('« Changer de chapitre » marque ceux que cette partie a joués', async () => {
@@ -482,7 +516,17 @@ describe('AccueilPageComponent', () => {
 
     await RouterTestingHarness.create('/?table=compagnie');
 
-    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null, reprendreLaSelection: true}}));
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null, reprendreLaSelection: true, nomEnCours: ''}}));
+    expect(TestBed.inject(Router).url).toBe('/');
+  });
+
+  it('au retour de la création d’un héros, rend le nom déjà tapé (?nom=…) et le retire de l’adresse', async () => {
+    accueil = vi.fn(() => of(DATA));
+    configurer();
+
+    await RouterTestingHarness.create('/?table=compagnie&nom=Les%20Lames');
+
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null, reprendreLaSelection: true, nomEnCours: 'Les Lames'}}));
     expect(TestBed.inject(Router).url).toBe('/');
   });
 

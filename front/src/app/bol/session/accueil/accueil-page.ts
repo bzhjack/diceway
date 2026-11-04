@@ -23,6 +23,7 @@ import {OpenTableData, OpenTableResultat} from '../models/open-table.model';
 import {CompagnieDialogComponent} from '../new/compagnie-dialog/compagnie-dialog';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
 import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosLibresPour} from './accueil.util';
+import {ignoresMessage} from '../play/scene-list/scene.util';
 import {libelleDeChapitre} from '../scenario.util';
 
 interface AccueilBibliotheque {
@@ -108,9 +109,10 @@ export class AccueilPageComponent {
         return;
       }
       const scenario = params.get('scenario');
-      void this.router.navigate([], {queryParams: {table: null, scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
+      const nom = params.get('nom') ?? '';
+      void this.router.navigate([], {queryParams: {table: null, scenario: null, nom: null}, queryParamsHandling: 'merge', replaceUrl: true});
       if (table === 'compagnie') {
-        this.nouvelleCompagnie(true);
+        this.nouvelleCompagnie({reprendreLaSelection: true, nomEnCours: nom});
       } else {
         this.nouvellePartie(scenario);
       }
@@ -169,11 +171,11 @@ export class AccueilPageComponent {
   }
 
   /** Le dialogue « Nouvelle compagnie » : un nom et des héros. Une fois créée, l'accueil se relit (« + Partie » devient possible).
-   * `reprendreLaSelection` : on revient de « Créer un héros », les héros déjà choisis restent. */
-  protected nouvelleCompagnie(reprendreLaSelection = false): void {
+   * `retour` : on revient de « Créer un héros », le nom tapé et les héros déjà choisis restent. */
+  protected nouvelleCompagnie(retour?: {reprendreLaSelection: boolean; nomEnCours: string}): void {
     this.dialog
       .open<CompagnieDialogComponent, CompagnieDialogData, BolCompagnieModel>(CompagnieDialogComponent, {
-        data: reprendreLaSelection ? {compagnie: null, reprendreLaSelection} : {compagnie: null},
+        data: {compagnie: null, ...retour},
         width: 'min(720px, 94vw)',
         maxWidth: '94vw',
         ariaLabelledBy: 'otd-titre',
@@ -230,7 +232,13 @@ export class AccueilPageComponent {
       .changerChapitre(partie.id, chapitreId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.charger(),
+        next: (session) => {
+          this.charger();
+          const ignores = ignoresMessage(session.figurants_ignores);
+          if (ignores) {
+            this.snackBar.open(ignores, 'OK', {duration: 6000});
+          }
+        },
         error: (error: unknown) =>
           this.snackBar.open(extractApiErrorMessage(error, 'Impossible de changer le chapitre de la partie.'), 'OK', {duration: 6000}),
       });

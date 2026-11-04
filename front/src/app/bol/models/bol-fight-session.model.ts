@@ -35,6 +35,8 @@ export interface BolSessionSceneRef {
  * combat et sa scène courante. */
 export interface BolFightSessionModel {
   id: string | null;
+  /** Après un chargement automatique de scène (création, arrivée à la table, changement de chapitre) : les figurants qu'il a laissés de côté. */
+  figurants_ignores?: number;
   user_id?: string | null;
   titre: string | null;
   statut: BolFightSessionStatut;

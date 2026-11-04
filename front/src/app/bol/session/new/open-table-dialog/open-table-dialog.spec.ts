@@ -223,6 +223,17 @@ describe('OpenTableDialogComponent', () => {
       expect(creerPartie).toHaveBeenCalledWith('c1', null);
     });
 
+    it('dit si la première scène a laissé des figurants de côté', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: {...ACCUEIL, compagnies: [LAMES]}});
+      creerPartie.mockReturnValue(of({id: 's9', figurants_ignores: 1}));
+
+      bouton('Créer la partie').click();
+      await stable();
+
+      expect(snack).toHaveBeenCalledTimes(1);
+      expect(snack.mock.calls[0][0]).toContain('1 personnage a été ignoré');
+    });
+
     it('prévient qu’un chapitre inconnu du compte est introuvable', async () => {
       await ouvrir({scenarioId: 'zz', accueil: ACCUEIL});
 

@@ -16,6 +16,7 @@ import {chapitresDuScenario, herosCartes, scenariosDuCompte, situerScenario, tei
 import {OpenTableData, OpenTableResultat} from '../../models/open-table.model';
 import {findScenario, libelleDeChapitre} from '../../scenario.util';
 import {enumerer} from '../open-table.util';
+import {ignoresMessage} from '../../play/scene-list/scene.util';
 
 /**
  * « Nouvelle partie », en dialogue sur l'accueil : une compagnie sur un scénario et son chapitre de départ (ou une partie improvisée), puis
@@ -164,6 +165,10 @@ export class OpenTableDialogComponent {
         next: (session) => {
           this.launching.set(false);
           this.dialogRef.close(true);
+          const ignores = ignoresMessage(session.figurants_ignores);
+          if (ignores) {
+            this.snackBar.open(ignores, 'OK', {duration: 6000});
+          }
           if (session.id) {
             void this.router.navigate(['/session', session.id, 'play']);
           }

@@ -14,13 +14,10 @@ import {CombatEffect} from '../../models/combat-effect.model';
 import {AfterCombatDialogComponent} from '../after-combat-dialog/after-combat-dialog';
 import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../../models/after-combat-dialog.model';
 import {bestHealingCareer, peutSecourir} from '../../rescue.util';
-import {browserStorage} from '../table-state.util';
+import {browserStorage, ISSUE_ANNONCEE} from '../table-state.util';
 import {heroDetails} from '../tapis/tapis.util';
 import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
-
-/** Où se retient l'issue déjà annoncée pour une table : la page se recrée à chaque arrivée, et « Continuer » doit tenir au retour. */
-const ISSUE_ANNONCEE = 'dw-issue-annoncee:';
 
 /** La fin d'un combat : « Après combat », ouvert par le MJ ou de lui-même quand un camp tombe, qui enregistre la récupération des blessés et rend la table au mode libre. */
 @Injectable()
