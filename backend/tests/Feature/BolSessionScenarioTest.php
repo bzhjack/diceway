@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Bol\BolFightSession;
+use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 use App\Models\User;
@@ -43,21 +44,46 @@ class BolSessionScenarioTest extends TestCase
         $this->assertNull($response->json('scenario_id'));
     }
 
-    public function test_loading_a_scene_sets_its_scenario(): void
+    /** Une scène d'un autre chapitre du même scénario fait passer la partie sur ce chapitre : le précédent compte comme joué pour elle. */
+    public function test_loading_a_scene_of_the_same_scenario_moves_the_partie(): void
     {
-        $a = $this->scenario('A');
-        $b = $this->scenario('B');
-        $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $b->id, 'titre' => 'Scène', 'ordre' => 0, 'distribution' => []]);
-        $session = $this->tableSession($a->id);
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $scene = $this->sceneOf($ch2->id);
+        $session = $this->tableSession($ch1->id);
 
         $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
 
-        $this->assertSame($b->id, $session->fresh()->scenario_id);
-        // La table a quitté A pour B : A compte comme joué.
-        $this->assertSame([$a->id], $session->fresh()->chapitres_quittes);
+        $this->assertSame($ch2->id, $session->fresh()->scenario_id);
+        $this->assertSame([$ch1->id], $session->fresh()->chapitres_quittes);
     }
 
-    public function test_saving_a_scene_sets_its_scenario(): void
+    /** Une scène d'un autre scénario se charge, mais la partie reste sur le sien. */
+    public function test_loading_a_scene_of_another_scenario_keeps_the_partie(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        [$ailleurs] = $this->saga('Le Dieu voilé', 1);
+        $scene = $this->sceneOf($ailleurs->id);
+        $session = $this->tableSession($ch1->id);
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
+
+        $fresh = $session->fresh();
+        $this->assertSame($ch1->id, $fresh->scenario_id);
+        $this->assertSame($scene->id, $fresh->scene_id);
+        $this->assertNull($fresh->chapitres_quittes);
+    }
+
+    public function test_saving_a_scene_of_the_same_scenario_moves_the_partie(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $session = $this->tableSession($ch1->id);
+
+        $this->postJson('/api/bol/scene/create', ['titre' => 'Scène', 'scenario_id' => $ch2->id, 'session_id' => $session->id])->assertOk();
+
+        $this->assertSame($ch2->id, $session->fresh()->scenario_id);
+    }
+
+    public function test_saving_a_scene_of_another_scenario_keeps_the_partie(): void
     {
         $a = $this->scenario('A');
         $b = $this->scenario('B');
@@ -65,7 +91,19 @@ class BolSessionScenarioTest extends TestCase
 
         $this->postJson('/api/bol/scene/create', ['titre' => 'Scène', 'scenario_id' => $b->id, 'session_id' => $session->id])->assertOk();
 
-        $this->assertSame($b->id, $session->fresh()->scenario_id);
+        $this->assertSame($a->id, $session->fresh()->scenario_id);
+    }
+
+    /** Une partie improvisée prend le scénario de la première scène chargée qui en a un. */
+    public function test_an_improvised_partie_takes_the_scenario_of_a_loaded_scene(): void
+    {
+        $a = $this->scenario('A');
+        $scene = $this->sceneOf($a->id);
+        $session = $this->tableSession();
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
+
+        $this->assertSame($a->id, $session->fresh()->scenario_id);
     }
 
     public function test_loading_an_improvised_scene_keeps_the_table_scenario(): void
@@ -95,34 +133,50 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame($response->json('id'), $fresh->scene_id);
     }
 
-    /** « Reprendre » sur un autre chapitre : la même table passe dessus, ses scènes jouées restent jouées. */
-    public function test_moves_the_table_to_another_own_chapter(): void
+    /** « Changer de chapitre » dans son scénario : la même table passe dessus, ses scènes jouées restent jouées, l'ancien est quitté. */
+    public function test_moves_the_partie_within_its_scenario(): void
     {
-        $a = $this->scenario('A');
-        $b = $this->scenario('B');
-        $session = $this->tableSession($a->id);
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $session = $this->tableSession($ch1->id);
         $session->update(['scenes_jouees' => ['s1']]);
 
-        $response = $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $b->id])->assertOk();
+        $response = $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertOk();
 
-        $this->assertSame($b->id, $response->json('scenario_id'));
+        $this->assertSame($ch2->id, $response->json('scenario_id'));
         $fresh = $session->fresh();
-        $this->assertSame($b->id, $fresh->scenario_id);
+        $this->assertSame($ch2->id, $fresh->scenario_id);
         $this->assertSame(['s1'], $fresh->scenes_jouees);
+        $this->assertSame([$ch1->id], $fresh->chapitres_quittes);
     }
 
-    public function test_a_chapter_of_another_account_or_none_makes_the_table_improvised(): void
+    /** Une partie liée à un scénario n'en change pas, et ne redevient pas improvisée ; un chapitre d'un autre compte n'en est pas un. */
+    public function test_refuses_to_move_a_partie_out_of_its_scenario(): void
     {
-        $a = $this->scenario('A');
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        [$ailleurs] = $this->saga('Le Dieu voilé', 1);
+        $oneShot = $this->scenario('Un ennui mortel');
         $etranger = $this->scenario('Étranger', User::factory()->create());
-        $session = $this->tableSession($a->id);
+        $session = $this->tableSession($ch1->id);
 
-        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $etranger->id])->assertOk();
-        $this->assertNull($session->fresh()->scenario_id);
+        foreach ([$ailleurs->id, $oneShot->id, $etranger->id, null] as $cible) {
+            $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $cible])
+                ->assertUnprocessable()
+                ->assertJsonPath('error', 'Ce chapitre n’est pas du scénario de la partie.');
+        }
+        $this->assertSame($ch1->id, $session->fresh()->scenario_id);
+    }
 
-        $session->update(['scenario_id' => $a->id]);
-        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => null])->assertOk();
-        $this->assertNull($session->fresh()->scenario_id);
+    /** Une partie improvisée reçoit un scénario une fois ; ensuite elle y reste. */
+    public function test_an_improvised_partie_takes_a_scenario_once(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $autre = $this->scenario('Un ennui mortel');
+        $session = $this->tableSession();
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch1->id])->assertOk();
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $autre->id])->assertUnprocessable();
+
+        $this->assertSame($ch1->id, $session->fresh()->scenario_id);
     }
 
     public function test_cannot_move_the_table_of_another_account(): void
@@ -143,6 +197,22 @@ class BolSessionScenarioTest extends TestCase
         $this->deleteJson("/api/bol/scenario/delete/{$scenario->id}")->assertOk();
 
         $this->assertNull($session->fresh()->scenario_id);
+    }
+
+    /** @return array<int, BolScenario> les chapitres 1 à `$n` d'une saga du compte */
+    private function saga(string $titre, int $n): array
+    {
+        $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => $titre]);
+
+        return array_map(
+            fn (int $numero) => BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => $numero, 'titre' => "Chapitre $numero"]),
+            range(1, $n),
+        );
+    }
+
+    private function sceneOf(?string $scenarioId): BolScene
+    {
+        return BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenarioId, 'titre' => 'Scène', 'ordre' => 0, 'distribution' => []]);
     }
 
     private function scenario(string $titre, ?User $owner = null): BolScenario

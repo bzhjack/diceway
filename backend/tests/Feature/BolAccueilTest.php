@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/** L'accueil lit en une requête légère la table ouverte, les scénarios, leur avancement et les derniers héros à table. */
+/** L'accueil lit en une requête légère les parties du compte (la dernière jouée en tête, chacune avec sa progression et ses héros), les
+ * scénarios et les comptes des bibliothèques. */
 class BolAccueilTest extends TestCase
 {
     use RefreshDatabase;
@@ -33,95 +34,145 @@ class BolAccueilTest extends TestCase
         Sanctum::actingAs($this->user);
     }
 
-    public function test_without_open_table(): void
+
+    public function test_without_partie(): void
     {
-        $this->tableSession('terminee');
+        $response = $this->getJson('/api/bol/accueil')->assertOk();
+
+        $this->assertNull($response->json('derniere'));
+        $this->assertSame([], $response->json('parties'));
+        $this->assertSame(['derniere', 'parties', 'scenarios', 'comptes'], array_keys($response->json()));
+    }
+
+    /** Toutes les parties, la plus récemment jouée d'abord ; elle est la `derniere`, quel que soit son statut. */
+    public function test_lists_every_partie_most_recently_played_first(): void
+    {
+        $ancienne = $this->partie('Les anciens', ilYa: 30);
+        $combat = $this->partie('Les Lames', ilYa: 5);
+        $combat->update(['statut' => 'combat']);
+        $recente = $this->partie('Les Fils du Serpent', ilYa: 1);
 
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
-        $this->assertNull($response->json('table'));
+        $this->assertSame([$recente->id, $combat->id, $ancienne->id], array_column($response->json('parties'), 'id'));
+        $this->assertSame($recente->id, $response->json('derniere'));
     }
 
-    public function test_open_table_is_the_most_recent_libre_or_combat(): void
+    public function test_describes_a_partie(): void
     {
-        $this->tableSession('libre');
-        $this->travel(1)->minutes();
-        $combat = $this->tableSession('combat');
-        $this->travel(1)->minutes();
-        $this->tableSession('terminee');
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $partie = $this->partie('Les Lames', $ch1->id);
 
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
+        $lue = $this->partieLue($partie->id);
 
-        $this->assertSame($combat->id, $response->json('table.id'));
-        $this->assertNotEmpty($response->json('table.created_at'));
+        $this->assertSame(
+            ['id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros'],
+            array_keys($lue),
+        );
+        $this->assertSame('Les Lames', $lue['titre']);
+        $this->assertSame('libre', $lue['statut']);
+        $this->assertSame($ch1->id, $lue['scenario_id']);
+        $this->assertSame($partie->jouee_le->toIso8601String(), $lue['jouee_le']);
     }
 
-    /** Reprendre une table la rouvre et clôt l'autre table ouverte (un combat en cours s'arrête) : une seule table ouverte à la fois. */
-    public function test_a_reopened_table_comes_back_as_the_open_table_and_closes_the_other(): void
+    /** Une ancienne partie sans nom reste listée, son titre à null. */
+    public function test_an_old_partie_without_name_is_listed(): void
     {
-        $ancienne = $this->tableSession('terminee');
-        $this->travel(1)->minutes();
-        $recente = $this->tableSession('combat');
-        $this->travel(1)->minutes();
+        $partie = $this->partie();
+        $partie->update(['titre' => null]);
 
-        $this->patchJson("/api/bol/fight-session/{$ancienne->id}/reopen")->assertOk();
-
-        $this->assertSame('libre', $ancienne->fresh()->statut);
-        $this->assertSame('terminee', $recente->fresh()->statut);
-        $this->assertSame($ancienne->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+        $this->assertNull($this->partieLue($partie->id)['titre']);
     }
 
-    /** Reprendre une table encore ouverte (deux tables ouvertes d'avant la règle) : elle devient la table de l'accueil, l'autre se clôt. */
-    public function test_reopening_an_open_table_makes_it_the_open_table(): void
+    /** La progression est celle de chaque partie : deux compagnies sur le même scénario n'ont pas les mêmes chapitres joués. */
+    public function test_played_chapters_are_per_partie(): void
     {
-        $ancienne = $this->tableSession('libre');
-        $this->travel(1)->minutes();
-        $recente = $this->tableSession('libre');
-        $this->travel(1)->minutes();
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $a = $this->partie('A', $ch2->id, quittes: [$ch1->id]);
+        $b = $this->partie('B', $ch1->id);
 
-        $this->patchJson("/api/bol/fight-session/{$ancienne->id}/reopen")->assertOk();
-
-        $this->assertSame('libre', $ancienne->fresh()->statut);
-        $this->assertSame('terminee', $recente->fresh()->statut);
-        $this->assertSame($ancienne->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+        $this->assertSame([$ch1->id], $this->partieLue($a->id)['chapitres_joues']);
+        $this->assertSame([], $this->partieLue($b->id)['chapitres_joues']);
     }
 
-    /** Reprendre ne touche pas aux tables d'un autre compte. */
-    public function test_reopening_leaves_other_accounts_alone(): void
+    /** Un chapitre dont toutes les scènes sont passées sur cette table est joué pour elle ; à moitié, il ne l'est pas. */
+    public function test_a_chapter_with_all_its_scenes_played_on_this_table_is_played(): void
     {
-        $table = $this->tableSession('terminee');
-        $autre = BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'libre', 'user_id' => User::factory()->create()->id]);
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $s1 = $this->scene($ch1->id);
+        $s2 = $this->scene($ch1->id);
+        $t1 = $this->scene($ch2->id);
+        $this->scene($ch2->id);
+        $partie = $this->partie('A', $ch2->id, [$s1->id, $s2->id, $t1->id]);
+        $autre = $this->partie('B', $ch1->id, [$s1->id]);
 
-        $this->patchJson("/api/bol/fight-session/{$table->id}/reopen")->assertOk();
-
-        $this->assertSame('libre', $autre->fresh()->statut);
+        $this->assertSame([$ch1->id], $this->partieLue($partie->id)['chapitres_joues']);
+        $this->assertSame([], $this->partieLue($autre->id)['chapitres_joues']);
     }
 
-    public function test_a_table_closed_last_does_not_come_back_as_the_open_table(): void
+    /** Un chapitre sans scène, jamais quitté, n'est pas joué. */
+    public function test_a_chapter_without_scene_never_left_is_not_played(): void
     {
-        $ouverte = $this->tableSession('libre');
-        $this->travel(1)->minutes();
-        $close = $this->tableSession('libre');
-        $this->travel(1)->minutes();
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $partie = $this->partie('A', $ch1->id);
 
-        $this->patchJson("/api/bol/fight-session/{$close->id}/close")->assertOk();
-
-        $this->assertSame($ouverte->id, $this->getJson('/api/bol/accueil')->assertOk()->json('table.id'));
+        $this->assertSame([], $this->partieLue($partie->id)['chapitres_joues']);
     }
 
-    public function test_describes_the_open_table(): void
+    /** Où en est le chapitre d'une partie : ses scènes dans leur ordre, la scène en cours, et celles déjà passées sur cette table. */
+    public function test_a_partie_tells_where_its_chapter_stands(): void
     {
-        $scenario = $this->scenario('Le Dieu voilé — Introduction');
-        $session = $this->tableSession('libre', $scenario->id);
+        $scenario = $this->scenario('Perle du Beshaar — 1. Sacrilège à Satarla');
+        $autre = $this->scenario('Perle du Beshaar — 2. De sable et d\'eau');
+        $troisieme = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'Le temple', 'ordre' => 2, 'distribution' => []]);
+        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
+        $seconde = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => '', 'lieu' => 'Le trajet', 'ordre' => 1, 'distribution' => []]);
+        $ailleurs = $this->scene($autre->id);
+        $partie = $this->partie('A', $scenario->id, [$premiere->id, $ailleurs->id, $seconde->id]);
+        $partie->update(['scene_id' => $seconde->id]);
 
-        $table = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
+        $lue = $this->partieLue($partie->id);
 
-        $this->assertSame(['id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'created_at'], array_keys($table));
-        $this->assertSame($session->id, $table['id']);
-        $this->assertSame('Table', $table['titre']);
-        $this->assertSame('libre', $table['statut']);
-        $this->assertSame($scenario->id, $table['scenario_id']);
-        $this->assertSame($session->created_at->toIso8601String(), $table['created_at']);
+        $this->assertSame([
+            ['id' => $premiere->id, 'titre' => 'La taverne'],
+            ['id' => $seconde->id, 'titre' => 'Le trajet'],
+            ['id' => $troisieme->id, 'titre' => 'Le temple'],
+        ], $lue['scenes']);
+        $this->assertSame($seconde->id, $lue['scene_id']);
+        $this->assertSame([$premiere->id, $seconde->id], $lue['scenes_jouees']);
+    }
+
+    public function test_an_improvised_partie_has_no_scenes(): void
+    {
+        $partie = $this->partie();
+
+        $lue = $this->partieLue($partie->id);
+
+        $this->assertNull($lue['scenario_id']);
+        $this->assertSame([], $lue['scenes']);
+        $this->assertSame([], $lue['chapitres_joues']);
+    }
+
+    /** Les héros d'une partie : ceux du compte, du camp des héros, dans l'ordre où ils ont été posés, avec leur portrait. */
+    public function test_partie_heroes_are_the_accounts_own_on_the_heroes_side(): void
+    {
+        $axel = $this->hero('Axel');
+        $balaram = $this->hero('Balaram');
+        $balaram->update(['avatar' => '/assets/bol/empty-avatar.jpg']);
+        $rival = $this->hero('Rival');
+        $pnj = $this->hero('Allié', 'C');
+        $catalogue = BolHeros::create(['nom' => 'Catalogue', 'joueur' => 'J', 'user_id' => null, 'type' => 'H']);
+        $etranger = $this->hero('Étranger', 'H', User::factory()->create());
+        $partie = $this->partie();
+        foreach ([$balaram, $catalogue, $pnj, $etranger, $axel] as $heros) {
+            $this->seat($partie, $heros);
+        }
+        $this->seat($partie, $rival, 'adversaires');
+
+        $this->assertSame([
+            ['id' => $balaram->id, 'nom' => 'Balaram', 'avatar' => '/assets/bol/empty-avatar.jpg'],
+            ['id' => $axel->id, 'nom' => 'Axel', 'avatar' => null],
+        ], $this->partieLue($partie->id)['heros']);
     }
 
     public function test_lists_only_own_scenarios(): void
@@ -153,202 +204,6 @@ class BolAccueilTest extends TestCase
         $this->assertSame(['id' => $oneShot->id, 'titre' => 'mon premier scénario', 'numero' => null, 'saga' => null], $scenarios[$oneShot->id]);
     }
 
-    public function test_played_scenarios_come_from_every_session(): void
-    {
-        $a = $this->scenario('A');
-        $b = $this->scenario('B');
-        $c = $this->scenario('C', $other = User::factory()->create());
-        $s1 = $this->scene($a->id);
-        $s2 = $this->scene($b->id);
-        $s3 = $this->scene(null);
-        $foreignScene = $this->scene($c->id, $other);
-
-        $this->tableSession('terminee', null, [$s1->id, $s3->id]);
-        $this->tableSession('libre', null, [$s2->id]);
-        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'libre', 'user_id' => $other->id, 'scenes_jouees' => [$foreignScene->id]]);
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $joues = $response->json('scenarios_joues');
-        $this->assertEqualsCanonicalizing([$a->id, $b->id], $joues);
-        $this->assertSame(array_values($joues), $joues);
-    }
-
-    /** Un chapitre qu'une table quitte pour un autre est joué, même sans y avoir chargé de scène ; clore sa table ne le rend pas joué. */
-    public function test_a_chapter_left_for_another_counts_as_played_not_a_closed_one(): void
-    {
-        $premier = $this->scenario('Saga — 1. Premier');
-        $second = $this->scenario('Saga — 2. Second');
-        $ferme = $this->scenario('Saga — 3. Fermé');
-        $improvise = $this->scenario('Saga — 4. Laissé pour improviser');
-        $etranger = $this->scenario('Étranger', $other = User::factory()->create());
-
-        $table = $this->tableSession('libre', $premier->id);
-        $this->patchJson("/api/bol/fight-session/{$table->id}/scenario", ['scenario_id' => $second->id])->assertOk();
-        $close = $this->tableSession('libre', $ferme->id);
-        $this->patchJson("/api/bol/fight-session/{$close->id}/close")->assertOk();
-        $libre = $this->tableSession('terminee', $improvise->id);
-        $this->patchJson("/api/bol/fight-session/{$libre->id}/scenario", ['scenario_id' => null])->assertOk();
-        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'terminee', 'user_id' => $other->id, 'scenario_id' => $etranger->id, 'chapitres_quittes' => [$etranger->id]]);
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([$premier->id], $response->json('scenarios_joues'));
-    }
-
-    /** Un chapitre dont toutes les scènes sont passées sur les tables du compte est joué ; à moitié, il ne l'est pas. */
-    public function test_a_chapter_counts_as_played_once_all_its_scenes_are(): void
-    {
-        $fini = $this->scenario('Saga — 1. Fini');
-        $entame = $this->scenario('Saga — 2. Entamé');
-        $f1 = $this->scene($fini->id);
-        $f2 = $this->scene($fini->id);
-        $e1 = $this->scene($entame->id);
-        $this->scene($entame->id);
-
-        // Les scènes du chapitre fini sont passées sur deux tables (deux compagnies, ou une table reprise).
-        $this->tableSession('terminee', $fini->id, [$f1->id]);
-        $this->tableSession('libre', $entame->id, [$f2->id, $e1->id]);
-
-        $this->assertSame([$fini->id], $this->getJson('/api/bol/accueil')->assertOk()->json('scenarios_joues'));
-    }
-
-    public function test_no_played_scenario_is_an_empty_list(): void
-    {
-        $this->tableSession('libre');
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([], $response->json('scenarios_joues'));
-        $this->assertNull($response->json('scenario_recent_id'));
-        $this->assertArrayNotHasKey('derniers_heros', $response->json());
-    }
-
-    public function test_recent_scenario_is_the_last_touched_table(): void
-    {
-        $a = $this->scenario('A');
-        $b = $this->scenario('B');
-        $x = $this->tableSession('libre', $a->id);
-        $this->travel(1)->minutes();
-        $this->tableSession('libre', $b->id);
-        $this->travel(1)->minutes();
-        $x->update(['titre' => 'Table reprise']);
-        $this->travel(1)->minutes();
-        $this->tableSession('libre');
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame($a->id, $response->json('scenario_recent_id'));
-    }
-
-    /** Où en est le chapitre de la table : ses scènes dans leur ordre, la scène en cours, et celles déjà passées sur cette table (pas celles
-     * d'un autre scénario ni d'une autre table). */
-    public function test_the_open_table_tells_where_its_chapter_stands(): void
-    {
-        $scenario = $this->scenario('Perle du Beshaar — 1. Sacrilège à Satarla');
-        $autre = $this->scenario('Perle du Beshaar — 2. De sable et d\'eau');
-        $troisieme = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'Le temple', 'ordre' => 2, 'distribution' => []]);
-        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => []]);
-        $seconde = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $scenario->id, 'titre' => '', 'lieu' => 'Le trajet', 'ordre' => 1, 'distribution' => []]);
-        $ailleurs = $this->scene($autre->id);
-        $table = $this->tableSession('combat', $scenario->id, [$premiere->id, $ailleurs->id, $seconde->id]);
-        $table->update(['scene_id' => $seconde->id]);
-
-        $reponse = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
-
-        $this->assertSame([
-            ['id' => $premiere->id, 'titre' => 'La taverne'],
-            ['id' => $seconde->id, 'titre' => 'Le trajet'],
-            ['id' => $troisieme->id, 'titre' => 'Le temple'],
-        ], $reponse['scenes']);
-        $this->assertSame($seconde->id, $reponse['scene_id']);
-        $this->assertSame([$premiere->id, $seconde->id], $reponse['scenes_jouees']);
-    }
-
-    public function test_an_improvised_table_has_no_scenes(): void
-    {
-        $this->tableSession('libre');
-
-        $table = $this->getJson('/api/bol/accueil')->assertOk()->json('table');
-
-        $this->assertSame([], $table['scenes']);
-        $this->assertSame([], $table['scenes_jouees']);
-    }
-
-    /** La compagnie est à la table ouverte, même quand une table plus récente a été close depuis. */
-    public function test_company_is_the_open_table_before_a_newer_closed_one(): void
-    {
-        $axel = $this->hero('Axel');
-        $jean = $this->hero('jean');
-        $ouverte = $this->tableSession('libre');
-        $this->seat($ouverte, $axel);
-        $this->travel(1)->minutes();
-        $close = $this->tableSession('terminee');
-        $this->seat($close, $jean);
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([$axel->id], array_column($response->json('compagnie'), 'id'));
-    }
-
-    public function test_company_is_the_last_table_without_open_one(): void
-    {
-        $h1 = $this->hero('H1');
-        $h2 = $this->hero('H2');
-        $h3 = $this->hero('H3');
-        $pnj = $this->hero('Allié', 'C');
-        $foreign = $this->hero('Étranger', 'H', User::factory()->create());
-
-        $old = $this->tableSession('terminee');
-        $this->seat($old, $h1);
-        $this->travel(1)->minutes();
-        $new = $this->tableSession('terminee');
-        $this->seat($new, $h2);
-        $this->seat($new, $pnj);
-        $this->seat($new, $foreign);
-        $this->seat($new, $h3);
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([$h2->id, $h3->id], array_column($response->json('compagnie'), 'id'));
-    }
-
-    /** Le seuil ne liste que les héros du compte, du camp des héros : les autres seraient comptés sans qu'on puisse les voir. */
-    public function test_company_is_the_accounts_own_heroes_on_the_heroes_side(): void
-    {
-        $own = $this->hero('Le mien');
-        $rival = $this->hero('Rival');
-        $catalog = BolHeros::create(['nom' => 'Catalogue', 'joueur' => 'J', 'user_id' => null, 'type' => 'H']);
-        $foreign = $this->hero('Étranger', 'H', User::factory()->create());
-
-        $table = $this->tableSession('libre');
-        $this->seat($table, $catalog);
-        $this->seat($table, $own);
-        $this->seat($table, $foreign);
-        $this->seat($table, $rival, 'adversaires');
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([$own->id], array_column($response->json('compagnie'), 'id'));
-    }
-
-    public function test_company_names_the_last_heroes_in_their_order_with_their_portrait(): void
-    {
-        $h1 = $this->hero('Axel');
-        $h2 = $this->hero('Balaram');
-        $h2->update(['avatar' => '/assets/bol/empty-avatar.jpg']);
-
-        $table = $this->tableSession('libre');
-        $this->seat($table, $h2);
-        $this->seat($table, $h1);
-
-        $response = $this->getJson('/api/bol/accueil')->assertOk();
-
-        $this->assertSame([
-            ['id' => $h2->id, 'nom' => 'Balaram', 'avatar' => '/assets/bol/empty-avatar.jpg'],
-            ['id' => $h1->id, 'nom' => 'Axel', 'avatar' => null],
-        ], $response->json('compagnie'));
-    }
 
     public function test_counts_what_each_library_shows_to_the_account(): void
     {
@@ -368,7 +223,7 @@ class BolAccueilTest extends TestCase
             BolArme::create(['arme' => 'Lame ' . $owner, 'type' => 'M', 'degats' => 'd6', 'user_id' => $owner]);
             BolArmure::create(['armure' => 'Cuir ' . $owner, 'protection' => '1', 'user_id' => $owner]);
         }
-        $this->tableSession('terminee');
+        $this->partie();
         BolFightSession::create(['titre' => 'Autre', 'statut' => 'libre', 'user_id' => $other->id]);
 
         $apres = $this->getJson('/api/bol/accueil')->assertOk()->json('comptes');
@@ -377,21 +232,18 @@ class BolAccueilTest extends TestCase
         $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1], $ajoutes);
     }
 
+
     public function test_hides_other_accounts(): void
     {
         $other = User::factory()->create();
         $scenario = $this->scenario('Étranger', $other);
-        $scene = $this->scene($scenario->id, $other);
-        $session = BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'combat', 'user_id' => $other->id, 'scenario_id' => $scenario->id, 'scenes_jouees' => [$scene->id]]);
-        $this->seat($session, $this->hero('Étranger', 'H', $other));
+        BolFightSession::create(['titre' => 'Autre compte', 'statut' => 'combat', 'user_id' => $other->id, 'scenario_id' => $scenario->id, 'jouee_le' => now()]);
 
         $response = $this->getJson('/api/bol/accueil')->assertOk();
 
-        $this->assertNull($response->json('table'));
+        $this->assertNull($response->json('derniere'));
+        $this->assertSame([], $response->json('parties'));
         $this->assertSame([], $response->json('scenarios'));
-        $this->assertSame([], $response->json('scenarios_joues'));
-        $this->assertNull($response->json('scenario_recent_id'));
-        $this->assertSame([], $response->json('compagnie'));
     }
 
     private function scenario(string $titre, ?User $owner = null): BolScenario
@@ -405,9 +257,35 @@ class BolAccueilTest extends TestCase
     }
 
     /** @param array<int, string>|null $played */
-    private function tableSession(string $statut, ?string $scenarioId = null, ?array $played = null): BolFightSession
+    /**
+     * Une partie du compte, jouée il y a `$ilYa` minutes.
+     *
+     * @param array<int, string>|null $played
+     * @param array<int, string>|null $quittes
+     */
+    private function partie(string $titre = 'Partie', ?string $scenarioId = null, ?array $played = null, ?array $quittes = null, int $ilYa = 0): BolFightSession
     {
-        return BolFightSession::create(['titre' => 'Table', 'statut' => $statut, 'user_id' => $this->user->id, 'scenario_id' => $scenarioId, 'scenes_jouees' => $played]);
+        return BolFightSession::create([
+            'titre' => $titre, 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $scenarioId,
+            'scenes_jouees' => $played, 'chapitres_quittes' => $quittes, 'jouee_le' => now()->subMinutes($ilYa),
+        ]);
+    }
+
+    /** @return array<int, BolScenario> les chapitres 1 à `$n` d'une saga du compte */
+    private function saga(string $titre, int $n): array
+    {
+        $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => $titre]);
+
+        return array_map(
+            fn (int $numero) => BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => $numero, 'titre' => "Chapitre $numero"]),
+            range(1, $n),
+        );
+    }
+
+    /** @return array<string, mixed> la partie `$id` dans la réponse de l'accueil */
+    private function partieLue(string $id): array
+    {
+        return collect($this->getJson('/api/bol/accueil')->assertOk()->json('parties'))->firstWhere('id', $id);
     }
 
     private function hero(string $nom, string $type = 'H', ?User $owner = null): BolHeros

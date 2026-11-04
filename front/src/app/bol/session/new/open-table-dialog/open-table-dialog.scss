@@ -4,7 +4,7 @@
   display: block;
 }
 
-// ── L'en-tête : le médaillon, « Nouvelle table », la question (ou la confirmation), et de quoi fermer ─────────────────────────────
+// ── L'en-tête : le médaillon, « Nouvelle partie », la question, et de quoi fermer ─────────────────────────────
 .otd-tete {
   display: flex;
   align-items: flex-start;
@@ -61,64 +61,14 @@
   color: var(--dw-forge-bone);
 }
 
-// ── Une autre table est ouverte : un bandeau d'une ligne (ce qu'elle est, ce que l'ouvrir ici en fait), et de quoi la reprendre ──────
-.otd-deja {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-warn) 70%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--dw-color-warn) 12%, var(--dw-forge-recess));
-
-  > a {
-    flex: none;
-  }
-}
-
-.otd-deja-icone {
-  flex: none;
-  color: var(--dw-forge-warning-text);
-}
-
-.otd-deja-corps {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.otd-deja-table {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--dw-forge-warning-text);
-
-  strong {
-    color: var(--dw-forge-hot-text);
-  }
-}
-
-.otd-deja-fil {
-  font-weight: 600;
-  color: var(--dw-forge-bone);
-}
-
-.otd-deja-texte {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.45;
-}
-
-// ── Les deux étapes, côte à côte : l'histoire à gauche, qui est à table à droite ──────────────────────────────────────────────────
-// ── Le nom de la compagnie de la nouvelle table : obligatoire, au-dessus des deux colonnes ─────────────────────────────────────────────────────────────
+// ── Le nom de la compagnie : obligatoire, au-dessus des deux colonnes ───────────────────────────────────────────────────────────────
 .otd-nom {
   width: min(28rem, 100%);
   // Le contenu de Material rogne le libellé flottant du premier champ.
   margin-top: 0.4rem;
 }
 
+// ── Les deux étapes, côte à côte : le scénario à gauche, qui est à table à droite ──────────────────────────────────────────────────
 .otd-colonnes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -348,28 +298,7 @@
   gap: 0.75rem;
 }
 
-// ── La confirmation : ce que la clôture de l'autre table fait ────────────────────────────────────────────────────────────────────
-.otd-confirmation {
-  font-size: 1rem;
-  line-height: 1.55;
-
-  p {
-    margin: 0 0 0.5rem;
-  }
-
-  // La remise à zéro globale retire les puces : on les remet, c'est une liste à lire.
-  ul {
-    margin: 0;
-    padding-left: 1.25rem;
-    list-style: disc;
-  }
-
-  strong {
-    color: var(--dw-forge-hot-text);
-  }
-}
-
-// ── Le pied : la future table en une ligne, et « Ouvrir la table » à la fin de la lecture ─────────────────────────────────────────
+// ── Le pied : la future partie en une ligne, et « Créer la partie » à la fin de la lecture ─────────────────────────────────────────
 .otd-pied {
   gap: 0.75rem;
   justify-content: flex-end;
@@ -389,15 +318,4 @@
   font-size: 1rem;
   font-weight: 700;
   color: var(--dw-forge-hot-text);
-}
-
-.otd-resume-cloture {
-  font-size: 0.88rem;
-  color: var(--dw-forge-warning-text);
-}
-
-// ── Le menu « Changer de chapitre » : le nom du chapitre, puis son état en plus discret ──────────────────────────────────────────
-.otd-menu-etat {
-  font-size: 0.85em;
-  color: var(--dw-forge-bronze-text);
 }

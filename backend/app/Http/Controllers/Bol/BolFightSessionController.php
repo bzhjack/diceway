@@ -230,31 +230,23 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
-    public function close(string $id)
-    {
-        $session = $this->fightSessionService->closeSession($id, Auth::id());
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
     public function changerChapitre(Request $request, string $id)
     {
         $session = $this->fightSessionService->changerChapitre($id, Auth::id(), $request->input('scenario_id'));
 
-        if (!$session) {
+        if ($session === null) {
             return response()->json(['error' => 'Not found'], 404);
+        }
+        if ($session === false) {
+            return response()->json(['error' => 'Ce chapitre n’est pas du scénario de la partie.'], 422);
         }
 
         return response()->json($session);
     }
 
-    public function reopen(string $id)
+    public function jouer(string $id)
     {
-        $session = $this->fightSessionService->reopenSession($id, Auth::id());
+        $session = $this->fightSessionService->jouer($id, Auth::id());
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);

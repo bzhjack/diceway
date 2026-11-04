@@ -16,9 +16,9 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'etat_combat'];
+    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'etat_combat'];
     protected $hidden = ['created_at', 'updated_at'];
-    protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'etat_combat' => 'array'];
+    protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'jouee_le' => 'datetime', 'etat_combat' => 'array'];
 
     /**
      * Une table qui passe d'un chapitre à un autre (« Changer de chapitre », ou une scène d'un autre chapitre chargée) a fini le premier :

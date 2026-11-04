@@ -318,8 +318,8 @@
   gap: 0.75rem;
 }
 
-// ── Les sagas : un carrousel, une carte chacune (sa couleur et son image, ses chapitres en pastilles, son bouton) ─────────────────
-.acc-sagas-tete {
+// ── Les parties : un carrousel, une carte chacune (la couleur et l'image de son scénario, ses chapitres en pastilles, son bouton) ──
+.acc-parties-tete {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -363,7 +363,7 @@
   margin-left: auto;
 }
 
-.acc-sagas {
+.acc-parties {
   // Les textes réservés aux lecteurs d'écran (`sr-only`, en absolu) se placent dans le carrousel : sans lui, ceux des cartes cachées à
   // droite élargiraient la page.
   position: relative;
@@ -386,7 +386,8 @@
 }
 
 // Un peu plus de trois cartes sur grand écran, une et un bout sur un téléphone : on voit qu'il y en a d'autres.
-.acc-saga {
+.acc-partie {
+  position: relative;
   display: flex;
   flex: 0 0 clamp(16.5rem, 30%, 24rem);
   flex-direction: column;
@@ -409,13 +410,13 @@
   scroll-snap-align: start;
 }
 
-.acc-saga-tete {
+.acc-partie-tete {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
 }
 
-// Les chapitres d'une saga, en pastilles : joué (plein, à sa couleur), sur la table (cerclé d'or, qui rougeoie), à jouer (creux).
+// Les chapitres du scénario d'une partie, en pastilles : joués par elle (pleins, à sa couleur), en cours (cerclé d'or), à jouer (creux).
 .acc-reperes {
   display: flex;
   flex-wrap: wrap;
@@ -450,15 +451,17 @@
   box-shadow: 0 0 12px var(--saga);
 }
 
-.acc-repere--prochain,
 .acc-repere--a-jouer {
   border: 1px dashed rgba(255, 214, 160, 0.55);
   background: rgba(10, 6, 4, 0.6);
   color: var(--dw-forge-bone);
 }
 
-.acc-saga-nom {
+.acc-partie-nom {
   margin: 0;
+  // La place du menu, en haut à droite.
+  padding-right: 2.5rem;
+  overflow-wrap: anywhere;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-size: 1.85rem;
   font-weight: 400;
@@ -469,16 +472,25 @@
     0 0 18px color-mix(in srgb, var(--saga) 60%, transparent);
 }
 
-.acc-saga-resume {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
+.acc-partie-scenario {
+  margin: -0.35rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   color: var(--dw-forge-bone);
   text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
-// Un lien (reprendre la table ouverte) ou un bouton (ouvrir le dialogue « Ouvrir une table ») : le même aspect.
-.acc-saga-suite {
+// Reprendre la partie : son lien couvre toute la carte, qui mène à sa table (sauf le menu, au-dessus).
+.acc-partie-reprendre::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+}
+
+.acc-partie-reprendre {
   display: flex;
   width: 100%;
   font: inherit;
@@ -506,26 +518,94 @@
   }
 }
 
-.acc-saga-suite-texte {
+.acc-partie-reprendre-texte {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.acc-saga-suite-label {
+.acc-partie-reprendre-label {
   font-size: 0.68rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
 
-.acc-saga-suite-titre {
+.acc-partie-reprendre-titre {
   overflow: hidden;
   font-size: 1rem;
   font-weight: 700;
   color: var(--dw-forge-bone);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.acc-partie-heros {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+.acc-partie-derniere {
+  align-self: flex-start;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--dw-radius-toggle);
+  background: var(--dw-color-legendary);
+  color: var(--dw-forge-recess);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.acc-partie-menu {
+  position: absolute;
+  // Au-dessus du lien de la carte, qui la couvre tout entière.
+  z-index: 1;
+  top: 0.6rem;
+  right: 0.6rem;
+  color: var(--dw-forge-bone);
+}
+
+// La dernière place du carrousel : de quoi créer une partie, en creux.
+.acc-partie-nouvelle-place {
+  display: flex;
+  flex: 0 0 clamp(12rem, 20%, 16rem);
+  min-height: 14rem;
+  scroll-snap-align: start;
+}
+
+.acc-partie-nouvelle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px dashed var(--dw-forge-bronze-dim);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--dw-forge-gold);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+    background-color: rgba(255, 170, 60, 0.08);
+  }
+}
+
+// Le menu est dans un calque : hors de la carte, il reste à ce composant.
+.acc-menu-etat {
+  font-size: 0.8rem;
+  color: var(--dw-forge-bone);
+}
+
+.acc-menu-vide {
+  margin: 0;
+  padding: 0.75rem 1rem;
 }
 
 // ── Les bibliothèques : une tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ─────────────────────────────
@@ -619,7 +699,8 @@
   @include forge.stud;
 }
 
-.acc-saga-suite,
+.acc-partie-reprendre,
+.acc-partie-nouvelle,
 .acc-heros,
 .acc-biblio-lien {
   &:focus-visible {

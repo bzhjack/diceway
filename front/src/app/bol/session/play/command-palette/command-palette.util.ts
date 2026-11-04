@@ -51,7 +51,7 @@ function actions(reserveOpen: boolean): readonly PaletteAction[] {
     {id: 'createCreature', label: 'Créer une créature', modes: BOTH},
     {id: 'createDemon', label: 'Créer un démon', modes: BOTH},
     {id: 'sessions', label: 'Changer de table', modes: BOTH},
-    {id: 'newSession', label: 'Nouvelle table', modes: BOTH},
+    {id: 'newSession', label: 'Nouvelle partie', modes: BOTH},
     {id: 'intendance', label: 'Intendance', modes: BOTH},
   ];
 }

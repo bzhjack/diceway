@@ -31,7 +31,7 @@ export class TableStore {
     return session ? buildPlayBoard(session) : null;
   });
 
-  /** Dérivé de `statut` — `'terminee'` n'a pas d'affichage dédié pour l'instant, traité comme `'libre'`. */
+  /** Dérivé de `statut`. */
   readonly mode = computed<'libre' | 'combat'>(() => (this.session()?.statut === 'combat' ? 'combat' : 'libre'));
 
   readonly sessionId = computed(() => this.session()?.id ?? null);
@@ -121,6 +121,12 @@ export class TableStore {
 
   notifyError(error: unknown, fallback: string): void {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
+  }
+
+  /** On arrive à la table : elle devient la dernière partie jouée (l'accueil la montre en tête), puis elle se charge. */
+  entrer(id: string): void {
+    this.fightSessionService.jouer(id).pipe(take(1)).subscribe({error: () => undefined});
+    this.loadSession(id);
   }
 
   loadSession(id: string): void {

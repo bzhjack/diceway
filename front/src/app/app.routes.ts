@@ -87,7 +87,7 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
-    // « Ouvrir une table » est un dialogue de l'accueil : cette adresse (menu du compte, palette de la table, retour de « Créer un héros »)
+    // « Nouvelle partie » est un dialogue de l'accueil : cette adresse (menu du compte, palette de la table, retour de « Créer un héros »)
     // y mène, avec son chapitre, et l'accueil l'ouvre.
     path: 'session/new',
     redirectTo: ({queryParams}) => {

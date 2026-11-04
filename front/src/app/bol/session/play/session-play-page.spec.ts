@@ -72,6 +72,7 @@ describe('SessionPlayPageComponent', () => {
   let commands: TableCommandsService;
   const service = {
     fightSession: vi.fn(),
+    jouer: vi.fn(() => EMPTY),
     updateCombatState: vi.fn(),
     applyDamage: vi.fn(),
     setCamp: vi.fn(),

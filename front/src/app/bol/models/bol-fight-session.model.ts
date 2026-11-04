@@ -7,8 +7,8 @@ export type CombatantAttitude = 'hostile' | 'mefiant' | 'neutre' | 'amical';
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
-/** Où en est la session : `libre` (table sans combat), `combat` (rounds en cours) ou `terminee`. */
-type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
+/** Où en est la partie : `libre` (table sans combat) ou `combat` (rounds en cours). */
+type BolFightSessionStatut = 'libre' | 'combat';
 
 /** État d'un combat en cours tel que gardé en base (cf. `combat-turn.util.ts`). */
 export interface EtatCombatDto {

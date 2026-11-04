@@ -1,20 +1,25 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolAccueilComptes, BolAccueilModel} from '../../models/bol-accueil.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
+import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
-import {CloseTableService} from '../../shared/close-table/close-table.service';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
-import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
+import {AccueilPartie} from '../models/accueil.model';
 import {OpenTableData} from '../models/open-table.model';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
-import {accueilSagas, ONE_SHOT, sagaResumes, tableOuverte, teinteDeSaga} from './accueil.util';
+import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosDuCompte} from './accueil.util';
+import {libelleDeChapitre} from '../scenario.util';
 
 interface AccueilBibliotheque {
   readonly cle: keyof BolAccueilComptes;
@@ -31,58 +36,51 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
   {cle: 'demons', label: 'Démons', route: '/library/demons', creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
   {cle: 'armes', label: 'Armes', route: '/library/weapons'},
   {cle: 'armures', label: 'Armures', route: '/library/armors'},
-  {cle: 'sessions', label: 'Tables', route: '/library/sessions'},
+  {cle: 'sessions', label: 'Parties', route: '/library/sessions'},
 ];
 
-/** Accueil, sur `/` : la table ouverte (où en est l'histoire, saga › chapitre › scène, et la compagnie qui y est assise) à reprendre ou à
- * clore, puis les sagas en carrousel (leurs chapitres en pastilles et leur bouton : la table ouverte quand elle porte un de leurs chapitres,
- * sinon le chapitre à jouer, sur une nouvelle table), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
+/** Accueil, sur `/` : la dernière partie jouée (où en est son histoire, scénario › chapitre › scène, et sa compagnie) à reprendre, puis
+ * toutes les parties en carrousel (leur compagnie, leur scénario, leurs chapitres en pastilles pour elles, de quoi les reprendre, changer
+ * de chapitre ou les supprimer), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
+  imports: [NgOptimizedImage, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccueilPageComponent {
   private readonly accueilService = inject(BolAccueilService);
-  private readonly closeTable = inject(CloseTableService);
+  private readonly fightSessionService = inject(BolFightSessionService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   protected readonly data = signal<BolAccueilModel | null>(null);
   protected readonly error = signal(false);
-  /** L'accueil n'a pas encore répondu : on ne sait pas encore s'il y a une table ouverte. */
+  /** L'accueil n'a pas encore répondu : on ne sait pas encore s'il y a des parties. */
   protected readonly chargement = computed(() => this.data() === null && !this.error());
-  protected readonly oneShot = ONE_SHOT;
-  /** Le carrousel des sagas est à son début, à sa fin (les deux : tout tient, sans flèches). */
+  /** Le carrousel des parties est à son début, à sa fin (les deux : tout tient, sans flèches). */
   protected readonly railDebut = signal(true);
   protected readonly railFin = signal(true);
   private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
 
-  protected readonly sagas = computed(() => {
+  protected readonly parties = computed(() => {
     const data = this.data();
-    return data
-      ? sagaResumes(
-          accueilSagas(data.scenarios, new Set(data.scenarios_joues), data.table?.scenario_id ?? null, data.scenario_recent_id),
-          data.table?.id ?? null,
-        )
-      : [];
+    return data ? partiesDeLAccueil(data) : [];
   });
 
-  protected readonly table = computed(() => {
+  /** La dernière partie jouée, pour le bandeau ; null sans partie. */
+  protected readonly bandeau = computed(() => {
     const data = this.data();
-    return data?.table ? tableOuverte(data.table, data.scenarios) : null;
+    const derniere = data?.parties.find((partie) => partie.id === data.derniere);
+    return data && derniere ? bandeauDePartie(derniere, data.scenarios) : null;
   });
 
-  /** La teinte de la saga de la table ouverte, pour son étiquette ; 0 sans saga. */
-  protected readonly tableTeinte = computed(() => teinteDeSaga(this.sagas(), this.table()?.saga ?? null));
-
-  protected readonly compagnie = computed(() =>
-    (this.data()?.compagnie ?? []).map((heros) => ({...heros, portrait: usableAvatar(heros.avatar), initiale: heros.nom.charAt(0).toUpperCase()})),
-  );
+  /** Les scénarios du compte, pour « Choisir un scénario » d'une partie improvisée. */
+  protected readonly scenarios = computed(() => scenariosDuCompte(this.data()?.scenarios ?? []));
 
   protected readonly bibliotheques = computed(() => {
     const comptes = this.data()?.comptes ?? null;
@@ -99,7 +97,7 @@ export class AccueilPageComponent {
       }
       const scenario = params.get('scenario');
       void this.router.navigate([], {queryParams: {table: null, scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
-      this.ouvrirTable(scenario);
+      this.nouvellePartie(scenario);
     });
     // Le carrousel n'existe qu'une fois l'accueil arrivé ; sa largeur change avec la fenêtre.
     effect((onCleanup) => {
@@ -134,33 +132,62 @@ export class AccueilPageComponent {
     rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
   }
 
-  /** Le dialogue de la table, sur ce chapitre (null : on improvise), avec ce que l'accueil a déjà lu : une nouvelle table, ou, `reprise`,
-   * la table ouverte (sur ce chapitre ou un autre). Il mène à la table. */
-  protected ouvrirTable(scenarioId: string | null = null, reprise = false): void {
+  /** Le dialogue « Nouvelle partie », sur ce chapitre (null : à choisir), avec ce que l'accueil a déjà lu. Il mène à la table. */
+  protected nouvellePartie(scenarioId: string | null = null): void {
     this.dialog.open<OpenTableDialogComponent, OpenTableData, boolean>(OpenTableDialogComponent, {
-      data: {scenarioId, accueil: this.data(), reprise},
+      data: {scenarioId, accueil: this.data()},
       width: 'min(1120px, 94vw)',
       maxWidth: '94vw',
       ariaLabelledBy: 'otd-titre',
-      // Une nouvelle table attend d'abord son nom ; une table reprise n'a rien à saisir.
-      autoFocus: reprise ? 'first-heading' : '.otd-nom input',
+      // La nouvelle partie attend d'abord le nom de sa compagnie.
+      autoFocus: '.otd-nom input',
     });
   }
 
-  /** « Clore la table » du bandeau : une fois close, l'accueil est relu (plus de table ouverte). */
-  protected clore(): void {
-    const table = this.data()?.table;
-    if (!table) {
+  /** Les chapitres du scénario d'une partie, pour « Changer de chapitre » : le courant est coché, ceux qu'elle a joués sont marqués. Ses
+   * pastilles sont dans le même ordre (un one shot n'en a pas, et n'a qu'un chapitre, le courant). */
+  protected chapitresDe(partie: AccueilPartie): {id: string; libelle: string; courant: boolean; joue: boolean}[] {
+    return chapitresDuScenario(partie.scenarioId, this.data()?.scenarios ?? []).map((c, i) => ({
+      id: c.id,
+      libelle: libelleDeChapitre(c.numero, c.titre),
+      courant: c.id === partie.scenarioId,
+      joue: partie.reperes[i]?.etat === 'joue',
+    }));
+  }
+
+  /** Passe la partie sur ce chapitre (de son scénario, ou le premier scénario d'une partie improvisée), puis relit l'accueil. */
+  protected changerChapitre(partie: AccueilPartie, chapitreId: string): void {
+    if (chapitreId === partie.scenarioId) {
       return;
     }
-    this.closeTable
-      .clore({id: table.id, enCombat: table.statut === 'combat'})
+    this.fightSessionService
+      .changerChapitre(partie.id, chapitreId)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((close) => {
-        if (close) {
-          this.charger();
-        }
+      .subscribe({
+        next: () => this.charger(),
+        error: (error: unknown) =>
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de changer le chapitre de la partie.'), 'OK', {duration: 6000}),
       });
+  }
+
+  /** « Supprimer la partie » : après confirmation, elle disparaît pour de bon, puis l'accueil se relit. */
+  protected supprimer(partie: AccueilPartie): void {
+    confirmDialog(
+      this.dialog,
+      {title: 'Supprimer la partie', message: `Supprimer « ${partie.nom} » ? Cette action est irréversible.`, confirmLabel: 'Supprimer'},
+      {width: '420px'},
+    ).subscribe((confirme) => {
+      if (!confirme) {
+        return;
+      }
+      this.fightSessionService
+        .delete(partie.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => this.charger(),
+          error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de supprimer la partie.'), 'OK', {duration: 6000}),
+        });
+    });
   }
 
   private charger(): void {

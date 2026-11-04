@@ -1,13 +1,13 @@
 <section class="dw-page">
-  <!-- Une fois l'en-tête sorti de l'écran, le même en petit reste en haut : où en est la table ouverte, de quoi la reprendre. -->
-  <dw-compact-bar [watch]="entete" [titre]="table()?.filAriane ?? 'Que joue-t-on ce soir ?'">
-    @if (table(); as table) {
-      <a mat-flat-button [routerLink]="['/session', table.id, 'play']" [attr.aria-label]="'Reprendre la table : ' + table.titre">
+  <!-- Une fois l'en-tête sorti de l'écran, le même en petit reste en haut : où en est la dernière partie jouée, de quoi la reprendre. -->
+  <dw-compact-bar [watch]="entete" [titre]="bandeau()?.filAriane ?? 'Que joue-t-on ce soir ?'">
+    @if (bandeau(); as bandeau) {
+      <a mat-flat-button [routerLink]="['/session', bandeau.id, 'play']" [attr.aria-label]="'Reprendre la partie : ' + bandeau.titre">
         <mat-icon>play_arrow</mat-icon> Reprendre
       </a>
     }
-    <button mat-stroked-button type="button" (click)="ouvrirTable()">
-      <mat-icon>add</mat-icon> Nouvelle table
+    <button mat-stroked-button type="button" (click)="nouvellePartie()">
+      <mat-icon>add</mat-icon> Nouvelle partie
     </button>
     <bol-account-menu />
   </dw-compact-bar>
@@ -19,170 +19,233 @@
         <h1 class="acc-titre">Que joue-t-on ce soir ?</h1>
       </div>
       <div class="acc-entete-actions">
-        <button mat-stroked-button type="button" (click)="ouvrirTable()">
-          <mat-icon>add</mat-icon> Nouvelle table
+        <button mat-stroked-button type="button" (click)="nouvellePartie()">
+          <mat-icon>add</mat-icon> Nouvelle partie
         </button>
         <bol-account-menu />
       </div>
     </header>
 
-    <!-- La table ouverte, sur l'illustration du tableau de bord : où en est l'histoire, qui est à table, de quoi la reprendre ; sans table,
-         de quoi en ouvrir une. Tant que l'accueil n'a pas répondu (ou s'il a échoué), on ne sait pas s'il y a une table : le bandeau ne
-         l'affirme pas. -->
+    <!-- La dernière partie jouée, sur l'illustration du tableau de bord : où en est l'histoire, qui y est assis, de quoi la reprendre ; sans
+         partie, de quoi en créer une. Tant que l'accueil n'a pas répondu (ou s'il a échoué), le bandeau n'affirme rien. -->
     <section class="acc-soir" aria-labelledby="acc-soir-titre" [attr.aria-busy]="chargement()">
       <img class="acc-soir-image" ngSrc="assets/bol/dashboard-header.webp" alt="" fill priority />
       <div class="acc-soir-contenu">
-        @if (table(); as table) {
+        @if (bandeau(); as bandeau) {
           <nav aria-label="Où en est l'histoire">
             <ol class="acc-fil">
-              <li class="acc-fil-histoire" [class]="'dw-saga--' + tableTeinte()">
+              <li class="acc-fil-histoire" [class]="'dw-saga--' + bandeau.teinte">
                 <span class="acc-fil-feu" aria-hidden="true"></span>
-                Table ouverte · {{ table.histoire }}
+                Dernière partie jouée · {{ bandeau.histoire }}
               </li>
-              @if (table.chapitre; as chapitre) {
+              @if (bandeau.chapitre; as chapitre) {
                 <li class="acc-fil-etape">{{ chapitre }}</li>
               }
-              @if (table.scene; as scene) {
+              @if (bandeau.scene; as scene) {
                 <li class="acc-fil-etape">{{ scene }}</li>
               }
             </ol>
           </nav>
-          <h2 id="acc-soir-titre" class="acc-soir-titre">{{ table.titre }}</h2>
-          @if (table.sceneEnCours; as scene) {
+          <h2 id="acc-soir-titre" class="acc-soir-titre">{{ bandeau.titre }}</h2>
+          @if (bandeau.sceneEnCours; as scene) {
             <p class="acc-soir-texte">
-              Scène en cours : <strong class="acc-soir-scene">{{ scene }}</strong>{{ table.enCombat ? ' · combat engagé' : '' }}
+              Scène en cours : <strong class="acc-soir-scene">{{ scene }}</strong>{{ bandeau.enCombat ? ' · combat engagé' : '' }}
             </p>
-          } @else if (table.enCombat) {
+          } @else if (bandeau.enCombat) {
             <p class="acc-soir-texte">Combat engagé</p>
           }
-          @if (table.scenes.length) {
+          @if (bandeau.scenes.length) {
             <div class="acc-scenes">
               <ol class="acc-scenes-barre" aria-label="Les scènes du chapitre">
-                @for (scene of table.scenes; track $index) {
+                @for (scene of bandeau.scenes; track $index) {
                   <li class="acc-scene" [class]="'acc-scene--' + scene.etat"><span class="sr-only">{{ scene.texte }}</span></li>
                 }
               </ol>
-              <p class="acc-scenes-compte">{{ table.scenesJouees }}</p>
+              <p class="acc-scenes-compte">{{ bandeau.scenesJouees }}</p>
             </div>
           }
-          <ng-container [ngTemplateOutlet]="compagnieTpl" [ngTemplateOutletContext]="{$implicit: 'Autour de la table'}" />
+          @if (bandeau.heros.length) {
+            <div class="acc-compagnie">
+              <span class="acc-compagnie-titre">Autour de la table</span>
+              <ul class="acc-compagnie-liste" aria-label="Autour de la table">
+                @for (heros of bandeau.heros; track heros.id) {
+                  <li>
+                    <a class="acc-heros" [routerLink]="['/create/hero', heros.id]">
+                      <span class="acc-heros-medaillon" aria-hidden="true">
+                        @if (heros.portrait; as portrait) {
+                          <img dwAvatarFallback [src]="portrait" alt="" />
+                        } @else {
+                          {{ heros.initiale }}
+                        }
+                      </span>
+                      <span class="acc-heros-nom">{{ heros.nom }}</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
           <div class="acc-soir-actions">
-            <a mat-flat-button [routerLink]="['/session', table.id, 'play']">
-              <mat-icon>play_arrow</mat-icon> Reprendre la table
+            <a mat-flat-button [routerLink]="['/session', bandeau.id, 'play']">
+              <mat-icon>play_arrow</mat-icon> Reprendre
             </a>
-            <button mat-stroked-button type="button" (click)="clore()">
-              <mat-icon>lock</mat-icon> Clore la table
-            </button>
           </div>
         } @else if (error()) {
-          <h2 id="acc-soir-titre" class="acc-soir-titre">La table du soir</h2>
+          <h2 id="acc-soir-titre" class="acc-soir-titre">La partie du soir</h2>
           <div class="acc-erreur">
-            <p class="acc-soir-texte" role="alert">
-              Impossible de charger la table ouverte et les scénarios. Une partie en cours se reprend depuis vos tables.
-            </p>
+            <p class="acc-soir-texte" role="alert">Impossible de charger les parties. Une partie se reprend aussi depuis « Mes parties ».</p>
             <a mat-stroked-button routerLink="/library/sessions">
-              <mat-icon>history</mat-icon> Mes tables
+              <mat-icon>history</mat-icon> Mes parties
             </a>
           </div>
         } @else if (chargement()) {
-          <h2 id="acc-soir-titre" class="acc-soir-titre">La table du soir</h2>
+          <h2 id="acc-soir-titre" class="acc-soir-titre">La partie du soir</h2>
           <p class="acc-soir-texte" role="status">Chargement…</p>
         } @else {
-          <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune table ouverte</h2>
-          <p class="acc-soir-texte">Ouvre une table sur un chapitre ci-dessous, ou pour improviser.</p>
-          <ng-container [ngTemplateOutlet]="compagnieTpl" [ngTemplateOutletContext]="{$implicit: 'La dernière compagnie'}" />
+          <h2 id="acc-soir-titre" class="acc-soir-titre">Aucune partie</h2>
+          <p class="acc-soir-texte">Crée une partie : le nom de sa compagnie, son scénario et ses héros.</p>
           <div>
-            <button mat-flat-button type="button" (click)="ouvrirTable()">
-              <mat-icon>add</mat-icon> Ouvrir une table
+            <button mat-flat-button type="button" (click)="nouvellePartie()">
+              <mat-icon>add</mat-icon> Nouvelle partie
             </button>
           </div>
         }
       </div>
     </section>
 
-    <!-- Les héros à table (la table ouverte, sinon la dernière) : une nouvelle table les reprend d'office. -->
-    <ng-template #compagnieTpl let-titre>
-      @if (compagnie().length) {
-        <div class="acc-compagnie">
-          <span class="acc-compagnie-titre">{{ titre }}</span>
-          <ul class="acc-compagnie-liste" [attr.aria-label]="titre">
-            @for (heros of compagnie(); track heros.id) {
-              <li>
-                <a class="acc-heros" [routerLink]="['/create/hero', heros.id]">
-                  <span class="acc-heros-medaillon" aria-hidden="true">
-                    @if (heros.portrait; as portrait) {
-                      <img dwAvatarFallback [src]="portrait" alt="" />
-                    } @else {
-                      {{ heros.initiale }}
-                    }
-                  </span>
-                  <span class="acc-heros-nom">{{ heros.nom }}</span>
-                </a>
-              </li>
-            }
-          </ul>
-        </div>
-      }
-    </ng-template>
-    <!-- En cas d'erreur, le bandeau le dit (avec « Mes tables ») : pas de section Scénarios vide. Les scénarios défilent de côté, en carrousel. -->
+    <!-- En cas d'erreur, le bandeau le dit (avec « Mes parties ») : pas de section Parties vide. Les parties défilent de côté, en carrousel. -->
     @if (!error()) {
-      <section aria-labelledby="acc-sagas-titre">
-        <div class="acc-sagas-tete">
-          <h2 id="acc-sagas-titre" class="acc-section-titre">Scénarios</h2>
+      <section aria-labelledby="acc-parties-titre">
+        <div class="acc-parties-tete">
+          <h2 id="acc-parties-titre" class="acc-section-titre">Parties</h2>
           <!-- Chaque pastille dit déjà son état à un lecteur d'écran : la légende ne sert qu'à l'œil. -->
           <ul class="acc-legende" aria-hidden="true">
             <li><span class="acc-legende-pastille acc-repere--joue"></span>joué</li>
-            <li><span class="acc-legende-pastille acc-repere--en-cours"></span>sur la table</li>
+            <li><span class="acc-legende-pastille acc-repere--en-cours"></span>en cours</li>
             <li><span class="acc-legende-pastille acc-repere--a-jouer"></span>à jouer</li>
           </ul>
           @if (!(railDebut() && railFin())) {
             <div class="acc-rail-boutons">
-              <button mat-icon-button type="button" aria-label="Scénarios précédents" aria-controls="acc-rail" [disabled]="railDebut()" (click)="defiler(-1)">
+              <button mat-icon-button type="button" aria-label="Parties précédentes" aria-controls="acc-rail" [disabled]="railDebut()" (click)="defiler(-1)">
                 <mat-icon>chevron_left</mat-icon>
               </button>
-              <button mat-icon-button type="button" aria-label="Scénarios suivants" aria-controls="acc-rail" [disabled]="railFin()" (click)="defiler(1)">
+              <button mat-icon-button type="button" aria-label="Parties suivantes" aria-controls="acc-rail" [disabled]="railFin()" (click)="defiler(1)">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
           }
         </div>
         @if (!data()) {
-          <p class="acc-note" role="status">Chargement des scénarios…</p>
+          <p class="acc-note" role="status">Chargement des parties…</p>
         } @else {
-          <ul #rail id="acc-rail" class="acc-sagas" (scroll)="mesurerRail()">
-            @for (saga of sagas(); track saga.nom) {
-              <li class="acc-saga" [class]="'dw-saga--' + saga.teinte">
-                <div class="acc-saga-tete">
-                  <h3 class="acc-saga-nom">{{ saga.nom ?? oneShot }}</h3>
-                  <ol class="acc-reperes" [attr.aria-label]="saga.nom ? 'Les chapitres de ' + saga.nom : 'Les one shots'">
-                    @for (repere of saga.reperes; track $index) {
-                      <li class="acc-repere" [class]="'acc-repere--' + repere.etat">
-                        <span aria-hidden="true">{{ repere.marque }}</span><span class="sr-only">{{ repere.texte }}</span>
-                      </li>
-                    }
-                  </ol>
-                  <p class="acc-saga-resume">{{ saga.resume }}</p>
-                </div>
-                @if (saga.suite; as suite) {
-                  <!-- « Reprendre » ouvre le dialogue sur la table ouverte (pour changer de chapitre au passage) ; les autres, sur une nouvelle table. -->
-                  <button type="button" class="acc-saga-suite" [attr.aria-label]="suite.ariaLabel" (click)="ouvrirTable(suite.id, suite.reprise)">
-                    <span class="acc-saga-suite-texte">
-                      <span class="acc-saga-suite-label">{{ suite.action }}</span>
-                      <span class="acc-saga-suite-titre">{{ suite.libelle }}</span>
-                    </span>
-                    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          <ul #rail id="acc-rail" class="acc-parties" (scroll)="mesurerRail()">
+            @for (partie of parties(); track partie.id) {
+              <li class="acc-partie" [class]="'dw-saga--' + partie.teinte">
+                <div class="acc-partie-tete">
+                  @if (partie.derniere) {
+                    <span class="acc-partie-derniere">dernière jouée</span>
+                  }
+                  <button
+                    mat-icon-button
+                    type="button"
+                    class="acc-partie-menu"
+                    [attr.aria-label]="'Actions de ' + partie.nom"
+                    [matMenuTriggerFor]="menuPartie"
+                    [matMenuTriggerData]="{partie}"
+                  >
+                    <mat-icon>more_vert</mat-icon>
                   </button>
-                }
-              </li>
-            } @empty {
-              <li class="acc-note">
-                Aucun scénario pour l'instant. Importe-en un (voir doc/scenarios/format-import.md) ou ouvre une nouvelle table.
+                  <h3 class="acc-partie-nom">{{ partie.nom }}</h3>
+                  <p class="acc-partie-scenario">{{ partie.scenario }}</p>
+                  @if (partie.reperes.length) {
+                    <ol class="acc-reperes" [attr.aria-label]="'Les chapitres de ' + partie.scenario + ' pour ' + partie.nom">
+                      @for (repere of partie.reperes; track $index) {
+                        <li class="acc-repere" [class]="'acc-repere--' + repere.etat">
+                          <span aria-hidden="true">{{ repere.marque }}</span><span class="sr-only">{{ repere.texte }}</span>
+                        </li>
+                      }
+                    </ol>
+                  }
+                  @if (partie.heros.length) {
+                    <p class="acc-partie-heros">
+                      @for (heros of partie.heros; track heros.id; let dernier = $last) {
+                        {{ heros.nom }}{{ dernier ? '' : ', ' }}
+                      }
+                    </p>
+                  }
+                </div>
+                <a class="acc-partie-reprendre" [routerLink]="['/session', partie.id, 'play']">
+                  <span class="acc-partie-reprendre-texte">
+                    <span class="acc-partie-reprendre-label">Reprendre</span>
+                    <span class="acc-partie-reprendre-titre">{{ partie.termine ? 'Scénario terminé' : (partie.reprendre ?? 'Partie improvisée') }}</span>
+                  </span>
+                  <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+                </a>
               </li>
             }
+            <li class="acc-partie-nouvelle-place">
+              <button type="button" class="acc-partie-nouvelle" (click)="nouvellePartie()">
+                <mat-icon aria-hidden="true">add</mat-icon> Nouvelle partie
+              </button>
+            </li>
           </ul>
         }
       </section>
     }
+
+    <!-- Le menu d'une partie : changer de chapitre dans son scénario (en choisir un pour une partie improvisée), la supprimer. -->
+    <mat-menu #menuPartie="matMenu">
+      <ng-template matMenuContent let-partie="partie">
+        @if (partie.scenarioId) {
+          <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitres" [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie)}">
+            <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre</span>
+          </button>
+        } @else {
+          <button mat-menu-item type="button" [matMenuTriggerFor]="menuScenarios" [matMenuTriggerData]="{partie}">
+            <mat-icon>auto_stories</mat-icon><span>Choisir un scénario</span>
+          </button>
+        }
+        <button mat-menu-item type="button" (click)="supprimer(partie)">
+          <mat-icon svgIcon="gi-trash" /><span>Supprimer la partie</span>
+        </button>
+      </ng-template>
+    </mat-menu>
+    <mat-menu #menuChapitres="matMenu">
+      <ng-template matMenuContent let-partie="partie" let-chapitres="chapitres">
+        @for (chapitre of chapitres; track chapitre.id) {
+          <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">
+            @if (chapitre.courant) {
+              <mat-icon>check</mat-icon>
+            }
+            <span>{{ chapitre.libelle }}</span>
+            @if (chapitre.courant) {
+              <span class="sr-only">, en cours</span>
+            }
+            @if (chapitre.joue) {
+              <span class="acc-menu-etat">&nbsp;· joué</span>
+            }
+          </button>
+        }
+      </ng-template>
+    </mat-menu>
+    <mat-menu #menuScenarios="matMenu">
+      <ng-template matMenuContent let-partie="partie">
+        @for (scenario of scenarios(); track scenario.id) {
+          <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitresDuScenario" [matMenuTriggerData]="{partie, scenario}">
+            {{ scenario.nom }}
+          </button>
+        } @empty {
+          <p class="acc-menu-vide">Aucun scénario importé.</p>
+        }
+      </ng-template>
+    </mat-menu>
+    <mat-menu #menuChapitresDuScenario="matMenu">
+      <ng-template matMenuContent let-partie="partie" let-scenario="scenario">
+        @for (chapitre of scenario.chapitres; track chapitre.id) {
+          <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">{{ chapitre.libelle }}</button>
+        }
+      </ng-template>
+    </mat-menu>
 
     <nav aria-labelledby="acc-bibliotheques-titre">
       <h2 id="acc-bibliotheques-titre" class="acc-section-titre acc-section-titre--espace">Bibliothèques</h2>

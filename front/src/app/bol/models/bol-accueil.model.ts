@@ -8,33 +8,38 @@ export interface BolAccueilScenario {
   saga: BolScenarioSaga | null;
 }
 
-/** Une scène du scénario de la table ouverte. */
+/** Une scène du chapitre d'une partie. */
 export interface BolAccueilScene {
   id: string;
   titre: string;
 }
 
-/** La table ouverte de l'accueil, avec le scénario qu'elle joue (null : on improvise) et où en est ce chapitre. */
-export interface BolAccueilTable {
-  id: string;
-  titre: string | null;
-  /** `combat` : la clore termine d'abord le combat. */
-  statut: 'libre' | 'combat';
-  scenario_id: string | null;
-  /** La scène chargée sur la table. */
-  scene_id: string | null;
-  /** Les scènes de son scénario, dans leur ordre (aucune sans scénario). */
-  scenes: BolAccueilScene[];
-  /** Celles de ces scènes déjà passées sur la table. */
-  scenes_jouees: string[];
-  created_at: string;
-}
-
-/** Un héros à table (la table ouverte, sinon la dernière), pour la compagnie. */
+/** Un héros d'une partie, pour sa carte et le bandeau. */
 export interface BolAccueilHeros {
   id: string;
   nom: string;
   avatar: string | null;
+}
+
+/** Une partie de l'accueil : une table, sa compagnie (`titre`, null pour une ancienne partie sans nom), son chapitre courant (null :
+ * partie improvisée) et ce qu'elle en a joué. */
+export interface BolAccueilPartie {
+  id: string;
+  titre: string | null;
+  statut: 'libre' | 'combat';
+  /** La dernière fois qu'on est entré à la table (ISO 8601). */
+  jouee_le: string | null;
+  scenario_id: string | null;
+  /** La scène chargée sur la table. */
+  scene_id: string | null;
+  /** Les scènes de son chapitre, dans leur ordre (aucune sans chapitre). */
+  scenes: BolAccueilScene[];
+  /** Celles de ces scènes déjà passées sur cette table. */
+  scenes_jouees: string[];
+  /** Les chapitres que cette partie a joués : quittés pour un autre, ou toutes leurs scènes passées sur cette table. */
+  chapitres_joues: string[];
+  /** Ses héros (du compte, du camp des héros), dans l'ordre où ils ont été posés. */
+  heros: BolAccueilHeros[];
 }
 
 /** Le nombre de fiches de chaque bibliothèque, telles que le compte les voit (catalogue compris pour les PNJ, créatures, démons, armes et
@@ -51,13 +56,10 @@ export interface BolAccueilComptes {
 
 /** Réponse de `GET /api/bol/accueil` : tout ce que le tableau de bord affiche, en une requête. */
 export interface BolAccueilModel {
-  table: BolAccueilTable | null;
+  /** La partie jouée en dernier, pour le bandeau ; null sans partie. */
+  derniere: string | null;
+  /** Toutes les parties, de la plus récemment jouée à la plus ancienne. */
+  parties: BolAccueilPartie[];
   scenarios: BolAccueilScenario[];
-  /** Ids des scénarios déjà joués sur une table du compte. */
-  scenarios_joues: string[];
-  /** Id du scénario de la table la plus récente (ouverte ou non), s'il y en a un. */
-  scenario_recent_id: string | null;
-  /** Les héros de la table ouverte (sinon de la dernière), avec leur nom et leur portrait. */
-  compagnie: BolAccueilHeros[];
   comptes: BolAccueilComptes;
 }

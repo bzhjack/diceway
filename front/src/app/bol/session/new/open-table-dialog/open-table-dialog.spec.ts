@@ -5,46 +5,33 @@ import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {provideRouter, Router} from '@angular/router';
 import {of, Subject, throwError} from 'rxjs';
-import {BolAccueilModel, BolAccueilTable} from '../../../models/bol-accueil.model';
+import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
-import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {OpenTableData} from '../../models/open-table.model';
 import {OpenTableDialogComponent} from './open-table-dialog';
 import {chapitre} from '../../chapitre.testing';
 
-const TABLE: BolAccueilTable = {
-  id: 't1',
-  titre: null,
-  statut: 'combat',
-  scenario_id: 'p1',
-  scene_id: null,
-  scenes: [],
-  scenes_jouees: [],
-  created_at: '2026-07-30T12:00:00Z',
-};
-
 const ACCUEIL: BolAccueilModel = {
-  table: null,
+  derniere: null,
+  parties: [],
   scenarios: [
     chapitre('p1', 'Perle du Beshaar — 1. Sacrilège à Satarla'),
     chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
     chapitre('p3', "Perle du Beshaar — 3. Le tombeau d'Urzûlzalinaar"),
     chapitre('p4', "Perle du Beshaar — 4. Le réveil de l'Ébranleur"),
     chapitre('p5', 'Perle du Beshaar — 5. Tolometh'),
+    chapitre('dvi', 'Le Dieu voilé — Introduction : La colère de Nemmereth'),
+    chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
+    chapitre('ps', 'premier scénario'),
   ],
-  scenarios_joues: [],
-  scenario_recent_id: null,
-  compagnie: [],
-  comptes: {heros: 1, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 1},
+  comptes: {heros: 1, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 0},
 };
 
 describe('OpenTableDialogComponent', () => {
   const accueil = vi.fn();
   const launch = vi.fn();
   const loadCatalog = vi.fn();
-  const closeSession = vi.fn();
-  const changer = vi.fn();
   const fermer = vi.fn();
   const snack = vi.fn();
   /** Le catalogue de la bibliothèque : vide tant que le réseau n'a pas répondu, comme le vrai service. */
@@ -60,13 +47,11 @@ describe('OpenTableDialogComponent', () => {
     catalogLoading = signal(!catalogResolu);
     catalogFailed = signal(false);
     accueil$ = new Subject<BolAccueilModel>();
-    for (const espion of [accueil, launch, loadCatalog, closeSession, changer, fermer, snack]) {
+    for (const espion of [accueil, launch, loadCatalog, fermer, snack]) {
       espion.mockReset();
     }
     accueil.mockReturnValue(accueil$);
     launch.mockReturnValue(of({id: 's9'}));
-    closeSession.mockReturnValue(of({}));
-    changer.mockReturnValue(of({}));
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [
@@ -76,7 +61,6 @@ describe('OpenTableDialogComponent', () => {
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {provide: MatSnackBar, useValue: {open: snack}},
         {provide: BolAccueilService, useValue: {accueil}},
-        {provide: BolFightSessionService, useValue: {close: closeSession, changerChapitre: changer}},
         {
           provide: CombatSelectionService,
           useValue: {
@@ -123,8 +107,20 @@ describe('OpenTableDialogComponent', () => {
     await stable();
   }
 
-  describe('l’histoire', () => {
-    it('montre le chapitre choisi, placé dans sa saga, et ne relit pas l’accueil qu’on lui donne', async () => {
+  const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
+  const item = (libelle: string) => items().find((b) => b.textContent?.replace(/\s+/g, ' ').includes(libelle))!;
+
+  it('se présente comme une nouvelle partie', async () => {
+    await ouvrir({scenarioId: null, accueil: ACCUEIL});
+
+    expect(texte('.otd-surtitre')).toBe('Nouvelle partie');
+    expect(texte('#otd-titre')).toBe('Qui est à table ?');
+    expect(bouton('Créer la partie')).toBeDefined();
+    expect(element.textContent).not.toContain('Clore');
+  });
+
+  describe('le scénario', () => {
+    it('montre le chapitre demandé, placé dans son scénario, et ne relit pas l’accueil qu’on lui donne', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       expect(texte('.otd-chapitre-place')).toBe('Perle du Beshaar › Chapitre 5 sur 5');
@@ -132,64 +128,76 @@ describe('OpenTableDialogComponent', () => {
       expect(accueil).not.toHaveBeenCalled();
     });
 
-    it('« Changer de chapitre » propose les chapitres de chaque saga, sans quitter le dialogue', async () => {
-      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, scenarios_joues: ['p2']}});
-      const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
+    it('choisir un scénario part de son premier chapitre (l’introduction s’il y en a une)', async () => {
+      await ouvrir({scenarioId: null, accueil: ACCUEIL});
 
-      bouton('Changer de chapitre').click();
+      bouton('Choisir un scénario').click();
       await stable();
-      items().find((b) => b.textContent?.includes('Perle du Beshaar'))!.click();
-      await stable();
-
-      const chapitres = items().filter((b) => /^\d\./.test(b.textContent?.trim().replace(/^check\s*/, '') ?? ''));
-      expect(chapitres.map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
-        '1. Sacrilège à Satarla',
-        "2. De sable et d'eau · joué",
-        "3. Le tombeau d'Urzûlzalinaar · le prochain",
-        "4. Le réveil de l'Ébranleur",
-        'check5. Tolometh, choisi',
-      ]);
-
-      chapitres[2].click();
+      expect(items().map((b) => b.textContent?.trim())).toEqual(['Le Dieu voilé', 'Perle du Beshaar', 'premier scénario']);
+      item('Le Dieu voilé').click();
       await stable();
 
-      expect(fermer).not.toHaveBeenCalled();
-      expect(texte('.otd-chapitre-nom')).toBe("Le tombeau d'Urzûlzalinaar");
-      expect(texte('.otd-chapitre-place')).toBe('Perle du Beshaar › Chapitre 3 sur 5');
+      expect(texte('.otd-chapitre-place')).toBe('Le Dieu voilé › Introduction');
+      expect(texte('.otd-chapitre-nom')).toBe('La colère de Nemmereth');
     });
 
-    it('« Improviser » retire le chapitre : la table s’ouvre sans scénario', async () => {
+    it('le chapitre de départ se change parmi ceux du scénario seulement', async () => {
+      await ouvrir({scenarioId: 'p1', accueil: ACCUEIL});
+
+      bouton('Chapitre de départ').click();
+      await stable();
+      expect(items().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+        'check1. Sacrilège à Satarla, choisi',
+        "2. De sable et d'eau",
+        "3. Le tombeau d'Urzûlzalinaar",
+        "4. Le réveil de l'Ébranleur",
+        '5. Tolometh',
+      ]);
+      item('3. Le tombeau').click();
+      await stable();
+
+      expect(texte('.otd-chapitre-nom')).toBe("Le tombeau d'Urzûlzalinaar");
+    });
+
+    it('un one shot n’a pas de chapitre de départ à choisir', async () => {
+      await ouvrir({scenarioId: 'ps', accueil: ACCUEIL});
+
+      expect(texte('.otd-chapitre-place')).toBe('One shot');
+      expect(bouton('Chapitre de départ')).toBeUndefined();
+    });
+
+    it('« Improviser » retire le scénario : la partie se crée sans lui', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       bouton('Improviser').click();
       await nommer();
-      bouton('Ouvrir la table').click();
+      bouton('Créer la partie').click();
 
       expect(texte('.otd-chapitre-nom')).toBe('Partie improvisée');
       expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', null);
     });
 
-    it('prévient qu’un chapitre inconnu du compte est introuvable, et laisse ouvrir la table sans lui', async () => {
+    it('prévient qu’un chapitre inconnu du compte est introuvable, et laisse créer la partie sans lui', async () => {
       await ouvrir({scenarioId: 'zz', accueil: ACCUEIL});
       await nommer();
 
       expect(texte('[role="alert"]')).toContain('introuvable');
-      expect(bouton('Ouvrir la table').disabled).toBe(false);
+      expect(bouton('Créer la partie').disabled).toBe(false);
     });
 
-    it('sans accueil, le lit : « Ouvrir la table » attend sa réponse, sans rien prétendre du chapitre', async () => {
+    it('sans accueil, le lit : « Créer la partie » attend sa réponse, sans rien prétendre du chapitre', async () => {
       await ouvrir({scenarioId: 'p5'});
       await nommer();
 
       expect(accueil).toHaveBeenCalledTimes(1);
       expect(texte('[role="status"]')).toContain('Chargement du chapitre');
       expect(element.querySelector('[role="alert"]')).toBeNull();
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
+      expect(bouton('Créer la partie').disabled).toBe(true);
 
       await repondre();
 
       expect(texte('.otd-chapitre-nom')).toBe('Tolometh');
-      expect(bouton('Ouvrir la table').disabled).toBe(false);
+      expect(bouton('Créer la partie').disabled).toBe(false);
     });
 
     it('si l’accueil ne répond pas, reste utilisable, sans chapitre, et le dit', async () => {
@@ -200,101 +208,51 @@ describe('OpenTableDialogComponent', () => {
       await stable();
 
       expect(texte('[role="alert"]')).toContain('Impossible de charger le chapitre');
-      expect(bouton('Ouvrir la table').disabled).toBe(false);
+      expect(bouton('Créer la partie').disabled).toBe(false);
     });
   });
 
-  describe('ouvrir la table', () => {
-    it('sans autre table ouverte, l’ouvre avec le chapitre et mène à elle', async () => {
+  describe('créer la partie', () => {
+    it('la crée avec son nom, son chapitre et ses héros, et mène à sa table', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       expect(texte('.otd-resume-texte')).toBe('Tolometh, avec Grimar');
-      expect(element.querySelector('.otd-deja')).toBeNull();
       await nommer();
       expect(texte('.otd-resume-texte')).toBe('Les Lames de Satarla · Tolometh, avec Grimar');
-      bouton('Ouvrir la table').click();
+      bouton('Créer la partie').click();
       await stable();
 
-      expect(closeSession).not.toHaveBeenCalled();
       expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
       expect(fermer).toHaveBeenCalledWith(true);
       expect(TestBed.inject(Router).url).toBe('/session/s9/play');
     });
 
-    it('avec une table ouverte : la signale, demande confirmation, la clôt puis ouvre la nouvelle', async () => {
-      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: TABLE}});
-
-      expect(texte('.otd-deja-table')).toContain('Sacrilège à Satarla');
-      expect(texte('.otd-deja-texte')).toBe(
-        'Ouvrir celle-ci la clôt : le combat en cours s’arrête, elle reste dans « Mes tables », d’où elle se reprend.',
-      );
-      expect(texte('.otd-resume-cloture')).toBe('Sacrilège à Satarla sera close.');
-
-      await nommer();
-      bouton('Ouvrir la table').click();
-      await stable();
-
-      expect(launch).not.toHaveBeenCalled();
-      expect(texte('#otd-titre')).toBe('Clore Sacrilège à Satarla ?');
-      expect([...element.querySelectorAll('.otd-confirmation li')].map((li) => li.textContent?.trim())).toEqual([
-        'le combat en cours s’arrête',
-        'elle reste dans « Mes tables », d’où elle se reprend',
-      ]);
-      expect(document.activeElement).toBe(bouton('Clore et ouvrir Les Lames de Satarla'));
-
-      bouton('Clore et ouvrir Les Lames de Satarla').click();
-      await stable();
-
-      expect(closeSession).toHaveBeenCalledWith('t1');
-      expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
-      expect(closeSession.mock.invocationCallOrder[0]).toBeLessThan(launch.mock.invocationCallOrder[0]);
-      expect(TestBed.inject(Router).url).toBe('/session/s9/play');
-    });
-
-    it('« Annuler » revient au choix sans rien clore', async () => {
-      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: TABLE}});
-      await nommer();
-      bouton('Ouvrir la table').click();
-      await stable();
-
-      bouton('Annuler').click();
-      await stable();
-
-      expect(texte('#otd-titre')).toBe('Qui est à table ce soir ?');
-      expect(closeSession).not.toHaveBeenCalled();
-      expect(launch).not.toHaveBeenCalled();
-    });
-
-    it('si l’ouverture échoue : le dit, revient au choix, et relit l’accueil (l’ancienne table a pu se clore)', async () => {
-      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: TABLE}});
+    it('si la création échoue : le dit et reste ouvert', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
       launch.mockReturnValue(throwError(() => new Error('réseau')));
       await nommer();
-      bouton('Ouvrir la table').click();
-      await stable();
 
-      bouton('Clore et ouvrir Les Lames de Satarla').click();
+      bouton('Créer la partie').click();
       await stable();
 
       expect(snack).toHaveBeenCalledTimes(1);
       expect(fermer).not.toHaveBeenCalled();
-      expect(texte('#otd-titre')).toBe('Qui est à table ce soir ?');
-      expect(accueil).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('le nom de la table', () => {
-    it('est obligatoire : sans lui, « Ouvrir la table » est désactivé et le dialogue dit pourquoi', async () => {
+    it('est obligatoire : sans lui, « Créer la partie » est désactivé et le dialogue dit pourquoi', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       expect(champNom()!.required).toBe(true);
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
-      expect(texte('.otd-nom mat-hint')).toBe('« Ouvrir la table » attend le nom de la compagnie.');
+      expect(bouton('Créer la partie').disabled).toBe(true);
+      expect(texte('.otd-nom mat-hint')).toBe('« Créer la partie » attend le nom de la compagnie.');
 
       await nommer('   ');
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
+      expect(bouton('Créer la partie').disabled).toBe(true);
 
       await nommer();
-      expect(bouton('Ouvrir la table').disabled).toBe(false);
+      expect(bouton('Créer la partie').disabled).toBe(false);
       expect(element.querySelector('.otd-nom mat-hint')).toBeNull();
     });
 
@@ -308,8 +266,8 @@ describe('OpenTableDialogComponent', () => {
       expect(launch).toHaveBeenCalledWith('Les Lames de Satarla', 'p5');
     });
 
-    it('part vide, même après une table nommée : une nouvelle table est une nouvelle compagnie', async () => {
-      await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: {...TABLE, titre: 'Les Fils du Serpent'}}});
+    it('part vide : une nouvelle partie est une nouvelle compagnie', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       expect(champNom()!.value).toBe('');
     });
@@ -324,82 +282,13 @@ describe('OpenTableDialogComponent', () => {
     });
   });
 
-  describe('reprendre la table ouverte', () => {
-    const REPRISE = {...ACCUEIL, table: TABLE, compagnie: [{id: 'h1', nom: 'Axel', avatar: null}]};
-    const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
-
-    it('sur son chapitre : mène à elle sans rien changer, avec ses héros, sans rien clore', async () => {
-      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
-
-      expect(texte('#otd-titre')).toBe('Reprendre la table');
-      expect(element.querySelector('.otd-deja')).toBeNull();
-      expect([...element.querySelectorAll('.otd-heros-nom')].map((n) => n.textContent)).toEqual(['Axel']);
-      expect(element.querySelector('.otd-heros-retirer')).toBeNull();
-      expect(bouton('Ajouter un héros')).toBeUndefined();
-      expect(loadCatalog).not.toHaveBeenCalled();
-      expect(champNom()).toBeNull();
-      expect(texte('.otd-resume-texte')).toBe('Sacrilège à Satarla, avec Axel');
-
-      bouton('Reprendre la table').click();
-      await stable();
-
-      expect(changer).not.toHaveBeenCalled();
-      expect(closeSession).not.toHaveBeenCalled();
-      expect(fermer).toHaveBeenCalledWith(true);
-      expect(TestBed.inject(Router).url).toBe('/session/t1/play');
-    });
-
-    it('sur un autre chapitre : la même table passe dessus, avec ses héros et son état', async () => {
-      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
-      bouton('Changer de chapitre').click();
-      await stable();
-      items().find((b) => b.textContent?.includes('Perle du Beshaar'))!.click();
-      await stable();
-      items().find((b) => b.textContent?.includes('3. Le tombeau'))!.click();
-      await stable();
-
-      expect(texte('.otd-resume-cloture')).toBe('La table quitte Sacrilège à Satarla, avec ses héros et son état.');
-      bouton("Passer à Le tombeau d'Urzûlzalinaar").click();
-      await stable();
-
-      expect(changer).toHaveBeenCalledWith('t1', 'p3');
-      expect(closeSession).not.toHaveBeenCalled();
-      expect(launch).not.toHaveBeenCalled();
-      expect(TestBed.inject(Router).url).toBe('/session/t1/play');
-    });
-
-    it('« Improviser » passe la table en partie improvisée', async () => {
-      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
-
-      bouton('Improviser').click();
-      await stable();
-      bouton('Passer en partie improvisée').click();
-      await stable();
-
-      expect(changer).toHaveBeenCalledWith('t1', null);
-    });
-
-    it('si le changement échoue : le dit et reste ouvert', async () => {
-      await ouvrir({scenarioId: 'p1', accueil: REPRISE, reprise: true});
-      changer.mockReturnValue(throwError(() => new Error('réseau')));
-
-      bouton('Improviser').click();
-      await stable();
-      bouton('Passer en partie improvisée').click();
-      await stable();
-
-      expect(snack).toHaveBeenCalledTimes(1);
-      expect(fermer).not.toHaveBeenCalled();
-    });
-  });
-
   describe('les héros', () => {
-    it('sans héros, « Ouvrir la table » est désactivé et le dialogue dit pourquoi', async () => {
+    it('sans héros, « Créer la partie » est désactivé et le dialogue dit pourquoi', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL}, []);
       await nommer();
 
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
-      expect(element.textContent).toContain('« Ouvrir la table » attend au moins un héros.');
+      expect(bouton('Créer la partie').disabled).toBe(true);
+      expect(element.textContent).toContain('« Créer la partie » attend au moins un héros.');
     });
 
     it('ne compte que les héros que le catalogue sait nommer', async () => {
@@ -409,11 +298,11 @@ describe('OpenTableDialogComponent', () => {
       expect(texte('.otd-compte')).toBe('1 héros');
     });
 
-    it('tant que le catalogue n’a pas résolu la présélection, « Ouvrir la table » est désactivé et le chargement est annoncé', async () => {
+    it('tant que le catalogue n’a pas résolu la présélection, « Créer la partie » est désactivé et le chargement est annoncé', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL}, [{catalogId: 'hero:h1', qty: 1}], false);
       await nommer();
 
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
+      expect(bouton('Créer la partie').disabled).toBe(true);
       expect(element.textContent).toContain('Chargement des héros');
     });
 
@@ -425,7 +314,7 @@ describe('OpenTableDialogComponent', () => {
       await stable();
 
       expect(texte('.otd-alerte--action')).toContain('Impossible de charger les héros');
-      expect(bouton('Ouvrir la table').disabled).toBe(true);
+      expect(bouton('Créer la partie').disabled).toBe(true);
       bouton('Réessayer').click();
       expect(loadCatalog).toHaveBeenCalledTimes(1);
     });

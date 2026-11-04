@@ -25,4 +25,24 @@ class BolScenario extends Model
     {
         return $this->belongsTo(BolSaga::class, 'saga_id', 'id');
     }
+
+    /**
+     * Une partie peut-elle passer du chapitre `$depuis` au chapitre `$vers` ? Oui si elle n'a pas encore de scénario (improvisée), ou si
+     * les deux chapitres sont du même scénario : le même chapitre, ou la même saga. Une partie liée ne redevient pas improvisée.
+     */
+    public static function dansLeScenario(?string $depuis, ?string $vers): bool
+    {
+        if ($depuis === null) {
+            return true;
+        }
+        if ($vers === null) {
+            return false;
+        }
+        if ($depuis === $vers) {
+            return true;
+        }
+        $sagas = self::whereIn('id', [$depuis, $vers])->pluck('saga_id', 'id');
+
+        return $sagas[$depuis] !== null && $sagas[$depuis] === ($sagas[$vers] ?? null);
+    }
 }
