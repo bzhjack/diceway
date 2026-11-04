@@ -117,6 +117,15 @@ describe('OpenTableDialogComponent', () => {
 
   const texte = (selecteur: string) => element.querySelector(selecteur)?.textContent?.trim() ?? null;
 
+  const champNom = () => element.querySelector<HTMLInputElement>('.otd-nom input');
+
+  async function nommer(nom = 'Les veillées'): Promise<void> {
+    const input = champNom()!;
+    input.value = nom;
+    input.dispatchEvent(new Event('input'));
+    await stable();
+  }
+
   describe('l’histoire', () => {
     it('montre le chapitre choisi, placé dans sa saga, et ne relit pas l’accueil qu’on lui donne', async () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
@@ -157,15 +166,16 @@ describe('OpenTableDialogComponent', () => {
       await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
 
       bouton('Improviser').click();
-      await stable();
+      await nommer();
       bouton('Ouvrir la table').click();
 
       expect(texte('.otd-chapitre-nom')).toBe('Partie improvisée');
-      expect(launch).toHaveBeenCalledWith(null, null);
+      expect(launch).toHaveBeenCalledWith('Les veillées', null);
     });
 
     it('prévient qu’un chapitre inconnu du compte est introuvable, et laisse ouvrir la table sans lui', async () => {
       await ouvrir({scenarioId: 'zz', accueil: ACCUEIL});
+      await nommer();
 
       expect(texte('[role="alert"]')).toContain('introuvable');
       expect(bouton('Ouvrir la table').disabled).toBe(false);
@@ -173,6 +183,7 @@ describe('OpenTableDialogComponent', () => {
 
     it('sans accueil, le lit : « Ouvrir la table » attend sa réponse, sans rien prétendre du chapitre', async () => {
       await ouvrir({scenarioId: 'p5'});
+      await nommer();
 
       expect(accueil).toHaveBeenCalledTimes(1);
       expect(texte('[role="status"]')).toContain('Chargement du chapitre');
@@ -188,6 +199,7 @@ describe('OpenTableDialogComponent', () => {
 
     it('si l’accueil ne répond pas, reste utilisable, sans chapitre, et le dit', async () => {
       await ouvrir({scenarioId: 'p5'});
+      await nommer();
 
       accueil$.error(new Error('réseau'));
       await stable();
@@ -203,11 +215,13 @@ describe('OpenTableDialogComponent', () => {
 
       expect(texte('.otd-resume-texte')).toBe('Tolometh, avec Grimar');
       expect(element.querySelector('.otd-deja')).toBeNull();
+      await nommer();
+      expect(texte('.otd-resume-texte')).toBe('Les veillées · Tolometh, avec Grimar');
       bouton('Ouvrir la table').click();
       await stable();
 
       expect(closeSession).not.toHaveBeenCalled();
-      expect(launch).toHaveBeenCalledWith(null, 'p5');
+      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
       expect(fermer).toHaveBeenCalledWith(true);
       expect(TestBed.inject(Router).url).toBe('/session/s9/play');
     });
@@ -221,6 +235,7 @@ describe('OpenTableDialogComponent', () => {
       );
       expect(texte('.otd-resume-cloture')).toBe('Sacrilège à Satarla sera close.');
 
+      await nommer();
       bouton('Ouvrir la table').click();
       await stable();
 
@@ -231,19 +246,20 @@ describe('OpenTableDialogComponent', () => {
         'son chapitre compte comme joué',
         'elle reste dans « Mes tables », d’où elle se reprend',
       ]);
-      expect(document.activeElement).toBe(bouton('Clore et ouvrir Tolometh'));
+      expect(document.activeElement).toBe(bouton('Clore et ouvrir Les veillées'));
 
-      bouton('Clore et ouvrir Tolometh').click();
+      bouton('Clore et ouvrir Les veillées').click();
       await stable();
 
       expect(closeSession).toHaveBeenCalledWith('t1');
-      expect(launch).toHaveBeenCalledWith(null, 'p5');
+      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
       expect(closeSession.mock.invocationCallOrder[0]).toBeLessThan(launch.mock.invocationCallOrder[0]);
       expect(TestBed.inject(Router).url).toBe('/session/s9/play');
     });
 
     it('« Annuler » revient au choix sans rien clore', async () => {
       await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: TABLE}});
+      await nommer();
       bouton('Ouvrir la table').click();
       await stable();
 
@@ -258,16 +274,53 @@ describe('OpenTableDialogComponent', () => {
     it('si l’ouverture échoue : le dit, revient au choix, et relit l’accueil (l’ancienne table a pu se clore)', async () => {
       await ouvrir({scenarioId: 'p5', accueil: {...ACCUEIL, table: TABLE}});
       launch.mockReturnValue(throwError(() => new Error('réseau')));
+      await nommer();
       bouton('Ouvrir la table').click();
       await stable();
 
-      bouton('Clore et ouvrir Tolometh').click();
+      bouton('Clore et ouvrir Les veillées').click();
       await stable();
 
       expect(snack).toHaveBeenCalledTimes(1);
       expect(fermer).not.toHaveBeenCalled();
       expect(texte('#otd-titre')).toBe('Qui est à table ce soir ?');
       expect(accueil).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('le nom de la table', () => {
+    it('est obligatoire : sans lui, « Ouvrir la table » est désactivé et le dialogue dit pourquoi', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
+
+      expect(champNom()!.required).toBe(true);
+      expect(bouton('Ouvrir la table').disabled).toBe(true);
+      expect(texte('.otd-nom mat-hint')).toBe('« Ouvrir la table » attend un nom.');
+
+      await nommer('   ');
+      expect(bouton('Ouvrir la table').disabled).toBe(true);
+
+      await nommer();
+      expect(bouton('Ouvrir la table').disabled).toBe(false);
+      expect(element.querySelector('.otd-nom mat-hint')).toBeNull();
+    });
+
+    it('part sans les blancs autour, et Entrée ouvre la table', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
+
+      await nommer('  Les veillées  ');
+      champNom()!.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      await stable();
+
+      expect(launch).toHaveBeenCalledWith('Les veillées', 'p5');
+    });
+
+    it('Entrée sans nom n’ouvre rien', async () => {
+      await ouvrir({scenarioId: 'p5', accueil: ACCUEIL});
+
+      champNom()!.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
+      await stable();
+
+      expect(launch).not.toHaveBeenCalled();
     });
   });
 
@@ -284,6 +337,7 @@ describe('OpenTableDialogComponent', () => {
       expect(element.querySelector('.otd-heros-retirer')).toBeNull();
       expect(bouton('Ajouter un héros')).toBeUndefined();
       expect(loadCatalog).not.toHaveBeenCalled();
+      expect(champNom()).toBeNull();
       expect(texte('.otd-resume-texte')).toBe('Sacrilège à Satarla, avec Axel');
 
       bouton('Reprendre la table').click();
@@ -342,6 +396,7 @@ describe('OpenTableDialogComponent', () => {
   describe('les héros', () => {
     it('sans héros, « Ouvrir la table » est désactivé et le dialogue dit pourquoi', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL}, []);
+      await nommer();
 
       expect(bouton('Ouvrir la table').disabled).toBe(true);
       expect(element.textContent).toContain('« Ouvrir la table » attend au moins un héros.');
@@ -356,6 +411,7 @@ describe('OpenTableDialogComponent', () => {
 
     it('tant que le catalogue n’a pas résolu la présélection, « Ouvrir la table » est désactivé et le chargement est annoncé', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL}, [{catalogId: 'hero:h1', qty: 1}], false);
+      await nommer();
 
       expect(bouton('Ouvrir la table').disabled).toBe(true);
       expect(element.textContent).toContain('Chargement des héros');
@@ -363,6 +419,7 @@ describe('OpenTableDialogComponent', () => {
 
     it('si le catalogue ne charge pas : le dit, et propose de réessayer', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL});
+      await nommer();
       loadCatalog.mockClear();
       catalogFailed.set(true);
       await stable();

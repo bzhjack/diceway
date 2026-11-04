@@ -33,6 +33,9 @@ class BolFightSessionController extends Controller
 
     public function create(Request $request)
     {
+        // Une table se crée toujours nommée : c'est sous ce nom qu'elle se retrouve.
+        $request->validate(['titre' => 'required|string|max:255']);
+
         $session = $this->fightSessionService->createSession(Auth::id(), [
             'titre'       => $request->titre,
             'scenario_id' => $request->scenario_id,

@@ -142,7 +142,8 @@ export class AccueilPageComponent {
       width: 'min(1120px, 94vw)',
       maxWidth: '94vw',
       ariaLabelledBy: 'otd-titre',
-      autoFocus: 'first-heading',
+      // Une nouvelle table attend d'abord son nom ; une table reprise n'a rien à saisir.
+      autoFocus: reprise ? 'first-heading' : '.otd-nom input',
     });
   }
 

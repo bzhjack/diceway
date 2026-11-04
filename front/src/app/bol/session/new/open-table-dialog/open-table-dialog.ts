@@ -1,9 +1,12 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, Injector, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {form, FormField, maxLength, required} from '@angular/forms/signals';
 import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of, switchMap, take} from 'rxjs';
@@ -24,6 +27,9 @@ import {enumerer} from '../open-table.util';
 /** L'état d'un chapitre à côté de son nom, dans le menu « Changer de chapitre » ; rien pour un chapitre à jouer. */
 const ETAT_DANS_LE_MENU: Record<ChapitreEtat, string | null> = {joue: 'joué', 'en-cours': 'sur la table', prochain: 'le prochain', 'a-jouer': null};
 
+/** La colonne `bol_fight_session.titre` : un `string` de 255 caractères. */
+const NOM_MAX = 255;
+
 /**
  * « Ouvrir une table », en dialogue sur l'accueil : l'histoire (le chapitre choisi sur l'accueil, ou une partie improvisée), puis qui est à
  * table (la dernière compagnie, reprise d'office), puis « Ouvrir la table », qui mène à elle. Une autre table encore ouverte se clôt d'abord,
@@ -31,7 +37,7 @@ const ETAT_DANS_LE_MENU: Record<ChapitreEtat, string | null> = {joue: 'joué', '
  */
 @Component({
   selector: 'bol-open-table-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RouterLink],
+  imports: [AvatarFallbackDirective, FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule, RouterLink],
   templateUrl: './open-table-dialog.html',
   styleUrl: './open-table-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +65,15 @@ export class OpenTableDialogComponent {
   protected readonly scenarioId = signal(this.data.scenarioId);
   private readonly confirmer = viewChild('confirmer', {read: ElementRef<HTMLButtonElement>});
 
+  /** Le nom de la nouvelle table, obligatoire : c'est sous lui qu'elle se retrouve. Une table reprise garde le sien. */
+  private readonly nom = signal('');
+  protected readonly nomField = form(this.nom, (path) => {
+    required(path, {message: 'Donnez un nom à la table'});
+    maxLength(path, NOM_MAX, {message: `${NOM_MAX} caractères au plus`});
+  });
+  private readonly nomSaisi = computed(() => this.nom().trim());
+  protected readonly nomValide = computed(() => this.nomSaisi().length > 0 && this.nomSaisi().length <= NOM_MAX);
+
   /**
    * Les présents que le catalogue sait nommer. La présélection arrive avant le catalogue : tant qu'une fiche n'y est pas résolue, elle n'est
    * ni affichée ni comptée, et elle ne suffit pas à ouvrir la table (la demande ne la porterait pas : table vide).
@@ -68,7 +83,7 @@ export class OpenTableDialogComponent {
   );
   protected readonly canLaunch = computed(
     () =>
-      (this.reprise || this.present().length > 0) &&
+      (this.reprise || (this.present().length > 0 && this.nomValide())) &&
       !this.launching() &&
       !this.loadingAccueil() &&
       (this.reprise || (!this.selection.loading() && !this.selection.loadFailed())),
@@ -151,14 +166,15 @@ export class OpenTableDialogComponent {
 
   protected readonly compagnieReprise = computed(() => (this.accueil()?.derniers_heros.length ?? 0) > 0);
 
-  /** La future table en une ligne : « Tolometh, avec Axel, jadawin, Balaram et jean ». */
+  /** La future table en une ligne : « Les veillées · Tolometh, avec Axel, jadawin, Balaram et jean » (sans nom saisi, le chapitre seul). */
   protected readonly resume = computed(() => {
     const noms = (this.reprise ? this.compagnie() : this.present()).map((entry) => entry.nom);
-    const nom = this.chapitre()?.nom ?? 'Partie improvisée';
+    const histoire = this.chapitre()?.nom ?? 'Partie improvisée';
+    const nom = !this.reprise && this.nomSaisi() ? `${this.nomSaisi()} · ${histoire}` : histoire;
     return noms.length ? `${nom}, avec ${enumerer(noms)}` : nom;
   });
 
-  protected readonly nomNouvelle = computed(() => this.chapitre()?.nom ?? 'la nouvelle table');
+  protected readonly nomNouvelle = computed(() => this.nomSaisi() || this.chapitre()?.nom || 'la nouvelle table');
 
   /** Le bouton du pied : ouvrir une nouvelle table ; en reprise, la reprendre, ou la passer sur le chapitre choisi. */
   protected readonly boutonPrincipal = computed(() => {
@@ -271,7 +287,7 @@ export class OpenTableDialogComponent {
     this.launching.set(true);
     clore$
       .pipe(
-        switchMap(() => this.selection.launch(null, this.scenario()?.id ?? null)),
+        switchMap(() => this.selection.launch(this.nomSaisi(), this.scenario()?.id ?? null)),
         take(1),
         takeUntilDestroyed(this.destroyRef),
       )

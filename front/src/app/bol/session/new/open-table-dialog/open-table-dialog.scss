@@ -112,6 +112,13 @@
 }
 
 // ── Les deux étapes, côte à côte : l'histoire à gauche, qui est à table à droite ──────────────────────────────────────────────────
+// ── Le nom de la nouvelle table : obligatoire, au-dessus des deux colonnes ─────────────────────────────────────────────────────────────
+.otd-nom {
+  width: min(28rem, 100%);
+  // Le contenu de Material rogne le libellé flottant du premier champ.
+  margin-top: 0.4rem;
+}
+
 .otd-colonnes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

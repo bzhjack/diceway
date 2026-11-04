@@ -44,6 +44,18 @@
       </section>
     }
 
+    @if (!reprise) {
+      <!-- Le nom de la table, obligatoire : c'est sous lui qu'elle se retrouve. -->
+      <mat-form-field class="otd-nom" subscriptSizing="dynamic">
+        <mat-label>Nom de la table</mat-label>
+        <input matInput autocomplete="off" placeholder="Ex. : la campagne du jeudi" [formField]="nomField" (keydown.enter)="ouvrir()" />
+        <mat-error>{{ nomField().errors()[0]?.message }}</mat-error>
+        @if (!nomValide()) {
+          <mat-hint>« Ouvrir la table » attend un nom.</mat-hint>
+        }
+      </mat-form-field>
+    }
+
     <div class="otd-colonnes">
       <section class="otd-etape" aria-labelledby="otd-histoire">
         <h3 id="otd-histoire" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">1</span> L’histoire</h3>
