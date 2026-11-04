@@ -36,6 +36,8 @@ export interface AccueilPartie {
   derniere: boolean;
   /** Le chapitre courant ; null pour une partie improvisée. */
   scenarioId: string | null;
+  /** Ce qu'un changement de chapitre retirerait de sa table : rien en combat, ni pour une partie improvisée. */
+  figurantsARetirer: number;
 }
 
 /** Un chapitre à choisir dans un menu : son id et son libellé (« 1. Sacrilège à Satarla », « Introduction : … »). */

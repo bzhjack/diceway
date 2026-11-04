@@ -615,10 +615,6 @@
     line-height: 1;
   }
 
-  .tas-head .tas-fixed {
-    color: var(--dw-forge-bone);
-  }
-
   // Quand les armes passent sous le reste : elles s'étalent sur un seul rang, le combat à deux armes au bout (la largeur est celle de la carte,
   // conteneur de la ligne).
   @container (max-width: 82rem) {

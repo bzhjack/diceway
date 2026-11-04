@@ -38,8 +38,6 @@ export interface BolFightSessionModel {
   user_id?: string | null;
   titre: string | null;
   statut: BolFightSessionStatut;
-  /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
-  ordre_manuel?: string[] | null;
   /** Position des jetons de l'ancien battlefield (plus utilisée depuis le tapis) — clé `PlayToken.key` → {x, y} en pourcentage. */
   positions_jetons?: Record<string, {x: number; y: number}> | null;
   /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */

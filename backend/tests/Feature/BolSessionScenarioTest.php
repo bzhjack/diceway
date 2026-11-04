@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Services\Bol\BolFightSessionService;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolFightSessionPnj;
@@ -176,6 +177,68 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame([$taverne->id, $desert->id], $session->fresh()->scenes_jouees);
     }
 
+    /** Les alliés de la compagnie la suivent de chapitre en chapitre, avec leur état ; seuls les adversaires partent. */
+    public function test_changing_chapter_keeps_the_allies_of_the_company(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $compagnon = $this->pnj('Compagnon');
+        $aubergiste = $this->pnj('Aubergiste');
+        $this->sceneAvec($ch2->id, 'Le désert', 0, null);
+        $session = $this->tableSession($ch1->id);
+        $ligne = BolFightSessionPnj::create($this->lignePnj($session->id, $compagnon->id, 'heros', 3));
+        BolFightSessionPnj::create($this->lignePnj($session->id, $aubergiste->id, 'adversaires', 8));
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertOk();
+
+        $restants = BolFightSessionPnj::where('fight_session_id', $session->id)->get();
+        $this->assertSame([$ligne->id], $restants->pluck('id')->all());
+        $this->assertSame(3, $restants[0]->vitalite_courante);
+    }
+
+    /** Un allié déjà à la table n'est pas posé une seconde fois par la scène qui le cite. */
+    public function test_changing_chapter_does_not_duplicate_an_ally_the_scene_also_lists(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $compagnon = $this->pnj('Compagnon');
+        BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch2->id, 'titre' => 'Le désert', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $compagnon->id, 'qty' => 1, 'camp' => 'heros'],
+        ]]);
+        $session = $this->tableSession($ch1->id);
+        BolFightSessionPnj::create($this->lignePnj($session->id, $compagnon->id, 'heros', 3));
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertOk();
+
+        $this->assertSame([3], BolFightSessionPnj::where('fight_session_id', $session->id)->pluck('vitalite_courante')->all());
+    }
+
+    /** Charger une scène en « Remplacer », à la table, retire toujours tout sauf les héros : c'est ce que dit son dialogue. */
+    public function test_replacing_a_scene_at_the_table_still_removes_the_allies(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $scene = $this->sceneAvec($ch1->id, 'La taverne', 0, null);
+        $session = $this->tableSession($ch1->id);
+        BolFightSessionPnj::create($this->lignePnj($session->id, $this->pnj('Compagnon')->id, 'heros', 3));
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'replace'])->assertOk();
+
+        $this->assertSame(0, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+    }
+
+    /** Si la scène ne se charge pas, le chapitre ne change pas non plus : on peut réessayer. */
+    public function test_a_failed_chapter_change_leaves_the_partie_untouched(): void
+    {
+        [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
+        $this->sceneAvec($ch2->id, 'Le désert', 0, $this->pnj('Garde'));
+        $session = $this->tableSession($ch1->id);
+        $this->partialMock(BolFightSessionService::class, fn ($mock) => $mock->shouldReceive('createPnjRow')->andThrow(new \RuntimeException('panne')));
+
+        $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $ch2->id])->assertServerError();
+
+        $fresh = $session->fresh();
+        $this->assertSame($ch1->id, $fresh->scenario_id);
+        $this->assertNull($fresh->chapitres_quittes);
+    }
+
     /** Un chapitre sans scène n'a rien à mettre à la place : la table n'est plus sur l'ancienne scène, mais rien n'en est retiré. */
     public function test_changing_to_a_chapter_without_scene_keeps_the_extras(): void
     {
@@ -295,6 +358,12 @@ class BolSessionScenarioTest extends TestCase
             fn (int $numero) => BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => $numero, 'titre' => "Chapitre $numero"]),
             range(1, $n),
         );
+    }
+
+    /** @return array<string, mixed> une ligne de PNJ à la table, sans passer par la fiche */
+    private function lignePnj(string $sessionId, string $pnjId, string $camp, int $vitalite): array
+    {
+        return ['fight_session_id' => $sessionId, 'pnj_id' => $pnjId, 'camp' => $camp, 'rang' => 'coriace', 'nom' => 'PNJ', 'vigueur' => 0, 'agilite' => 0, 'esprit' => 0, 'aura' => 0, 'melee' => 0, 'tir' => 0, 'defense' => 0, 'vitalite_courante' => $vitalite, 'vitalite_max' => 8];
     }
 
     private function pnj(string $nom): BolHeros

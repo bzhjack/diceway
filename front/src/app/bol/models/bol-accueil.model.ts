@@ -43,6 +43,8 @@ export interface BolAccueilPartie {
   chapitres_joues: string[];
   /** Ses héros (du compte, du camp des héros), dans l'ordre où ils ont été posés. */
   heros: BolAccueilHeros[];
+  /** Ses adversaires à la table : ce qu'un changement de chapitre retirerait. */
+  figurants: number;
 }
 
 /** Le nombre de fiches de chaque bibliothèque, telles que le compte les voit (catalogue compris pour les PNJ, créatures, démons, armes et

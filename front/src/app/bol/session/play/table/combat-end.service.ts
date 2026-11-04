@@ -1,4 +1,4 @@
-import {computed, effect, inject, Injectable, untracked} from '@angular/core';
+import {computed, DestroyRef, effect, inject, Injectable, untracked} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, EMPTY, finalize, forkJoin, map, Observable, of, Subscription, switchMap, take, tap} from 'rxjs';
@@ -52,12 +52,16 @@ export class CombatEndService {
         if (!sessionId || outcome === this.issueAnnoncee(sessionId)) {
           return;
         }
-        this.retenirIssue(sessionId, outcome);
         if (outcome) {
-          this.announceOutcome(outcome);
+          this.announceOutcome(sessionId, outcome);
+        } else {
+          this.attente?.unsubscribe();
+          this.retenirIssue(sessionId, null);
         }
       });
     });
+    // On quitte la table : une annonce en attente n'a plus à s'ouvrir, et reste à faire au retour.
+    inject(DestroyRef).onDestroy(() => this.attente?.unsubscribe());
   }
 
   /** « Terminer le combat » : la boîte « Après combat » montre ce que chaque blessé récupère (repos, dégâts à mains nues, soins
@@ -148,14 +152,17 @@ export class CombatEndService {
 
   /** Un camp vient de tomber : « Après combat » s'ouvre. Si une autre boîte est ouverte (« Défier la mort »…), il attend qu'elle se ferme, et ne
    * s'ouvre que si l'issue tient toujours. S'il est déjà ouvert, il n'y a rien à ajouter. */
-  private announceOutcome(outcome: CombatOutcome): void {
+  private announceOutcome(sessionId: string, outcome: CombatOutcome): void {
     this.attente?.unsubscribe();
     this.attente = null;
     if (this.enCours) {
+      this.retenirIssue(sessionId, outcome);
       return;
     }
+    // L'issue n'est retenue qu'une fois annoncée : si l'attente tourne court, elle reste à annoncer.
     const open = (): void => {
       if (this.combatOutcome() === outcome) {
+        this.retenirIssue(sessionId, outcome);
         this.askEndCombat(outcome);
       }
     };

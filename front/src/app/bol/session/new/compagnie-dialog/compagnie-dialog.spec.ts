@@ -23,7 +23,7 @@ describe('CompagnieDialogComponent', () => {
   let fixture: ComponentFixture<CompagnieDialogComponent>;
   let element: HTMLElement;
 
-  async function ouvrir(compagnie: BolCompagnieModel | null, heros = [{catalogId: 'hero:h1', qty: 1}]): Promise<void> {
+  async function ouvrir(compagnie: BolCompagnieModel | null, heros = [{catalogId: 'hero:h1', qty: 1}], reprendreLaSelection = true): Promise<void> {
     for (const espion of [creer, modifier, fermer, snack, reset, loadCatalog]) {
       espion.mockReset();
     }
@@ -34,7 +34,7 @@ describe('CompagnieDialogComponent', () => {
       imports: [MatIconTestingModule],
       providers: [
         provideRouter([]),
-        {provide: MAT_DIALOG_DATA, useValue: {compagnie}},
+        {provide: MAT_DIALOG_DATA, useValue: {compagnie, reprendreLaSelection}},
         {provide: MatDialogRef, useValue: {close: fermer}},
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {provide: MatSnackBar, useValue: {open: snack}},
@@ -46,7 +46,7 @@ describe('CompagnieDialogComponent', () => {
             loading: signal(false),
             loadFailed: signal(false),
             combatants,
-            entryFor: (id: string) => ({catalogId: id, kind: 'hero', sourceId: id.replace('hero:', ''), nom: id === 'hero:h2' ? 'Balaram' : 'Axel', avatar: ''}),
+            entryFor: (id: string) => ({catalogId: id, kind: id.split(':')[0], sourceId: id.split(':')[1], nom: id === 'hero:h2' ? 'Balaram' : 'Axel', avatar: ''}),
             remove: vi.fn(),
             reset,
           },
@@ -122,6 +122,48 @@ describe('CompagnieDialogComponent', () => {
 
     expect(snack).toHaveBeenCalledTimes(1);
     expect(fermer).not.toHaveBeenCalled();
+  });
+
+  describe('la sélection partagée', () => {
+    it('une nouvelle compagnie part de zéro, sans les héros restés de la dernière', async () => {
+      await ouvrir(null, [{catalogId: 'hero:h1', qty: 1}], false);
+
+      expect(reset).toHaveBeenCalledTimes(1);
+    });
+
+    it('au retour de « Créer un héros », reprend les héros choisis', async () => {
+      await ouvrir(null);
+
+      expect(reset).not.toHaveBeenCalled();
+    });
+
+    it('fermée sans créer, ne laisse pas ses héros pour la prochaine', async () => {
+      await ouvrir(null);
+
+      fixture.destroy();
+
+      expect(reset).toHaveBeenCalled();
+    });
+
+    it('partir créer un héros garde les héros choisis pour le retour', async () => {
+      await ouvrir(null);
+
+      element.querySelector<HTMLAnchorElement>('a[href="/create/hero"]')!.dispatchEvent(new MouseEvent('click', {cancelable: true}));
+      fixture.destroy();
+
+      expect(reset).not.toHaveBeenCalled();
+    });
+
+    it('n’affiche ni n’envoie qu’un héros : un vieux brouillon peut contenir autre chose', async () => {
+      await ouvrir(null, [{catalogId: 'pnj:p1', qty: 1}, {catalogId: 'hero:h1', qty: 1}]);
+      await nommer('Les Lames');
+
+      expect(element.querySelectorAll('.otd-heros-pastille').length).toBe(1);
+      bouton('Créer la compagnie').click();
+      await stable();
+
+      expect(creer).toHaveBeenCalledWith('Les Lames', ['h1']);
+    });
   });
 
   describe('une compagnie existante', () => {

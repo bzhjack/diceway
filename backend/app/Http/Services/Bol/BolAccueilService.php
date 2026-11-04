@@ -21,7 +21,9 @@ class BolAccueilService
 
     public function summary(string $userId): array
     {
+        $adversaires = fn ($lignes) => $lignes->where('camp', '!=', 'heros');
         $sessions = BolFightSession::where('user_id', $userId)
+            ->withCount(['pnjs as figurants_pnj' => $adversaires, 'creatures as figurants_creature' => $adversaires, 'demons as figurants_demon' => $adversaires])
             ->orderByDesc('jouee_le')
             ->orderByDesc('created_at')
             ->get(['id', 'compagnie_id', 'titre', 'statut', 'scenario_id', 'scene_id', 'scenes_jouees', 'chapitres_quittes', 'jouee_le', 'created_at']);
@@ -70,12 +72,14 @@ class BolAccueilService
             'scenes_jouees'   => array_values(array_intersect(array_map('strval', $partie->scenes_jouees ?? []), array_column($scenes, 'id'))),
             'chapitres_joues' => $this->chapitresJoues($partie, $scenesParChapitre, $chapitresDuCompte),
             'heros'           => $this->compagnie($this->herosDeLaTable($userId, $partie->id)),
+            // Ce qu'un changement de chapitre retirerait : les héros et leurs alliés restent.
+            'figurants'       => $partie->figurants_pnj + $partie->figurants_creature + $partie->figurants_demon,
         ];
     }
 
     /**
      * Les chapitres joués par cette partie : ceux qu'elle a quittés pour un autre chapitre, et ceux dont toutes les scènes (au moins une)
-     * sont passées sur cette table. Ce que jouent les autres parties n'y compte pas.
+     * sont passées sur cette table, la scène en cours n'y comptant pas : on y est encore. Ce que jouent les autres parties n'y compte pas.
      *
      * @param array<string, array<int, string>> $scenesParChapitre
      * @param array<int, string>                $chapitresDuCompte
@@ -83,7 +87,7 @@ class BolAccueilService
      */
     private function chapitresJoues(BolFightSession $partie, array $scenesParChapitre, array $chapitresDuCompte): array
     {
-        $jouees = array_map('strval', $partie->scenes_jouees ?? []);
+        $jouees = array_diff(array_map('strval', $partie->scenes_jouees ?? []), [(string) $partie->scene_id]);
         $joues = array_map('strval', $partie->chapitres_quittes ?? []);
         foreach ($scenesParChapitre as $chapitre => $scenes) {
             if ($scenes !== [] && array_diff($scenes, $jouees) === []) {

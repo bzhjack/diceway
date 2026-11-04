@@ -149,32 +149,6 @@ class BolFightSessionService
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
     }
 
-    /** Persiste l'ordre d'initiative réordonné manuellement (glisser-déposer du ruban). */
-    public function updateOrder(string $sessionId, string $userId, array $ordre): ?BolFightSession
-    {
-        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session) {
-            return null;
-        }
-
-        $session->update(['ordre_manuel' => array_values($ordre)]);
-
-        return $this->getSessionWithRelations($sessionId);
-    }
-
-    /** Persiste les positions des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` => {x, y} en pourcentage. */
-    public function updatePositions(string $sessionId, string $userId, array $positions): ?BolFightSession
-    {
-        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session) {
-            return null;
-        }
-
-        $session->update(['positions_jetons' => $positions]);
-
-        return $this->getSessionWithRelations($sessionId);
-    }
-
     /**
      * Bascule une session `libre` en `combat` (ou, déjà en combat, enregistre un nouveau jet de réaction) — les adversaires sont déjà en place via addCombatant().
      *
@@ -251,17 +225,17 @@ class BolFightSessionService
             return null;
         }
 
-        $this->quitterLeCombat($session, 'libre');
+        $this->quitterLeCombat($session);
 
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Fin d'un combat : plus de jet de réaction, d'ordre réordonné ni d'état du tour ; la session passe au `statut` donné. */
-    private function quitterLeCombat(BolFightSession $session, string $statut): void
+    /** Fin d'un combat : plus de jet de réaction ni d'état du tour ; la table repasse en mode libre. */
+    private function quitterLeCombat(BolFightSession $session): void
     {
         BolFightSessionHeros::where('fight_session_id', $session->id)->update(['initiative_resultat' => null]);
 
-        $session->update(['statut' => $statut, 'ordre_manuel' => null, 'etat_combat' => null]);
+        $session->update(['statut' => 'libre', 'etat_combat' => null]);
     }
 
     /**

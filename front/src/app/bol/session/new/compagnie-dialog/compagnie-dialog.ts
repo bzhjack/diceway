@@ -54,7 +54,11 @@ export class CompagnieDialogComponent {
 
   /** Les héros choisis que le catalogue sait nommer : tant qu'une fiche n'y est pas résolue, elle n'est ni affichée ni comptée. */
   protected readonly present = computed(() =>
-    this.selection.combatants().flatMap((combatant) => this.selection.entryFor(combatant.catalogId) ?? []),
+    this.selection.combatants().flatMap((combatant) => {
+      // Le brouillon est partagé et persisté : un ancien peut contenir autre chose que des héros.
+      const entry = this.selection.entryFor(combatant.catalogId);
+      return entry?.kind === 'hero' ? [entry] : [];
+    }),
   );
   protected readonly peutEnregistrer = computed(
     () => this.present().length > 0 && this.nomValide() && !this.enregistrement() && !this.selection.loading() && !this.selection.loadFailed(),
@@ -64,14 +68,26 @@ export class CompagnieDialogComponent {
 
   /** Revenir à ce dialogue après la création d'un héros : `/session/new` mène à l'accueil, qui le rouvre, avec la sélection commencée. */
   protected readonly createHeroState = {returnUrl: '/session/new?compagnie=nouvelle'};
+  private partiCreerUnHeros = false;
 
   constructor() {
     this.selection.loadCatalog();
     if (this.existante) {
       this.selection.combatants.set(this.existante.heros.map((heros) => ({catalogId: `hero:${heros.id}`, qty: 1})));
-      // La sélection est partagée : les héros d'une compagnie qu'on quitte ne doivent pas se retrouver dans la prochaine.
-      this.destroyRef.onDestroy(() => this.selection.reset());
+    } else if (!this.data.reprendreLaSelection) {
+      this.selection.reset();
     }
+    // La sélection est partagée : les héros d'une compagnie qu'on quitte ne doivent pas se retrouver dans la prochaine.
+    this.destroyRef.onDestroy(() => {
+      if (!this.partiCreerUnHeros) {
+        this.selection.reset();
+      }
+    });
+  }
+
+  /** « Créer un héros » ferme le dialogue pour y revenir ensuite : les héros choisis attendent le retour. */
+  protected allerCreerUnHeros(): void {
+    this.partiCreerUnHeros = true;
   }
 
   protected reloadCatalog(): void {

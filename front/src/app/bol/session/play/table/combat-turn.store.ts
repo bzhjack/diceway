@@ -36,9 +36,9 @@ export class CombatTurnStore {
   /** Un héros qui a retardé son action l'interrompt (1 point d'héroïsme) : il passe devant tout le monde, ce round seulement. */
   private readonly interrupting = signal<{readonly round: number; readonly key: string} | null>(null);
 
-  /** Cartes dans l'ordre de jeu : initiative BoL des jetons, puis ordre manuel du MJ. */
+  /** Cartes dans l'ordre de jeu : initiative BoL des jetons. */
   private readonly orderedCards = computed(() => {
-    const base = orderCards(this.table.cards(), this.table.board()?.tokens ?? [], null);
+    const base = orderCards(this.table.cards(), this.table.board()?.tokens ?? []);
     const round = this.etat().round;
     const delayedKeys = this.delayed().round === round ? this.delayed().keys : [];
     const ordered = [...base.filter((e) => !delayedKeys.includes(e.card.key)), ...delayedKeys.flatMap((k) => base.filter((e) => e.card.key === k))];

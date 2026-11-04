@@ -110,7 +110,7 @@ export class AccueilPageComponent {
       const scenario = params.get('scenario');
       void this.router.navigate([], {queryParams: {table: null, scenario: null}, queryParamsHandling: 'merge', replaceUrl: true});
       if (table === 'compagnie') {
-        this.nouvelleCompagnie();
+        this.nouvelleCompagnie(true);
       } else {
         this.nouvellePartie(scenario);
       }
@@ -168,11 +168,12 @@ export class AccueilPageComponent {
       });
   }
 
-  /** Le dialogue « Nouvelle compagnie » : un nom et des héros. Une fois créée, l'accueil se relit (« + Partie » devient possible). */
-  protected nouvelleCompagnie(): void {
+  /** Le dialogue « Nouvelle compagnie » : un nom et des héros. Une fois créée, l'accueil se relit (« + Partie » devient possible).
+   * `reprendreLaSelection` : on revient de « Créer un héros », les héros déjà choisis restent. */
+  protected nouvelleCompagnie(reprendreLaSelection = false): void {
     this.dialog
       .open<CompagnieDialogComponent, CompagnieDialogData, BolCompagnieModel>(CompagnieDialogComponent, {
-        data: {compagnie: null},
+        data: reprendreLaSelection ? {compagnie: null, reprendreLaSelection} : {compagnie: null},
         width: 'min(720px, 94vw)',
         maxWidth: '94vw',
         ariaLabelledBy: 'otd-titre',
@@ -198,11 +199,33 @@ export class AccueilPageComponent {
     }));
   }
 
-  /** Passe la partie sur ce chapitre (de son scénario, ou le premier scénario d'une partie improvisée), puis relit l'accueil. */
+  /** Passe la partie sur ce chapitre (de son scénario, ou le premier scénario d'une partie improvisée), puis relit l'accueil. Si des
+   * figurants partiraient, le MJ confirme d'abord : ils ne reviennent pas. */
   protected changerChapitre(partie: AccueilPartie, chapitreId: string): void {
     if (chapitreId === partie.scenarioId) {
       return;
     }
+    const n = partie.figurantsARetirer;
+    if (n === 0) {
+      this.appliquerChapitre(partie, chapitreId);
+      return;
+    }
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Changer de chapitre',
+        message: `La table passe à la première scène de ce chapitre : ${n > 1 ? `ses ${n} figurants partent, avec leurs blessures` : 'son figurant part, avec ses blessures'}. Les héros et leurs alliés restent.`,
+        confirmLabel: 'Changer de chapitre',
+      },
+      {width: '420px'},
+    ).subscribe((confirme) => {
+      if (confirme) {
+        this.appliquerChapitre(partie, chapitreId);
+      }
+    });
+  }
+
+  private appliquerChapitre(partie: AccueilPartie, chapitreId: string): void {
     this.fightSessionService
       .changerChapitre(partie.id, chapitreId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -238,7 +261,10 @@ export class AccueilPageComponent {
       .accueil()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => this.data.set(data),
+        next: (data) => {
+          this.data.set(data);
+          this.error.set(false);
+        },
         error: () => this.error.set(true),
       });
   }

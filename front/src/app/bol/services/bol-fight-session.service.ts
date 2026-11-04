@@ -116,17 +116,6 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/ressource`, {ressource, delta}));
   }
 
-  updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre}));
-  }
-
-  updatePositions(
-    sessionId: string,
-    positions: Readonly<Record<string, {x: number; y: number}>>,
-  ): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/positions`, {positions}));
-  }
-
   /** Démarre le combat. `exclus` : clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat. */
   startCombat(sessionId: string, exclus: readonly string[] = []): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {exclus}));

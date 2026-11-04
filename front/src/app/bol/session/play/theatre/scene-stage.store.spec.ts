@@ -65,7 +65,7 @@ describe('SceneStageStore', () => {
     expect(store.scenarioId()).toBe('sc1');
     expect(store.acts().map((a) => a.statut)).toEqual(['jouee', 'en-cours', 'a-venir']);
     expect(store.currentScene()?.id).toBe('s2');
-    expect(store.regionNoms().get(5)).toBe('Jungle de Qo et jungle de Qush');
+    expect(store.regionNom({region_id: 5} as BolSceneModel)).toBe('Jungle de Qo et jungle de Qush');
   });
 
   it('la frise suit le scénario de la session, pas celui de la scène courante', () => {

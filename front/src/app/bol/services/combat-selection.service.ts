@@ -8,8 +8,7 @@ import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
 import {BolHerosService} from './bol-heros.service';
 import {BolPnjService} from './bol-pnj.service';
-import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {CombatantKind, CombatCatalogEntry, SelectedCombatant, AmbushState} from '../models/combat-selection.model';
+import {CombatantKind, CombatCatalogEntry, SelectedCombatant} from '../models/combat-selection.model';
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
 
@@ -18,13 +17,10 @@ const STORAGE_KEY = 'diceway-combat-selection';
 
 interface PersistedDraft {
   readonly combatants: SelectedCombatant[];
-  /** Résultat du jet de réaction choisi par héros (catalogId -> résultat), avant même le lancement du combat. */
-  readonly heroInitiative: Record<string, InitiativeResultat>;
-  readonly ambushState: AmbushState;
 }
 
 function restoreDraft(): PersistedDraft {
-  const empty: PersistedDraft = {combatants: [], heroInitiative: {}, ambushState: null};
+  const empty: PersistedDraft = {combatants: []};
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -46,11 +42,7 @@ function restoreDraft(): PersistedDraft {
           );
         })
       : [];
-    const heroInitiative =
-      obj.heroInitiative && typeof obj.heroInitiative === 'object' ? obj.heroInitiative : {};
-    const ambushState = obj.ambushState === 'heroes_ambush' || obj.ambushState === 'heroes_ambushed' ? obj.ambushState : null;
-
-    return {combatants, heroInitiative, ambushState};
+    return {combatants};
   } catch {
     return empty;
   }
@@ -71,17 +63,11 @@ export class CombatSelectionService {
 
   private readonly initialDraft = restoreDraft();
   readonly combatants = signal<readonly SelectedCombatant[]>(this.initialDraft.combatants);
-  readonly heroInitiative = signal<ReadonlyMap<string, InitiativeResultat>>(
-    new Map(Object.entries(this.initialDraft.heroInitiative) as [string, InitiativeResultat][]),
-  );
-  readonly ambushState = signal<AmbushState>(this.initialDraft.ambushState);
 
   constructor() {
     effect(() => {
       const draft: PersistedDraft = {
         combatants: this.combatants() as SelectedCombatant[],
-        heroInitiative: Object.fromEntries(this.heroInitiative()) as Record<string, InitiativeResultat>,
-        ambushState: this.ambushState(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -189,52 +175,15 @@ export class CombatSelectionService {
     this.combatants.update((list) => [...list, {catalogId, qty: 1}]);
   }
 
-  incQty(catalogId: string): void {
+  private incQty(catalogId: string): void {
     this.combatants.update((list) => list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty + 1} : c)));
-  }
-
-  decQty(catalogId: string): void {
-    this.combatants.update((list) => {
-      const target = list.find((c) => c.catalogId === catalogId);
-      if (!target) {
-        return list;
-      }
-      if (target.qty <= 1) {
-        return list.filter((c) => c.catalogId !== catalogId);
-      }
-      return list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty - 1} : c));
-    });
   }
 
   remove(catalogId: string): void {
     this.combatants.update((list) => list.filter((c) => c.catalogId !== catalogId));
-    this.setHeroInitiative(catalogId, null);
-  }
-
-  /** Résultat du jet de réaction choisi pour un héros, avant même le lancement du combat. */
-  setHeroInitiative(catalogId: string, resultat: InitiativeResultat | null): void {
-    this.heroInitiative.update((map) => {
-      if (!resultat && !map.has(catalogId)) {
-        return map;
-      }
-
-      const next = new Map(map);
-      if (resultat) {
-        next.set(catalogId, resultat);
-      } else {
-        next.delete(catalogId);
-      }
-      return next;
-    });
-  }
-
-  setAmbushState(state: AmbushState): void {
-    this.ambushState.set(state);
   }
 
   reset(): void {
     this.combatants.set([]);
-    this.heroInitiative.set(new Map());
-    this.ambushState.set(null);
   }
 }

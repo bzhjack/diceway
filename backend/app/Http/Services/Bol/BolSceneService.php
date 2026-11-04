@@ -138,7 +138,7 @@ class BolSceneService
      * @return array{session: BolFightSession|null, ignored: int}|null null si scène ou session introuvable
      * @throws SceneLoadNotAllowedException si la session n'est pas en mode libre
      */
-    public function loadIntoSession(string $userId, string $sessionId, string $sceneId, string $mode): ?array
+    public function loadIntoSession(string $userId, string $sessionId, string $sceneId, string $mode, bool $garderLesAllies = false): ?array
     {
         $session = $this->ownedSession($sessionId, $userId);
         $scene = $this->ownedScene($sceneId, $userId);
@@ -149,14 +149,16 @@ class BolSceneService
             throw new SceneLoadNotAllowedException();
         }
 
-        return DB::transaction(function () use ($session, $scene, $mode) {
+        return DB::transaction(function () use ($session, $scene, $mode, $garderLesAllies) {
             $sessionId = $session->id;
             $positions = $session->positions_jetons ?? [];
 
+            // `garderLesAllies` : ceux du camp des héros restent, et la scène ne les pose pas une seconde fois.
+            $allies = $garderLesAllies ? $this->alliesAssis($sessionId) : [];
             if ($mode === 'replace') {
-                BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
-                BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
-                BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
+                foreach ([BolFightSessionPnj::class, BolFightSessionCreature::class, BolFightSessionDemon::class] as $lignes) {
+                    $lignes::where('fight_session_id', $sessionId)->when($garderLesAllies, fn ($q) => $q->where('camp', '!=', 'heros'))->delete();
+                }
                 $positions = BolSceneDistribution::heroPositionsOnly($positions);
             }
 
@@ -166,6 +168,9 @@ class BolSceneService
                 $sourceId = (string) ($entry['source_id'] ?? '');
                 $qty = max(1, (int) ($entry['qty'] ?? 1));
                 $camp = BolSceneDistribution::entryCamp($entry);
+                if ($camp === 'heros' && isset($allies[$kind . ':' . $sourceId])) {
+                    continue;
+                }
 
                 $rows = match ($kind) {
                     'pnj'      => array_filter([$this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp)]),
@@ -210,12 +215,13 @@ class BolSceneService
     }
 
     /**
-     * Une partie sans scène chargée, qu'elle commence ou qu'on arrive à sa table : la première scène de son chapitre se charge, avec ses
-     * figurants. Une partie qui a déjà sa scène n'y perd rien ; en combat, sans chapitre ou sans scène, elle reste telle quelle.
+     * Une partie qui n'a encore joué aucune scène, qu'elle commence ou qu'on arrive à sa table : la première scène de son chapitre se charge,
+     * avec ses figurants, ajoutés à ce qui est posé. Une partie qui a déjà joué une scène (même supprimée depuis) n'y perd rien : ce qui est
+     * sur sa table ne se double pas. En combat, sans chapitre ou sans scène, elle reste telle quelle.
      */
     public function chargerLaPremiereScene(string $userId, BolFightSession $partie): BolFightSession
     {
-        if ($partie->scene_id !== null || $partie->statut !== 'libre') {
+        if ($partie->scene_id !== null || $partie->statut !== 'libre' || !empty($partie->scenes_jouees)) {
             return $partie;
         }
         $scene = $this->premiereScene($userId, $partie->scenario_id);
@@ -227,26 +233,46 @@ class BolSceneService
     }
 
     /**
-     * « Changer de chapitre » : la partie passe sur ce chapitre et charge sa première scène. Les figurants de l'ancien chapitre partent, les
-     * héros restent ; une partie improvisée qui reçoit son scénario ne perd rien de ce qui est posé. Sans scène à charger, la table quitte
-     * juste l'ancienne scène ; en combat, seul le chapitre change. Mêmes retours que `BolFightSessionService::changerChapitre`.
+     * « Changer de chapitre » : la partie passe sur ce chapitre et charge sa première scène. Les adversaires de l'ancien chapitre partent ; les
+     * héros et leurs alliés restent, avec leur état. Une partie improvisée qui reçoit son scénario ne perd rien de ce qui est posé. Sans scène
+     * à charger, la table quitte juste l'ancienne scène ; en combat, seul le chapitre change. Tout ou rien : si la scène ne se charge pas, le
+     * chapitre ne change pas. Mêmes retours que `BolFightSessionService::changerChapitre`.
+     *
+     * @throws SceneLoadNotAllowedException si un combat a commencé entre-temps
      */
     public function changerDeChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
     {
-        $ancien = $this->ownedSession($sessionId, $userId)?->scenario_id;
-        $partie = $this->fightSessionService->changerChapitre($sessionId, $userId, $scenarioId);
-        if (!$partie || $partie->scenario_id === $ancien || $partie->statut !== 'libre') {
-            return $partie;
+        return DB::transaction(function () use ($sessionId, $userId, $scenarioId) {
+            $ancien = $this->ownedSession($sessionId, $userId)?->scenario_id;
+            $partie = $this->fightSessionService->changerChapitre($sessionId, $userId, $scenarioId);
+            if (!$partie || $partie->scenario_id === $ancien || $partie->statut !== 'libre') {
+                return $partie;
+            }
+
+            $scene = $this->premiereScene($userId, $partie->scenario_id);
+            if (!$scene) {
+                $partie->update(['scene_id' => null]);
+
+                return $this->fightSessionService->getSessionWithRelations($sessionId);
+            }
+
+            $mode = $ancien === null ? 'add' : 'replace';
+
+            return $this->loadIntoSession($userId, $sessionId, $scene->id, $mode, garderLesAllies: true)['session'] ?? $partie;
+        });
+    }
+
+    /** @return array<string, true> les alliés à cette table, par `kind:fiche` */
+    private function alliesAssis(string $sessionId): array
+    {
+        $cles = [];
+        foreach (['pnj' => [BolFightSessionPnj::class, 'pnj_id'], 'creature' => [BolFightSessionCreature::class, 'creature_id'], 'demon' => [BolFightSessionDemon::class, 'demon_id']] as $kind => [$lignes, $colonne]) {
+            foreach ($lignes::where('fight_session_id', $sessionId)->where('camp', 'heros')->pluck($colonne) as $fiche) {
+                $cles[$kind . ':' . $fiche] = true;
+            }
         }
 
-        $scene = $this->premiereScene($userId, $partie->scenario_id);
-        if (!$scene) {
-            $partie->update(['scene_id' => null]);
-
-            return $this->fightSessionService->getSessionWithRelations($sessionId);
-        }
-
-        return $this->loadIntoSession($userId, $sessionId, $scene->id, $ancien === null ? 'add' : 'replace')['session'] ?? $partie;
+        return $cles;
     }
 
     private function premiereScene(string $userId, ?string $chapitreId): ?BolScene

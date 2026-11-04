@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Exceptions\Bol\FuiteImpossibleException;
+use App\Exceptions\Bol\SceneLoadNotAllowedException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolCompagnieService;
 use App\Http\Services\Bol\BolFightSessionService;
@@ -203,28 +204,6 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
-    public function updateOrder(Request $request, string $id)
-    {
-        $session = $this->fightSessionService->updateOrder($id, Auth::id(), $request->input('ordre', []));
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
-    public function updatePositions(Request $request, string $id)
-    {
-        $session = $this->fightSessionService->updatePositions($id, Auth::id(), $request->input('positions', []));
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
     public function startCombat(Request $request, string $id)
     {
         $data = $request->validate(['exclus' => 'sometimes|array', 'exclus.*' => 'string']);
@@ -255,7 +234,11 @@ class BolFightSessionController extends Controller
 
     public function changerChapitre(Request $request, string $id)
     {
-        $session = $this->sceneService->changerDeChapitre($id, Auth::id(), $request->input('scenario_id'));
+        try {
+            $session = $this->sceneService->changerDeChapitre($id, Auth::id(), $request->input('scenario_id'));
+        } catch (SceneLoadNotAllowedException) {
+            return response()->json(['error' => 'Terminez le combat avant de changer de chapitre.'], 409);
+        }
 
         if ($session === null) {
             return response()->json(['error' => 'Not found'], 404);

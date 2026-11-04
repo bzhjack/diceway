@@ -183,6 +183,36 @@ describe('CombatEndService', () => {
     expect(open).toHaveBeenCalledTimes(1);
   });
 
+  it('quitter la table pendant une attente n’ouvre rien, et l’issue s’annonce au retour', () => {
+    setup(debout(), etat());
+    ouverts = [{}];
+    cartes.set(vaincu());
+    TestBed.tick();
+    const fermes = tousFermes;
+
+    TestBed.resetTestingModule();
+    ouverts = [];
+    fermes.next();
+    expect(open).not.toHaveBeenCalled();
+
+    setup(vaincu(), etat());
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('une issue démentie pendant l’attente ne s’ouvre pas', () => {
+    setup(debout(), etat());
+    ouverts = [{}];
+    cartes.set(vaincu());
+    TestBed.tick();
+    cartes.set(debout());
+    TestBed.tick();
+
+    ouverts = [];
+    tousFermes.next();
+
+    expect(open).not.toHaveBeenCalled();
+  });
+
   it('une issue qui vacille pendant « Après combat » n’en ouvre pas un second', () => {
     const ferme = new Subject<undefined>();
     setup(debout(), etat());

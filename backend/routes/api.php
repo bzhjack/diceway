@@ -179,8 +179,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/vilenie', [BolFightSessionController::class, 'adjustVilenie']);
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/fuite', [BolFightSessionController::class, 'fuiteOpportune']);
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/ressource', [BolFightSessionController::class, 'adjustPnjRessource']);
-    Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
-    Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
     Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
     Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
     Route::patch('/bol/fight-session/{id}/jouer', [BolFightSessionController::class, 'jouer']);

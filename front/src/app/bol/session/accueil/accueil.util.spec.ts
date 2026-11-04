@@ -27,6 +27,7 @@ const partie = (over: Partial<BolAccueilPartie> = {}): BolAccueilPartie => ({
   scenes_jouees: [],
   chapitres_joues: [],
   heros: [],
+  figurants: 0,
   ...over,
 });
 
@@ -179,6 +180,12 @@ describe('partiesDeLAccueil', () => {
     expect(b.teinte).toBe(3);
     expect(a.reperes.map((r) => r.etat)).toEqual(['joue', 'en-cours', 'a-jouer']);
     expect(b.reperes.map((r) => r.etat)).toEqual(['en-cours', 'a-jouer', 'a-jouer']);
+  });
+
+  it('annonce ce qu’un changement de chapitre retirerait : rien en combat, ni pour une partie improvisée', () => {
+    expect(carte({figurants: 2}).figurantsARetirer).toBe(2);
+    expect(carte({figurants: 2, statut: 'combat'}).figurantsARetirer).toBe(0);
+    expect(carte({figurants: 2, scenario_id: null}).figurantsARetirer).toBe(0);
   });
 
   it('montre les héros : leur portrait utilisable, sinon leur initiale', () => {

@@ -8,6 +8,7 @@ use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
+use App\Models\Bol\BolFightSessionPnj;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
@@ -66,7 +67,7 @@ class BolAccueilTest extends TestCase
         $lue = $this->partieLue($partie->id);
 
         $this->assertSame(
-            ['id', 'compagnie_id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros'],
+            ['id', 'compagnie_id', 'titre', 'statut', 'jouee_le', 'scenario_id', 'scene_id', 'scenes', 'scenes_jouees', 'chapitres_joues', 'heros', 'figurants'],
             array_keys($lue),
         );
         $this->assertSame('Les Lames', $lue['titre']);
@@ -108,6 +109,32 @@ class BolAccueilTest extends TestCase
 
         $this->assertSame([$ch1->id], $this->partieLue($partie->id)['chapitres_joues']);
         $this->assertSame([], $this->partieLue($autre->id)['chapitres_joues']);
+    }
+
+    /** La scène en cours ne compte pas : un chapitre d'une seule scène n'est pas joué dès qu'on y arrive. */
+    public function test_the_current_scene_does_not_make_its_chapter_played(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $seule = $this->scene($ch1->id);
+        $partie = $this->partie('A', $ch1->id, [$seule->id]);
+        $partie->update(['scene_id' => $seule->id]);
+
+        $this->assertSame([], $this->partieLue($partie->id)['chapitres_joues']);
+
+        // Une fois passée à autre chose, elle compte.
+        $partie->update(['scene_id' => null]);
+        $this->assertSame([$ch1->id], $this->partieLue($partie->id)['chapitres_joues']);
+    }
+
+    /** Ce qu'un changement de chapitre retirerait : les adversaires de toute sorte, pas les héros ni leurs alliés. */
+    public function test_a_partie_counts_its_extras(): void
+    {
+        $partie = $this->partie();
+        $this->seat($partie, $this->hero('Axel'));
+        BolFightSessionPnj::create(['fight_session_id' => $partie->id, 'pnj_id' => $this->hero('Garde', 'C')->id, 'camp' => 'adversaires', 'rang' => 'coriace', 'nom' => 'Garde', 'vigueur' => 0, 'agilite' => 0, 'esprit' => 0, 'aura' => 0, 'melee' => 0, 'tir' => 0, 'defense' => 0, 'vitalite_courante' => 8, 'vitalite_max' => 8]);
+        BolFightSessionPnj::create(['fight_session_id' => $partie->id, 'pnj_id' => $this->hero('Ami', 'C')->id, 'camp' => 'heros', 'rang' => 'coriace', 'nom' => 'Ami', 'vigueur' => 0, 'agilite' => 0, 'esprit' => 0, 'aura' => 0, 'melee' => 0, 'tir' => 0, 'defense' => 0, 'vitalite_courante' => 8, 'vitalite_max' => 8]);
+
+        $this->assertSame(1, $this->partieLue($partie->id)['figurants']);
     }
 
     /** Un chapitre sans scène, jamais quitté, n'est pas joué. */

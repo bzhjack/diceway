@@ -235,6 +235,25 @@ class BolCompagnieTest extends TestCase
         $this->patchJson("/api/bol/fight-session/{$id}/jouer")->assertOk()->assertJsonPath('scene_id', $scene->id);
     }
 
+    /** La scène en cours a été supprimée : la partie a déjà commencé, rien ne se recharge par-dessus ce qui est posé. */
+    public function test_entering_a_partie_whose_scene_was_deleted_loads_nothing(): void
+    {
+        [$ch1] = $this->saga('Perle du Beshaar', 1);
+        $allie = $this->hero('Garde', 'C');
+        $premiere = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'La taverne', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $allie->id, 'qty' => 1, 'camp' => 'adversaires'],
+        ]]);
+        $seconde = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'titre' => 'Le temple', 'ordre' => 1, 'distribution' => []]);
+        $partie = BolFightSession::create(['titre' => 'A', 'statut' => 'libre', 'user_id' => $this->user->id, 'scenario_id' => $ch1->id, 'jouee_le' => now()]);
+        $this->postJson("/api/bol/fight-session/{$partie->id}/load-scene", ['scene_id' => $seconde->id, 'mode' => 'add'])->assertOk();
+        $partie->fresh()->update(['scene_id' => null]);
+
+        $this->patchJson("/api/bol/fight-session/{$partie->id}/jouer")->assertOk()->assertJsonPath('scene_id', null);
+
+        $this->assertSame(0, BolFightSessionPnj::where('fight_session_id', $partie->id)->count());
+        $this->assertNotSame($premiere->id, $partie->fresh()->scene_id);
+    }
+
     /** En combat, on ne charge pas de scène (le serveur le refuse) : arriver à la table ne change rien, et ne fait pas d'erreur. */
     public function test_entering_a_partie_in_combat_loads_nothing(): void
     {

@@ -99,35 +99,17 @@ describe('orderCards', () => {
   const cards = [RORK, CREATURE, KALENA, PRETRE];
 
   it('follows the initiative order of the tokens, a batch counting once', () => {
-    expect(orderCards(cards, tokens, null).map((o) => o.card.key)).toEqual(['hero-1', 'pnj-7', 'creature-3', 'hero-2']);
+    expect(orderCards(cards, tokens).map((o) => o.card.key)).toEqual(['hero-1', 'pnj-7', 'creature-3', 'hero-2']);
   });
 
   it('carries the tier and round-1 lock of each card', () => {
-    const [first, second] = orderCards(cards, tokens, null);
+    const [first, second] = orderCards(cards, tokens);
     expect(first).toMatchObject({tier: 'reussite', lockedRound1: false});
     expect(second).toMatchObject({tier: 'coriace', lockedRound1: true});
   });
 
-  it('applies the manual order first, then the remaining cards in initiative order', () => {
-    expect(orderCards(cards, tokens, ['hero-2', 'creature-3']).map((o) => o.card.key)).toEqual([
-      'hero-2',
-      'creature-3',
-      'hero-1',
-      'pnj-7',
-    ]);
-  });
-
-  it('ignores unknown and duplicated keys of the manual order', () => {
-    expect(orderCards(cards, tokens, ['creature-3-0', 'hero-2', 'hero-2', 'pnj-99']).map((o) => o.card.key)).toEqual([
-      'hero-2',
-      'hero-1',
-      'pnj-7',
-      'creature-3',
-    ]);
-  });
-
   it('still lists a card that has no token', () => {
-    expect(orderCards([KALENA, card('demon', 9)], tokens, null).map((o) => o.card.key)).toEqual(['hero-1', 'demon-9']);
+    expect(orderCards([KALENA, card('demon', 9)], tokens).map((o) => o.card.key)).toEqual(['hero-1', 'demon-9']);
   });
 });
 

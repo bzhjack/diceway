@@ -41,6 +41,7 @@ const DATA: BolAccueilModel = {
       ],
       scenes_jouees: ['s1', 's2'],
       chapitres_joues: [],
+      figurants: 0,
       heros: [
         {id: 'h1', nom: 'Axel', avatar: null},
         {id: 'h2', nom: 'jadawin', avatar: '/api/bol/portraits/abc.png'},
@@ -57,6 +58,7 @@ const DATA: BolAccueilModel = {
       scenes: [],
       scenes_jouees: [],
       chapitres_joues: ['p1'],
+      figurants: 0,
       heros: [{id: 'h3', nom: 'Balaram', avatar: null}],
     },
     {
@@ -70,6 +72,7 @@ const DATA: BolAccueilModel = {
       scenes: [],
       scenes_jouees: [],
       chapitres_joues: [],
+      figurants: 0,
       heros: [],
     },
   ],
@@ -262,6 +265,50 @@ describe('AccueilPageComponent', () => {
     expect(texte(item("2. De sable et d'eau"))).toBe("2. De sable et d'eau, en cours");
   });
 
+  it('changer de chapitre demande confirmation quand des figurants partiraient', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 2} : p))}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+    item('Changer de chapitre').click();
+    await stable();
+
+    open.mockReturnValue({afterClosed: () => of(false)});
+    item("2. De sable et d'eau").click();
+    await stable();
+
+    expect((open.mock.calls[0][1] as {data: {message: string}}).data.message).toContain('ses 2 figurants partent, avec leurs blessures');
+    expect(changerChapitre).not.toHaveBeenCalled();
+  });
+
+  it('confirmé, le changement de chapitre a lieu', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 1} : p))}));
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+    item('Changer de chapitre').click();
+    await stable();
+
+    item("2. De sable et d'eau").click();
+    await stable();
+
+    expect(open).toHaveBeenCalledTimes(1);
+    expect((open.mock.calls[0][1] as {data: {message: string}}).data.message).toContain('son figurant part, avec ses blessures');
+    expect(changerChapitre).toHaveBeenCalledWith('t1', 'p2');
+  });
+
+  it('sans figurant, le changement de chapitre ne demande rien', async () => {
+    const page = await rendre();
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    await stable();
+    item('Changer de chapitre').click();
+    await stable();
+
+    item("2. De sable et d'eau").click();
+    await stable();
+
+    expect(open).not.toHaveBeenCalled();
+    expect(changerChapitre).toHaveBeenCalledWith('t1', 'p2');
+  });
+
   it('une partie improvisée choisit un scénario, puis un de ses chapitres', async () => {
     const page = await rendre();
     page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
@@ -312,6 +359,18 @@ describe('AccueilPageComponent', () => {
     await stable();
 
     expect(supprimer).not.toHaveBeenCalled();
+  });
+
+  it('une lecture réussie après un échec efface l’erreur : les parties réapparaissent', async () => {
+    const page = await rendre(throwError(() => new Error('réseau')), of(DATA));
+    expect(page.querySelector('.acc-parties')).toBeNull();
+
+    page.querySelector<HTMLButtonElement>('.acc-entete-actions button')!.click();
+    await stable();
+    TestBed.tick();
+
+    expect(page.querySelector('[role="alert"]')).toBeNull();
+    expect(cartes(page).length).toBe(3);
   });
 
   it('compte les fiches de chaque bibliothèque et ne propose de créer que des fiches', async () => {
@@ -371,7 +430,7 @@ describe('AccueilPageComponent', () => {
 
     await RouterTestingHarness.create('/?table=compagnie');
 
-    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null, reprendreLaSelection: true}}));
     expect(TestBed.inject(Router).url).toBe('/');
   });
 

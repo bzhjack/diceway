@@ -325,7 +325,6 @@ describe('TurnAssistantComponent', () => {
       expect(cas?.getAttribute('aria-label')).toBe('Dégâts, d6B');
       expect(cas?.querySelector('mat-icon')?.getAttribute('data-mat-icon-name')).toBe('gi-paw');
       expect(cas?.querySelector('em')?.textContent?.trim()).toBe('d6B');
-      expect(zone.querySelector('.tas-fixed')).toBeNull();
     });
 
     it('un démon frappe avec son icône de démon', async () => {

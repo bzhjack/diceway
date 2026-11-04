@@ -52,13 +52,10 @@ function cardKeyOf(token: Pick<PlayToken, 'kind' | 'pivotId'>): string {
   return `${token.kind}-${token.pivotId}`;
 }
 
-/** Les cartes dans l'ordre de jeu. Par défaut, l'ordre d'initiative des jetons (déjà trié par
- * paliers). L'ordre manuel du MJ passe devant ; ses clés inconnues
- * ou en double sont ignorées, et les cartes qu'il ne cite pas suivent dans l'ordre d'initiative. */
+/** Les cartes dans l'ordre de jeu : l'ordre d'initiative des jetons (déjà trié par paliers), puis celles qui n'ont pas de jeton. */
 export function orderCards(
   cards: readonly TapisCard[],
   tokens: readonly TurnToken[],
-  manualOrder: readonly string[] | null,
 ): OrderedCard[] {
   const cardByKey = new Map(cards.map((card) => [card.key, card]));
   const byInitiative = new Map<string, OrderedCard>();
@@ -76,21 +73,7 @@ export function orderCards(
     }
   }
 
-  const result: OrderedCard[] = [];
-  const placed = new Set<string>();
-  for (const key of manualOrder ?? []) {
-    const entry = byInitiative.get(key);
-    if (entry && !placed.has(key)) {
-      placed.add(key);
-      result.push(entry);
-    }
-  }
-  for (const [key, entry] of byInitiative) {
-    if (!placed.has(key)) {
-      result.push(entry);
-    }
-  }
-  return result;
+  return [...byInitiative.values()];
 }
 
 /** Hors combat : tout personnage à 0 de vitalité ou moins (02-actions-combat.md, « Blessures, inconscience et mort »). Un héros à 0

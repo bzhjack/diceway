@@ -29,7 +29,7 @@ describe('SceneLectureComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [{provide: SceneStageStore, useValue: {busy: signal(false), regionNoms: signal(new Map())}}],
+      providers: [{provide: SceneStageStore, useValue: {busy: signal(false)}}],
     });
     fixture = TestBed.createComponent(SceneLectureComponent);
     fixture.componentRef.setInput('scene', scene('s1', 'Le sceau est dans la sacoche.'));
