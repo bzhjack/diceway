@@ -39,8 +39,8 @@ const fail = (message) => {
 };
 // L'addition du jet d'attaque, un terme après l'autre : « 2d6 dés | −1 bouclier | ≥ 9 seuil ».
 const attackStation = page.locator('.tas-line').nth(0);
-const attackTerms = async () => (await attackStation.locator('.tas-sum-term').allInnerTexts()).map((term) => term.replace(/\s+/g, ' ').trim()).join(' | ');
-const total = async () => attackStation.locator('.tas-sum-term--total b').innerText();
+const attackTerms = async () => (await attackStation.locator('.rs-term').allInnerTexts()).map((term) => term.replace(/\s+/g, ' ').trim()).join(' | ');
+const total = async () => attackStation.locator('.rs-term--total b').innerText();
 
 await page.goto(`${base}/session/${id}/play`, {waitUntil: 'networkidle'});
 await page.getByRole('button', {name: /Démarrer un combat/}).click();
