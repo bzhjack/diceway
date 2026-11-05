@@ -212,11 +212,9 @@ describe('OpenTableDialogComponent', () => {
       expect(bouton('Chapitre de départ')).toBeUndefined();
     });
 
-    it('« Improviser » retire le scénario : la partie se crée sans lui', async () => {
-      await ouvrir({scenarioId: 'p1', accueil: {...ACCUEIL, compagnies: [LAMES]}});
+    it('sans scénario choisi, la partie se crée improvisée', async () => {
+      await ouvrir({scenarioId: null, accueil: {...ACCUEIL, compagnies: [LAMES]}});
 
-      bouton('Improviser').click();
-      await stable();
       bouton('Créer la partie').click();
 
       expect(texte('.otd-chapitre-nom')).toBe('Partie improvisée');

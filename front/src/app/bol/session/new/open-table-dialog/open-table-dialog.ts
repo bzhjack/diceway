@@ -43,7 +43,7 @@ export class OpenTableDialogComponent {
   private readonly accueil = signal<BolAccueilModel | null>(this.data.accueil ?? null);
   /** L'accueil n'a pas encore répondu : on ne connaît ni les compagnies ni les scénarios ; la partie ne se crée pas encore. */
   protected readonly loadingAccueil = signal(!this.data.accueil);
-  /** Le chapitre de départ de la future partie : celui demandé ; « Improviser » le retire. */
+  /** Le chapitre de départ de la future partie : celui demandé, puis celui choisi ; aucun tant que la partie est improvisée. */
   protected readonly scenarioId = signal(this.data.scenarioId);
   private readonly compagnieId = signal<string | null>(null);
 
@@ -140,10 +140,6 @@ export class OpenTableDialogComponent {
     if (chapitres.length) {
       this.scenarioId.set(chapitres[0].id);
     }
-  }
-
-  protected improviser(): void {
-    this.scenarioId.set(null);
   }
 
   /** Sans compagnie : l'accueil ouvre « Nouvelle compagnie » à la place de ce dialogue. */
