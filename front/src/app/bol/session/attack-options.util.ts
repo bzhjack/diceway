@@ -3,7 +3,7 @@ import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
 import {isDualWieldEligible} from './combat-attack.util';
 import {degatsEnMain, parseDamage} from './combat-resolution.util';
 
-/** Postures proposées à l'attaquant (doc/rules/02-actions-combat.md, "Options de combat") — "Défense
+/** Postures proposées à l'attaquant (doc/bol/rules/02-actions-combat.md, "Options de combat") — "Défense
  * totale" n'en vient pas : elle empêche d'attaquer, l'assistant l'ajoute lui-même au bout de l'échelle. */
 const IN_SCOPE_POSTURE_SLUGS: ReadonlySet<string> = new Set([
   'none',

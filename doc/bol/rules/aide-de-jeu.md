@@ -1,6 +1,6 @@
 # Barbarians of Lemuria Mythic : aide de jeu
 
-> Résumé des règles pour la table. Source : `doc/rules/` (vérifié contre le livre de base VF 1.3). Les pages citées sont celles du livre. Ce que la mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) change est marqué « Mythic+ » ou par un astérisque.
+> Résumé des règles pour la table. Source : `doc/bol/rules/` (vérifié contre le livre de base VF 1.3). Les pages citées sont celles du livre. Ce que la mise à jour Mythic+ (`doc/bol/pdf-text/07-maj-mythic-plus.txt`) change est marqué « Mythic+ » ou par un astérisque.
 
 ---
 

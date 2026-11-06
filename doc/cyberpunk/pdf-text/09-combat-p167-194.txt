@@ -1,0 +1,1598 @@
+           PAR NEIL BRANQUINHO
+
+
+
+
+                                                      Fusillade du
+                                                     vendredi soir
+                                        Rapide. Violent. Cyberpunk RED.
+
+                Dans un jeu de rôle, votre imagination tient lieu de « plateau de jeu » ;
+                le MJ vous dépeint l’environnement, puis vous devez vous représenter
+                mentalement l’emplacement de tous les éléments en fonction de cette
+                description. Des joueurs se servent parfois de plans quadrillés et de figurines
+                en guise de support visuel pour résoudre les situations complexes.
+
+                                                                                             167
+  FUSILLADE DU VENDREDI SOIR
+
+
+                E   n temps de combat
+
+                Nous avons déjà expliqué comment le temps s’écoule dans une partie de Cyberpunk RED en page 126. À présent,
+                parlons des cas où les choses deviennent violentes ou très spécifiques. Si vous devez absolument savoir qui est le plus
+                rapide et si un seul jet de compétence (expliqué en page 128) ne suffit pas pour résoudre la situation, vous êtes en combat.
+                Faites un jet d’Initiative !
+
+                Initiative et temps de combat
+                Pour résumer, le combat se divise en tours d’une durée de 3 secondes. La quantité de temps nécessaire pour que chaque
+                participant effectue son tour s’appelle un round. Comme les actions ont lieu à peu près simultanément dans le jeu, un
+                round dure lui aussi 3 secondes.
+
+
+                   Quand un combat commence, tous les participants font un jet d’Initiative :
+                                                                 Initiative = RÉF + 1d10
+                   Ensuite, en fonction du résultat de leur jet d’Initiative, les participants se placent dans ce que nous appelons la file
+                d’Initiative par ordre décroissant. Pour départager les égalités, les personnages concernés effectuent un nouveau
+                jet jusqu’à ce que le résultat le plus élevé l’emporte. Les actions de combat sont résolues par ordre d’Initiative, chaque
+                participant situé dans la file d’Initiative ayant droit à un tour. Une fois que le dernier personnage a accompli son tour, un
+                nouveau round commence, et la file d’Initiative reste la même.
+
+                                    Votre tour = 1 action de mouvement + 1 autre action
+                                          Chaque tour, un personnage peut effectuer 1
+                                               action de mouvement et 1 action
+
+
+                A    ctions
+
+                Les actions constituent l’essentiel de votre tour dans Cyberpunk RED. Voici les utilisations basiques que vous pouvez
+                faire de votre action en combat. Les actions de combat sont expliquées plus en détail plus loin dans la présente section.
+
+                ▶ Les actions de combat en bref
+                  Action                      Données
+                  Action de                    Se déplacer d’autant de mètres que votre MOUV x 2 (ou d’un nombre de cases égal à votre MOUV) maximum
+                  mouvement                    chaque tour.
+                  Agripper                     Agripper un adversaire et le retenir ou s’emparer d’un objet qu’il tient.
+                  Attaquer                     Attaquer avec une arme à distance ou de mêlée.
+                  Bouclier humain              Équiper un opposant que vous avez agrippé comme bouclier humain.
+                                               Effectuer une action de mouvement supplémentaire, mais seulement si vous avez déjà effectué une action
+                  Courir
+                                               de mouvement lors de ce tour.
+                  Démarrer
+                                               Démarrer un véhicule pour acquérir son MOUV et passer en tête de la file d’Initiative.
+                  un véhicule
+                  Équiper/Lâcher               Équiper ou lâcher un bouclier prend une action (voir Utiliser un bouclier plus loin dans la présente section,
+                  un bouclier                  en page 183).
+
+
+ 168
+                                                             FUSILLADE DU VENDREDI SOIR
+
+                  Action                      Données
+                  Étrangler                   Étrangler un adversaire que vous avez agrippé.
+                  Lancer                      Projeter au sol un adversaire agrippé ou lancer un objet.
+                  Manœuvre
+                                              Utiliser une action en conduisant pour vous concentrer totalement sur une manœuvre dangereuse.
+                  en véhicule
+                  Monter dans
+                                              Monter dans un véhicule (voir Combat en véhicule plus loin dans la présente section, en page 189).
+                  un véhicule
+                  Recharger                   Recharger intégralement et remettre en place le chargeur d’une arme, avec un seul type de munitions.
+                                              Retarder une action pour la réaliser plus tard dans la file d’Initiative. Vous devez choisir un événement spécifique qui va
+                  Retarder
+                                              déclencher votre action ou un numéro spécifique dans la file d’Initiative auquel l’action aura lieu, ainsi que la nature de
+                  son action
+                                              l’action et la cible prévue.
+                                              Se relever quand on est au sol. Quand vous êtes au sol, vous ne pouvez pas accomplir d’action de mouvement tant que
+                  Se relever
+                                              vous n’avez pas effectué cette action.
+                                              Stabiliser une cible pour entamer le processus de guérison naturelle ou la sortir du seuil de blessure mortelle pour lui
+                  Stabiliser
+                                              sauver la vie (cf. page 222).
+                  Utiliser des actions        Effectuer plusieurs actions virtuelles à l’intérieur du NET (pour savoir comment utiliser les actions virtuelles, reportez-
+                  virtuelles                  vous à la page 197 de la section Netrunning).
+                  Utiliser une                Utiliser une compétence pour accomplir une tâche rapide. Une tâche plus longue nécessite plusieurs actions pendant
+                  compétence                  plusieurs tours et vous ne faites le jet que quand vous avez investi tout le temps nécessaire par tranche de 3 secondes.
+                                              Manipuler un objet sans recourir à une compétence. Dégainer une arme facilement accessible avec une main libre ou
+                  Utiliser un objet           lâcher une arme (pas un bouclier) que vous tenez pour qu’elle tombe au sol ne nécessite pas d’accomplir cette action,
+                                              mais ranger sur vous une arme que vous tenez, si.
+
+
+
+                L   es actions en détail                                                    en plein milieu de l’action de mouvement puis terminer
+                                                                                            votre mouvement ensuite. Cette opération est appelée
+                                                                                                                                                                            Peu importe le
+                                                                                            diviser une action, et elle ne sert pas seulement pour les                      nombre d’armes
+                Ci-dessous quelques détails dont vous aurez peut-être                       actions de mouvement. Certains types d’attaques sont plus                       que vous tenez,
+                besoin concernant certaines actions.                                        rapides que d’autres et vous permettent de frapper ou de
+                                                                                                                                                                            vous ne pouvez
+                                                                                                                                                                            jamais faire plus
+                                                                                            tirer deux fois avec une seule action attaquer.                                 de deux jets
+                Action de mouvement                                                                                                                                         d’attaquer dans
+                                                                                               Ces attaques sont appelées des attaques à 2 Attaques                         le cadre de votre
+                Chaque tour, un personnage peut effectuer une action de                     par round (ou 2 Att/round). Toutes les attaques venant de                       action.
+                mouvement. Elle lui permet uniquement de se déplacer                                                                                                        Vous ne pouvez
+                                                                                            sources à 2 Att/round peuvent être « divisées » au sein                         pas non plus
+                d’autant de mètres que son MOUV x 2, ou d’un nombre de                      d’une même action de mouvement. Vous pouvez bouger,                             attaquer avec
+                cases égal à son MOUV (si vous jouez avec un plan qua-                      tirer, bouger, tirer, et enfin bouger une dernière fois. Vous                   deux armes à 1
+                                                                                                                                                                            Att/round pendant
+                drillé), y compris en diagonale. Si vous jouez avec un plan                 pouvez même attaquer une seule fois avec deux sources                           la même action,
+                quadrillé, vous ne pouvez pas vous arrêter entre les cases.                 à 2 Att/round différentes en « divisant » vos deux attaques                     même si vous en
+                                                                                                                                                                            tenez une dans
+                                                                                            parmi ces deux sources, ce qui vous permet de les utiliser                       chaque main.
+                                     ▶ Au sol ◀                                             toutes les deux lors d’un même tour. Donc oui, vous pouvez
+                Quand vous êtes au sol, vous ne pouvez pas accomplir                        utiliser le pistolet très lourd dans votre main gauche pour
+                d’action de mouvement tant que vous n’avez pas effectué                     tirer dans le couloir, puis franchir le couloir sanglant pour
+                l’action se relever.                                                        frapper votre victime avec la machette dans votre main
+                                                                                            droite.
+                   ▶ Mouvement divisé et Att/round ◀                                           Les attaques venant de sources à 1 Att/round sont plus
+                Dans Cyberpunk RED, le combat est rythmé et fluide.                         lentes et prennent toute votre action attaquer, mais vous
+                Chaque fois que vous vous déplacez en utilisant votre                       pouvez tout de même diviser votre mouvement entre avant
+                action de mouvement, vous pouvez effectuer votre action                     et après l’attaque.
+
+
+
+                                                                                                                                                                            169
+  FUSILLADE DU VENDREDI SOIR
+
+                                                                ▶ Autres formes de mouvement ◀
+                                        Nager, escalader et sauter en prenant de l’élan coûtent 2 m de mouvement par mètre effecti-
+       Exemple de combat                vement parcouru, ou 2 cases par case effectivement parcourue. Quand vous sautez sans élan,
+                                        vous pouvez parcourir la moitié de la distance que vous pourriez parcourir en sautant avec de
+                à distance              l’élan. Pour plus d’informations sur les chutes et la noyade, reportez-vous à la partie Subir des
+      Royal lâche un seul tir sur un    dégâts plus loin dans la présente section (page 186).
+      booster nu qui se rue vers
+      lui, mais se trouve encore        Viser
+      à 24 m de distance avec
+      son fusil d’assaut. Selon le      Avec 1 Att/round maximum, vous pouvez viser puis effectuer une seule attaque de mêlée ou à
+      tableau des SD basés sur          distance en y consacrant toute votre action et en subissant une pénalité de –8 à votre jet pour
+      la distance, il doit dépasser     viser l’une des zones spéciales ci-dessous. Si vous touchez, vous infligez les dégâts de l’attaque
+      un SD 15. Son joueur lance        normalement et vous obtenez aussi un effet supplémentaire selon la zone spéciale visée.
+      1d10, obtient un 4 et ajoute
+      RÉF 8 + compétence Armes               Zone visée           Effet
+      d’épaule 6. Avec un 18,
+      Royal touche ! Son joueur fait             Tête             Multipliez par 2 les dégâts qui traversent l’armure de la tête de votre cible.
+      un jet de dégâts pour l’arme
+                                                                  Si ne serait-ce qu’un seul point de dégâts traverse l’armure de votre cible, votre cible lâche
+      (5d6) et obtient 25, donc le           Objet tenu
+      booster tombe directement                                   un objet de votre choix qu’elle tenait dans les mains. Il tombe au sol devant elle.
+      en blessure mortelle. Royal                                 Si ne serait-ce qu’un seul point de dégâts traverse l’armure de votre cible, votre cible subit
+      préférerait que tous les idiots           Jambe
+                                                                  aussi la blessure critique jambe cassée, si tant est qu’il lui reste une jambe non cassée.
+      qu’il doit canarder suivent
+      l’exemple du booster et
+      débarquent sans armure et
+      sans se donner la peine de        Dégainer, lâcher et ranger
+      se faire au moins implanter
+      un treillissage dermique.         Dégainer une arme facilement accessible avec une main libre n’est pas une action. Lâcher une
+      Au début du tour du booster,      arme que vous tenez pour qu’elle tombe au sol n’est pas une action, mais ranger cette arme sur
+      son joueur rate le jet de         vous est une action. L’exception : équiper ou lâcher un bouclier prend une action (voir Utiliser un
+      sauvegarde contre la mort         bouclier plus loin dans la présente section, en page 183).
+      et le personnage meurt.
+                                        Recharger
+                                        Parfois, vous videz votre chargeur. Vous pouvez utiliser une action pour le recharger intégra-
+                                        lement et le remettre en place, avec un seul type de munitions. Vous ne pouvez pas mélanger
+                                        plusieurs types de munitions au sein d’un même chargeur.
+
+
+
+                                        C    ombat à distance
+
+                                        Le combat à distance couvre toute attaque effectuée… à distance. Voyons ce que l’Ère du Rouge
+                                        offre comme possibilités de ce côté-là.
+
+                                        Légende du tableau des armes à distance
+                                        Type d’arme : la classification de l’arme.
+                                        Compétence d’arme : la compétence que vous utilisez quand vous tirez avec cette arme.
+                                        Dégâts : les dégâts d’un seul tir venant de l’arme.
+                                        Chargeur standard : le nombre de balles ou de munitions d’un autre type que peut contenir
+                                         l’arme sans modifications. En dessous de la taille du chargeur, vous trouverez le type de
+                                         munition que tire l’arme.
+                                        Attaque par round (Att/round) : le nombre de fois que vous pouvez tirer avec l’arme en
+                                         une seule action attaque.
+
+
+
+ 170
+                                                          FUSILLADE DU VENDREDI SOIR
+
+                Mains : le nombre de mains dont vous avez besoin pour tenir l’arme et tirer avec.
+                Dissimulation : si l’arme peut être dissimulée sous vos vêtements avec la compétence Dissimulation/Révélation d’objet.
+                Modes de tir alternatifs et traits spéciaux : les traits uniques de l’arme (voir la section concernée en page 173).
+                Prix : le coût de l’arme dans la devise principale de Night City, l’eurodollar. La catégorie de l’objet est indiquée sous son
+                  prix (voir Acheter et vendre en page 385).
+
+                                      Compétence                     Chargeur  Att/
+                  Type d’arme                            Dégâts                                Mains        Dissimulation          Prix
+                                        d’arme                       standard round*
+                     Pistolet                                               12                                                       50
+                                           Pistolet         2d6                        2           1               OUI
+                     moyen                                             (pistolet M)                                               (Coûteux)
+                                Modes de tir alternatifs et traits spéciaux : aucun
+                                                                     8                                             100
+                 Pistolet lourd      Pistolet      3d6                      2         1            OUI
+                                                               (pistolet L)                                   (Très coûteux)
+                                Modes de tir alternatifs et traits spéciaux : aucun
+                  Pistolet très                                      8                                             100
+                                     Pistolet      4d6                      1         1           NON
+                      lourd                                   (pistolet TL)                                   (Très coûteux)
+                                Modes de tir alternatifs et traits spéciaux : aucun
+                    Pistolet-                                       30                                             100
+                                     Pistolet      2d6                      1         1            OUI
+                  mitrailleur                                 (pistolet M)                                    (Très coûteux)
+                                Modes de tir alternatifs et traits spéciaux : tir automatique (3) ● tir de suppression
+                    Pistolet-
+                                                                    40                                             100
+                  mitrailleur        Pistolet      3d6                      1         1           NON
+                                                               (pistolet L)                                   (Très coûteux)
+                      lourd
+                                Modes de tir alternatifs et traits spéciaux : tir automatique (3) ● tir de suppression
+                                                                     4                                             500
+                 Fusil à pompe    Armes d’épaule   5d6                      1         2           NON
+                                                                  (slug)                                        (Onéreux)
+                                Modes de tir alternatifs et traits spéciaux : chevrotine
+                                                                    25                                             500
+                 Fusil d’assaut   Armes d’épaule   5d6                      1         2           NON
+                                                                  (fusil)                                       (Onéreux)
+                                Modes de tir alternatifs et traits spéciaux : tir automatique (4) ● tir de suppression
+                    Fusil de                                         4                                             500
+                                  Armes d’épaule   5d6                      1         2           NON
+                   précision                                      (fusil)                                       (Onéreux)
+                                Modes de tir alternatifs et traits spéciaux : aucun
+                     Arcs et                                        –                                              100
+                                    Tir à l’arc    4d6                      1         2           NON
+                   arbalètes                                     (flèche)                                     (Très coûteux)
+                                Modes de tir alternatifs et traits spéciaux : flèches
+                     Lance-                                          2                                             500
+                                  Armes lourdes    6d6                      1         2           NON
+                   grenades                                    (grenade)                                        (Onéreux)
+                                    Modes de tir alternatifs et traits spéciaux : explosion
+                     Lance-                                                1                                                         500
+                                        Armes lourdes       8d6                        1           2              NON
+                   roquettes                                           (roquette)                                                 (Onéreux)
+                                    Modes de tir alternatifs et traits spéciaux : explosion
+                *Attaque par round
+
+
+
+
+                                                                                                                                                171
+  FUSILLADE DU VENDREDI SOIR
+
+                Résolution des attaques de combat à distance
+
+                                       Pour résoudre une attaque à distance :
+
+                         RÉF de l’attaquant + compétence d’arme appropriée + 1d10
+
+                                                                 contre
+
+                   SD du défenseur calculé selon la portée de l’arme et de la cible ou DEX
+                               du défenseur + compétence Esquive + 1d10*
+                            * Un défenseur qui possède un niveau de RÉF de 8 ou plus peut choisir d’esquiver une
+                               attaque à distance au lieu d’utiliser le tableau de portée pour déterminer le SD
+
+
+
+
+                                  Si vous dépassez le SD (en cas d’égalité, le défenseur
+                                    l’emporte), vous infligez des dégâts au défenseur.
+
+                           L’armure du défenseur réduit les dégâts que vous infligez, comme
+                                 détaillé plus loin dans la présente section, en page 186.
+
+
+
+
+                                                                                                                   PAR RICHARD BAGNALL
+
+
+
+
+ 172
+                                                          FUSILLADE DU VENDREDI SOIR
+
+                ▶ SD d’un seul tir selon la portée
+                                                                                                      51 à            101 à         201 à           401 à
+                     Type d’arme            0à6m         7 à 12 m     13 à 25 m 26 à 50 m
+                                                                                                     100 m            200 m         400 m           800 m
+                       Pistolets               13            15            20            25            30              30               –               –
+                      Pistolets-
+                                               15            13            15            20            25              25              30               –
+                     mitrailleurs
+                   Fusils à pompe
+                                               13            15            20            25            30              35               –               –
+                        (slug)
+                    Fusils d’assaut            17            16            15            13            15              20              25              30
+                 Fusils de précision           30            25            25            20            15              16              17              20
+                  Arcs et arbalètes            15            13            15            17            20              22               –               –
+                  Lance-grenades               16            15            15            17            20              22              25               –
+                  Lance-roquettes              17            16            15            15            20              20              25              30
+
+
+                Modes de tir alternatifs et traits spéciaux
+                                                    ▶ Tir automatique ◀
+                Dans Cyberpunk RED, le tir automatique a été retravaillé pour fluidifier le jeu. Au lieu de simuler
+                                                                                                                                  Exemple de tir
+                directement chaque balle, nous simulons maintenant des trajectoires de balles. Être doué pour                       automatique
+                garder une arme à feu automatique pointée sur sa cible vous permet de tirer le meilleur parti du
+                                                                                                                              Royal est acculé par un
+                mode automatique.                                                                                             booster nu particulièrement
+                  Quand vous utilisez le tir automatique, cela vous prend une action et 10 balles. S’il vous                  massif qui veut se venger
+                reste moins de 10 balles dans votre chargeur, vous ne pouvez pas utiliser le tir                              de ce qui lui est arrivé la
+                                                                                                                              semaine dernière (cf.
+                automatique. Vous utilisez la compétence Tir automatique à la place de la compétence d’arme
+                                                                                                                              page 170). Royal tire
+                normalement associée à l’arme. De plus, au lieu d’utiliser la ligne de l’arme dans le tableau de              avec son fusil d’assaut
+                portée, vous utilisez sa ligne dans le tableau de portée de tir automatique. Vous ne pouvez                   en utilisant le merveilleux
+                pas viser en utilisant le tir automatique.                                                                    mode tir automatique.
+                                                                                                                              Selon la table de portée
+                    Une cible qui possède un niveau de RÉF de 8 ou plus peut toujours choisir d’esquiver votre
+                                                                                                                              pour le tir automatique,
+                tir automatique.                                                                                              son joueur doit dépasser
+                   Si vous touchez, lancez 2d6 pour déterminer les dégâts et multipliez le résultat                           un SD 17 pour toucher
+                par la différence entre le SD et le résultat de votre jet pour toucher votre cible,                           une cible à 14 m. Il lance
+                                                                                                                              1d10, obtient un 7 et ajoute
+                jusqu’à un maximum indiqué dans le tir automatique de l’arme (3 pour les pisto-                               RÉF 8 + compétence Tir
+                lets-mitrailleurs, 4 pour les fusils d’assaut). Le résultat représente les dégâts infligés par                automatique 6, pour un total
+                le tir automatique. Si les deux dés ont donné un 6, vous avez aussi infligé une blessure critique             de 21. Comme il a dépassé
+                (cf. page 187). L’armure du défenseur réduit les dégâts que vous infligez, comme détaillé plus                le SD 17 du tir automatique
+                loin dans la présente section, en page 186.                                                                   de 4, il lance 2d6 pour les
+                                                                                                                              dégâts (obtenant 10) et
+                ▶ SD du tir automatique selon la portée                                                                       multiplie le résultat par 4, la
+                                                                                                                              différence entre le SD de tir
+                                                                                                                              automatique et le résultat de
+                    Type d’arme            0à6m          7 à 12 m      13 à 25 m      26 à 50 m 51 à 100 m
+                                                                                                                              son jet pour toucher sa cible,
+                     Pistolets-                                                                                               pour un total de 40 points
+                                              20             17            20             25             30                   de dégâts. Ouch ! Espérons
+                    mitrailleurs
+                                                                                                                              que ce booster-là ait un
+                   Fusils d’assaut            22            20             17             20             25                   treillissage dermique !
+
+
+
+
+                                                                                                                                                      173
+  FUSILLADE DU VENDREDI SOIR
+
+                                            ▶ Flèches ◀                                     Vous faites un seul et même jet de dégâts pour toutes les
+                                                                                         cibles. L’armure du défenseur réduit les dégâts que vous
+                     Les arcs et les arbalètes tirent des flèches. Comme enco-
+                                                                                         infligez, comme détaillé plus loin dans la présente section,
+                     cher une flèche fait partie intégrante de l’attaque avec
+                                                                                         en page 186.
+                     un arc ou une arbalète, vous n’avez jamais besoin
+                     de recharger un arc ou une arbalète en utilisant                      Une cible qui possède un niveau de RÉF de 8 ou plus
+                     l’action recharger. De plus, les flèches standard                   peut toujours choisir d’esquiver votre chevrotine.
+                     peuvent toujours être récupérées après avoir été tirées,
+                                                                                                             ▶ Explosions ◀
+                     vous ne devez donc acheter des munitions standard pour
+                     ces armes qu’une fois ou presque.                                   Toutes les armes explosives infligent leurs dégâts à
+                                                                                         toutes les cibles (y compris le terrain) dans une
+                                   ▶ Tir de suppression ◀                                zone de 10 m sur 10 m (5 cases sur 5 cases), dont le
+                                                                                         centre est la cible que vous voulez toucher (qui est un carré
+       Pour savoir   Quand vous utilisez le tir de suppression, cela vous prend
+  comment lancer                                                                         de 2 m sur 2 m et non une personne). Vous faites un
+                     une action et 10 balles. S’il vous reste moins de 10
+ une grenade à la                                                                        seul et même jet de dégâts pour toutes les cibles.
+   main, reportez-   balles dans votre chargeur, vous ne pouvez pas
+         vous à la   utiliser le tir de suppression.                                       Si vous ne parvenez pas à dépasser le SD requis pour
+   Page 177                                                                              toucher la cible que vous vouliez, le MJ décide où l’explosif
+                        Tous les participants à pied situés dans votre ligne de
+                                                                                         a en fait atterri dans le carré de 10 m sur 10 m centré sur la
+                     vue et à découvert dans un rayon de 25 m doivent faire un
+                                                                                         cible prévue, et l’explosif inflige à la place des dégâts dans
+                     jet de VOL + Concentration + 1d10 contre votre RÉF
+                                                                                         un carré de 10 m sur 10 m centré sur ce point.
+                     + compétence Tir automatique + 1d10.
+                                                                                           Quiconque possède un niveau de RÉF de 8 ou plus peut
+                       Tous ceux qui ratent leur jet doivent dépenser leur pro-
+                                                                                         choisir d’esquiver l’explosion pour lui-même en obtenant
+                     chaine action de mouvement pour se mettre à couvert. Si
+                                                                                         un résultat sur son jet supérieur à votre résultat initial, et se
+                     cette seule action ne suffit pas, ils doivent aussi effectuer une
+                                                                                         place hors de la zone de l’explosion s’il réussit.
+                     action courir pour se rapprocher le plus possible d’un couvert.
+                                                                                            Une explosion n’inflige pas de dégâts à une cible abritée
+                                         ▶ Chevrotine ◀                                  par un couvert que ses dégâts ne suffiraient pas à détruire.
+                     En plus des slugs, les fusils à pompe peuvent aussi tirer           Cependant, si les dégâts de l’explosion suffisent à détruire
+                     des chevrotines. Vous ne pouvez pas viser en tirant une             le couvert, la cible n’est plus abritée par le couvert et subit
+                     chevrotine. Quand vous tirez une chevrotine, vous effectuez         tous les dégâts de l’explosion.
+                     1 attaque à distance (RÉF + Armes d’épaule + 1d10) avec
+                     un SD 13. Si vous réussissez, toutes les cibles situées à 6 m             ▶ Exemple d’explosion
+                     (3 cases) ou moins devant vous et dans votre ligne de vue
+                     subissent 3d6 points de dégâts.                                                         Ne touchera pas
+
+                          ▶ Exemple de chevrotine
+                                                                                                                        Pourrait toucher
+                                                           Ne touchera pas
+
+
+                                                  Pourrait toucher                                               Pourrait toucher
+
+                                                                                                                 Pourrait toucher
+
+                                          Pourrait toucher
+
+
+
+
+  174
+                                                                FUSILLADE DU VENDREDI SOIR
+
+                C    ombat de mêlée
+
+                Vous n’avez pas trouvé d’arme à feu. Il n’y en a jamais quand on en a vraiment besoin. Vous                   Exemple de
+                vous dites que les gamins de l’appartement du fond ont dû voler la vôtre, ou alors vous l’avez
+                encore laissé tomber derrière la poubelle (là où vous avez planqué le cadavre). On dirait que             combat de mêlée
+                vous allez devoir vous rabattre sur le combat de mêlée.                                                Après son concert, Rico Rico,
+                  Le combat de mêlée consiste à utiliser des armes que vous écrasez sur l’ennemi ou avec               un Rockeur, est abordé par
+                                                                                                                       deux clowns (pas des Bozos,
+                lesquelles vous tranchez l’ennemi. Il s’applique aussi lorsque vous utilisez les parties de votre
+                                                                                                                       heureusement) qui n’ont pas
+                corps (par exemple les pieds, les mains, la tête, etc.) pour frapper un adversaire.                    aimé sa musique. Dur, dur
+                                                                                                                       de faire un one man show
+                Légende du tableau des armes de mêlée                                                                  en zone de combat. Les
+                Type d’arme de mêlée : la classification de l’arme de mêlée.                                           assaillants agressent Rico
+                                                                                                                       Rico avec des machettes
+                Exemples d’armes de mêlée : quelques exemples de cette classification d’armes de mêlée.                (des armes de mêlée
+                Mains : le nombre de mains dont vous avez besoin pour tenir l’arme et l’utiliser. Dans le cas des      intermédiaires) au début. Ils
+                                                                                                                       attaquent Rico Rico avec leur
+                 armes de mêlée, ce nombre change en fonction de l’arme spécifique employée, il n’est pas              DEX + compétence Arme
+                 identique pour toute une classification.                                                              de mêlée + 1d10 contre la
+                Dégâts : les dégâts d’une seule attaque portée avec l’arme.                                            DEX + Esquive + 1d10 de
+                                                                                                                       Rico Rico. Les attaques de
+                Attaque par round (Att/round) : le nombre de fois que vous pouvez frapper avec l’arme                  mêlée sont effectuées à 2
+                 en une seule action attaque.                                                                          Att/round, ce qui signifie
+                                                                                                                       deux frappes potentielles par
+                Dissimulation : si l’arme peut être dissimulée sous vos vêtements avec la compétence
+                                                                                                                       action d’attaque, donc avec
+                  Dissimulation/Révélation d’objet.                                                                    deux assaillants, Rico Rico
+                Prix : le coût de l’arme dans la devise principale de Night City, l’eurodollar. La catégorie de        doit esquiver les machettes
+                  prix de l’objet est indiquée sous son coût (voir Acheter et vendre en page 385).                     des clowns quatre fois
+                                                                                                                       avant de jouer son tour. Il
+                                                                                                                       esquive trois attaques, mais
+                                                                                                                       la quatrième le touche et
+                     Type         Exemples                                                                             obtient 7 sur le jet de dégâts.
+                                                                                     Att/
+                  d’arme de      d’armes de              Mains             Dégâts         Dissimu­lation    Prix       Les dégâts infligés par des
+                                                                                    round
+                    mêlée           mêlée                                                                              armes de mêlée ignorent
+                                                                                                                       la moitié de l’armure du
+                   Arme de                                                                                             défenseur (arrondie au
+                                 couteau de combat,                                                           50
+                    mêlée                           varie selon le type     1d6       2         OUI                    supérieur), donc la tenue
+                                     tomahawk                                                              (Coûteux)
+                    légère                                                                                             pare-balles légère à PA 11
+                   Arme de                                                                                             de Rico Rico est considérée
+                                  batte de baseball,                                                                   comme à PA 6, ce qui fait
+                    mêlée                                                                                     50
+                                   pied-de-biche, varie selon le type       2d6       2         NON                    que 1 point de dégâts
+                   intermé-                                                                                (Coûteux)   traverse. La tenue pare-
+                                       machette
+                     diaire                                                                                            balles légère de Rico Rico
+                   Arme de        tuyau de plomb,                                                            100       est aussi perforée, ce qui
+                    mêlée           épée, batte à    varie selon le type    3d6       2         NON          (Très     diminue son PA de 1 point
+                                                                                                                       et le fait passer à 10.
+                    lourde             pointes                                                             coûteux)
+
+                                   tronçonneuse,
+                  Arme de
+                                    masse, pales                                                              500
+                  mêlée très                         varie selon le type    4d6       1         NON
+                                   d’hélicoptère,                                                          (Onéreux)
+                   lourde
+                                      naginata
+
+
+
+
+                                                                                                                                              175
+  FUSILLADE DU VENDREDI SOIR
+
+                Armes de mêlée en combat
+                L’utilisation entraînée d’une arme de mêlée inclut l’escrime, le combat au couteau, le maniement de la massue ou de toute
+                autre arme contondante, bâtons et battes de baseball inclus.
+                  Les armes de mêlée utilisent la compétence Arme de mêlée pour une attaque. Quand elles infligent des
+                dégâts, toutes les armes de mêlée ignorent la moitié de l’armure du défenseur (arrondie au supérieur).
+                La quantité de dégâts infligée dépend de la classification de l’arme de mêlée. Les armes plus lourdes infligent davantage
+                de dégâts, mais ne peuvent pas être dissimulées sous les vêtements avec la compétence Dissimulation/Révélation d’objet.
+                Les armes de mêlée très lourdes ne permettent pas de frapper deux fois au cours d’une même action d’attaque.
+                  Les armes de mêlée doivent être maniées avec le nombre de mains pour lequel elles ont été conçues, sauf précision
+                contraire dans la description de l’arme. Il existe toutefois une exception : un personnage qui possède un niveau de COR
+                de 8 ou plus peut utiliser d’une seule main une arme de mêlée conçue pour être maniée à deux mains.
+
+                Résolution du combat de mêlée
+
+                                               Pour résoudre une attaque de mêlée :
+                   DEX de l’attaquant + compétence d’attaque de mêlée appropriée + 1d10
+                                                                        contre
+                                      DEX du défenseur + compétence Esquive + 1d10*
+
+                  À l’exception des armes de mêlée très lourdes, toutes les attaques de mêlée sont à 2 Att/round, ce qui autorise 2 frappes
+                pour chaque action attaque. Les cibles doivent être à portée d’allonge (2 m).
+
+
+                           Si vous obtenez un résultat supérieur à celui du défenseur (en cas d’égalité,
+                                 le défenseur l’emporte), vous infligez des dégâts au défenseur.
+                                 L’armure du défenseur réduit les dégâts que vous infligez, comme
+                                       détaillé plus loin dans la présente section, en page 184.
+
+
+                Bagarre, boxe à mains nues et prises
+                Une attaque de bagarre s’effectue avec la compétence du même nom, et les dégâts infligés par chaque coup varient en
+                fonction du COR de l’attaquant, à une seule exception près : avec un cyberbras, vos dégâts pour une attaque
+                de bagarre sont toujours d’au moins 2d6 (mais davantage si votre COR est de 7 ou plus). Bagarre est
+                aussi la compétence utilisée pour déclencher une prise et y échapper. Quand elle inflige des dégâts, une attaque
+                de bagarre n’ignore pas la moitié de l’armure du défenseur.
+
+                                                                     5 à 6 (ou 4
+                         COR                  4 ou moins            ou moins avec                 7 à 10                11 ou plus
+                                                                     cyberbras)
+                        Dégâts                    1d6                      2d6                     3d6                     4d6
+
+
+
+
+ 176
+                                                            FUSILLADE DU VENDREDI SOIR
+
+                                     ▶ Agripper ◀                                 votre cible, vous mettez fin à la prise (ce qui vous libère du
+                                                                                  malus de –2 infligé aux personnages agrippés, qu’ils soient
+                En dépensant votre action, vous pouvez agripper quelqu’un
+                                                                                  attaquants ou défenseurs) et elle termine au sol. La cible
+                et le retenir, vous emparer d’un objet qu’il tient ou échapper
+                                                                                  ne peut plus accomplir d’action de mouvement jusqu’à ce
+                à une prise. Vous devez avoir une main libre pour agripper et
+                                                                                  qu’elle utilise une action pour se relever.
+                elle ne peut plus être utilisée pour faire autre chose pendant
+                toute la durée d’une prise venant de l’action agripper.              Si vous voulez lancer un objet, vous pouvez le faire en
+                                                                                  utilisant une action pour effectuer une attaque à distance
+                   Pour déterminer le résultat d’une action agripper, vous
+                                                                                  à l’aide de DEX + Athlétisme + 1d10, à 25 m de distance
+                et votre cible située à portée d’allonge devez effectuer un
+                                                                                  maximum, en utilisant la ligne du SD du lance-grenades
+                jet de DEX + compétence Bagarre + 1d10. Si vous
+                                                                                  dans le tableau de portée. Si vous lancez l’objet sur une
+                remportez le jet, vous pouvez choisir d’entraver les mou-
+                                                                                  personne qui peut esquiver les balles, elle peut aussi
+                vements du défenseur ou de vous emparer d’un objet qu’il
+                                                                                  choisir d’esquiver votre objet. Les armes de mêlée infligent
+                tient dans ses mains pour le prendre dans une main libre.
+                                                                                  leurs dégâts normaux quand elles sont lancées, mais ne
+                  Si vous gagnez et que vous choisissez d’agripper le             réduisent plus le PA de moitié. Les grenades infligent les
+                défenseur et pas ses affaires, on considère que vous êtes         mêmes dégâts que si elles étaient tirées par un lance-gre-
+                tous les deux agrippés ; vous subissez par conséquent un          nades. Une arme improvisée que vous lancez inflige la
+                malus de –2 sur toutes vos actions tant que vous restez           quantité de dégâts déterminée par le MJ.
+                dans cette position.
+                   Un défenseur agrippé ne peut pas effectuer d’action de
+                mouvement, mais l’attaquant peut le traîner dans la direction
+                qu’il souhaite lorsqu’il réalise son action de mouvement.
+                Aucun des deux personnages agrippés ne peut utiliser
+                d’armes nécessitant d’être maniées à deux mains, même si
+                le personnage possède plus de deux bras. L’attaquant peut
+                cesser d’agripper sa cible à tout moment, sans dépenser
+                d’action, alors que le défenseur ou tout autre personnage
+                doit utiliser son action pour effectuer un nouveau jet en
+                opposition avec l’attaquant (le même que celui mentionné
+                plus haut) pour défaire sa prise, ce qui met fin à la prise
+                pour toutes les personnes concernées. Vous devez agripper
+                une personne avant de l’étrangler ou de la lancer.
+                                    ▶ Étrangler ◀
+
+
+
+                                                                                  PAR SANTIAGO BETANCUR
+                Si vous êtes l’attaquant et que vous avez agrippé votre
+                adversaire, vous pouvez utiliser une action pour étrangler
+                l’adversaire prisonnier et infliger autant de dégâts que votre
+                COR. Si les dégâts infligés par un étranglement suffisent
+                théoriquement à faire tomber une cible avec plus de 1 PS à
+                moins de 0 PS, elle tombe inconsciente et il ne lui reste que
+                1 PS. Ces dégâts ignorent l’armure du défenseur,
+                mais ne la perforent pas. De plus, si vous étranglez
+                la même cible pendant trois rounds de suite, elle tombe
+                inconsciente, quel que soit son total de points de santé.
+
+                                      ▶ Lancer ◀
+                Vous projetez une personne que vous avez agrippée ou
+                un objet que vous tenez. Si vous êtes l’attaquant et que
+                vous avez agrippé un adversaire, vous pouvez utiliser une
+                action pour la projeter sur le sol, infligeant autant de dégâts
+                que votre COR. Ces dégâts ignorent l’armure du
+                défenseur, mais ne la perforent pas. En projetant
+
+
+
+                                                                                                                                                   177
+  FUSILLADE DU VENDREDI SOIR
+
+                Arts martiaux
+                La compétence Art martial permet d'effectuer des attaques et des coups spéciaux d’arts martiaux. Les attaques d’arts
+                martiaux sont à 2 Att/round. Vous ne pouvez utiliser des attaques d’arts martiaux que si vous possédez au moins 1 point
+                dans la compétence.
+
+                                                        ▶ Dégâts d’arts martiaux ◀
+                Quand elles infligent des dégâts, les attaques d’arts martiaux ignorent la moitié de l’armure du
+                défenseur (arrondie au supérieur). Les dégâts que vous infligez sont basés sur votre COR.
+
+                         COR                 4 ou moins                               5à6                       7 à 10                 11 ou plus
+                       Dégâts                    1d6                                       2d6                   3d6                       4d6
+
+
+
+
+                                                                                                 Pour résoudre une attaque d’arts
+                                                                                                   martiaux/un coup spécial :
+
+                                                                                                 DEX de l’attaquant + compétence
+                                                                                                      de cette forme + 1d10
+
+                                                                                                                       contre
+
+                                                                                                    DEX du défenseur + Esquive
+                                                                                                         + 1d10 ou SD*
+
+
+
+                                                                     PAR NEIL BRANQUINHO
+                                                                                                          * pour certains coups spéciaux
+
+
+
+
+                                                                                             Formes et coups spéciaux
+                                                                                             Toutes les formes utilisent des coups spéciaux
+                                                                                             communs et chaque forme inclut deux coups spéciaux
+                                                                                             uniques. Vous ne pouvez utiliser un coup spécial d’arts
+                                                                                             martiaux que si vous possédez au moins 1 point dans la
+                                                                                             forme de ce coup, et beaucoup de coups spéciaux d’arts
+                                                                                             martiaux ont aussi des prérequis individuels à respecter
+                                                                                             pour pouvoir les réaliser. Sauf précision contraire, les coups
+                                                                                             spéciaux d’arts martiaux ne peuvent pas être utilisés en
+                                                                                             visant. Les coups spéciaux d’arts martiaux sont résolus de
+                                                                                             la manière décrite dans la section ci-dessous.
+
+
+
+
+ 178
+                                                             FUSILLADE DU VENDREDI SOIR
+
+                        ▶ Coups spéciaux communs ◀                                 la cible que vous avez frappée deux fois ce tour-ci voit
+                                                                                   toute l’armure qu’elle porte perforée de 2 points de plus.
+                ▶ Rétablissement
+                    Pas de prérequis : toutes les formes d’art martial
+                                                                                   ▶ Frappe brise-os
+                    permettent d’utiliser ce coup.                                    Prérequis : VOL 8 ou plus
+
+                Chaque fois que vous utilisez l’action se relever, vous            Au lieu d’effectuer deux attaques avec votre action attaque
+                pouvez tenter de dépasser un SD 13 avec le jet de résolu-          d’arts martiaux, vous pouvez choisir d’effectuer une Frappe
+                tion d’un coup spécial d’arts martiaux. Si vous réussissez,        brise-os. Utilisez votre action pour faire un jet de résolution
+                vous relever ne vous a pas coûté d’action.                         de coup spécial d’arts martiaux contre une seule cible à
+                                                                                                                                                     Vous trouverez
+                                                                                   portée d’allonge de mêlée. Si vous touchez, votre cible           davantage
+                                       ▶ Aïkido ◀                                  subit la blessure critique côtes cassées en plus des dégâts       d’informations
+                                                                                                                                                     sur les blessures
+                                                                                   de votre attaque d’arts martiaux. Si elle souffrait déjà de
+                Cette forme douce utilise des techniques de balayage                                                                                 critiques en
+                                                                                   cette blessure critique, elle n’en subit pas d’autres.             page 187
+                avec la main et le corps pour immobiliser et désarmer les
+                adversaires en retournant leur force contre eux.                      Si vous choisissez de subir un malus de –8 sur votre jet,
+                                                                                   vous pouvez utiliser ce coup spécial pour cibler la tête de
+                ▶ Enchaînement de désarmement                                      votre adversaire comme si vous visiez, en déclarant votre
+                                                                                   intention au moment où vous faites le jet. Si vous touchez,
+                    Prérequis : vous touchez la même cible avec une
+                                                                                   votre cible subit la blessure critique fracture du crâne après
+                    attaque de bagarre et avec une attaque d’arts martiaux
+                                                                                   le calcul des dégâts. Si elle souffrait déjà de cette blessure
+                    pendant ce tour.
+                                                                                   critique, elle n’en subit pas d’autres.
+                Une fois par tour quand vous remplissez ce prérequis, vous
+                pouvez faire un jet de résolution de coup spécial d’arts                                   ▶ Judo ◀
+                martiaux et tenter de dépasser un SD 15. Si vous réussissez,       Cette forme douce utilise des prises, des projections et des
+                un objet dans les mains de la cible que vous avez touchée          évasions.
+                deux fois ce tour-ci se retrouve dans vos mains ou, au choix,
+                tombe au sol.                                                      ▶ Dégagement
+                                                                                      Prérequis : vous avez touché une cible qui vous
+                ▶ Prise d’acier                                                       agrippe avec deux attaques de mêlée ce tour-ci.
+                    Prérequis : vous avez réussi à agripper une cible et
+                                                                                   Une fois par tour quand vous remplissez ce prérequis,
+                    elle n’a pas déjà subi Prise d’acier.
+                                                                                   vous pouvez faire un jet de résolution de coup spécial
+                Une fois par tour quand vous remplissez ce prérequis, vous         d’arts martiaux et tenter de dépasser un SD 15. Si vous
+                pouvez dépenser une action, faire un jet de résolution de          réussissez, vous n’êtes plus agrippé par la cible que vous
+                coup spécial d’arts martiaux et tenter de dépasser un SD           avez touchée deux fois et elle subit la blessure critique bras
+                15. Si vous réussissez, la cible que vous agrippez subit un        cassé si elle n’en souffrait pas déjà. Vous choisissez quel
+                malus de –2 sur toutes ses tentatives pour échapper à cette        bras est concerné.
+                prise. De plus, jusqu’à ce que la prise soit brisée, votre cible
+                ne peut plus effectuer d’attaque à distance.                       ▶ Projection défensive
+                                                                                      Prérequis : vous avez esquivé toutes les attaques
+                                       ▶ Karaté ◀
+                                                                                      de mêlée qui vous prenaient pour cible depuis votre
+                Cette forme dure utilise des frappes et des coups conçus              dernier tour.
+                pour briser les os ou l’armure d’un adversaire.
+                                                                                   Une fois par tour quand vous remplissez ce prérequis, vous
+                                                                                   pouvez dépenser une action, faire un jet de résolution de
+                ▶ Enchaînement de perforation d’armure                             coup spécial d’arts martiaux et tenter de dépasser un SD
+                    Prérequis : vous touchez la même cible avec une                15. Si vous réussissez, vous utilisez l’action lancer sur une
+                    arme de mêlée et avec une attaque d’arts martiaux              cible à portée d’allonge de mêlée dont vous avez esquivé
+                    pendant ce tour.                                               l’attaque de mêlée pour remplir le prérequis de ce coup
+                Une fois par tour quand vous remplissez ce prérequis, vous         spécial. Ce lancer ne peut pas être esquivé. Si vous dépas-
+                pouvez faire un jet de résolution de coup spécial d’arts           sez le SD, la cible est projetée. Vous n’avez pas besoin de
+                martiaux et tenter de dépasser un SD 15. Si vous réussissez,       l’agripper d’abord.
+
+
+
+                                                                                                                                                     179
+  FUSILLADE DU VENDREDI SOIR
+
+                                   ▶ Taekwondo ◀
+                Cette forme dure utilise les coups de pied hauts et les
+                frappes précises pour franchir les défenses et causer des
+                                                                                   A     utres manières de se blesser
+
+
+                blessures sévères en attaquant les points de pression.                           En dehors des flingues
+                                                                                                   et des objets pointus
+                ▶ Coup de pied aérien                                              Chute libre
+                    Prérequis : MOUV 8 ou plus. Vous devez déjà vous               Un personnage en chute libre chute de 40 m par tour à la
+                    être déplacé d’au moins 4 m ce tour-ci.                        fin de son tour. Dès qu’il n’est plus sur le sol, si un rebord ou
+                Au lieu d’effectuer deux attaques avec votre action attaque        une corniche se trouve à proximité, il peut faire une unique
+                d’arts martiaux, vous pouvez choisir d’effectuer un Coup           tentative pour se raccrocher avec un jet d’Athlétisme SD 15.
+                de pied aérien. Utilisez votre action et tout votre mouve-         Aucun jet n’est nécessaire s’il possède une main grappin,
+                ment restant pour ce tour pour vous élancer en avant en            un lance-grappin, etc.
+                ligne droite vers votre cible, qui peut se trouver à 4 m de          Quand il touche le sol, un personnage qui est
+                vous maximum. Faites un jet de résolution de coup spécial          tombé de 10 m ou plus subit 2d6 points de dégâts
+                d’arts martiaux contre cette cible. Si vous touchez, vous          par tranche de 10 m de chute (encaissés par l’ar-
+                infligez des dégâts au corps de votre cible comme si vous          mure du corps) et sauf si son joueur réussit un jet
+                l’aviez touchée avec une attaque d’arts martiaux. De plus,         d’Athlétisme SD 15, il subit également la blessure
+                si votre attaque réussit, votre cible est à présent au sol. Elle   critique jambe cassée. Un personnage qui possède 2
+                tombe de toute moto ou véhicule n’ayant pas d’habitacle            cyberjambes ne subit ni les dégâts ni la blessure critique.
+                totalement fermé sur ou dans lequel elle pouvait se trouver.       Cela dit, les cyberjambes n’empêchent ni les dégâts ni la
+                                                                                   blessure critique si la chute fait plus de 30 m. Et pour des
+                ▶ Frappe de point de pression                                      raisons de bon sens, si vous tombez d’un gratte-ciel sans
+                    Prérequis : VOL 8 ou plus                                      parachute, inutile de faire un jet de sauvegarde contre la
+                                                                                   mort, vous êtes mort quoi qu’il arrive.
+                Au lieu d’effectuer deux attaques avec votre action attaque
+                d’arts martiaux, vous pouvez choisir d’effectuer une Frappe        Électrocution
+                de point de pression. Utilisez votre action pour faire un jet      Quand vous êtes électrocuté, vous subissez
+                de résolution de coup spécial d’arts martiaux contre une           immédiatement 6d6 points de dégâts. Ces points
+                seule cible à portée d’allonge de mêlée. Si vous touchez,          sont réduits par l’armure normalement. Si vous ne vous éloi-
+                votre cible subit la blessure critique vertèbre endommagée         gnez pas de la source de votre électrocution, vous subissez
+                en plus des dégâts de votre attaque d’arts martiaux. Si elle       de nouveau ces dégâts à la fin de chacun de vos tours à
+                souffrait déjà de cette blessure critique, elle n’en subit pas     partir de votre tour suivant.
+                d’autres.
+                   Si vous choisissez de subir un malus de –8 sur votre jet,       Être en feu
+                vous pouvez utiliser ce coup spécial pour cibler la tête de
+                                                                                   Quand vous êtes en feu, jusqu’à ce que vous utilisiez une
+                votre adversaire comme si vous visiez, en déclarant votre
+                                                                                   action pour éteindre les flammes, vous subissez un certain
+                intention au moment où vous faites le jet. Si vous touchez,
+                                                                                   nombre de points de dégâts directement sur vos PS à la fin
+                votre cible subit la blessure critique lésion cérébrale. Si
+                                                                                   de votre tour. Votre armure n’est pas perforée. N’oubliez
+                elle souffrait déjà de cette blessure critique, elle n’en subit
+                                                                                   pas que chaque tour ne dure que 3 secondes. L’addition
+                pas d’autres.
+                                                                                   grimpe rapidement.
+
+                                                                                       Intensité           Exemple                   Effet
+                                                                                                                                2 points de dégâts
+                                                                                         Faible             Feu de bois
+                     Et commet tu comptes                                                                                     directement sur vos PS
+
+                    me flinguer , si je t ’ai                                            Forte             Feu d’essence
+                                                                                                                                4 points de dégâts
+                                                                                                                              directement sur vos PS
+                       brisé la nuque ?                                                                                         6 points de dégâts
+                                                                                       Mortelle              Thermite
+                           – Petra « Ceinture de cuir » Davids                                                                directement sur vos PS
+
+
+
+
+ 180
+                                                               FUSILLADE DU VENDREDI SOIR
+
+                Exposition aux éléments
+                L’exposition prolongée à des conditions environnementales extrêmes inflige 1d6 points de dégâts directement sur vos PS
+                à la fin de chaque jour d’exposition. Quand vous êtes exposé à ce type de conditions, même si vous êtes stabilisé, vous
+                ne pouvez pas guérir naturellement. Avec de l’équipement adapté à votre environnement, vous ne risquez jamais d’être
+                exposé aux éléments.
+
+                Noyade et asphyxie
+                Un personnage peut retenir son souffle pendant un nombre de minutes égal à son COR. Quand il ne peut plus retenir
+                son souffle, il commence à se noyer. Au début d’un tour de noyade, il subit un nombre de points de dégâts qui ignorent
+                l’armure égal à son COR. Son armure n’est pas perforée.
+                   L’asphyxie fonctionne comme la noyade, mais elle a parfois des effets secondaires. Si vous vous asphyxiez dans
+                l’espace, vous subissez 1d6 points de dégâts supplémentaires à la fin de votre tour qui touchent votre INT, vos RÉF et
+                votre DEX à cause de l’exposition au vide. Si votre INT tombe à 0, vous êtes mort. Ces dégâts sur vos CARAC sont guéris
+                si vous réussissez à aspirer une goulée d’air.
+
+                Poisons et drogues
+                Quand vous êtes empoisonné ou drogué, vous devez effectuer un jet de Résistance à la torture/aux drogues et dépasser le
+                SD de cette attaque. Si le jet échoue, vous subissez l’effet du poison ou de la drogue. Votre armure n’est pas
+                perforée. Les drogues de rue, leurs effets et l’addiction sont décrits en détail dans la section Trauma Team en page 227.
+
+                ▶ Poisons
+                                                                                 SD du jet de
+                     Intensité                   Exemples                      Résistance à la                         Effet
+                                                                            torture/aux drogues
+                      Faible               Belladone, déchets toxiques              11                1d6 points de dégâts directement sur vos PS
+                       Forte                         Arsenic                        13                2d6 points de dégâts directement sur vos PS
+                                          Biotoxines, poison synthétique,
+                     Mortelle                                                       15                3d6 points de dégâts directement sur vos PS
+                                              venin de poisson-pierre
+
+
+                ▶ Drogues
+                                                                                 SD du jet de
+                     Intensité                   Exemples                      Résistance à la                         Effet
+                                                                            torture/aux drogues
+                      Faible                          Alcool                        11                                  Ivresse
+                       Forte                   Pentothal de sodium                  13                        Sensibilité aux suggestions
+                     Mortelle                  Drogue synthétique                   15                         Choisi par le concepteur
+                                                                                                                                                    Beaucoup de
+                                                                                                                                                    corporations
+                Radiations                                                                                                                          utilisaient de
+                                                                                                                                                    petits réacteurs
+                L’exposition à un faible niveau de radiations ne vous tue pas immédiatement. Avec le temps, elle vous rend malade,                  nucléaires pour
+                                                                                                                                                    alimenter leurs
+                puis finit par vous tuer, peut-être en déclenchant un cancer. Le MJ détermine ce qui se passe exactement.                           installations avant
+                                                                                                                                                    la Quatrième
+                  L’exposition à un niveau élevé de radiations est immédiatement dangereuse. Pour chaque tour que vous passez                       Guerre corporatiste,
+                dans la zone irradiée, vous êtes considéré comme en feu avec une intensité faible (voir Être en feu en page 180), mais              alors les zones
+                vous ne pouvez pas utiliser une action pour éteindre les flammes tant que vous restez dans la zone                                  irradiées sont
+                                                                                                                                                    plus nombreuses
+                irradiée. Si vous vous trouvez dans une zone très irradiée, par exemple un réacteur qui fuit, vous êtes considéré comme             que ce que vous
+                en feu avec une intensité mortelle.                                                                                                  croyez.
+
+
+
+                                                                                                                                                    181
+  FUSILLADE DU VENDREDI SOIR
+
+
+                                          A    vant de subir les dégâts
+
+       Exemple de couvert                 Vous avez peut-être intérêt à voir s’il y a un moyen de mettre quelque chose entre vous et toutes
+                                          ces choses pas cool qui veulent vous transformer en pulpe. Par exemple, se mettre à couvert,
+      Quelqu’un tire sur Gina,            utiliser un bouclier (ou un malheureux booster que vous immobilisez fermement) et l’armure.
+      mais la rate. Elle ne sait pas
+      où se trouve le tireur, donc
+      elle se replie derrière une         Se mettre à couvert
+      barricade en béton épais
+      (25 PS) à l’entrée du parking
+      tout proche. Le tireur se                                 Règles essentielles du couvert :
+      trouve de l’autre côté de la
+      rue, sur le toit d’un magasin          Vous êtes considéré comme à couvert si vous êtes totalement
+      Oasis, et ne voit plus Gina.
+      Comme il n’a pas de ligne
+                                                 situé derrière un élément qui pourrait arrêter une balle.
+      de vue jusqu’à elle et que                             Si vous êtes dans la ligne de vue de
+      Gina n’est pas assez bête
+      pour quitter la sécurité du                           quelqu’un, vous n’êtes pas à couvert.
+      couvert pendant qu’elle tente
+      de s’échapper, le tireur a            Le couvert « partiel » n’existe pas. Soit il peut arrêter une balle,
+      deux possibilités : changer                  soit il ne peut pas. S’il ne peut pas arrêter une balle,
+      de position ou détruire
+      le couvert. Il décide de                 il ne fournit pas de couvert et ne possède donc pas de PS.
+      continuer à tirer.
+         À son tour, le tireur tire sur
+      la barricade. Son joueur fait         Rien n’empêche votre ennemi de se déplacer pour vous avoir de nouveau dans sa ligne de
+      un jet d’Armes d’épaule avec        vue, annulant ainsi votre couvert, aussi mieux vaut vous assurer d’avoir un meilleur plan que
+      un SD déterminé par son             votre adversaire.
+      arme (un fusil de précision)
+      et la portée et réussit. Le tir       L’autre méthode pour « sortir » quelqu’un d’un couvert consiste à détruire le couvert lui-même
+      inflige 17 points de dégâts         en utilisant une méthode amusante telle qu’une grenade. Tout élément derrière lequel vous pouvez
+      et fait tomber les PS de la         vous mettre à couvert possède des PS, et une section de 2 m sur 2 m (1 case) de cet élément
+      barricade à 8. Un round
+                                          peut être attaquée exactement comme vous. À 0 PS, le couvert est détruit. Si les PS d’un
+      plus tard, un deuxième tir fait
+      tomber la barricade à 0 PS          couvert tombent à 0, les points de dégâts supplémentaires sont perdus et ne sont pas infligés aux
+      et donc perce un gros trou          cibles qui se cachent derrière. Vous pourrez les blesser avec votre prochaine attaque. La seule
+      dedans. Le tireur voit Gina et      exception est celle des explosions (cf. page 174).
+      à son tour suivant, il peut tirer
+      sur elle directement.               Points de santé d’un couvert
+          Malheureusement pour le         Les PS d’un couvert sont déterminés par le matériau dont il est composé et par son épaisseur.
+      tireur, Gina a passé ses deux
+      derniers tours à déterminer           Un couvert mince peut généralement être légèrement déplacé si vous n’avez pas le choix,
+      sa position, elle est très forte    mais un couvert épais est trop lourd pour qu’un personnage qui ne possède pas au moins 10
+      au tir, l’attaque l’a énervée       en COR puisse le déplacer sans équipement spécial.
+      et elle a une Initiative plus
+      élevée.
+                                            Un couvert en acier ne peut pas être endommagé par les attaques d’arts martiaux ou de
+                                          bagarre, sauf si l’attaquant possède un cyberbras ou au moins 10 en COR.
+
+                                                  Type de couvert                       PS épais                        PS fin
+                                                         Acier                            50 PS                         25 PS
+                                                        Pierre                            40 PS                         20 PS
+                                                 Verre pare-balles                        30 PS                         15 PS
+                                                         Béton                            25 PS                         10 PS
+                                                          Bois                            20 PS                         5 PS
+                                            Plâtre/Mousse/Plastique                       15 PS               0 PS (pas de couvert)
+
+
+
+ 182
+                                                          FUSILLADE DU VENDREDI SOIR
+
+                ▶ Exemples de matériau et d’épaisseur de couvert
+                                Exemple                              Matériau et épaisseur                                 PS
+                                                                                                                                                  Ce tableau vous
+                                  Arbre                                          Bois épais                               20 PS                   donne également
+                                                                                                                                                  une bonne
+                                Armoire                                            Bois fin                                5 PS                   estimation des
+                                                                                                                                                  dommages que
+                              Bloc moteur                                        Acier épais                              50 PS                   peuvent subir les
+                          Bouche d’incendie                                      Acier épais                              50 PS                   murs et les portes
+                                                                                                                                                  avant d'être
+                        Cloison d’open space                                   Pas de couvert                              0 PS                    détruits.
+
+                           Comptoir de bar                                       Bois épais                               20 PS
+                         Conteneur maritime                                       Acier fin                               25 PS
+                              Gros rocher                                       Pierre épaisse                            40 PS
+                   Mur d’une cabane en rondins                                   Bois épais                               20 PS
+                               Pare-brise                                      Pas de couvert                              0 PS
+                       Pare-brise pare-balles                           Verre pare-balles fin ou épais                  15 ou 30 PS
+                      Paroi en verre de parloir
+                                                                            Verre pare-balles fin                         15 PS
+                             de prison
+                      Porte de chambre forte
+                                                                                 Acier épais                              50 PS
+                            de banque
+                           Porte de voiture                                       Acier fin                               25 PS
+                             Porte en bois                                         Bois fin                                5 PS
+                            Porte en métal                                        Acier fin                               20 PS
+                          Poteau électrique                                      Béton épais                              25 PS
+                             Réfrigérateur                                        Acier fin                               25 PS
+                                  Sofa                                 Plâtre/Mousse/Plastique épais                      15 PS
+                                 Statue                                         Pierre épaisse                            20 PS
+                           Table renversée                                         Bois fin                                5 PS
+                        Terminal de données                                      Béton épais                              25 PS
+                    Verre de fenêtre de banque                             Verre pare-balles épais                        30 PS
+
+
+                Utiliser un bouclier
+                Équiper ou lâcher un bouclier prend une action. Quand vous utilisez une main pour porter un bouclier, vous ne pouvez
+                pas l’utiliser pour faire quoi que ce soit d’autre. Un bouclier est une source de couvert portative, quand vous maniez un
+                bouclier auquel il reste des PS, vous êtes considéré comme à couvert. Quand vous êtes attaqué par une cible que vous
+                voyez, vous pouvez interposer le bouclier entre l’attaque et vous. Si vous choisissez de le faire, vous ne pouvez pas esquiver
+                l’attaque, mais une attaque à distance peut toujours vous manquer à cause du mauvais tir de votre adversaire. Le bouclier
+                encaisse tous les dégâts de l’attaque sur ses PS. Si un bouclier tombe à 0 PS, il est détruit (jusqu’à ce qu’il soit
+                réparé s’il est inorganique) et ne peut plus être utilisé comme couvert, même s’il reste équipé dans
+                votre main jusqu’à ce que vous utilisiez une action pour le lâcher.
+
+
+
+
+                                                                                                                                                 183
+  FUSILLADE DU VENDREDI SOIR
+
+                    Type de
+                                              Description du bouclier                          Points de santé (PS)                   Prix
+                    bouclier
+
+                    Bouclier          Un bouclier en polycarbonate transparent qui peut vous                                           100
+                                                                                                           10
+                   balistique                      protéger lors d’une fusillade.                                                 (Très coûteux)
+                                                                                                 COR du cadavre quand       Tout dépend du nombre de
+                    Cadavre                       Bouclier de chair. Ex-personne.
+                                                                                                  il était encore vivant   balles que vous avez dû tirer.
+
+
+                Bouclier humain
+                Bon, on savait tous qu’on allait en arriver là… Si vous êtes déjà l’attaquant d’une prise, vous pouvez utiliser
+                une action pour « équiper » le défenseur comme bouclier humain si vous ne maniez pas encore de bouclier,
+                en utilisant la main que vous utilisez pour l’agripper. Quand vous maniez un bouclier humain, vous êtes considéré comme
+                à couvert. Les boucliers humains sont plus « difficiles à manier » que les boucliers normaux. Étant donné que généralement,
+                ils bougent, ils ne peuvent pas être utilisés pour bloquer les attaques de mêlée ou les attaques à distance qui prennent
+                spécifiquement pour cible votre tête en visant. Quand vous êtes attaqué par une cible que vous voyez avec une attaque
+                à distance qui ne cible pas votre tête, vous pouvez interposer le bouclier humain entre l’attaque à distance et vous. Vous
+                pouvez toujours attaquer votre propre bouclier humain quand vous l’avez équipé, c’est d’ailleurs
+                pratiquement une tradition. Votre bouclier humain ne peut pas esquiver les attaques à distance quand vous l’avez
+                équipé, même s’il possède 8 ou plus en RÉF. Quand votre bouclier humain prend un tir, il subit les dégâts comme s’il avait
+                été touché normalement. Un bouclier humain qui meurt quand vous l’avez équipé devient automatique-
+                ment un bouclier avec un nombre de PS égal à son COR. Lâcher un bouclier humain vivant revient à mettre fin à
+                votre prise, ce qui ne coûte pas d’action, mais lâcher un cadavre bouclier coûte une action comme pour tout autre bouclier.
+
+                Armure
+                L’armure est représentée par son Pouvoir d’arrêt, ou PA, qui indique à quel point elle arrête les dégâts. Vous pouvez
+                porter une protection sur le corps et sur la tête. À choisir, nous vous conseillons de protéger ces deux endroits.
+                  Vous pouvez acheter une armure pour la localisation de la tête ou pour celle du corps. Porter ne serait-ce qu’une seule
+                pièce d’armure lourde réduit vos RÉF, votre DEX et votre MOUV de la pénalité d’armure la plus punitive parmi celles des
+                pièces d’armure que vous portez, mais vous ne subissez qu’une seule pénalité d’armure même si vous portez une pièce
+                d’armure sur le corps et une sur la tête. Cette pénalité peut même immobiliser totalement votre personnage (s’il tombe à
+                0 en MOUV).
+                  Le PA conféré par l’armure ne se cumule pas. Seule votre source la plus élevée de PA pour une localisation donnée
+                détermine votre PA pour cette localisation. Toutes les pièces d’armure que vous portez sur une localisation
+                donnée sont perforées simultanément quand vous subissez des dégâts (cf. page 186).
+
+                Légende du tableau des armures
+                Type d’armure : le nom généralement donné à l’armure. Il existe de nombreuses marques différentes, ceci est le nom
+                  générique.
+                Description de l’armure : ce à quoi ressemble l’armure. Si elle a des effets ou des points particuliers à noter, ils sont
+                 indiqués dans cette colonne.
+                Pouvoir d’arrêt : le nombre de points de dégâts que l’armure peut arrêter avant qu’ils atteignent votre corps.
+                Pénalité d’armure : à quel point l’armure diminue votre capacité de mouvement et de réaction quand vous la portez.
+                Prix : le coût de l’armure dans la devise principale de Night City, l’eurodollar. La catégorie de prix de l’objet est indiquée
+                  sous son coût (voir Acheter et vendre, en page 385).
+
+
+
+
+ 184
+                                                                                FUSILLADE DU VENDREDI SOIR
+
+                                                                                                                                Pouvoir        Pénalité
+                                       Armure                               Description                                                                               Prix
+                                                                                                                              d’arrêt (PA)   (minimum 0)
+
+                                                                                                                                                                        20
+                                        Cuir             Le préféré des Nomades et autres cyberpunks à moto.                       4               Aucune
+                                                                                                                                                                    (Ordinaire)
+                                                 Ce matériau se décline en plusieurs versions : vestes, gilets, costards et                                             50
+                                       Kevlar®                                                                                     7               Aucune
+                                                                             même bikinis.                                                                           (Coûteux)
+
+                  Tenue pare- Une combinaison de Kevlar® et de maillage plastique intégrés dans la                                                                      100
+                                                                                                                                   11              Aucune
+                  balles légère                        trame du tissu.                                                                                             (Très coûteux)
+
+                                Combinaison cintrée renforcée aux endroits vulnérables par des
+                 Combinaison couches de gel absorbant solidifié par frittage. Contient un rangement                                                                     1 000
+                                                                                                                                   11              Aucune
+                  connectée pour une cyberconsole et des supports pour les câbles d’interface. Pour                                                                (Très onéreux)
+                                           plus d’informations, voyez page 350.
+                        Tenue
+                                                   Une tenue pare-balles plus lourde, constituée de placage plastique                                                   100
+                      pare-balles                                                                                                  12        –2 RÉF, DEX et MOUV
+                                                          solidifié renforcé par un maillage en Kevlar® dense.                                                     (Très coûteux)
+                       moyenne
+
+                 Tenue pare-                       La plus solide des tenues pare-balles combine du Kevlar® densifié                                                    500
+                                                                                                                                   13        –2 RÉF, DEX et MOUV
+                 balles lourde                       avec une alternance de maillages plastiques et textiles tissés.                                                 (Onéreux)
+
+                                                                                                                                                                        500
+                                        Flak        La version remise au goût du jour de la traditionnelle veste flak.             15        –4 RÉF, DEX et MOUV
+                                                                                                                                                                     (Onéreux)
+
+                                                 Le Metalgear® est capable de tout arrêter, mais vous rend plus facile à                                               5 000
+                      Metalgear®                                                                                                   18        –4 RÉF, DEX et MOUV
+                                                      toucher qu’un bantha unijambiste dans une course de pods.                                                      (Luxueux)
+
+
+
+
+                PAR PEDRAM MOHAMMADI
+
+
+
+
+                                                                                                                                                                                    185
+   FUSILLADE DU VENDREDI SOIR
+
+
+                       Q    uand l’armure ne suffit pas
+
+                                                                           Blessures et mort
+                       Subir des dégâts
+                       Impossible d’esquiver à temps. Ou alors cette armure pas chère que votre Fixer vous a dégotée coûtait que dalle pour une
+                       bonne raison. Maintenant, vous avez un gros trou quelque part sur le corps et il n’était pas là ce matin.
+
+
+                                                    Chaque fois que vous subissez des dégâts :
+
+                                           1. Votre attaquant fait le jet de dégâts pour son attaque.
+
+                               2. Soustrayez le PA de votre armure sur cette localisation (si l’attaquant
+                                n’a pas ciblé votre tête en visant, c’est toujours le corps) des dégâts. *
+                              Soustrayez les éventuels points de dégâts restants de vos points de santé.
+
+                                3. Si vous avez subi des dégâts, votre armure sur cette localisation est
+                                perforée, ce qui réduit son PA de 1 point jusqu’à ce qu’elle soit réparée.
+
+                              * Certaines choses qui causent des dégâts, par exemple les poisons ou le feu, ignorent l’armure.
+
+
+
+                       Seuils de blessure
+                       Au fur et à mesure que vous encaissez des dégâts, vous passez des seuils de blessure qui auront un impact sur vos
+                       performances. Lorsque vous atteignez un nouveau seuil de blessure, il remplace les effets du seuil de blessure précédent.
+                              Votre seuil de blessure est déterminé par le nombre de points de santé qu’il vous reste.
+
+                             Type de blessure                       Seuil                                    Effet                         SD de stabilisation
+           Pour des
+    explications sur          Blessure légère            Moins que le maximum de PS                           Aucun                                 SD 10
+les points de santé,
+reportez-vous à la                                         Moins de la moitié des PS
+    Page 79                   Blessure grave                                                         –2 sur toutes les actions                      SD 13
+                                                            (arrondie au supérieur)
+                                                                                                       –4 sur toutes les actions
+                                                                                                     –6 au MOUV (1 minimum)
+                                                                                             Doit faire un jet de sauvegarde contre
+                                                                                             la mort au début de chacun de ses tours.       SD 15 pour rendre 1 PS
+                                                                                          Un personnage ayant subi une blessure mortelle     et le personnage est
+                            Blessure mortelle                    Moins de 1 PS
+                                                                                              subit une blessure critique chaque fois        inconscient (évanoui
+                                                                                            qu'il subit des dégâts à cause d’une attaque      pendant 1 minute).
+                                                                                               de mêlée ou d’une attaque à distance.
+                                                                                           De plus, sa pénalité au jet de sauvegarde
+                                                                                                   contre la mort augmente de 1.
+                                                         Un jet de sauvegarde contre la                                                      Impossible à ramener
+                                    Mort                                                                       Mort
+                                                                    mort raté                                                                      à la vie
+
+
+
+
+  186
+                                                                   FUSILLADE DU VENDREDI SOIR
+
+                Blessures critiques
+
+                                        Chaque fois que vous lancez les dés pour déterminer les dégâts
+                                        d’une attaque de mêlée ou d’une attaque à distance et que vous
+                                           obtenez deux 6 ou plus, vous infligez une blessure critique !
+
+                   Lancez 2d6 dans le tableau des blessures critiques approprié jusqu’à ce que vous obteniez une
+                blessure critique dont la cible ne souffre pas déjà. Si vous n’avez pas visé pour toucher la tête, faites le jet dans
+                le tableau des blessures critiques pour le corps.
+                   Toutes les blessures critiques causent un horrible effet de blessure et infligent 5 points de dégâts
+                bonus directement sur les points de santé de la cible lorsqu’elles sont subies. Les dégâts bonus ne perforent pas l’armure
+                et ne sont pas modifiés par la localisation du coup.
+                   Attention, les blessures critiques et leurs dégâts bonus sont appliqués même lorsque les dégâts de l’attaque n’ont pas
+                traversé le PA de la cible.
+                   Vous trouverez des informations sur les soins d’urgence, les traitements et les méthodes permettant de guérir les blessures
+                critiques en page 223.
+
+                ▶ Blessures critiques pour le corps
+                  Jet                                                                                                                           Soins
+                       Blessure                                              Effet de blessure                                                                       Traitement
+                 (2d6)                                                                                                                        d’urgence
+
+                                             Le bras arraché est perdu. Vous lâchez immédiatement tous les objets que vous teniez dans la
+                    2      Bras arraché                                                                                                             –                 Chirurgie SD 17
+                                           main de ce bras. La pénalité au jet de sauvegarde contre la mort de base augmente de 1.
+                                             La main arrachée est perdue. Vous lâchez immédiatement tous les objets que vous teniez dans
+                    3     Main arrachée                                                                                                             –                 Chirurgie SD 17
+                                             cette main. La pénalité au jet de sauvegarde contre la mort de base augmente de 1.
+                             Poumon                       –2 au MOUV (1 minimum). La pénalité au jet de sauvegarde                              Assistance
+                    4                                                                                                                                                 Chirurgie SD 15
+                             affaissé                             contre la mort de base augmente de 1.                                       médicale SD 15
+                                            À la fin de chaque tour lors duquel vous vous déplacez de plus de 4 m à pied, vous subissez de      Assistance   Assistance médicale SD 15 ou
+                    5     Côtes cassées
+                                                nouveau les dégâts bonus de cette blessure critique directement sur vos points de santé.      médicale SD 13        Chirurgie SD 13
+                                           Vous ne pouvez pas utiliser votre bras cassé. Vous lâchez immédiatement tous les objets que vous     Assistance   Assistance médicale SD 15 ou
+                    6       Bras cassé
+                                                                            teniez dans la main de ce bras.                                   médicale SD 13        Chirurgie SD 13
+                                                                                                                                              Premiers secours     Les soins d’urgence
+                         Plaie avec corps À la fin de chaque tour durant lequel vous vous déplacez de plus de 4 m à pied, vous subissez de
+                    7                                                                                                                           ou Assistance suppriment l’effet de blessure
+                             étranger          nouveau les dégâts bonus de cette blessure critique directement sur vos points de santé.
+                                                                                                                                              médicale SD 13     de manière permanente
+                                                                                                                                                Assistance   Assistance médicale SD 15 ou
+                    8     Jambe cassée                                       –4 au MOUV (1 minimum)
+                                                                                                                                              médicale SD 13        Chirurgie SD 13
+                                                                                                                                              Premiers secours     Les soins d’urgence
+                    9     Muscle déchiré                                     –2 aux attaques de mêlée                                           ou Assistance suppriment l’effet de blessure
+                                                                                                                                              médicale SD 13     de manière permanente
+                            Vertèbre À votre prochain tour, vous ne pouvez pas effectuer d’action, mais vous pouvez effectuer une action Assistance
+                   10                                                                                                                                                 Chirurgie SD 15
+                          endommagée de mouvement. La pénalité au jet de sauvegarde contre la mort de base augmente de 1. médicale SD 15
+                                                                                                                                                Assistance
+                   11     Doigts écrasés                            –4 à toutes les actions impliquant cette main                                                     Chirurgie SD 15
+                                                                                                                                              médicale SD 13
+                                              La jambe arrachée est perdue. –6 au MOUV (1 minimum). Vous ne pouvez pas esquiver les
+                   12    Jambe arrachée                                                                                                             –                 Chirurgie SD 17
+                                              attaques. La pénalité au jet de sauvegarde contre la mort de base augmente de 1.
+
+
+
+
+                                                                                                                                                                               187
+  FUSILLADE DU VENDREDI SOIR
+
+                      ▶ Blessures critiques pour la tête
+          Jet                                                                                                                          Soins
+                        Blessure                                         Effet de blessure                                                                  Traitement
+         (2d6)                                                                                                                       d’urgence
+                                                 L’œil crevé est perdu. –4 aux attaques à distance et aux jets de Perception
+             2            Œil crevé                impliquant la vue. La pénalité au jet de sauvegarde contre la mort                      –                 Chirurgie SD 17
+                                                                         de base augmente de 1.
+                                                        –2 à toutes les actions. La pénalité au jet de sauvegarde
+             3         Lésion cérébrale                                                                                                    –                 Chirurgie SD 17
+                                                                contre la mort de base augmente de 1.
+                                                                                                                                       Assistance
+             4         Œil endommagé              –2 aux attaques à distance et aux jets de Perception impliquant la vue.                                    Chirurgie SD 13
+                                                                                                                                     médicale SD 15
+                                                                                                                                     Premiers secours     Les soins d’urgence
+             5       Commotion cérébrale                                   –2 à toutes les actions                                     ou Assistance suppriment l’effet de blessure
+                                                                                                                                     médicale SD 13     de manière permanente
+                                                                                                                                       Assistance         Assistance médicale ou
+             6         Mâchoire cassée                          –4 à toutes les actions impliquant de parler
+                                                                                                                                     médicale SD 13           Chirurgie SD 13
+                                              À la fin de chaque tour durant lequel vous vous déplacez de plus de 4 m à pied,        Premiers secours     Les soins d’urgence
+                       Plaie avec corps
+             7                                vous subissez de nouveau les dégâts bonus de cette blessure critique directement         ou Assistance suppriment l’effet de blessure
+                           étranger
+                                                                          sur vos points de santé.                                   médicale SD 13     de manière permanente
+                                                                                                                                       Assistance         Assistance médicale ou
+             8          Coup du lapin         La pénalité au jet de sauvegarde contre la mort de base augmente de 1.
+                                                                                                                                     médicale SD 13           Chirurgie SD 13
+                                           Les attaques visant votre tête multiplient les dégâts qui traversent votre PA par 3 et non Assistance          Assistance médicale ou
+             9        Fracture du crâne
+                                           par 2. La pénalité au jet de sauvegarde contre la mort de base augmente de 1. médicale SD 15                       Chirurgie SD 15
+                                             Chaque fois que vous vous déplacez de plus de 4 m à pied lors d’un tour, vous ne
+                                                                                                                                       Assistance
+            10       Oreille endommagée     pouvez pas effectuer d’action de mouvement lors de votre tour suivant. De plus, vous                             Chirurgie SD 13
+                                                                                                                                     médicale SD 13
+                                                    subissez un malus de –2 aux jets de Perception impliquant l’ouïe.
+                                                      Vous ne pouvez pas parler. La pénalité au jet de sauvegarde
+            11         Trachée écrasée                                                                                                     –                 Chirurgie SD 15
+                                                                contre la mort de base augmente de 1.
+                                              L’oreille arrachée est perdue. Chaque fois que vous vous déplacez de plus de 4 m à
+                                             pied lors d’un tour, vous ne pouvez pas effectuer d’action de mouvement lors de votre
+            12         Oreille arrachée                                                                                                    –                 Chirurgie SD 17
+                                            tour suivant. De plus, vous subissez un malus de –4 aux jets de Perception impliquant
+                                           l’ouïe. La pénalité au jet de sauvegarde contre la mort de base augmente de 1.
+
+
+                                                                                 ▶ Blessure mortelle ◀
+                      Un personnage souffrant d’une blessure mortelle subit une blessure critique chaque fois qu’une attaque lui inflige des
+       Pour savoir    dégâts. De plus, sa pénalité au jet de sauvegarde contre la mort augmente de 1.
+   comment guérir,
+reportez-vous à la    Jets de sauvegarde contre la mort
+  Page 222
+                      Au début de chacun de vos tours, lorsque vous souffrez d’une blessure mortelle, vous devez faire un
+                      jet de sauvegarde contre la mort. Lancez un d10. Si le résultat est inférieur à votre COR, vous survivez et vous pouvez
+                      jouer votre tour normalement. Si vous obtenez un 10, vous ratez automatiquement votre jet de sauvegarde
+                      contre la mort. Chaque fois que vous faites un jet de sauvegarde contre la mort, votre pénalité au jet de sauvegarde
+                      contre la mort augmente, ce qui signifie que le résultat de tous vos futurs jets de sauvegarde contre la mort augmente de +1,
+                      il devient donc de plus en plus difficile de repousser la mort. Cette pénalité au jet de sauvegarde contre la mort continue
+                      d’augmenter jusqu’à ce qu’une stabilisation réussie vous rende 1 PS. À ce moment-là, elle redevient la pénalité au jet de
+                      sauvegarde contre la mort de base qui peut être augmentée par les pires blessures critiques.
+
+                                 Si vous ratez ne serait-ce qu’un jet de sauvegarde contre la mort, vous mourez.
+
+  188
+                                                             FUSILLADE DU VENDREDI SOIR
+
+
+
+
+                PAR NEIL BRANQUINHO
+
+
+
+
+                C                     ombat en véhicule
+
+                                        Parce que parfois, ça fait du bien de passer en mode terreur du bitume
+                Il y a beaucoup de véhicules à l’Ère du Rouge. Un grand nombre d’entre eux sont des assemblages fabriqués à partir des
+                pièces détachées des épaves de l’après-guerre, mais il y a aussi pas mal de véhicules chics si vous avez assez d’eurodol-
+                lars. Voici une liste de types de véhicule de base que vous pourriez obtenir dans les rues de Night City à l’époque actuelle.
+
+                Légende des tableaux des véhicules
+                Description : une présentation simple du véhicule, accompagnée de ses caractéristiques spéciales standard.
+                PDS : points de dégâts structurels. Les points de santé d’un véhicule.
+                Vitesse (combat) : le MOUV du véhicule en combat.
+                Vitesse (narrative) : la vitesse maximum du véhicule en km/h. Permet de savoir à quel point il est rapide en dehors
+                  des combats.
+                Prix : le coût du véhicule dans la devise principale de Night City, l’eurodollar. La catégorie de prix de l’objet est indiquée
+                  sous son coût (voir Acheter et vendre, en page 385).
+                                                                                                                                                 189
+  FUSILLADE DU VENDREDI SOIR
+
+                ▶ Véhicules terrestres
+                                                                                               Vitesse     Vitesse
+                   Véhicule               Description                     PDS    Places                                         Prix
+                                                                                              (combat)   (narrative)
+                                       Moto ordinaire alimentée                                                                20 000
+                 Moto de route                                            35        2          MOUV 20     161 km/h
+                                             au CHOOH2.                                                                    (Super luxueux)
+                                   Moto de rue exotique alimentée
+                                                                                                                              100 000
+                  Supermoto       au CHOOH2 capable de pointes de         35        2          MOUV 60     483 km/h
+                                                                                                                           (Super luxueux)
+                                          vitesse extrêmes.
+                    Voiture
+                                     Voiture ordinaire alimentée                                                               30 000
+                   terrestre                                              50        4          MOUV 20     161 km/h
+                                             au CHOOH2.                                                                    (Super luxueux)
+                   compacte
+                    Voiture
+                   terrestre          Voiture de sport alimentée                                                               50 000
+                                                                          50        4          MOUV 40     322 km/h
+                    à haute                   au CHOOH2.                                                                   (Super luxueux)
+                 performance
+                                 Voiture de sport exotique alimentée
+                 Supervoiture                                                                                                 100 000
+                                  au CHOOH2, capable de pointes de        50        2          MOUV 60     483 km/h
+                   terrestre                                                                                               (Super luxueux)
+                                           vitesse extrêmes
+
+
+                ▶ Véhicules maritimes
+                                                                                               Vitesse     Vitesse
+                   Véhicule               Description                     PDS    Places                                         Prix
+                                                                                              (combat)   (narrative)
+
+                                  Embarcation personnelle ordinaire                                                            20 000
+                    Jet ski                                               35        2          MOUV 20     97 km/h
+                                       alimentée au CHOOH2.                                                                (Super luxueux)
+                                                                                                                               30 000
+                  Hors-bord        Hors-bord alimenté au CHOOH2.          50        4          MOUV 20     97 km/h
+                                                                                                                           (Super luxueux)
+                                  Bateau à moteur de luxe alimenté
+                                                                                                                                30 000
+                                    au CHOOH2 avec suffisamment
+                  Bateau de                                                                                                (Super luxueux)
+                                     de place pour loger quelques         60    2 par pièce    MOUV 10     24 km/h
+                  plaisance                                                                                             par pièce sous le pont
+                                 privilégiés. Les bateaux de plaisance
+                                                                                                                            (2 pièces min.)
+                                     ont des pièces personnalisées.
+                                     Bateau de plaisance de luxe
+                                                                                                                                50 000
+                                 alimenté au CHOOH2 avec largement
+                                                                                                                       (Super luxueux) par pièce
+                     Yacht       assez de place pour loger et divertir    100   4 par pièce    MOUV 10     24 km/h
+                                                                                                                          sous ou sur le pont
+                                 un hôte et ses distingués invités. Les
+                                                                                                                            (4 pièces min.)
+                                 yachts ont des pièces personnalisées.
+
+
+
+                                    Oublie tout ce que tu connais. Rien de
+                                  tout ça n ’a d ’importance . Q uand tu te fonds
+                                         dans le noir absolu du ciel nocturne
+                                          pour la première fois , ta vie change .
+                                                                                – Siobhan, pilote aérocasse-cou
+
+
+
+ 190
+                                                                FUSILLADE DU VENDREDI SOIR
+
+                ▶ Véhicules aériens
+                                                                                                            Vitesse   Vitesse
+                     Véhicule                       Description                         PDS      Places                                         Prix
+                                                                                                           (combat) (narrative)
+
+                                        Un minuscule giravion alimenté au CHOOH2                                                                20 000
+                  Gyrocoptère                                                           35           2       MOUV 20        161 km/h
+                                       généralement piloté par les passionnés de vol.                                                       (Super luxueux)
+                                       Un hélicoptère standard alimenté au CHOOH2                                                               40 000
+                   Hélicoptère                                                          60           4       MOUV 40        322 km/h
+                                             pouvant effectuer de longs vols.                                                               (Super luxueux)
+                    Aérodyne          Un véhicule volant muni d’un moteur à poussée
+                                                                                                                                                50 000
+                    polyvalent            verticale de haute technologie alimenté       100          6       MOUV 40        322 km/h
+                                                                                                                                            (Super luxueux)
+                       AV-4                             au CHOOH2.
+                                       Un véhicule exotique volant muni d’un moteur
+                     Super-                                                                                                                    100 000
+                                         à poussée verticale alimenté au CHOOH2,        60           2       MOUV 60        483 km/h
+                 aérodyne AV-9                                                                                                              (Super luxueux)
+                                          capable de pointes de vitesse extrêmes.
+                                                                                                                                                30 000
+                                        Un dirigeable de fret moderne dont la taille
+                                                                                                   2 par                                  (Super luxueux) par
+                     Aérozep             varie énormément selon sa fonction. Les        100                  MOUV 20        161 km/h
+                                                                                                   pièce                                   pièce sous le pont
+                                          aérozeps ont des pièces personnalisées.
+                                                                                                                                            (2 pièces min.)
+
+
+                                               Mais évidemment, vous vous en foutez, pas vrai ?
+                                             Vous voulez juste savoir comment faire exploser tout ça.
+
+                Points de dégâts structurels
+
+                Tous les véhicules possèdent des points de dégâts                             Viser les points faibles d’un véhicule
+                structurels (PDS). Tant qu’un véhicule a au moins 1 PDS,
+                il peut encore se déplacer. Quand il ne lui reste plus de                     Tous les véhicules ont des points faibles, des
+                PDS, le véhicule est considéré comme Détruit, n’est plus                      zones qui peuvent être visées en utilisant l’action
+                considéré comme un couvert et ne peut plus se déplacer                        viser. En utilisant votre action, vous pouvez viser le point
+                avant d’être réparé avec la compétence de Technique                           faible d’un véhicule pour un seul tir ou une seule attaque
+                appropriée (Aérotech, Maritech ou Terratech).                                 de mêlée, ce qui prend toute votre action et vous inflige un
+                                                                                              malus de –8 sur votre jet. Si vous réussissez, vous multipliez
+                   Contrairement aux humains, les véhicules ne                                par 2 les dégâts qui traversent le PA du véhicule. C’est
+                peuvent pas esquiver les attaques, mais quand                                 comme ça que vous pouvez viser les pneus, le moteur, le
+                un humain se trouve dans un véhicule, il peut                                 réservoir de carburant, etc.
+                toujours esquiver tout ce qu’il pourrait norma-
+                lement esquiver à pied si l’attaque le cible lui et                              Vous n’avez aucune raison de ne pas viser un point
+                non le véhicule. Tirer sur un véhicule avec une arme à                        faible lors d’une attaque de mêlée contre un véhicule
+                distance nécessite toujours de toucher en utilisant le tableau                stationnaire, car les véhicules ne peuvent pas esquiver et
+                de portée.                                                                    vous touchez automatiquement, mais si le véhicule est
+                                                                                              en mouvement, vous devez dépasser un SD 13
+                  Quand un personnage se trouve dans un véhi-                                 pour toucher son point faible et la pénalité de
+                cule, il peut toujours être pris pour cible par une                           –8 s’applique.
+                attaque au travers du verre, qui ne possède pas
+                de PS et ne fournit pas de couvert. Le verre pare-                            Démarrer votre véhicule
+                balles est une amélioration de Nomade (voir leur capacité
+                                                                                              Monter dans un véhicule est une action, mais en descendre
+                de rôle en page 163).
+                                                                                              n’en est pas une, c’est simplement du mouvement. Démarrer
+                                                                                              un véhicule ou l’arrêter est une action. Si vous possédez des
+                                                                                              ports d’interface neurale, une partie de cette action peut
+                                                                                              consister à les connecter ou à les déconnecter. Si vous
+
+
+
+                                                                                                                                                                191
+  FUSILLADE DU VENDREDI SOIR
+
+                utilisez des ports d’interface pour conduire un                accaparent toute votre attention, du point de vue des méca-
+                véhicule, vous pouvez le conduire sans utiliser                niques de jeu, vous devez donc y consacrer à la fois votre
+                vos mains ! Sans ports d’interface neurale, vous devez         action et votre action de mouvement. Si vous ne parvenez
+                utiliser l’une de vos mains pour conduire et vous ne pouvez    pas à dépasser le SD du jet avec RÉF + compétence de
+                pas l’utiliser pour faire quoi que ce soit d’autre pendant     Contrôle appropriée + 1d10, vous perdez immédiate-
+                que vous conduisez. Si vous retirez cette main du volant,      ment le contrôle du véhicule. Si vous ne pouvez pas
+                au début de votre prochain tour, vous perdez automatique-      perdre le contrôle du véhicule en ratant ce que vous tentez de
+                ment le contrôle du véhicule (cf. ci-contre).                  faire, c’est que cela ne devrait pas nécessiter de manœuvre.
+                  Donc, vous ne pouvez pas monter dans un véhicule puis              Situation nécessitant une manœuvre :
+                partir pied au plancher lors du même tour de 3 secondes,
+                ce qui est logique.                                              Manœuvre                                              SD
+                                                                                 Embardée                                              13
+                     Quand quelqu’un démarre un                                  Virage brutal                                         13
+                   véhicule, trois choses se produisent :                        Arrêt d’urgence                                       13
+                    1. Le conducteur est immédiatement                           Virage à cent-quatre-vingts degrés                    17
+                  placé en premier dans la file d’Initiative.                    Saut                                                  17
+
+                     2. En pratique, le MOUV du véhicule                         Atterrissage (véhicule aérien)                        13
+                     devient le MOUV du conducteur. Les                          Manœuvre acrobatique (véhicule aérien) 17
+                     pénalités que le conducteur subissait
+                       sur son MOUV n’ont aucun effet                          Perdre le contrôle du véhicule
+                         sur le mouvement du véhicule.                         Si vous perdez le contrôle d’un véhicule, le MJ détermine la
+                                                                               totalité de votre mouvement pour le tour durant lequel cela
+                    3. Le conducteur ne peut plus utiliser                     se produit. Si votre véhicule entre en collision avec quelque
+                      l’action courir (après tout, s’il est                    chose, il est considéré comme l’ayant chargé.
+                   monté dans le véhicule, c’est justement
+                                                                               Charger
+                         pour ne pas avoir à le faire).
+                                                                               Quand vous faites rentrer votre véhicule dans quelque
+                                                                               chose, que ce soit un piéton, un couvert ou un autre
+                Conduite de base                                               véhicule, votre véhicule et le piéton, le couvert ou l’autre
+                La conduite de base ne nécessite pas de jet de compé-          véhicule subissent tous les deux 6d6 points de dégâts et
+                tence si la somme de vos RÉF + compétence de Contrôle          tous les participants impliqués dans la collision (piétons ou
+                appropriée est supérieure à 9. Si ce n’est pas le cas, pour    personnes dans un véhicule impliqué) subissent la blessure
+                effectuer de la conduite de base, vous devez utiliser votre    critique coup du lapin.
+                action chaque tour pour tenter un jet de RÉF + compétence         Si les PS d’un couvert ou d’un autre véhicule que vous
+                de Contrôle appropriée + 1d10 SD 10 afin de garder le          chargez tombent à 0 à cause de ces dégâts, vous pouvez
+                contrôle du véhicule. Si le jet échoue, vous perdez le         poursuivre votre mouvement. Sinon, le mouvement de votre
+                contrôle du véhicule. Voilà pourquoi il ne faut pas            véhicule doit s’arrêter. Vous pouvez toujours conti-
+                laisser vos gamins conduire la voiture…                        nuer votre mouvement après avoir chargé un
+                   Si la somme de vos RÉF + compétence de Contrôle             piéton, mais si le piéton a plus de 0 PS après l’impact,
+                appropriée est supérieure à 9, vous n’avez pas besoin d’uti-   il peut choisir de se retrouver accroché au-dessus de votre
+                liser votre action pour effectuer de la conduite de base, et   véhicule s’il le désire.
+                la conduite de base suit les mêmes règles qu’une action de        ▶ Esquiver un véhicule qui charge ◀
+                mouvement en dehors d’un véhicule, sauf que votre MOUV
+                est bien plus élevé quand vous conduisez.                      Esquiver un véhicule qui charge à pied (pour éviter les 6d6
+                                                                               points de dégâts relativement gênants) nécessite un jet de
+                Effectuer des manœuvres en véhicule                            DEX + Esquive + 1d10 dont le SD est de 13 seulement.
+                Le MJ détermine les cas où la conduite non basique que vous      S’il réussit son esquive, le personnage peut choisir de
+                voulez effectuer nécessite une manœuvre. Les manœuvres         se retrouver accroché au-dessus du véhicule s’il le désire.
+
+
+ 192
+                                                                   FUSILLADE DU VENDREDI SOIR
+
+                R    éputation                                                             ils se rencontrent pour la première fois, les personnages
+                                                                                           lancent 1d10. Un personnage obtenant un score inférieur
+                                                                                           au niveau de réputation de la personne rencontrée a déjà
+                          Un autre genre de combat                                         entendu parler d’elle. Parfois, ce sera en termes élogieux.
+                                                                                           D’autres fois, ce sera en mal, en particulier si vous vous êtes
+                Dans la Rue, les balles et les coups de poing ne règlent                   attiré les foudres de nombreux ennemis en vous taillant une
+                pas tout. Dans un monde où un affrontement est suscep-                     réputation de cruauté.
+                tible de vous faire manger les pissenlits par la racine en
+                l’espace d’une nanoseconde explosive, d’autres méthodes
+                ont émergé pour décider du vainqueur d’un conflit. Parmi
+                elles, la réputation joue un rôle déterminant.
+                  La réputation est une mesure des spécialités de votre
+                personnage qui lui ont valu une certaine notoriété, en bien
+                ou en mal. Ce sont toujours les actions d’un personnage qui
+                forgent sa réputation, ensuite scellée par le MJ. Quand
+                votre MJ estime que votre personnage a accom-
+                pli quelque chose qui mérite qu’il acquière une
+                réputation, il peut lui attribuer l’un des niveaux
+                de réputation du tableau ci-dessous. Ce niveau
+                représente la réputation de votre personnage. Les gens
+                peuvent aussi avoir entendu parler des autres actes moins
+                impressionnants de votre personnage, mais la réputation
+                d’un nouvel acte ne remplace l’ancienne que si son niveau
+                est plus élevé.
+                  Dans Cyberpunk RED, la plupart des person-
+                      nages commencent avec 0 en réputation.
+
+                ▶ Réputation
+
+                                                                                           PAR EVE VENTRUE
+                 Niveau                    Qui vous connaît ?
+                     1                   Ceux qui ont assisté à vos actions.
+                     2           Votre entourage immédiat a entendu des histoires.
+                     3          Vos collèges et vos connaissances savent des choses.
+                     4                 La légende a fait le tour du quartier.
+                               Des personnes qui vivent hors des quartiers que vous
+                     5
+                                       fréquentez reconnaissent votre nom.
+                               Des personnes qui vivent hors des quartiers que vous
+                     6
+                                      fréquentez reconnaissent votre visage.
+                     7          On a écrit un ou deux articles narrant vos exploits.
+                     8            Vos prouesses font régulièrement les gros titres.
+                             Les chaînes télévisées et les screamsheets ne ratent jamais
+                     9
+                                           une occasion de parler de vous.
+                    10                 Vous êtes connu dans le monde entier.
+
+
+                   Chaque fois que votre personnage fait de nouvelles
+                rencontres dans des situations inédites, sa réputation peut
+                influencer les réactions des autres intervenants. Quand
+
+
+
+                                                                                                                                                             193
+  FUSILLADE DU VENDREDI SOIR
+
+                                        La réputation peut aussi devenir un handicap. Dès que vous sombrez dans la médiocrité (vous
+                                      faites preuve de lâcheté, désertez lors d’un combat, trahissez un allié, etc.), le MJ peut vous
+
+            Exemple de
+                                      attribuer un niveau de réputation pour ces actions. La réputation reçue à cause d’une action ou
+                                      d’un événement négatif peut remplacer la réputation d’une action ou d’un événement positifs.
+        baston de regard              Dans ce cas, les gens ont davantage de chances d’avoir entendu parler de vos mauvaises actions
+                                      que de vos actions d’éclat (là encore, lancez 1d10), mais vous aurez du mal à les impressionner.
+      Rico Rico remarque un           Une réputation de faiblesse jouera même contre vous.
+      punk en train de taguer
+      le mur de son immeuble,         Baston de regard
+      il lui demande donc de
+      dégager en pointant son fusil   La réputation dans Cyberpunk RED entraîne un autre genre de conflit : la baston de regard.
+      d’assaut par la fenêtre et en   Dans cet univers, bon nombre de combats se résument par un duel d’ego, pour savoir qui est le
+      menaçant de l’utiliser. Les     plus puissant, le plus sadique, et qui est prêt à tout pour le prouver. Ce comportement se conclut
+      deux personnages entament       souvent par une baston de regard, un moment où deux poids lourds de la Rue se préparent avant
+      une baston de regard.
+                                      de se jeter dans la mêlée ou tentent de faire battre en retraite leur adversaire. Le MJ demande
+          Chaque joueur fait un jet
+      de PRES + réputation + 1d10.    une baston de regard quand il estime que la scène le nécessite. Lors d’une baston de regard,
+      Rico Rico l’emporte grâce       les deux adversaires font le jet suivant :
+      à sa PRES et à sa réputation
+      de 4 (il est connu dans le
+      quartier grâce à son concert
+      dément de la semaine
+                                                                 PRES + réputation* + 1d10
+      précédente). Le punk décide                        * Une réputation de lâcheté donne un nombre négatif.
+      de se dégonfler plutôt que
+      d’essayer de se battre alors
+      qu’il tremble de peur.
+                                        En cas d’égalité, aucun camp ne prend l’avantage, rien ne se passe. Sinon, le perdant a le
+                                      choix entre :
+
+
+                                                                              Se dégonfler
+                                                                                     ou
+                                           Subir un malus de –2 sur toutes les actions effectuées contre cet
+                                             adversaire terrifiant, jusqu’à ce qu’il parvienne à le vaincre.
+
+
+
+
+                                                                      Je suis qu ’un vieux
+                                                                      para en colère /
+                                                              Et je vise la tête direct/
+                                                              Pas de raison de blablater
+                                                              Si t ’es pas un mec correct.
+                                                                                                           — XerzeX
+                                                                                                            « Ho hisse »
+
+
+
+
+ 194
+

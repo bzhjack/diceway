@@ -10,7 +10,7 @@ export function rescueDifficulty(vitalite: number): ActionDifficulty {
   return ACTION_DIFFICULTIES[Math.min(ACTION_DIFFICULTIES.length - 1, base + Math.max(0, -vitalite))];
 }
 
-/** La carrière de soins du personnage — médecin, qui couvre le guérisseur et le rebouteux (doc/resources/carrieres.md) —, ou `null` s'il n'en a pas. */
+/** La carrière de soins du personnage — médecin, qui couvre le guérisseur et le rebouteux (doc/bol/resources/carrieres.md) —, ou `null` s'il n'en a pas. */
 export function bestHealingCareer(carrieres: readonly ActionRollCarriere[]): ActionRollCarriere | null {
   return carrieres.find((carriere) => carriere.id === CARRIERE_MEDECIN_ID) ?? null;
 }

@@ -1,6 +1,6 @@
 # Chroniques Lémuriennes 1.2 — Markdown de préparation
 
-Texte extrait de `doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf` (136 pages, Ludospherik, 2017) avec :
+Texte extrait de `doc/bol/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf` (136 pages, Ludospherik, 2017) avec :
 
 ```bash
 pdftotext -layout -f <première page PDF> -l <dernière page PDF> "Pdf BoL Chroniques-Lémuriennes 1.2.pdf" -

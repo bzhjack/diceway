@@ -3,7 +3,7 @@
 Recensement des exemples chiffrés du livre (Barbarians of Lemuria : Mythic, VF 1.3), pour vérifier que l'application calcule comme le livre.
 Chaque exemple donne sa source, ses entrées, le calcul détaillé et le résultat attendu.
 
-- Source : `doc/pdf-text/` (page livre = page PDF − 2 ; la page indiquée est la page livre où commence l'exemple, à ±1 selon la mise en page en colonnes).
+- Source : `doc/bol/pdf-text/` (page livre = page PDF − 2 ; la page indiquée est la page livre où commence l'exemple, à ±1 selon la mise en page en colonnes).
 - Dés : les faces citées par le livre sont reprises telles quelles. Pour tester l'application, on saisit ces totaux « à table ».
 - Seuil de réussite d'un jet d'action, d'attaque ou de réaction : **9**.
 - Les exemples sont numérotés pour s'y référer (`A1`, `R1`…). Le champ **Dans l'app** dit où l'écran concerné se trouve.

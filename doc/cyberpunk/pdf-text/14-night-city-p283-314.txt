@@ -1,0 +1,1782 @@
+           PAR HÉLIO FRAZÃO
+
+
+
+
+                              Bienvenue à Night City
+                                                                  La ville des rêves
+                « Je suis chez moi à Night City. C’est peut-être le pire trou à rats de ce côté-ci de
+                la Sierra Nevada, mais y a une étincelle, un truc qu’on ne trouve pas ailleurs.
+                Et les habitants ? Ô, mes aïeux, c’est quelque chose ! Quoi ? Je ne sais pas, mais
+                quelque chose… C’est comme vivre au milieu d’un ouragan. Tu te laisses porter
+                et tu vois où le vent t’amène. En espérant pas te faire réduire en charpie pendant
+                le trajet. »
+                                                                                           Pouce Vert
+                                                                                             283
+  BIENVENUE À NIGHT CITY
+
+
+                U    n peu d’histoire
+
+                Aujourd’hui, Night City panse ses plaies après plusieurs
+                                                                                          L a vision d’un homme
+                                                                                          Né à Pasadena en Californie, Richard Night était le
+                                                                                          deuxième d’une famille de cinq enfants. Ses parents,
+                décennies houleuses. Mais il ne faut jamais oublier que                   chercheurs à Caltech, s’étaient spécialisés dans la science
+                comme le reste de l’Amérique, la ville abrite une société                 des matériaux. Night manifesta très jeune des aptitudes
+                armée sous une façade de pauvreté, de violence et d’iné-                  d’ingénieur, mais lorsque l’accord concernant l’entreprise
+                galité scandaleuses. Il n’est pas rare de voir davantage                  qu’il avait montée avec son colocataire de l’université (le
+                d’armes à feu que de mallettes dans ses rues animées et si                célèbre magnat des affaires Romney Zukarian) tourna au
+                le pire du chaos est passé, le danger demeure : la société                vinaigre, Night, furieux, changea d’orientation et passa de
+                s’est déjà effondrée une fois et peut toujours s’écrouler à               l’ingénierie aux investissements financiers. Désormais bien
+                nouveau. L’histoire se répète, il y a toujours un gang qui                au fait du monde des affaires, Night reprit la compagnie
+                rôde attendant l’occasion de monter au sommet quoi qu’il                  à son ancien rival.
+                en coûte. Telle est l’amère leçon qu’apprit l’Amérique à la                  Associant ses connaissances en ingénierie et en finance,
+                fin du XXe siècle.                                                        Night fonda bientôt Halsey, Ferris et Night, compagnie de
+                   Après l’Effondrement, nombre de mégacorporations                       développement spécialisée dans l’utilisation de techniques
+                cherchèrent à s’installer dans leurs propres zones urbaines :             de construction avancées pour les mégaprojets comme les
+                des villes contrôlées d’où le crime, la pauvreté et l’endet-              complexes de bureau, les aéroports et même les petites
+                tement auraient été absents. Les corporations auraient                    villes. HFN connut un succès phénoménal durant les
+                dirigé les municipalités pour obtenir un zonage optimal                   années qui précédaient l’Effondrement et fut à l’origine
+                et empêcher des éléments anti-business d’interférer avec                  de nombre de communautés modèles de par le monde.
+                leur développement. Mais l’alliance parfaite entre sens
+                des affaires et compétence d’urbaniste restait un lointain                Night et le spectre de l’Effondrement
+                espoir… jusqu’à ce que Richard Night entre en scène.                      Préoccupé par la violence et le chaos que susciterait
+                                                                                          l’Effondrement imminent, Night décida qu’il se trouvait
+                                                                                          dans une situation idéale pour régler ce problème. Il créa
+                                                                                          une compagnie annexe (Night Industries) pour protéger
+                                                                                          ses partenaires et entama la planification d’une nouvelle
+                                                                                          ville, un environnement contrôlé et protégé des ravages
+                                                                                          qui déchiraient le monde. Parfaitement calculée, auto-
+                                                                                          nome, elle pourrait repousser jusqu’aux plus déterminés
+                                                                                          des maraudeurs. On y trouverait des quartiers bien définis
+                                                                                          pour préserver la personnalité de diverses nationalités
+                                                                                          et cultures, ainsi qu’un Centre Corporatiste ultramoderne
+                                                                                          qui deviendrait le flambeau étincelant du capitalisme
+                                                                                          éclairé. Un projet ambitieux, vaste et visionnaire dans son
+                                                                                          approche.
+
+
+
+
+                                                                        PAR MAREK MADEJ
+                                                                                             Ne restait plus qu’un problème à régler : où le réali-
+                                                                                          ser ? Night allait avoir besoin d’énormément d’espace
+                                                                                          pour développer sa ville, ainsi que d’accès à des ports
+                                                                                          donnant sur l’océan et à des autoroutes modernes pour
+                                                                                          livrer l’immense quantité de matériaux nécessaires à la
+                                                                                          construction. Il envoya des prospecteurs passer au peigne
+                                                                                          fin les côtes est et ouest des États-Unis en pleine tourmente,
+                                                                                          mais au bout du compte, ce fut un modeste article du San
+                                                                                          Francisco Chronicle qui attira son attention : il décrivait un
+                                                                                          incident effroyable survenu dans une petite ville de la côte
+                                                                                          californienne.
+
+
+
+
+ 284
+                                                                                   BIENVENUE À NIGHT CITY
+
+                Le massacre de Morro Bay
+                Pendant les dernières décennies du XXe siècle, Morro Bay
+                et San Luis Obispo avaient dû supporter les Hell’s Angels
+                et d’autres gangs de motards et gogangs (des gangs
+                cybernétiquement améliorés), essentiellement parce que les
+                forces de l’ordre étaient en sous-effectif à la bordure de la
+                côte californienne et parce que deux autoroutes principales
+                y passaient (l’Autoroute 1 et l’U.S. 101). Pendant l’Effondre-
+
+
+
+
+                                                                                    ZONE DE MORRO BAY VERS 1990
+                ment, les forces de l’ordre et les gangs de boosters héritiers
+                des Hell’s Angels entamèrent une guerre de territoire qui
+                déborda sur Morro Bay. Les boosters s’emparèrent de la
+                ville durant cinq jours de carnage : nombre des 10 000
+                habitants furent tués, estropiés, ou durent s’enfuir de la ville
+                minuscule (où ne vivaient qu’environ 4 000 familles). La
+                région tout entière se transforma en ville fantôme : personne
+                ne voulait revenir sur le site du tristement célèbre Massacre
+                de Morro Bay.
+
+                Le partenariat de Coronado City
+                Ce funeste événement permit à l’anticonformiste Richard
+                Night d’acquérir les restes de Morro Bay pour un centième
+                de leur prix. Il reçut le concours de Petrochem qui s’était
+                emparé de la centrale Dynergy désormais à l’abandon et
+                projetait déjà d’installer un port côtier et un terminal pétro-
+                lier sur place. Subventionnés par Merrill, Asukaga et Finch
+                (qui voulaient faire de la nouvelle ville une plaque tour-
+                nante financière), Night et Petrochem engagèrent Arasaka
+                pour se débarrasser des gangs de boosters et ramener la
+                « sécurité ». La promesse de contrats de construction lucra-
+                tifs et de sources possibles de revenus extralégaux attira
+                d’autres investisseurs (plutôt louches). Pour faire oublier le
+                Massacre de Morro Bay, le partenariat rebaptisa la région
+                « Del Coronado Bay » pour y installer la nouvelle ville de
+                Coronado. Bientôt, les habitants finirent par la surnommer
+
+
+
+
+                                                                                    TRANSITION FROM 1990 TO 2020
+                la ville de Night, « Night’s City » en raison de la person-
+                nalité fracassante de son fondateur.
+
+                L a reconstruction de Morro Bay
+                La géologie d’origine de la baie ne suffisait pas pour
+                accueillir Coronado City : Night fit raser les collines envi-
+                ronnantes et s’en servit pour combler des zones immergées
+                (tout comme l’avait fait San Francisco des années plus tôt,
+                lors de l’Exposition Universelle de 1939). Il remodela la
+                baie pour élargir à environ 16 km la mince flèche littorale
+                qui pointait vers l’ouest. Il fit également draguer le port,
+                afin qu’il puisse accueillir les grands navires nécessaires à
+                la construction. Les déblais servirent eux aussi à combler
+                des zones à l’ouest.
+
+
+
+
+                                                                                                                   285
+  BIENVENUE À NIGHT CITY
+
+                Une ville divisée en quartiers                                    L a chute de Night City
+                  Coronado City reflétait bel et bien la vision éclectique        Les malfrats de la côte ouest (mafia, yakuzas, etc.) main-
+                de son créateur. Au lieu d’en faire une vaste construction        tenaient leur emprise sur le secteur du bâtiment de la
+                de verre et d’acier, Night divisa la ville en quartiers qui se    « côte gauche » depuis des décennies. Ils contrôlaient les
+                distinguaient par leur style architectural et leur thème, un      syndicats de la construction et des transports, ainsi que
+                peu comme les « lands » d’origine du premier Disneyland           la plupart des branches du gouvernement chargées des
+                (Frontierland, Tomorrowland, Adventureland, New                   permis, de l’impact environnemental et d’autres impératifs
+                Orleans Square et Fantasyland).                                   liés aux bâtiments. En investissant une somme considérable
+                   Un quartier façon côte est (Upper Eastside et Little           dans le Partenariat (par l’intermédiaire de sociétés-écrans),
+                Italy) comprenait des éléments de Boston, de New York et          les divers parrains espéraient non seulement bénéficier
+                de Philadelphie, tandis que Studio City et Charter Hill           d’un phénoménal retour sur investissement, mais également
+                reflétaient le style de l’ouest qu’on trouve à Seattle et San     prendre l’ascendant dans le secteur des jeux de hasard, de
+                Francisco. Lake Park, Westhill Gardens et le quartier             la prostitution et de la drogue dans cette ville.
+                de l’Université étaient conçus à l’origine comme des zones           Malheureusement, le plan visionnaire de Night néces-
+                de logement confortables où les maisons en grès rouge façon       sitait d’utiliser ses propres techniques de construction et
+                XIXe et les demeures pseudovictoriennes cossues voisinaient       matériaux avancés, ce qui écartait nombre de syndicats
+                avec toutes sortes de petites boutiques, de restaurants et        et de firmes du bâtiment contrôlées par ses partenaires
+                de business à portée de marche. New Harbor et l’East              issus du crime organisé. Cet aspect ne leur plaisait guère,
+                Marina devaient accueillir un centre commercial d’enver-          d’autant que Night refusait avec insistance l’incursion du
+                gure mondiale, équivalent à la Galleria de San Francisco,         crime dans une ville qu’il voulait sûre. Pendant les quatre
+                avec une zone de marina ouverte pour les yachts, les              premières années de construction, il reçut chaque jour des
+                bateaux de plaisance et autres activités de loisirs nautiques     menaces de mort.
+                (le principal port industriel devant s’installer au nord de la      Fier et autonome, il les ignora. Lorsque le sabotage et
+                ville, à North Oak). Même les quartiers asiatiques (Little        les tentatives d’intimidation les remplacèrent, il fit appel
+                China et Japantown, mais aussi toutes sortes de petits            à ses alliés des corporations, qui jugulèrent les menaces
+                sites d’influence sud-est asiatique dans la zone d’Eastpark       sans pitié, mais de façon limitée. La chance de Night finit
+                adjacente à Japantown) présentaient des différences mar-          par tourner. Le 20 septembre 1998, il fut abattu par balle
+                quées, reflétant le style culturel spécifique de chaque région.   dans son penthouse au dernier étage de la toute nouvelle
+                Night prêtait hommage à la défunte et regrettée petite ville de   Parkview Tower. On n’arrêta jamais son assassin. En
+                Morro Bay en recréant une grande partie de l’organisation         mémoire de Night, le conseil municipal récemment nommé
+                de la zone dans un quartier de plein air aux allures de village   rebaptisa officiellement la ville « Night City ».
+                de bord de mer pittoresque, Old Downtown.
+                   Le centre-ville de City Center et le Corporate                 Le règne de la pègre
+                Center regroupaient évidemment des tours de bureaux               Quatre ans après la première vague de construction, de
+                et des parcs destinés aux cadres et aux employés. C’est           puissants barons de la pègre avaient fait assassiner Night
+                ici que Night fit l’éclatante démonstration de ses talents        et s’étaient emparés du projet Coronado City.
+                d’ar­ch­itecte en concevant nombre de « gratte-firmament »,
+                                                                                     En 2005, ils avaient la mainmise sur la ville. Les cor-
+                les signes les plus visibles de la fortune croissante de
+                                                                                  porations avaient installé leurs bastions dans la « petite
+                Coronado City. La vision de Night était bel et bien exhaus-
+                                                                                  couronne corporatiste » et la luxueuse Corporate Plaza.
+                tive et avant-gardiste. Il n’en perçut les problèmes que
+                                                                                  Diriger la ville ne les intéressait pas ou peu, et les membres
+                lorsqu’il commença à la réaliser.
+                                                                                  du conseil municipal étaient incapables de gérer la situa-
+                Quand la pègre emménage                                           tion sans qu’elles ne tirent les ficelles et ne leur fournissent
+                                                                                  des hommes de main.
+                Bien que principaux financeurs du Partenariat de
+                Coronado, Petrochem et MA&F présentaient un handi-                   Le « crime organisé » sait organiser des crimes, mais se
+                cap : ce n’étaient pas des compagnies de bâtiment. Pour           débrouille beaucoup moins bien quand il s’agit de gérer
+                un chantier comme celui de Coronado City, il leur fallait un      une ville. Au bout d’un an, les parrains avaient remplacé
+                associé capable de mobiliser machines et main-d’œuvre             l’essentiel du personnel municipal par des marionnettes
+                pour creuser les fondations et dresser l’acier.                   de leur choix, au point que même Petrochem et MA&F
+                                                                                  se retrouvèrent poussés vers la sortie dans la course aux
+                  Et ce fut la pègre.                                             eurobiftons illégaux.
+
+
+ 286
+                                                                              BIENVENUE À NIGHT CITY
+
+                   À force de vendre des contrats à leurs petits copains,      des Véhicules Aérodyne de combat et déclenchèrent une
+                d’organiser marché de la drogue et extorsion, et d’inviter     vague d’attentats à la bombe, d’assassinats et de batailles
+                le fond du caniveau de l’Effondrement dans la région,          rangées contre les troupes mal préparées des syndicats
+                les barons de la pègre réussirent à transformer une ville      du crime.
+                relativement propre et moderne en véritable champ de              Quand la fumée se dissipa, les corporations avaient             Le terme de
+                bataille. Le crime, la drogue, la prostitution, la violence                                                                       « pègre » est
+                                                                               entièrement détruit les bases de la pègre à Night City. Dès        utilisé de façon
+                gratuite et le terrorisme cybernétique devinrent bientôt       lors, dès qu’un parrain cherchait des noises aux corpos, il        générique
+                monnaie courante. En 2009, le nom de Night City avait          s’assurait de respecter les sacrosaintes règles des Affaires.
+                                                                                                                                                  ici. Diverses
+                                                                                                                                                  organisations
+                acquis des connotations funestes.                              À la fin de la Guerre de la Pègre, les corporations instal-        criminelles
+                   Night City connut un « âge des ténèbres » : en quatre       lèrent un maire dont elles tiraient les ficelles à la tête de la   sévissent à Night
+                                                                                                                                                  City, parmi
+                ans, on y perpétra davantage de meurtres que dans              ville, et commencèrent à la nettoyer. Le conseil municipal         lesquelles la
+                la plupart des villes en une décennie. La pègre régnait        fraîchement élu, confronté au retour du chaos à Night              mafia, la triade,
+                                                                                                                                                  les yakuzas et la
+                sur la ville d’une poigne de fer, détruisant tous ceux qui     City, nomma les soldats des forces de sécurité des corpos           bratva.
+                lui barraient la route. L’activité des gangs atteignit son     comme adjoints et leur octroya toute autorité dans les
+                paroxysme pendant la période, où des gangs tristement          limites de la ville. Le Corporate Center et le City Center
+                célèbres comme les Blood Razors et les Équarrisseurs firent    retrouvèrent leur propreté immaculée. Les autres quartiers,
+                leurs débuts.                                                  également nettoyés (avec un taux de réussite variable)
+                  Night City devint un véritable enfer sur terre, une zone     redevinrent vivables. Plus ou moins.
+                de guerre où on risquait aussi bien de voir sa voiture            La politique draconienne des corpos contribua au
+                exploser que de se faire voler l’autoradio. Les affaires de    développement d’un problème désormais chronique de
+                meurtres non résolus archivées par la police se comptaient     sans-abris : on expulsa de force ceux qui n’avaient pas de
+                par milliers.                                                  quoi payer les rénovations de l’endroit où ils vivaient. Des
+                                                                               centaines d’habitants se retrouvèrent à la rue quand on
+                Les mégacorpos prennent la main                                améliora des logements naguère abordables qui accueil-
+                Après quatre ans de guerre de rue, en 2009, les corpora-       lirent les soldats nécessaires au maintien de l’ordre. Par
+                tions décidèrent qu’elles en avaient assez. Jusqu’en 2011,     la suite, la situation s’adoucit : on avait besoin de moins
+                pendant le conflit qu’on qualifie aujourd’hui de Guerre        d’agents de sécurité dans les rues.
+                de la Pègre, les corporations luttèrent pour prendre              En 2013, les pires excès de la ville avaient été écrasés
+                le contrôle de la pègre de Night City. Il faut toutefois       sous l’impitoyable talon des mégacorpos. On avait res-
+                comprendre qu’elles ne se préoccupaient pas de facteurs        tauré les services essentiels comme la police, les pompiers
+                aussi triviaux que le bien de la population ou la décence      et diverses fonctions municipales, et même si les maîtres
+                élémentaire. Tout était affaire de business. Comme une         corporatistes de Night City opprimaient la population, ou
+                rivale, la pègre visait ses propres objectifs, lesquels ne     du moins le punk moyen dans la Rue, cela valait toujours
+                coïncidaient pas avec les leurs. Si les parrains refusaient    mieux que d’esquiver les balles pour se rendre au Vendit
+                de jouer selon les règles, les corpos pouvaient se mettre      du coin.
+                à leur niveau. Des paramilitaires entraînés par Arasaka
+                embarquèrent dans des véhicules d’assaut, des tanks et
+
+
+
+
+                                                                                                                                                  287
+  BIENVENUE À NIGHT CITY
+
+
+                                        N     ight City en 2020                            Northside : quartier industriel vieillissant,
+                                                                                            conçu pour ressembler au vieux New York
+
+         Pourquoi cette
+                                                                                            et abritant nombre d’habitants intéressants.
+                                                       L’Âge d’or                          Upper Marina : associant des éléments
+        leçon d’histoire ?                                                                  architecturaux des quartiers de North
+                                        En 2020, Night City était une région urbani-        Beach et de la Marina à San Francisco.
+       Pourquoi vous donner ces         sée en pleine expansion, encore gangrenée
+       informations sur l’aspect                                                           East Marina : vieux secteur industriel et des
+       de Night City plus de deux
+                                        par les violences urbaines et la criminalité,
+                                                                                             docks, en partie gentrifié. Abrite le Ferry
+       décennies auparavant ?           mais dotée d’une solide croissance écono-
+                                                                                             Building et le Marina Yacht Club.
+       C’est simple : les villes        mique dans le secteur des corporations. Elle
+       ressemblent à des couches        était l’essence même de la ville Cyberpunk                   ▶ ▶ Brownstones,
+       de gâteau. À chaque ère          du futur — brutale, dangereuse, gratifiée d’un               le vieux centre ◀
+       de construction, on bâtit        charme enjôleur et d’un style décontracté qui
+       souvent sur les restes de la                                                        Old Downtown : cœur de la municipa-
+                                        la rendait unique. Comme disait à l’époque
+       précédente : par exemple,                                                            lité originale de Morro Bay. Un mélange
+       il existe tellement de strates   Bes Isis, journaliste de Net 54 et personnalité
+                                                                                            pittoresque de bidonvilles et de gangs de
+       de la légendaire ville de        célèbre de Night City…
+                                                                                            boosters colorés.
+       Troie que les archéologues
+       désignent chaque ère                Personne ne repart                              West Hill : une communauté cloisonnée élé-
+       par un numéro. En outre,                                                             gante, réservée aux riches et aux puissants.
+       saviez-vous qu’il existe à             de Night C ity.
+                                                                                                ▶ Quartier Corporatiste
+       Seattle des quartiers entiers
+       sous la terre ? Mais comme à
+                                            Ou alors dans un                                        et de la City ◀
+       Troie, certains secteurs d’une       sac mortuaire .
+       ville peuvent abriter toutes                                                        Corporate Center : c’est là que réside le
+       sortes de trésors intéressants                                                       véritable pouvoir de Night City. On y trouve
+       et désormais perdus :
+       armes, argent, données…
+                                        Les « zones Disneyland »                            d’immenses tours, citadelles des vrais diri-
+                                                                                            geants de la ville.
+       Considérez ce chapitre           Conformément à la vision de Richard Night,
+       comme le début d’une carte       Coronado City se divisait en quartiers dotés       City Center : quartier général et plaque
+       aux trésors archéologique        de styles architecturaux et de thèmes distincts,     tournante des puissants et des mégacorpos.
+       qui pourrait permettre à vos                                                          Venez y voir ce qu’on fait de vos impôts !
+                                        comme le premier parc Disneyland. Night
+       joueurs de mettre la main sur
+       un matos incroyable s’ils sont   espérait ainsi réunir une population multicul-     Quartier des Banques : le cœur finan-
+       prêts à creuser.                 turelle et dynamique qui se répartirait dans        cier de la ville, source de l’argent des
+                                        ces secteurs. Mais après sa mort prématurée,        corporations.
+                                        la ville se désintégra pour n’être plus qu’un      Centre médical : la plus grande concen-
+                                        fatras de quartiers concurrents ravagés par         tration d’entreprises médicales de la ville.
+                                        les gangs, puis contrôlés par les mégacorpos        Abrite également la Trauma Team et
+                                        tyranniques.                                        d’autres artistes du scalpel.
+                                                     ▶ Little Asia ◀                             ▶ Le quartier de nuit ◀
+                                        Japantown : fascinant centre culturel              New Harbor : quartier abritant le Mallplex,
+                                          japonais qui fait le lien avec la ceinture        centre commercial à plusieurs niveaux
+                                          pacifique.                                        et mini-arcologie, ainsi que son voisin, le
+                                        Little China : une sorte de Chinatown à             Stade McCartney, foyer des California
+                                          l’ancienne avec ses nombreux excellents           Rangers qui ont remporté le Superbowl.
+                                          restaurants et ses boutiques de curiosités.      Upper Eastside : zone commerciale et d’af-
+                                                                                            faires où on trouve des gangs et des boîtes
+                                                   ▶ Little Europe ◀                        de nuit chaudes.
+                                        Little Italy : quartier traditionnel italien et
+                                                                                           Studio City : foyer des Colonial Studios,
+                                          bastion des pittoresques Parrains de la
+                                                                                             d’anciens studios de cinéma.
+                                          Mafia de Night City.
+                                                                                           Charter Hill : venez jouer dans l’élégant et
+                                                                                            luxueux cadre du casino Hacienda Hotel.
+
+
+ 288
+                                                                                 BIENVENUE À NIGHT CITY
+
+                       ▶ Le quartier de l’Université ◀                            plutôt plaisante. On y logeait dans d’agréables bungalows
+                                                                                  aux couleurs pastel qui s’alignaient à l’identique le long
+                Université de Night City : forteresse académique
+                                                                                  des voies. Les enfants y fréquentaient d’excellentes écoles,
+                 et bastion de l’enseignement, véritable vivier de
+                                                                                  et l’hôpital, le théâtre, le Club des engagés et des officiers
+                 contre-culture.
+                                                                                  ainsi que le centre commercial de la base offraient tout ce
+                Lake Park : les plantes et animaux transgéniques ne sont          qu’on pouvait demander. Pour ceux qui appréciaient de
+                  que deux des nombreuses attractions de ce vaste parc            vivre en uniforme, ou entourés de ceux qui les portaient,
+                  central.                                                        c’était l’endroit idéal.
+                Les banlieues                                                                                   ▶ Rancho Coronado
+                Selon le plan initial, six « banlieues » devaient entourer le                                 dans la Petite couronne ◀
+                centre de Night City : Night City Sud (un port industriel),
+                                                                                  Le parangon de la Petite couronne, avec tout ce que cela
+                Pacifica (une ville au bord de la plage), Rancho Coronado
+                                                                                  implique. Au sud de Night City, sur l’autoroute 126, Rancho
+                (l’incarnation même des localités de la Petite couronne),
+                                                                                  Coronado s’étendait sur des kilomètres, entièrement com-
+                Heywood (banlieue résidentielle légèrement industriali-
+                                                                                  posée de pavillons semés çà et là de supérettes à la mode.
+                sée), North Oak (ville sœur de Night City et foyer de la
+                                                                                  Dans ses quartiers sans personnalité, la ville était envahie
+                Base Militaire de NorCal) et Westbrook (Pays des Grosses
+                                                                                  d’employés d’Arasaka, de Petrochem, de Biotechnica, de
+                Huiles). Toutes se trouvaient à vingt minutes (en maglev) du
+                                                                                  WNS et d’EBM, tous impeccablement casés dans des
+                centre de Night City.
+                                                                                  rangées de petites maisons à trois chambres strictement
+                                                                                  identiques s’étendant jusqu’à l’horizon.
+                        ▶ Zone de loisirs de Pacifica ◀
+                                                                                    Rien que d’y penser, c’était le genre d’endroit qui
+                Foyer de Playland-sur-mer, Pacifica était une zone rési-
+                                                                                  donnait des sueurs froides à n’importe quel Edgerunner.
+                dentielle chic nichée entre les falaises de l’océan Pacifique
+                et Rancho Coronado. Protégée par un contrat de sécurité
+                Militech, c’était un endroit sûr avant la guerre. Rénové
+                depuis peu, Playland-sur-mer marchait fort auprès des fans
+                de parcs d’attractions qui descendaient de San Francisco,
+                et attirait également un considérable trafic touristique
+                depuis le sud. Sur les falaises de Pacifica se déployaient les
+                appartements coûteux du lotissement Coastview qui don-
+                naient à la fois sur la mer et sur les lumières chatoyantes
+                de Playland-sur-mer en contrebas pour certains. Pacifica
+                était l’endroit où l’on venait décompresser et se détendre
+                après une journée de bagarre en ville.
+
+                   ▶ Banlieue militaire de North Oak ◀
+
+
+
+
+                                                                                  NIGHT CITY AUTOUR DE 2020
+                Abritant la base militaire de NorCal, les hauts bâtiments et
+                les navires de North Oak composaient le panorama visible
+                depuis la East Marina. Dans les années 2020, la Guerre
+                des États Libres était encore fraîche dans les mémoires
+                et North Oak formait une véritable ville militaire : des
+                engagés géraient la plupart de ses boutiques et la majorité
+                de la population se composait de personnes associées de
+                près ou de loin au complexe militaro-industriel. L’énorme
+                base militaire de NorCal procédait du marché permettant
+                à la Californie du Nord de conserver son indépendance
+                vis-à-vis de l’Union en tant qu’État Libre. Le gouvernement
+                n’y voyait pas d’inconvénient, la base jouant un rôle de
+                repoussoir et empêchant la racaille des gangs routiers de
+                pousser vers le nord pour piller les réserves d’eau. La vie à
+                North Oak, avec ses vastes rues à l’ombre des chênes, était
+
+
+
+                                                                                                                                                   289
+  BIENVENUE À NIGHT CITY
+
+                  ▶ La zone industrielle de Heywood ◀                            station d’épuration municipale de Night City et de kilo-
+                                                                                 mètres de logements miteux bâtis au tournant du siècle
+                Zone d’industrie légère qui enjambait l’est de la baie de
+                                                                                 par des entrepreneurs à la solde de la pègre. L’endroit
+                Del Coronado entre Rancho Coronado et North Oak,
+                                                                                 était réputé dangereux dans les années 2020 : si l’on ne
+                Heywood abritait un peu de tout : des logements, quelques
+                                                                                 s’y faisait pas agresser et traîner dans une ruelle par l’un
+                boutiques généralistes, des bars, ainsi que la subdivision
+                                                                                 des nombreux gangs, on avait des chances de se faire
+                bien connue d’Apple Valley Corporate, une localité de la
+                                                                                 descendre par un autochtone à la gâchette facile qui vous
+                Petite couronne essentiellement dominée par Biotechnica
+                                                                                 avait pris pour un membre d’un des gangs susmentionnés.
+                dans le sud de la banlieue. Sur la majorité des douces
+                                                                                 Mieux valait éviter de s’y rendre autrement qu’en journée.
+                collines de Heywood, on trouvait de grandes usines, des
+                                                                                 La nuit, les feux d’artifice commençaient, et les ambulances
+                complexes industriels (y compris une fabrique d’armes
+                                                                                 n’arrivaient généralement dans le secteur que le lendemain
+                d’Arasaka), plusieurs stations de recherche de Biotechnica,
+                                                                                 matin. Le plus grand employé de South Night City était
+                deux stations d’entrepôt et de recherche d’EBM ainsi que
+                                                                                 le port de cargos et de conteneurs de San Morro Bay,
+                de nombreux autres complexes. Ces mornes parcs indus-
+                                                                                 principal terminal de chargement et de déchargement des
+                triels conçus à la chaîne piquetaient les collines, en surface
+                                                                                 navires qui débarquaient en Californie centrale. Les fruits,
+                ou sous terre, parfois sur des hectares. À un moment, il y
+                                                                                 légumes, aliments transformés et produits manufacturés y
+                en avait tant que même le conseil municipal de Heywood
+                                                                                 partaient dans un flux constant vers la Californie du Nord
+                ne connaissait pas tous leurs noms ou ce qu’ils faisaient.
+                                                                                 et du Sud, et les produits d’importation y arrivaient.
+                                ▶ Night City Sud ◀
+                                                                                                   ▶ Westbrook ◀
+                Ce quartier consistait essentiellement en une ville portuaire
+                                                                                 Westbrook a toujours été une forteresse bâtie sur une
+                lourdement industrialisée pourvue d’un vétuste terminal
+                                                                                 chaîne de collines surplombant North Oak et domi-
+                de raffinerie de pétrole, d’un port pour conteneurs, de la
+                                                                                 nant Night City depuis l’autre côté de la baie, mais une
+
+
+
+
+                                                                                                                                        PAR MAKSYM HARAHULIN
+
+
+
+
+ 290
+                                                                                  BIENVENUE À NIGHT CITY
+
+                forteresse raffinée et manucurée. Nombre des riches                  C’est alors que survint la 4e Guerre corporatiste.
+                cadres des corporations y logeaient dans des manoirs
+                coûteux, dans une sérénité garantie par des services de            Night City et la 4e (2022)
+                sécurité étendus et un contrat avec Arasaka. Tous les rési-        L’histoire de Night City lors de la 4e Guerre corporatiste a
+                dents de Westbrook étaient pourvus de puces de sécurité            fait l’objet de dizaines de romans et de films, ainsi que de
+                codées implantées sous la peau et devaient passer au               quelques danses sensorielles (enregistrées chez des com-
+                moins trois points de contrôle sur la route des collines.          battants capturés et soumis à une pression extrême). Le plus
+                Là, plusieurs batteries de missiles sol-air s’assuraient que       important, c’est le rôle unique qu’a joué Night City dans le
+                les véhicules aériens disposent également des codes IFF            monde chaotique et instable du début des années 2020.
+                appropriés.
+                                                                                      À cause de son statut d’État Libre, Night City abritait des
+                   Presque tous les cadres des plus grandes corporations           régiments appartenant aux deux camps de la Quatrième
+                de Night City vivaient là, y compris les vice-présidents           Guerre corporatiste. C’est peut-être pour cette raison que
+                et cadres d’Arasaka, d’EBM et de Petrochem, ainsi que              le conflit n’épargna pas la ville. Dans chaque rue, dans
+                nombre de personnalités de premier plan de Night City. La          chaque bâtiment, les combats faisaient rage, en particu-
+                condition d’admission à Westbrook était simple : disposer          lier autour de la zone corporatiste où les deux factions
+                des fonds nécessaires pour y vivre.                                possédaient des bureaux importants. Avant l’explosion
+                   En général, Westbrook était également réputé être un            nucléaire qui rasa le centre de la ville, des flopées d’habi-
+                endroit particulièrement sûr pour loger les employés à haut        tants quittaient déjà le navire en faisant tout leur possible
+                risque « d’extraction » par une corporation ennemie. Il n’y        pour ne pas être abattues par les drones, écrasées sous
+                eut qu’une seule tentative de ce genre dans l’histoire du          les chenilles des tanks ou fusillées par les escadrons de la
+                quartier : elle se solda par la destruction de trois AV-4 et la    mort des corporations. Une grande partie de la ville était
+                mort de 24 soldats de Militech. Ce fut la première et der-         en lambeaux, les gens se bousculaient pour atteindre des
+                nière opération semblable à Westbrook pendant toutes les           cieux plus cléments tels que Heywood et Pacifica.
+                années 2010. Naturellement, à l’époque, certains milieux             Et puis les deux camps franchirent la ligne rouge, et
+                bien informés en conclurent que l’incident était à l’origine       quelqu’un eut la riche idée de poser une bombe.
+                de la longue rivalité entre les branches d’Arasaka et de
+                Militech opérant à Night City.                                     L a bombe (2023)
+                                                                                   Avec le recul, on peut dire que Night City a eu le malheur
+                Les Badlands
+                                                                                   d’être une Ville Libre dans une zone dépourvue de gou-
+                Au-delà de Night City et de ses banlieues s’étend la vaste         vernement national. Les combattants corporatistes n’étaient
+                et aride plaine californienne ponctuée çà et là de villes          pas non plus assez stupides pour larguer une bombe
+                abandonnées et de lac asséchés. Peu d’habitants de Night           nucléaire au milieu d’une région encore dominée par les
+                City osent s’aventurer dans cette région qu’on nomme les           États-Unis ou la puissante Union européenne. En réalité,
+                Badlands, à l’exception des rudes Nomades qui la tra-              c’est probablement parce que Night City ne faisait plus
+                versent dans leurs immenses caravanes bien protégées.              partie des États-Unis que la présidente Kress s’est retenue
+                  Oh, et les membres des gogangs aussi… On ne vous                 de raser les bastions d’Arasaka dans le monde entier.
+                avait pas parlé des gogangs ?                                        Quoi qu’il en soit, des gens ont largué cette bombe
+                                                                                   nucléaire.
+
+                N     ight City, enfin heureuse ?
+
+                Au bout du compte, en 2020, Night City est devenue
+                                                                                      La puissance de la bombe qui explosa dans les tours
+                                                                                   Arasaka équivalait à une minuscule fraction de celle d’Hi-
+                                                                                   roshima. Ce dispositif tactique, à peine plus grand que
+                une zone urbaine animée, prospère et dangereuse. Le                les mini-bombes Davy Crockett de 1950 (qui rentraient
+                gouvernement a plus ou moins réussi à contrôler le chaos,          dans un sac à dos pour déployer une puissance explo-
+                et quand il n’y parvenait plus, il a pu compter sur les            sive inférieure à 1 kilotonne) était conçu pour démolir de
+                corpos pour ramener la ville dans le droit chemin avec les         fond en comble la base de données mère et empêcher
+                méthodes brutales et implacables qu’on leur connaît. Des           les mégacorporations rivales de l’exploiter. La détonation,
+                marchés ont été conclus, de l’argent a changé de mains,            programmée trop tôt, eut lieu au 120e étage, à 365 mètres
+                des gens se sont fait tuer, mais d’autres en ont réchappé…         au-dessus du sol, dans les appartements de Kei Arasaka
+                Night City n’était pas la cité utopique dont Richard Night         qui abritaient le laboratoire Soulkiller.
+                avait rêvé, mais l’un dans l’autre, elle tenait debout.
+
+
+
+                                                                                                                                                    291
+   BIENVENUE À NIGHT CITY
+
+
+                                                                                           L   ’Ère du rouge
+                          Le souffle de l’explosion anéantit presque tout à fait les
+                       tours jumelles qui, fendues en deux, causèrent des dégâts
+                       aux structures voisines. Le centre de la ville se transforma
+                       en champ de gravats en l’espace de quelques secondes.               Les dommages furent surtout provoqués par l’onde de
+                       Les gens qui se trouvaient dans le quartier moururent sur le        choc, puisque la détonation eut lieu à plus de 300 mètres
+                       coup. Les bâtiments de Night City étaient pour la plupart           de haut (à titre de comparaison, Little Boy explosa à 580
+                       bâtis sur des remblais, car à l’origine le sol se situait à peine   mètres d’altitude). Bien que ces circonstances aient limité
+                       à cinq mètres au-dessus du niveau de la mer : la bombe              les effets de la radioactivité sur le long terme, les retombées
+                       d’Arasaka provoqua un microséisme qui réduisit à néant              s’insinuèrent dans les immenses gratte-ciels situés autour de
+                       les fondations et inonda le cœur de la ville.                       l’épicentre de l’explosion (plus tard, ils seraient rasés et ser-
+                                                                                           viraient à combler la baie). Les tonnes de béton et d’acier
+                                                                                           se métamorphosèrent en débris minuscules, catapultés par
+                                                                                           le souffle de l’explosion, qui arrosèrent la Californie du
+                                                                                           Nord et la mer pendant plusieurs mois, provoquant en outre
+                                                                                           une féroce tempête de feu sur plusieurs milliers d’hectares
+Trace parle de son
+    père, "Nomade"                                                                         autour de la ville.
+       Santiago, ex-
+         partenaire                                                                          Le nuage de poussière s’éleva dans les cieux qu’il teinta
+       de Rogue et                                                                         de rouge pendant deux ans. Plusieurs années après la
+  chef de la nation                                                                        catastrophe, l’aube et le crépuscule brillaient d’une lueur
+nomade Aldecado.
+                                                                                           cramoisie à cause des particules en suspension et ce phé-
+                                 L e V ieil H omme dit                                     nomène inspira aux habitants de l’époque le surnom d’Ère
+                                 que si la bombe avait                                     du Rouge pour désigner cette période.
+
+                                   été déclenchée là où                                    Mode survie
+                              c'était initialement prévu ,                                        Après la bombe (2023-2025)
+                                 le complexe hautement
+                                                                                           Vingt-quatre heures après la catastrophe, Night City était
+                             renforcé aurait absorbé-                                      à peine habitable. De nombreuses personnes avaient été
+                             le plus gros de l'explosion ,                                 épargnées grâce à leur organisme fortement cybernétisé
+                                                                                           ou à leurs filtres à radiation. Toutefois, la bombe et ses
+                                  épargnant le reste de                                    répercussions détruisirent la majeure partie des logements
+                                 la C ity. Je ne sais pas                                  de la ville, ce qui obligea les résidents à déménager vers
+                                                                                           les banlieues de l’autre côté de la baie ou des quartiers
+                                  s'il avait raison , mais                                 encore plus éloignés. Pis encore, Night City était en grande
+                                  j'ai bien l'intention de                                 partie bâtie sur des couches de remblais, du sable et de la
+                                                                                           terre qui se liquéfièrent sous l’explosion et se transformèrent
+                                            -
+                                        le découvrir .                                     en gelée. La secousse brisa les conduites d’eau, de gaz
+                                                         — Trace Santiago                  et neutralisa le réseau électrique. Les rues étaient pavées
+                                                                                           de plaques d’asphalte déformées, semées d’épaves de
+                                                                                           véhicules terrestres et de Navis écrasées parmi les débris
+                                                                                           des gratte-ciels dévastés. Night City était en ruine, mais
+                                                                                           la situation était moins cauchemardesque qu’à Rio ou
+                                                                                           Hong Kong.
+                                                                                              La région située au-delà de Greater Night City avait
+                                                                                           été abandonnée pendant l’Effondrement. Mais après
+                                                                                           l’explosion, des gens partirent s’installer à l’est le plus vite
+                                                                                           possible. Les quartiers se réunifièrent, désormais mus par
+                                                                                           un but commun, même si la confiance demeurait précaire.
+                                                                                           Les habitants ne cherchaient pas encore à rebâtir. Ils cher-
+                                                                                           chaient simplement à se nourrir.
+
+
+
+
+  292
+                                                                                  BIENVENUE À NIGHT CITY
+
+                    Dans cette terre dévastée, peuplée de ruines, de gangs,        la ville irrécupérable et offrit l’asile aux survivants dans
+                de combattants corporatistes rebelles et de débris radioac-        les Nouveaux États-Unis. Il y avait deux raisons à cette
+                tifs, les citoyens de Night City avaient activé le mode survie.    manœuvre : d’une part, comme les ressources du pays
+                  Et en matière de survie, ce sont des champions.                  étaient déjà très limitées, Kress ne disposait pas d’autre
+                                                                                   option sur ce terrain. D’autre part, la présidente intransi-
+                L a renaissance                                                    geante considérait qu’à long terme, l’accueil des réfugiés     Il existe des
+                                                                                                                                                  dizaines, sinon
+                                                                                   était le meilleur moyen de ramener l’État Libre et égaré de    des centaines
+                       Après la bombe (2030-2040)                                  NorCal (et ses richesses technologiques) dans le giron du      de théories du
+                                                                                                                                                  complot portant
+                                                                                   gouvernement.                                                  sur l’holocauste
+                La présidente Kress mit l’attaque de Night City sur le dos                      Têtue jusqu’au bout, Night City contre-attaqua.   de Night City.
+                d’Arasaka, mais apprit très vite que l’arme utilisée avait                                                                        N’hésitez pas à
+                                                                                                                                                  créer les vôtres
+                été fournie par un escadron d’assaut de Militech. Le men-          L a reconstruction de Night City                                dans vos parties.
+                songe qui circula prétendait qu’Arasaka avait fait exploser
+                le centre corporatiste lors d’une opération de dissuasion                                      Après la bombe (2040-2045)
+                pour empêcher Militech de s’emparer des bureaux de
+                l’entreprise. D’ailleurs, Arasaka possédait à cette fin une        Si son impact sur les États-Unis demeura négligeable en
+                arme thermonucléaire beaucoup plus puissante, dissimulée           dehors du Couloir de Boston-Washington (Boswash), la
+                dans les fondations des tours, mais l’explosion du dispositif      bombe priva environ deux millions d’habitants de foyer
+                de Militech rendit ce plan inopérable. Personne ne sut où          dans la région de Night City, que ce soit à cause de l’ex-
+                termina la bombe d’Arasaka après la chute des tours, et            plosion ou de l’inondation qui s’ensuivit, conséquence de la
+                comme seuls quelques rares cadres supérieurs du zaibatsu           liquéfaction des fondations de la ville (bâties sur du sable
+                tels que Kei et son père Saburo connaissaient cette solution       et des remblais). Les survivants s’enfuirent vers des camps
+                de dernier recours, cette arme entra dans la légende.              de réfugiés surpeuplés des banlieues voisines telles que
+                                                                                   North Oak, Westbrook, Pacifica, Heywood et Night City
+                Au royaume des complots                                            Sud. Il devint bientôt évident qu’il fallait mettre en œuvre
+                et des rumeurs                                                     une solution sans tarder.
+                Rares étaient les personnes possédant des renseignements
+                concrets sur l’escadron d’assaut mandaté par Militech et
+                sa composition. Des rumeurs prétendaient que Morgan
+                Blackhand, œuvrant en secret pour le gouvernement,
+                avait transmis la nouvelle de l’échec de l’opération à la
+                présidente Elizabeth Kress. Là encore, cette histoire relevait
+                du domaine du fantasme, car personne ne revit Morgan
+                Blackhand ou son cadavre après la chute des tours. Quoi
+                qu’il en fût, Kress s’appuya sur ces bruits de couloir et
+                sur la réactivation de la commission du général Lundee
+
+
+
+
+                                                                                   NIGHT CITY AUTOUR DE 2020
+                pour prendre l’ascendant sur Militech. Elle mit au pas la
+                corporation et nationalisa ses actifs pour qu’elle revienne
+                au gouvernement américain en pleine résurgence. Elle mit
+                en œuvre toute la puissance de ses ressources militaires
+                et de sa propagande pour dépeindre Arasaka sous les
+                traits macabres d’une mégacorporation étrangère et démo-
+                niaque, gouvernée par un dément qui avait détruit sans
+                aucun remords une ville américaine afin d’accroître son
+                pouvoir personnel. Les statuts qui autorisaient Arasaka à
+                exercer son activité sur le sol américain furent immédiate-
+                ment révoqués, ses employés et ses dirigeants classés parmi
+                les terroristes, et ses actifs saisis ou évacués du territoire.
+                  Malgré cette mascarade politique, Kress éprouvait peu
+                d’intérêt pour la reconstruction de Night City. À l’image
+                des présidents de l’époque de l’Effondrement, elle déclara
+
+
+
+                                                                                                                                                  293
+  BIENVENUE À NIGHT CITY
+
+                         Les derniers membres de l’administration de Night City        envahi de nuages de pollution. Les immeubles continuent à
+                      firent appel à des ressources externes et rappelèrent à une      pousser en dépit des gogangs, des épidémies, des émeutes
+                      foule d’Edgerunners les dettes qu’ils avaient contractées        et autres désagréments qui font partie du paysage de l’Ère
+                      envers la ville. Les Nomades du clan Aldecaldo et leurs          du Rouge.
+                      amis de StormTech supervisèrent cette étape. Grâce à                Cette période de reconstruction ininterrompue permit
+                      l’expérience acquise avec le projet de reconstruction de         à Night City de consolider ses relations avec le reste
+                      Chicago, StormTech et les Aldecaldo avaient toutes les           du monde. Abandonnée par la présidente Kress et ses
+                      cartes en main pour bâtir de grands ensembles de loge-           « Nouveaux » États-Unis, la ville n’avait aucune envie
+                      ments temporaires à partir de conteneurs et de modules           de se retrouver encore une fois pieds et poings liés par
+                      bétoformés qu’ils importaient par voie maritime et terrestre.    un gouvernement vacillant. Si les successeurs de Kress
+                         Tout d’abord, il fallait dégager le sol et fabriquer des      aspirent à ramener cette zone libre dans le troupeau, ils
+         Parmi les    fondations stables pour ces structures rudimentaires.            ont intérêt à fourbir leurs armes en prévision d’un conflit
+ bâtiments perdus     La majeure partie de la zone corporatiste était détruite.        interminable et brutal. Ces raclures auraient le culot de
+        à la fin de
+     la guerre, on
+                      Comme la quantité de débris était trop importante pour           demander de l’aide à Arasaka ! Il en va de même pour
+  compte le centre    qu’on les achemine vers des décharges lointaines, les            l’Union européenne, elle peut faire tout ce qui lui chante
+      commercial/     survivants se servirent de bulldozers et de tanks abandon-       tant qu’elle ne se met pas en travers du chemin de Night
+      arcologie du
+       Mallplex de    nés par les deux belligérants qu’ils reconvertirent pour         City. Comme un cybersoldat touché qui finit à terre et se
+      New Harbor.     enfouir les gravats dans la baie. Les autres quartiers de        relève dans un hurlement de rage métallique, Night City
+                      Night City avaient été rasés par les combats incessants,         a des ambitions. Elle rêve de devenir la plus grande ville
+                      préludes à la chute des tours. Les décombres devinrent le        de la planète, une mégalopole badass et incontournable.
+                      socle sur lequel s’élevèrent de nouveaux mégabâtiments             Et elle voit les choses en grand.
+                      et des structures urbaines plus datées, prêts à défier le ciel
+
+
+
+
+                                                                                                                                             PAR MAKSYM HARAHULIN
+
+
+
+
+  294
+                                                                                         BIENVENUE À NIGHT CITY
+
+                N    ight City à l’Ère du Rouge
+
+                    Avant qu ’il reparte sur la Route , mon père a beaucoup traîné dans
+                  Night City. Il racontait que malgré le danger et la crasse (et croyez-
+                  moi, je ne me fais pas d ’illusions , mon vieux n ’allait pas dans les pires
+                   quartiers de la ville ), le centre - ville était d ’une beauté éclatante ,
+                   une oasis après la traversée d ’un enfer . À l’époque , si vous aviez les
+                    fonds et les bons contacts , Night C ity pouvait devenir le paradis
+                    sur terre , où vous rencontriez des gens magnifiques , cybernétisés ,
+                      puissants . Évidemment, si vous étiez , comme moi auparavant, un
+                      jeune mercenaire à la recherche d ’un boulot, tout le charme et
+                    l’attrait de ce décor urbain foutaient le camp et vous balançaient
+                        dans la misère et la criminalité en un claquement de doigts .
+
+
+                        A ujourd ’hui, comme à l’époque de mon vieux , la vie à Night City
+                      dépend de l’endroit où vous vous trouvez . L es quartiers sont tous
+                     différents selon la faction , le gang ou la corporation qui contrôle
+                       le coin , et même là , les règles peuvent changer sans crier gare .
+                     M algré tout, on peut quand même diviser Night City en sept zones.
+                                                                                                                                               — Trace Santiago
+
+
+                Night City est encore aujourd’hui en pleine reconstruction. Les vieilles zones des années 2020 ont été réorganisées,
+                rebaptisées, voire démolies et jetées dans la baie pour les plus radioactives. Au lieu de quartiers, les autochtones désignent
+                ces nouveaux sites en fonction du type d’environnement qui y domine : zone irradiée, centre de reconstruction urbaine,
+                zone exécutive, zone de combat, banlieues surpeuplées, périmètre des néo-colons et grand route.
+
+                    Type de zone                                                                  Description
+                                          La zone la plus affectée par la bombe de Night City. Ce terrain ravagé où sont ensevelis les corps des victimes est jonché de
+                   Zone irradiée
+                                          ruines de gratte-ciels difformes et de véhicules calcinés.
+                                          Ces zones de la ville ont échappé aux pires ravages de la guerre et de la bombe. Dans le Centre-ville en reconstruction,
+                   Centre-ville en
+                                          on voit partout des grues et des engins de chantier, occupés à bâtir les nouvelles tours des corps et les mégabâtiments qui
+                   reconstruction
+                                          accueilleront une population immense.
+                  Zone exécutive          Cette zone spéciale de la ville a été isolée et verrouillée, réservée exclusivement aux cadres de haut niveau et à leurs familles.
+                                          Le secteur de la ville le plus dangereux, où la loi n’a pas cours. Il naquit de la zone de combat d’origine au lendemain de la
+                  Zone de combat
+                                          4e Guerre corporatiste. La seule justice qu’on trouve ici sort du canon d’une arme à feu.
+                     Banlieues            Désormais remplies de villages de tentes et de camps de réfugiés non réglementés bondés de populations déplacées par la
+                    surpeuplées           guerre, cette zone située dans l’ancienne Petite couronne est au bord de la catastrophe.
+                   Périmètre des          Cette zone située en périphérie de la ville est presque sans foi ni loi, à l’exception des secteurs contrôlés par les familles de
+                    néo-colons            Nomades.
+                                          C’est l’autoroute, uniquement peuplée de personnes en transit ou de gangs de boosters voyageant dans des voitures et sur des
+                  La Grand Route
+                                          motos aux carrosseries hérissées de pointes.
+
+
+
+
+                                                                                                                                                                               295
+  BIENVENUE À NIGHT CITY
+
+
+
+
+                                                                                                                                  NIGHT CITY AUTOUR DE 2045
+
+
+
+
+                   En plus de cette requalification urbaine, le conseil municipal avait défini un niveau de menace pour chaque nouvelle
+                zone : une mesure de sa dangerosité précisant les périls qu’on pouvait y croiser. Vous en apprendrez plus à ce sujet
+                ci-dessous.
+
+                Niveaux de menace
+                À Night City, les Niveaux de menace servent à définir les adversaires armés et le niveau de péril général que présente
+                chaque secteur. Voici un aperçu des divers niveaux :
+
+
+
+
+ 296
+                                                                                        BIENVENUE À NIGHT CITY
+
+                 Niveau de menace          Description
+                                           Un quartier sûr, protégé par des portails, uniquement accessible aux individus richissimes et puissants qui y vivent et jouent
+                      Exécutive            au golf ou au tennis sous la protection d’une sécurité armée. Relié au Centre de Reconstruction par maglev pour vous rendre
+                                           au travail.
+                                           Ces secteurs surveillés par la sécurité des corporations sont à l’abri des carnages de la zone de combat. Toutefois, ils
+                    Corporatiste
+                                           présentent d’autres dangers. Des dangers à haut budget.
+                                           Ceux qui n’ont pas les moyens de loger dans les zones corporatistes vivent dans ces secteurs et jouissent d’une sécurité
+                       Modéré              relative… du moins par rapport aux carnages des zones de combat. Malheureusement, ce qui se passe dans ces dernières n’y
+                                           reste pas toujours circonscrit et déborde parfois dans la zone modérée.
+                       Combat              Les pires endroits de la ville, où des gens meurent et où personne ne vient faire le ménage ensuite.
+                                           Les zones situées hors de la ville. Ici, il n’existe qu’une loi : celle que vous faites appliquer vous-même. Vous ne tomberez
+                      Périphérie
+                                           guère que sur des gangs de route et des Nomades dans le coin.
+
+
+                  Notez qu’au sein d’une région associée à un Niveau de menace spécifique, on peut trouver des poches intérieures ou
+                périphériques correspondant à d’autres. Une zone en pleine rénovation ou en cours de gentrification peut passer d’un
+                Niveau de menace à un autre, ou même en présenter plusieurs.
+                                    Vous vous rappelez cette histoire de carte au trésor de la page 288 ?
+                                                                      ▶ La zone irradiée ◀
+                                                             Niveau de menace : combat
+                Il s’agissait naguère de la zone corporatiste. Bien qu’on en ait rasé les gravats pour combler une partie de la baie, ce
+                terrain ravagé où sont ensevelis les corps des victimes est encore jonché de ruines de gratte-ciels difformes et de véhicules
+                calcinés. Bien que les radiations se soient un peu dissipées, elles sont encore présentes, et la plupart des habitants ont
+                abandonné le secteur aux pires des gangs. Si vous vous y rendez, vous êtes soit membre d’un gang, soit suicidaire, soit
+                déterminé à récupérer quelque chose de caché parmi ce champ de ruines.
+                  On y trouve les vieux quartiers suivants :
+                Le vieux quartier des banques : abritant les anciennes banques de Night City, ce n’est plus qu’un tas de gravats
+                  qu’on n’a jamais officiellement déblayés.
+                Le vieux centre-ville : il ne reste que des ruines radioactives de ce centre-ville autrefois animé.
+                Le vieux centre corporatiste : l’ancien cœur de Night City n’est plus que l’ombre démolie de sa splendeur de naguère.
+                Le vieux centre médical : irradié en grande partie, le vieux centre médical comprend de nombreux hôpitaux enfouis
+                  sous les décombres.
+                                                      ▶ Le Centre-ville en reconstruction ◀
+                                                      Niveau de menace : corporatiste/modéré
+                L’holocauste n’a pas rasé toute la ville. Déjà rempli de gratte-ciels et de denses blocs urbains, une bonne partie du centre a
+                survécu. Malheureusement, la déflagration et ses conséquences ravageuses ont endommagé les digues et les brise-lames
+                qui empêchaient les eaux de la baie et de l’océan Pacifique de submerger les remblais sur lesquels on avait bâti l’essentiel
+                du centre. On y subit des inondations fréquentes, et le réseau d’eau et d’électricité fonctionne au mieux par intermittence.
+                Le métro du NCART fonctionne toujours, quand la marée ne l’inonde pas. Les urbanistes réfléchissent à surélever toutes
+                les voies pour transformer le métro en monorail, mais ce projet demande du temps ainsi que des fonds dont la municipalité
+                ne dispose pas encore.
+                   Dans le Centre-ville en reconstruction, les grues et les engins de chantier (comme les omniprésents mécanoïdes de
+                Zhirafa) sont partout. Les immenses squelettes de nouvelles tours de corpos s’élèvent des ruines de la vieille ville, protégés
+                par de vigilantes armées privées et des drones sentinelles. Le travail ne s’arrête jamais au centre, où résonne en permanence
+                le fracas des engins lourds éclairés par les projecteurs de chantier. Les principaux édifices sont les mégabâtiments de la
+
+
+
+
+                                                                                                                                                                            297
+   BIENVENUE À NIGHT CITY
+
+                      zone de reconstruction urbaine Watson, des mini-arcolo-                     Upper Marina : district urbain animé qui rassemble
+                      gies tout-en-un conçues pour loger les millions d’habitants                  de vieilles zones industrielles et des zones gentrifiées
+                      que l’explosion de la bombe a jetés à la rue.                                de style « international » autour d’une marina bien
+                        On trouve les quartiers suivants dans le Centre-ville en                   entretenue.
+                      reconstruction :                                                            Quartier de l’Université : un district en long situé en
+                      Le Glen : un nouveau district en développement qui                           bordure des zones de combat qui abrite la seule univer-
+    Pour obtenir la
+ liste des lieux de     contient la plupart des bâtiments municipaux importants.                   sité encore en activité de la ville.
+ Night City à l’Ère
+ du Rouge, passez
+                      Little Europe : un district composite dont les quartiers                    Lotissement Watson : un district en développement où
+  directement à la      denses et distincts sont composés aussi bien de vieux                       les mégabâtiments et les arcologies sont érigées pour
+  page 310              bâtiments de briques que d’immenses gratte-ciels.                           accueillir les milliers de sans-abris de la guerre. Une
+                      La base militaire de NorCal : base militaire fortifiée                        bonne partie de la population asiatique de Night City
+                        au nord de Night City où l’on trouve essentiellement des                    a emménagé dans un secteur du quartier surnommé
+                        soldats de Militech. Presque isolée du reste de la ville.                   Kabuki.
+
+                      Zone de loisirs de Pacifica : un district financé en                                      ▶ La zone exécutive ◀
+                       grande partie par les corporations et bâti autour du                                  Niveau de menace : exécutive
+                       parc d’attractions aquatique de Playland-sur-mer, qui                      Ce secteur est une communauté verrouillée par des portails
+                       constitue le centre d’un développement massif.                             et protégée, réservée aux cadres de haut rang et à leurs
+                                                                                                  familles. En plus des demeures de luxe, elle possède ses
+                                                                                                  propres commerces et complexes de loisir comprenant des
+                                                                                                  terrains de golf, des spas privés et des clubs.
+                                                                                                  La zone exécutive : une nouvelle zone, installée dans les
+                                                                                                    collines entourant la ville, ne comprenant qu’un seul dis-
+                                                                                                    trict voué à la sécurité et au plaisir de l’élite corporatiste.
+                                                                                                              ▶ Les zones de combat ◀
+                                                                                                                Niveau de menace : combat
+                                                                                                  Les gangs règnent en maîtres dans les zones de combat.
+                                                                                                  Circulant parmi les bidonvilles, les immeubles et les pâtés
+                                                                                                  de maisons abandonnés, les gangs et leurs alliés se par-
+                                                                                                  tagent le territoire, contrôlent les ressources limitées et tuent
+                                                                                                  ou détruisent tout ce qui leur barre la route. Il n’existe aucun
+                                                                                                  programme de reconstruction dans les zones de combat,
+
+
+
+
+                                                                            PAR NEIL BRANQUINHO
+                                                                                                  même si de temps à autre, une corporation ou une branche
+                                                                                                  du conseil municipal s’abat sur le secteur comme une tonne
+                                                                                                  de ferrobriques pour éliminer les gangs en masse, une
+                                                                                                  méthode que la ville assimile au taillage de haie.
+                                                                                                    Les quartiers des zones de combat sont les suivants :
+                                                                                                  Vieille Japantown : ancien centre culturel japonais qui
+                                                                                                    sombra dans le chaos et la désuétude pendant la 4e
+                                                                                                    Guerre corporatiste. Une grande partie de la population
+                                                                                                    a émigré vers Watson et le secteur s’est vidé, uniquement
+                                                                                                    occupé par des gangs aujourd’hui.
+                                                                                                  Little China : un « Chinatown » tentaculaire et dangereux
+                                                                                                    où de nombreuses petites communautés se battent pour
+                                                                                                    leur survie et repoussent les gangs des zones de combat.
+                                                                                                  Ancienne zone de combat : un district de la ville
+                                                                                                   abandonné depuis longtemps aux gangs et aux cinglés.
+
+
+
+
+  298
+                                                                                 BIENVENUE À NIGHT CITY
+
+                  L’ancienne zone de combat fut le germe qui donna nais-          transformer les villes fantômes en foyers pour les sans-abris
+                  sance à ses homonymes actuels.                                  de Night City.
+                Night City Sud : expansion industrielle où grouillent les         Les villes voisines comprises dans le périmètre
+                 gangs à la gâchette facile qui ont reconverti les entrepôts         des néo-colons sont : Atascadero, Avila Beach,
+                                                                                     Cambria, Los Osos, Paso Robles, Pismo Beach, San Luis
+                 en planques et en QG.
+                                                                                     Obispo et San Simeon.
+                       ▶ Les banlieues surpeuplées ◀
+                                                                                                 ▶ La Grand Route ◀
+                        Niveau de menace : modéré/combat
+                                                                                            Niveau de menace : périphérie
+                Au lendemain de la guerre, la majeure partie du centre-
+                                                                                  Dans les années 2020, la Grand Route était le foyer
+                ville demeurait inhabitable, non pas en raison des radia-
+                                                                                  des membres de gogangs itinérants et de caravanes de
+                tions, mais parce que le réseau d’électricité, d’égouts et
+                                                                                  Nomades bien protégées. Mais à mesure que les Familles
+                d’eau ne fonctionnait plus. Les banlieues accueillirent une
+                                                                                  Nomades s’emparent peu à peu du commerce et du trans-
+                immense quantité de bidonvilles et de camps de réfugiés
+                                                                                  port des produits, elles utilisent les surplus militaires pour
+                non réglementés au beau milieu des communautés autrefois
+                                                                                  repousser les gangs et assainir les routes.
+                paisibles de la Petite couronne. En attendant que les méga-
+                bâtiments destinés à abriter les réfugiés soient terminés, les      Celles-ci demeurent ouvertes, vastes et poussiéreuses,
+                taux de criminalité s’envolent dans cette zone surpeuplée         jonchées par endroits de véhicules calcinés, mais la Grand
+                et toujours au bord de la catastrophe.                            Route commence à ressembler davantage à la Route 66
+                                                                                  qu’à un extrait de Mad Max.
+                 Les quartiers des banlieues surpeuplées sont les suivants :
+                                                                                  Les vieilles autoroutes comprises dans les zones
+                Heywood : un secteur véritablement bondé de la ville,
+                                                                                    de Grand Route sont : la California State Route 41,
+                 abritant un grand pourcentage de la population et où un
+                                                                                    la California State Route 46, la California State Route
+                 schisme naît déjà entre les catégories de richesse et de
+                                                                                    58, la California State Route 99, la California State 828,
+                 pouvoir. Les riches occupent le nord et les pauvres (qui
+                                                                                    l’Interstate Highway 5, et l’Interstate Highway 101.
+                 ont rebaptisé la zone Santo Domingo) au sud.
+                Zone industrielle de Heywood : la plus grande                     L’ère du changement
+                 zone industrielle de la ville regorge d’entrepôts, d’en-         À l’Ère du Rouge, Night City est en pleine mutation. Les
+                 gins de chantier, d’usines et même de navires-cargo              projets de reconstruction se multiplient dans tous les quar-
+                 abandonnés.                                                      tiers. Une nouvelle génération de mégabâtiments d’allure
+                New Westbrook : débordement urbain bâti sur les                   colossale remplace rapidement la première génération de
+                 vestiges de la zone exécutive d’origine. Ce secteur au           logements temporaires. Conçues sur le modèle de l’arco-
+                 paysage encore vaguement bling-bling grouille de sans-           logie du New Harbor Mall détruit par les tirs d’artillerie
+                 abris qui ont fui les autres quartiers de la ville à cause de    en 2022, ces structures gigantesques comprennent des
+                 la guerre ou en ont été expulsés plus récemment par la           espaces de vie et de divertissement, des restaurants, des
+                 gentrification du Centre-ville en reconstruction.                galeries commerciales, dont les accès sont tous regroupés
+                Rancho Coronado : vaste étendue de quartier résidentiel           dans un hall central. À l’avenir, elles devraient représenter
+                 dans le style de la Petite couronne, désormais envahi de         la majorité des habitations de la future mégalopole de
+                 bidonvilles et de zones industrielles nés des cadavres           Night City.
+                 d’anciennes supérettes.
+                                                                                  Une vie presque normale
+                      ▶ Le périmètre des néo-colons ◀
+                                                                                  L’accès aux services est inégal et la loi inconstante ; vous
+                           Niveau de menace : périphérie                          ne pouvez plus surfer sur le NET pour explorer les confins
+                Quand Night City était la plaque tournante de la région,          de l’espace virtuel, encore moins réserver un vol dans une
+                une myriade de petites villes et de banlieues avaient             navette luxueuse d’Orbital Air pour gagner Crystal Palace,
+                poussé tout autour. La plupart furent abandonnées entre les       mais de manière générale, tout fonctionne correctement à
+                années 2000 et 2020, car elles étaient trop éloignées du          Night City. Certes, vous ne pourrez pas acquérir le dernier
+                centre pour pouvoir être protégées des gangs en maraude           Agent digital mis sur le marché ou la meilleure arme du
+                qui sévissaient dans les environs.                                moment, puisque la guerre a fortement perturbé les chaînes
+                  À présent, grâce au soutien des familles nomades et des         de distribution. Mais grâce au développement des jardins
+                agences de sécurité privée, les néo-colons essaient de            de toit et des murs végétalisés, des batteries solaires de
+                                                                                  contrebande et du matériel reconditionné par votre super
+
+
+
+                                                                                                                                                   299
+  BIENVENUE À NIGHT CITY
+
+                      voisin Techie, vous mangez mieux (quand vous mangez),           • Les infrastructures routières et les taxes (que doivent
+                      avez accès à des équipements et à une source d’alimenta-           verser les corporations, les factions et les quartiers).
+                      tion électrique plus fiable ; vous pouvez même compter sur      • La délivrance d’autorisations pour les détectives indé-
+                      le Fixer du coin pour vous dégoter de nouveaux implants            pendants et les agents de police.
+          Pour plus
+    d’informations    cybernétiques et vous faire tester les drogues fraîchement
+                                                                                       • Les services de justice et les contrats de la ville avec
+     sur les corpos   débarquées dans les Rues (en toute illégalité).
+ influentes à l’Ère                                                                        les entreprises de construction.
+      du Rouge, cf.    Ce n’est pas l’âge d’or des années 2020, choomba.                Night City ne possède pas de maire ou de pouvoir
+  page 267            Mais la Rue fonctionne encore.                                 central fort, aussi les affrontements entre factions sont-ils
+                                                                                     fréquents. Parfois, les conflits se règlent dans la Rue, l’arme
+
+                      P    articularités                                             à la main, plutôt que dans une salle de réunion propice
+                                                                                     aux négociations. On notera cependant qu’aucun camp
+                                                                                     n’a le dessus et, qu’entre les renversements d’alliances et
+                                « L e pouvoir politique                              les changements d’objectifs, les situations ne dégénèrent
+                                                                                     pas trop souvent en guerre ouverte.
+                                 prend racine dans le
+                                                                                       Chaque quartier de Night City possède ses propres
+                                   canon d ’un fusil . »                             services de secours qui restent malheureusement trop
+                                                               – Mao Zedong          peu subventionnés et manquent de moyens matériels. Ces
+                                                                                     petites unités lourdement armées fonctionnent grâce aux
+                                                                                     impôts prélevés sur les corporations locales et les habitants
+                      Politique                                                      du quartier.
+                      Sur le plan politique, Night City est actuellement gouvernée
+                      (toutes proportions gardées) par une junte comprenant          Services publics
+                      l’ancienne équipe municipale, des factions de Nomades
+                      et d’Edgerunners, et les quelques corporations dont les                            ▶ Hôpitaux ◀
+                      structures ont survécu à la guerre. Les membres les plus       Les deux hôpitaux publics construits dans les années 2020
+                      charismatiques et agressifs de ces organisations disparates    (le City Medical Center et le Crisis Medical Center) existent
+                      dominent le conseil municipal, qui inclut :                    encore dans le centre, mais subissent des inondations et de
+                       • Les familles nomades.                                       régulières coupures de services (électricité, eau, communi-
+                                                                                     cations). Malgré tout, ce sont les derniers établissements à
+                       • Les factions d’Edgerunners constituées de Netrunners,
+                                                                                     pratiquer les grosses opérations chirurgicales et à pouvoir
+                       de Solos, de Rockeurs et autres « Cyberpunks ».
+                                                                                     gérer les épidémies intermittentes qui se succédèrent après
+                       • L’ancienne équipe municipale.                               la chute des tours. On trouve dorénavant un certain nombre
+                        • L es corporations intéressées comme Biotechnica,          de cliniques itinérantes qui représentent la principale
+                            Continental Brands, Danger Girl, Militech, Network       source de soins à l’Ère du Rouge. C’est chez ces héritières
+                            54, Petrochem, Rocklin Augmentics, SovOil, Trauma        des « charcudocs » qui opéraient souvent en secret dans les
+                            Team, Ziggurat, Zhirafa et plus récemment Arasaka.       années 2020 que se rendent les habitants pour obtenir des
+                        Trop chaotique pendant l’après-guerre pour former            médicaments et des soins d’urgence, voire faire poser cer-
+                      une mairie centralisée, le conseil municipal de la ville       tains appareillages cybernétiques de niveau intermédiaire.
+                      se compose de gestionnaires urbains issus de différents        La ville dispose également d’une vaste crypte cryonique,
+                      districts et quartiers. Même les zones de combat disposent     vestige des lendemains de la chute où les corps jonchaient
+                      d’un gestionnaire, aussi incapable soit-il de contrôler les    les rues. Les corps s’y amoncellent dans les tiroirs de salles
+Vous trouverez les    gangs de sa circonscription. Le gestionnaire urbain élu par    réfrigérées.
+ grosses huiles de    son groupe disparate est personnellement responsable
+     Night City en
+  page 304
+                      de son secteur de la ville, contrairement au maire, titre                        ▶ Information ◀
+                      purement cérémoniel que conservent certaines localités         Les terminaux de données installés dans les années 2010
+                      comme San Francisco. Le conseil et les gestionnaires sont      occupent toujours les coins d’un bon nombre (30 %) de
+                      théoriquement chargés de gérer :                               rues et permettent d’accéder aux informations, aux ser-
+                        • Le puits de données local.                                 vices informatiques, aux fax-mails et au NET. Leur fonc-
+                       • L e zonage à destination des corporations et des           tionnement, même dans les conditions les plus difficiles
+                          habitants du quartier.                                     aujourd’hui, témoigne de la robustesse de leur conception
+                                                                                     d’origine. Toutefois, certains Netrunners, Techies et Fixers
+
+
+ 300
+                                                                                  BIENVENUE À NIGHT CITY
+
+                ont recâblé quelques-uns de ces terminaux pour qu’ils              Compte tenu des ressources limitées, les pots-de-vin et la
+                demandent une carte d’accès ou un autre type de paie-              corruption devinrent bientôt monnaie courante chez les
+                ment afin d’autoriser l’accès à leurs propres terminaux. La        Justiciers.
+                plupart des terminaux de données sont également reliés au             Les seuls vrais survivants dans la police de Night City
+                système du puits de données, ce qui permet de les utiliser         sont les membres du RAID-C, alias la MAX-TAC ou
+                comme cabines téléphoniques, services de messagerie,               « Psycho Squad ». Totalement incorruptible et fidèle à son
+                liseuses d’informations et points d’accès aux PopMédias.           commandant, Max Hammerman, ce bastion isolé du NCPD
+                                                                                   exerce un contrôle drastique sur tous les individus soup-
+                                      ▶ Le NET ◀                                   çonnés de comportement cyberpsychotique dans la ville.
+                La guerre a quasi éradiqué la plupart du trafic sur le NET
+                hors de la ville. Quant aux restes des noyaux du NET et            ▶ J’ai pas besoin d’un insigne à la con ◀
+                des infrastructures câblées, un cybervirus redoutable les          Alors que Night City (comme la plupart des zones urbaines
+                compromit gravement en ravageant les systèmes de proto-            des néo-colons) dispose de ses propres forces de police,
+                cole Ihara-Grubb à la fin de la guerre. Ce « DataKrash »,          d’autres secteurs engagent des forces de sécurité pour
+                que l’on attribue au Netrunner fou Rache Bartmoss peu              protéger des bâtiments essentiels comme les archives ou les
+                avant sa mort en 2021, a rendu la navigation dans le               bureaux municipaux. Ils attribuent la protection de l’ordre
+                NET mondial suicidaire. Les derniers agents de Netwatch            à divers professionnels : néocorporatistes, police privée
+                (la police mondiale du NET) ont pratiquement banni les             et troupes locales engagées par les propriétaires locaux
+                Netrunners de vastes sections de l’Architecture afin d’em-         pour patrouiller et contrôler certains secteurs. On peut citer
+                pêcher la diffusion du Krash.                                      parmi eux :
+                   Pour y parvenir, ils ont littéralement détruit des noyaux
+                essentiels du NET dans le système et en ont déconnecté
+                                                                                                       ▶ MAX-TAC ◀
+                d’autres. Le peu de trafic qui subsiste sur le NET à l’Ère         Ancienne branche de la police de Night City, MAX-TAC
+                du Rouge est limité à des VPN particulièrement protégés            est devenu une organisation indépendante. Elle passe
+                ou à des systèmes « d’écluses », des réseaux limitant la           des contrats avec les quartiers, les municipalités et même
+                circulation des données à l’intérieur d’un bâtiment ou d’un        certains individus privés pour s’occuper des atteintes les
+                campus.                                                            plus flagrantes envers le public : prises d’otage, individus
+                                                                                   atteints de cyberpsychoses, armes militaires, terroristes, etc.
+                            ▶ Le puits de données ◀                                MAX-TAX est dirigé par l’incorruptible commandant Max
+                Le puits de données est un réseau d’information à l’échelle        Hammerman, autrefois membre des forces de police de la
+                de la ville qui s’appuie sur le backbone constitué par les         ville. Hammerman se sent investi d’une mission : faire res-        Les terminaux
+                premiers terminaux de données datant d’avant l’Ère du              pecter la loi et l’ordre, et protéger les innocents. MAX-TAC       de données
+                                                                                                                                                      constituent
+                Rouge. Serveurs d’information et systèmes d’échange                obéit à la lettre à un code de conduite drastique : l’orga-        également un
+                conçus pour un usage public dans les limites d’une ville, les      nisation met un terme aux combats, peu importe qui les a           abri très résistant,
+                puits de données diffusent des contenus gratuits issus des         déclenchés. Si vous faites partie d’un service de sécurité         au cas où vous
+                                                                                                                                                      vous poseriez la
+                efforts collaboratifs d’une communauté d’utilisateurs. Dans        et que vous combattez une bande de boosters, vous feriez           question. Ils sont
+                leur conception, ils ressemblent au système de « pages »           mieux de déposer les armes quand les agents de MAX-TAC             considérés comme
+                hyperstratifiées adopté à l’essai puis abandonné pour le           se pointent si vous ne voulez pas qu’ils vous canardent            du béton Épais
+                                                                                                                                                       (25 PV).
+                NET au début des années 1990.                                      aussi. Ils ne gardent pas les prisonniers : les individus
+                                                                                   arrêtés sont remis au tribunal ou à la prison locale.
+                L a loi et l’ordre
+                                                                                                ▶ Services de sécurité ◀
+                Les forces de l’ordre de Night City se sont littéralement
+                écroulées sous l’effet de la guerre puis de la chute des           Ils sont représentés par des milliers de « flics à louer » en
+                tours. Peu à peu, divers Solos et agents des forces de             uniforme engagés pour surveiller les zones urbaines, les
+                l’ordre ont commencé à reprendre le contrôle sur les gangs         immeubles de bureaux et les zones résidentielles huppées.
+                en maraude et les pillards, quartier par quartier.                 La plus grande organisation de ce genre est Lazarus
+                                                                                   Security, héritier des deux sociétés omniprésentes dans les
+                   Plus les habitants avaient d’argent à investir dans la réso-    années 2020, Arasaka et Militech. Ces services de sécurité
+                lution du problème, plus ces forces de police improvisées se       ont le droit de procéder à des arrestations, mais pas de
+                montraient efficaces, les « flics à louer » des corporations       détenir des prisonniers : ceux-ci sont remis au tribunal ou
+                obtenant le top en matière de véhicules et de matériel.            à la prison locale.
+
+
+
+                                                                                                                                                     301
+  BIENVENUE À NIGHT CITY
+
+                           ▶ Sécurité corporatiste ◀                                         ▶ Transports : NCTC ◀
+                Semblables aux services de sécurité, ces groupes sont          Les bus de la Corporation des Transports de Night City
+                directement liés à une corporation. Ils n’ont généralement     (Night City Transit Corporation) desservent la majorité
+                pas le droit de procéder à des arrestations ni d’enfermer      des artères principales de la ville. Les infrastructures de
+                des prisonniers, mais les rumeurs abondent concernant des      la NCART (Night City Area Rapid Transit : Réseau de
+                prisons secrètes installées sous le QG des corpos.             Transport Rapide de Night City), corporation publique
+                                                                               financée par certains intérêts privés (c’est-à-dire corpo-
+                      ▶ Gardes du corps personnels ◀                           ratistes…), ont disparu sous des dizaines de mètres d’eau
+                Il s’agit des forces de sécurité personnelles autorisées et    salée lors de l’effondrement de la nappe phréatique de
+                contrôlées par la municipalité, un peu comme les détec-        Night City, mais on envisage de rebâtir les sections inon-
+                tives privés détenteurs d’un permis autrefois. Les gardes du   dées en surface et d’étendre le nouveau monorail pour
+                corps personnel sont aptes à user de la force maximale         couvrir les zones de banlieue en expansion : North Oak,
+                uniquement au cas où un danger physique immédiat               New Westbrook, Pacifica, Heywood et Watson.
+                menace leurs clients. Dépourvus du droit de procéder à
+                des arrestations, ils doivent appeler les forces de polices      ▶ Transport : le métro de Night City ◀
+                ou de sécurité locales pour faire des prisonniers.             L’aéroport local gère les vols domestiques et internatio-
+                                                                               naux. Ou les gérerait s’il y en avait. Là encore, le chaos de
+                           ▶ Police indépendante ◀                             la guerre a perturbé le trafic régulier : les jets et aérodynes
+                Variante des gardes du corps personnels, ces Solos sont        privés n’existent que pour les riches. Dans le cadre de la
+                engagés pour protéger un quartier. Ils « battent le pavé »     restauration urbaine, des plans en cours prévoient d’instal-
+                et patrouillent, gérant les menaces à mesure qu’elles se       ler un site de lancement par catapulte électromagnétique
+                présentent. La police indépendante a le droit de procéder      d’avions spatiaux/delta à Morro Rock (un batholite volca-
+                à des arrestations, conféré par le quartier pour lequel elle   nique qui représente la zone la plus géologiquement stable
+                opère. Parfois, elle dispose de cellules de détention, mais    de toute la région).
+                la plupart du temps, les prisonniers sont remis au tribunal
+                ou à la prison locale.
+
+
+
+
+                                                                                                                                        PAR EDDIE MENDOZA
+
+
+
+
+ 302
+                                                                                   BIENVENUE À NIGHT CITY
+
+                                       ▶ Transports : les routes ◀                  porte-conteneurs : ces bateaux représentent un autre
+                                                                                    moyen sûr de sortir de Night City par voie marine.
+                Night City se situe sur l’autoroute 828, qui s’étend vers
+                l’est pour rejoindre l’I-5. Par route, il faut 4 heures pour
+                                                                                    ▶ Transports : le ciel, et même l’espace ◀
+                rejoindre San Francisco (à cause de l’activité des gangs
+                et du mauvais état des routes) et environ 6 heures pour se          Besoin de voyager en un temps record ? Les clans nomades
+                rendre à Los Angeles.                                               contrôlent une bonne partie du trafic des aérozeps (les
+                                                                                    dirigeables modernes) dans la région et à l’étranger ;        Bien sûr, il existe
+                                                                                                                                                  déjà un monorail
+                                      ▶ Transports : les Nomades ◀                  en général, des vaisseaux et des Navis gravitent autour       fonctionnel et très
+                                                                                    de ces moyens de transport pour les défendre. Les vols        sécurisé qui circule
+                Pour entrer ou sortir de la ville de la façon la plus fiable, il                                                                  sur une boucle
+                                                                                    commerciaux et autres véhicules aériens se comptent sur
+                faut se tourner vers les services des clans nomades. Ceux-ci                                                                      comprenant la
+                                                                                    les doigts de la main à cause de leur coût trop élevé, mais   zone exécutive,
+                organisent des convois lourdement armés vers les villes
+                                                                                    si vous êtes vraiment pressé, vous trouverez tout un panel    Little Europe et
+                de la côte, de l’Ouest, et même jusqu’à la frontière des                                                                          le lotissement
+                                                                                    de pilotes, d’anciens membres de l’ESA (Agence spatiale
+                Nouveaux États-Unis. Ces convois, qui comptent souvent                                                                            Watson. Là où il
+                                                                                    européenne) ou des Orbitaux qui possèdent leur propre          y a de l’argent…
+                plus d’une centaine de véhicules, des Kombis géants abri-
+                                                                                    appareil suborbital. Tel le légendaire Han Solo, ces as de
+                tant plusieurs familles jusqu’aux petites motos blindées
+                                                                                    l’aviation se décarcassent pour échapper aux complica-
+                d’escorte, sont capables de repousser les gangs des routes
+                                                                                    tions administratives et sont prêts à transporter n’importe
+                et mercenaires en goguette les plus déterminés. Les clans
+                                                                                    quel chargement (y compris vous) tant que la prime est
+                établis sur l’océan ont réquisitionné tous les navires, depuis
+                                                                                    juteuse.
+                les paquebots de luxe abandonnés jusqu’aux gigantesques
+
+
+
+
+                PAR ALEXANDER DUDAR
+
+
+
+
+                                                                                                                                                  303
+   BIENVENUE À NIGHT CITY
+
+
+                          H    abitants de Night City                                        États-Unis. Les Weng Fang Tong contrôlent tous les jeux
+                                                                                             de hasard, les usuriers et la prostitution à Night City.
+                                                                                             Presque tous les gangs de boosters qui opèrent à Little
+                          Les noms à connaître, les individus à éviter et les                China sont ses employés, qu’il utilise comme hommes de
+                          employeurs potentiels à Night City.                                main. Depuis le dernier étage du bâtiment de sa société
+                                                                                             d’export, il surveille le quartier grâce à ses nombreux
+                          Les grosses huiles de Night City                                   sous-fifres, dont tous ont remplacé un de leurs yeux par
+                                                                                             une microcaméra télescopique. Ils envoient les vidéos
+                                       Tous ces gros bonnets                                 enregistrées par signaux brouillés à M. Ling Po.
+                                        qui dirigent la ville.                             Dr Edward Michaels, médecin (Corporatiste) :
+                                                                                            doyen de l’université de Night City (un job dont per-
+                          L’Autre Dr Bob (Medtech) : un des rares chirurgiens de            sonne d’autre ne veut), c’est celui vers qui on se tourne
+                            Night City qui n’a pas été formé dans l’armée. L’Autre Dr       quand on veut quoi que ce soit sur le campus. Cet
+      Dans une vie          Bob installe beaucoup d’implants cybernétiques chez             homme au crâne dégarni qui approche les quatre-
+    antérieure, Bes         les boosters, mais il refuse de réaliser des reconstruc-
+  Isis faisait partie                                                                       vingts ans court encore tous les matins pour garder la
+         de Samurai,        tions faciales pour les poseurs. Il y a quelques années,        forme, aidé par ses nouvelles cyberjambes de Rocklin
+       le groupe de         il s’agissait juste d’une compétence qu’il ne maîtrisait        Augmentics. Clairement ouvert et honnête, le Dr
+        musique de
+Johnny Silverhand.
+                            pas, mais depuis, l’un des nombreux John F. Kennedy             Michaels a acquis une réputation d’excellence dans
+                            Juniors de Night City lui a fait perdre l’usage de ses          les cercles académiques pendant son mandat au sein
+                            mains. Dorénavant, l’Autre Dr Bob abhorre les gangs             du conseil d’établissement de Pacifica. Il a passé des
+                            de poseurs. Et pour ne rien arranger, tout le monde le          marchés avec divers groupes d’Edgerunners dans le but
+                            confond avec le Dr Bob Jones, l’un des Visages de la            de défendre son université à l’Ère du Rouge. Michaels
+                            Trauma Team.                                                    pense également que tous devraient recevoir un traite-
+                          Bes Isis (Média) : Bes Isis est une Média indépendante            ment identique à l’Université de Night City, alors que
+        Fiona Hayes
+ n’est pas la seule        célèbre réputée pour ses méthodes dangereuses lors-              nombre de ses collègues croient qu’il faut se tourner vers
+  journaliste qu’on        qu’il s’agit de rafler un scoop au nez de ses homologues.        un financement total de la part des corporations.
+  peut soupçonner
+     de ne pas être        Il lui est arrivé à plusieurs reprises d’enfreindre plusieurs   Fiona Hayes (Média) : là où il y a des scandales, des
+           l’originale.    règles pour avoir la primeur d’un gros article, et d’en           pots-de-vin ou des affaires de corruption, on est sûr de
+       Beaucoup de
+    Médias utilisent
+                           payer le prix. Elle a une jambe chromée et une prothèse           trouver la vedette de Net 54, Fiona Hayes. Véritable ins-
+ le nom de plume           remplaçant la moitié de sa poitrine : deux accessoires            titution de Night City, elle a pour habitude d’apparaître
+      « Thompson »         indispensables après avoir feint une blessure grave pour
+            quand ils                                                                        là où elle n’est pas la bienvenue, généralement accom-
+          souhaitent       décrocher un article sur le « grille-médecin ».                   pagnée d’une équipe de tournage accomplie et triée sur
+ publier un article                                                                          le volet ainsi que d’une batterie de questions délicates.
+   particulièrement       Blacklist (Techie) : ancien ingénieur en chimie et en
+   dangereux sans           cybernétique renégat de Biotechnica, Blacklist se fait           Ses enquêtes ont dévoilé des crimes politiques et cor-
+       qu’on puisse         connaître à Night City de diverses manières. C’est               poratistes, des scandales et des conspirations. Nombre
+            remonter
+       jusqu’à eux.         l’homme vers qui se tournent les gangs de boosters               d’anciens gros bonnets vivent désormais en prison ou ont
+                            pour obtenir des prothèses « personnalisées », les cor-          dû prendre une retraite honteuse à cause d’elle. Bien sûr,
+                            porations pour synthétiser des virus et la police pour           ses exploits journalistiques ont fait de Fiona une femme à
+                            identifier et analyser des produits chimiques utilisés dans      abattre qui doit parfois vivre plusieurs mois comme une
+                            des crimes. Après sa querelle avec Biotechnica, il a fini        fugitive pour éviter de se faire assassiner par les sujets
+                            par faire la paix avec Niccolo Loggagia et retrouvé un           de ses articles. Elle en reparaît au grand jour qu’une
+                            emploi comme concepteur d’animaux transgéniques de               fois ses articles complets et bien étayés par des preuves,
+                            remplacement.                                                    acculant sa cible dans un lieu agréable et public avec
+                                                                                             son équipe de tournage. Même si son sujet refuse de
+                          David Ling Po (Corporatiste) : né à Hong Kong, David
+                                                                                             commenter, ses reportages font généralement boule
+                           a émigré aux États-Unis avec sa famille en 2014. Après
+                                                                                             de neige jusqu’à leur inévitable conclusion. La rumeur
+                           avoir décroché un diplôme avec mention très bien à
+                                                                                             prétend dans la rue qu’elle n’est pas la première Fiona
+                           l’université de Stanford, Ling Po, pilier de la commu-
+                                                                                             Hayes, et qu’elle ne sera pas la dernière.
+                           nauté, semble incarner toutes les valeurs du business-
+                           man moderne. Mais derrière sa façade respectable,               Fireman (Fixer) : Fireman est le plus connu des nom-
+                           Ling Po dirige les Weng Fang Tong, la plus puissante              breux marchands d’armes locaux. Il se distingue en
+                           et vaste organisation criminelle chinoise de l’ouest des          fournissant beaucoup de commerces légaux en systèmes
+
+
+  304
+                                                                                 BIENVENUE À NIGHT CITY
+
+                  de sécurité, en plus des armes qu’utilisent leurs videurs       Mister Kernaghan (Fixer) : avant la 4 e Guerre
+                  et leurs Solos. Fireman était à l’origine un cybersoldat         corporatiste, Mister Kernaghan travaillait au support
+                  engagé dans la guerre SudAm et qui exploita ses                  informatique des autorités portuaires de Night City.
+                  contacts après avoir pris sa retraite militaire pour mettre      Quand la bombe éclata et que le port ferma, il s’empara
+                  en place une modeste entreprise. En plus des armes,              d’un maximum de données et s’enfuit. Une fois en lieu
+                  Fireman vend des informations, ce qui le rend très popu-         sûr, loin des radiations, Mister Kernaghan utilisa ces
+                  laire parmi les Edgerunners de la ville. Client régulier         manifestes d’expédition et ces plans de route pour se
+                  de l’Afterlife, il est bien connu dans la communauté des         bâtir un empire. Au début, il engagea des équipes pour
+                  Solos.                                                           récupérer des denrées vitales comme de la nourriture, de
+                Franklin M’bolu (Techie) : concepteur de nombreuses                l’eau et des médicaments afin de les vendre aux gangs
+                  technologies de pointe chez Orbital Air, M’bolu a pour           locaux et aux bandes de nomades. Mais à mesure que
+                  mission de bâtir la future catapulte électromagnétique           Night City se remettait, il passa à des produits plus
+                  de la société. Installée sur Morro Rock, elle permettra          rares qui rapportaient davantage. Désormais riche,
+                  d’envoyer des avions spatiaux en LEO. Dur en affaires,           Mister Kernaghan règne avec son chat Kosmos sur
+                  Franklin M’bolu gérait à l’origine les contrats et les           une véritable cour qui se réunit tous les trimestres pour
+                  marchés aux États-Unis. Dans certains cercles, on                des marchés de minuit où l’élite vient se procurer des
+                  prétend qu’il arrondirait les fins de mois en revendant          articles de luxe comme des Aérozeps, des combinaisons
+                  certains appareils et informations au marché noir.               CryoMax et des articles de collection uniques.
+
+                Garven Haakensen (Fixer) : ancien assistant au                    Nostradamus (Média) : contrairement à son homo-
+                 maire, le « conseiller municipal » Haakensen passe tout           nyme des années 1400, Nostradamus se spécialise
+                 son temps dans son bureau. Il a des contacts parmi tous           non pas dans le futur, mais dans le passé et le présent.
+                 les groupes d’intérêts spécialisés, ainsi que dans les            Il vit en reclus dans un entrepôt aménagé et bien
+                 corporations et au sein du crime organisé. Ou plutôt,             défendu. L’endroit abrite la plus grande collection de
+                 pour préciser, ce sont eux qui ont des contacts avec lui.         livres rares de la ville. Nostradamus s’en sert, en plus
+                 Jusqu’ici, il a réussi à jongler avec toutes ces relations        d’un gigantesque système informatique, pour compiler
+                 au fil des ans sans que personne ne s’en rende compte,            toutes les informations possibles. Il engage souvent des
+                 et puisqu’il n’existe plus de maire officiel à Night City,        Netrunners pour lui faciliter la tâche en se procurant les
+                 Haakensen est ce qui se rapproche le plus d’un courtier           informations à vendre dont il vit.
+                 en influence dispensant des faveurs.                             Phoenix Redwyne (Medtech) : quand Phoenix a
+                Hornet (Fixer) : ce self-made-man qui s’est fait une               lâché son job à la Trauma Team, elle avait un plan.
+                 quantité d’ennemis est devenu un Fixer connu et respecté          Exercer quelques petits boulots, mettre de l’argent de
+                 en ville depuis quelques années. Ancien faussaire à la            côté et ouvrir sa propre clinique. Et la 4e Guerre cor-
+                 petite semaine de Heywood, il a fait ses premières armes          poratiste a éclaté et a tout fichu par terre. Au lieu de
+                 auprès d’Arasaka à la fin de la 4e Guerre corporatiste            gagner suffisamment pour ouvrir une belle clinique chic,
+                 en fournissant de meurtrières armes chimiques dont                Phoenix a dû se débrouiller avec les moyens du bord.
+                 certaines étaient de sa conception. Après la guerre, il           Elle a ouvert la première version, baptisée « Née des
+                                                                                   cendres » dans une tente en bordure de la ville. Au fil      Le plus sûr moyen
+                 s’est fait une place dans la plupart des marchés de la                                                                         de mettre Hornet
+                 ville, contractant des alliances avec nombre de bandes            des ans, l’établissement s’est déplacé dans un conteneur     en colère consiste
+                 nomades en périphérie et réquisitionnant des Techies et           vide, puis une boutique abandonnée, et finalement dans       à lui parler de
+                                                                                                                                                sa maison. La
+                 medtechs de talent à son service. Si vous avez besoin de          un garage aménagé. Ces temps-ci, si Phoenix n’a pas          rumeur prétend
+                 cybertech, de biotech ou de drogue, Hornet est l’homme            fermé boutique, c’est grâce aux donations de la commu-       qu’il possédait un
+                                                                                   nauté et à un complexe réseau de relations. Après avoir      joli petit coin en
+                 qu’il vous faut. Il possède plusieurs bureaux dans toute la                                                                    banlieue autrefois,
+                 ville et voyage souvent, jamais sans sa garde du corps,           passé deux décennies à rafistoler les habitants de Night     avec une clôture
+                 une Solo masquée et munie d’un monokatana du nom                  City, presque tous ceux qui comptent en ville lui doivent    blanche et tout
+                                                                                   une ou deux faveurs.                                          le toutim !
+                 de Fox.
+                Lucius Rhyne (Rockeur) : organisateur communautaire               Queen Morosha (Solo) : étoile montante dans la
+                  du nouveau lotissement Watson, Lucius est un des rares           communauté des Solos, Queen Morosha est un per-
+                  idéalistes œuvrant pour un monde meilleur. Il est connu          sonnage mystérieux qui se fraya un chemin hors de la
+                  pour ses discours galvanisant et ses incitations à l’action.     zone de combat pour devenir l’un des Solos les plus
+                                                                                   réputés de la ville en quelques années seulement. Elle
+                                                                                   a déjà gagné le surnom de « Reine des Solos » en
+
+
+                                                                                                                                                305
+  BIENVENUE À NIGHT CITY
+
+                  dirigeant une organisation de tueurs et de gardes du               et un pharmacien herboriste du peuple. Il est connu
+                  corps en petit nombre, mais extraordinairement effi-               et respecté par ses pairs, car il sait toujours ce qui se
+                  caces. Contrairement à nombre d’autres Solos, Queen                passe dans les communautés asiatiques de Night City.
+                  Morosha a opté pour une visibilité extrême, donnant des            L’information coule comme une rivière entre ses mains et
+                  interviews sur son travail et son organisation et faisant          il la dirige souvent là où elle aura les effets les plus béné-
+                  des apparitions de temps à autre. On peut affirmer que             fiques. Pour beaucoup, ce n’est qu’un herboriste qui ne
+                  son ascension fulgurante a fait grincer des dents, mais            parle que son cantonais natal. Mais si on le confronte à
+                  jusqu’ici, personne n’a réussi à abattre la reine.                 un problème intéressant ou si on lui témoigne le respect
+                Rex Royale (Fixer) : la sécurité préoccupe constam-                  adéquat, il tombe le masque et peut se révéler très utile.
+                 ment ceux qui vivent en bordure des zones de combat.              Les gros durs de Night City
+                 Mais où s’arrêtent-elles au juste ? À en croire Rex, là
+                 où il l’a décidé. C’est pourquoi les gens le paient pour              Quelques individus remarquables
+                 qu’il les en protège. Ce n’est pas comme si la police
+                 allait s’en charger. À mi-chemin entre racket et service                       à ne jamais importuner
+                 public, les Solos Communautaires de Rex entretiennent
+                 suffisamment sa popularité auprès de ses voisins pour             « Couteau » (Solo) : cet assassin yakuza opère désor-
+                 que ceux-ci continuent à le rémunérer. Il faut bien le dire,        mais dans la région de Night City. Nul ne sait à quoi
+                 Rex se soucie réellement de la communauté et organise               ressemble ce maître du déguisement, et encore moins
+                 même de temps à autre des petits-déjeuners avec pan-                de qui il s’agit. On ne se méfie jamais de quelqu’un qui
+                 cakes et tout le toutim. Mais son affaire n’est pas une             pourrait avoir n’importe quel visage. La rumeur prétend
+                 œuvre de charité, c’est tout.                                       que « Couteau » serait un nom de code désignant
+                                                                                     plusieurs assassins. Si vous avez besoin de le joindre —
+                Rogue (Solo) : autrefois, Rogue et son ex-partenaire
+                                                                                     mais réfléchissez-y à deux fois… — laissez le message
+                 Santiago étaient les meilleurs assassins et gardes du
+                                                                                     « Katana » sur un compte ZChat spécifique connu de
+                 corps de la ville. Après le traumatisme de la bombe,
+                                                                                     certains Fixers.
+                 Rogue prit sa retraite et reprit l’Afterlife. Aujourd’hui, elle
+                 s’entoure d’une cour composée de Solos locaux et joue             Déchiqueteuse (Nomade) : l’avènement des Nomades
+                 parfois les intermédiaires auprès de contacts potentiels.          à l’Ère du Rouge a conduit à une escalade croissante
+                                                                                    des conflits entre leurs familles. Quand ils cherchent
+                William Joseph « Billy Joe » Brent wood
+                                                                                    une médiatrice, ils se rendent souvent au garage de
+                 (Corporatiste) : pour la plupart de ceux qui le croisent,
+                                                                                    Déchiqueteuse, à l’orée de Night City. Des querelles
+                 Billy Joe Brentwood reste le cadre sympathique, grande
+                                                                                    portant sur des terres récupérées aux conflits entre
+                 gueule et peu avare en louanges qui dirige la succursale
+                                                                                    personnes, ils lui balancent tout. Pour ses clients,
+                 de Petrochem (firme de Dallas) à Night City, ce type
+                                                                                    Déchiqueteuse est à la fois juge extralégal, détective
+                 qui raconte des histoires de pêche bon enfant et les
+                                                                                    privé et conseiller conjugal. Dans son garage, les
+                 anecdotes de sa jeunesse turbulente dans l’État Libre
+                                                                                    armes sont interdites, et quiconque cherche la bagarre
+                 du Texas. Ceux qui le côtoient de près connaissent pour-
+                                                                                    se retrouve jeté dehors sans délicatesse par 122 kg de
+                 tant la vérité. Derrière la façade de cadre très en vue et
+                                                                                    Nomade éperdument pacifique à charpente linéaire
+                 généreux se cache un individu impitoyable et ambitieux
+                                                                                    implantée sous blindage subdermique.
+                 qui ne se soucie guère de ceux qu’il doit abattre pour
+                 atteindre le sommet, à condition que son image n’en               Dillon Murphy (Solo) : Dillon est un Solo d’âge mûr qui
+                 pâtisse pas. Si l’on en croit la rumeur, il tremperait dans         hausse rarement le ton et s’est bâti une solide réputation
+                 pas mal d’affaires, y compris dans la politique locale              dans la Rue grâce à son sang-froid et à sa rapidité avec
+                 et nationale. Son mode de vie l’expose fréquemment                  un calibre 44. Il s’exprime avec un accent irlandais à
+                 aux scandales : c’est une des cibles favorites des maîtres          couper au couteau et ressemble à un certain Rory
+                 chanteurs et des journalistes d’investigation, mais                 McGuire, artilleur de l’I.R.A. de Belfast évadé d’une
+                 nombre de ceux qui ont tenté de lui forcer la main ou               prison de sécurité maximale il y a plusieurs décennies.
+                 de révéler sa face cachée ont fini par réapparaître dos             Dans son dos, on le surnomme le « chevalier blanc de
+                 au soleil dans les eaux du port, ou par se volatiliser…             Night City » en raison de l’attitude noble qui le pousse
+                                                                                     à protéger la veuve et l’orphelin, souvent à titre gratuit.
+                Dr Wu Chii Lee (Medtech) : désormais confortablement
+                                                                                     La rumeur prétend qu’il aurait épousé une ravissante
+                  installé dans le lotissement Watson, le vieux Dr Lee est
+                                                                                     rouquine et se serait rangé pour élever une horde de
+                  un guérisseur, un prêtre, un diseur de bonne aventure
+                                                                                     gamins. On le trouve pourtant toujours dans la Rue de
+
+
+
+ 306
+                                                                                BIENVENUE À NIGHT CITY
+
+                  temps à autre, en particulier autour de l’église du père         à des opérations dans une bonne douzaine de pays,
+                  Kevin.                                                           ce qui n’étonnera personne. Mais quand il a fini par
+                Eran Malour (Techie) : vétéran médaillé des guerres                ne plus supporter cette destruction sans fin et l’intolé-
+                  d’Amérique du Sud, Eran Malour en a eu assez un jour.            rance des humains, il en est venu à la conclusion que
+                  Après avoir passé huit ans chez les marines, il est rentré       seules la charité et la grâce divine pouvaient sauver
+                  aux États-Unis et s’est servi de ses économies pour créer        l’humanité. Son église fournit un refuge à tous ceux qui
+                  sa propre entreprise. Armurier de talent, il a commencé          le demandent (et sont prêts à lui remettre leurs armes)
+                  à fabriquer des armes personnalisées pour ses amis               et il n’hésite pas à jouer les médiateurs. Le père Kevin a
+                  et s’est vite fait une clientèle parmi les Solos de Night        réglé pacifiquement un nombre stupéfiant de problèmes
+                  City. En 2016, il a convaincu certains des plus fidèles          de gangs ou de corporations, même au sein du chaos
+                  d’investir dans l’avenir de son affaire. Il a acheté une         de l’Ère du Rouge.
+                  petite fabrique robotique que les récentes innovations         Pouce Vert (Solo) : né à Night City au sein d’une
+                  de fabrication en gravité zéro avaient rendue obsolète,         famille d’immigrants nigériens, Pouce Vert s’engagea
+                  et il l’a adaptée pour concevoir, produire et modifier          chez Militech quand la guerre éclata pour de bon. Il y
+                  n’importe quelle arme à feu selon les souhaits du client.       exerça jusqu’à la fin du conflit, et lorsqu’il rentra chez lui,
+                  Aujourd’hui, il est pour ainsi dire à la retraite, mais il      il trouva un foyer presque anéanti. Sa famille et nombre
+                  vous bricolera une arme s’il vous a à la bonne. Un de ses       de ses amis ayant été tués, sa maison détruite et son
+                  clients les plus remarquables était Johnny Silverhand, à        corps truffé de cyborgimplants, Pouce Vert n’avait plus
+                  qui il a fabriqué toutes sortes de pistolets personnalisés.     rien, excepté l’envie de rebâtir sur les cendres. Après la
+                Fox (Solo) : Fox est une grande femme mince, ou du moins          guerre, il est devenu l’un des jardiniers de toit du Centre-
+                  c’est ce qu’on s’imagine d’après sa voix. Depuis son plus       ville en reconstruction. Toujours muni de ses implants et
+                  jeune âge, elle cultive une aura intimidante, toujours élé-     bien entraîné après des années de combat, il a formé
+                  gamment vêtue de noir de la tête aux pieds, le visage           une coalition de jardiniers et de fermiers qu’il protège           Kenshiro est
+                                                                                  contre les gangs et des corpos telles que Continental              réputé pour
+                  à peine visible derrière le filet cousu dans sa capuche,                                                                           accepter des
+                  et parlant à peine. Garde du corps de Hornet pendant            Brands.                                                            affaires auxquelles
+                                                                                                                                                     la plupart des
+                  des années, elle a fait ses premières armes en décevant        Recluse (Netrunner) : on ne sait pas grand-chose de la              agences de
+                  un flux constant d’individus bien décidés à abattre son          Netrunner solitaire qui vit au cœur de la zone de combat          détectives, y
+                  pittoresque protégé pendant qu’il gravissait les échelons        de l’ancien quartier de Japantown. Mais tout le monde             compris Danger
+                                                                                                                                                     Girl, refusent
+                  du pouvoir à Night City. Elle est désormais connue et            sait qu’on n’entre pas dans le vieux centre commercial             de toucher.
+                  respectée dans la ville, mais elle n’a pas changé d’atti-        Kaifū Corner à moins de chercher les ennuis ou d’avoir
+                  tude, tout simplement parce qu’elle y est habituée. Elle         besoin d’un des meilleurs Netrunners. Ces dernières
+                  préfère tuer de façon discrète, mais efficace. La rumeur         années, la Recluse a vécu dans ce petit supermarché
+                  prétend qu’elle entraînerait de jeunes Solos à agir de la        où elle a installé des systèmes de défense coûteux et
+                  sorte, mais personne n’en est sûr, évidemment.                   discrets, ainsi que des architectures NET complexes que
+                Kenshiro Saeba (Justicier) : ancien Solo qui servit lors           la plupart des Netrunners rêveraient de se procurer.
+                 de la guerre SudAm, Kenshiro travaille comme détective            Elle ne parle qu’aux clients capables d’aligner de gros
+                 privé dans la Little Europe, où on lui a donné le surnom          billets, et ne rencontre jamais quiconque en personne.
+                 de « Chasseur Nocturne ». Il y a quelques années,                 La Recluse préfère rencontrer ses clients à l’accueil de
+                 quand il a résolu une affaire d’enlèvement impliquant             son Architecture NET, où elle se présente sous la forme
+                 Yasume Kanzaki et un baron de la pègre rival, il a été            de son emblème, une énorme araignée recluse brune à
+                 contraint de faire profil bas et de se cacher à Japantown         la voix glaciale. Certains prétendent qu’il s’agit d’une
+                 pendant plusieurs années. Redoutable tireur, Kenshiro             ancienne agente de Netwatch qui se cacherait de ses
+                 est un homme qu’on aime avoir à ses côtés au combat.              ex-employeurs, d’autre que c’est une IA… D’aucuns affir-
+                 Il s’est fait beaucoup de contacts parmi les forces de            ment même que la Recluse serait un fantôme du NET qui
+                 l’ordre, mais tous n’approuvent pas ses méthodes.                 vivrait dans l’ancien NET. Mais il y a une chose que tous
+                                                                                   les habitants de la zone de combat savent : quand on
+                Père Kevin (Solo) : le père Kevin de l’église des Anges            a besoin de quelqu’un pour pirater les recoins les plus
+                  du Seigneur était Solo dans sa jeunesse, et il a participé       hermétiques du NET, on s’adresse à la Recluse.
+
+
+
+
+                                                                                                                                                    307
+  BIENVENUE À NIGHT CITY
+
+                       Les gangs de Night City                                            Cruz jusqu’aux villes du sud. Ils engagent sans hésiter
+                                                                                          tous les individus compétents, fiables et capables de
+                       Les rues animées de Night City grouillent de gangs. Le             tenir le rythme. Intelligents et relativement honnêtes,
+                       jour, la Rue reste le domaine des corporatistes et de ceux         ils remplissent des contrats d’approvisionnement pour
+                       qui font la navette vers la Petite couronne. Mais la nuit, les     plusieurs groupes de néo-colons de Night City.
+                       prédateurs sortent de leurs trous et de leurs tas d’ordures,
+                       et la ville se met à hurler. Traitez-les de rats d’égout, de     Les Inquisiteurs : les Inquisiteurs forment une véritable
+                       rôdeurs, de racaille ou d’engeance des bas-fonds, les              secte. Ce gang agressif s’appuie sur une idéologie reli-
+                       gangs sont pourtant les maîtres nocturnes de Night City.           gieuse. Les Inquisiteurs considèrent les cyberimplants
+                       Qu’il s’agisse d’une douzaine d’individus ou d’une armée           comme blasphématoires et n’ont aucun scrupule à
+                       de deux cents, chaque gang est aussi diversifié que la Rue         vous les arracher : ils estiment que de cette façon, ils
+          Malgré les   elle-même : gardiens, chromeurs, dorpheurs et détraqués            « sauvent » votre âme. Non seulement ils estiment que
+       rumeurs qui                                                                        c’est le « mal », mais ils sont en guerre avec à peu près
+  circulent depuis     forment ensemble un cocktail meurtrier, avec une bonne
+         des années,   dose de sang pour couronner le tout.                               tous les autres gangs de la ville. Tout le monde déteste
+           personne                                                                       ces types-là.
+         n’a jamais                         Voici les gangs.
+      pu confirmer                                                                      Iron Sights : les Iron Sights (surnommés également les
+     l’existence du                  Voici vos pires cauchemars.                          « Yeux de fer ») forment un gang de combat d’effectif
+  « Grand Bozo »,      La 6 th Street : à l’origine composé des nombreux vété-            modeste, mais étonnamment résistant, dont les membres
+       censé diriger
+          les Bozos.     rans de la 4e Guerre corporatiste, la 6 th Street est un         sont proches de la cyberpsychose. Financés par
+                         gang de justiciers qui cherchent à protéger divers quar-         Arasaka, ils ont connu un temps de vaches maigres après
+                         tiers de la ville. Ses membres sont généralement bien            la guerre, mais on raconte dans la Rue qu’ils auraient
+                         armés et toujours munis de leurs cyberimplants militaires.       un nouveau bienfaiteur et qu’ils auraient commencé à
+                         Récemment, il leur a fallu passer à l’extorsion et à la          ressortir leurs éventreurs.
+                         contrebande pour payer les factures. Même s’ils opèrent
+On ne sait jamais        dans toute la ville, les membres de la 6 th Street sont        Maelstrom : ce gang de combat naquit autour des ves-
+  si quelqu’un est       surtout les protecteurs de l’église des Anges du Seigneur.      tiges des Metal Warriors, une bande presque entière-
+un Inquisiteur. Ils                                                                      ment massacrée en une nuit par les Inquisiteurs. Il recruta
+   cachent souvent     Les A n nonc ia t eurs : les A nnonciateurs (ou                   par la suite des membres de la Légion du Chrome Rouge
+ les robes de leur
+    gang quand ils      « Reckoners ») forment l’une des sectes apocalyptiques           et des Iron Sights qui éprouvaient de violentes rancunes
+      exercent leur     qui ont surgi après la guerre. Ils hantent les rues, prê-        personnelles vis-à-vis de ces derniers. Après la guerre,
+ travail ordinaire.     chant l’imminence de la Moisson des Âmes, recrutant              le Maelstrom mit un terme à une longue vendetta contre
+                        les sans-abris et cherchant les donations, bien souvent          un petit gang de cyberpsychos et finit par adopter en
+                        récupérées après vous avoir assommé. Quelques-uns                partie la philosophie de ses vieux rivaux qui détestaient
+                        sont assez dingues pour vouloir précipiter la fin des            la chair. Ce bouleversement conduisit à une augmen-
+                        temps dans le sang, à coup de C4…                                tation presque exponentielle des implants visibles et
+                       Les Bozos : au début, les Bozos faisaient surtout de sales        extrêmes parmi les membres du gang. Et bien sûr, ce
+                         blagues. Biosculptés pour ressembler à des clowns de            phénomène a en retour provoqué un nombre croissant
+                         cirque, avec de gros nez rouges, des cheveux roux               d’affrontements de plus en plus brutaux entre Maelstrom
+                         en bataille et de longs pieds plats (des pieds, pas des         et Inquisiteurs.
+                         chaussures…), vêtus du costume approprié, ils se lan-          Les Piranhas : les Piranhas sont un gang de fêtards
+                         çaient dans des pantomimes hilarantes et improvisées.            typique. Ils font la fête, boivent du Smash, prennent de
+                         Mais bientôt, les Bozos se transformèrent en gang de             la drogue et en vendent, et agressent les gens « juste
+                         clowns tueurs. Ceux qui vivaient sur leur domaine appre-         parce que ». Pour eux, la Fête est partout.
+                         naient à déguerpir quand ils les croisaient en bande. Les
+                         Bozos aiment exploiter les peurs de la population : ils        Les Primetimers : les Primetimers font partie d’un gang
+                         se cachent dans des appartements obscurs, enferment              de poseurs qui se servent de la biosculpture pour res-
+                         leurs victimes dans des endroits exigus remplis de rats,         sembler à des personnages de vieux sitcoms et émis-
+                         arrêtent des ascenseurs entre deux étages pour les               sions télévisées de jadis. Ils forment une sorte de famille
+                         remplir d’eau, etc. Ils ne sont pas drôles.                      étendue qui protège leur quartier et rêve d’une époque
+                                                                                          révolue. Les Primetimers se divisent en plusieurs factions
+                       Les Cowboys d’Acier : cette bande de nomades venus                 basées sur diverses émissions. Ils protègent farouche-
+                         de Salinas organise des convois bigarrés qui font la             ment leur territoire et leurs membres.
+                         route le long de la côte, des terres agricoles de Santa
+
+
+
+ 308
+                                                                             BIENVENUE À NIGHT CITY
+
+                La Légion du Chrome Rouge : la Légion est un groupe haineux néofasciste, de jeunes gens
+                  rassemblés autour de leur haine de divers groupes. Les uniformes et les slogans militaristes
+                  sont la règle. Les membres de la Légion s’attaquent à tout ce qui n’est pas « bien » à leurs yeux.
+                Les Scavvers (Scavengers) : les Scavvers ne forment pas un gang à proprement parler.                     Où sont passés
+                  Le terme désigne les sans-abris désespérés qui squattent dans les ruines de zones urbaines              les [insérer ici
+                                                                                                                       le nom d’un gang] ?
+                  ravagées par la guerre. Ils fouillent les débris au péril de leur vie pour trouver des articles à
+                  revendre : cuivre, platine, vieux appareils et même armes abandonnées. Beaucoup y laissent
+                  leur peau, surtout parce que ces champs de bataille urbains ont déjà été passés au peigne            Même avant la 4e Guerre
+                  fin pendant les dix-sept dernières années et qu’il leur faut creuser de plus en plus profond, en     corporatiste, la vie des
+                  terrain instable, pour dégoter le moindre objet intéressant.                                         gangs n’était qu’un cycle de
+                                                                                                                       violence meurtrière. Il n’était
+                Les Tyger Claws : autrefois à la solde d’Arasaka, les Tyger Claws ont pris leur indépendance           pas rare que l’un d’entre eux
+                  pour devenir un dangereux gang de protecteurs de la communauté asiatique de Night City.              disparaisse totalement après
+                  Ils ont joué un rôle important dans la reconstruction de pans entiers de Japantown après la          une orgie de destruction,
+                  4e Guerre corporatiste. Les Tyger Claws sont réputés pour leurs motos rapides, leurs réflexes        décimé par un rival ou
+                  augmentés et leurs arts martiaux meurtriers.                                                         par les représailles d’une
+                                                                                                                       corporation.
+                Les Vampyres philharmoniques : les Vamps sont un gang de farceurs qui tient son nom                       Au lendemain de
+                  d’un canular perpétré il y a quelques décennies, et durant lequel cinq de leurs membres vêtus        l’holocauste de Night City, le
+                  de capes et de smokings, et portant de fausses dents de vampire, volèrent attachés à des             chaos a éparpillé beaucoup
+                  câbles derrière l’orchestre philharmonique de Night City la nuit d’Halloween. Artistes, voyous,      de gangs. Les DJ se sont
+                                                                                                                       disséminés aux quatre vents,
+                  critiques de la société ? Leurs dents font-elles simplement partie de la panoplie ? Qui sait…
+                                                                                                                       les R.A.G.E.U.X. ont eu
+                Les Voodoo Boys : les contacts avec le crime en Floride et dans les Caraïbes ont peut-être             raison des Surdoués, et la
+                  été à l’origine des Voodoo Boys, gang terroriste aux pratiques teintées de magie rituelle et         plupart des Sauvages ont
+                  dont les membres satisfont leurs goûts étranges en dealant des drogues essentiellement non           succombé face aux soldats
+                                                                                                                       de Militech.
+                  synthétiques. Mais les choses ont changé récemment, quand de vrais Haïtiens et autres réfugiés
+                  de République Dominicaine ont commencé à affluer dans la région. Ces immigrants ont consi-              Bien sûr, un survivant peut
+                  déré les soi-disant « Voodoo Boys » comme une insulte et ont exprimé leur mécontentement en          toujours faire renaître son
+                                                                                                                       gang, à moins que quelqu’un
+                  estropiant leurs victimes, en les décapitant à la machette et en laissant des membres coupés
+                                                                                                                       ne décide de récupérer
+                  çà et là en guise de mise en garde. Restez à l’écoute !                                              un peu de la notoriété
+                                                                                                                       d’un ancien groupe en
+                                                                                                                       s’appropriant son nom et son
+                                                                                                                       thème.
+                                                                                                                          Si l’un de vos chouchous
+                                                                                                                       d’une précédente édition ne
+                                                                                                                       figure pas ici, n’hésitez pas à
+                                                                                                                       le réintroduire. Night City est
+                                                                                                                       grande, et il y a bien assez
+                                                                                                                       de place pour un gang ou
+                                                                                                                       deux de plus.
+
+
+
+
+                                                                                                                                            309
+  BIENVENUE À NIGHT CITY
+
+
+
+
+                                                                                                                                     NIGHT CITY AUX ENVIRONS DE 2045
+
+
+
+
+                L   es sites importants en ville et aux environs
+
+                Vous trouverez ci-dessous les lieux les plus importants et les plus intéressants de Night City.
+
+                Zone irradiée
+                   Le Totentanz : ce bar situé à la limite de la zone irradiée est réputé être l’endroit où on peut trouver des gangs
+                1.	
+                   de boosters. Ils semblent tous s’y réunir, mais pas pour danser. Quand le nombre de victimes est inférieur à vingt, ils
+                   appellent ça une mauvaise nuit.
+
+
+
+ 310
+                                                                             BIENVENUE À NIGHT CITY
+
+                Le Centre-ville en reconstruction
+                                                                      ▶ Le Glen ◀
+                2.	 First Night City Bank : principale artère financière de Night City. Le rez-de-chaussée du bâtiment est une banque
+                     à l’ancienne, accessible au public, avec sol de marbre et séparateurs de file d’attente en velours rouge. Un coffre
+                     situé au premier étage, à l’accès restreint, contient l’argent.
+                3.	 Hôtel de ville : siège du conseil municipal de Night City. Le nombre de lobbyistes, de groupes d’intérêt et d’employés
+                     municipaux affairés n’a pas diminué malgré tout ce qui s’est passé.
+                4.	 Commissariat de police n° 1 : à cheval sur la frontière séparant le Glen des zones de combat, le commissariat
+                     n° 1 représente la première ligne de défense contre les boosters et les cyberpsychos des zones de combat, veillant
+                     sur cette délimitation avec un œil de lynx et le doigt sur la gâchette.                                                     Certaines corpos
+                5.	 L’Atlantis : boîte de nuit glamour à plusieurs étages, très populaire chez les Corporatistes en raison de son style         s’efforcent de
+                                                                                                                                                 rendre une forme
+                     tape-à-l’œil, avant-gardiste et déroutant, souligné par des escaliers mécaniques, des miroirs aux murs et un éclairage      de gouvernement
+                     d’un bleu céruléen.                                                                                                         central à Night
+                                                                                                                                                 City, ce qui
+                6.	 Palais de justice : le tribunal et la prison, avec leur structure imposante et brutaliste, sont conçus pour intimider,      explique qu’elles
+                     avec des tours géantes, des portes d’acier noir et même un pont-levis. Le bâtiment fut ouvert au public le même jour        aient financé
+                     que son voisin l’hôtel de ville.                                                                                            la construction
+                                                                                                                                                  du Glen.
+                7.		Bureaux de Merrill, Asukaga et Finch : situés aux derniers étages d’un gratte-ciel central. L’accès à ces paliers
+                     est réservé aux visiteurs qui ont pris rendez-vous. Généralement, la société ne prend pas de nouveaux clients, excepté
+                     sur recommandation.
+                8.	 Raven Microcybernetics : les nouveaux bureaux de Raven Microcyb sont situés dans un gratte-ciel relativement
+                     simple. Bien que la société possède l’immeuble, elle n’en occupe que les 10 derniers étages, le reste étant dévolu à
+                     ses partenaires en affaires les plus proches.
+
+                                                          ▶ Quartier de l’Université ◀
+                9.	Campus de Biotechnica : on trouve les bureaux de Biotechnica à la limite du quartier de l’Université. Des serres
+                    sous dôme géodésique parsèment la propriété et ses toits-terrasses lui confèrent un aspect unique. Un des dômes,
+                    ouvert au public, abrite un musée vivant consacré à l’histoire naturelle et à celle de la compagnie. On entend des
+                    bruits étranges quand on traverse le campus de nuit.
+                10.	Université de Night City : un campus dont on a fait une sorte de monastère fortifié après qu’il a subi divers assauts
+                    de la part des boosters. C’est le centre de l’enseignement supérieur dans la ville, et la seule chance pour les gosses
+                    qui ne viennent pas des corpos d’accéder à une éducation de haut niveau.
+
+                                                                  ▶ Little Europe ◀
+                11. Camden Court : complexe d’appartement luxueux du nord de la ville, Camden Court est très apprécié des Solos en
+                     raison de sa sécurité physique et informatique époustouflante : seul un fou tenterait de s’y introduire sans une équipe
+                     d’assaut corporatiste au grand complet.
+                12. Bureaux de Continental Brands : les bureaux de Continental Brands occupent l’un des plus récents gratte-ciels
+                     de Night City. Les premiers étages abritent le Mégamarché Oasis, où l’on peut se procurer les Croquettes aux goûts les
+                     plus obscurs, visiter la Cuisine-Test Oasis ou participer à un cours de La Cuisine aux croquettes. Les niveaux supérieurs
+                     ne contiennent que des bureaux ternes et quelques labos chimiques.
+                13. Bureaux de Danger Girl : les bureaux de Danger Girl occupent ce majestueux building art déco de douze étages
+                     couronné d’une tour d’horloge. À l’intérieur, on trouve douze niveaux et un rez-de-chaussée à l’épaisse moquette
+                     rose vif, remplis de mascottes, de filles-chat souriantes, de maquettes de robot, d’autels consacrés à des groupes de
+                     J-pop et d’armes à feu aux couleurs chamarrées.
+                14. Église des Anges du Seigneur : église catholique romaine à trois étages dirigée par le père Kevin, et offrant un
+                     refuge et des conseils spirituels à quiconque accepte de déposer les armes et de parler sereinement.
+                15. Caserne de pompiers n° 2 de Night City : grande caserne fortifiée capable de déployer des équipes de
+                     pompiers cyberaugmentés pour éteindre les incendies accidentels dans le Centre-ville en reconstruction et s’occuper
+                     des feux criminels en bordure des zones de combat.
+
+
+
+                                                                                                                                                 311
+  BIENVENUE À NIGHT CITY
+
+
+                                                         Je sais qu ’on a du mal à piger
+                                                       dans un endroit comme Night C ity,
+                                                         gamin , mais ici , c ’est un lieu
+                                                       saint . A lors soit tu respectes la
+                                                        sainteté de mon église , soit tu
+                                                      respectes la sainteté de ma main
+                                                       dans ta gueule . C’est toi qui vois .
+                                                                                                      – Père Kevin
+                       16. Le Court-circuit : repaire favori des Techies et des Netrunners, c’est ici que certains clients traînent parfois des épaves
+                           récupérées dans la zone irradiée pour les bricoler dans un des box. À l’entrée, des drones de Zhirafa empêchent qu’on
+                           y rapporte des appareils trop dangereux.
+
+                                                                        ▶ Upper Marina ◀
+                       17. Centre médical : le centre médical de la ville est un grand hôpital de recherche qui entretient de nombreux liens
+                           avec les corporations. En plus d’offrir des soins aux citoyens de Night City, il propose des services de psychothérapie
+                           et de biosculpture… à condition d’allonger la monnaie.
+                       18. Stade Mc Cartney : ce stade de 75 000 places sponsorisé par les corporations accueille les nombreuses équipes
+                           locales de Night City : les Night City Slammers (baseball), les Night City Rangers (football américain), les Night City
+                           Heat (basket) et les Night City Death Dealers (football de combat).
+                       19. Bureaux de REO Transports de Viande : REO Transports de Viande, rivale à la petite semaine de Trauma Team,
+                           possède des bureaux près des zones de combat. Ses employés pratiquent la méthode douteuse du « grille-médecin »,
+                           laquelle consiste à griller la priorité aux équipes de Trauma Team en débarquant avant elles pour leur voler les clients
+                           et faire payer le prix fort à ces derniers s’ils survivent au traitement.
+                       20. L’Afterlife : premier bar à Solos de Night City, bâti sur les vestiges d’une ancienne morgue en périphérie de la zone
+                           irradiée et dirigé par le légendaire Solo Rogue. Tous les Solos de la ville rêvent qu’on baptise une boisson de l’Afterlife
+                           d’après eux… même si ça n’arrive qu’à titre posthume.
+                       21. Bureaux de Ziggurat : les bureaux de Ziggurat occupent un impressionnant gratte-ciel aux lignes courbes conçu
+                           pour dominer la baie et attirer l’attention. On n’y accueille du public que de temps à autre, dans le cadre de confé-
+                           rences de presse.
+
+                                                                  ▶ Le lotissement Watson ◀
+                       22. Commissariat de police n° 3 : grand bâtiment bien armé et occupé par des officiers vétérans (et parfois para-
+                           noïaques) équipés d’armes de Militech pour imposer la paix au nord de Night City.
+            On peut
+   commander un        23. Bureaux de Petrochem : les bureaux de Petrochem se situent de l’autre côté de la rue où l’on trouve son rival
+Johnny Silverhand          acharné, SovOil. En dehors d’un petit musée où l’on peut apprendre l’histoire du pétrole et d’une boutique de souvenirs,
+ à l’Afterlife, mais
+   pas un Morgan           l’ensemble de l’immeuble est interdit au public et extrêmement bien défendu.
+         Blackhand,
+   curieusement…       24. Bureaux de SovOil : les bureaux de SovOil se situent de l’autre côté de la rue où l’on trouve son rival acharné,
+                           Petrochem. Bien qu’ils soient entièrement interdits au public, on distingue juste derrière les portes du complexe toutes
+                           sortes de statues et de monolithes dorés et voyants.
+                       25. Tour de Trauma Team : la tour de Trauma Team contient son propre hôpital réservé aux clients corporatistes, un
+                           hangar d’entretien d’AV-4 et une tour de contrôle du trafic aérien pour gérer le chaos des opérations.
+
+
+
+
+  312
+                                                                             BIENVENUE À NIGHT CITY
+
+                                            ▶ Base militaire de NorCal ◀
+                26. Bureaux de Militech : les bureaux de Militech à Night City se situent dans la base mili-
+                    taire de NorCal. L’accès du personnel non gouvernemental est restreint. Toutes les réunions
+                    entre étrangers au service ont lieu dans un bâtiment sécurisé situé entre les deux postes de
+                                                                                                                             Votre ville
+                    sécurité.                                                                                         Aucune règle ne vous oblige
+                                                                                                                      à jouer à Cyberpunk RED
+                                                     ▶ Morro Rock ◀                                                   à Night City. Vous pouvez
+                27. Catapulte électromagnétique d’Orbital Air : une énorme construction bâtie sur                     organiser vos scénarios
+                    Morro Rock afin d’y ériger la première catapulte électromagnétique orbitale de Night City.        à Atlanta, Barcelone,
+                                                                                                                      Melbourne, Rio de Janeiro
+                                           ▶ Zone de loisirs de Pacifica ◀                                            ou n’importe où dans le
+                                                                                                                      monde. C’est votre jeu.
+                28. Playland-sur-mer : parc d’attractions et village de vacances sponsorisé par les corpora-          Votre choix. À vous de vous
+                    tions. On y trouve de palpitantes aventures en danse sensorielle, d’extraordinaires attractions   l’approprier.
+                    et manèges, des restaurants Continental Brands et une foule d’agents de sécurité des corpos.         En outre, rien ne vous
+                    Une grande partie du parc est en constante rénovation.                                            force à utiliser notre version
+                                                                                                                      de Night City. Si vous
+                Zone de combat                                                                                        avez une bonne idée de
+                                                                                                                      médiacorpo pour remplacer
+                                                                                                                      Net 54, n’hésitez pas ! Si
+                                              ▶ Ancienne Japantown ◀                                                  vous souhaitez installer un
+                29. Centre médical de crise : un centre médical où on ne pose pas de question, équipé de la           bar à nouilles et une source
+                    technologie la plus avancée et fréquenté par les Edgerunners, les Solos comme les boosters        chaude dans Upper Marina,
+                    en raison de sa neutralité.                                                                       prenez votre feutre et
+                                                                                                                      dessinez-les sur le plan.
+                30. Hôtel Highcourt Plaza : hôtel particulièrement chic et bien défendu, situé entre l’ancienne           La ville où vous jouez, qu’il
+                    Japantown et Little China, avec des ascenseurs de verre et un excellent service dans un décor     s’agisse de Night City ou
+                    façon 1920.                                                                                       d’une autre, devrait être un
+                                                                                                                      site vivant, qui respire. C’est
+                                                     ▶ Little China ◀                                                 un personnage, au même
+                31. The Forlorn Hope : un petit bar réservé aux Solos qui accueille principalement les vétérans       titre que tous les autres PNJ
+                    de la guerre SudAm et de la 4e Guerre corporatiste. Il sert de deuxième foyer à nombre des        du jeu. Le meilleur moyen
+                                                                                                                      d’obtenir cet effet consiste à
+                    plus dangereux Solos retraités de la ville.                                                       vous l’approprier réellement.
+                                           ▶ Ancienne zone de combat ◀                                                Utilisez nos idées, bien sûr,
+                                                                                                                      mais peuplez-la de vos
+                32. Jesse James, traiteur casher : Nomades et boosters viennent traîner dans cet éta-                 citoyens, de vos gangs, de
+                    blissement qui ressemble davantage à un saloon, avec un nombre de victimes quotidien              vos sites.
+                    rivalisant avec celui du Totentanz. Cela dit, pour une petite fortune, vous pouvez y déguster       Que cette ville vous
+                    un excellent sandwich au corned-beef.                                                             appartienne.
+
+                                                   ▶ Night City Sud ◀
+                33. Medical Technologies : cette petite banque de corps sur le front de mer a évité de finir
+                    dans la baie en se spécialisant dans la culture de membres de remplacement sur commande,
+                    ainsi que dans l’approvisionnement de divers gangs de boosters en cyberimplants.
+                34. Les Docs Sauvages : boutique de charcudocs de taille correcte, dirigée par 5 apprentis
+                    du défunt Savage Doc et protégée par les Yakuzas et les Tyger Claws.
+                35. La Taule : bar de gangs populaire des docks du sud, connu pour son arène en parpaings
+                    où des boosters de toutes les zones de combat viennent régler leurs différends à coups
+                    d’énormes armes à feu et d’éventreurs.
+
+
+
+
+                                                                                                                                              313
+  BIENVENUE À NIGHT CITY
+
+                      Banlieues surpeuplées
+                                                             ▶ Heywood (Santo Domingo) ◀
+                      36. Camp Aldecaldo : c’est dans ce grand campement multiculturel situé en bordure de la ville que les Nomades
+                          aldecaldo gèrent un vaste réseau de commerce et de transport, vendant leurs services de guide dans les badlands
+                          et transportant des produits un peu partout.
+                      37. Commissariat de police n° 2 : ce grand commissariat débordé doit consacrer plus de la moitié de son effectif
+                          à s’occuper des gangs de Scavvers et s’appuie sur les drones Zhirafa pour surveiller la vaste étendue des banlieues
+                          surpeuplées.
+                      38. Le MetalStorm : un bar presque indestructible bâti sous le pont du centre de Night City. Le MetalStorm accueille
+     Les Nomades
+     contrôlent un
+                          des chromeurs de tout poil, y compris quelques borgs intégraux qui y viennent pour faire du grabuge et se saouler.
+  certain nombre          Dans ce bar, presque tout est en métal, y compris les clients.
+de points d’entrée
+   dans Night City,                                        ▶ Zone industrielle de Heywood ◀
+     mais c’est au
+  camp Aldecaldo      39. Parc de bureaux Zhirafa : les bureaux de Zhirafa furent construits sur un ancien parc industriel, en bâtissant
+   qu’ils préfèrent       de nouveaux étages sur l’architecture existante et en insufflant une nouvelle vie aux intérieurs pour y accueillir des
+     faire affaire.
+                          cafétérias confortables, des coins-réflexion et au moins une arène de laser tag. On voit souvent des drones et des
+                          animaux mécha patrouiller dans le parc.
+                                                                     ▶ New Westbrook ◀
+                      40. Bureaux de Network 54 : même depuis l’autre côté de la baie, on n’a aucun mal à distinguer les bureaux publics
+                          de Network 54 des autres grâce à l’enseigne au néon placardée sur le bâtiment qui les abrite. Berceau de nombreuses
+                          émissions populaires enregistrées en public, il contient aussi sa propre clinique, ses restaurants, ses centres de loisirs
+                          et ses appartements réservés à ses stars, qui ne font pas partie de la visite.
+                      41. Caserne de pompiers n° 1 : une caserne bien équipée, à la limite de la baie, et capable de déployer des Navis
+                          et des camions pour intervenir sur les incendies au nord et au sud de la ville.
+                      42. Campus de Rocklin Augmentics : le campus de Rocklin Augmentics se compose de bureaux, de salles de réunions,
+                          d’une cafétéria et d’un hôpital reliés par plusieurs ponts aériens à un bâtiment de béton bien plus grand, réservé à la
+                          recherche et au développement.
+                      43. Bureaux de WorldSat : les bureaux de WorldSat Communications sont situés à New Westbrook, au sommet d’une
+                          crête qui permet à leur principale tour, dressée sur place, de bénéficier d’une portée maximale. Relativement proche
+                          de la frontière de la ville, le complexe est bien défendu.
+
+
+
+                                              C’est le troisième meurtre dans une corpo
+                                                  cette semaine ! Q ui a eu la riche idée
+                                              d ’installer les bureaux de S ov Oil et ceux
+                                              de P etrochem les uns en face des autres ?
+                                                                                               – Officier Suri Navarro
+
+
+
+
+ 314
+

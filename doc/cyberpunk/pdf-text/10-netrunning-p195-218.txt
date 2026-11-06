@@ -1,0 +1,1443 @@
+           PAR NEIL BRANQUINHO
+
+
+
+
+                                                            netrunning
+                                               Le piratage à l’Ère du Rouge
+
+                « Tu branches le dernier câble et tu t’assures que tous les ports d’interface sont
+                bien en place. Dans ta tête, tu appuies sur le bouton “Démarrer”. En l’espace
+                d’une seconde, le fond de ton esprit est tapissé de parasites blancs et gris avant
+                le grand saut. Puis, avec une sensation de chute nauséeuse, tu es projeté dans
+                un labyrinthe de néons instables et de quadrillages qui tournent… »
+
+                                                                                             195
+  NETRUNNING
+
+                      Enfin ça, c’était avant. À l’époque actuelle, vous enfilez         Cyberconsole
+                      vos lunettes de réalité virtuelle, vous entrez le code men-
+ Les programmes       talement et vous passez sur le NET de manière fluide. Et le        Les cyberconsoles sont les plateformes modulaires sur
+   sont décrits en
+                      NET a la même apparence que le frigo à viande. Sauf que            lesquelles sont installés les programmes et le matériel
+  Page 201
+                      maintenant, un étrange métaunivers se superpose à cette            informatique qui servent à faire du Netrunning. Chaque
+      Le matériel
+    informatique      vision si ordinaire, et il est rempli de formes, de motifs et de   programme et chaque pièce de matériel informatique
+     est décrit en    créatures numériques extraterrestres.                              occupe l’un des emplacements d’extension en nombre
+  Page 208                                                                               limité de votre cyberconsole. La différence entre une
+                            Bienvenue sur le NET à l’Ère du Rouge.                       cyberconsole puissante et une cyberconsole bon marché,
+                                                                                         c’est le nombre d’emplacements qu’elle possède pour les
+    Un Netrunner
+       ne peut se
+    brancher que
+    sur une seule
+                      P    ourquoi est-ce que
+                           le NET a changé ?
+                                                                                         programmes et le matériel informatique.
+
+                                                                                                                                         Emplace-
+                                                                                           Type                            Prix
+     cyberconsole                                                                                                                          ment
+         à la fois.   L’infrastructure centrale du NET a été démolie pendant la
+                      Guerre. Les dégâts ont touché à la fois les lignes terrestres        Cyberconsole de                   100
+      Changer de                                                                                                                            5
+                      et les câbles sous-marins qui étaient les deux formes prin-          mauvaise qualité             (Très coûteux)
+     cyberconsole
+    nécessite une     cipales de liaison de communication. Ce qui restait du NET           Cyberconsole                 500 (Onéreux)       7
+    action réelle.
+                      a été infesté par toutes sortes de GLACE à cause de la
+                                                                                           Cyberconsole                      1 000
+                      Guerre. Les pires étaient les R.A.G.E.U.X, des assemblages                                                            9
+                                                                                           d’excellente qualité         (Très onéreux)
+                      d’IA mortels qui traquaient et tuaient tous ceux qu’ils ren-
+                      contraient sur le NET.
+                         Netwatch a fini par abandonner et par fermer l’in-              Lunettes de réalité virtuelle
+                      frastructure du NET. Les ordinateurs ne sont restés connec-
+                      tés que par des lignes terrestres et lasers ad hoc.                Étant donné que vous êtes obligé de vous déplacer dans le
+                                                                                         monde réel (qu’on surnomme « frigo à viande »), vous ne
+                      META                                                               pouvez pas raccorder vos nerfs optiques au NET, comme
+                                                                                         cela se faisait avant l’Ère du Rouge. Si vous le faisiez à
+                      Aux alentours de 2035, un nouveau langage de program-
+                                                                                         l’ancienne, vous erreriez au hasard, puisque tous vos sens
+                      mation a été développé. Il était conçu pour unifier tous les
+                                                                                         seraient concentrés sur le cyberspace. Au lieu de quoi, les
+                      différents systèmes d’exploitation qui existaient encore. Ce
+                                                                                         Netrunners modernes se servent de lunettes de réalité
+                      nouveau langage s’appelle META et peut tout remplacer,
+                                                                                         virtuelle, des casques qui projettent l’imagerie cyberspa-
+                      du C++ aux applications téléphoniques simples. META est
+                                                                                         tiale par-dessus l’environnement qui se trouve actuellement
+                      ce qui fait tourner le NET actuel. Étant donné que comme
+                                                                                         dans leur champ de vision. Cela signifie que vous verrez et
+                      LINUX, META est basé sur la syntaxe de patches séman-
+                      tiques, il a du mal à supporter les graphismes, les énormes
+                      interfaces graphiques de l’ancien NET n’ont donc pas pu                 M a chérie dit que je suis
+                      être transférées. Maintenant, les choses ont une apparence            qu ’un drogué . E lle dit que
+                      un peu différente. Euh, enfin très différente en fait.
+                                                                                               je pourrais passer ma vie
+                        Mais trêve de bavardages ; nous reviendrons sur le sujet
+                      plus loin dans ce livre. Pour l’instant, commençons par voir            entière sur le NET, le nez
+                      ce dont vous aurez besoin pour faire tourner le NET.                   collé à ma cyberconsole , à
+
+
+                      D    e quoi ai-je besoin pour                                       aspirer les flux de données
+                           faire du Netrunning ?                                             comme une de ces bestioles
+                                                                                           éteintes , là , les « baleines ».
+
+                      Câblage neural et ports d’interface                                 Et heureusement que je l’ai, ma
+                                                                                           chérie , parce que si elle était
+                      Tous les Netrunners possèdent au moins un minimum de
+                      cyberimplants. Ne serait-ce que pour utiliser une cyber-             pas là pour me ramener dans
+                      console, vous devez y brancher des ports d’interface, ce              le réel , elle aurait raison .
+                      qui nécessite également que vous possédiez un câblage
+                      neural (voir la section Cybermatériel en page 359).                                                                – Pneumo
+
+ 196
+                                                                                                                         NETRUNNING
+
+                entendrez entre autres les GLACE, qui demeureront invisibles pour vos potes du frigo à viande.
+                Par ailleurs, cela vous évitera de trébucher alors que vous franchissez discrètement le seuil d’un
+
+                                                                                                                           Exemple d’actions
+                biolaboratoire secret.
+                 Si vous oubliez vos lunettes de réalité virtuelle, vous allez devoir aller sur le
+                NET à l’ancienne, ce qui vous rend inconscient dans le frigo à viande jusqu’à ce                                 virtuelles
+                que vous vous débranchiez.
+                                                                                                                          Alloy Knight est un
+                Programmes et matériel informatique                                                                       Netrunner. À son tour, il doit
+                                                                                                                          décider s’il veut utiliser ses
+                Ce sont les armes et l’équipement du cyberspace. Les programmes sont les outils qu’un Netrunner           trois actions virtuelles pour
+                utilise pour se battre, se protéger et explorer l’univers électronique.                                   continuer à progresser dans
+                                                                                                                          l’architecture NET ou s’il veut
+                                                                                                                          utiliser une action réelle pour
+                Améliorations diverses                                                                                    tirer sur le booster au bout
+                Vous serez sûrement intéressé par quelques autres outils en dehors des lunettes de réalité virtuelle      du couloir qui s’est rendu
+                et de la cyberconsole bien chargée en programmes et en matériel informatique, mais ces outils             compte de sa présence.
+                                                                                                                              Alloy décide de laisser
+                ne sont pas indispensables, nous en parlerons donc plus loin.
+                                                                                                                          ses coéquipiers gérer le
+                                                                                                                          booster et choisit d’utiliser
+
+
+                F   aire des choses sur le NET                                                                            ses trois actions virtuelles.
+                                                                                                                          Mais d’abord, il utilise son
+                                                                                                                          action de mouvement pour
+                La vie de Netrunner n’est pas facile. Pour survivre, vous allez devoir maîtriser à la perfection vos      se mettre à couvert tout en
+                                                                                                                          restant dans la portée de 6 m
+                outils, alors lisez attentivement.
+                                                                                                                          du point d’accès.
+
+                Actions réelles et actions virtuelles
+                Les Netrunners ont accès à deux types d’actions : les actions réelles (actions sans déplacement
+                qui se déroulent dans la réalité, ou frigo à viande) et les actions virtuelles (qui se déroulent
+                uniquement dans l’architecture NET).
+
+                             Pendant votre tour, vous pouvez effectuer une action
+                            réelle ou un nombre d’actions virtuelles défini par votre
+                              rang d’Interface (la capacité de rôle du Netrunner).
+                                   Quel que soit votre choix, vous avez toujours
+                                       droit à votre action de mouvement.
+
+                Actions virtuelles
+                Plus le rang d’Interface d’un Netrunner est élevé, plus il peut effectuer d’actions virtuelles pendant
+                son tour. Interface est la capacité de rôle du Netrunner. Sans cette capacité, vous ne pouvez
+                pas faire de Netrunning.
+
+                   Rang d’Interface                1-3               4-6               7-9                10
+                  Actions virtuelles                2                 3                  4                 5
+
+
+                  Ainsi, un Netrunner au rang 1 d’Interface ne peut effectuer que deux actions virtuelles par
+                tour, alors qu’au rang 4 d’Interface, il peut entreprendre jusqu’à trois actions virtuelles par tour.
+
+
+
+
+                                                                                                                                                 197
+  NETRUNNING
+
+                Liste des actions virtuelles                                   Se connecter ou se déconnecter
+                                                                               Vous pouvez consacrer une action virtuelle à vous connec-
+                ▶ Se connecter/Se déconnecter                                  ter à une architecture NET lorsque vous vous trouvez à
+                   Entrer dans une architecture NET ou en sortir de            portée de l’un de ses points d’accès (il faut se trouver en
+                   manière sûre quand vous vous trouvez à 6 m ou moins         général à moins de 6 m, et réussir à passer les murs qui
+                   d’un point d’accès. Généralement, si un mur vous            le protègent). Vous devez être connecté pour pouvoir
+                   sépare du point d’accès, vous ne pouvez pas utiliser        trafiquer une architecture NET. Si vous vous déplacez
+                   cette action. Si vous quittez une architecture NET sans     hors de portée pendant que vous êtes connecté, l’archi-
+                   vous déconnecter d’abord, préparez-vous à avoir             tecture vous déconnecte automatiquement, mais vous
+                   très, très mal.                                             devenez vulnérable : vous subissez l’effet de tous
+                                                                               les programmes GLACE ennemis rencontrés,
+                ▶ Utiliser une capacité d’Interface                            mais non dérezzés, dans l’architecture NET
+                   Toutes les capacités d’Interface sauf une nécessitent       avant d’être éjecté. Nous reviendrons plus en détail
+                   d’utiliser au moins une action virtuelle (voir les règles   sur les programmes GLACE (pour Générateur de logiciel
+                   détaillées en page 199).                                    anti-intrusion par contre-mesures électroniques) plus loin
+                                                                               (en page 204), mais croyez-moi, vous n’avez pas envie de
+                ▶ Activer/Désactiver un programme                              vivre cette expérience.
+                   Activer ou désactiver l’un de vos programmes.                  Dépenser une action pour se déconnecter en restant
+                                                                               à portée du point d’accès est beaucoup plus sûr. Se
+                ▶ Divers                                                       déconnecter « réinitialise » les défenses d’une
+                   Il est très rare que ce que vous souhaitez faire sur le     architecture NET, ce qui signifie que vous devrez
+                   NET n’entre pas dans l’une des catégories précédentes,      reprendre votre exploration du NET depuis le
+                   car la capacité d’Interface Virus vous permet de faire      début. Pour ce faire, vous devrez vous reconnec-
+                   presque tout ce que vous pouvez imaginer à une archi-       ter au même endroit et retenter votre chance.
+                   tecture NET pourvu que vous vous trouviez à l’étage         Quand vous vous déconnectez, tous vos programmes
+                   le plus bas. Si votre MJ vous autorise à effectuer une      quittent l’architecture avec vous. Si vous voulez avoir un
+                   opération qui n’entre pas dans les catégories précé-        effet permanent sur l’architecture, vous devez atteindre
+                   dentes, elle prendra probablement une action virtuelle.     l’étage le plus bas pour y laisser un Virus.
+
+
+
+                                                                               C
+                Qu’est-ce qui n’est pas                                             apacités d’Interface
+                une action virtuelle ?
+                Les seules opérations au sein d’une architecture NET qui       Un Netrunner ne doit pas seulement savoir comment
+                ne nécessitent pas l’utilisation d’une action virtuelle sont   activer ses programmes. La maîtrise des capacités
+                le mouvement et la sauvegarde d’une copie d’un fichier.        d’Interface est ce qui sépare les gros noobs des pros pour
+                                                                               lesquels ils essaient de se faire passer.
+                ▶ Se déplacer dans une architecture NET ◀
+                Dans une architecture NET, vous pouvez vous déplacer           Comment utiliser
+                autant que vous le voulez à votre tour. Vous ne pouvez         vos capacités d’Interface
+                pas aller au-delà d’un obstacle du NET qui vous bloque,
+                par exemple un mot de passe. Si vous n’êtes pas prudent,       Votre Netrunner peut exploiter ces capacités
+                prendre trop de risques a des chances de vous tuer.            d’Interface en dépensant ses actions virtuelles (si l’on
+                                                                               excepte la fonction Recherche).
+                 ▶ Sauvegarder une copie d’un fichier ◀
+                Quand vous trouvez un fichier dans une architecture, en
+                                                                                         Pour résoudre ces capacités
+                sauvegarder une copie dans votre cyberconsole n’est pas
+                une action virtuelle.                                                   (sauf l’Élimination), on utilise
+                                                                                            la formule suivante :
+                                                                                       Interface + 1d10 contre SD
+
+
+ 198
+                                                                                                                        NETRUNNING
+
+                Capacités d’Interface                                               ▶ Contrôle
+                                                                                        Vous permet de contrôler des appareils configurés sur
+                ▶ Recherche                                                             un nœud de contrôle et rattachés à une architecture
+                    Vous utilisez une action réelle pour trouver l’empla-               NET tels que des caméras, des drones, des tourelles,
+                    cement des points d’accès à une architecture NET de la              des lasers, des ascenseurs, des extincteurs automa-
+                    zone dans la réalité. Plus le résultat est élevé, plus vos          tiques, etc. Pour prendre le contrôle d’un nœud lors
+                    recherches sont fructueuses. Le MJ détermine l’ampleur              d’une action virtuelle, il faut surpasser son SD. Le
+                    de vos trouvailles.                                                 Netrunner doit effectuer une action virtuelle séparée
+                Exemple : le Netrunner utilise la capacité Recherche                    par appareil rattaché au nœud pour pouvoir le mani-
+                en guise d’action réelle pour localiser les architectures               puler une fois qu’il s’est emparé du nœud de contrôle,
+                NET et leurs points d’accès à pirater dans le bâtiment. Il              et il peut le faire depuis n’importe où dans l’architecture
+                lance 1d10 et ajoute son rang d’Interface (7), obtenant                 tant qu’il continue de contrôler le nœud de contrôle.
+                un résultat de 14. Le MJ décide que grâce à ce jet, le                  Chaque nœud de contrôle ne peut être activé qu’une
+                Netrunner découvre la présence de deux points d’accès                   fois par tour. Le SD pour contester un nœud de contrôle
+                à l’architecture NET du complexe à proximité.                           dont s’est emparé un autre Netrunner ou un GLACE de
+                                                                                        type Démon est égal au résultat du jet de Contrôle qui
+                ▶ Analyse                                                               lui a permis de se l’approprier. Vous perdez le contrôle
+                                                                                        des nœuds de contrôle dont vous vous êtes emparé
+                    Vous découvrez le contenu de données que vous avez
+                                                                                        dans une architecture quand vous vous déconnectez.
+                    dénichées (dans un fichier par exemple) et leur valeur
+                                                                                    Exemple : dans une architecture, le Netrunner tombe
+                    à l’aide d’une action virtuelle. Certains fichiers pos-
+                                                                                    sur un nœud de contrôle SD 10 relié aux caméras de
+                    sèdent un SD que vous devez surpasser pour pouvoir
+                                                                                    son étage. Il utilise la capacité Contrôle avec son action
+                    les ouvrir.
+                                                                                    virtuelle et fait un jet d’Interface (7) + 1d10, surpassant le
+                Exemple : après avoir exhumé un fichier au titre intéres-
+                                                                                    SD du nœud de contrôle de 2. Ensuite, il se sert d’une autre
+                sant, le Netrunner lance une Analyse lors d’une action
+                                                                                    action virtuelle pour repositionner les caméras de surveil-
+                virtuelle. Comme il s’agit d’un fichier SD 9, il fait un jet
+                                                                                    lance, afin qu’elles ne filment pas les amis du Netrunner
+                d’Interface (7) + 1d10 et obtient sans peine un résultat
+                                                                                    pendant qu’ils s’échappent par l’issue de secours.
+                supérieur à 9. Malheureusement, le fichier était un leurre
+                destiné à lui faire perdre son temps !
+                                                                                    ▶ Élimination
+                ▶ Cartographie                                                           Lors d’une action virtuelle, vous effectuez une attaque
+                                                                                         contre un programme ou un Netrunner adverse. Si vous
+                     Cette action virtuelle révèle une portion du « plan » de
+                                                                                         réussissez un jet d’Élimination contre la Défense + 1d10
+                     l’architecture NET. Plus le résultat de votre jet est élevé,
+                                                                                         du programme ou l’Interface + 1d10 du Netrunner,
+                     plus les informations récoltées sont précises. Cela vous
+                                                                                         vous infligez 1d6 points de dégâts au REZ du pro-
+                     permet en général de découvrir ce que contient l’ar-
+                                                                                         gramme ou directement au cerveau du Netrunner.
+                     chitecture NET piratée, mais les SD demeurent secrets.
+                                                                                    Exemple : bien qu’il ait employé tous ses programmes
+                     Vous pouvez voir l’architecture sur un nombre d’étages
+                                                                                    offensifs lors du tour, un Netrunner n’est pas parvenu à se
+                     égal au résultat de votre jet ou jusqu’au premier obsta-
+                                                                                    débarrasser d’un Cerbère. Heureusement, il lui reste une
+                     cle (généralement un mot de passe) au SD plus élevé
+                                                                                    action virtuelle pour accomplir une Élimination. Il fait un
+                     que le résultat de votre jet de Cartographie (selon celle
+                                                                                    jet d’Interface (7) + 1d10 contre la Défense (2) + 1d10 du
+                     de ces deux limites qui se déclenche la première).
+                                                                                    Cerbère. Il le bat, inflige 1d6 points de dégâts à son REZ
+                Exemple : le Netrunner, qui s’est connecté à une nouvelle
+                                                                                    et l’achève pour de bon.
+                architecture NET, n’a aucune idée de ce qui l’attend. Il
+                utilise la capacité Cartographie lors d’une action virtuelle
+                pour en savoir plus. Il fait un jet d’Interface + 1d10 et
+                                                                                    ▶ Glissement
+                n’obtient que 10. Le MJ décide qu’il découvre seulement                Vous utilisez une action virtuelle pour fuir un combat
+                le plan des trois premiers étages de l’ascenseur, car le troi-         contre un seul programme GLACE qui n’est pas de
+                sième est protégé par un mot de passe SD 11 qui bloque                 type Démon. Si vous réussissez votre jet de Glissement
+                la vision du Netrunner.                                                contre la Perception + 1d10 du programme, vous
+                                                                                       pouvez échapper au GLACE en vous rendant à un
+                                                                                       étage adjacent à l’ascenseur, mais vous ne pouvez
+
+
+
+                                                                                                                                                      199
+  NETRUNNING
+
+                                          pas passer au travers d’un mot de passe ou d’un autre obstacle virtuel. Une fois que vous
+                                          avez échappé à un GLACE, il cesse de vous suivre et devient un GLACE posté en attente à
+
+       Exemples de Virus
+                                          l’endroit exact où vous lui avez échappé. Vous ne pouvez Glisser qu’une seule fois
+                                          par tour. Vous ne pouvez pas effectuer de Glissement par anticipation.
+                                      Exemple : engagé dans un conflit brutal contre un GLACE de type Cerbère, le Netrunner décide
+      Voici quelques idées de Virus
+      ainsi que le temps nécessaire   finalement que la mort attendra. Avec son action virtuelle, il essaie de Glisser hors d’atteinte du
+      et le SD à dépasser pour les    GLACE en faisant un jet d’Interface (7) + 1d10 contre la Perception (6) + 1d10 du Cerbère. Le
+      implanter.                      Netrunner obtient 14, le Cerbère 13. C’est réussi ! le Netrunner choisit de gagner l’étage suivant
+      Un Virus qui contraint          de l’ascenseur. Malheureusement, un autre Cerbère l’attend de pied ferme. Le Netrunner aurait
+      l’architecture NET à            vraiment dû Cartographier les lieux ! Il ne pourra pas Glisser avant le prochain tour.
+      transformer l’icône de cobra
+      féroce de tous les GLACE        ▶ Masquage
+      de type Cobra installés dans
+      l’architecture en une icône          Avec une action virtuelle, vous brouillez les indices de votre présence et des Virus que
+      de petit serpent mignon qui          vous avez laissés dans l’architecture NET. Pour annuler votre Masquage et découvrir vos
+      porte un chapeau pointu.             agissements, un autre Netrunner doit effectuer une Cartographie dont le SD est égal au
+      SD 6 ; une action                    résultat de votre jet de Masquage. Si vous n’utilisez pas la capacité Masquage avant de vous
+      virtuelle.
+                                           déconnecter, n’importe quel autre Netrunner peut automatiquement découvrir quelles actions
+      Un Virus qui désactive               vous avez effectuées dans l’architecture en utilisant la capacité Cartographie.
+      totalement un GLACE en          Exemple : après avoir infecté le réseau de la corporation, le Netrunner désire dissimuler les
+      particulier installé dans
+      l’architecture jusqu’à ce que
+                                      traces de son passage et son Virus, il utilise donc une action virtuelle pour effectuer un Masquage.
+      le Virus soit détruit.          Il fait un jet d’Interface (7) + 1d10, obtenant un 16 ! Un Netrunner adverse devra surpasser
+      SD 10 ; deux actions            ce nombre avec un jet d’Interface + 1d10 avant de découvrir l’historique du cheminement du
+      virtuelles.                     personnage ou de faire un jet pour effacer son Virus. Si le Netrunner n’avait pas programmé
+      Un Virus qui déclenche une      un Virus aussi voyant, la corporation n’aurait peut-être jamais su que son architecture NET avait
+      panne dans un nœud de           été compromise !
+      contrôle jusqu’à ce que le
+      Virus soit détruit.             ▶ Porte dérobée
+      SD 10 ; deux actions
+      virtuelles.                          Grâce à cette action virtuelle, le Netrunner peut ignorer les mots de passe qui cloisonnent
+      Un Virus qui supprime de             une architecture NET. Bien sûr, s’il connaît déjà le mot de passe, il franchit automatiquement
+      façon permanente tous                l’obstacle.
+      les GLACE installés dans        Exemple : le Netrunner rencontre un mot de passe complexe (SD 10) qui bloque sa progression
+      l’architecture.                 dans l’architecture. Il utilise une action virtuelle pour le contourner avec une Porte dérobée.
+      SD 12 ; dix actions             Il lance 1d10 et ajoute son rang d’Interface (7), obtenant un résultat de 16. Le mot de passe
+      virtuelles.
+                                      n’entrave plus le Netrunner.
+      Un Virus qui cause des
+      dégâts catastrophiques et
+      durables à l’architecture NET
+                                      ▶ Virus
+      elle-même et divise par 2 le         Une fois que vous avez atteint l’étage le plus bas de l’architecture NET, vous pouvez larguer
+      nombre d’étages disponibles          votre propre Virus dans l’architecture qui effectuera deux actions ou deux changements,
+      de manière permanente.               dans la mesure du raisonnable. Utiliser cette capacité est le seul moyen pour un
+      SD 12 ; dix actions
+                                           Netrunner d’apporter un changement à une architecture NET qui persistera
+      virtuelles.
+                                           quand il se sera déconnecté. Décrivez au MJ ce que vous voulez que le virus fasse et il
+                                           lui attribuera un SD en fonction. Pour infecter l’architecture avec un Virus particu-
+                                           lièrement violent, le MJ peut fixer un SD élevé. Selon ce que vous voulez faire,
+                                           il peut aussi estimer que vous aurez besoin de plusieurs actions virtuelles
+                                           pour le paramétrer. Faites un jet de Virus. Le SD pour détruire un Virus est égal au résultat
+                                           du jet de Virus qui a présidé à sa création.
+                                      Exemple : après avoir atteint le niveau le plus bas d’une architecture, le Netrunner veut laisser
+                                      les lieux dans un état catastrophique. Il explique au MJ que son idée serait de créer un Virus qui
+                                      modifie tous les mots de passe de l’architecture toutes les 5 minutes. Le MJ décide que le codage
+                                      du Virus nécessite neuf actions virtuelles, et fixe le SD à 12. Pendant les trois tours qui suivent, le
+                                      Netrunner dépense ses trois actions virtuelles pour configurer le Virus, puis fait un jet d’Interface
+
+
+ 200
+                                                                                                                    NETRUNNING
+
+                (7) + 1d10… et obtient seulement 12. Comme le code n’a pas fonctionné, il décide de retenter sa chance en dépensant à
+                nouveau ses neuf actions virtuelles des trois tours suivants, et obtient cette fois un 15. Quand la corporation découvre ce
+                cadeau, son Netrunner écope d’une sacrée migraine en essayant de supprimer le Virus SD 15.
+
+
+
+                C    ombat dans le NET
+
+                Voilà comment est résolue la violence sur le NET :
+
+
+
+                                           Votre rang d’Interface + ATT du programme
+                                                + 1d10 ou ATT du GLACE + 1d10
+
+                                                                         contre
+
+                  Rang d’Interface de la cible + 1d10 ou DÉF du programme/GLACE + 1d10
+
+                                          Si l’attaquant touche, la cible subit l’effet du programme
+
+                  Un programme dont la classe précise un type de cible (par exemple antipersonnel ou antiprogramme) n’est efficace
+                que lorsqu’il est utilisé contre la cible prévue.
+
+                Vaincre un programme
+                Un programme est dérezzé quand il tombe à 0 REZ (points de santé), mais dans ce cas, il ne disparaît pas de votre
+                cyberconsole ou de l’architecture NET. Il est toujours considéré comme « en cours d’exécution », il est seulement entravé
+                au point d’en devenir inutile. Pour lui redonner son REZ et ses fonctionnalités, vous devez dépenser deux actions virtuelles :
+                une pour le désactiver et une pour le réactiver ensuite. Les programmes d’attaque représentent une exception. Ils s’activent
+                lors d’une attaque puis, une fois utilisés, se désactivent automatiquement par eux-mêmes.
+                  Sauf évidemment si le programme a été détruit, auquel cas il est effacé à 100 % (et n’est plus rezzé). Vous allez devoir
+                en acheter un autre. Vous n’êtes pas obligé de lui offrir une cérémonie funéraire, mais si ça vous réconforte…
+
+
+
+                P    rogrammes
+
+                Un Netrunner utilise des programmes pour se battre, se défendre et explorer l’univers électronique. Activer ou désactiver
+                un programme requiert une action virtuelle. Chaque programme chargé sur votre cyberconsole ne peut être
+                activé qu’une fois par round réel. Un programme actuellement activé (rezzé) ne peut plus être de nouveau activé
+                avant d’être désactivé. Les programmes d’attaque se désactivent d’eux-mêmes une fois utilisés.
+                   Vous pouvez exécuter plusieurs copies du même programme sur votre cyberconsole si vous voulez contourner cette
+                limite, et leurs effets se cumulent s’ils sont exécutés simultanément, sauf précision contraire.
+                                              Installer ou désinstaller un programme prend 1 heure.
+
+
+
+
+                                                                                                                                                 201
+  NETRUNNING
+
+
+
+
+                                                                                                                                                           PAR NEIL BRANQUINHO
+
+
+
+
+                ▶ Les trois types de programmes en dehors des GLACE :
+                      Classe          Description
+                     Soutien          Améliore vos capacités dans l’architecture NET quand il est rezzé.
+                     Défensif         Bloque ou minimise les attaques des programmes ou des Netrunners adverses quand il est rezzé.
+                                      Programme conçu pour infliger des dégâts aux Netrunners ou aux programmes ou pour les entraver et qui se désactive
+                     Offensif
+                                      automatiquement après son activation.
+
+
+                Légende des tableaux des programmes
+                Classe : le type du programme. Un programme dont la classe précise un type de cible (par exemple antipersonnel ou
+                  antiprogramme) n’est efficace que lorsqu’il est utilisé contre la cible prévue.
+                Attaque (ATT) : nombre que vous ajoutez aux attaques effectuées avec le programme.
+                Défense (DÉF) : nombre que vous ajoutez aux jets de défense effectués par le programme.
+                REZ : les points de santé du programme, c’est-à-dire la quantité de dégâts qu’il peut subir quand il est rezzé avant de
+                 devenir dérezzé.
+                Effet : ce que fait le programme. Pour les programmes offensifs, vous devez toucher votre cible avec avant d’appliquer
+                  l’effet.
+                Icône : l’apparence du programme sur le NET. Beaucoup de Netrunners personnalisent le visuel de leurs programmes.
+                Prix : le coût du programme dans la devise principale de Night City, l’eurodollar (ED). La catégorie de prix de l’objet
+                  est indiquée sous son coût (voir Acheter et vendre en page 385).
+
+
+ 202
+                                                                                                                                       NETRUNNING
+
+                ▶ Soutien
+                 Nom            Classe         ATT        DÉF         REZ       Effet                                                                        Prix
+                                                                                Vous donne un bonus de +2 sur tous vos jets de Masquage tant que               20
+                 Effaceur        Soutien        0           0          7
+                                                                                le programme est rezzé.                                                    (Ordinaire)
+                                Icône : un globe rose qui émet de minuscules bulles de savon.
+                                                                                Vous donne un bonus de +2 sur tous vos jets de Cartographie tant               20
+                 Loupe           Soutien        0           0          7
+                                                                                que le programme est rezzé.                                                (Ordinaire)
+                                Icône : une loupe argentée brillante qui tourne lentement sur elle-même.
+                 Speedy                                                                                                                                        100
+                                 Soutien        0           0          7        Augmente votre Vitesse de +2 tant que le programme est rezzé.
+                 Gonzalvez                                                                                                                                (Très coûteux)
+                                Icône : une traînée de poussière soulevée par le Netrunner quand il se déplace.
+                                                                                Vous donne un bonus de +2 sur tous vos jets de Porte dérobée tant              50
+                 Ver             Soutien        0           0          7
+                                                                                que le programme est rezzé.                                                 (Coûteux)
+                                Icône : un automate doré en forme de ver aux yeux vert fluo.
+
+
+                ▶ Défensif
+                 Nom            Classe         ATT          DÉF       REZ        Effet                                                                        Prix
+                                                                                 Réduit de 4 tous les dégâts au cerveau que vous devriez subir tant
+                                                                                 que le programme est rezzé. Vous ne pouvez exécuter qu’une seule              50
+                 Armure          Défensif         0         0          7
+                                                                                 copie de ce programme à la fois. Chaque copie de ce programme ne           (Coûteux)
+                                                                                 peut être utilisée qu’une fois par Netrun.
+                                Icône : une armure dorée transparente portée par le Netrunner.
+                                                                                 Empêche le premier effet réussi d’un programme qui n’est pas un
+                                                                                 GLACE d’infliger des dégâts au cerveau. Après avoir arrêté les dégâts,
+                                                                                                                                                                20
+                 Bouclier        Défensif         0         0          7         le Bouclier se dérezze. Vous ne pouvez exécuter qu’une seule copie de
+                                                                                                                                                            (Ordinaire)
+                                                                                 ce programme à la fois. Chaque copie de ce programme ne peut être
+                                                                                 utilisée qu’une fois par Netrun.
+                                Icône : une barrière énergétique argentée clignotante qui entoure le Netrunner.
+                                                                                 Fait tomber à 0 l’ATT de tous les programmes offensifs qui ne sont
+                                                                                 pas des GLACE exécutés contre vous tant que le programme est rezzé.
+                 Tir de                                                                                                                                        50
+                                 Défensif         0         0          7         Vous ne pouvez exécuter qu’une seule copie de ce programme à la
+                 barrage                                                                                                                                    (Coûteux)
+                                                                                 fois. Chaque copie de ce programme ne peut être utilisée qu’une fois
+                                                                                 par Netrun.
+                                Icône : une nuée de rayons lumineux aux couleurs aveuglantes qui se déploient autour du Netrunner.
+
+
+                ▶ Offensif
+                 Nom                Classe            ATT       DÉF        REZ       Effet                                                                     Prix
+                                  Offensif                                           Inflige 2d6 points de dégâts aux GLACE et 3d6 aux autres                   50
+                 Bannissement                         1           0         0
+                                  antiprogramme                                      programmes.                                                             (Coûteux)
+                                  Icône : un gigantesque marteau blanc lumineux manié par le Netrunner.
+
+
+
+
+                                                                                                                                                                           203
+  NETRUNNING
+
+                  Nom                 Classe           ATT        DÉF       REZ         Effet                                                                     Prix
+                                     Offensif                                           Inflige 3d6 points de dégâts aux GLACE et 2d6 aux autres                    50
+                  Sabre                                  1          0          0
+                                     antiprogramme                                      programmes.                                                              (Coûteux)
+                                     Icône : un katana énergétique brillant qui apparaît dans la main du Netrunner.
+                                                                                        Le Netrunner ennemi est déconnecté de l’architecture de force et           100
+                                     Offensif
+                  ConsoleKRASH                           0          0          0        non de manière sûre. Il subit l’effet de tous les GLACE ennemis            (Très
+                                     antipersonnel
+                                                                                        rezzés qu’il a rencontrés dans l’architecture quand il la quitte.        coûteux)
+                                     Icône : un bâton de dynamite dans le style cartoon lancé par le Netrunner.
+                                                                                        Inflige 2d6 points de dégâts directement au cerveau du Netrunner
+                                                                                        ennemi. Si sa cyberconsole n’est pas dotée d’un câblage isolé, elle
+                                                                                        prend feu. Les vêtements de l’infortunée victime s’enflamment              100
+                                     Offensif
+                  Feubeu                                 2          0          0        également. Jusqu’à ce qu’il passe une action réelle à éteindre les         (Très
+                                     antipersonnel
+                                                                                        flammes, le Netrunner subit 2 points de dégâts sur ses PS chaque         coûteux)
+                                                                                        fois qu’il termine son tour. Si cet effet se déclenche plusieurs fois,
+                                                                                        il ne se cumule pas.
+                                     Icône : une boule de feu cramoisie lancée par la main du Netrunner.
+                                                                                        Inflige 1d6 points de dégâts directement au cerveau d’un
+                  Hélice             Offensif                                           Netrunner et réduit la quantité totale d’actions virtuelles qu’il peut      50
+                                                         1          0          0
+                  d’éclairs          antipersonnel                                      accomplir lors de son prochain tour de 1 (mais il lui reste deux         (Coûteux)
+                                                                                        actions virtuelles minimum).
+                                     Icône : une hélice double composée de lumières clignotantes qui jaillit du doigt du Netrunner.
+                                                                                        Détruit un programme qui n’est pas un GLACE installé sur la                100
+                                     Offensif
+                  Laser corrosif                         0          0          0        cyberconsole du Netrunner ciblé. Le programme est choisi au                (Très
+                                     antipersonnel
+                                                                                        hasard.                                                                  coûteux)
+                                     Icône : un rayon de lumière vert fluo tiré par le doigt du Netrunner.
+                                                                                        Le Netrunner ennemi ne peut plus ni progresser davantage au
+                                                                                        sein de l’architecture ni se déconnecter de manière sûre pendant           100
+                                     Offensif
+                  Superglue                              2          0          0        1d6 rounds (mais il peut toujours se déconnecter de manière                (Très
+                                     antipersonnel
+                                                                                        dangereuse). Chaque copie de ce programme ne peut être utilisée          coûteux)
+                                                                                        qu’une fois par Netrun.
+                                     Icône : une masse de colle rouge qui jaillit de la main du Netrunner.
+                                                                                        L’INT, les RÉF et la DEX du Netrunner ennemi sont chacune réduites
+                                                                                                                                                                   100
+                                     Offensif                                           d’1d6 (mais restent de 1 minimum) pendant 1 heure. Les effets
+                  Taser                                  0          0          0                                                                                   (Très
+                                     antipersonnel                                      sont principalement psychosomatiques et ne laissent donc pas de
+                                                                                                                                                                 coûteux)
+                                                                                        séquelles permanentes.
+                                     Icône : une boule chromée crépitant d’électricité lancée par le Netrunner.
+
+
+
+                G    LACE
+
+                Les GLACE Noirs sont des programmes mortels qui, une fois, déclenchés, traquent les autres programmes ou les
+                Netrunners au sein d’une architecture. Vous pouvez choisir d’installer vos propres GLACE (en dehors du type Démon)
+                dans votre cyberconsole, sachant que ces programmes volumineux occupent 2 emplacements au lieu d’un.
+                Activer ou désactiver un programme requiert une action virtuelle.
+                                             Installer ou désinstaller un GLACE prend 1 heure.
+
+
+
+
+ 204
+                                                                                                                            NETRUNNING
+
+                ▶ Types de GLACE                                                        l’architecture où il se trouve, auquel cas le GLACE agit
+                                                                                        comme indiqué ci-dessus. Cette action n’est pas possible
+                                                                                        en combat. D’autre part, il peut l’activer pendant un combat
+                       Classe                       Description
+                                                                                        en choisissant une cible valide. Dans ce cas, le GLACE
+                      GLACE             Programme mortel ayant pour seul but de         se retrouve au début de la file d’Initiative, avec un score
+                  antipersonnel         traquer et de tuer les Netrunners.              supérieur de 1 point à l’entité qui possédait avant son
+                                       Programme mortel ayant pour seul but de          apparition la meilleure Initiative. Il attaque sa cible chaque
+                      GLACE                                                             fois que son tour arrive, jusqu’à ce qu’il soit dérezzé, détruit
+                                       traquer et de tuer les programmes rezzés
+                 antiprogramme                                                          ou semé avec Glissement.
+                                       d’un Netrunner.
+                                                                                           Pour désigner une nouvelle cible à son GLACE, le
+                                        Programme doté d’un système intelligent qui
+                                                                                        Netrunner doit dépenser une action virtuelle pour le
+                                        utilise les nœuds de contrôle pour défendre
+                                        son architecture NET ou un espace physique      désactiver et une action virtuelle pour le réactiver, ce qui
+                 GLACE Démon                                                            le replace au début de la file d’Initiative et l’envoie sur une
+                                        en ciblant le Netrunner et son groupe dans le
+                                        frigo à viande. Il est trop volumineux          cible valide.
+                                        pour être installé sur une cyberconsole.          Votre GLACE a une capacité de réflexion aussi limitée
+                                                                                        que les GLACE que vous rencontrez. Un GLACE n’est pas
+                Rencontrer et utiliser des GLACE                                        un animal de compagnie numérique, puisqu’il ne prend
+                                                                                        aucune initiative et suit ce que lui dicte son code.
+                Lorsque vous rencontrez un GLACE ennemi posté en attente                       Le MJ joue tous les tours des GLACE.
+                dans une architecture, faites un jet d’Interface + vos bonus
+                de VIT actifs + 1d10 contre la VIT + 1d10 du GLACE. Si le
+                programme obtient un meilleur résultat, vous (ou l’un de vos
+                programmes actifs pris au hasard dans le cas d’un GLACE
+                antiprogramme) subissez immédiatement son effet. Il se
+                place ensuite tout en haut de la file d’Initiative, avec un
+                score supérieur de 1 point à l’entité qui possédait avant
+                son apparition la meilleure Initiative. Pendant ses tours, le
+                GLACE réitère son attaque contre le Netrunner (ou contre
+                l’un de ses programmes actifs pris au hasard dans le cas
+                d’un GLACE antiprogramme) avec un jet d’ATT + 1d10
+                contre l’Interface + 1d10 du Netrunner (ou la DÉF + 1d10
+                du programme dans le cas d’un GLACE antiprogramme)
+                et applique son effet s’il réussit.
+
+
+
+
+                                                                                        PAR RICHARD BAGNALL
+                   Un GLACE poursuit sa cible dans toute l’ar-
+                chitecture jusqu’à ce que le GLACE soit dérezzé
+                ou jusqu’à ce que le Netrunner réussisse à uti-
+                liser la capacité d’Interface Glissement pour lui
+                échapper. Un GLACE antiprogramme continue
+                de suivre un Netrunner ennemi jusqu’à ce que
+                le GLACE soit dérezzé ou semé avec Glissement
+                même si le Netrunner n’a actuellement pas de
+                programme rezzé, car le GLACE est programmé
+                pour considérer les Netrunners ennemis comme
+                des sources de programmes. Un GLACE semé par
+                le Glissement d’un Netrunner cesse de suivre sa
+                cible et devient un GLACE « posté en attente »
+                dans l’architecture à l’endroit exact où la pour-
+                suite s’est terminée, comme indiqué ci-dessus.
+                  Il existe deux manières pour un Netrunner d’activer son
+                propre programme GLACE avec une action virtuelle. D’une
+                part, il peut poster le programme en attente à l’étage de
+
+
+                                                                                                                                                           205
+  NETRUNNING
+
+                  Légende du tableau des GLACE
+                  Classe : le type du programme. Un programme dont la classe précise un type de cible (par exemple antipersonnel ou
+                    antiprogramme) n’est efficace que lorsqu’il est utilisé contre la cible prévue.
+                  Perception (PER) : le SD pour utiliser Glissement contre ce GLACE.
+                  Vitesse (VIT) : la rapidité de réaction du GLACE. Un GLACE à la VIT élevée posté en attente a davantage de chances
+                    de porter un coup gratuit quand il rencontre un Netrunner pour la première fois (voir Rencontrer et utiliser des GLACE
+                    en page 205).
+                  Attaque (ATT) : nombre que le GLACE ajoute à son jet quand il attaque pendant son tour.
+                  Défense (DÉF) : nombre que le GLACE ajoute à son jet quand il se défend contre une attaque.
+                  REZ : les points de santé du programme, c’est-à-dire la quantité de dégâts qu’il peut subir quand il est rezzé avant de
+                   devenir dérezzé.
+                  Effet : l’effet causé quand le GLACE touche avec une attaque.
+                  Icône : l’apparence du programme sur le NET. Beaucoup de Netrunners personnalisent le visuel de leurs programmes
+                    GLACE.
+                  Prix : le coût du programme dans la devise principale de Night City, l’eurodollar (ED). La catégorie de prix de l’objet est
+                    indiquée sous son coût (voir Acheter et vendre en page 385).
+
+                   Nom           Classe          PER        VIT       ATT        DÉF       REZ                                Effet                                  Prix
+
+                                                                                                     Inflige 2d6 points de dégâts directement au cerveau du
+                                                                                                     Netrunner. Si sa cyberconsole n’est pas dotée d’un câblage
+                                                                                                     isolé, elle prend feu. Les vêtements de l’infortunée victime
+                                GLACE                                                                                                                                  500
+                Cerbère                            6         6          6          2        20       s’enflamment également. Jusqu’à ce qu’il passe une action
+                                antipersonnel                                                                                                                       (Onéreux)
+                                                                                                     réelle à éteindre les flammes, le Netrunner subit 2 points
+                                                                                                     de dégâts sur ses PS chaque fois qu’il termine son tour. Si
+                                                                                                     cet effet se déclenche plusieurs fois, il ne se cumule pas.
+                                Icône : un énorme loup de métal noir. Ses yeux brillent d’une lueur blanche et des vagues de flammes parcourent son corps.
+                                Il répète sans cesse le nom du Netrunner ennemi d’une voix aussi métallique que grinçante.
+                                                                                                                                                                      100
+                                GLACE                                                                Détruit un programme installé sur la cyberconsole du
+                Cobra                              4         6          2          2        15                                                                        (Très
+                                antipersonnel                                                        Netrunner ennemi. Le programme est choisi au hasard.
+                                                                                                                                                                    coûteux)
+                                Icône : un cobra égyptien doré qui crache des rayons de lumière vert fluo.
+                                                                                                     Dérezze un programme défensif que le Netrunner ennemi
+                                GLACE                                                                                                                                  50
+                Corbeau                            6         4          4          2        15       a rezzé (choisi au hasard), puis inflige 1d6 points de
+                                antipersonnel                                                                                                                       (Coûteux)
+                                                                                                     dégâts directement au cerveau du Netrunner.
+                                Icône : un corbeau qui porte une armure de plaques et manie une lance de cavalerie blanche et brillante.
+                                                                                                     Inflige 1d6 points de dégâts directement au cerveau du
+                                    GLACE                                                            Netrunner ennemi et réduit la quantité totale d’actions           50
+                Feu follet                         4         4          4          2        15
+                                antipersonnel                                                        virtuelles qu’il peut accomplir lors de son prochain tour de   (Coûteux)
+                                                                                                     1 (mais il lui reste deux actions virtuelles minimum).
+                                Icône : un orbe de lumière pourvu d’un œil minuscule qui crépite d’énergie.
+
+
+                                    L es GLACE que je déteste le plus ? L es tueurs .
+                                    Si un GLACE me crame le cerveau, je peux gérer ,
+                                    mais je suis morte s ’il descend mes programmes .
+                                                                                                                                            — redeye
+
+ 206
+                                                                                                                                    NETRUNNING
+
+                   Nom       Classe          PER        VIT        ATT        DÉF      REZ                                 Effet                                  Prix
+                                                                                                  Inflige 3d6 points de dégâts directement au cerveau
+                                                                                                  du Netrunner ennemi. Jusqu’à la fin de son prochain            1 000
+                               GLACE
+                Kraken                         6          2          8          4        30       tour, le Netrunner ne peut plus ni progresser au sein de        (Très
+                           antipersonnel
+                                                                                                  l’architecture ni se déconnecter de manière sûre (mais il     onéreux)
+                                                                                                  peut toujours se déconnecter de manière dangereuse).
+                            Icône : une masse de tentacules orange qui sortent des murs et donnent de grands coups dans tous les sens. Leurs ventouses sont recouvertes
+                            de colle rouge.
+                                                                                                  L’INT, les RÉF et la DEX du Netrunner ennemi sont chacune
+                               GLACE                                                              réduites d’1d6 (mais restent de 1 minimum) pendant               500
+                Liche                          8          2          6          2        25
+                           antipersonnel                                                          1 heure. Les effets sont principalement psychosomatiques,     (Onéreux)
+                                                                                                  ils ne laissent donc pas de séquelles permanentes.
+                            Icône : un squelette métallique drapé dans une robe de bure noire. Ses mains sont ornées de bagues noircies qui crépitent d’électricité.
+                                                                                                  Jusqu’à ce que ce programme soit dérezzé, un Netrunner
+                                                                                                  ennemi touché par son effet subit un malus de –2 sur
+                               GLACE                                                              tous ses jets de Glissement. Chaque GLACE de type Putois         500
+                Putois                         2          4          4          2        10
+                           antipersonnel                                                          ne peut appliquer son effet qu’à un seul Netrunner à          (Onéreux)
+                                                                                                  la fois, mais les effets de plusieurs Putois peuvent se
+                                                                                                  cumuler.
+                            Icône : un putois dans le style cartoon qui marche sur ses pattes arrière et suit le Netrunner de beaucoup trop près.
+                                                                                                  Le MOUV du Netrunner ennemi est réduit d’1d6 (mais
+                                                                                                                                                                   100
+                               GLACE                                                              reste de 1 minimum) pendant 1 heure. Les effets sont
+                Scorpion                       2          6          2          2        15                                                                        (Très
+                           antipersonnel                                                          principalement psychosomatiques, ils ne laissent donc pas
+                                                                                                                                                                 coûteux)
+                                                                                                  de séquelles permanentes.
+                            Icône : un minuscule scorpion noir qui émet un sifflement très fort chaque fois que le Netrunner ennemi parle.
+                                                                                                  Inflige 3d6 points de dégâts directement au cerveau du
+                                                                                                  Netrunner ennemi. Le Netrunner est déconnecté de force
+                                                                                                                                                                 1 000
+                               GLACE                                                              de sa Netrun actuelle, sans la moindre précaution. Il subit
+                Titan                          2          2          8          4        25                                                                       (Très
+                           antipersonnel                                                          l’effet de tous les GLACE ennemis rezzés qu’il a rencontrés
+                                                                                                                                                                onéreux)
+                                                                                                  dans l’architecture (mais pas celui du Titan, qui vient
+                                                                                                  d’avoir lieu) quand il la quitte.
+                            Icône : une énorme paire de pieds et de chevilles qui surplombe le Netrunner ennemi.
+                                                                                                  Inflige 6d6 points de dégâts à un programme. Si cela           1 000
+                                GLACE
+                Dragon                         6          4          6          6        30       suffit théoriquement à dérezzer le programme, il est            (Très
+                           antiprogramme
+                                                                                                  détruit à la place.                                           onéreux)
+                            Icône : un robot dragon aux écailles dorées entouré d’arcs électriques.
+                Tigre à                                                                           Inflige 6d6 points de dégâts à un programme. Si cela           1 000
+                                GLACE
+                dents de                       8          6          6          2        25       suffit théoriquement à dérezzer le programme, il est            (Très
+                           antiprogramme
+                sabre                                                                             détruit à la place.                                           onéreux)
+                            Icône : un énorme félin musclé avec deux grandes dents saillantes blanches et brillantes.
+                                                                                                  Inflige 4d6 points de dégâts à un programme. Si cela
+                                GLACE                                                                                                                              500
+                Tueur                          4          8          6          2        20       suffit théoriquement à dérezzer le programme, il est
+                           antiprogramme                                                                                                                        (Onéreux)
+                                                                                                  détruit à la place.
+                            Icône : un robot samouraï aux yeux rouges qui manie un katana brillant.
+
+
+
+
+                                                                                                                                                                       207
+  NETRUNNING
+
+
+                A    méliorations diverses
+
+                Après avoir accompli quelques missions, vous voudrez sûrement booster votre Netrunning avec tous les ED que vous aurez
+                gagnés. Vous êtes au bon endroit pour ça.
+
+                  Nom                                   Données                                                                                                 Prix
+
+                                                        Armure PA 11 pour la tête et le corps avec un espace où stocker une cyberconsole et des
+                                                                                                                                                                 1 000
+                  Combinaison connectée                 câbles pour ports d’interface neurale. Ajoute 1 emplacement d’extension supplémentaire
+                                                                                                                                                            (Très onéreux)
+                                                        destiné uniquement au matériel informatique (voir la fiche complète en page 350).
+                                                        Une cyberconsole intégrée directement dans un cyberbras. Ajoute 1 emplacement de
+                  Option cyberconsole                                                                                                                            500
+                                                        programme ou de matériel informatique supplémentaire (voir la fiche complète en
+                  sur un cyberbras                                                                                                                            (Onéreux)
+                                                        page 364).
+
+
+
+                Matériel informatique pour cyberconsole
+                Les emplacements d’extension d’une cyberconsole peuvent être utilisés pour accueillir des programmes, mais aussi du
+                matériel informatique. La manière dont vous répartissez ces emplacements entre copies supplémentaires de vos pro-
+                grammes préférés, GLACE mortels et matériel informatique utile dépend de vos préférences personnelles. Mais une chose
+                est sûre, vous n’avez pas de place pour tout et vous pouvez amèrement regretter l’absence de n’importe quel élément…
+                Sauf précision contraire, une pièce de matériel informatique occupe toujours 1 emplacement d’extension.
+                                 Installer ou enlever une pièce de matériel informatique prend 1 heure.
+
+                  Nom                  Données                                                                                                                 Prix
+
+                                       Une cyberconsole dotée d’une barrière anti-KRASH est immunisée contre tout effet de programme qui force
+                  Barrière                                                                                                                                       100
+                                       le Netrunner à se déconnecter, que ce soit de manière sûre ou non. Occupe 2 emplacements d’extension
+                  anti-KRASH                                                                                                                                (Très coûteux)
+                                       pour matériel informatique.
+                                       Une cyberconsole dotée d’un câblage isolé ne peut ni prendre feu ni mettre le feu aux vêtements de                        100
+                  Câblage isolé
+                                       l’utilisateur à cause de l’effet d’un programme.                                                                     (Très coûteux)
+                                       Une cyberconsole aux circuits renforcés ne peut pas être temporairement désactivée, inutilisable ou détruite
+                  Circuits                                                                                                                                       100
+                                       à cause d’un effet d’IEM, par exemple le tir d’un canon à ondes ou l’effet d’un programme qui n’est pas un
+                  renforcés                                                                                                                                 (Très coûteux)
+                                       GLACE.
+                                       Quand il est installé sur une cyberconsole, comme son nom l’indique, un disque dur de sauvegarde « sauve »
+                                       les programmes offensifs, défensifs ou de soutien (mais pas les programmes GLACE) qui sont détruits en les
+                                       plaçant sur le disque dur de sauvegarde juste avant qu’ils ne disparaissent. En dépensant une action réelle,
+                                       un Netrunner peut réinstaller tous les programmes « sauvés » par le disque dur de sauvegarde sur sa console,
+                  Disque dur de                                                                                                                                  100
+                                       s’il a assez d’emplacements pour tous. S’il est enlevé de la cyberconsole, le disque dur de sauvegarde efface
+                  sauvegarde                                                                                                                                (Très coûteux)
+                                       automatiquement son propre contenu. Les programmes restaurés qui ne peuvent être utilisés qu’une fois par
+                                       Netrun ou autre restriction similaire sont restaurés dans l’état exact dans lequel ils ont été sauvegardés, il est
+                                       donc impossible de tuer sa propre Armure pour récupérer une utilisation (on vous voyait venir, petit fourbe…)
+                                       Occupe 2 emplacements d’extension pour matériel informatique.
+                  Extension de         Une cyberconsole dotée d’une extension de portée peut se connecter à un point d’accès situé à 8 m de distance      100
+                  portée               ou moins.                                                                                                     (Très coûteux)
+                                       Une cyberconsole dotée d’un verrou biométrique peut être verrouillée et déverrouillée à l’aide d’une empreinte
+                                       digitale, d’une capture d’iris, d’un échantillon de sang ou de toute autre méthode biométrique désirée. La
+                  Verrou                                                                                                                                         100
+                                       méthode varie selon le modèle de verrou biométrique. Impossible d’accéder à une cyberconsole verrouillée
+                  biométrique                                                                                                                               (Très coûteux)
+                                       sans sa clé biométrique, à moins de réussir un jet de Sécurité électronique SD 17. Occupe 2 emplacements
+                                       d’extension pour matériel informatique.
+
+
+
+
+ 208
+                                                                                                                                   NETRUNNING
+
+                A     rpenter le NET
+                                                                                                                                           Remarques
+                                                                                                                                        concernant les
+                                  Imaginez que vous êtes dans un ascenseur.
+                                                                                                                                        architectures
+                Chaque étage d’une architecture NET est un niveau et quand la « porte » s’ouvre, quelque chose vous attend,
+                que ce soit un programme, un GLACE, un autre Netrunner, un fichier, un nœud de contrôle, etc.                        Beaucoup de systèmes
+                   Chaque tour, vous pouvez descendre d’autant d’étages dans l’architecture                                          électroniques n’ont pas
+                                                                                                                                     d’architecture NET,
+                que vous le désirez, à supposer que vous ne soyez pas bloqué par un mot de passe ou un
+                                                                                                                                     soit parce qu’ils sont
+                autre obstacle virtuel. Vous ne pouvez pas sauter d’étage. Vous avez tout de même un                                 analogiques, comme
+                nombre limité d’actions virtuelles chaque tour. La manière dont vous les utilisez dépend de votre                    beaucoup de grille-pain
+                tolérance au risque et de votre style de Netrunning.                                                                 même à l’Ère du Rouge, soit
+                                                                                                                                     parce qu’ils fonctionnent
+                  Vous devez ouvrir chaque porte dans l’ordre… et derrière beaucoup d’entre elles, vous trou-
+                                                                                                                                     en comptant exclusivement
+                verez un GLACE qui tentera de vous punir immédiatement pour avoir ouvert sa porte (sauf si                           sur CitiNet et sur des
+                vous êtes assez rapide) et qui va se placer tout en haut de la file d’Initiative même si vous avez                   puces mémoire, comme
+                été plus rapide. Jusqu’où allez-vous tenter votre chance ? Est-ce que vous voulez aller                              les Agents et les caméras
+                lentement en éliminant chaque GLACE que vous rencontrez ou est-ce que vous voulez Glisser                            vidéo. Ces types d’appareils
+                sans aucune prudence, voire dans la gueule du loup, et ouvrir porte après porte en prenant de                        électroniques peuvent tout
+                                                                                                                                     de même être trafiqués
+                plus en plus de risques, esquiver les attaques initiales de tous les GLACE qui vous guettent et vous
+                                                                                                                                     en utilisant la compétence
+                déconnecter de manière sûre avec votre dernière action virtuelle avant que les GLACE toujours                        Sécurité électronique, mais
+                actifs dans l’architecture NET n’aient le temps de jouer leur tour ?                                                 comme ils n’ont pas besoin
+                                                                                                                                     d’architecture NET pour
+                ▶ Exemple d’architecture NET                                                                                         fonctionner, ils ne peuvent
+                                                                                                                                     pas être piratés avec la
+                   Étage                         De l’autre côté de la porte                                       SD                capacité de rôle Interface.
+                                                                                                                                     Voilà pourquoi beaucoup
+                      1                                          Fichier                                    (Analyse SD 6)           de Netrunners ont aussi
+                                                                                                                                     un bon niveau de Sécurité
+                      2                                       Mot de passe                              (Porte dérobée SD 8)
+                                                                                                                                     électronique en complément
+                      3                                Nœud de contrôle (caméras)                           (Contrôle SD 10)         de leur Netrunning. Les
+                                                                                                                                     cyberimplants ne peuvent
+                      4                                       Mot de passe                              (Porte dérobée SD 8)         pas être piratés avec
+                      5                                           Cobra                                            –                 Interface pour la même
+                                                                                                                                     raison, et sont régis par la
+                      6                             Nœud de contrôle (porte sécurisée)                      (Contrôle SD 10)         compétence Cybertech.
+                      7                                          Cerbère                                           –                    Quand il crée une
+                                                                                                                                     architecture, le MJ ne doit
+                                                                                                                                     pas oublier à quoi elle sert.
+                                                                                                                                     Si quelqu’un a seulement
+
+
+                C    onstruire une architecture NET                                                                                  besoin d’une architecture
+                                                                                                                                     NET avec quelques nœuds
+                     B u i l d i n g a N E T a r c h                                       i   t    e   c      t    u r        e     de contrôle simples et un
+                                                                                                                                     Lutin pour contrôler la
+                                        Création étape par étape pour les MJ                                                         musique et l’éclairage de
+                                                                                                                                     sa boîte de nuit, la sécurité
+                Créer une architecture NET pour votre joueur Netrunner est simple. Vous pouvez en improviser                         ne sera sans doute pas sa
+                une sur le moment si nécessaire, mais vous avez probablement intérêt à la préparer. Une fois                         priorité. Comme dans le
+                                                                                                                                     monde réel, les gens dans
+                que vous avez déterminé une valeur de difficulté de l’architecture NET qui correspond
+                                                                                                                                     Cyberpunk construisent
+                à ce que vous cherchez, le reste tient en trois étapes.                                                              en fonction de leur budget
+                                                                                                                                     et veulent avoir quelque
+                                                                                                                                     chose qui supporte les
+                                                                                                                                     fonctions nécessaires pour
+                                                                                                                                     gérer efficacement leurs
+                                                                                                                                     opérations.
+
+
+
+                                                                                                                                                        209
+  NETRUNNING
+
+                Étape 0 : la valeur de difficulté
+                Les défenses de l’architecture NET que vous créez seront plus ou moins résistantes en fonction de son degré de complexité.
+                Régler la valeur de difficulté est un bon moyen de vous assurer que votre architecture NET va poser un vrai défi à votre
+                Netrunner (tout en lui laissant une chance) sans pour autant le tuer immédiatement. Mieux vaut commencer par une valeur
+                de difficulté standard.
+
+                                                                        Difficulté         Difficulté         Difficulté        Difficulté
+                                                                        basique            standard         inhabituelle        avancée
+                  SD d’un mot de passe/fichier/nœud
+                                                                           SD 6               SD 8              SD 10             SD 12
+                  de contrôle
+                  Interface d’un Netrunner qui a ses
+                                                                             2                  4                 6                  8
+                  chances
+                  Interface d’un Netrunner qui pourrait
+                  mourir avant d’atteindre l’étage le                        –            2 ou moins        4 ou moins         6 ou moins
+                  plus bas
+
+
+                Étape 1 : dessiner le plan de l’architecture
+                Lancez 3d6. Le résultat est le nombre total d’étages de l’architecture. Lancez un d10 ; si vous obtenez 7 ou plus, l’archi-
+                tecture comporte un embranchement. Relancez le d10 pour voir si vous obtenez un autre embranchement. Arrêtez-vous
+                quand vous n’obtenez pas d’embranchement. Répartissez le nombre total d’étages entre la branche principale et les autres
+                branches que les jets de dés ont généré selon vos envies. Le ou les embranchements d’une architecture NET
+                doivent obligatoirement être situés en dessous du deuxième étage de la branche principale. Assurez-
+                vous également que l’une des branches soit plus longue que les autres, car c’est l’étage le plus bas de cette branche qui
+                sera le « fond » de l’architecture NET où un Netrunner peut laisser un Virus.
+
+                Étape 2 : peupler l’architecture
+                Consultez le tableau de valeurs de difficulté d’architecture NET ci-dessus et choisissez la valeur que vous désirez. Tenez
+                compte du rang d’Interface de votre personnage joueur Netrunner. Commencez par l’étage le plus élevé
+                de l’architecture et remplissez les étages par ordre descendant. Pour les deux premiers étages de l’architecture NET,
+                faites un jet dans le tableau du lobby ci-dessous pour déterminer ce qui se trouve à chaque étage en refaisant le jet si
+                vous tombez sur un programme ou un mot de passe que vous avez déjà obtenu. Puis continuez à remplir
+                les étages en descendant. Pour tous les étages en dehors des deux premiers, faites un jet dans le tableau du corps de
+                l’architecture NET qui correspond à la valeur de difficulté que vous avez attribuée à l’architecture pour déterminer ce qui
+                se trouve à chaque étage en refaisant le jet si vous tombez sur un programme ou un mot de passe que
+                vous avez déjà obtenu.
+                   En utilisant cette méthode, plus un Netrunner descend dans une architecture NET, plus il a de chances de trouver des
+                fichiers précieux ou des nœuds de contrôle utiles.
+
+                Étape 3 : adapter l’architecture au monde réel à proximité
+                Assurez-vous que chaque fichier ou nœud de contrôle dans l’architecture que vous avez générée a une raison d’exister
+                dans la partie du frigo à viande où l’architecture est installée. Les fichiers et les nœuds de contrôle sont les « trésors » des
+                Netruns, donc leur impact dans le monde du jeu doit être significatif et logique au vu de l’endroit où ils se trouvent. Une
+                personne importante dans ce bâtiment connaît probablement les mots de passe de l’architecture. Évidemment, elle ne
+                les donnera pas au premier venu. Un nœud de contrôle n’est pas nécessairement fait uniquement pour le combat. Les
+                caméras, les extincteurs automatiques, les sirènes, les tapis roulants de chaîne de montage, les flux
+                vidéo, les valves de contrôle du chlore, les verrous électroniques, les fauteuils massants, les distri-
+                buteurs de soda, l’air conditionné et les machines lanceuses de balles de tennis… tous ces appareils
+                peuvent aussi faire d’excellents nœuds de contrôle.
+
+
+ 210
+                                                                                                                       NETRUNNING
+
+                  Si l’architecture comporte des nœuds de contrôle, déterminez ce qu’ils contrôlent et décidez si un Démon est présent
+                pour les utiliser. Toute défense active doit être maniée par un Démon. Essayez d’adapter le Démon à son environnement.
+                Dans le doute, les Lutins sont les Démons les plus courants. L’architecture NET du cinéma local ne comporte probablement
+                pas de Balron, sauf si le cinéma cache quelque chose d’autre.
+                   Pour bien adapter l’architecture à son emplacement dans le frigo à viande, n’hésitez pas à remplacer tout programme
+                que vous avez généré par un autre programme du même prix et à intervertir l’ordre des étages que vous avez créés dans
+                l’architecture. Ou au lieu de faire des jets de dés, choisissez les étages que vous voulez à l’étape 2 pour une approche
+                plus personnalisée qui respecte également l’équilibre du jeu. Pour un seul étage, vous pouvez même choisir un étage d’une
+                architecture NET de la valeur de difficulté située juste au-dessus de celle que vous utilisez actuellement, afin d’inclure un
+                « niveau du boss ».
+
+                ▶ Architecture NET : deux premiers étages (lobby)
+
+                  Résultat du jet             Étage du lobby
+                            1                 Fichier SD 6
+                            2                 Mot de passe SD 6
+                            3                 Mot de passe SD 8
+                            4                 Putois
+                            5                 Feu follet
+                            6                 Tueur
+
+
+                ▶ Architecture NET : tous les autres étages
+                 Résultat
+                                 Étage basique                    Étage standard            Étage inhabituel               Étage avancé
+                  du jet
+                     3                   Cerbère                        Cerbère x2                   Kraken                      Cerbère x3
+                     4            Tigre à dents de sabre              Cerbère, Tueur            Cerbère, Scorpion                 Cobra x2
+                     5                 Corbeau x2                        Putois x2               Cerbère, Tueur                Cerbère, Liche
+                     6                   Cerbère                   Tigre à dents de sabre          Corbeau x2                   Feu follet x3
+                     7                  Feu follet                       Scorpion             Tigre à dents de sabre   Cerbère, Tigre à dents de sabre
+                     8                   Corbeau                          Cerbère                    Cerbère                       Kraken
+                     9            Mot de passe SD 6                Mot de passe SD 8         Mot de passe SD 10            Mot de passe SD 12
+                    10                Fichier SD 6                     Fichier SD 8              Fichier SD 10                 Fichier SD 12
+                    11          Nœud de contrôle SD 6             Nœud de contrôle SD 8     Nœud de contrôle SD 10      Nœud de contrôle SD 12
+                    12            Mot de passe SD 6                Mot de passe SD 8         Mot de passe SD 10            Mot de passe SD 12
+                    13                    Putois                           Cobra                      Tueur                         Titan
+                    14                    Cobra                            Tueur                      Liche                       Dragon
+                    15                  Scorpion                           Liche                     Dragon                   Tueur, Scorpion
+                    16                Tueur, Putois                        Cobra                 Cobra, Corbeau                    Kraken
+                    17                Feu follet x3                     Corbeau x3              Dragon, Feu follet      Corbeau, Feu follet, Cerbère
+                    18                    Liche                       Liche, Corbeau                  Titan                      Dragon x2
+
+
+
+
+                                                                                                                                                         211
+  NETRUNNING
+
+
+                D    émons et défenses                                           Un Démon se place tout en haut de la file
+                                                                               d’Initiative quand il détecte un intrus à l’aide de
+                                                                               l’une de ses caméras d’observation ou quand
+                          Boîte à outils pour les MJ                           un Netrunner entre dans son architecture. À son
+                                                                               tour, le Démon active en priorité ses nœuds de
+                Vous pouvez pimenter une architecture NET en y installant      contrôle en dépensant ses actions virtuelles et
+                des défenses. Dans ce cas, vous pouvez avoir intérêt à         n’utilise Élimination sur un Netrunner ennemi
+                installer un Démon dans l’architecture pour les contrôler.     que s’il lui reste des actions virtuelles ensuite.
+                                                                                  La plus grande limitation d’un Démon est son « intelli-
+                Démons                                                         gence » très spécifique, dépourvue de volonté propre. Les
+                À l’Ère du Rouge, les « Démons » sont en fait des types        Démons ressemblent aux IA utilisées dans les jeux vidéo :
+                bien particuliers de systèmes intelligents GLACE. Ce ne        ils possèdent des « déclencheurs » qui définissent les
+                sont pas les véritables IA de la période pré-Guerre, dont la   actions prédéterminées qu’ils peuvent effectuer.
+                création est devenue très strictement encadrée après toute        Par exemple, un Démon qui contrôle une tourelle sait
+                la destruction qu’elles ont causée pendant la Quatrième        qu’il doit attaquer quiconque pénètre dans une salle en
+                Guerre corporatiste.                                           particulier et ne porte pas un badge d’identification donné.
+                   Ces « Démons » sont conçus pour attaquer des cibles         C’est la seule chose dont il se préoccupe. Si le badge du
+                dans le frigo à viande, par exemple le groupe qui accom-       directeur marketing a été remplacé par un faux et que ce
+                pagne un Netrunner, en utilisant des nœuds de contrôle         dernier s’aventure dans la salle sans en avoir conscience,
+                tels que des drones et des tourelles.                          le Démon le traite comme n’importe quel autre intrus.
+
+                   Les Démons possèdent un rang d’Interface et une             ▶ Démons
+                valeur de combat. Cette valeur de combat est la somme
+                de leur CARAC et de leur compétence. Vous ajoutez le                                                    Actions          Valeur
+                résultat du jet d’1d10 à cette valeur de combat quand le         Nom         REZ      Interface          virtu-            de
+                Démon attaque ou se défend avec des drones, des tou-                                                     elles           combat
+                relles, etc. qu’il contrôle. Un Démon ne peut exécuter           Lutin        15            3                2               14
+                ni programme ni GLACE.
+                                                                                             Icône : une petite sphère de lumière orange avec des
+                   Avec leur rang d’Interface, les Démons n’ont accès                        cornes rouges.
+                qu’à deux des capacités d’un Netrunner qu’ils peuvent
+                utiliser en dépensant leurs actions virtuelles : Élimination     Ifrit        25            4                3               14
+                (pour se défendre) et Contrôle (pour faire fonctionner les                   Icône : un grand homme noir musclé habillé d’un
+                nœuds de contrôle). Même quand un Démon est aux                              élégant costume, arborant fez et poignard.
+                commandes, un nœud de contrôle ne peut être                      Balron       30            7                4               14
+                activé qu’une fois par tour. Les Démons peuvent
+                contrôler plusieurs nœuds de contrôle exacte-                                Icône : un énorme monstre humanoïde en armure noire
+                                                                                             futuriste ou couvert de tentacules verts et brillants qui
+                ment comme les Netrunners. Voilà pourquoi Arasaka
+                                                                                             émettent un sifflement.
+                dispose de plusieurs tourelles dans ses bureaux.
+                  Un Démon a en permanence conscience de chaque
+                facette de son architecture, ce qui veut dire qu’il n’est      Légende des tableaux des défenses
+                pas entravé par les mots de passe, qu’il sait toujours si un
+                Netrunner est présent et qu’il remporte automatiquement        Type : le nom de la défense.
+                tout concours de Vitesse avec un programme.                    Description : une description de la défense. Certaines
+                  Aussi, les Démons n’ont-ils ni VIT ni PER. C’est pourquoi     donnent plusieurs options entre lesquelles le MJ peut
+                vous ne pouvez pas échapper à un Démon en utilisant             choisir quand il crée la défense. Le temps nécessaire et
+                Glissement, pas plus qu’un Démon n’a l’occasion de vous         le SD à dépasser pour contrer la défense avec Sécurité
+                porter un coup gratuit quand il vous découvre. Les Démons       électronique sont aussi indiqués dans cette colonne.
+                n’ont pas non plus de DÉF et se défendent comme un
+                Netrunner, avec Interface + 1d10.
+
+
+
+
+ 212
+                                                                                                                                        NETRUNNING
+
+                Déclencheur par défaut : la méthode d’activation la plus courante pour cette défense. Le MJ ne doit pas hésiter à la
+                 modifier pour qu’elle corresponde à ce qu’il lui faut.
+                Données : cette colonne inclut toutes les informations supplémentaires nécessaires, par exemple le MOUV des défenses
+                 actives, la valeur de combat des défenses fixes, la portée de fonctionnement, les PS, le jet de Perception à réussir pour
+                 repérer une défense environnementale et l’Att/round.
+
+                Défenses mobiles
+                Les défenses mobiles sont de petits robots capables d’agir de manière indépendante au sein d’une certaine zone. Comme
+                les véhicules autonomes, elles peuvent suivre une cible sur une longue distance, généralement tout le périmètre du site
+                qu’elles défendent, par exemple un bâtiment ou une zone entourée par une palissade ou une clôture. Pour que les
+                défenses mobiles restent opérationnelles, un Démon doit contrôler leur nœud de contrôle au sein de
+                l’architecture, sauf si elles sont contrôlées manuellement par un Netrunner.
+                  Quand une défense mobile n’est contrôlée par personne, elle peut être piratée avec la compétence Sécurité électronique.
+                Une fois piratée, la défense peut être contrôlée à distance (à 6 m maximum de l’un des points d’accès de l’architecture
+                NET) avec un Agent en dépensant une action comme le fait un Netrunner pour sa capacité Contrôle.
+                   Quand une défense mobile est contrôlée par un Netrunner, toutes ses attaques et défenses sont effectuées en utilisant
+                les compétences du Netrunner comme s’il avait les armes de la défense dans ses propres mains et comme s’il esquivait
+                avec son propre corps.
+
+                                                                                                                  Déclencheur
+                  Type               Description                                                                                                Données
+                                                                                                                   par défaut
+                                     Les drones-araignées sont équipés de 2 des objets suivants :
+                                     • Lance-grenade avec 2 grenades lacrymogènes
+                                                                                                             La cible pénètre dans la zone    MOUV 4 ● 40 PS
+                  Drone-             • Arme de mêlée très lourde
+                                                                                                               sans porter le passe ou le        Périmètre de
+                  araignée           • Pistolet-mitrailleur lourd avec 40 balles de base
+                                                                                                                    badge approprié.          la zone défendue
+                                     • Caméra d’observation
+                                     Sécurité électronique SD 21 et 5 minutes pour pirater.
+                                     Existe sous diverses formes, notamment boule mobile, drone à chenilles,
+                                     drone à roues ou drone serpent. Les drones terrestres sont équipés de 2
+                                     des objets suivants :                                                   La cible pénètre dans la zone    MOUV 4 ● 30 PS
+                  Drone
+                                     • Pistolet très lourd avec 8 balles perforantes                           sans porter le passe ou le        Périmètre de
+                  terrestre
+                                     • Pistolet-mitrailleur avec 30 balles de base                                  badge approprié.          la zone défendue
+                                     • Caméra d’observation
+                                     Sécurité électronique SD 21 et 5 minutes pour pirater.
+                                     Les grands drones aériens sont équipés de 2 des objets suivants :
+                                     • Pistolet à fléchettes avec 8 fléchettes empoisonnées                  La cible pénètre dans la zone    MOUV 6 ● 20 PS
+                  Grand drone
+                                     • Pistolet très lourd avec 8 balles perforantes                           sans porter le passe ou le        Périmètre de
+                  aérien
+                                     • Caméra d’observation                                                         badge approprié.          la zone défendue
+                                     Sécurité électronique SD 21, 5 minutes pour pirater.
+                                     Les mini-drones aériens sont équipés de 1 des objets suivants :
+                                     • Pistolet à fléchettes avec 8 fléchettes empoisonnées                       La cible pénètre dans       MOUV 6 ● 15 PS
+                  Mini-drone
+                                     • Pistolet très lourd avec 8 balles perforantes                          la zone sans porter le passe       Périmètre de
+                  aérien
+                                     • Caméra d’observation                                                      ou le badge approprié.       la zone défendue
+                                     Sécurité électronique SD 17 et 5 minutes pour pirater.
+                                     De minuscules drones volants faisant environ la taille d’un moucheron
+                  Nuage de           et pourvus de surfaces tranchantes grâce à des nanofils.                     La cible pénètre dans       MOUV 8 ● 15 PS
+                  drones             Considérez le nuage comme une seule et même entité maniant une           la zone sans porter le passe   Périmètre de la zone
+                  aériens            arme de mêlée très lourde.                                                  ou le badge approprié.           défendue
+                                     Sécurité électronique SD 17 et 5 minutes pour pirater.
+
+
+
+                                                                                                                                                                    213
+  NETRUNNING
+
+                Défenses fixes
+                Les défenses fixes sont des systèmes immobiles et restreints à un seul espace ou zone. Elles sont considérées comme des
+                défenses « actives » au sens où leur programmation requiert un ensemble de conditions prédéterminées pour déclen-
+                cher une attaque. Chaque défense fixe est connectée à son propre nœud de contrôle au sein d’une architecture NET.
+                Contrairement aux défenses mobiles, les défenses fixes n’ont pas besoin d’être contrôlées par un Démon ou par un
+                Netrunner. Quand elles agissent par elles-mêmes sans être contrôlées par un Démon, elles utilisent leur valeur de combat,
+                qui est la somme de leur CARAC et de leur compétence, auquel vous ajoutez 1d10. Les défenses fixes ne peuvent pas
+                esquiver les attaques puisque, comme leur nom l’indique, elles ne bougent pas.
+                  Quand une défense fixe n’est contrôlée par personne, elle peut être piratée avec la compétence Sécurité électronique.
+                Une fois piratée, la défense peut être contrôlée à distance (à 6 m maximum de l’un des points d’accès de l’architecture
+                NET) avec un Agent en dépensant une action comme le fait un Netrunner pour sa capacité Contrôle.
+                  Quand une défense fixe est contrôlée par un Netrunner, toutes ses attaques sont effectuées en utilisant les compétences
+                du Netrunner comme s’il avait les armes de la défense dans ses propres mains.
+
+                                                                                                                          Déclencheur
+                      Type                                       Description                                                                            Données
+                                                                                                                           par défaut
+                                                                                                                      La cible pénètre dans la pièce
+                                                                                                                        sans porter le passe ou le
+                                     Une arme de mêlée très lourde automatisée, qui attaque généralement               badge approprié. L’arme de Valeur de combat 14
+                  Arme de
+                                     depuis l’un des angles d’une pièce. Souvent c’est un appareil à découper           mêlée continue d’attaquer            25 PS
+                  mêlée
+                                     par jet d’eau industriel ou un fil monofilament rotatif.                        jusqu’à ce que toutes les cibles Périmètre de la zone
+                  automatisée
+                                     Sécurité électronique SD 17 et 5 minutes pour pirater.                              soient mortes ou hors de          défendue
+                                                                                                                       portée, ou jusqu’à ce que le
+                                                                                                                      badge adéquat soit présenté.
+                                     Des armes automatisées tirent un nuage de nanites dans la pièce sous
+                                     forme de brouillard rouge. Quand elles sont inhalées, les nanites attaquent
+                                     leur victime de l’intérieur en formant des caillots avec l’hémoglobine de son
+                                     sang. Tout ce qui filtre les attaques au gaz bloque aussi le nuage sanglant                                     Une seule attaque
+                  Nuage                                                                                              La cible pénètre dans la pièce sur toutes les cibles
+                                     automatisé.
+                  sanglant                                                                                             sans porter le passe ou le
+                                     Tous les individus organiques présents dans la zone défendue doivent                                           Périmètre de la zone
+                  automatisé                                                                                                badge approprié.
+                                     réussir un jet de Résistance à la torture/aux drogues SD 15. Quiconque                                               défendue
+                                     le rate subit 3d6 points de dégâts directement sur ses PS. Son armure
+                                     n’est pas perforée.
+                                     Sécurité électronique SD 21 et 5 minutes pour pirater.
+                                     Cette défense est une arme automatisée, généralement accrochée au
+                                     plafond d’une pièce pour couvrir une zone plus large. La plupart des armes
+                                                                                                                 La cible pénètre dans la pièce
+                                     à distance peuvent être installées sur une tourelle automatique, mais
+                                                                                                                   sans porter le passe ou le    Valeur de combat 14
+                                     généralement, la tourelle est équipée de l’une des armes suivantes :
+                                                                                                                  badge approprié. La tourelle
+                  Tourelle           • Fusil d’assaut avec 25 balles de base                                                                            25 PS
+                                                                                                                continue de tirer jusqu’à ce que
+                  automatisée        • Crache-feu avec 4 chevrotines incendiaires                                                                    Périmètre de
+                                                                                                                 la cible soit morte ou hors de
+                                     • Pistolet à fléchettes avec 8 fléchettes empoisonnées                                                       la zone défendue
+                                                                                                                  portée, ou jusqu’à ce que le
+                                     • Pistolet très lourd avec 8 balles perforantes
+                                                                                                                 badge adéquat soit présenté.
+                                     • Pistolet-mitrailleur lourd avec 40 balles de base
+                                     Sécurité électronique SD 17 et 5 minutes pour pirater.
+
+
+                Défenses environnementales
+                Les défenses environnementales sont des systèmes « intégrés » dans une partie spécifique de l’environnement ordinaire.
+                Elles sont généralement déployées sur un espace limité, par exemple un couloir, une pièce ou un espace relativement petit
+                entouré par une clôture ou une palissade. Beaucoup de défenses environnementales font partie de la structure du sol, des
+                murs ou du plafond, à moins qu’elles n’aient des émetteurs ou des projecteurs (ou les deux) intégrés dans ces surfaces.
+
+
+ 214
+                                                                                                                                               NETRUNNING
+
+                Les défenses environnementales ont chacune leur propre nœud de contrôle au sein d’une architecture NET. Elles sont
+                toutes automatiques et même quand elles sont contrôlées par un Démon ou par un Netrunner, elles peuvent seulement
+                être allumées ou éteintes et s’activent toujours dès qu’elles sont déclenchées. Quand aucun Démon n’est présent,
+                allumer le sol électrifié la nuit avant de partir fait partie du travail de l’un des employés du bâtiment.
+                   Quand une défense environnementale n’est contrôlée par personne, elle peut être piratée avec la compétence Sécurité
+                électronique. Une fois piratée, la défense peut être contrôlée à distance (à 6 m maximum de l’un des points d’accès de
+                l’architecture NET) avec un Agent en dépensant une action comme le fait un Netrunner pour sa capacité Contrôle.
+
+                                                                                                                                        Déclencheur
+                    Type                                              Description                                                                                      Données
+                                                                                                                                         par défaut
+                                                                                                                                                                            5 PS
+                  Caméras      Ces caméras peuvent voir en luminosité faible/infrarouge/UV et transmettre les images à un                                          Perception SD 17 pour
+                                                                                                                                          La cible pénètre
+                  d’obser-     Démon ou à un agent de sécurité pour qu’il agisse si nécessaire.                                                                     repérer cette défense
+                                                                                                                                           dans la pièce.
+                  vation       Sécurité électronique SD 9 et 1 minute pour pirater.                                                                              Peut filmer toute une pièce
+                                                                                                                                                                      ou tout un couloir
+                                                                                                                                                                           20 PS
+                  Tapis        Un entrelacs de nanofils dissimulé dans un tapis apparemment normal. Quand il est déclenché,                                        Perception SD 17 pour
+                  d’enche-     les fils jaillissent et s’enroulent autour des pieds et des jambes de la cible, réduisant son MOUV         La cible marche           repérer cette défense
+                  vêtre-       de 1d6 jusqu’à ce que le tapis soit détruit ou jusqu’à ce qu’elle ne se trouve plus dessus.                  sur le tapis.               1 Att/round
+                  ment         Sécurité électronique SD 13 et 1 minute pour pirater.                                                                                Périmètre de la zone
+                                                                                                                                                                          défendue
+                               Des câbles électriques intégrés dans un sol ordinaire qui, quand ils sont déclenchés, administrent                                          20 PS
+                               un choc électrique infligeant 6d6 points de dégâts au corps de la cible. Ces dommages sont                                          Perception SD 17 pour
+                  Sol                                                                                                                     La cible marche
+                               réduits par l’armure et ne la perforent pas. La cible reçoit un nouveau choc à la fin de son tour                                    repérer cette défense
+                  électrifié                                                                                                            sur la zone câblée.
+                               suivant et de chacun de ses autres tours jusqu’à ce qu’elle ne se trouve plus sur le sol électrifié.                                 Périmètre de la zone
+                               Sécurité électronique SD 13 et 1 minute pour pirater.                                                                                      défendue
+                               Une grille de lasers projetés depuis le plafond et les murs pour s’entrecroiser étroitement.                                        Perception SD 17 pour
+                                                                                                                                       La cible pénètre dans
+                               Toucher l’un des lasers équivaut à être touché au corps par une arme de mêlée très lourde. Si                                        repérer cette défense
+                  Grille de                                                                                                           la zone défendue ou se
+                               elle est repérée, la grille de lasers peut être traversée avec prudence en réussissant un jet de
+                  lasers                                                                                                              déplace de 2 m au sein        Périmètre de la zone
+                               Contorsion SD 17. En cas d’échec, le personnage touche un laser.
+                                                                                                                                       de la zone défendue.               défendue
+                               Sécurité électronique SD 17 et 5 minutes pour pirater.
+                               Une partie du sol est reliée à un mécanisme de contrepoids pour s’ouvrir sous les pieds de la
+                               cible et la faire tomber dans une fosse en dessous. La cible peut tenter d’éviter la chute avec                                     Perception SD 17 pour
+                  Piège à      un jet d’Athlétisme SD 15. Aucun jet n’est requis si la cible dispose d’une main grappin ou d’un          La cible marche            repérer cette défense
+                  fosse        lance-grappin facilement accessible. Le fond de la fosse peut être tapissé d’une grille de nanofils     sur le piège à fosse.        Périmètre de la zone
+                               ou de pics qui infligent 6d6 points de dégâts au corps de la cible, réduits par l’armure.                                                  défendue
+                               Sécurité électronique SD 13 et 1 minute pour pirater.
+                                                                                                                                                                            10 PS
+                               Une série de vaporisateurs qui, quand ils sont déclenchés, projettent une glue épaisse autour des                                   Perception SD 17 pour
+                                                                                                                                 La cible pénètre dans              repérer cette défense
+                               pieds et des jambes de la cible, réduisant son MOUV de 2d6 jusqu’à ce que la glue soit détruite
+                  Glue                                                                                                           la zone couverte par
+                               ou jusqu’à ce que la cible s’échappe de la zone défendue.                                                                                1 Att/round
+                                                                                                                                   les vaporisateurs.
+                               Sécurité électronique SD 13 et 1 minute pour pirater.                                                                                Périmètre de la zone
+                                                                                                                                                                          défendue
+                                                                                                                                                                           20 PS
+                                                                                                                                                                   Perception SD 17 pour
+                  Barres       Des barres d’acier qui jaillissent des murs ou du plafond pour former une grille et écraser les
+                                                                                                                                      La cible pénètre dans la      repérer cette défense
+                  anti-        cibles sous et entre elles en infligeant 6d6 points de dégâts à leur corps, réduits par l’armure.
+                                                                                                                                         zone de la grille.             1 Att/round
+                  intrusion    Sécurité électronique SD 13 et 5 minutes pour pirater.
+                                                                                                                                                                    Périmètre de la zone
+                                                                                                                                                                          défendue
+
+                                                                                                                                                                                    215
+  NETRUNNING
+
+                                                                                                                      Déclencheur
+           Type                                          Description                                                                              Données
+                                                                                                                       par défaut
+                                                                                                                                                        10 PS
+                      Une série de vaporisateurs qui, quand ils sont déclenchés, projettent un liquide
+                                                                                                                    La cible pénètre dans la   Perception SD 17 pour
+                      extrêmement glissant sur le sol de la zone. Quiconque effectue une action de mouvement
+      Glissomax                                                                                                      zone couverte par les      repérer cette défense
+                      dans cette zone doit réussir un jet d’Athlétisme SD 15 sous peine de tomber au sol.
+                                                                                                                         vaporisateurs.         Périmètre de la zone
+                      Sécurité électronique SD 13 et 1 minute pour pirater.
+                                                                                                                                                      défendue
+                      Des panneaux enchâssés dans les murs et conçus pour ressembler à des peintures ou à des
+                      tableaux blancs. Quand ils sont déclenchés, ils émettent une explosion étourdissante de         La cible arrive à                 5 PS
+                      lumière aveuglante et de sons. Tout personnage pris dans leur zone d’effet doit réussir un     2 m ou moins d’un         Perception SD 17 pour
+      Panneaux
+                      jet de Résistance à la torture/aux drogues SD 15 sous peine de subir les blessures critiques panneau. Zone d’effet :      repérer cette défense
+      étourdissants
+                      œil endommagé et oreille endommagée pendant 1 minute. Cependant, la victime ne subit carré de 10 m sur 10 m               Périmètre de la zone
+                      pas les dégâts bonus de ces blessures critiques.                                             centré sur le panneau.             défendue
+                      Sécurité électronique SD 13 et 1 minute pour pirater.
+                      Quand il se déclenche, toutes les ouvertures de l’espace sont hermétiquement scellées.
+                      Placez le piège tout en haut de la file d’Initiative. Autour du piège, tous les personnages                                      60 PS
+                      présents dans l’espace doivent réussir un jet de Résistance à la torture/aux drogues SD 13.
+      Ascenseur                                                                                                         La cible pénètre       Perception SD 17 pour
+                      Tous ceux qui échouent sont à présent inconscients, mais seulement jusqu’à ce qu’ils soient
+      à gaz                                                                                                            dans l’espace clos       repérer cette défense
+                      réveillés par des dégâts qu’ils subissent ou par quelqu’un qui dépense une action pour les
+      soporifique                                                                                                      ou la zone close.        Périmètre de la zone
+                      réveiller. Le piège peut être vaincu en faisant tomber ses PS à 0 avant que tout le monde
+                      ne tombe inconscient ou en le désarmant par un autre moyen.                                                                     défendue
+                      Sécurité électronique SD 17 et 5 minutes pour pirater.
+
+
+
+
+                                                                                                                                                                   PAR ADRIAN MARC
+
+
+
+
+ 216
+                                                                                                                           NETRUNNING
+
+                L   a sécurité à domicile en 2045
+
+                Les mesures de sécurité onéreuses ne sont pas destinées uniquement aux corporations, mais
+                                                                                                                                 Quel type de
+                aussi aux rares individus qui peuvent se les offrir. Si vous avez besoin de défenses automatisées                 sécurité me
+                pour votre domicile, cassez votre tirelire et allez faire un tour sur votre Marché de nuit local. Vous             faut-il ?
+                devez commencer par acheter votre propre architecture NET.
+                                                                                                                            Aucune architecture NET
+                Acheter une architecture NET                                                                                n’est à l’abri d’une équipe
+                                                                                                                            d’infiltration d’élite que
+                Une architecture NET coûte très cher. Plus vous voulez d’étages, plus le prix par étage est élevé.          vous n’avez pas vue venir.
+                De plus, la longueur de l’architecture NET détermine si le serveur physique qui l’abrite est portatif       Toutes les défenses que
+                                                                                                                            vous installez peuvent
+                (de la taille d’un gros sac à dos) ou non, et détermine la quantité maximum de nœuds de contrôle
+                                                                                                                            potentiellement être
+                (vendus séparément) que vous pouvez y installer. Réfléchissez bien, car vous ne pouvez plus                 retournées contre vous par
+                augmenter le nombre d’étages d’une architecture NET après l’avoir achetée. Les architectures                un Netrunner ou un Techie
+                NET ne peuvent être achetées que sur un Marché de nuit qui vend des appareils électroniques                 suffisamment compétent,
+                personnels, organisé par un Fixer de rang 4 ou plus.                                                        ne l’oubliez pas.
+                                                                                                                               Parfois, mieux vaut être
+                                             Nombre                                                                         subtil niveau sécurité :
+                                                                                                                            investir dans des nœuds
+                 Nombre d’étages            maximum de                    Portatif               Prix par étage
+                                                                                                                            de contrôle pour gérer des
+                                          nœuds de contrôle                                                                 caméras et une alarme et
+                         3à6                         2                        Oui                   1 000 (Très onéreux)    dans un fichier pour stocker
+                                                                                                                            les enregistrements vidéo,
+                         7 à 12                      3                        Non                      5 000 (Luxueux)      protégé par des GLACE bien
+                        13 à 18                      –                        Non               10 000 (Super luxueux)      méchants.
+                                                                                                                               Si vous voulez vous
+                                                                                                                            montrer clairement dissuasif,
+                                                                                                                            élaborez un système
+                Ajouter des mots de passe, des nœuds de contrôle et des fichiers                                            de sécurité qui tue les
+                Une fois que vous avez une architecture NET, vous devez la peupler. Les mots de passe, les                  intrus. Achetez toutes les
+                nœuds de contrôle et les fichiers prennent chacun un étage de votre nouveau bébé par élément                architectures NET courtes
+                                                                                                                            que votre Fixer peut vous
+                et leur prix dépend de leur difficulté de piratage pour un Netrunner. Les architectures NET ne
+                                                                                                                            trouver et peuplez-les de
+                peuvent être achetées que sur un Marché de nuit qui vend des appareils électroniques person-                tourelles automatisées
+                nels, organisé par un Fixer de rang 4 ou plus.                                                              jusqu’au nombre maximum
+                                                                                                                            de nœuds de contrôle.
+                           SD du Netrunner pour                                                                             Profitez du réseau de votre
+                                                                                         Prix                               Fixer pour mettre la main
+                             pirater l’élément
+                                                                                                                            sur de jolis lance-roquettes
+                                                                                           500                              et sur des roquettes rares
+                                      SD 6
+                                                                                        (Onéreux)                           pour équiper vos beaux
+                                                                                                                            engins de mort tout neufs. Un
+                                                                                           1 000
+                                      SD 8                                                                                  Netrunner ne peut rien faire
+                                                                                      (Très onéreux)                        sans s’approcher du système.
+                                                                                          5 000                             Donc, assurez-vous qu’il
+                                     SD 10                                                                                  meurt en essayant.
+                                                                                        (Luxueux)
+                                                                                         10 000
+                                      SD 12
+                                                                                     (Super luxueux)
+
+
+
+
+                                                                                                                                                  217
+  NETRUNNING
+
+                       Ajouter des Démons et des GLACE                                            Ajouter des défenses
+                                                                                                  aux nœuds de contrôle
+                       Maintenant que vous avez quelque chose à protéger, vous
+                       pouvez peupler votre architecture NET de GLACE. Pour                       Pour mettre la touche finale à votre système de sécurité à
+     Vous trouverez    ce faire, vous payez le prix de chaque programme que                       domicile, vous pouvez connecter chacun de vos nœuds
+         davantage     vous voulez ajouter individuellement et les placez comme                   de contrôle à une défense. Si vous préférez connecter vos
+d’informations sur     vous le désirez aux étages vides de votre architecture NET.                nœuds de contrôle à quelque chose d’autre, parlez-en
+    les marchés de
+             nuit en   Les GLACE utilisés dans une architecture NET coûtent                       à votre MJ. Vous allez devoir déterminer une méthode
+  Page 337             exactement le même prix que les GLACE utilisés dans une                    qui permette à vos défenses de distinguer les alliés des
+                       cyberconsole. Si vous voulez ajouter 2 GLACE à un étage,                   ennemis. Vous aurez peut-être aussi besoin d’un Démon
+                       vous payez le double du prix de chaque programme que                       qui vous aidera à gérer vos nœuds de contrôle, sauf si vous
+                       vous placez à cet étage. Si vous voulez ajouter 3 GLACE                    voulez le faire manuellement.
+                       à un seul étage, vous payez le triple du prix de chaque                       Chaque défense possède son propre prix, selon la
+                       programme que vous placez à cet étage. Les Démons sont                     difficulté pour la pirater en utilisant la compétence Sécurité
+                       un cas particulier et ne peuvent pas être placés en double                 électronique. Les défenses ne peuvent être achetées que
+                       ou en triple. Vous ne pouvez placer qu’un seul Démon                       sur un Marché de nuit qui vend des appareils électroniques
+                       par tranche de six étages dans votre architecture (voir le                 personnels, organisé par un Fixer de rang 4 ou plus
+                       tableau ci-dessous pour leurs prix). Tous les programmes
+                                                                                                  (cf. page 212 pour la liste des défenses).
+                       conçus pour les architectures NET ne peuvent être achetés
+                       que sur un Marché de nuit qui vend des appareils électro-                      SD pour pirater avec
+                       niques personnels, organisé par un Fixer de rang 4 ou plus.                                                              Prix
+                                                                                                      Sécurité électronique
+
+                                  Démon                          Prix                                            SD 9                        500 (Onéreux)
+
+                                  Lutin                    1 000 (Très onéreux)
+                                                                                                                SD 13                     1 000 (Très onéreux)
+
+                                   Ifrit                     5 000 (Luxueux)
+                                                                                                                SD 17                       5 000 (Luxueux)
+
+                                  Balron                  10 000 (Super luxueux)                                SD 21                    10 000 (Super luxueux)
+
+
+
+                       Exemple de sécurité à domicile
+                       Quelqu’un est entré par effraction dans l’entrepôt de TLB LTD la semaine dernière, donc l’entreprise décide de renforcer
+                       sa sécurité. Elle commence par acheter une architecture NET à 4 étages (1 000 ED par étage, 4 000 ED au total).
+                       Au premier étage, elle place un Cerbère (1 000 ED) et un Tueur (1 000 ED). Les deux coûtent le double, car ils sont
+                       deux au même étage. Au deuxième étage, elle installe un mot de passe avec un SD de 8 (1 000 ED). Le troisième étage
+                       accueille un autre Cerbère (500 ED parce qu’il est le seul GLACE de l’étage) et le dernier étage abrite un nœud de
+                       contrôle SD 8 (1 000 ED) qui fait fonctionner une tourelle automatisée (5 000 ED). Au total, ce nouveau système
+                       de sécurité coûte la coquette somme de 13 500 ED.
+
+                       ▶ Architecture NET de TLB LTD
+                          Étage                                  De l’autre côté de la « porte »                                                     SD
+                             1                                                     Cerbère, Tueur                                                     –
+                             2                                                     Mot de passe                                              (Porte dérobée SD 8)
+                             3                                                        Cerbère                                                         –
+                             4                                      Nœud de contrôle (tourelle automatisée)                                     (Contrôle SD 8)
+
+
+
+
+  218
+

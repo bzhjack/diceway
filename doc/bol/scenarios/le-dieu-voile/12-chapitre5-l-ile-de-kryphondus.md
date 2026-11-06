@@ -6,7 +6,7 @@ Salvatores. Fiche de session : [chapitre-5/01-fiche-de-session.md](chapitre-5/01
 l’app : [app/ch5.json](app/ch5.json). Personnages récurrents :
 [personnages-recurrents.md](personnages-recurrents.md).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent, les notes au MJ en gras, les blocs de stats à leur place.
 Les renvois « page N » sont ceux du livre (« BoL » : livre de règles de *Barbarians of Lemuria*). L’aide de jeu V

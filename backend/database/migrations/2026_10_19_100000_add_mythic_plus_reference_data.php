@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-/** Mise à jour vers l'édition Mythic+ (doc/pdf-text/07-maj-mythic-plus.txt) : trois avantages, un désavantage et six armes
+/** Mise à jour vers l'édition Mythic+ (doc/bol/pdf-text/07-maj-mythic-plus.txt) : trois avantages, un désavantage et six armes
  * régionales ; la dague et l'arme d'hast n'incluent plus le kriss et le khastok, devenus des armes à part. Les lignes déjà
  * présentes (même nom) sont laissées telles quelles ; les listes en cache sont vidées. */
 return new class extends Migration

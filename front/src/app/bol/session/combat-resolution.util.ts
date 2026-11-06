@@ -143,7 +143,7 @@ export function rollD6(): number {
 
 /** Résout le modificateur d'attaque réellement appliqué par la posture choisie. "Attaque au défaut
  * de l'armure" n'a pas de malus fixe en base (`modificateur_armor: true`) : son malus est la valeur
- * de protection fixe de la cible (−1/−2/−3 légère/moyenne/lourde, doc/rules/02-actions-combat.md). */
+ * de protection fixe de la cible (−1/−2/−3 légère/moyenne/lourde, doc/bol/rules/02-actions-combat.md). */
 export function resolvePostureAttackModifier(posture: {readonly slug: string; readonly modificateur: number} | null, targetProtection: number): number {
   if (!posture) {
     return 0;

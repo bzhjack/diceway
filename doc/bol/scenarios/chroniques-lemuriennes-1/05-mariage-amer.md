@@ -582,7 +582,7 @@ précieux qui pourrait être revendu à prix d'or ?
 Il y a peu de risques qu'un combat éclate lors de la rencontre avec les céruléens. Si toutefois cela se produit,
 utilisez les profils des nomades Karvoona et de leur chaman, page 173 du livre de base.
 
-*[NdT] Profils du livre de base, p. 173 (`doc/pdf-text/bol-complet.txt`) :*
+*[NdT] Profils du livre de base, p. 173 (`doc/bol/pdf-text/bol-complet.txt`) :*
 
 - *Nomades Karvoona (coriaces) : Vigueur 2, Agilité -1, Esprit 1, Aura 0 ; Initiative 0, Mêlée 1, Tir 1,
   Défense 0. Carrières : barbare 1, chasseur 1. Protection : armure légère d6-3 (1). Armes : lance céruléenne

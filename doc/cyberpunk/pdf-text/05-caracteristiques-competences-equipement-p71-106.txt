@@ -1,0 +1,1944 @@
+           PAR HUNTANG
+
+
+
+
+                                   Paré pour le futur
+                                    Les composants d’un personnage
+
+                Votre personnage est le rôle que vous interpréterez au cours d’une session
+                de jeu de rôle, laquelle s’apparente à une séance de théâtre d’improvisation.
+                Par exemple, si votre groupe mettait en scène une réinterprétation du film
+                Blade Runner, l’androïde Roy Batty (qui est, soit dit en passant, le personnage
+                préféré de Mike) serait l’un de ces personnages.
+
+                                                                                              71
+  PARÉ POUR LE FUTUR
+
+                Comme l’acteur Rutger Hauer, la personne qui jouerait Roy            charisme. Cette caractéristique indique également
+                dans cette aventure s’efforcerait d’adopter un comporte-             comment vous vous débrouillez en société et mesure
+                ment réaliste lors de chaque scène du film. Dans ce cas,             l’étendue de vos capacités d’interactions sociales.
+                qu’est-ce qui empêche un joueur de proclamer : « Quand             Empathie (EMP) : votre faculté à vous lier à d’autres per-
+                Deckard coince Roy, ce dernier utilise ses yeux à rayons            sonnes et à prendre soin d’elles, à vous soucier de leur
+                d’énergie pour faire fondre le pistolet de Deckard » ?              sort. Il s’agit d’une caractéristique primordiale puisqu’elle
+                Les règles bien sûr ! Pour s’assurer que tous les joueurs           retarde les effets de la cyberpsychose, une maladie psy-
+                produisent une interprétation crédible, sans abuser de              chiatrique mortelle, courante à l’Ère du Rouge.
+                leur puissance, le MJ se sert d’un ensemble de consignes
+                structurées (comme celles qui suivent) pour annoncer aux           Caractéristiques de combat
+                joueurs ce qui relève du possible ou de l’impossible dans
+                                                                                   Technique (TECH) : manipulation d’outils et d’instruments.
+                les bornes de cet univers. Et pour imposer des limites aux
+                                                                                     Cette caractéristique diffère des Réflexes puisqu’elle
+                actions des personnages, le MJ dispose pour commencer
+                                                                                     indique si vous avez le coup de main pour bricoler. Un
+                d’un outil redoutable : les caractéristiques.
+                                                                                     personnage disposant d’une Technique élevée peut se
+                                                                                     révéler incapable de manier le couteau ou de jongler.
+
+                Q    ue sont les
+                     caractéristiques ?
+                                                                                     Dans le même ordre d’idée, un personnage avec de
+                                                                                     bons Réflexes ne possède pas forcément du savoir-faire
+                                                                                     nécessaire pour reconfigurer les câblages d’un ordina-
+                                                                                     teur ou démarrer une voiture sans les clés.
+                Les caractéristiques (abrégées en CARAC) sont des
+                                                                                   Réflexes (RÉF) : évalue votre temps de réponse et votre
+                valeurs chiffrées qui donnent une idée des capacités de
+                                                                                    agilité quand il s’agit de viser, lancer un objet, jongler,
+                votre personnage par rapport au reste du monde. On peut
+                                                                                    etc. Par exemple, un prestidigitateur aura une excellente
+                décrire tous les habitants et les créatures existantes à l’aide
+                                                                                    valeur de Réflexes. Et surtout, cette caractéristique a un
+                des caractéristiques (ou plutôt les décortiquer). Il s’agit d’un
+                                                                                    impact sur votre aptitude à toucher une cible avec des
+                moyen de comparaison qui interviendra à des moments
+                                                                                    armes à distance.
+                importants dans le jeu. Par exemple, un personnage ayant
+                5 dans une caractéristique sera meilleur qu’un individu            Caractéristiques de fortune
+                ayant 4, mais moins performant qu’un protagoniste ayant
+                6 dans la même caractéristique. En général, la valeur              Chance (CHA) : mesure à quel point la fortune vous sourit.
+                des caractéristiques s’échelonne de 1 à 8, mais elle peut            Avec une Chance suffisamment élevée, vous pouvez faire
+                parfois dépasser cette limite.                                       pencher la balance en votre faveur. En jeu, cela signifie
+                                                                                     que vous pouvez défausser des points de Chance pour
+                  Dans une campagne de Cyberpunk RED, les                            les transformer en bonus sur un jet de dé. Cette réserve
+                personnages disposent de dix caractéristiques                        de points est restaurée au début de chaque session de
+                principales, réparties en quatre groupes : les                       jeu.
+                caractéristiques mentales, physiques, de combat
+                ou de fortune.                                                     Caractéristiques physiques
+                Caractéristiques mentales                                          Corps (COR) : votre taille, votre carrure et votre capacité
+                                                                                    à rester en vie et conscient grâce à votre masse mus-
+                Intelligence (INT) : vos capacités intellectuelles. Mais            culaire, votre obstination démesurée, la structure de
+                  cette caractéristique ne se limite pas à ce domaine, car          votre corps ou d’autres qualités. Cette caractéristique
+                  elle inclut aussi la ruse, la concentration, la perception        détermine la quantité de dégâts que vous pouvez subir
+                  et les capacités d’apprentissage.                                 sans passer l’arme à gauche.
+                Volonté (VOL) : votre détermination et votre sang-froid            Dextérité (DEX) : vos capacités physiques lorsque vous
+                 dans les situations stressantes et dangereuses. Cette              devez vous adonner à des activités athlétiques comme
+                 caractéristique représente également votre courage et              rester en équilibre, sauter, faire des roulades ou com-
+                 votre capacité à survivre aux privations sur le long terme.        battre. Un gymnaste sera doté d’une Dextérité élevée.
+                 Elle est essentielle pour connaître le montant de dégâts           Et surtout, cette caractéristique aidera votre personnage
+                 que vous pouvez encaisser.                                         à éviter les coups et à mettre en plein dans le mille avec
+                Prestance (PRES) : votre aptitude à impressionner les               des armes de mêlée.
+                  gens et à les influencer grâce à votre style et votre            Mouvement (MOUV) : votre vitesse de déplacement
+                                                                                    quand vous courez, sautez, nagez, etc.
+
+ 72
+                                                                                      PARÉ POUR LE FUTUR
+
+                O    btenir ses caractéristiques
+
+                Vous suivez toujours ? Alors, commençons par voir ce qui est commun à toutes les méthodes de création de personnage :
+                le tableau de caractéristiques.
+
+                Le tableau de caractéristiques
+                Quand vous créez votre personnage, vous devez noter vos caractéristiques dans un tableau de CARAC semblable à
+                celui qui suit :
+
+                          ▶ INT                 ▶ RÉF                 ▶ DEX                 ▶ TECH                 ▶ PRES
+
+
+                          ▶ VOL                 ▶ CHA                 ▶ MOUV                ▶ COR                  ▶ EMP
+
+
+
+                   Ce tableau ne change pas, quelle que soit la méthode de création de personnage que vous choisissez : Rat des Rues,
+                Edgerunner ou Formule complète. Vous retrouverez un tableau de caractéristiques similaire sur votre
+                fiche de personnage.
+
+                Les trois méthodes de génération des caractéristiques
+                                          ▶ Méthode no 1 : Rat des Rues (profil générique) ◀
+                Quand vous choisissez l’option Rat des Rues, lancez 1d10 et recopiez sur votre fiche de personnage les nombres
+                situés sur la ligne correspondant au résultat du jet. Vous ne pouvez pas modifier ces CARAC ; vous devez retranscrire à     Définition
+                                                                                                                                            des CARAC
+                l’identique les nombres indiqués en fonction du résultat de votre jet. La bonne nouvelle, c’est que nous avons généré ces   Page 72
+                tableaux par ordinateur pour vous offrir un profil optimal pour chaque rôle.                                                Étape suivante :
+                                                                                                                                            CARAC dérivées
+                  Exemple : Gaëtan décide d’incarner un Solo. Il consulte le tableau de profil pour les Solos et obtient 6 sur son d10.     Page 79
+
+                   Jet       INT          RÉF      DEX       TECH        PRES         VOL      CHA          MOUV      COR          EMP
+                    1             6       7          7          3             8        6            5        5             6        5
+                    2             7       8          6          3             6        6            7        5             6        6
+                    3             5       8          7          4             7        7            6        7             8        5
+                    4             5       8          6          4             6        7            6        5             7        6
+                    5             6       6          7          5             7        6            7        6             8        4
+                    6             7       7          6          5             7        6            6        7             7        5
+                    7             7       7          6          5             6        7            7        6             6        6
+                    8             7       8          7          5             6        6            5        6             8        4
+                    9             7       7          6          4             6        6            6        5             6        5
+                   10             6       6          8          5             6        6            5        6             6        5
+
+                  Gaëtan consulte ensuite le résultat correspondant à son jet et remplit le tableau de caractéristiques de
+                sa fiche de personnage en recopiant les nombres indiqués sur la même ligne.
+
+
+
+                                      7                  7                        6                     5                      7
+                          ▶ INT                 ▶ RÉF                 ▶ DEX                 ▶ TECH                 ▶ PRES
+
+
+
+
+                                      6                  6                        7                     7                      5
+                          ▶ VOL                 ▶ CHA                 ▶ MOUV                ▶ COR                  ▶ EMP
+
+
+
+
+                                                                                                                                            73
+  PARÉ POUR LE FUTUR
+
+                                        Voici les tableaux de profils pour chaque rôle :
+
+                ▶ Rockeur
+                  Jet       INT   RÉF     DEX      TECH     PRES      VOL       CHA        MOUV   COR   EMP
+                   1        7     6        6         5        6         8        7          7      3     8
+                   2        3     7        7         7        7         6        7          7      5     8
+                   3        4     5        7         7        6         6        7          7      5     8
+                   4        4     5        7         7        6         8        7          6      3     8
+                   5        3     7        7         7        6         8        6          5      4     7
+                   6        5     6        7         5        7         8        5          7      3     7
+                   7        5     6        6         7        7         8        7          6      3     6
+                   8        5     7        7         5        6         6        6          6      4     8
+                   9        3     5        5         6        7         8        7          5      5     7
+                  10        4     5        6         5        8         8        7          6      4     7
+
+
+                ▶ Solo
+                  Jet       INT   RÉF     DEX      TECH     PRES      VOL       CHA        MOUV   COR   EMP
+                   1         6     7       7         3        8         6        5          5      6     5
+                   2         7     8       6         3        6         6        7          5      6     6
+                   3         5     8       7         4        7         7        6          7      8     5
+                   4         5     8       6         4        6         7        6          5      7     6
+                   5         6     6       7         5        7         6        7          6      8     4
+                   6         7     7       6         5        7         6        6          7      7     5
+                   7         7     7       6         5        6         7        7          6      6     6
+                   8         7     8       7         5        6         6        5          6      8     4
+                   9         7     7       6         4        6         6        6          5      6     5
+                  10         6     6       8         5        6         6        5          6      6     5
+
+
+                ▶ Netrunner
+                  Jet       INT   RÉF     DEX      TECH     PRES      VOL       CHA        MOUV   COR   EMP
+                   1         5     8       7         7        7         4        8          7      7     4
+                   2         5     6       7         5        8         3        8          7      5     5
+                   3         5     6       8         6        6         4        7          6      7     4
+                   4         5     7       7         7        7         5        8          6      5     5
+                   5         5     8       8         5        7         3        7          5      5     6
+                   6         6     6       6         7        8         4        7          7      6     6
+                   7         6     6       6         7        6         5        7          7      7     6
+                   8         5     7       8         6        8         4        8          5      7     4
+                   9         7     6       7         7        6         3        6          5      6     5
+                  10         7     8       6         6        6         4        7          7      5     6
+
+
+
+
+ 74
+                                                            PARÉ POUR LE FUTUR
+
+
+                ▶ Techie
+                  Jet       INT   RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1        6     7      7     8      4      4     5     5      7     6
+                   2        7     6      6     7      5      3     7     7      5     5
+                   3        8     6      5     7      5      4     7     7      5     7
+                   4        7     8      7     8      4      4     6     5      6     7
+                   5        6     6      7     6      4      3     7     7      6     6
+                   6        8     7      5     6      3      3     7     6      6     7
+                   7        8     6      7     8      4      4     7     6      7     6
+                   8        8     8      7     8      5      4     6     5      6     6
+                   9        6     6      7     8      3      3     5     7      7     7
+                  10        8     8      5     6      4      4     6     5      6     6
+
+
+                ▶ Medtech
+                  Jet       INT   RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1        7     5      6     7      5      3     8     5      5     7
+                   2        6     7      7     7      4      4     6     7      7     7
+                   3        6     5      5     8      5      3     8     5      7     8
+                   4        8     7      6     8      3      5     6     6      5     7
+                   5        6     7      5     7      5      5     8     7      6     8
+                   6        8     5      5     8      5      5     6     6      5     6
+                   7        8     6      5     8      5      4     8     5      7     7
+                   8        6     5      7     7      3      5     8     5      5     8
+                   9        6     6      7     7      5      4     6     6      5     6
+                  10        8     7      6     6      3      4     8     7      6     7
+
+
+                ▶ Média
+                  Jet       INT   RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1        6     6      5     5      8      7     5     7      5     7
+                   2        8     7      7     3      6      6     6     5      6     8
+                   3        6     7      7     5      6      8     5     5      5     7
+                   4        6     5      7     5      6      7     5     5      6     6
+                   5        6     6      7     4      8      7     6     7      5     8
+                   6        7     5      5     4      8      7     6     7      5     8
+                   7        8     5      6     3      7      6     6     5      6     7
+                   8        6     5      6     5      6      8     6     6      7     8
+                   9        7     7      5     4      6      7     6     5      6     7
+                  10        7     6      6     3      7      6     7     6      7     6
+
+
+
+
+                                                                                           75
+  PARÉ POUR LE FUTUR
+
+                ▶ Justicier
+                  Jet     INT     RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1          5   6      7     5      7      8     5     6      5     6
+                   2          6   6      6     5      6      8     5     7      5     5
+                   3          5   7      7     7      6      7     5     5      7     6
+                   4          6   6      7     6      6      8     5     7      7     6
+                   5          6   6      7     6      7      7     6     5      5     6
+                   6          7   6      5     5      7      8     5     6      7     4
+                   7          7   8      7     5      6      8     7     6      5     4
+                   8          5   6      6     5      6      8     5     7      6     4
+                   9          7   7      5     5      7      7     6     5      5     6
+                  10          6   6      5     6      8      7     5     7      6     6
+
+
+                ▶ Corporatiste
+                  Jet     INT     RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1          8   5      5     3      8      6     6     5      5     7
+                   2          8   6      6     4      7      6     7     7      5     7
+                   3          8   7      6     3      8      6     7     6      4     5
+                   4          8   5      7     5      6      5     6     5      5     7
+                   5          7   7      6     5      8      5     7     7      5     6
+                   6          5   7      7     3      6      7     6     5      5     7
+                   7          6   6      7     5      8      7     6     7      4     6
+                   8          6   7      7     3      7      5     7     5      5     7
+                   9          7   6      7     5      7      5     7     6      5     5
+                  10          7   7      5     5      8      6     6     7      4     7
+
+
+                ▶ Fixer
+                  Jet     INT     RÉF   DEX   TECH   PRES   VOL   CHA   MOUV   COR   EMP
+                   1          8   5      7     4      6      5     8     5      5     8
+                   2          8   5      5     5      6      7     8     7      5     7
+                   3          6   6      6     4      5      6     8     6      3     8
+                   4          7   7      5     5      7      6     7     7      5     8
+                   5          8   6      6     3      6      5     8     7      5     6
+                   6          8   7      5     5      6      7     7     5      3     6
+                   7          8   6      6     5      6      5     6     7      5     8
+                   8          6   6      7     4      7      6     7     7      4     7
+                   9          8   7      7     5      5      5     7     6      5     7
+                  10          6   5      6     5      5      6     8     6      4     7
+
+
+
+
+ 76
+                                                                                     PARÉ POUR LE FUTUR
+
+                ▶ Nomade
+                   Jet       INT        RÉF        DEX        TECH       PRES        VOL         CHA       MOUV        COR         EMP
+                    1         6          6           8          3           6          7          6           6          6           4
+                    2         5          7           6          5           8          8          8           7          5           4
+                    3         5          8           6          3           8          7          6           5          6           5
+                    4         5          8           7          4           8          6          7           7          7           5
+                    5         6          6           6          3           6          7          6           7          7           4
+                    6         7          6           8          4           6          7          6           5          6           5
+                    7         6          7           8          4           6          6          7           5          7           5
+                    8         5          7           8          3           8          6          7           5          5           5
+                    9         6          7           6          4           8          6          6           6          6           6
+                   10         5          6           7          4           7          8          7           7          7           4
+
+
+                                        ▶ Méthode n° 2 : Edgerunner (rapide et sans filet) ◀
+                Quand vous choisissez l’option Edgerunner, vous devez encore une fois consulter le tableau de caractéristiques qui
+                correspond à votre rôle (cf. page 74). Cette fois, lancez 1d10 pour chaque caractéristique, en consultant le résultat obtenu
+                dans la colonne correspondante.                                                                                                Définition
+                  Exemple : Gaëtan a encore envie d’incarner un Solo. Cette fois, il lance 1d10 pour chaque caractéristique du tableau,        des CARAC
+                                                                                                                                               Page 72
+                en allant de gauche à droite. Il obtient les nombres suivants :
+                                                                                                                                               Étape suivante :
+                                                                                                                                               CARAC dérivées
+                   Jet       INT        RÉF        DEX        TECH       PRES        VOL        CHA        MOUV        COR         EMP         Page 79
+
+                    1         6          7           7          3           8          6          5           5          6           5
+                    2         7          8           6          3           6          6          7           5          6           6
+                    3         5          8           7          4           7          7          6           7          8           5
+                    4         5          8           6          4           6          7          6           5          7           6
+                    5         6          6           7          5           7          6          7           6          8           4
+                    6         7          7           6          5           7          6          6           7          7           5
+                    7         7          7           6          5           6          7          7           6          6           6
+                    8         7          8           7          5           6          6          5           6          8           4
+                    9         7          7           6          4           6          6          6           5          6           5
+                   10         6          6           8          5           6          6          5           6          6           5
+
+
+                  Une fois qu’il a effectué les jets pour connaître les valeurs de ses dix caractéristiques, il reporte ces
+                résultats dans son tableau de caractéristiques :
+
+
+
+                                   6                      7                      7                     5                      7
+                          ▶ INT                 ▶ RÉF                  ▶ DEX                  ▶ TECH                ▶ PRES
+
+
+
+
+                                   6                      6                      7                     8                      5
+                          ▶ VOL                 ▶ CHA                  ▶ MOUV                 ▶ COR                 ▶ EMP
+
+
+
+
+                                                                                                                                               77
+  PARÉ POUR LE FUTUR
+
+                                        ▶ Méthode n° 3 : Formule complète (création par points) ◀
+                    Cette méthode vous permet de construire votre personnage de A à Z à l’aide d’une « réserve de points de personnage »
+                    qui sert à « acheter » les caractéristiques. Bien que cette méthode soit la plus flexible, elle nécessite beaucoup plus de
+       Définition   temps. C’est pourquoi nous la déconseillons aux joueurs novices.
+      des CARAC
+    Page 72           Lorsque vous optez pour la Formule complète, le MJ vous accorde un montant de points avec lesquels vous devez
+Étape suivante :    générer votre personnage (en général 62 points). Vous n’avez qu’une seule règle à respecter : une carac-
+  CARAC dérivées    téristique ne peut être supérieure à 8 ou inférieure à 2. Et nous recommandons chaudement au MJ
+  Page 79
+                    de s’en tenir au rang personnage de départ. Toutefois, nous avons aussi inclus des valeurs en points pour des
+                    personnages plus modestes et plus importants, en nous basant sur le système aléatoire qui était à l’honneur dans les éditions
+                    précédentes de Cyberpunk (2013, 2020). Nous insistons une fois de plus sur la nécessité de rester sur le montant de
+                    points des personnages de départ, à moins que le MJ ait vraiment envie de modifier l’équilibre du jeu.
+                      C’est vous qui voyez, on vous aura prévenu.
+
+                                                         Rang du personnage                                              Points de CARAC
+                                                          Personnage de soutien mineur                                             50
+                                                              Personnage de départ                                                 62
+                                                          Personnage de soutien majeur                                             70
+                                                                  Héros mineur                                                     75
+                                                                  Héros majeur                                                     80
+
+
+                      Répartissez vos points entre les dix caractéristiques du tableau. En moyenne, vous devriez pouvoir mettre 6 points dans
+                    chaque CARAC et avoir quand même des points en excédent.
+                      Trouver le bon calibrage est la partie amusante de la formule complète.
+
+
+                                        6                      6                         6                  6                      6
+                               ▶ INT                 ▶ RÉF                     ▶ DEX               ▶ TECH                 ▶ PRES
+
+                      60
+                                        6                      6                         6                  6                      6
+                               ▶ VOL                 ▶ CHA                     ▶ MOUV              ▶ COR                  ▶ EMP
+                      points
+
+                    Exemple : une fois de plus, Gaëtan décide de jouer un Solo. Cette fois, il dispose de 62 points pour définir les caractéris-
+                    tiques de son personnage. Gaëtan commence par répartir ses points de façon équitable entre toutes les caractéristiques,
+                    puis il trafique les nombres pour obtenir son profil définitif. En fin de compte, Gaëtan choisit de créer un Solo costaud qui
+                    tient plus du cogneur que du pistolero, privilégiant ainsi les caractéristiques COR, DEX, VOL et MOUV.
+
+
+                                        5                      7                         8                  3                      6
+                               ▶ INT                 ▶ RÉF                     ▶ DEX               ▶ TECH                ▶ PRES
+
+                      62
+                     points ▶ VOL       7                      6                         8                  8                      4
+                                                     ▶ CHA                     ▶ MOUV             ▶ COR                  ▶ EMP
+
+
+
+
+                      Note : nous pourrions aussi en profiter pour tenir les futurs maîtres de jeu au courant des combines dont les joueurs
+                    disposent pour créer des personnages d’élite. Mais regardons la réalité en face : s’ils ont envie d’incarner des superhéros,
+                    qui sommes-nous pour les en empêcher ? Après tout, vous êtes grands et si, en tant que MJ, vous trouvez que les joueurs
+                    dépassent les bornes, pourquoi ne pas les laisser faire et les éliminer en cours de partie ?
+                      Telle est la voie de Cyberpunk.
+
+
+
+
+ 78
+                                                                                     PARÉ POUR LE FUTUR
+
+                Passage obligatoire : les caractéristiques dérivées
+                Quelle que soit la méthode choisie pour générer vos caractéristiques, vous devez calculer deux valeurs supplémentaires :
+                                                                                                                                                Étape suivante :
+                les points de santé et l’Humanité. Il s’agit des caractéristiques dérivées de votre personnage, qu’on appelle                   Compétences
+                ainsi, car elles dépendent directement de votre tableau de caractéristiques. Pour connaître leur valeur, on effectue une        Page 86
+                opération mathématique (division, multiplication, soustraction) impliquant une caractéristique déjà existante.
+
+                                                            ▶ Points de santé (PS) ◀                                                            Étape suivante :
+                                                                                                                                                Compétences
+                Les points de santé permettent de savoir si votre personnage est mort, ou s’il se vide de son sang sur le sol. Tous les per-    Page 88
+                sonnages de Cyberpunk RED sans exception possèdent cette caractéristique dérivée. Les points de santé représentent la
+                rage de vivre d’un individu et sa condition physique. Quand il subit des dégâts provoqués par des événements externes, il
+                soustrait les dégâts de sa réserve de points de santé. Quand les PS d’un personnage descendent en dessous d’un certain          Étape suivante :
+                seuil, il subit des pénalités, figurant l’accumulation des blessures qui ralentissent ses mouvements et embrument son esprit.   Compétences
+                                                                                                                                                Page 90
+                  Lorsque le personnage tombe à 0 point de santé, il entre en état mort (cet état mesure la rapidité de son agonie). Nous
+                évoquerons plus en détail le seuil de blessure, les pénalités et l’état mort dans la section dédiée au combat, page 186.
+                  Votre nombre de points de santé est égal à 10 + (5 x [COR + VOL divisé par deux, arrondi au
+                supérieur]). Mais comme le calcul mental n’est pas forcément votre tasse de thé, nous avons tout mis dans un tableau.
+                Reportez-vous au tableau ci-dessous pour connaître le montant de points de santé de votre personnage.
+                  Le seuil de blessure grave de votre personnage est égal à la moitié de ses PS (arrondie au supérieur).
+                  Sa sauvegarde contre la mort est égale à sa caractéristique de COR.
+
+
+                                                                              CORPS
+                                 2      3       4       5       6      7       8       9      10      11      12     13      14      15
+                            2    20     25     25      30      30      35      35     40      40      45      45     50      50      55
+                            3    25     25     30      30      35      35      40     40      45      45      50     50      55      55
+                            4    25     30     30      35      35      40      40     45      45      50      50      55     55      60
+
+
+
+
+                  VOLONTÉ
+                            5    30     30     35      35      40      40      45     45      50      50      55      55     60      60
+                            6    30     35     35      40      40      45      45     50      50      55      55     60      60      65
+                            7    35     35     40      40      45      45      50     50      55      55      60     60      65      65
+                            8    35     40     40      45      45      50      50     55      55      60      60     65      65      70
+                            9    40     40     45      45      50      50      55     55      60      60      65     65      70      70
+                            10   40     45     45      50      50      55      55     60      60      65      65      70     70      75
+
+
+
+
+                                                                                                                                                79
+  PARÉ POUR LE FUTUR
+
+                                                               ▶Humanité (HUM) ◀
+                L’Humanité mesure la qualité de vos interactions avec les gens et le monde extérieur. Les individus possédant une
+                caractéristique d’Humanité faible ont de gros problèmes dans leurs interactions sociales. Ils courent le risque de devenir
+                des sociopathes, de souffrir d’isolement ou de dissociation mentale, voire de commettre des homicides. Lorsque l’Huma-
+                nité de votre personnage tombe en dessous de 0, sa vie émotionnelle sombre dans le néant ; son esprit succombe à la
+                cyberpsychose, laquelle peut se traduire par la psychopathie ou la schizophrénie. Bien que l’accumulation de matériel
+                cybernétique contribue largement au déclenchement de cette maladie (cf. page 230 pour en savoir plus à ce sujet),
+                d’autres situations traumatisantes peuvent conduire les personnages à basculer dans le gouffre.
+                  Votre personnage gagne 10 points d’Humanité (HUM) pour chaque point qu’il possède en Empathie. Par exemple, un
+                personnage qui commence avec EMP 5 aura 50 en Humanité. Une fois de plus, voici un tableau pour vous faciliter la vie :
+
+                   Empathie (EMP)             1         2         3         4        5         6         7         8         9        10
+
+                  Humanité (HUM)             10        20        30        40        50       60        70        80        90       100
+
+                   Lorsque votre personnage est sujet à une perte d’Humanité, ce qui se produit généralement, mais pas toujours, avec
+                l’installation d’implants cybernétiques, il perd des points d’Humanité. La perte de points d’Humanité conduit à une réduction
+                de la caractéristique d’Empathie chaque fois que vous atteignez la dizaine inférieure. Par exemple, un personnage ayant
+                44 en Humanité possède 4 en Empathie jusqu’à ce que son Humanité tombe à 39, après quoi son EMP devient égale à
+                3. Pour savoir comment regagner des points d’Humanité à l’aide de cures thérapeutiques, voyez la page 229.
+                  Notez toutes ces valeurs dans les cases Humanité, Points de santé, Seuil de blessure grave et
+                Sauvegarde contre la mort de votre fiche de personnage avant de passer à l’étape suivante : les
+                compétences.
+
+
+
+
+                                                                                                                                     PAR BAD MOON ART STUDIO
+
+
+
+
+ 80
+                                                                                      PARÉ POUR LE FUTUR
+
+                C    ompétences                                                   épais, les enchaînements d’exercices plus exténuants),
+                                                                                  ce qui se reflète dans le « coût d’acquisition » des com-
+                                                                                  pétences. Les compétences qui coûtent plus cher sont
+                Quelle que soit la méthode de création de personnage qui          signalées dans la liste ci-après par la mention (x2). Le
+                vous a servi à générer vos caractéristiques, l’étape suivante     coût d’achat de ces compétences est deux fois plus élevé
+                va vous permettre de savoir ce dont votre alter ego est           (2 points par niveau).
+                capable en définissant les compétences qu’il maîtrise.
+
+                Que sont les compétences ?                                         Il existe neuf catégories de compétence dans
+                                                                                  Cyberpunk RED.
+                Tout ce que le personnage connaît ou sait faire est repré-        Combat : les aptitudes pour se battre au corps à corps, à
+                senté par des compétences qui mesurent son niveau de               mains nues ou avec une arme de mêlée.
+                maîtrise et son talent. Un personnage acquiert aussi des
+                                                                                  Contrôle : les compétences requises pour conduire un
+                compétences en s’entraînant dans une discipline. Il a
+                                                                                   véhicule ou chevaucher un animal.
+                consacré du temps à l’apprentissage d’un domaine de
+                connaissance et affiné ses talents en faisant appel à un pro-     Corps : tout ce qui concerne les travaux physiques, la
+                fesseur, à un livre, ou bien au terme d’une série d’exercices      puissance musculaire brute, l’endurance…
+                longs et ardus comme on en voit dans les films d’action et        Éducation : vos connaissances et l’acquisition d’un savoir
+                de kung-fu. Le niveau d’une compétence montre l’aisance             scolaire ou universitaire.
+                de votre personnage dans ce domaine d’activité.
+                                                                                  Représentation : savoir interpréter un rôle, jouer de la
+                               ▶ Compétences liées                                 musique, produire des effets spéciaux, créer un maquil-
+                                                                                   lage convaincant et user d’artifices scéniques.
+                              aux caractéristiques ◀
+                                                                                  Sociabilité : votre habileté à vous fondre dans un envi-
+                En outre, chaque compétence est liée à une CARAC qui
+                                                                                   ronnement social, à éviter les bourdes et à impressionner
+                représente le talent inné. Certaines personnes sont naturel-
+                                                                                   par votre style et votre élégance. Inclut également la
+                lement plus douées que d’autres pour apprendre ou réa-
+                                                                                   capacité à convaincre les autres grâce à vos talents
+                liser certaines actions. Ainsi, quand vous effectuez un jet
+                                                                                   d’orateur.
+                de compétence (nous traiterons de ce sujet page 128),
+                vous devez ajouter la CARAC associée à la compétence              Technique : les compétences professionnelles acquises
+                pour mesurer votre réussite lorsque vous accomplissez               par la pratique et l’habileté pour les travaux manuels.
+                une action basée sur cette compétence. C’est ce que l’on          Tir : la maîtrise nécessaire pour manier une arme à dis-
+                appelle une base de compétence.                                     tance, comme un fusil ou un arc.
+
+                            ▶ Toutes les compétences                              Vigilance : l’attention que vous portez à votre environne-
+                                                                                    ment, par exemple pour relever des indices.
+                               ne se valent pas ◀
+                Certaines compétences sont plus difficiles à acquérir que
+                d’autres (l’apprentissage est plus long, les livres à lire plus
+
+
+
+                                            J’ai commencé en fabriquant de faux
+                                           papiers pour les E dgerunners et les rats
+                                             des R ues . Q uatre ans ont passé , et je
+                                             crée des armes biotechnologiques
+                                                pour les gros bonnets . Tout ça pour
+                                                   dire qu ’il n ’est jamais trop tard
+                                                   pour se lancer dans une activité .
+                                                                                                         - hornet
+
+
+
+                                                                                                                                               81
+  PARÉ POUR LE FUTUR
+
+                     Compétences de Combat                                                 Endurance................................................... VOL
+                                                                                           La capacité à endurer les privations et les conditions de vie
+   Vous trouverez                                                                            dans des environnements hostiles.
+ des informations
+                     Arme de mêlée............................................ DEX
+ supplémentaires     Se servir d’armes de mêlée.                                           Résistance à la torture/aux drogues........... VOL
+           sur les
+     compétences     Art martial (x2)........................................... DEX       Votre tolérance à la douleur causée par les interrogatoires
+  Page 131           Employer des techniques d’arts martiaux lors d’un affron-               musclés, la torture ou les drogues.
+                       tement. Chaque fois que vous améliorez cette compé-
+                       tence, vous devez choisir une discipline martiale. Vous
+                       pouvez vous entraîner dans plusieurs disciplines, mais              Compétences d’Éducation
+                       vous devrez les améliorer séparément. Les options dispo-
+                       nibles (Karaté, Taekwondo, Judo, Aïkido) sont indiquées             Bibliothèque. ............................................... INT
+                       page 178.                                                           Effectuer des recherches dans des bases de données, des
+                                                                                              puits de données, les collections des bibliothèques et
+                     Bagarre. ..................................................... DEX       autres sources d’information compilées pour obtenir des
+                     Se battre et effectuer des prises en usant de la force brute.            renseignements.
+                     Esquive. ...................................................... DEX   Bureaucratie................................................ INT
+                     Esquiver les coups lorsqu’on vous attaque au corps à corps.           Savoir traiter avec les bureaucrates, connaître leur langage
+                       Un personnage ayant minimum 8 en RÉF peut aussi                       et les techniques pour les approcher, et extraire les infor-
+                       utiliser cette compétence pour esquiver les attaques à                mations qui transitent dans les administrations.
+                       distance.
+                                                                                           Composition................................................. INT
+                                                                                           Rédiger des chansons, des articles ou des fictions d’un
+                     Compétences de Contrôle                                                 niveau professionnel.
+                                                                                           Comptabilité................................................ INT
+                     Conduite de véhicule terrestre. .................... RÉF              Tenir les comptes, savoir identifier et dresser de faux bilans,
+                     Savoir piloter et manœuvrer des véhicules terrestres.                   jongler avec les chiffres, établir un budget et effectuer les
+                     Équitation. ................................................... RÉF     opérations comptables courantes.
+                     Savoir chevaucher un animal entraîné spécialement.                    Connaissance............................................... INT
+                     Pilotage de véhicule aérien (x2). ................. RÉF               Reflète votre niveau de connaissance dans des disciplines
+                     Savoir piloter et manœuvrer des véhicules aériens.                      scolaires telles que la lecture, l’écriture, les principes
+                                                                                             mathématiques de base et l’histoire. Vous en savez assez
+                     Pilotage de véhicule marin........................... RÉF               pour vous débrouiller.
+                                                                                           Criminologie................................................ INT
+                     Compétences de Corps                                                  La capacité à trouver des indices grâce au relevé d’em-
+                                                                                             preintes, aux tests balistiques, à l’analyse de preuves et
+                     Athlétisme. ................................................. DEX       aux recherches dans les fichiers et les enregistrements
+                     La base des capacités athlétiques, comme faire un salto,                de la police.
+                       sauter, s’échapper, lancer des objets, nager, etc.
+                                                                                           Cryptographie............................................. INT
+                     Contorsion.................................................. DEX      Savoir déchiffrer et crypter des messages.
+                     La capacité à mouvoir son corps pour se défaire de
+                       menottes et autres entraves, ou bien pour se faufiler dans          Déduction. ................................................... INT
+                       des endroits inaccessibles et des espaces exigus.                   Établir une conclusion qui ne saute pas aux yeux ou un
+                                                                                             diagnostic médical à partir d’un faisceau d’indices.
+                     Danse. ........................................................ DEX
+                     Exécuter des chorégraphies de très haut niveau.                       Dressage...................................................... INT
+                                                                                           La capacité à dresser les animaux, les entraîner et leur
+                     Discrétion.................................................... DEX      prodiguer des soins.
+                     La capacité à se dissimuler dans l’obscurité, à se mouvoir
+                       sans faire de bruit ou à éviter de se faire repérer. Pour           Gestion d’affaires........................................ INT
+                       détecter votre présence, les autres personnages peuvent             Connaître le b.a.-ba de l’entrepreneuriat tel que la loi de
+                       faire appel à la compétence Perception.                              l’offre et de la demande, le management des employés,
+                                                                                            l’approvisionnement, la vente et le marketing.
+
+
+ 82
+                                                                                            PARÉ POUR LE FUTUR
+
+                Guide local................................................... INT     Compétences de Sociabilité
+                Mesure votre degré de familiarité avec un environnement
+                 spécifique et les objectifs des diverses factions présentes,          Connaissance de la rue. ............................. PRES
+                 que ce soient des organisations criminelles ou des partis             Vous savez nouer des relations et les exploiter pour obtenir
+                 politiques. Quand vous augmentez le niveau de cette                     des biens de contrebande et des marchandises illégales,
+                 compétence, vous devez choisir un lieu spécifique dont                  communiquer avec le monde du crime et éviter les ennuis
+                 l’importance ne doit pas excéder celle d’un quartier ou                 dans les quartiers chauds.
+                 d’une communauté.
+                                                                                       Conversation. ............................................. EMP
+                Jeux de hasard............................................ INT         Grâce à cette compétence, vous soutirez des rensei-
+                Savoir calculer les chances de réussite et optimiser vos                gnements aux gens sous couvert d’une conversation
+                  résultats aux jeux de hasard.                                         anodine.
+                Langue......................................................... INT    Corruption. ................................................ PRES
+                Votre niveau de maîtrise dans une langue donnée.                       Vous pressentez le degré de corruptibilité des gens. Vous
+                  Choisissez une langue spécifique chaque fois que vous                  savez comment approcher votre interlocuteur et quelle
+                  investissez des points dans cette compétence.                          somme lui proposer.
+                Science......................................................... INT   Habillement et style................................... PRES
+                Mettre au point des expériences, rédiger des articles                  Savoir quels vêtements porter à quelle occasion.
+                  scientifiques, mettre des hypothèses à l’épreuve et
+                  débattre avec d’autres chercheurs dans un domaine                    Interrogatoire............................................ PRES
+                  scientifique précis. Quand vous augmentez le niveau de               Vous savez obtenir des informations par la force.
+                  cette compétence, choisissez la discipline qui en béné-              Look........................................................... PRES
+                  ficie. Options disponibles : Géologie, Mathématiques,                Vous savez soigner votre look pour déployer votre charme.
+                  Physique, Zoologie, Anthropologie, Biologie, Chimie,
+                                                                                       Négoce...................................................... PRES
+                  Histoire, etc.
+                                                                                       Conclure des affaires intéressantes avec des vendeurs ou
+                Survie en milieu hostile................................ INT            des acheteurs.
+                Se débrouiller pour bénéficier d’un minimum de confort
+                                                                                       Persuasion................................................. PRES
+                  dans les environnements hostiles.
+                                                                                       La capacité à convaincre, persuader ou influencer d’autres
+                Tactique....................................................... INT      personnes.
+                Savoir diriger des troupes efficacement lors d’un affron-
+                                                                                       Psychologie. ............................................... EMP
+                  tement à grande échelle. Un personnage doté de cette
+                                                                                       La capacité à déchiffrer les expressions et le langage cor-
+                  capacité connaît les décisions à prendre pour mener une
+                                                                                         porel des gens, afin de deviner leur humeur du moment
+                  bataille et sait jauger les réactions des forces adverses.
+                                                                                         et discerner les mensonges éventuels.
+
+                                                                                       Compétences de Technique
+                Compétences de Représentation
+                                                                                       Aérotech.................................................... TECH
+                Instrument. ................................................ TECH      Réparation et maintenance de véhicules aériens.
+                Savoir jouer d’un instrument à un excellent niveau. Vous
+                  devez choisir un instrument quand vous améliorez cette               Armurerie.................................................. TECH
+                  compétence. Options disponibles : chant, guitare, per-               Réparation et maintenance d’armes en tout genre.
+                  cussions, violon, piano, etc.                                        Arts plastiques........................................... TECH
+                Jeu d’acteur............................................... PRES       Réalisation de tableaux, de dessins ou de sculptures
+                Savoir jouer un rôle, se déguiser afin de passer pour un                 sophistiqués.
+                  personnage fictif ou réel, feindre des émotions et des               Assistance médicale (x2)............................ TECH
+                  humeurs.                                                             Appliquer des soins médicaux aux blessés pour guérir
+                                                                                        toutes les blessures critiques qui ne nécessitent pas
+                                                                                        d’opération chirurgicale, et ainsi leur éviter la mort (la
+                                                                                        Chirurgie est uniquement accessible aux Medtechs par
+                                                                                        leur capacité de rôle Médecine).
+
+
+
+                                                                                                                                                              83
+  PARÉ POUR LE FUTUR
+
+                Contrefaçon............................................... TECH      Compétences de Tir
+                Fabrication et détection de documents et de moyens
+                  d’identification falsifiés.                                        Armes d’épaule. .......................................... RÉF
+                Crochetage. ............................................... TECH     Tirer avec précision avec des armes à projectile qu’il faut
+                Crochetage de serrures dépourvues de protection                         épauler telles que les carabines et les fusils à pompe.
+                  électronique.                                                      Armes lourdes (x2). ..................................... RÉF
+                Cybertech. ................................................. TECH    Tirer avec précision avec des armes à projectile
+                Identifier, comprendre et réparer des membres et des                   encom­brantes telles que des lance-grenades et des
+                  implants cybernétiques.                                              lance-roquettes.
+
+                Électronique............................................... TECH     Pistolet......................................................... RÉF
+                Identifier, comprendre, réparer des appareils électroniques,         Tirer avec précision avec des armes à projectile tenues à
+                  mécaniques et tous les objets qui ne sont pas couverts                une main comme des pistolets.
+                  par les autres compétences de Technique.                           Tir à l’arc...................................................... RÉF
+                Explosifs (x2)............................................. TECH     Mettre dans le mille avec des armes qui projettent des
+                Installer et désamorcer des explosifs, connaître la quantité           flèches ou des carreaux.
+                  de matière explosive nécessaire pour aboutir au résultat           Tir automatique (x2).................................... RÉF
+                  désiré.                                                            Tenir sa cible en joue avec une arme en mode automatique
+                Maritech. ................................................... TECH     malgré le recul.
+                Réparation et maintenance de véhicules aquatiques.
+                Photos et films............................................ TECH     Compétences de Vigilance
+                Prendre des photographies, produire des vidéos ou des
+                  programmes de danse sensorielle.                                   Concentration............................................. VOL
+                Pickpocket. ................................................ TECH    La capacité à se concentrer, à mobiliser sa mémoire, à
+                Récupérer discrètement des objets conservés sur d’autres               ignorer les sources de distraction et à contrôler ses réac-
+                  personnes et commettre des vols à l’étalage sans se faire            tions physiologiques.
+                  prendre.                                                           Dissimulation/Révélation d’objet. ............... INT
+                Premiers secours........................................ TECH        La capacité à soustraire des objets à la vue et retrouver
+                Appliquer des soins médicaux aux personnes blessées pour               des éléments cachés. On utilise cette compétence pour
+                  leur éviter la mort en traitant les blessures graves les plus        dissimuler ses armes sous ses vêtements et repérer les
+                  courantes.                                                           armes dissimulées.
+
+                Sécurité électronique (x2).......................... TECH            Lecture sur les lèvres.................................... INT
+                Identifier, comprendre, réparer, pirater et installer des            Lire sur les lèvres d’une personne pour savoir ce qu’elle
+                  appareils électroniques complexes, parmi lesquels les                 raconte.
+                  ordinateurs, les cyberconsoles, le matériel électronique           Perception. .................................................. INT
+                  personnel, les systèmes de sécurité électronique, les              La capacité à observer, percevoir les détails, déceler des
+                  micros et les traceurs, les plaques de pression, les détec-          éléments cachés comme des indices, des pièges ou des
+                  teurs laser, etc.                                                    personnages qui se dissimulent en exploitant la compé-
+                Terratech. .................................................. TECH     tence Discrétion, mais pas les objets cachés à l’aide de
+                Réparation et maintenance de véhicules terrestres.                     la compétence Dissimulation/Révélation d’objet.
+                                                                                     Pistage......................................................... INT
+                                                                                     Savoir suivre une piste en analysant les empreintes et autres
+                                                                                       traces de passage.
+
+
+
+
+ 84
+                                                                                    PARÉ POUR LE FUTUR
+
+                Comment obtenir ses compétences ?
+                                                        ▶ Acheter des compétences ◀
+                Les compétences, dont le niveau s’échelonne de 1 à 10, s’utilisent en jeu en ajoutant le niveau d’une compétence au niveau
+                de la caractéristique liée. Sur le modèle des caractéristiques, le degré d’efficacité des compétences est directement lié à
+                leur niveau.
+
+                                                          ▶ Compétences de base ◀
+                Les compétences de base sont des aptitudes communes à toutes les cultures de l’Ère du Rouge : Athlétisme, Bagarre,
+                Concentration, Connaissance, Conversation, Discrétion, Esquive, Guide local (quartier d'origine), Langue (argot),
+                Perception, Persuasion, Premiers secours et Psychologie. Tous les personnages sont censés posséder ces compétences
+                avec une valeur de départ de 2 minimum. De plus, tous les personnages commencent avec 4 points dans la
+                Langue correspondant à leur origine culturelle, comme décrit dans le parcours personnel à la page 45.
+
+
+
+
+                PAR ALEXANDER DUDAR
+
+
+
+
+                                                                                                                                              85
+  PARÉ POUR LE FUTUR
+
+                                     ▶ Méthode n° 1 : compétences des Rats des Rues (profil générique) ◀
+                    Les compétences des Rats des Rues sont prédéterminées. Quand vous créez un personnage avec cette méthode, la liste
+                    des compétences de base (en gras) et des compétences professionnelles est déjà établie à l’avance en fonction de votre
+  Définitions des
+                    rôle. Trouvez votre rôle dans les tableaux ci-dessous et recopiez les valeurs indiquées pour chaque compétence
+    compétences     sur votre fiche de personnage. N’oubliez pas la Langue niveau 4 qui dépend de l’origine culturelle que
+    Page 81         vous avez choisie durant votre parcours (cf. page 45).
+Étape suivante :
+Armes et armures
+  Page 98                        Rockeur                    Solo                Netrunner                          Techie                Medtech
+
+                      Compétence Niv             Compétence Niv            Compétence Niv              Compétence Niv              Compétence            Niv
+
+                      Athlétisme             2   Athlétisme            2   Athlétisme              2   Athlétisme              2   Athlétisme            2
+                      Bagarre                6   Bagarre               2   Bagarre                 2   Bagarre                 2   Bagarre               2
+                      Concentration          2   Concentration         2   Concentration           2   Concentration           2   Concentration         2
+                      Connaissance           2   Connaissance          2   Connaissance            6   Connaissance            6   Connaissance          6
+                      Conversation           2   Conversation          2   Conversation            2   Conversation            2   Conversation          6
+                      Discrétion             2   Discrétion            2   Discrétion              6   Discrétion              2   Discrétion            2
+                      Esquive                6   Esquive               6   Esquive                 6   Esquive                 6   Esquive               6
+                      Guide local                Guide local               Guide local                 Guide local                 Guide local
+                      (quartier              4   (quartier             2   (quartier               2   (quartier               2   (quartier             2
+                      d'origine)                 d'origine)                d'origine)                  d'origine)                  d'origine)
+                      Langue (argot)         2   Langue (argot)        2   Langue (argot)          2   Langue (argot)          2   Langue (argot)        2
+                      Perception             2   Perception            6   Perception              2   Perception              2   Perception            2
+                      Persuasion             6   Persuasion            2   Persuasion              2   Persuasion              2   Persuasion            2
+                      Premiers secours       6   Premiers secours      6   Premiers secours        2   Premiers secours        6   Premiers secours      2
+                      Psychologie            6   Psychologie           2   Psychologie             2   Psychologie             2   Psychologie           6
+                      Arme de mêlée          6   Arme de mêlée         6   Bibliothèque            6   Armes d’épaule          6   Armes d’épaule        6
+                      Composition            6   Armes d’épaule        6   Cryptographie           6   Armurerie               6   Assistance médicale   6
+                      Connaissance
+                                             6   Interrogatoire        6   Cybertech               6   Cybertech               6   Cybertech             4
+                      de la rue
+                                                                           Dissimulation/
+                      Habillement et style   4   Pistolet              6                           6   Électronique            6   Déduction             6
+                                                                           Révélation d’objet
+                      Instrument                 Résistance à la                                       Science
+                                             6                         6   Électronique            6                           6   Électronique          6
+                      (1 au choix)               torture/aux drogues                                   (1 au choix)
+                                                                                                                                   Résistance à la
+                      Look                   4   Tactique              6   Pistolet                6   Sécurité électronique   6                         4
+                                                                                                                                   torture/aux drogues
+                                                                                                                                   Science
+                      Pistolet               6   Tir automatique       6   Sécurité électronique   6   Terratech               6                         6
+                                                                                                                                   (1 au choix)
+
+
+
+
+ 86
+                                                                                                  PARÉ POUR LE FUTUR
+                            Média                        Justicier             Corporatiste                          Fixer                     Nomade
+
+                 Compétence               Niv Compétence             Niv Compétence               Niv Compétence                    Niv Compétence                 Niv
+
+                 Athlétisme               2   Athlétisme             2   Athlétisme                2      Athlétisme                2   Athlétisme                 2
+                 Bagarre                  2   Bagarre                6   Bagarre                   2      Bagarre                   2   Bagarre                    6
+                 Concentration            2   Concentration          2   Concentration             2      Concentration             2   Concentration              2
+                 Connaissance             2   Connaissance           2   Connaissance              6      Connaissance              2   Connaissance               2
+                 Conversation             6   Conversation           6   Conversation              6      Conversation              6   Conversation               2
+                 Discrétion               2   Discrétion             2   Discrétion                2      Discrétion                2   Discrétion                 6
+                 Esquive                  6   Esquive                6   Esquive                   6      Esquive                   6   Esquive                    6
+                 Guide local                  Guide local                Guide local                      Guide local                   Guide local
+                                          6                          2                             2                                6                              2
+                 (quartier d’origine)         (quartier d’origine)       (quartier d’origine)             (quartier d’origine)          (quartier d’origine)
+                 Langue (argot)           2   Langue (argot)         2   Langue (argot)            2      Langue (argot)            4   Langue (argot)             2
+                 Perception               6   Perception             2   Perception                2      Perception                2   Perception                 4
+                 Persuasion               6   Persuasion             2   Persuasion                6      Persuasion                4   Persuasion                 2
+                 Premiers secours         2   Premiers secours       2   Premiers secours          2      Premiers secours          2   Premiers secours           6
+                 Psychologie              6   Psychologie            2   Psychologie               6      Psychologie               6   Psychologie                2
+                                                                                                          Connaissance de
+                 Bibliothèque             4   Armes d’épaule         6   Bureaucratie              6                                6   Arme de mêlée              6
+                                                                                                          la rue
+                                                                                                                                        Conduite de véhicule
+                 Composition              6   Criminologie           6   Comptabilité              6      Contrefaçon               6                              6
+                                                                                                                                        terrestre
+                 Corruption               6   Déduction              6   Déduction                 6      Corruption                6   Dressage                   6
+                 Déduction                6   Interrogatoire         6   Gestion d’affaires        6      Crochetage                4   Négoce                     6
+                 Lecture sur les lèvres   4   Pistolet               6   Lecture sur les lèvres    6      Gestion d’affaires        6   Pistage                    6
+                 Photos et films          4   Pistage                6   Look                      4      Négoce                    6   Pistolet                   6
+                                                                                                                                        Survie en milieu
+                 Pistolet                 6   Tir automatique        6   Pistolet                  6      Pistolet                  6                              6
+                                                                                                                                        hostile
+
+
+                Exemple : une fois de plus, Gaëtan incarne un Solo (cela confine à l’obsession). Le personnage qu’il crée avec la méthode
+                Rat des Rues commence avec les compétences indiquées dans les tableaux ci-dessous. Il maîtrise également une autre
+                Langue au niveau 4, en fonction de son origine culturelle (cf. page 45).
+
+                   Compétence                                            Niv                  Compétence                                                   Niv
+
+                   Athlétisme                                              2                  Persuasion                                                       2
+                   Bagarre                                                 2                  Premiers secours                                                 6
+                   Concentration                                           2                  Psychologie                                                      2
+                   Connaissance                                            2                  Arme de mêlée                                                    6
+                   Conversation                                            2                  Armes d’épaule                                                   6
+                   Discrétion                                              2                  Interrogatoire                                                   6
+                   Esquive                                                 6                  Pistolet                                                         6
+                   Guide local (quartier d’origine)                        2                  Résistance à la torture/aux drogues                              6
+                   Langue (argot)                                          2                  Tactique                                                         6
+                   Perception                                              6                  Tir automatique                                                  6
+
+
+                                                                                                                                                                         87
+  PARÉ POUR LE FUTUR
+
+                                 ▶ Méthode no 2 : compétences pour les Edgerunners (rapide et sans filet) ◀
+                    Comme pour le Rat des Rues, les compétences des Edgerunners sont prédéterminées. En revanche, bien que vous n’ayez
+                    accès qu’à un nombre restreint de compétences en fonction de votre rôle, vous êtes libre de fixer le niveau de
+  Définitions des   chaque compétence. Vous devez cependant respecter quelques règles :
+    compétences
+    Page 81           • En tant qu’Edgerunner, vous disposez de 86 points de compétence à répartir entre les compétences de votre
+Étape suivante :         personnage. Vous ne pouvez pas dépenser ces points autrement.
+Armes et armures
+  Page 98
+                      • Aucune compétence parmi celles choisies ne peut être supérieure à 6 ou inférieure à 2.
+                      • Vous devez avoir au moins deux niveaux dans les compétences suivantes : Athlétisme, Bagarre, Concentration,
+                         Connaissance, Conversation, Discrétion, Esquive, Guide local (quartier d’origine), Langue (argot), Perception,
+                         Persuasion, Premiers secours et Psychologie.
+                      • Les compétences portant la mention (x2) nécessitent deux points de compétence par augmentation
+                         de niveau. Pour les autres, il suffit de dépenser un point pour acquérir un niveau.
+                      • N’oubliez pas la Langue niveau 4 gratuite qui dépend de votre origine culturelle, telle que définie dans votre parcours
+                        (cf. page 45).
+                      Pour connaître les compétences que possède votre Edgerunner, consultez la colonne correspondant à votre rôle dans les
+                    tableaux ci-dessous et répartissez vos points entre les compétences mentionnées. N’oubliez pas qu’aucune compétence
+                    ne doit avoir un niveau supérieur à 6 ou inférieur à 2.
+                       Conseil : vous aurez remarqué que chaque rôle se voit attribuer 20 compétences. Commencez par diviser vos
+                    86 points par 20, ce qui vous donnera une base de 4 points par compétence pour avoir une vue d’ensemble
+                    (et 6 points restants).
+
+                         Compétences              Compétences                Compétences                 Compétences                   Compétences
+                          de Rockeur                de Solo                  de Netrunner                  de Techie                    de Medtech
+                      Athlétisme               Athlétisme                 Athlétisme                   Athlétisme                   Athlétisme
+                      Bagarre                  Bagarre                    Bagarre                      Bagarre                      Bagarre
+                      Concentration            Concentration              Concentration                Concentration                Concentration
+                      Connaissance             Connaissance               Connaissance                 Connaissance                 Connaissance
+                      Conversation             Conversation               Conversation                 Conversation                 Conversation
+                      Discrétion               Discrétion                 Discrétion                   Discrétion                   Discrétion
+                      Esquive                  Esquive                    Esquive                      Esquive                      Esquive
+                      Guide local              Guide local                Guide local                  Guide local                  Guide local
+                      (quartier d’origine)     (quartier d’origine)       (quartier d’origine)         (quartier d’origine)         (quartier d’origine)
+                      Langue (argot)           Langue (argot)             Langue (argot)               Langue (argot)               Langue (argot)
+                      Perception               Perception                 Perception                   Perception                   Perception
+                      Persuasion               Persuasion                 Persuasion                   Persuasion                   Persuasion
+                      Premiers secours         Premiers secours           Premiers secours             Premiers secours             Premiers secours
+                      Psychologie              Psychologie                Psychologie                  Psychologie                  Psychologie
+                      Arme de mêlée            Arme de mêlée              Bibliothèque                 Armes d’épaule               Armes d’épaule
+                      Composition              Armes d’épaule             Cryptographie                Armurerie                    Assistance médicale (x2)
+                      Connaissance de la rue   Interrogatoire             Cybertech                    Cybertech                    Cybertech
+                                                                          Dissimulation/
+                      Habillement et style     Pistolet                                                Électronique                 Déduction
+                                                                          Révélation d’objet
+                      Instrument               Résistance à la torture/                                Science
+                                                                          Électronique                                              Électronique
+                      (1 au choix)             aux drogues                                             (1 au choix)
+                                                                                                                                    Résistance à la torture/
+                      Look                     Tactique                   Pistolet                     Sécurité électronique (x2)
+                                                                                                                                    aux drogues
+                      Pistolet                 Tir automatique (x2)       Sécurité électronique (x2)   Terratech                    Science (1 au choix)
+
+
+ 88
+                                                                                                  PARÉ POUR LE FUTUR
+
+                    Compétences                      Compétences          Compétences                      Compétences                 Compétences
+                     de Média                         de Justicier       de Corporatiste                     de Fixer                   de Nomade
+                  Athlétisme                      Athlétisme             Athlétisme                     Athlétisme                 Athlétisme
+                  Bagarre                         Bagarre                Bagarre                        Bagarre                    Bagarre
+                  Concentration                   Concentration          Concentration                  Concentration              Concentration
+                  Connaissance                    Connaissance           Connaissance                   Connaissance               Connaissance
+                  Conversation                    Conversation           Conversation                   Conversation               Conversation
+                  Discrétion                      Discrétion             Discrétion                     Discrétion                 Discrétion
+                  Esquive                         Esquive                Esquive                        Esquive                    Esquive
+                  Guide local                     Guide local            Guide local                    Guide local                Guide local
+                  (quartier d’origine)            (quartier d’origine)   (quartier d’origine)           (quartier d’origine)       (quartier d’origine)
+                  Langue (argot)                  Langue (argot)         Langue (argot)                 Langue (argot)             Langue (argot)
+                  Perception                      Perception             Perception                     Perception                 Perception
+                  Persuasion                      Persuasion             Persuasion                     Persuasion                 Persuasion
+                  Premiers secours                Premiers secours       Premiers secours               Premiers secours           Premiers secours
+                  Psychologie                     Psychologie            Psychologie                    Psychologie                Psychologie
+                  Bibliothèque                    Armes d’épaule         Bureaucratie                   Connaissance de la rue     Arme de mêlée
+                  Composition                     Criminologie           Comptabilité                   Contrefaçon                Conduite de véhicule terrestre
+                  Corruption                      Déduction              Déduction                      Corruption                 Dressage
+                  Déduction                       Interrogatoire         Gestion d’affaires             Crochetage                 Négoce
+                  Lecture sur les lèvres          Pistage                Lecture sur les lèvres         Gestion d’affaires         Pistage
+                  Photos et films                 Pistolet               Look                           Négoce                     Pistolet
+                  Pistolet                        Tir automatique (x2)   Pistolet                       Pistolet                   Survie en milieu hostile
+
+
+                   Exemple : Gaëtan planche sur un Solo en mode Edgerunner. Son personnage possède les capacités suivantes :
+                Athlétisme, Bagarre, Concentration, Connaissance, Conversation, Discrétion, Esquive, Guide local (quartier d’origine),
+                Langue (argot), Perception, Persuasion, Premiers secours, Psychologie, Arme de mêlée, Armes d’épaule, Interrogatoire,
+                Pistolet, Résistance à la torture/aux drogues, Tactique, Tir automatique.
+                  Gaëtan investit 4 points dans chaque compétence et répartit les 6 points restants à sa guise. Ensuite, il modifie la
+                répartition des points jusqu’à obtenir le résultat suivant :
+
+                  Compétence                                   Niveau    Coût                Compétence                                Niveau          Coût
+                  Athlétisme                                         4      4                Persuasion                                     4              4
+                  Bagarre                                            6      6                Premiers secours                               4              4
+                  Concentration                                      2      2                Psychologie                                    4              4
+                  Connaissance                                       4      4                Arme de mêlée                                  6              6
+                  Conversation                                       2      2                Armes d’épaule                                 4              4
+                  Discrétion                                         6      6                Interrogatoire                                 4              4
+                  Esquive                                            6      6                Pistolet                                       4              4
+                  Guide local (quartier d’origine)                   4      4                Résistance à la torture/aux drogues            4              4
+                  Langue (argot)                                     4      4                Tactique                                       4              4
+                  Langue (selon son origine culturelle)              4      0                Tir automatique (x2)                           2              4
+                  Perception                                         6      6
+
+                                                                                                                     Coût total : 86
+                  Comme Gaëtan a envie de jouer un Solo baraqué, il choisit d’améliorer au maximum Arme de mêlée, Bagarre,
+                Discrétion, Esquive et Perception au détriment d’autres compétences.
+
+
+
+                                                                                                                                                                    89
+  PARÉ POUR LE FUTUR
+
+                                              ▶ Méthode no 3 : Formule complète (création par points) ◀
+                    Contrairement aux autres personnages (Rats des Rues et Edgerunners), ceux créés avec la Formule complète (création
+                    par points) sont totalement libres ou presque concernant l’acquisition des compétences. Comme les Edgerunners, ces
+  Définitions des   personnages disposent de 86 points à répartir entre les compétences de leur choix. La différence étant que la Formule
+    compétences     complète permet d’investir 86 points où bon vous semble, si l’on excepte les compétences basiques qui
+    Page 81
+                    nécessitent un niveau minimum (cf. ci-dessous).
+Étape suivante :
+  Armes, armures,     Vous avez juste quatre règles à retenir :
+   équipement et
+    cybernétique      • Aucune compétence ne peut être supérieure à 6.
+ Page 104
+                      • Vous devez avoir au moins deux niveaux dans les compétences suivantes : Athlétisme, Bagarre, Concentration,
+                         Connaissance, Conversation, Discrétion, Esquive, Guide local (quartier d’origine), Langue (argot), Perception,
+                         Persuasion, Premiers secours et Psychologie.
+                      • Les compétences portant la mention (x2) nécessitent deux points de compétence par augmentation
+                         de niveau. Pour les autres, il suffit de dépenser un point pour acquérir un niveau.
+                      • N’oubliez pas la Langue niveau 4 gratuite qui dépend de votre origine culturelle, telle que définie dans votre parcours
+                        (cf. page 45).
+                      Exemple : Gaëtan crée un Solo, mais cette fois, il utilise la Formule complète. Son personnage doit posséder les
+                    compétences suivantes au niveau 2 : Athlétisme, Bagarre, Concentration, Connaissance, Conversation, Discrétion, Esquive,
+                    Guide local (quartier d’origine), Langue (argot), Perception, Persuasion, Premiers secours, Psychologie. Il investit le minimum
+                    syndical dans ces compétences (ce qui n’est pas la meilleure idée).
+                      Gaëtan décide également que son personnage mystérieux passe du temps à traquer des Nomades renégats dans les
+                    étendues sauvages. Il dépense donc les 60 points de compétence restants comme suit :
+
+
+                      Compétence                              Niveau    Coût            Compétence                            Niveau      Coût
+                      Athlétisme                                2         2             Arme de mêlée                             5         5
+                      Bagarre                                   2         2             Armes d’épaule                            4         4
+                      Concentration                             2         2             Arts martiaux (x2)                        2         4
+                      Connaissance                              2         2             Conduite de véhicule terrestre            4         4
+                      Conversation                              2         2             Déduction                                 4         4
+                      Discrétion                                2         2             Endurance                                 4         4
+                      Esquive                                   2         2             Interrogatoire                            4         4
+                      Guide local (quartier d’origine)          2         2             Pistage                                   4         4
+                      Langue (argot)                            2         2             Pistolet                                  4         4
+                      Langue (selon son origine culturelle)     4         0             Résistance à la torture/aux drogues       4         4
+                      Perception                                2         2             Survie en milieu hostile                  4         4
+                      Persuasion                                2         2             Tactique                                  3         3
+                      Premiers secours                          2         2
+                                                                                        Tir automatique (x2)                      6        12
+                      Psychologie                               2         2
+                                                                                                                Coût total : 86
+
+
+
+
+ 90
+                                                                                    PARÉ POUR LE FUTUR
+
+                É    tape suivante : Armes et armures
+
+                Vous n’êtes pas obligé d’avoir des implants cybernétiques pour être un Cyberpunk. En revanche, vous avez absolument
+                besoin d’une arme et d’une armure. Dans les ténèbres de l’Ère du Rouge, les flics coopératifs qui vous sauvent les fesses
+                quand ça chauffe ne sont pas légion.
+
+                Armes
+                                       Parlons un peu des trucs qui font pan… ou tchac, tchac, schlak.
+                Les armes font partie du quotidien à l’Ère du Rouge. Quand on sait que les effectifs de police qui patrouillent dans la Rue
+                sont réduits à peau de chagrin et qu’une horde de truands cuirassés et armés jusqu’aux dents rôde, prête à vous découper
+                en morceaux pour vous revendre en pièces détachées, vous ne vous étonnerez pas de croiser des gens équipés. L’astuce
+                consiste à être plus chargé que les autres — et à savoir utiliser son matériel pour éviter de se le faire voler.
+
+                                                            ▶ Catégories d’armes ◀
+                Il existe trois catégories d’armes :
+                Armes de mêlée : épées, haches, battes, marteaux, etc.
+                Armes à distance : armes de tir ou de lancer.
+                Armes exotiques : arme de mêlée et à distance spécialisées ou qui ne rentrent pas dans les catégories ci-dessus.
+                   En général, vous pouvez vous équiper d’armes traditionnelles (que vous pouvez empoigner et reposer à loisir) ou greffées
+                sur votre corps sous forme d’implants cybernétiques. Ces cyberarmes, comme on dit dans la Rue, sont des variantes d’armes
+                de mêlée et à distance existantes. Certaines bizarreries, telles que le tristement célèbre cybercobra, sont classées parmi
+                les armes de corps à corps, à défaut de mieux. Puisque ces implants disposent de fonctions spéciales, nous leur avons
+                dédié un chapitre complet à partir de la page 110.
+                   Nous abordons ici les classes d’armes ordinaires et génériques. Nous nous appesantirons sur les modèles spécifiques
+                et les marques dans la section Marché de nuit, page 340.
+
+
+
+                A     rmes de mêlée
+
+                Ces armes servent à poignarder ou trancher les gens, à les rouer de coups jusqu’à ce qu’ils baignent dans leur sang ou
+                à les amputer de leurs membres. Épées, haches, battes, marteaux ; tout ce que contient la section quincaillerie de votre
+                Marché de nuit local. Lorsqu’on utilise la force de ses bras pour infliger des dégâts, on appelle ça une arme de mêlée. En
+                général, cet armement est lié à la caractéristique Dextérité.
+
+                Lire le tableau des armes de mêlée
+                Type d’arme : la classe de l’arme de mêlée.
+                Exemple d’armes de mêlée : quelques exemples d’armes de corps à corps appartenant à cette catégorie.
+                Mains : le nombre de mains libres nécessaires pour tenir et manier l’arme. Dans le cas des armes de mêlée, cette valeur
+                 ne dépend pas du type d’arme de mêlée, elle varie d’un modèle à l’autre.
+                Dégâts : le nombre de dégâts infligés par l’arme au cours d’une attaque.
+                Attaque par round (Att/round) : le nombre de coups que vous pouvez porter au cours d’une action d’attaque.
+                Dissimulation : indique si vous pouvez cacher l’arme sous vos vêtements avec la compétence Dissimulation/Révélation
+                  d’objet.
+                Prix : le coût moyen de l’arme à Night City, exprimé en eurodollars (ED) ou EDdies. La catégorie de prix de l’objet
+                est indiquée sous son prix. Voyez Acheter et vendre à la page 385.
+
+
+
+
+                                                                                                                                              91
+  PARÉ POUR LE FUTUR
+
+                                         Exemple d’arme                                         Att/
+                   Type d’arme                                            Mains      Dégâts          Dissimulation             Prix
+                                            de mêlée                                           round
+
+                  Arme de mêlée                                                                                                  50
+                                       Couteau de combat, tomahawk        Variable    1d6         2            OUI
+                     légère                                                                                                   (Coûteux)
+
+                  Arme de mêlée       Batte de baseball, pied de biche,                                                          50
+                                                                          Variable    2d6         2            NON
+                   intermédiaire                 machette                                                                     (Coûteux)
+
+                  Arme de mêlée         Tuyau en plomb, épée, batte                                                              100
+                                                                          Variable    3d6         2            NON
+                     lourde                       cloutée                                                                   (Très coûteux)
+
+
+                  Arme de mêlée          Tronçonneuse, pioche, pale                                                             500
+                                                                          Variable    4d6         1            NON
+                    très lourde            d’hélicoptère, naginata                                                           (Onéreux)
+
+
+                   Ce tableau vous permet d’appréhender notre méthode de classification des armes de mêlée. Sachant que l’être humain
+                a ramassé son premier caillou qui lui a servi d’arme à l’aube des temps, vous imaginez bien la quantité d’objets pointus
+                et tranchants qui se baladent à Night City. Lorsque vous ne savez pas vraiment à quelle catégorie appartient le khopesh
+                en bronze égyptien que vous venez de retirer du cadavre d’un Eurosolo, demandez au maître de jeu de trancher (pour
+                notre part, nous voterions pour l’arme de mêlée lourde).
+
+
+
+
+                                                                                                                                   PAR ADRIAN MARC
+
+
+
+
+ 92
+                                                                                      PARÉ POUR LE FUTUR
+
+
+
+
+                   PAR ADRIAN MARC
+
+
+
+
+                A            rmes à distance
+
+                Toutes ces armes tirent des projectiles. Fusils, pistolets laser (rares), gyrojets (encore plus rares), même ces minuscules
+                arbalètes de poing que les gangs de guerriers de la route adorent agiter au-dessus de leur tête. Quand votre arme
+                propulse un élément qui cause des dégâts au point d’arrivée de sa trajectoire, il s’agit d’une arme à distance. En général,
+                cet armement est lié à la caractéristique Réflexes. Lorsque vous achetez une arme à distance, gardez à l’esprit qu’à portée
+                identique, l’efficacité diffère d’un modèle à l’autre. Un fusil d’assaut convient parfaitement pour les tirs à longue distance
+                et les fusillades à moyenne portée, mais il se révèle encombrant dans les couloirs étroits et les combats rapprochés. Un
+                pistolet est toujours utile dans les cas où votre adversaire dégaine le premier. Les tableaux des portées d’armes se trouvent
+                à la page 173.
+
+                Lire le tableau des armes à distance
+                Type d’arme : la classe de l’arme à distance.
+                Compétence d’arme : la compétence utilisée lorsque vous maniez l’arme.
+                Dégâts : le nombre de dégâts infligés pour un seul tir.
+                Chargeur standard : le nombre de munitions que contient l’arme avant toute modification. Sous la taille du chargeur,
+                 vous trouverez le type de munition utilisé.
+                Attaque par round (Att/round) : le nombre de tirs que vous pouvez effectuer au cours d’une action d’attaque.
+                Mains : le nombre de mains libres nécessaires pour tenir et manier l’arme.
+                Dissimulation : indique si vous pouvez cacher l’arme sous vos vêtements avec la compétence Dissimulation/Révélation
+                  d’objet.
+                Modes de tir alternatifs et traits spéciaux : caractéristiques propres à l’arme. La liste complète se trouve page 173.
+                Prix : le coût moyen de l’arme à Night City, exprimé en eurodollars (ED) ou EDdies. La catégorie de prix de l’objet
+                  est indiquée sous son prix. Voyez Acheter et vendre à la page 385.
+
+
+
+                                                                                                                                                 93
+   PARÉ POUR LE FUTUR
+
+                                                                                            Att/
+                                              Compétence                     Chargeur
+    Pour en savoir         Type d’arme                           Dégâts                    round      Mains       Dissimulation         Prix
+plus sur les modes
+                                                d’arme                       standard
+   de tir alternatifs,
+       rendez-vous            Pistolet                                       12                                                    50
+   Page 173                                        Pistolet         2d6              2          1               OUI
+                              moyen                                    (Pistolet M)                                            (Coûteux)
+                                         Modes de tir alternatifs et traits spéciaux : aucun
+                                                                              8                                                   100
+                          Pistolet lourd      Pistolet      3d6                      2          1               OUI
+                                                                        (Pistolet L)                                         (Très coûteux)
+                                         Modes de tir alternatifs et traits spéciaux : aucun
+                             Pistolet                                         8                                                   100
+                                              Pistolet      4d6                      1          1               NON
+                            très lourd                                 (Pistolet TL)                                         (Très coûteux)
+                                         Modes de tir alternatifs et traits spéciaux : aucun
+                             Pistolet-                                       30                                                   100
+                                              Pistolet      2d6                      1          1               OUI
+                           mitrailleur                                 (Pistolet M)                                          (Très coûteux)
+                                         Modes de tir alternatifs et traits spéciaux : tir automatique (3) • tir de suppression
+                             Pistolet-
+                                                                             40                                                   100
+                           mitrailleur        Pistolet      3d6                      1          1               NON
+                                                                        (Pistolet L)                                         (Très coûteux)
+                               lourd
+                                         Modes de tir alternatifs et traits spéciaux : tir automatique (3) • tir de suppression
+                                                                              4                                                   500
+                          Fusil à pompe    Armes d’épaule   5d6                      1          2               NON
+                                                                          (Slug)                                               (Onéreux)
+                                         Modes de tir alternatifs et traits spéciaux : chevrotine
+                                                                             25                                                   500
+                          Fusil d’assaut   Armes d’épaule   5d6                      1          2               NON
+                                                                          (Fusil)                                              (Onéreux)
+                                         Modes de tir alternatifs et traits spéciaux : tir automatique (4) • tir de suppression
+                             Fusil de                                         4                                                   500
+                                           Armes d’épaule   5d6                      1          2               NON
+                            précision                                     (Fusil)                                              (Onéreux)
+                                         Modes de tir alternatifs et traits spéciaux : aucun
+                              Arcs et                                        –                                                    100
+                                             Tir à l’arc    4d6                      1          2               NON
+                            arbalètes                                    (Flèche)                                            (Très coûteux)
+                                         Modes de tir alternatifs et traits spéciaux : flèches
+                              Lance-                                          2                                                   500
+                                           Armes lourdes    6d6                      1          2               NON
+                            grenades                                    (Grenade)                                              (Onéreux)
+                                            Modes de tir alternatifs et traits spéciaux : explosion
+                             Lance-                                               1                                                       500
+                                                Armes lourdes       8d6                       1          2              NON
+                            roquettes                                         (Roquette)                                               (Onéreux)
+                                            Modes de tir alternatifs et traits spéciaux : explosion
+
+
+                         Munitions des armes à distance
+                         ▶ Munition standard
+                         Prix : 10 ED pour 10 unités (Bon marché)
+                         À ce prix-là, vous achetez des munitions standard pour votre arme qui n’ont rien de particulier. Elles se présentent sous
+                         forme de balles (slug, balles de pistolet ou de fusil), de chevrotines ou de flèches. Vous ne trouverez pas de grenades
+                         et de roquettes parmi les munitions standard ; leurs conditions d’acquisition sont décrites à la page 344 dans la section
+                         Marché de nuit.
+
+
+
+
+  94
+                                                                                                PARÉ POUR LE FUTUR
+
+                A     rmes exotiques
+
+                Les armes exotiques sont tellement spécialisées ou originales qu’on a du mal à les classer. Ce sont en général des variantes
+                d’armes existantes. Elles sont toutes de qualité ordinaire et sont incompatibles avec les accessoires d’armes et les munitions
+                spéciales, sauf mention contraire. Le tableau ci-dessous vous donne un aperçu des armes exotiques existantes. La liste
+                complète et les règles qui leur sont associées se trouvent page 347.
+
+                Lire le tableau des armes exotiques
+                Nom : son appellation. Il s’agit le plus souvent d’un nom générique ; en effet, plusieurs marques proposent leur propre
+                 modèle.
+                Description et données : les spécificités de l’arme décrite. La plupart du temps, nous faisons référence à une arme
+                 mentionnée dans le tableau des armes de mêlée et à distance non exotiques. Si l’on excepte les règles mentionnées
+                 dans cette case, l’arme fonctionne comme son équivalent ordinaire.
+                Prix : le coût moyen de l’arme à Night City, exprimé en eurodollars (ED) ou EDdies. La catégorie de prix de l’objet
+                  est indiquée sous son prix. Voyez Acheter et vendre à la page 385.
+                Note au MJ : lorsqu’ils créent leur personnage, les joueurs peuvent s’acheter ce qu’ils veulent, dans la limite imposée
+                 par leur trésorerie, mais ils n’ont pas le droit de constituer un pot commun avec leurs budgets de départ. Nous vous
+                 déconseillons de leur accorder de l’argent supplémentaire, car si vos joueurs ont accès à des objets luxueux ou encore
+                 plus chers, l’équilibre de votre campagne peut en pâtir. Mais dans le cas où vous voudriez quand même prendre le
+                 risque, nous avons inclus ces objets dans le tableau ci-dessous. En jeu, les armes exotiques sont rares et chères. Elles
+                 sont difficiles à dénicher sur les marchés de nuit sans l’aide d’un ami Fixer, et en posséder une sonne comme une reven-
+                 dication. Si vous rentrez dans le Totentanz avec un fusil d’assaut Hurricane de Constitution Arms sanglé sur l’épaule,
+                 les autres clients ne manqueront pas de vous remarquer. En bien ou en mal.
+
+                               Arme                                         Description et données                                              Prix
+                                                                 Pistolet très lourd d’excellente qualité que portait le célèbre                10 000
+                    3516 de Malorian Arms
+                                                                             Johnny Silverhand. Inflige 5d6 dégâts.                         (Super luxueux)
+                        Canon à ondes                 Pistolet très lourd qui désactive les équipements cybernétiques et électroniques.      500 (Onéreux)
+                       Canon électrique                   Fusil d’assaut qui ignore les armures inférieures à PA 11. Dépend de la
+                                                                                                                                            5 000 (Luxueux)
+                      Rhinemetall EMG-86                     compétence Armes Lourdes. Nécessite 11+ en COR pour être utilisé.
+                                                                         Fusil à pompe qui tire des balles incendiaires.
+                            Crache-feu                                                                                                      500 (Onéreux)
+                                                                            Dépend de la compétence Armes lourdes.
+                    Fusil d’assaut Hurricane
+                                                          Fusil à pompe avec 2 Att/round. Nécessite 11+ en COR pour être utilisé.           5 000 (Luxueux)
+                     de Constitution Arms
+                      Gantelet de combat              Gantelet lourd. Contient trois emplacements d’extension cyberbras/cybermembre.      1 000 (Très onéreux)
+                                                                   Fusil d’assaut qui tire uniquement en mode automatique
+                    Helix de Tsunami Arms                        (avec un multiplicateur de tir automatique supérieur à celui               5 000 (Luxueux)
+                                                           d’un fusil d’assaut standard). Nécessite 11+ en COR pour être utilisé.                                Vous trouverez
+                              Hurleur                      Pistolet très lourd qui inflige la blessure critique oreille endommagée.         500 (Onéreux)        des informations
+                                                                                                                                                                 supplémentaires
+                                                                       Arme de mêlée très lourde maniée à deux mains.                                            sur les qualités
+                     Kendachi Mono-trois                                                                                                    5 000 (Luxueux)      d’armes à la
+                                                                             Ignore les armures inférieures à PA 11.
+                                                                                                                                                                 Page 342
+                   Lance-grenades Militech
+                                                         Lance-grenades avec 2 Att/round. Nécessite 11+ en COR pour être utilisé.           5 000 (Luxueux)
+                       « Cowboy » U-56
+                     Matraque électrique                             Une arme de mêlée intermédiaire « moins létale ».                       100 (Coûteux)
+                    Pistolet à air comprimé                      Pistolet moyen qui tire des billes de peinture (et d’acide !)             100 (Très coûteux)
+                      Pistolet à fléchettes                           Pistolet très lourd qui tire des fléchettes spéciales.               100 (Très coûteux)
+                      Pistolet à impulsion
+                                                                              Un pistolet lourd « moins létal ».                             100 (Coûteux)
+                           électrique
+
+
+
+                                                                                                                                                                 95
+  PARÉ POUR LE FUTUR
+
+                                  Accessoires d’armes
+                                  Chaque arme à distance non exotique possède trois emplacements d’accessoires qui permettent
+      Munitions spéciales         de les améliorer. Vous pouvez combiner des accessoires qui s’installent au même endroit, en
+                                  payant leur prix séparément. Installer le même accessoire en double ne produit aucun effet. Les
+      En dehors des munitions     accessoires étant conçus pour des modèles spécifiques, il est difficile de les adapter sur d’autres
+      standard, vous pouvez       armes. Vous trouverez la liste des accessoires spéciaux dans la section Marché de nuit de ce
+      charger n’importe quel
+                                  livre (cf. page 342).
+      type de munition spéciale
+      dans vos armes à distance
+      non exotiques, comme des
+      balles incendiaires, des
+      flèches empoisonnées,
+                                  A     rmure
+
+                                       Seuls les idiots restent en plein milieu, à se faire tirer comme des lapins.
+      des balles perforantes,
+      etc.                        Dans un monde où la cybertechnologie transforme n’importe quel quidam en guerrier bardé
+         Retrouvez la liste des   de métal, l’armure a toujours son importance. Les protections décrites ici sont, à la manière des
+      grenades et des munitions   armes évoquées auparavant, assez génériques, puisqu’elles incluent toutes sortes de vêtements,
+      spéciales à la page 345.    costumes, combinaisons de pilote, minijupes, tout ce qu’un punk de la Rue correctement vêtu
+      Vous avez besoin de         considère comme le summum de la mode au service de la défense individuelle. Une fois encore,
+      trouer une armure ? De      si vous ne savez pas dans quelle case rentre votre nouvel ensemble ICONAmerica, trouvez la
+      déguerpir dans un nuage     description qui correspond le mieux aux matériaux dont il est composé (cuir, Kevlar ®, placage
+      de fumée ? J’espère que     plastique ou même cotte de mailles) et inspirez-vous-en.
+      vous avez de la moula.
+                                                  Lorsque vous achetez une pièce d’armure, choisissez
+                                                     entre une protection pour la tête ou pour le corps.
+                                  Dès que vous portez une pièce d’armure qui inflige des pénalités en RÉF, en DEX et en MOUV,
+                                  vous subissez les malus décrits. En revanche, ces derniers ne sont pas cumulatifs, même si vous
+                                  portez le même type d’armure sur la tête et le corps. Votre personnage peut se retrouver totale-
+                                  ment immobilisé à cause de ces pénalités (MOUV minimum 0).
+                                     La PA des armures ne se cumule pas. Pour déterminer la PA correspondant à une partie du
+                                  corps, on prend la PA la plus élevée pour cet emplacement. Toutes les armures que vous portez
+                                  à l’emplacement donné sont perforées (PA réduite de 1 point) lorsque vous subissez des dégâts.
+                                  Voyez Quand l’armure ne suffit pas, page 186.
+
+                                  Lire le tableau des armures
+                                  Armure : le nom qu’on lui donne. Comme il existe quantité de marques, il s’agit d’une appel-
+                                   lation générique.
+                                  Description : son apparence et les matériaux qui la composent. Les effets et les règles spéciales
+                                   éventuels sont indiqués dans cette case.
+                                  Pouvoir d’arrêt : le nombre de points de dégâts que l’armure encaisse avant que l’attaque
+                                   n’atteigne votre corps.
+                                  Pénalité : la perte de mobilité et de souplesse qu’entraîne le port de l’armure.
+                                  Prix : le coût moyen de l’arme à Night City, exprimé en eurodollars (ED) ou EDdies. La
+                                    catégorie de prix de l’objet est indiquée sous son prix. Voyez Acheter et vendre à la page 385.
+
+
+
+
+ 96
+                                                                                                          PARÉ POUR LE FUTUR
+
+                                                                                                               Pouvoir            Pénalité
+                   Armure                                     Description                                                                                Prix
+                                                                                                             d’arrêt (PA)       (minimum 0)
+
+                                                                                                                                                           20
+                      Cuir                  Le préféré des Nomades et autres cyberpunks à moto.                     4                 Aucune
+                                                                                                                                                       (Ordinaire)
+                                         Ce matériau se décline en plusieurs versions : vestes, gilets,                                                    50
+                   Kevlar®                                                                                          7                 Aucune
+                                                         costards et même bikinis.                                                                      (Coûteux)
+
+                Tenue pare-             Une combinaison de Kevlar® et de maillage plastique intégrés                                                       100
+                                                                                                                    11                Aucune
+                balles légère                             dans la trame du tissu.                                                                     (Très coûteux)
+
+                               Combinaison cintrée renforcée aux endroits vulnérables par des
+                Combinaison couches de gel absorbant solidifié par frittage. Contient un rangement                                                         1 000
+                                                                                                                    11                Aucune
+                 connectée    pour une cyberconsole et des supports pour les câbles d’interface.                                                      (Très onéreux)
+                                       Pour plus d’informations, voyez page 350.
+                   Tenue
+                                      Une tenue pare-balles plus lourde, constituée de placage plastique                                                   100
+                 pare-balles                                                                                        12          –2 RÉF, DEX et MOUV
+                                             solidifié renforcé par un maillage en Kevlar® dense.                                                     (Très coûteux)
+                  moyenne
+
+                Tenue pare-           La plus solide des tenues pare-balles combine du Kevlar® densifié                                                    500
+                                                                                                                    13          –2 RÉF, DEX et MOUV
+                balles lourde           avec une alternance de maillages plastiques et textiles tissés.                                                 (Onéreux)
+
+                                                                                                                                                           500
+                      Flak             La version remise au goût du jour de la traditionnelle veste flak.           15          –4 RÉF, DEX et MOUV
+                                                                                                                                                        (Onéreux)
+
+                                     Le Metalgear® est capable de tout arrêter, mais vous rend plus facile                                                5 000
+                 Metalgear®                                                                                         18          –4 RÉF, DEX et MOUV
+                                        à toucher qu’un bantha unijambiste dans une course de pods.                                                     (Luxueux)
+
+                                                                                                               10 PS, valeur
+                   Bouclier             Un bouclier transparent en polycarbonate qui peut vous sauver                             Aucune, mais se          100
+                                                                                                              réduite par les
+                  balistique                   la vie lors d’une fusillade. Voyez page 183.                                      manie à une main     (Très coûteux)
+                                                                                                                  dégâts
+
+
+
+
+                       Ne sois pas idiot. A dapte ton armure à la situation. Si on
+                       t ’embauche comme garde du corps pour la soirée caritative
+                           d ’un C orpo et que tu te ramènes en tenue antiémeute
+                          complète , tout ce que tu vas faire , c ’est passer pour un
+                       mariole et mettre ton employeur dans l’embarras . B ien
+                           sûr , j ’ai une tenue flak qui donne l’impression que je
+                       pars au front , mais j ’ai aussi investi dans un costume en
+                      fibres D uraweave de chez Takanaka . Technologie d’avant -
+                      guerre . Avec ça , on croirait que je bosse dans les bureaux
+                       de la direction , mais ça arrête net les balles de pistolet.
+                                                                                                                                               — Cooper
+
+
+
+                                                                                                                                                                       97
+  PARÉ POUR LE FUTUR
+
+                                                           ▶ Obtenir son matériel : armes et armures ◀
+                                 pour les Rats des Rues (profil générique) et les Edgerunners (rapide et sans filet)
+                     Les armes et l’armure du Rat des Rues sont prédéfinies comme ses compétences. Cependant, la section Marché de
+                     nuit (page 340) vous offre la possibilité d’acquérir des armes et des armures supplémentaires au fur et à mesure de la
+                     progression de votre personnage. Consultez la colonne qui correspond au rôle de votre personnage dans le tableau
+   Liste des armes
+     Page 91
+                     ci-dessous pour connaître votre équipement de départ. Parfois, vous aurez le choix entre plusieurs options (par exemple fusil
+                     à pompe ou fusil d’assaut pour le Techie). Choisissez une seule option parmi celles proposées. En plus de cet équipement
+ Liste des armures
+    Page 96          de départ, les Rats des Rues et les Edgerunners disposent de 500 ED à dépenser comme bon leur semble
+Étape suivante :     ou à économiser pour plus tard. Vous trouverez la liste complète des armes, des armures, des équipements et des
+    Votre attirail   cyberimplants dans la section Marché de nuit, page 340.
+  Page 103
+
+                           Rockeur                          Solo                          Netrunner                      Techie                         Medtech
+                        Armes/armure                    Armes/armure                    Armes/armure                  Armes/armure                   Armes/armure
+   Liste des armes
+     Page 91                Pistolet très lourd               Fusil d’assaut                Pistolet très lourd        Fusil à pompe ou fusil            Fusil à pompe ou
+ Liste des armures
+                         50 munitions standard              Pistolet très lourd          30 munitions standard                 d’assaut                     fusil d’assaut
+    Page 96
+                               de pistolet TL             Arme de mêlée lourde                 de Pistolet TL         100 chevrotines standard       100 chevrotines standard
+Étape suivante :
+    Votre attirail        Arme de mêlée lourde            ou bouclier balistique        Tenue pare-balles légère          de fusil à pompe                de fusil à pompe
+  Page 103              ou grenade étourdissante                                       Protection de corps (PA 11)        ou 100 munitions          ou 100 munitions standard
+                                                         30 munitions standard
+                                                                                                                          standard de fusil                    de fusil
+                        2 grenades lacrymogènes                de pistolet TL           Tenue pare-balles légère
+                                                                                        Protection de tête (PA 11)      Grenade étourdissante       10 chevrotines incendiaires
+                        Tenue pare-balles légère      70 munitions standard de fusil
+                                                                                                                      Tenue pare-balles légère        de fusil à pompe ou 10
+                       Protection de corps (PA 11)      Tenue pare-balles légère
+                                                                                                                     Protection de corps (PA 11)     munitions incendiaires de
+                        Tenue pare-balles légère       Protection de corps (PA 11)                                                                               fusil
+                        Protection de tête (PA 11)                                                                    Tenue pare-balles légère
+                                                        Tenue pare-balles légère                                                                       2 grenades fumigènes
+                                                                                                                      Protection de tête (PA 11)
+                                                        Protection de tête (PA 11)                                                                   Tenue pare-balles légère
+Vous trouverez les                                                                                                                                  Protection de corps (PA 11)
+    grenades à la
+ Page 344                                                                                                                                            Tenue pare-balles légère
+                                                                                                                                                     Protection de tête (PA 11)
+                                                                                                                                                         Bouclier balistique
+
+                           Média                           Justicier                     Corporatiste                     Fixer                        Nomade
+                        Armes/armure                    Armes/armure                    Armes/armure                  Armes/armure                   Armes/armure
+
+                         Pistolet lourd ou pistolet          Fusil d’assaut ou              Pistolet très lourd        Pistolet lourd ou pistolet     Pistolet lourd ou pistolet
+                                 très lourd                    fusil à pompe             50 munitions standard                 très lourd                     très lourd
+                        50 munitions standard de               Pistolet lourd                  de pistolet TL          Pistolet lourd ou pistolet   100 munitions standard de
+                       pistolet L ou 50 munitions      100 munitions standard de        Tenue pare-balles légère               très lourd           pistolet L ou 100 munitions
+                          standard de pistolet TL        fusil ou 100 chevrotines      Protection de corps (PA 11)      Arme de mêlée légère           standard de pistolet TL
+                        Tenue pare-balles légère       standard de fusil à pompe        Tenue pare-balles légère     100 munitions standard de         Arme de mêlée lourde
+                       Protection de corps (PA 11)        ou 100 slugs standard         Protection de tête (PA 11)   pistolet L ou 100 munitions          ou pistolet lourd
+                        Tenue pare-balles légère          30 munitions standard                                         standard de pistolet TL      Tenue pare-balles légère
+                        Protection de tête (PA 11)              de pistolet L                                         Tenue pare-balles légère      Protection de corps (PA 11)
+                                                         Bouclier balistique ou 2                                    Protection de corps (PA 11)     Tenue pare-balles légère
+                                                           grenades fumigènes                                         Tenue pare-balles légère       Protection de tête (PA 11)
+                                                        Tenue pare-balles légère                                      Protection de tête (PA 11)
+                                                       Protection de corps (PA 11)
+                                                        Tenue pare-balles légère
+                                                        Protection de tête (PA 11)
+
+
+
+
+  98
+                                                                                              PARÉ POUR LE FUTUR
+
+                                       Par exemple, le Solo de Gaëtan possède les armes et armures suivantes :
+
+                                                                        Solo de Gaëtan
+                                                                        Armes/armure
+
+                                                                               Fusil d’assaut
+                                                                            Pistolet très lourd
+                                                                         Arme de mêlée lourde
+                                                                   30 munitions standard de pistolet TL
+                                                                     70 munitions standard de fusil
+                                                           Tenue pare-balles légère Protection de corps (PA 11)
+                                                            Tenue pare-balles légère Protection de tête (PA 11)
+
+
+
+                                               ▶ Obtenir son matériel : armes et armures ◀
+                                                pour la Formule complète (calcul par points)
+                Contrairement aux Rats des Rues et aux Edgerunner, quand vous employez la Formule complète pour créer votre person-
+                nage, vous devez acheter tout votre matériel ainsi que vos implants cybernétiques. Les règles pour la Formule complète
+                se trouvent page 104.
+
+
+
+                É   tape suivante : votre attirail
+
+                                          Que cachez-vous dans vos poches ? En dehors d’un flingue…
+                Nous n’irons pas par quatre chemins. L’avenir Cyberpunk est synonyme de mouvement. Comme les cowboys du Far West,
+                la plupart des gens de cette époque portent leur vie sur le dos ; un monde d’accessoires miniaturisés pour dormir, manger
+                et se divertir entassés dans des fourre-tout et sur les sièges arrière des voitures. Dans la Rue, les affaires que l’on emporte
+                partout avec soi sont ce que l’on appelle l’attirail.
+                Le plus souvent, l’attirail comprend :
+                  • Un matelas autogonflant et un sac de couchage (tient dans un carton de 15 cm x 15 cm qui se range
+                    facilement).
+                  • Votre Agent (un ordinateur miniaturisé équipé d’un système de communication qui tient dans la poche).
+                  • Une poignée de puces mémoires.
+                  • Une cyberconsole et des câbles (pour les Netrunners).
+                  • Un technioutil et autres outils.
+                  • De la nourriture à emporter sous forme de barres, de berlingots, de sachets aluminium, de rations, et de temps
+                     à autre une banane (qui vaut son pesant d’or à l’Ère du Rouge).
+                  • Vos effets personnels tels que vos vêtements, votre brosse à dents, etc.
+                  Tout cela tient dans un sac en bandoulière ou un sac en toile. À l’Ère du Rouge, les personnages de Cyberpunk RED
+                n’ont toujours pas le temps de se poser. Le Rockeur est déjà sur la préparation du prochain concert. Le Solo doit changer
+                de quartier pour décrocher son contrat suivant, et de toute manière, il vaut mieux qu’il bouge avant que ses ennemis ne
+                découvrent l’endroit où il dort. Les flics, les Netrunners, les Médias et les Techies se déplacent sans cesse ; ils partent en
+                mission de surveillance, en quête d’informations sérieuses, ou bien fuient les gens dont ils se sont attiré les foudres avec
+                leurs manœuvres sur le NET. Les Nomades… Primo, ils n’ont pas de maisons (à moins que vous considériez leurs kombis
+                comme tels), et deuxio, à quoi bon se charger si on ne peut pas embarquer son matos sur sa moto ?
+
+
+
+
+                                                                                                                                                  99
+  PARÉ POUR LE FUTUR
+
+                   Pour l’instant, ne vous préoccupez pas du reste : votre domicile, votre loyer, la manière dont vous récoltez assez d’argent
+                pour vous offrir un sachet de croquettes Kibble Product no 19. Ces sujets sont couverts par les règles de Niveau de vie
+                et de Logement, que vous découvrirez page 105. En attendant, voici un aperçu du matériel que vous avez sur vous ou à
+                portée de main quand vous commencez votre existence à Night City.
+
+                Lire le tableau des équipements
+                  • Objet : le nom qu’on lui donne. Comme il existe quantité de marques différentes, il s’agit d’une appellation générique.
+                  • Description et données : une description détaillée de l’objet et de son usage, ainsi que la page à laquelle trouver
+                    des règles spéciales. Vous trouverez page 351 la liste complète des équipements, qui n’apparaissent pas tous ici, et
+                    des informations supplémentaires.
+                  • Prix : le coût moyen de cet équipement à Night City, exprimé en eurodollars (ED). La catégorie de prix de l’objet
+                     est indiquée sous son prix. Voyez Acheter et vendre à la page 385.
+
+                          Objet                                  Description et données                                           Prix
+                                                    Smartphone équipé d’une IA autoadaptive. +2 en Bibliothèque.
+                          Agent                           +2 en Habillement et style selon les circonstances.                100 (Très coûteux)
+                                                               Cf. page 352 pour plus d’informations.
+                     Amplificateur                           Permet de connecter jusqu’à deux instruments.
+                                                                                                                               50 (Coûteux)
+                      portable                                      Durée de la batterie : 6 heures.
+                                                     Teste la composition chimique d’une substance en se référant
+                 Analyseur chimique                                                                                         1 000 (Très onéreux)
+                                                                 à une base de données d’échantillons.
+                     Barre nutritive                           Un repas exécrable sous forme de barre.                       10 (Bon marché)
+                    Bâton lumineux                           Éclaire sur un rayon de 4 m. Dure 10 heures.                    10 (Bon marché)
+                      Brouilleur/
+                                                    Permet de brouiller les communications ou de rétablir le signal.          500 (Onéreux)
+                      décrypteur
+                       Caméra                   Enregistre jusqu’à 12 heures d’audio et de vidéo sur une puce mémoire.       100 (Très coûteux)
+                     Combinaison
+                                                                        Protège des radiations.                             1 000 (Très onéreux)
+                     antiradiation
+                    Communicateur
+                                                                 Se glisse dans l’oreille. Portée : 1 km.                    100 (Très coûteux)
+                         radio
+                     Corde (60 m)                                          Corde en nylon.                                     20 (Ordinaire)
+                                                      Console standard pour le netrunning. Sept emplacements.
+                     Cyberconsole                                                                                             500 (Onéreux)
+                                                              Cf. page 353 pour plus d’informations.
+                 Détecteur de micros               Bipe en présence d’un dispositif d’écoute dans un rayon de 2 m.            500 (Onéreux)
+                  Détecteur de radar         Bipe quand il détecte des ondes électromagnétiques émises à moins de 100 m.       500 (Onéreux)
+                  Enregistreur audio                   Enregistre jusqu’à 24 heures d’audio par puce mémoire.                100 (Très coûteux)
+                                                        Inflige 3d6 dégâts qui ne sont pas réduits par l’armure.
+                  Fiole de biotoxines                                                                                         500 (Onéreux)
+                                                 Pour contrer son effet, on utilise Résistance à la torture/aux drogues.
+                                                        Inflige 2d6 dégâts qui ne sont pas réduits par l’armure.
+                    Fiole de poison                                                                                          100 (Très coûteux)
+                                                 Pour contrer son effet, on utilise Résistance à la torture/aux drogues.
+                     Fourre-tout                                            Sac de transport.                                 20 (Ordinaire)
+                  Fusée de détresse                           Éclaire un rayon de 100 m pendant 1 heure.                     10 (Bon marché)
+                  Guitare électrique
+                                              Pour faire de la musique. Les instruments électriques nécessitent un ampli.     500 (Onéreux)
+                 ou autre instrument
+                        Hypodair                                Injecteur de drogue simple d’utilisation.                      50 (Coûteux)
+                        Jumelles                          Parfait pour voir au loin. Grossissement x2 ou x3.                   50 (Coûteux)
+
+
+
+ 100
+                                                                                               PARÉ POUR LE FUTUR
+                       Objet                               Description et données                                          Prix
+
+                   Lampe-torche               Lampe-torche qui porte à 100 m. La batterie dure 10 heures.               20 (Ordinaire)
+                  Lance-grappin        Projette un grappin rattaché à un câble de 30 m. Ne peut pas servir d’arme.    100 (Très coûteux)
+                 Lecteur de danse
+                                            Permet à l’utilisateur de vivre l’expérience de la danse sensorielle.    1 000 (Très onéreux)
+                    sensorielle
+                                                   Lunettes bénéficiant d’améliorations technologiques.
+                Lunettes connectées                                                                                    500 (Onéreux)
+                                                Contient 2 emplacements pour installer des cyberoptiques.
+                Lunettes de réalité
+                                                  Projette des images du cyberspace sur le monde réel.                100 (Très coûteux)
+                    virtuelle
+                     Matelas
+                autogonflant et sac            Un matelas qui se gonfle tout seul et son sac de couchage.               20 (Ordinaire)
+                   de couchage
+                                         Permet de diagnostiquer les blessures et les infections. +2 en Premiers
+                   Médiscanner                                                                                       1 000 (Très onéreux)
+                                                          secours et en Assistance médicale.
+                     Menottes              Entrave les mouvements. Pour les briser, il faut avoir 10+ en COR.           50 (Coûteux)
+                    Ordinateur                                  Ordinateur fixe ou portable.                            50 (Coûteux)
+                Outils de crochetage                 Permettent de crocheter les serrures mécaniques.                   20 (Ordinaire)
+                   Pack hygiène                        Tout le nécessaire pour l’hygiène corporelle.                    20 (Ordinaire)
+                 Pad de percussion          Permet de recréer n’importe quel type d’instrument de percussion.
+                                                                                                                       500 (Onéreux)
+                   électronique                                   Nécessite un ampli.
+                    Paquet de
+                                                         Assez de croquettes pour faire un repas.                     10 (Bon marché)
+                    croquettes
+                    Peinture
+                                                              Peinture qui brille dans le noir.                         20 (Ordinaire)
+                 phosphorescente
+                Protection auditive        Protection auditive compacte. Permet à l’utilisateur de se prémunir
+                                                                                                                     1 000 (Très onéreux)
+                      active                         des effets néfastes causés par les sons intenses.
+                   Puce mémoire                               Support de stockage standard.                           10 (Bon marché)
+                                                    Repas autochauffant dans son emballage composé
+                Ration alimentaire                                                                                    10 (Bon marché)
+                                                              de plastique et d’aluminium.
+                 Récepteur radio/                 Jouer les meilleurs tubes ou écouter les stations radio
+                                                                                                                        50 (Coûteux)
+                lecteur de musique                        qui émettent à moins d’un kilomètre.
+                   Respirateur
+                                                       Utile pour filtrer les particules d’air toxiques.                20 (Ordinaire)
+                   antipollution
+                  Ruban adhésif             Disponible dans différentes couleurs, y compris phosphorescentes.           20 (Ordinaire)
+                Sacoche de Medtech              Une sacoche contenant du matériel médical indispensable.              100 (Très coûteux)
+                    Technioutil                                    Un outil multifonction.                            100 (Très coûteux)
+                                                 Permet de diagnostiquer les causes de panne matérielle.
+                  Technoscanner                                                                                      1 000 (Très onéreux)
+                                                        +2 aux compétences basées sur la TECH.
+                 Téléphone jetable            Pour passer des appels. Facile à détruire en cas de nécessité.            50 (Coûteux)
+                Tente et matériel de
+                                                       Matériel de campement pour une personne.                         50 (Coûteux)
+                      bivouac
+                                                    Permet de suivre une balise connectée au traceur
+                      Traceur                                                                                          500 (Onéreux)
+                                                             sur un rayon d’un kilomètre.
+                 Trousse de Techie                     Petite sacoche à outils pour les réparations.                   500 (Onéreux)
+
+
+                                                                                                                                            101
+  PARÉ POUR LE FUTUR
+
+
+                     V     êtements
+
+                     La culture, la classe et la couture sont trois choses différentes, choomba. Nous avons incorporé ce tableau pour que vous
+                     compreniez mieux les options vestimentaires offertes aux Rats des Rues et aux Edgerunners.
+
+                                                                                                                                                    Lentilles     Couvre-
+                                              Bas          Haut         Veste        Chaussures        Bijoux       Verres miroirs    Lunettes        de            chef
+   Pour en savoir                                                                                                                                   contact
+      plus sur les
+ vêtements qu’on       Vagabond
+   porte en 2045,                                           10                                                                           10            10           10
+     rendez-vous          Sans-abri            20                          20             20              20              20
+                                                           (Bon                                                                         (Bon          (Bon         (Bon
+ Page 327                 Guenilles        (Ordinaire)                 (Ordinaire)    (Ordinaire)     (Ordinaire)     (Ordinaire)
+                                                          marché)                                                                      marché)       marché)      marché)
+                          Clochard
+                        Couleurs
+                        du gang                                                                                                                        10           10
+                                              50             20           50              20             50               20              20
+                         Dangereux                                                                                                                    (Bon         (Bon
+                                           (Coûteux)     (Ordinaire)   (Coûteux)      (Ordinaire)     (Coûteux)       (Ordinaire)     (Ordinaire)
+                          Violent                                                                                                                    marché)      marché)
+                          Rebelle
+                       Générique
+                                                                                                                                                       10           10
+                         Standard             50             20           50              20             50               20              20
+                                                                                                                                                      (Bon         (Bon
+                          Coloré           (Coûteux)     (Ordinaire)   (Coûteux)      (Ordinaire)     (Coûteux)       (Ordinaire)     (Ordinaire)
+                                                                                                                                                     marché)      marché)
+                         Modulable
+                         Bohème
+                                                                                                         100                                           10           10
+                           Pastoral           50             20           50              50                              50             50
+                                                                                                         (Très                                        (Bon         (Bon
+                             Rétro         (Coûteux)     (Ordinaire)   (Coûteux)       (Coûteux)                       (Coûteux)      (Coûteux)
+                                                                                                       coûteux)                                      marché)      marché)
+                            Liberté
+                      Décontracté
+                                              100                         100                            100
+                            Confort                          20                           50                              50             50             20           50
+                                              (Très                       (Très                          (Très
+                          Souplesse                      (Ordinaire)                   (Coûteux)                       (Coûteux)      (Coûteux)     (Ordinaire)   (Coûteux)
+                                            coûteux)                    coûteux)                       coûteux)
+                       Pratique sportive
+                     Âme nomade
+                                              100                         100                            100                                                        100
+                           Western                           20                           100                             50             50             20
+                                              (Très                       (Très                          (Très                                                      (Très
+                            Élimé                        (Ordinaire)                 (Très coûteux)                    (Coûteux)      (Coûteux)     (Ordinaire)
+                                            coûteux)                    coûteux)                       coûteux)                                                   coûteux)
+                            Tribal
+                     Pop asiatique
+                                              100                         100            100             100                             100           100          100
+                           Coloré                            20                                                           100
+                                              (Très                       (Très          (Très           (Très                           (Très         (Très        (Très
+                           Cosplay                       (Ordinaire)                                                 (Très coûteux)
+                                            coûteux)                    coûteux)       coûteux)        coûteux)                        coûteux)      coûteux)     coûteux)
+                           Kawaii
+                      Urbain flash
+                                              100                         100            100             100                             100           100          100
+                        Tape à l’œil                         20                                                           100
+                                              (Très                       (Très          (Très           (Très                           (Très         (Très        (Très
+                       Technologique                     (Ordinaire)                                                 (Très coûteux)
+                                            coûteux)                    coûteux)       coûteux)        coûteux)                        coûteux)      coûteux)     coûteux)
+                         Streetwear
+                        Cadre sup
+                                                                                                                                                       100
+                         Leadership           500           50            500            500            5 000             500            500                         500
+                                                                                                                                                       (Très
+                          Présence         (Onéreux)     (Coûteux)     (Onéreux)      (Onéreux)       (Luxueux)        (Onéreux)      (Onéreux)                   (Onéreux)
+                                                                                                                                                     coûteux)
+                          Autorité
+                          Haute
+                         couture             1 000                       1 000                                                          1 000         1 000
+                                                            500                         5 000           50 000            1 000                                     5 000
+                           Inédit             (Très                       (Très                                                          (Très         (Très
+                                                         (Onéreux)                    (Luxueux)       (Luxueux)      (Très onéreux)                               (Luxueux)
+                       Grand couturier      onéreux)                    onéreux)                                                       onéreux)      onéreux)
+                         Sur-mesure
+
+
+
+ 102
+                                                                                                         PARÉ POUR LE FUTUR
+
+                                                       ▶ Obtenir son attirail et son équipement ◀
+                    Version réservée aux Rats des Rues (profil générique) et aux Edgerunners (rapide et sans filet)
+                De même que les caractéristiques, les compétences, les armes et l’armure, l’attirail et les tenues vestimentaires des Rats des
+                Rues et des Edgerunners sont prédéterminés. Cependant, la section Marché de nuit (page 340) vous offre la possibilité                                            Liste des
+                d’acquérir des équipements supplémentaires au fur et à mesure de votre progression. Consultez la colonne correspondant                                           équipements
+                au rôle de votre personnage dans le tableau ci-dessous pour connaître votre équipement de départ. Parfois, vous aurez                                           Page 99
+
+                le choix entre plusieurs options (par exemple Loupe ou Effaceur pour le Netrunner). Choisissez une seule option parmi                                            Style vestimentaire
+                                                                                                                                                                                Page 102
+                celles proposées.
+                                                                                                                                                                                 Étape suivante :
+                                                                                                                                                                                 Niveau de vie et
+                         Attirail                        Attirail                      Attirail                          Attirail                      Attirail                  Logement
+                       du Rockeur                        du Solo                    du Netrunner                        du Techie                    du Medtech                  Page 105
+
+
+                              Agent                          Agent                          Agent                             Agent                         Agent
+                            Ordinateur            Décontracté : chaussures x2,          Cyberconsole                Respirateur antipollution             Hypodair               Liste des
+                        Guitare électrique         vestes x3, verres miroirs,        (7 emplacements)                   Téléphone jetable                 Menottes               équipements
+                                                                                                                                                                                Page 99
+                     ou détecteur de micros             bas x2, hauts x2         Lunettes de réalité virtuelle          Ruban adhésif x5                Lampe-torche             Style vestimentaire
+                  Peinture phosphorescente x5                                       Programme : Armure                    Lampe-torche              Générique : veste x3        Page 102
+
+                     Amplificateur portable                                          Programme : Sabre                Fusée de détresse x6        Peinture phosphorescente       Étape suivante :
+                                                                                                                                                                                 Niveau de vie
+                        Récepteur radio/                                                Programme :                     Trousse de Techie            Sacoche de Medtech          et Logement
+                       lecteur de musique                                            Loupe ou Effaceur                                                                           Page 105
+                                                                                                                  Générique : bas x8, haut x10    Décontracté : chaussures,
+                             Caméra                                                     Programme :                                                    bas x3, haut x5
+                                                                                                                   Décontracté : chaussures x2
+                        Générique : veste,                                        Sabre ou Hélice d’éclairs
+                       bijoux x3, haut x4                                        Programme : Ver ou Sabre
+                    Urbain flash : bas, haut                                        Générique : haut x10
+                   Décontracté : bijoux, verres                                  Décontracté : chaussures x2,
+                       miroirs, chaussures                                             bijoux, bas x2
+                                                                                     Urbain flash : veste
+
+
+                         Attirail                       Attirail                      Attirail du                        Attirail                      Attirail
+                        du Média                      du Justicier                   Corporatiste                        du Fixer                    du Nomade
+
+                              Agent                          Agent                 Communicateur radio x4                    Agent                           Agent
+                       Enregistreur audio                Lampe-torche               Brouilleur/décrypteur             Détecteur de micros          Respirateur antipollution
+                            Jumelles                      Menottes x2            Cadre sup : chaussures, veste,           Ordinateur                     Ruban adhésif
+                     Téléphone jetable x2            Communicateur radio           bas, verres miroirs, haut,        Téléphone jetable x2                Lampe-torche
+                       ou lance-grappin                                                    bijoux x2
+                                                     Fusée de détresse x10                                          Générique : lentilles de            Lance-grappin
+                         Lampe-torche              Générique : veste, bas x2,                                           contact, bijoux              Matelas autogonflant
+                           Ordinateur                       haut x3                                               Décontracté : verres miroirs        et sac de couchage
+                        Récepteur radio/            Décontracté : chaussures                                        Urbain flash : paire de          Sacoche de Medtech
+                      lecteur de musique          x2, veste x2, bas x2, verres                                    chaussures, veste, bas, haut     Communicateur radio x2
+                     Brouilleur/décrypteur              miroirs, haut x2
+                                                                                                                                                             Corde
+                             Caméra                                                                                                                       Technioutil
+                    Générique : chaussures,                                                                                                      Tente et matériel de bivouac
+                            haut, bas
+                                                                                                                                                       Bohème : bijoux
+                       Décontracté : veste
+                                                                                                                                                    Âme nomade : haut x4,
+                  Urbain flash : verres miroirs                                                                                                     bas x2, chaussures x2,
+                                                                                                                                                      veste, couvre-chef
+
+
+
+                                                                                                                                                                                103
+  PARÉ POUR LE FUTUR
+
+                        ▶ Obtenir son matériel : armes, armure, équipement, attirail et cyberimplants ◀
+                                                                pour les Formules complètes (création par points)
+                    Les personnages créés avec la Formule complète ont beaucoup plus de latitude pour choisir leurs armes, leur armure et leur
+                    équipement, comme c’était déjà le cas avec les caractéristiques et les compétences. À la différence des Edgerunners et des
+                    Rats des Rues, vous disposez de 2 550 eurodollars (ED ou EDdies) pour acheter les armes, les armures,
+Étape suivante :    l’équipement et les cyberimplants de votre choix. Consultez les tableaux puis faites votre liste des
+ Niveau de vie et
+       Logement     courses. Gardez à l’esprit que dans la prochaine section consacrée à la création de personnage, vous pourrez acheter
+  Page 105          vos implants cybernétiques, alors gardez un peu d’argent pour ces achats importants. Vous trouverez une liste complète
+                    des armes, des armures, des équipements et du matériel cybernétique auquel vous avez accès dans la section Marché de
+                    nuit, page 340, si vous avez les EDdies pour vous les offrir. Vous conservez l’argent qui n’est pas dépensé à cette étape.
+                                                                           Sommaire des différentes catégories :
+                    Armes.................................................................... Page 91     Vêtements......................................................... Page 102
+                    Armure. ................................................................ Page 96      Cyberimplants.................................................. Page 110
+                    Attirail................................................................... Page 99   Liste exhaustive............................................. Page 340
+
+                    Astuce : consultez toutes les sections consacrées aux armes, aux armures, aux cyberimplants et à l’équipement avant
+                     de dépenser tout votre budget. Rédigez une liste des courses avant de claquer vos eurodollars durement gagnés, puis
+                     faites vos achats. Vous pouvez bien sûr garder la somme de votre budget de départ que vous n’utilisez pas.
+                                                  Exemple : Gaëtan a noté ce qu’il voulait s’offrir avec ses 2 550 ED.
+
+                                                            Objet                                                                           Prix
+
+                                     Câblage neural (cyberimplant)                                                                           500
+                          Mégadrénaline Sandevistan (cyberimplant)                                                                           500
+                                                     Fusil d’assaut                                                                          500
+                                           Pistolet-mitrailleur lourd                                                                        100
+                                             Arme de mêlée lourde                                                                            100
+                                    Tenue pare-balles légère (corps)                                                                         100
+                                     Tenue pare-balles légère (tête)                                                                         100
+                             100 munitions standard de pistolet lourd                                                                        100
+                                     100 munitions standard de fusil                                                                         100
+                                            Grenade étourdissante                                                                            100
+                                             2 grenades fumigènes                                                                            100
+                                                         Jumelles                                                                             50
+                                                 Téléphone jetable                                                                            50
+                                        Tente et matériel de bivouac                                                                          50
+                                                      Fourre-tout                                                                             20
+                                                    Lampe-torche                                                                              20
+                             Matelas autogonflant et sac de couchage                                                                          20
+                                                     Pack hygiène                                                                             20
+                                                     Corde (60 m)                                                                             20
+
+
+                                                                                      Dépense totale : 2 550 ED
+
+
+
+ 104
+                                                                                    PARÉ POUR LE FUTUR
+
+                                           ▶ Vêtements offerts pour la Formule complète ◀
+                En plus des armes, de l’armure, de l’équipement et des cyberimplants, les personnages créés avec la Formule complète
+                reçoivent 800 ED supplémentaires qu’ils peuvent dépenser uniquement en vêtements et en cyberfashion. Les
+                crédits que vous ne dépensez pas sont perdus.
+                                       Exemple : pour coller à son personnage de Solo errant,
+                              Gaëtan décide de lui attribuer des vêtements qui rappellent la mode nomade.
+
+                                                         Objet                                                         Prix
+
+                                       Bas âme nomade (jean renforcé élimé)                                             100
+                          Haut âme nomade (pull en coton épais avec renforts de coude)                                  20
+                               Veste âme nomade (avec une abondance de franges)                                         100
+                                        Chaussures âme nomade (santiags)                                                100
+                                     Verres miroirs (modèle classique aviateur)                                         50
+                                 Maillage électromagnétique (cyberfashion)                                               10
+
+
+                                                               Total dépensé : 380 ED
+                                                       Montant restant (et perdu) : 420 ED
+
+                Niveau de vie et Logement
+                Quand vous créez un personnage autre qu’un Corpo, celui-ci loge dans un conteneur situé dans une des banlieues
+                bondées de la ville ou dans une zone de combat, et possède un Niveau de vie pas si luxueux à base de croquettes.
+                Reportez-vous page 377 pour avoir plus d’informations sur ce qu’implique votre train de vie. Pour le premier mois, le loyer
+                et les croquettes sont gratuits, choomba, mais vous devrez 1 100 ED au proprio le premier du mois, sinon vous êtes bon         Niveau de vie
+                                                                                                                                               et Logement
+                pour vous faire éjecter le lendemain.                                                                                         Page 105
+                  Au contraire, un Corpo loge gratuitement dans un conapt corporatiste d’une zone corporatiste et mène une existence           Étape suivante :
+                confortable à base de prépacks de qualité. Reportez-vous page 377 pour avoir plus d’informations sur ce qu’implique            Cyberimplants
+                                                                                                                                               Page 117
+                votre train de vie. Vous n’avez pas de loyer à payer, parce que vous valez mieux que les autres, mais pour maintenir votre
+                Niveau de vie, vous allez devoir débourser 600 ED le premier de chaque mois.
+                  Grâce à leur compétence de rôle Moto, les Nomades disposent d’options de Logement supplémentaires. Voyez page 165            Niveau de vie
+                pour plus de détails.                                                                                                          et Logement
+                                                                                                                                              Page 105
+                                                                                                                                               Étape suivante :
+                Exemple : en tant que Solo, le personnage de Gaëtan commence la partie en vivant dans un conte-                                Cyberimplants
+                   neur et bénéficie d’un Niveau de vie à base de croquettes. Pendant un mois, ces deux éléments                               Page 117
+
+                  sont gratuits. Après quoi, il devra régler son loyer pour ne pas se faire jeter dehors (ou déména-
+                  ger dans un endroit pire ou meilleur, selon ses finances) et le montant de son Niveau de vie pour
+                                                        ne pas mourir de faim.                                                                 Niveau de vie
+                                                                                                                                               et Logement
+
+
+
+                É
+                                                                                                                                              Page 105
+                    tape suivante : vos cyberimplants                                                                                          Étape suivante :
+                                                                                                                                               C’est terminé,
+                                                                                                                                                choomba !
+                                                   Le moment est venu de se pucer, choomba.
+                Pour conclure le processus de création de votre personnage, il est temps de lui acheter des cyberimplants. La cybernétique
+                a envahi l’Ère du Rouge, et les habitants y recourent chacun à leur manière. Avant de choisir entre la peste et le choléra,
+                allons voir le charcudoc pour choisir ce qui vous intéresse.
+
+
+
+
+                                                                                                                                              105
+                Vous donnez beaucoup
+                   aux autres, alors
+                  laissez Kibble vous
+                dispenser ses bienfaits.
+
+                 Une recette conçue
+                   scientifiquement
+                    pour rendre les
+                  fibres moléculaires
+                 de vos muscles plus
+                   puissantes, plus
+                rapides et plus saines
+                  avec ses 12 acides
+                  aminés créotiques.
+
+                   Disponible goût
+                      KIWI
+                                                        Goûtez à l’exotisme
+                                           Avertissement
+                                           * Une dose maximum par jour. Si vous ressentez des nausées
+                                           ou des troubles digestifs, consultez votre médecin.
+
+
+
+
+

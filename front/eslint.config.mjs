@@ -1,5 +1,5 @@
 // Les conventions de CLAUDE.md, vérifiées. Les écarts déjà là sont notés dans eslint-suppressions.json (phase 2 de
-// doc/plans/2026-10-31-revue-de-code.md) : ils passent, un nouvel écart bloque, et un écart corrigé se retire avec `npm run lint:prune`.
+// doc/bol/plans/2026-10-31-revue-de-code.md) : ils passent, un nouvel écart bloque, et un écart corrigé se retire avec `npm run lint:prune`.
 import eslint from '@eslint/js';
 import angular from 'angular-eslint';
 import {defineConfig} from 'eslint/config';

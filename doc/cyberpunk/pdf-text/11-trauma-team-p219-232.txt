@@ -1,0 +1,842 @@
+           PAR ADRIAN MARC
+
+
+
+
+                                                      trauma team
+                                               Parce que vous allez vous
+                                              faire tirer dessus. Souvent.
+
+                À l’Ère du Rouge, vous allez vous prendre des balles, beaucoup de balles.
+                Cette section explique comment guérir après la fusillade. Le terme
+                « Trauma Team » désigne une escouade d’ambulanciers spécialisés qui
+                récupère les clients qui ont été blessés ou incapacités d’une autre manière.
+
+
+                                                                                          219
+  TRAUMA TEAM
+
+                                         Seuils de blessure
+                                         Au fur et à mesure que vous encaissez des dégâts, vous passez des seuils de blessure qui auront
+        Que faire quand un               un impact sur vos performances. Lorsque vous atteignez un nouveau seuil de blessure, il remplace
+                                         les effets du seuil de blessure précédent.
+         personnage meurt
+                                                                Votre seuil de blessure est déterminé par
+       Que peut faire le MJ quand                              le nombre de points de santé qu’il vous reste.
+       l’un des PJ repart d’un
+       combat les pieds devant ?              Type de                                                                                     SD de
+       Voici quelques manières de                                    Seuil                                Effet
+                                              blessure                                                                                 stabilisation
+       gérer la chose :
+                                              Blessure        Moins que le maximum
+       Préparez-vous au
+       pire : dès le début de la               légère          de PS Aucun SD 10
+       campagne, demandez à                                     Moins de la moitié
+       vos joueurs de commencer à             Blessure
+                                                                      des PS                      –2 sur toutes les actions                   SD 13
+       développer un personnage                grave
+                                                              (arrondie au supérieur)
+       de rechange pour reprendre
+       le flambeau si l’original                                                                    –4 sur toutes les actions
+       devait tomber. Le deuxième                                                                  –6 au MOUV (1 minimum)
+       personnage peut être un                                                           Doit faire un jet de sauvegarde contre la
+       membre de sa famille, un
+                                                                                             mort au début de chacun de ses tours.    SD 15 pour rendre 1 PS
+       ami proche ou même un
+       ancien partenaire. C’est               Blessure                                      Un personnage ayant subi une blessure      et le personnage est
+                                                                  Moins de 1 PS
+       toujours mieux si le deuxième          mortelle                                   mortelle subit une blessure critique chaque inconscient (évanoui
+       personnage connaissait le                                                            fois qu’il subit des dégâts à cause d’une   pendant 1 minute)
+       PJ décédé et peut s’intégrer                                                     attaque de mêlée ou d’une attaque à distance.
+       au groupe sans trop de                                                            De plus, sa pénalité au jet de sauvegarde
+       problèmes.
+                                                                                                 contre la mort augmente de 1.
+       Attendez-vous
+       à la fin : préparez                                     Un jet de sauvegarde                                                   Impossible à ramener
+                                                Mort                                                        Mort
+       psychologiquement vos                                    contre la mort raté                                                         à la vie
+       joueurs à s’attendre à la
+       mort de leurs personnages
+       (l’option « un samouraï           Blessures critiques
+       ne craint pas la mort »).
+       Sous toutes ses versions,
+       Cyberpunk a la réputation
+       d’être un jeu de rôle très             Chaque fois que vous lancez les dés pour déterminer les dégâts
+       létal (des BD parodiques ont
+                                              d’une attaque de mêlée ou d’une attaque à distance et que vous
+       même été dessinées à ce
+       sujet). Donc, dès le départ,              obtenez deux 6 ou plus, vous infligez une blessure critique !
+       faites en sorte que les joueurs
+       s’attendent à une mort
+       soudaine et brutale. Vendez-        Lancez 2d6 dans le tableau des blessures critiques approprié jusqu’à ce que
+       leur l’idée que quand leurs       vous obteniez une blessure critique dont la cible ne souffre pas déjà. Si vous n’avez
+       personnages tomberont, ils
+                                         pas visé pour toucher la tête, faites le jet dans le tableau des blessures critiques pour le corps.
+       tomberont en héros dans
+       une explosion de gloire ;           Toutes les blessures critiques causent un horrible effet de blessure et infligent
+       et quand cela se produira,        5 points de dégâts bonus directement sur les points de santé de la cible lorsqu’elles sont
+       faites ce que vous pouvez         subies. Les dégâts bonus ne perforent pas l’armure et ne sont pas modifiés par la localisation
+       pour que cette mort soit une
+                                         du coup.
+       scène dont tout le monde
+       à la table se souviendra et         Attention, les blessures critiques et leurs dégâts bonus sont appliqués même lorsque les dégâts
+       parlera pendant longtemps.        de l’attaque n’ont pas traversé le PA de la cible.
+
+
+
+
+ 220
+                                                                                                                                TRAUMA TEAM
+
+                ▶ Blessures critiques pour le corps
+                 Jet                                                                                                      Soins
+                         Blessure                                   Effet de blessure                                                        Traitement
+                (2d6)                                                                                                   d’urgence
+                                               Le bras arraché est perdu. Vous lâchez immédiatement tous les objets
+                  2      Bras arraché      que vous teniez dans la main de ce bras. La pénalité au jet de sauvegarde           –              Chirurgie SD 17
+                                                            contre la mort de base augmente de 1.
+                                             La main arrachée est perdue. Vous lâchez immédiatement tous les objets
+                  3      Main arrachée        que vous teniez dans cette main. La pénalité au jet de sauvegarde                –              Chirurgie SD 17
+                                                          contre la mort de base augmente de 1.
+                                                 –2 au MOUV (1 minimum). La pénalité au jet de sauvegarde                 Assistance
+                  4     Poumon affaissé                                                                                                       Chirurgie SD 15
+                                                         contre la mort de base augmente de 1.                          médicale SD 15
+                                                      À la fin de chaque tour lors duquel vous vous déplacez
+                                                                                                                          Assistance       Assistance médicale SD
+                  5      Côtes cassées          de plus de 4 m à pied, vous subissez de nouveau les dégâts bonus
+                                                                                                                        médicale SD 13     15 ou Chirurgie SD 13
+                                                  de cette blessure critique directement sur vos points de santé.
+                                             Vous ne pouvez pas utiliser votre bras cassé. Vous lâchez immédiatement      Assistance       Assistance médicale SD
+                  6       Bras cassé
+                                                     tous les objets que vous teniez dans la main de ce bras.           médicale SD 13     15 ou Chirurgie SD 13
+                                                                                                                                            Les soins d’urgence
+                                                     À la fin de chaque tour durant lequel vous vous déplacez           Premiers secours
+                        Plaie avec corps                                                                                                   suppriment l’effet de
+                  7                             de plus de 4 m à pied, vous subissez de nouveau les dégâts bonus          ou Assistance
+                            étranger                                                                                                       blessure de manière
+                                                  de cette blessure critique directement sur vos points de santé.       médicale SD 13
+                                                                                                                                                permanente
+                                                                                                                          Assistance       Assistance médicale SD
+                  8      Jambe cassée                               –4 au MOUV (1 minimum)
+                                                                                                                        médicale SD 13     15 ou Chirurgie SD 13
+                                                                                                                                            Les soins d’urgence
+                                                                                                                        Premiers secours
+                                                                                                                                           suppriment l’effet de
+                  9     Muscle déchiré                              –2 aux attaques de mêlée                              ou Assistance
+                                                                                                                                           blessure de manière
+                                                                                                                        médicale SD 13
+                                                                                                                                                permanente
+                                                  À votre prochain tour, vous ne pouvez pas effectuer d’action,
+                           Vertèbre                                                                                       Assistance
+                 10                            mais vous pouvez effectuer une action de mouvement. La pénalité                                Chirurgie SD 15
+                         endommagée                                                                                     médicale SD 15
+                                               au jet de sauvegarde contre la mort de base augmente de 1.
+                                                                                                                          Assistance
+                 11      Doigts écrasés                    –4 à toutes les actions impliquant cette main                                      Chirurgie SD 15
+                                                                                                                        médicale SD 13
+                                                    La jambe arrachée est perdue. –6 au MOUV (1 minimum).
+                 12     Jambe arrachée            Vous ne pouvez pas esquiver les attaques. La pénalité au jet                 –              Chirurgie SD 17
+                                                   de sauvegarde contre la mort de base augmente de 1.
+
+
+                ▶ Blessures critiques pour la tête
+                 Jet                                                                                                      Soins
+                         Blessure                                   Effet de blessure                                                        Traitement
+                (2d6)                                                                                                   d’urgence
+                                                         L’œil crevé est perdu. –4 aux attaques à distance
+                  2        Œil crevé              et aux jets de Perception impliquant la vue. La pénalité au jet              –              Chirurgie SD 17
+                                                    de sauvegarde contre la mort de base augmente de 1.
+                                                   –2 à toutes les actions. La pénalité au jet de sauvegarde
+                  3     Lésion cérébrale                                                                                       –              Chirurgie SD 17
+                                                           contre la mort de base augmente de 1.
+                                                                                                                          Assistance
+                  4     Œil endommagé         –2 aux attaques à distance et aux jets de Perception impliquant la vue.                         Chirurgie SD 13
+                                                                                                                        médicale SD 15
+
+
+                                                                                                                                                                    221
+  TRAUMA TEAM
+
+                  Jet                                                                                                               Soins
+                            Blessure                                    Effet de blessure                                                              Traitement
+                 (2d6)                                                                                                            d’urgence
+                                                                                                                                                      Les soins d’urgence
+                                                                                                                                  Premiers secours
+                             Commotion                                                                                                               suppriment l’effet de
+                    5                                                     –2 à toutes les actions                                   ou Assistance
+                              cérébrale                                                                                                              blessure de manière
+                                                                                                                                  médicale SD 13
+                                                                                                                                                          permanente
+                                                                                                                                    Assistance       Assistance médicale ou
+                    6      Mâchoire cassée                     –4 à toutes les actions impliquant de parler
+                                                                                                                                  médicale SD 13         Chirurgie SD 13
+                                                                                                                                                      Les soins d’urgence
+                                              À la fin de chaque tour durant lequel vous vous déplacez de plus de 4 m à pied, Premiers secours
+                           Plaie avec corps                                                                                                          suppriment l’effet de
+                    7                         vous subissez de nouveau les dégâts bonus de cette blessure critique directement ou Assistance
+                               étranger                                                                                                              blessure de manière
+                                                                          sur vos points de santé.                             médicale SD 13
+                                                                                                                                                          permanente
+                                               La pénalité au jet de sauvegarde contre la mort de base augmente de                  Assistance       Assistance médicale ou
+                    8       Coup du lapin
+                                                                                1.                                                médicale SD 13         Chirurgie SD 13
+                                              Les attaques visant votre tête multiplient les dégâts qui traversent votre PA par
+                                                                                                                                    Assistance       Assistance médicale ou
+                    9     Fracture du crâne   3 et non par 2. La pénalité au jet de sauvegarde contre la mort de base
+                                                                                                                                  médicale SD 15         Chirurgie SD 15
+                                                                             augmente de 1.
+                                              Chaque fois que vous vous déplacez de plus de 4 m à pied lors d’un tour, vous
+                               Oreille                                                                                              Assistance
+                   10                          ne pouvez pas effectuer d’action de mouvement lors de votre tour suivant. De                             Chirurgie SD 13
+                            endommagée                                                                                            médicale SD 13
+                                               plus, vous subissez un malus de –2 aux jets de Perception impliquant l’ouïe.
+                                                Vous ne pouvez pas parler. La pénalité au jet de sauvegarde contre la
+                   11      Trachée écrasée                                                                                               –              Chirurgie SD 15
+                                                                   mort de base augmente de 1.
+                                                L’oreille arrachée est perdue. Chaque fois que vous vous déplacez de plus de
+                                              4 m à pied lors d’un tour, vous ne pouvez pas effectuer d’action de mouvement
+                   12      Oreille arrachée    lors de votre tour suivant. De plus, vous subissez un malus de –4 aux jets de             –              Chirurgie SD 17
+                                                Perception impliquant l’ouïe. La pénalité au jet de sauvegarde contre la
+                                                                       mort de base augmente de 1.
+
+
+                               ▶ Blessure mortelle ◀                                             d’augmenter jusqu’à ce qu’une stabilisation réussie vous
+                                                                                                 rende 1 PS. À ce moment-là, elle redevient la pénalité au
+                Un personnage souffrant d’une blessure mortelle subit une
+                                                                                                 jet de sauvegarde contre la mort de base qui peut être
+                blessure critique chaque fois qu’une attaque lui inflige des
+                                                                                                 augmentée par les pires blessures critiques.
+                dégâts. De plus, sa pénalité au jet de sauvegarde contre
+                la mort augmente de 1.
+
+                Jets de sauvegarde contre la mort                                                               Si vous ratez ne serait-ce
+                                                                                                             qu’un jet de sauvegarde contre
+                Au début de chacun de vos tours, lorsque vous
+                souffrez d’une blessure mortelle, vous devez                                                      la mort, vous mourez.
+                faire un jet de sauvegarde contre la mort. Lancez                                             Et il est impossible de redonner
+                un d10. Si le résultat est inférieur à votre COR, vous survi-
+                                                                                                                        la vie à un mort.
+                vez et vous pouvez jouer votre tour normalement. Si vous
+                obtenez un 10, vous ratez automatiquement
+
+
+                                                                                                S
+                votre jet de sauvegarde contre la mort. Chaque
+                fois que vous faites un jet de sauvegarde contre la mort,
+                                                                                                        tabilisation et guérison
+                votre pénalité au jet de sauvegarde contre la mort aug-
+                mente, ce qui signifie que le résultat de tous vos futurs jets                   À supposer que vous ne finissiez pas mort, vous aurez
+                de sauvegarde contre la mort augmente de +1, il devient                          besoin de vous remettre sur pied pour regagner la Rue et
+                donc de plus en plus difficile de repousser la mort. Cette                       reprendre vos activités. Pour commencer à guérir naturel-
+                pénalité au jet de sauvegarde contre la mort continue                            lement, il faut d’abord qu’on vous stabilise.
+
+
+ 222
+                                                                                                                 TRAUMA TEAM
+
+                        Le SD pour stabiliser une cible                           ▶ Chirurgie
+                        (ou pour vous stabiliser vous-                             • Peut être utilisée pour traiter les blessures critiques,
+                      même) dépend du seuil de blessure                               même les plus létales.
+                          auquel se trouve la cible.                               • Disponible uniquement pour les Medtechs par leur
+                                                                                      capacité de rôle, Médecine.
+                       Blessure légère : SD 10                                    ▶ Cybertech
+                       Blessure grave : SD 13                                      • Ne peut pas être utilisée pour stabiliser des seuils de
+                                                                                      blessure.
+                      Blessure mortelle : SD 15
+                                                                                   • Peut être utilisée pour prodiguer des soins d’urgence
+                                                                                      et des traitements sur des blessures critiques infligées
+                    Stabiliser quelqu’un prend une action
+                                                                                      à des cyberimplants qui remplacent des organes
+                     et nécessite un jet : TECH + Premiers                            biologiques, par exemple des cybermembres ou des
+                   soins ou Assistance médicale + 1d10                                cyberyeux.
+
+                                                                                  ▶ Premiers secours
+                                                                                   • Peut être utilisée pour stabiliser des seuils de blessure
+                Et après la stabilisation ?                                           et pour prodiguer des soins d’urgence, mais seule-
+                Une fois la stabilisation réussie, la cible récupère autant           ment sur les blessures critiques les plus courantes.
+                de PS que son COR par jour tant qu’elle passe la majeure           • Disponible pour tous les personnages et peu gour-
+                partie de son temps à se reposer et se cantonne à des                 mande en points, car un personnage a toujours 2
+                activités calmes, jusqu’à ce qu’elle ait recouvré tous ses PS.        points minimum dans cette compétence à la création.
+                Si le patient fait trop d’efforts, il ne regagne pas de PS ce
+                jour-là, ses blessures se rouvrent et il doit de nouveau être     Traiter une blessure critique
+                stabilisé pour recommencer à guérir naturellement.
+                                                                                  Il existe deux manières de guérir une blessure critique : des
+                                                                                  soins d’urgence et un traitement. Selon la sévérité
+                … À moins qu’il n’ait subi                                        de la blessure critique, l’un ou l’autre peut ne pas être dis-
+                une blessure mortelle
+                                                                                  ponible ou peut nécessiter des compétences différentes.
+                Un personnage affligé d’une blessure mortelle et qui est la       Les pires blessures critiques nécessitent la compétence
+                cible d’une stabilisation réussie regagne immédiatement           Chirurgie, disponible exclusivement pour les Medtechs
+                1 point de santé et se voit désormais considéré comme             par leur capacité de rôle.
+                inconscient. L’adrénaline est retombée. Quand vous êtes
+                inconscient, vous ne percevez plus du tout le monde. Cet                Des soins d’urgence suppriment
+                état dure toujours 1 minute. Vous faites tout de même des                  l’effet de blessure pour le
+                jets de sauvegarde contre la mort si quelqu’un vous poi-
+                gnarde et vous inflige une blessure mortelle pendant ce                        reste de la journée.
+                temps (ce qui arrive plus souvent que vous ne le croyez).
+                                                                                       Chaque tentative prend 1 minute.
+                Compétences nécessaires                                                 Vous pouvez vous prodiguer des
+                Il existe quatre compétences de guérison dans                            soins d’urgence à vous-même.
+                Cyberpunk RED : Cybertech, Premiers secours,
+                Assistance médicale (x2) et Chirurgie.                                Un traitement supprime l’effet de
+                                                                                      blessure de manière permanente.
+                ▶ Assistance médicale
+                 • Peut être utilisée pour stabiliser des seuils de blessure          Chaque tentative prend 4 heures.
+                    et pour prodiguer des soins d’urgence ou un traitement
+                                                                                      Vous ne pouvez pas vous prodiguer
+                    sur une blessure critique (à l’exception des plus létales).
+                                                                                         un traitement à vous-même.
+                 • D isponible pour tous les personnages, mais très
+                    gourmande en points, car c’est une compétence au
+                    prix (x2).
+
+                                                                                                                                                   223
+  TRAUMA TEAM
+
+                     Blessures critiques et Cybertech
+         Pour plus   Si vous subissez une blessure critique sur une partie de votre corps qui a été remplacée par un cyberimplant (cyberbras,
+   d’informations    cyberjambe, cyberœil, cyberaudio etc.), vous subissez tout de même l’effet de la blessure critique et ses dégâts bonus.
+    concernant la
+       corporation
+                     Cependant, vous pouvez utiliser la compétence Cybertech, et non les compétences Premiers secours, Assistance médicale
+    Trauma Team,     ou Chirurgie, pour prodiguer des soins d’urgence ou un traitement. Vous faites le jet avec le SD indiqué et la tentative
+reportez-vous à la   prend la même durée.
+  page 279
+
+
+
+
+                     T   rauma Team : Silver ou Gold ?
+
+                     Quand la demande pour ses services a augmenté, Trauma Team a modifié son modèle de financement pour s’adapter à
+                     l’époque et propose désormais deux niveaux de service à ses clients : Silver (500 ED/mois) et Gold (1 000 ED/mois).
+                        Les membres Silver doivent payer les traitements qui nécessitent de la chirurgie, au même prix que celui d’un hôpital.
+                     Si le membre ne veut pas payer pour ces traitements, la Trauma Team fait tout son possible pour lui en utilisant la compé-
+                     tence Assistance médicale avant de le conduire à l’hôpital le plus proche.
+                       La couverture Gold inclut les traitements nécessitant de la chirurgie sans frais supplémentaires.
+                        Les deux couvertures sont transférables sur une base d’un pour un, ce qui veut dire que vous pouvez utiliser votre cou-
+                     verture pour aider l’un de vos amis qui n’en a pas, mais pas pour deux amis en même temps ou si vous avez déjà fait appel
+                     à votre couverture pour vous-même. Enregistrer votre carte Trauma Team sur un Agent connecté à un biomoniteur permet
+                     à votre Agent d’appeler la Trauma Team à votre place pendant une fusillade sans que vous ayez besoin de dépenser une
+                     action pour ce faire quand vos PS tombent en dessous de votre COR ou chaque fois que vous subissez
+                     une blessure critique qui vous arrache une partie du corps. Si vous enregistrez votre carte Trauma Team sur
+                     l’Agent d’un ami, son Agent pourra appeler pour ses blessures de la même manière que ci-dessus, mais en utilisant votre
+                     couverture. Sinon, appeler la Trauma Team prend une action et vous pouvez le faire chaque fois que vous êtes blessé.
+
+
+
+
+                                                                                                                                          PAR MAKSYM HARAHULIN
+
+
+
+
+  224
+                                                                                                                            TRAUMA TEAM
+
+                  Cela dit, si vous tapez sur les nerfs de l’Équipe en la dérangeant pour des blessures très mineures,
+                elle pourrait « oublier » de répondre à votre prochain appel.
+                   Quand vous appelez la Trauma Team, lancez un d6. Le résultat obtenu est le nombre de rounds que la Trauma Team
+                met à arriver. Quand elle arrive, elle se place tout en haut de la file d’Initiative. La Trauma Team est traitée de la même
+                manière que les renforts du Justicier, ce qui veut dire qu’en plus du PA, des PS et des niveaux de MOUV et de COR, ses
+                membres possèdent une valeur de combat qui est utilisée à la fois pour l’attaque et pour la défense. Ce nombre est
+                la somme de leur CARAC et de leur compétence. Vous ajoutez le résultat du jet d’un d10 à cette valeur chaque fois qu’ils
+                attaquent avec les armes ou l’équipement qu’ils portent ou qu’ils se défendent. Les membres de la Trauma Team
+                ne peuvent pas esquiver les balles.
+                  Une Trauma Team est composée de 5 membres : 1 docteur, 1 infirmier, 1 pilote et 2 agents de sécurité. Ils arrivent
+                par les airs dans un AV-4 équipé d’un support d’arme lourde pour véhicule sur lequel est fixé un Helix de Tsunami Arms
+                (cf. page 348). L’AV-4 est aussi rempli de matériel médical, dont 4 cryocuves et une table d’opération à la pointe de la
+                technologie.
+                  La Trauma Team met un point d’honneur à arriver dans son AV-4 aussi près que possible du combat et à mettre tous les
+                patients en sécurité dans des sacs à cryopompe durant le tour de son arrivée dans le combat si possible, après quoi elle
+                repart sous un tir de couverture dès que tous les patients couverts sont en sécurité dans l’AV-4.
+
+                                                                                                                Valeur de             MOUV
+                  Membre de la Trauma Team                                                                                  PA   PS
+                                                                                                                 combat               et COR
+                  Médecin de la Trauma Team
+                  Un Medtech en tenue pare-balles légère qui manie une cryopompe et un pistolet lourd.
+                  Il porte sur lui 2 hypodairs contenant chacune 1 dose de rapidétox.                              10       11   20     4
+                  De plus, il peut utiliser sa valeur de combat pour les compétences suivantes : Pilotage de
+                  véhicule aérien, Premiers secours, Assistance médicale et Techniques médicales.
+                  Infirmier de la Trauma Team
+                  Un Medtech en kevlar® qui manie une cryopompe et un bouclier balistique.
+                                                                                                                   10       7    25     6
+                  De plus, il peut utiliser sa valeur de combat pour les compétences suivantes :
+                  Pilotage de véhicule aérien, Premiers secours, Assistance médicale et Techniques médicales.
+                  Pilote de la Trauma Team
+                  Un pilote en kevlar® qui manie un pistolet très lourd.
+                                                                                                                   10       7    25     6
+                  De plus, il peut utiliser sa valeur de combat pour les compétences suivantes :
+                  Aérotech, Premiers secours et Pilotage de véhicule aérien.
+                  Agent de sécurité de la Trauma Team (x2)
+                  Un gros bras dont l’Équipe loue les services en tenue pare-balles lourde                         10       13   30     4
+                  qui manie des fusils d’assaut.
+
+
+
+
+                U     ne visite à l’hôpital
+
+                Les avancées médicales ont transformé beaucoup de séjours à l’hôpital en simples procédures ambulatoires qui ne durent
+                pas plus de 4 heures par traitement requis durant la visite. En conséquence, leurs coûts ont considérablement baissé.
+                Quand vous vous rendez à l’hôpital, vous ne payez que la stabilisation ou le traitement au SD le
+                plus élevé nécessaire pour vous guérir totalement. Tout le reste servant à entamer le processus de guérison
+                naturelle est ajouté sans frais supplémentaires. Vous sortirez probablement de l’hôpital dans la journée pour finir de guérir
+                confortablement chez vous. Si vous préférez guérir à l’hôpital, l'occupation d'un lit vous coûtera 100 ED (Très coûteux) la
+                nuit. Si vous ne pouvez pas payer vos frais médicaux en partant, l’hôpital peut élaborer un échéancier de paiement avec
+                vous selon lequel vous pouvez payer la facture au début du mois suivant. Les gens qui ne paient pas leurs frais médicaux
+                à temps risquent d’être harcelés par des agents de recouvrement, et nous ne souhaitons cela à personne… Voici ce que
+                coûte une visite à l’hôpital :
+
+                                                                                                                                                225
+  TRAUMA TEAM
+
+                                            SD le plus élevé de stabilisation ou de traitement
+                Pièces de                   d’une blessure critique pendant la visite
+                                                                                                                                Prix
+
+            remplacement                    SD 17 ou plus                                                                1 000 (Très onéreux)
+       Quand un personnage perd             SD 15                                                                           500 (Onéreux)
+       une partie de son corps              SD 13                                                                         100 (Très coûteux)
+       à cause d’une blessure
+       critique, par exemple œil            SD 10                                                                            50 (Coûteux)
+       crevé ou bras arraché, il a
+       plusieurs possibilités s’il veut
+       remplacer l’organe perdu.
+          Les traitements standard
+                                          L a banque de corps
+       de la plupart des hôpitaux         L’adoption généralisée des nouvelles avancées de la technologie de clonage de membre inven-
+       impliquent l’utilisation           tées par Biotechnica pendant la Quatrième Guerre corporatiste a fait s’effondrer le marché des
+       soit d’un organe de
+                                          authentiques cadavres humains. Les membres clonés sont devenus si répandus que pour la
+       remplacement cloné à partir
+       des propres tissus du patient      première fois dans l’histoire du trafic d’organes, les gens valaient moins cher
+       et développé de manière            morts que vivants. La banque de corps a dû faire évoluer son modèle commercial pour rester
+       artificiellement rapide            à flot et est devenue le fournisseur de membres clonés des hôpitaux. Dans le cadre de cette
+       jusqu’à sa taille adulte,          reconversion, elle a cessé d’acheter des membres humains qu’ils aient ou non été légitimement
+       soit d’un cyberimplant             acquis. Le prix d’un membre de remplacement est à présent inclus dans le prix d’une visite à
+       médicalisé. Le cyberimplant        l’hôpital. Acheter vos propres membres de remplacement et les conserver en cryogénisation
+       médicalisé remplace la
+       partie du corps perdue par
+                                          « juste au cas où » ne coûte que 50 ED (Coûteux) par membre.
+       un appareil technologique
+       qui n’offre aucun avantage         Cyberimplants « tombés du camion »
+       supplémentaire en dehors de
+       la fonctionnalité normale de       Les cyberimplants pris sur des cadavres peuvent être revendus sur le marché s’ils ont été correc-
+       l’organe. Un cyberimplant          tement extraits. Seul un Medtech peut extraire un cyberimplant (sauf si le cyberimplant s’enlève
+       médicalisé ne possède pas          facilement en dépensant une action, ce qui est par exemple le cas d’une puce ou d’un cyber-
+       d’emplacements d’extension         membre avec une monture à changement rapide) d’un cadavre sans détruire le matériel dans
+       pour des améliorations (par        l’opération (un cyberimplant détruit n’a aucune valeur sur le marché, mais peut toujours être
+       exemple des éventreurs             réparé avec la compétence Cybertech), et le SD d’extraction est le même que le SD d’installation
+       ou un bandeau) et
+                                          du cyberimplant sur un nouveau corps. Ces deux opérations prennent 4 heures chacune et si
+       n’augmente pas les dégâts
+       infligés, contrairement à un       elles échouent, elles détruisent le cyberimplant et gaspillent 2 heures passées à opérer malgré
+       cyberimplant classique. Il ne      tout. Si cela ne vous dérange pas de détruire le cyberimplant au passage, vous pouvez vous
+       déclenche pas non plus de          contenter de sortir votre machette et fourrer ce cyberbras dans votre sac à dos une minute plus
+       perte d’Humanité.                  tard. Mais n’oubliez pas qu’il devra être réparé avant de servir à quoi que ce soit. L’installation
+           Si un patient veut             d’un cyberimplant que vous achetez est incluse dans le prix, mais il existe de nombreuses raisons
+       remplacer une partie               pour lesquelles vous pouvez vouloir vous le faire installer par chirurgie en dehors du système,
+       du corps perdue par un             notamment la confidentialité. Si vous installez un cyberimplant, votre patient subit une perte
+       cyberimplant classique,            d’Humanité normale des suites de votre installation.
+       il doit d’abord payer le
+       traitement pour guérir la             Vous ne pouvez pas pratiquer d’opération chirurgicale d’installation sur
+       blessure critique, puis payer         vous-même, sauf si le cyberimplant est normalement installé en boutique.
+       le prix du cyberimplant. Par
+       exemple, si Nightingale perd                                                                               Prix pour une
+       son bras lors d’un combat                                             SD du jet de Chirurgie
+                                             Installation normale                                                  installation
+       et veut un cyberbras qu’elle                                          (Medtech seulement)
+                                                                                                                    à l’hôpital
+       pourra améliorer plus tard,
+       elle doit payer 1 000 ED                     Boutique                            SD 13                       100 (Très coûteux)
+       pour le traitement et 500 ED
+       pour le bras.                             Centre médical                         SD 15                        500 (Onéreux)
+                                                     Hôpital                            SD 17                      1 000 (Très onéreux)
+
+
+
+
+ 226
+                                                                                                                    TRAUMA TEAM
+
+                Sculpture corporelle
+                Tant que vous êtes à l’hôpital en train de vous faire charcuter pour traiter des blessures par balle, pourquoi ne pas dépenser       La sculpture
+                quelques eurodollars pour transformer totalement votre apparence ? L’art de la sculpture corporelle a plus ou moins connu            corporelle peut
+                une renaissance à l’Ère du Rouge, car le prix modique des tissus clonés développés en cuve l’a rendu financièrement                  être utilisée à des
+                                                                                                                                                     fins cosmétiques,
+                abordable pour des tranches de la population qui ne pouvaient pas se le permettre auparavant. L’accessibilité a entraîné             mais également
+                des innovations dans cette pratique : le cancer de la peau n’est plus un problème et la perte d’Humanité a été supprimée             thérapeutiques :
+                                                                                                                                                     retrait de tissus
+                pour la plupart des opérations de sculpture corporelle, grâce à l’invention de tissus plus proches de la peau biologique.            cicatriciels,
+                Comme le prix des matières premières est maintenant très faible, les fournisseurs de quartier comme Bodyshoppe et Doc’s R            réparation de
+                UsTM ont testé bien plus librement toutes les possibilités de la sculpture corporelle et se sont fait concurrence pour réinventer    dégâts occasionnés
+                                                                                                                                                     par les cancers ou
+                cette « mode » chaque saison. Il n’est plus possible de distinguer un humain ayant subi de la sculpture                              leur traitement,
+                corporelle d’un humain « naturel » simplement de visu. En fait, mieux vaut partir du principe que la                                 affirmation de
+                personne la plus séduisante dans un endroit donné a probablement subi de la sculpture corporelle.                                     genre…
+
+                  La sculpture corporelle exotique (les opérations vraiment fantasques qui donnent des traits très étranges ou inhumains,
+                par exemple des moustaches de chat, un mufle, une crinière, une peau de reptile, de la fourrure, une queue, des sabots,
+                des antennes, des griffes, des ailerons et des pattes) est également devenue moins chère et plus accessible. Mais contrai-
+                rement à la sculpture corporelle « classique », la sculpture corporelle exotique déclenche une perte d’Humanité à cause
+                de ses effets extrêmes, et représente une pratique marginale dans la société, généralement associée aux gangs ayant
+                une « mascotte » animale et à d’autres types de groupe très extrémistes et très fermés. Les « exotiques » (les personnes
+                qui subissent de la sculpture corporelle exotique) se font souvent installer des cyberimplants en plus pour améliorer leurs
+                capacités afin qu’elles correspondent à leur nouvelle forme.
+                  Un Medtech compétent peut effectuer des opérations chirurgicales de sculpture corporelle seul. Une opération prend
+                4 heures et si elle échoue, elle détruit les matériaux requis et gaspille 2 heures passées à opérer malgré tout.                    Les différences
+                                                                                                                                                    entre centre
+                 Vous ne pouvez pas pratiquer d’opérations chirurgicales de sculpture corporelle sur vous-même.                                     médical et hôpital
+                                                                                                                                                    sont expliquées
+                                                                                                                                                     en Page 110
+                     Sculpture                                                                            SD de Chirurgie
+                                          Installation           Prix          Perte d’Humanité
+                     corporelle                                                                           (Medtech uniquement)
+                                                                 500 ED                                   SD 15 : les matériaux coûtent 100 ED
+                     Classique             Centre médical                                 –
+                                                                (Onéreux)                                 (Très coûteux)
+                                                                 1 000 ED                                 SD 17 : les matériaux coûtent 500 ED
+                      Exotique                Hôpital                                    4d6
+                                                              (Très onéreux)                              (Onéreux)
+
+
+
+
+                D    rogues de rue
+
+                Les drogues sont dangereuses et s’en amuser peut sérieusement abîmer votre personnage pour longtemps.
+                   Quand vous prenez des drogues de rue, vous le faites généralement en dépensant une action avec un hypodair pour
+                administrer une seule dose de la drogue désirée à une cible consentante, ou en tentant d’effectuer une seule attaque
+                d’arme de mêlée avec une action pour administrer une seule dose à une cible non consentante si vous touchez au lieu de
+                lui infliger des dégâts.
+                  Quand vous recevez une dose de l’une de ces drogues, vous subissez automatiquement l’effet
+                principal de la drogue. Quand l’effet principal de la drogue se dissipe à la fin de sa durée, faites
+                un jet de VOL + Résistance à la torture/aux drogues + 1d10 pour tenter de dépasser le SD de l’effet
+                secondaire de la drogue, celui-ci est permanent et crée une dépendance jusqu’à ce que vous suiviez
+                une thérapie pour soigner l’addiction. Prendre plusieurs doses d’une drogue multiplie la durée de l’effet principal
+                par le nombre de doses prises.
+
+
+
+
+                                                                                                                                                    227
+  TRAUMA TEAM
+
+                      ▶ Boost                                                           Effet secondaire (SD 17)
+                                                                                        • La perte d’Humanité de l’effet principal n’est pas
+                        Prix d’une dose : 50 ED (Coûteux)
+        L’addiction                                                                         récupérée.
+      ne peut être
+      soignée que
+                        Effet principal                                                 • Si l’utilisateur n’était pas déjà accro à la Dentelle
+   par la thérapie,     • Dure 24 heures                                                  noire, il le devient. Tant qu’il est accro, si l’utilisa-
+  pour vous aider
+    à vous sevrer.      • Pendant toute la durée de l’effet principal, l’INT              teur n’est pas en train de subir l’effet principal de
+   Vous trouverez           de l’utilisateur augmente de 2 points. Cet effet               la Dentelle noire, ses RÉF sont réduits de 2 points.
+        davantage           peut faire passer votre INT au-dessus de 8.
+   d’informations
+     à ce sujet en      Effet secondaire (SD 17)                                      ▶ Smash
+ page 229               • Si l’utilisateur n’était pas déjà accro au boost, il         Prix d’une dose : 10 ED (Ordinaire)
+                            le devient. Tant qu’il est accro, son INT est réduite
+                                                                                        Effet principal
+                            de 2 points.
+                                                                                        • Dure 4 heures
+                      ▶ Dentelle noire                                                  • Jaune, mousseux et vendu partout en cannette.
+                        Prix d’une dose : 50 ED (Coûteux)                               • Pendant toute la durée de l’effet principal, l’utili-
+                                                                                            sateur se sent euphorique, acrobatique, heureux
+                        Effet principal
+                                                                                            et prêt à faire la fête. Selon les mécaniques de
+                        • Dure 24 heures
+                                                                                            jeu, cela lui donne un bonus de +2 dans les
+                         • L’utilisateur subit une perte d’Humanité de 2d6                 compétences suivantes : Danse, Contorsion,
+                            points quand il prend une dose, il récupère cette               Conversation, Psychologie, Persuasion et Jeu
+                            Humanité s’il ne subit pas l’effet secondaire de la             d’acteur.
+                            Dentelle noire.                                             Effet secondaire (SD 15)
+                         • Pendant toute la durée de l’effet principal, l’utilisa-     • Si l’utilisateur n’était pas déjà accro au Smash, il le
+                            teur ignore les effets des blessures graves.                    devient. Tant qu’il est accro, l’utilisateur perd tout
+
+
+
+
+                                                                                                                                              PAR HUNTANG
+
+
+
+
+ 228
+                                                                                                              TRAUMA TEAM
+
+                       intérêt pour des activités habituellement plaisantes        • Quand vous êtes accro au verre bleu, son effet
+                       et subit un malus de –2 dans les compétences                   principal change : au lieu d’« avoir un flash », vous
+                       suivantes : Danse, Contorsion, Conversation,                   n’avez plus de flash tant que vous subissez l’effet
+                       Psychologie, Persuasion et Jeu d’acteur.                       principal du verre bleu. À présent, vous le prenez
+                   • Si vous êtes accro au Smash, le MJ vous dira                    pour contrer l’effet de l’addiction.
+                      parfois que vous avez envie d’une dose et vous
+                      devrez l’interpréter au mieux dans votre roleplay.
+
+                ▶ Synthécoke                                                   L   a thérapie et vous
+
+                                                                               L’Empathie est une CARAC et pour chaque point d’Em-
+                  Prix d’une dose : 20 ED (Ordinaire)                          pathie que vous possédez, vous disposez de 10 points
+                  Effet principal                                              d’Humanité. Par exemple, un personnage qui commence
+                  • Dure 4 heures                                             avec EMP 5 dispose de 50 points d’Humanité. Quand
+                   • Pendant toute la durée de l’effet principal, les RÉF     vous subissez une perte d’Humanité (généralement en
+                      de l’utilisateur augmentent de 1 point. Cet effet        vous faisant installer de la cyber), vous perdez des points
+                      peut faire passer vos RÉF au-dessus de 8. De plus,       d’Humanité. Chaque fois que vous perdez suffisamment
+                      l’utilisateur a tendance à la paranoïa.                  d’Humanité pour que la dizaine de votre niveau change,
+                                                                               par exemple si vous passez de 50 à 46, votre EMP est
+                  • Pendant toute la durée de l’effet principal, le MJ
+                                                                               réduite et devient la dizaine de votre Humanité. Dans notre
+                      vous dira parfois que vous avez une bouffée de
+                                                                               exemple, EMP 5 devient EMP 4.
+                      paranoïa et vous devrez l’interpréter au mieux
+                      dans votre roleplay.                                       C’est là que la thérapie entre en jeu : si vous
+                  Effet secondaire (SD 15)                                     voulez garder tous vos cyberimplants sans pour
+                  • Si l’utilisateur n’était pas déjà accro à la synthé­      autant devenir moins empathique ou si vous
+                      coke, il le devient. Tant qu’il est accro, ses RÉF       voulez vous débarrasser d’une addiction. Elle
+                      sont réduits de 2 points, sauf s’il subit actuellement   coûte cher et s'avère difficile à suivre, mais elle est rapide
+                      l’effet principal de la synthécoke.                      par rapport aux traitements similaires des temps passés.
+                   • Si vous êtes accro à la synthécoke, le MJ vous dira      La plupart des améliorations de l’efficacité des théra-
+                      parfois que vous avez envie d’une dose et vous           pies viennent des médicaments inventés par Biotechnica
+                      devrez l’interpréter au mieux dans votre roleplay.       pendant la Quatrième Guerre corporatiste.
+                                                                                  Un Medtech compétent peut pratiquer des thérapies par
+                ▶ Verre bleu                                                   lui-même, en utilisant la compétence Techniques médicales
+                  Prix d’une dose : 20 ED (Ordinaire)                          que lui donne sa capacité de rôle, Médecine. Chaque
+                                                                               thérapie prend 1 semaine entière, pendant laquelle le
+                  Effet principal
+                                                                               docteur et son patient ne peuvent rien faire d’autre. À la
+                  • Dure 4 heures
+                                                                               fin de la semaine, le docteur fait un jet et tente de dépasser
+                  • Pendant toute la durée de l’effet principal, le MJ        le SD de la thérapie. Si le jet est réussi, le patient gagne
+                      va parfois vous dire que vous « avez des flashs »,       l’effet de la thérapie. Si le jet échoue, la semaine n’a
+                      ce qui veut dire que vous hallucinez de manière          servi à rien et tous les matériaux utilisés sont
+                      brève, mais intense, en voyant des tourbillons           perdus. Les matériaux utilisés pour les thérapies
+                      de couleurs fluos. Vous ne pouvez pas effectuer          sont exclusivement produits par Biotechnica et
+                      d’action lors d’un tour dans cet état.                   doivent être achetés directement à cette corpo-
+                  Effet secondaire (SD 15)                                     ration. Le prix indiqué pour la thérapie part du principe
+                  • Si l’utilisateur n’était pas déjà accro au verre bleu,    que le patient ne passe pas la nuit à l’hôpital pendant
+                      il le devient.                                           le processus. S’il passe la nuit à l’hôpital, il doit payer
+                   • Tant que vous êtes accro, le MJ va parfois vous          100 ED par nuit comme d’habitude.
+                      dire que vous « avez un flash », ce qui veut dire
+                      que vous hallucinez de manière brève, mais             Je vois régulièrement mon
+                      intense. Vous ne pouvez pas effectuer d’action
+                                                                        thérapeute . Okay, je suis tueur à gages,
+                      lors d’un tour dans cet état.
+                                                                          mais ça veut pas dire que je peux pas
+                   • U n accro au verre bleu a généralement un
+                      « flash » par heure, mais cela varie énormément      prendre soin de ma santé mentale .
+                      d’une personne à l’autre.                                                            – Cooper
+
+                                                                                                                                                229
+  TRAUMA TEAM
+
+                                         Un Medtech ne peut pas pratiquer de thérapie sur lui-même.
+
+                                                                                                                                                    SD du
+                                                                                                                                                     jet de
+                  Thérapie          Description                                  Prix         Effet
+                                                                                                                                                  Techniques
+                                                                                                                                                   médicales
+                                                                                              Le patient est libéré d’une de ses addictions.
+                                    1 semaine de psychothérapie intensive                                                                              SD 15
+                                                                                              Cependant, chaque fois que son joueur fait un
+                                    assortie d’une batterie de médicaments        1 000                                                            Les matériaux
+                  Addiction                                                                   jet contre l’effet secondaire de la source de son
+                                    contre l’addiction dans un environnement (Très onéreux)                                                        valent 500 ED
+                                                                                              addiction pendant 1 an après la désintoxication,
+                                    sûr.                                                                                                             (Onéreux)
+                                                                                              le jet échoue automatiquement.
+                                    1 semaine de psychothérapie                               Le patient regagne 2d6 points d’Humanité perdus.
+                                    intensive combinant des thérapies                         Impossible de regagner toute son Humanité
+                                    comportementales de gestion du stress                     sans faire enlever ses cyberimplants. Chaque
+                                                                                                                                                       SD 15
+                  Perte             et de la colère, de l’hypnose et une                      cyberimplant réduit votre Humanité maximum
+                                                                                  500                                                              Les matériaux
+                  d’Humanité        reprogrammation directe, mais mineure                     de 2 points. Chaque cyborgimplant réduit
+                                                                               (Onéreux)                                                           valent 100 ED
+                  standard          du cerveau, avec l’aide de médicaments                    votre Humanité maximum de 4 à la place.
+                                                                                                                                                   (Très coûteux)
+                                    et d’un environnement sûr qui peut                        Un cyberimplant causant 0 point de perte
+                                    être généré par une danse sensorielle                     d’Humanité à l’installation ne réduit pas votre
+                                    thérapeutique.                                            Humanité maximum.
+                                                                                              Le patient regagne 4d6 points d’Humanité perdus.
+                                    1 semaine de psychothérapie intensive,
+                                                                                              Impossible de regagner toute son Humanité
+                                    et des séances qui se concentrent sur
+                                                                                              sans faire enlever ses cyberimplants. Chaque
+                                    une reprogrammation directe et extrême                                                                             SD 17
+                                                                                              cyberimplant réduit votre Humanité maximum
+                 Perte d’Humanité   du cerveau, rendue possible uniquement        1 000                                                            Les matériaux
+                                                                                              de 2 points. Chaque cyborgimplant réduit
+                      extrême       par des médicaments à la pointe de       (Très onéreux)                                                        valent 500 ED
+                                                                                              votre Humanité maximum de 4 à la place.
+                                    l’innovation et par un environnement                                                                             (Onéreux)
+                                                                                              Un cyberimplant causant 0 point de perte
+                                    sûr qui peut être généré par une danse
+                                                                                              d’Humanité à l’installation ne réduit pas votre
+                                    sensorielle thérapeutique.
+                                                                                              Humanité maximum.
+
+
+
+                C    yberpsychose
+
+                Dans le contexte de la cyberpsychose, la perte d’Humanité est définie comme une perte d’empathie envers les autres
+                et une perte équivalente de considération de soi ou d’instinct de conservation. Les sujets possédant une Humanité basse
+                ont du mal à percevoir le caractère « réel » de leur propre personne ou des autres. Au lieu de cela, ils se mettent à se
+                considérer ou à considérer les autres comme des ensembles de pièces détachées, et non des organismes vivants en chair
+                et en os. En résumé, c’est une forme de trouble mental dissociatif.
+                   Selon la Mayo Clinic : La dissociation est un processus mental de déconnexion par rapport à ses propres pensées,
+                sentiments, souvenirs ou identité. Les troubles mentaux dissociatifs nécessitant un traitement professionnel incluent l’amnésie
+                dissociative, la fugue dissociative, le trouble de la dépersonnalisation et le trouble dissociatif de l’identité. Les événements
+                traumatiques qui se produisent à l’âge adulte peuvent aussi déclencher des troubles dissociatifs, notamment la guerre,
+                la torture ou une catastrophe naturelle.
+
+                Trouble de la dépersonnalisation
+                Le trouble de la dépersonnalisation est caractérisé par un sentiment de détachement vis-à-vis de sa propre vie, de ses
+                propres pensées et de ses propres sentiments. Les personnes souffrant de ce type de trouble affirment qu’elles se sentent
+                distantes et émotionnellement détachées par rapport à elles-mêmes, comme si elles regardaient le personnage d’un
+                film ennuyeux. Les autres symptômes typiques incluent les problèmes de concentration et de mémoire. La personne peut
+                déclarer se sentir « dans les nuages » ou hors de contrôle. Le temps peut sembler ralentir. Elle peut percevoir son corps
+                comme ayant une forme ou une taille différente de la normale ; dans les cas sévères, elle n’arrive pas à se reconnaître
+                elle-même dans un miroir.
+
+
+ 230
+                                                                                                                            TRAUMA TEAM
+
+                Rôle des cyberimplants
+                La cyberpsychose ne se déclenche pas simplement parce qu’une personne a subi l’installation
+                d’un cyberimplant. C’est l’enlèvement volontaire d’une partie du corps fonctionnelle pour la
+                remplacer par une machine qui la déclenche. Il n’est généralement pas normal de se trancher
+                                                                                                                                       Les thèmes
+                un membre ou de se faire extraire un organe fonctionnel volontairement. Se faire percer les                             difficiles
+                oreilles implique certes une autoblessure, mais à un niveau à peine perceptible pour la per-
+                                                                                                                                Pour apprendre à connaître
+                sonne concernée, et cela ne nécessite pas l’ablation d’une partie du corps. En revanche, choisir                vos joueurs, il est important
+                volontairement de remplacer un organe fonctionnel simplement pour l’esthétique ou pour une                      d’apprendre à connaître les
+                amélioration fonctionnelle nécessite que le patient soit déjà en mesure de supporter l’idée de                  sujets avec lesquels ils sont à
+                se faire découper le corps volontairement.                                                                      l’aise ou non. Cyberpunk
+                                                                                                                                RED est un univers aux
+                   La cyberpsychose survient quand le sujet commence à modifier son corps de manière compul-                    thématiques pour adultes et
+                sive pour aller au-delà des limites humaines. Comme il considère son corps comme une chose                      aborde souvent des sujets
+                (une forme de trouble dissociatif de la personnalité), il le modifie sans même y réfléchir.                     choquants. Vous risquez de
+                                                                                                                                vite gâcher votre campagne
+                       La raison pour laquelle ce qui précède ne s’applique pas aux gens                                        si vous mettez en scène
+                            qui ont des cyberimplants nécessaires et non volontaires :                                          quelque chose qui met vos
+                  Remplacer une partie du corps endommagée ou perdue par une nouvelle partie obtenue                            joueurs mal à l’aise, en
+                par clonage ou par un cyberimplant médicalisé (ne coûte que 50 ED s’il est acheté                               colère ou qui les déprime,
+                                                                                                                                donc mieux vaut poser les
+                séparément, le coût est inclus dans le prix d’une visite à l’hôpital dans les rares cas où un membre            limites de chacun à l’avance.
+                cloné n’est pas disponible) n’augmente pas la dissociation, parce que le remplacement de la                         Le concept des « lignes
+                partie du corps redonne un sentiment d’« entièreté » à la personne et augmente la conscience                    rouges » et des « voiles » est
+                qu’elle a de son propre corps. Mais si elle remplaçait le membre concerné par un cyberbras avec                 utile en jeu de rôle sur table.
+                des couteaux dans les jointures des doigts, ce choix serait volontaire, car c’est une augmentation              Les lignes rouges sont des
+                excessive, et entraînerait donc une perte d’Humanité.                                                           limites absolues : le joueur
+                                                                                                                                ne veut pas avoir affaire à
+                Traumatisme mental                                                                                              ces thèmes quand il joue. Les
+                                                                                                                                voiles représentent l’idée que
+                Se faire installer des cyberimplants n’est pas la seule chose qui peut causer une perte d’Humanité.             le thème peut faire partie de
+                Une perte d’Humanité a également lieu quand le sujet vit des événements fortement traumatiques,                 l’histoire, mais que le joueur
+                par exemple la torture ou une catastrophe naturelle. Et malheureusement, les Edgerunners sont                   ne veut pas de description
+                                                                                                                                détaillée ; la scène doit être
+                très régulièrement confrontés à ce genre de situation. Ce type de perte d’Humanité est déterminé
+                                                                                                                                un fondu au noir.
+                par le MJ : souvent, il peut déclencher une perte d’Humanité à la suite d’un événement ou
+                d’une situation (par exemple quand vous tombez sur une meute de Scavvers en train de dévorer                       Si en tant que MJ, vous ne
+                                                                                                                                savez pas comment parler
+                un bébé).
+                                                                                                                                à vos joueurs des sujets
+                                                                                                                                qui pourraient les gêner,
+                                                                                                                      Perte     plusieurs outils gratuits et
+                  Type de traumatisme            Exemple de traumatisme
+                                                                                                                   d’Humanité   bien conçus sont disponibles
+                                                                                                                                sur Internet pour vous faciliter
+                  Incident physique                                                                                             la conversation.
+                                                 Torture                                                              1d6
+                  traumatique
+                  Incident mental
+                                                 Assister à une mort, mutilation, etc. particulièrement horrible      1d6
+                  traumatique
+                  Stress mental sur le
+                                                 Enlèvement, emprisonnement, maltraitance sur le long terme           2d6
+                  long terme
+                                                 Ne pas manger à sa faim, être piégé dans une zone de
+                  Facteurs de stress
+                                                 guerre, vivre la destruction à grande échelle causée par un
+                  environnemental sur                                                                                 2d6
+                                                 désastre sur le long terme ou être constamment en danger
+                  le long terme
+                                                 pendant 1 mois
+
+
+
+
+                                                                                                                                                        231
+  TRAUMA TEAM
+
+                Effets de la cyberpsychose                                      • Remplacer facilement des parties de votre corps
+                                                                                   sans bonne raison thérapeutique augmente la dis-
+                La cyberpsychose n’est pas systématiquement violente et            sociation, tout comme les traumatismes externes et
+                tous les « cyberpsychos » ne sont pas violents. Cependant,         psychologiques.
+                chez un certain nombre de malades, en particulier ceux
+                                                                                • Plus la dissociation est importante, plus des symp-
+                qui avaient déjà manifesté des tendances psychopatholo-
+                                                                                   tômes psychopathologiques auront tendance à
+                giques ou sociopathes, ces tendances sont amplifiées au
+                                                                                   émerger en plus de la dissociation.
+                point de devenir dangereuses. C’est en particulier le fait
+                de voir les autres comme des choses à utiliser ou à détruire    • Quand vous êtes en colère, énervé ou simplement en
+                sans réflexion ni empathie qui empire énormément.                  manque de stimulation, vous agressez les autres de
+                                                                                   rage ou juste pour le « plaisir ».
+                Selon la liste d’identification de la psychopathie
+                de Hare, les éléments constitutifs de la psycho-               Règles de la cyberpsychose
+                pathie incluent les suivants :
+                                                                                      Si votre Empathie est la suivante…
+                 • Image de soi grandiose
+                 • Besoin de stimulation                                      ▶ 3 ou plus
+                 • Sournois et manipulateur                                      Pas de cyberpsychose ou de trouble dissociatif.
+                 • Absence de remords ou de culpabilité
+                                                                               ▶2
+                 • Insensibilité et manque d’empathie
+                                                                                  Trouble dissociatif limite. Faites au mieux pour jouer
+                 • Mauvais contrôle de ses comportements
+                                                                                  votre personnage en conséquence.
+                 • Impulsivité
+                 • Refus de toute responsabilité                              ▶1
+                 • Versatilité criminelle                                        Trouble dissociatif, cyberpsychose limite. Le person-
+                                                                                  nage manifeste fortement au moins 3 traits de la liste
+                  Cyberpunk RED part du principe que si vous avez
+                                                                                  d’identification de la psychopathie de Hare. Faites au
+                déjà une EMP basse, vous aurez davantage tendance à
+                                                                                  mieux pour jouer votre personnage en conséquence.
+                manifester ces symptômes, et que le fait de cribler votre
+                corps de cyberimplants non nécessaires peut déclencher         ▶0
+                ce type de réaction.
+                                                                                  Cyberpsychose. Le personnage manifeste fortement
+                     Dissociation + tendances psychopathes
+                                                                                  au moins 5 traits de la liste d’identification de la psy-
+                                    = cyberpsychose
+                                                                                  chopathie de Hare. Faites au mieux pour jouer votre
+                            ou, pour le dire autrement…                           personnage en conséquence.
+                  « Je suis une chose » + « Les autres sont des
+                   choses » = « Pourquoi ne pas tuer tout ce qui
+                                                                               ▶ 0 avec une Humanité négative
+                      me barre la route, tout simplement ? »                      Cyberpsychose extrême. Le MJ prend le contrôle du
+                 Donc, en dehors des mécaniques de jeu, cela donne :              personnage et le joue en suivant ses pires tendances.
+                 • Vous avez déjà une Empathie basse, ce qui signifie            Le joueur ne peut reprendre le contrôle du personnage
+                    que vous avez déjà tendance aux troubles mentaux              que si son niveau d’Humanité redevient positif.
+                    dissociatifs.
+                                                                                 Les cyberpsychos violents qui deviennent un
+                 • Vous souffrez également d’un problème sous-jacent          danger pour la sécurité du public sont traqués
+                    de maladies psychopathologiques/schizophréniques           par une branche de la police appelée la Psycho
+                    (EMP déjà basse au départ).                                Squad ou la RAID-C. Généralement, les cibles
+                                                                               sont tuées, rarement capturées et réhabilitées.
+
+
+
+
+ 232
+

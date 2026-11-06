@@ -1,6 +1,6 @@
 # La Perle du Beshaar — Markdown de préparation
 
-Texte extrait de `doc/pdf/La-Perle-du-Beshaar.pdf` (146 pages, *Chroniques
+Texte extrait de `doc/bol/pdf/La-Perle-du-Beshaar.pdf` (146 pages, *Chroniques
 lémuriennes 4*) via :
 
 ```bash

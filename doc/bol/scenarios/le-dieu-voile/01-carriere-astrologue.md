@@ -2,7 +2,7 @@
 
 *Livre p. 5-11 (PDF p. 7-13). Auteur : Pascal Montagna.*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`), les tables en tableaux. Les renvois « page N » sont ceux du livre ; « BoL » renvoie au livre de règles, « ChL » à* Chroniques lémuriennes *(1).*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`), les tables en tableaux. Les renvois « page N » sont ceux du livre ; « BoL » renvoie au livre de règles, « ChL » à* Chroniques lémuriennes *(1).*
 
 > **Note Diceway.** Carrière absente du catalogue de l’app (décision de Lionel du 2026-10-23 : référence en Markdown seulement). Les PNJ astrologues prennent la carrière la plus proche, avec « astrologue N » en commentaire.
 

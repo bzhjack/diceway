@@ -5,7 +5,7 @@ Kryphondus (livre p. 134-135, PDF p. 136-137). Fiche de session :
 [chapitre-3/01-fiche-de-session.md](chapitre-3/01-fiche-de-session.md). Personnages récurrents :
 [personnages-recurrents.md](personnages-recurrents.md). Données de l’app : [app/ch3.json](app/ch3.json).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent, les notes au MJ en gras, les blocs de stats à leur place
 (démon fuligineux) ou dans les « Protagonistes » de fin de chapitre. Les renvois « page N » sont ceux du livre (Urceb :

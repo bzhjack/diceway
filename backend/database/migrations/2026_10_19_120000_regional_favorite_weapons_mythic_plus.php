@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 /** L'arme favorite régionale (avantage « Arme favorite » proposé par une région) nomme l'arme du livre, devenue une arme à part avec
  * la mise à jour Mythic+ : kriss, khastok, fronde de l'Axos, hache d'abordage de Parsool, arc de guerre de Tyrus, épée valgardienne
- * (origines du livre, doc/pdf-text/01-creation-p12-55.txt ; doc/pdf-text/07-maj-mythic-plus.txt). Elle était rattachée à l'arme de base (dague, arme d'hast…). Les héros
+ * (origines du livre, doc/bol/pdf-text/01-creation-p12-55.txt ; doc/bol/pdf-text/07-maj-mythic-plus.txt). Elle était rattachée à l'arme de base (dague, arme d'hast…). Les héros
  * qui l'ont déjà reçue de leur région suivent ; une précision changée à la main n'est pas touchée. */
 return new class extends Migration
 {

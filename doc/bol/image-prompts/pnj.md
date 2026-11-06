@@ -2,7 +2,7 @@
 
 Prompts pour regénérer (via ChatGPT) les portraits des 15 PNJ du catalogue
 global (`BolPnjSeeder.php`), dans le même style que les bannières des
-bibliothèques (`doc/image-prompts/headers.md`, en particulier `header-pnj.webp`) :
+bibliothèques (`doc/bol/image-prompts/headers.md`, en particulier `header-pnj.webp`) :
 illustration peinte et encrée façon BD fantasy des années 80, ombres
 profondes, dominante vert émeraude sombre / teal contrastée par la lumière
 chaude de torches. Les portraits actuels sont des rendus réalistes qui ne

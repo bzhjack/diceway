@@ -2,7 +2,7 @@
 
 Pages source principales: p. 12-55, avec options raciales jouables p. 90-95
 
-Mise a jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`): avantages `Maitre artisan`, `Prestance`, `Envoutant`, desavantage
+Mise a jour Mythic+ (`doc/bol/pdf-text/07-maj-mythic-plus.txt`): avantages `Maitre artisan`, `Prestance`, `Envoutant`, desavantage
 `Mefiance envers les inconnus`, armes regionales (marquees `Mythic+` ci-dessous).
 
 ## Sequence de creation

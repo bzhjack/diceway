@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Frontend**: Angular 22 app in `/front/`
 - **Backend**: Laravel 13 REST API in `/backend/`
-- Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown); layout of `/doc/` in `doc/README.md`
+- Game documentation: one folder per game under `/doc/` — `/doc/bol/` (Barbarians of Lemuria), `/doc/cyberpunk/` (Cyberpunk RED, being modelled; rulebook text in `doc/cyberpunk/pdf-text/`, PDF page = book page + 4); layout in `doc/README.md`
 
 
 ## Commands
@@ -45,11 +45,11 @@ npm run docker:exec            # Shell into container
 
 ### Scenario import
 
-Scenarios live in each machine's database, not in git: after a pull that brings new JSON files under `doc/scenarios/<saga>/app/`, import them on this machine (the container only mounts `app/`, so copy the file first). Full format and behaviour: `doc/scenarios/format-import.md`.
+Scenarios live in each machine's database, not in git: after a pull that brings new JSON files under `doc/bol/scenarios/<saga>/app/`, import them on this machine (the container only mounts `app/`, so copy the file first). Full format and behaviour: `doc/bol/scenarios/format-import.md`.
 
 ```bash
 # from the repo root
-docker cp doc/scenarios/le-dieu-voile/app/ch1.json diceway:/tmp/ch1.json
+docker cp doc/bol/scenarios/le-dieu-voile/app/ch1.json diceway:/tmp/ch1.json
 docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email> --dry-run   # validate only
 docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>             # import
 ```
@@ -66,12 +66,12 @@ What the screens call things — keep to these words in any visible text:
 
 ## Business rules & reference data
 
-When a task touches game rules, character creation, equipment, careers, languages, traits, or activation:
-1. Check `/doc/resources/` first — authoritative reference data (weapons, armor, careers, languages, advantages, disadvantages, regions, bestiary, demons, NPCs).
-2. Use `/doc/rules/` for additional context or mechanics not covered in `/doc/resources/`.
-3. To verify a rule against the original rulebook, grep `/doc/pdf-text/` — pre-extracted text of the rulebook PDF, one file per chapter (see its README; PDF page = book page + 2). Do not re-run `pdftotext` on the PDF.
+Each game's documentation follows the same layout (`resources/`, `rules/`, `pdf-text/`, `specs/`, `scenarios/`, `image-prompts/`, `plans/`): look in the folder of the game the task is about. For BoL, when a task touches game rules, character creation, equipment, careers, languages, traits, or activation:
+1. Check `/doc/bol/resources/` first — authoritative reference data (weapons, armor, careers, languages, advantages, disadvantages, regions, bestiary, demons, NPCs).
+2. Use `/doc/bol/rules/` for additional context or mechanics not covered in `/doc/bol/resources/`.
+3. To verify a rule against the original rulebook, grep `/doc/bol/pdf-text/` — pre-extracted text of the rulebook PDF, one file per chapter (see its README; PDF page = book page + 2). Do not re-run `pdftotext` on the PDF.
 
-`/doc/rules/` was audited against the rulebook PDF on 2026-06-10: all numeric tables and formulas are accurate.
+`/doc/bol/rules/` was audited against the rulebook PDF on 2026-06-10: all numeric tables and formulas are accurate.
 
 ## Angular conventions (`front/`)
 

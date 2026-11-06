@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Pose d'un coup les portraits générés pour une saga (prompts : `doc/scenarios/<saga>/portraits.md`). Chaque image est
+ * Pose d'un coup les portraits générés pour une saga (prompts : `doc/bol/scenarios/<saga>/portraits.md`). Chaque image est
  * nommée d'après la clé d'import de sa fiche : `<clé>.png` avec `--saga`, ou `<saga>--<clé>.png`. Une fiche qui a déjà un
  * portrait le garde, sauf avec `--force` ; une clé qui renvoie au catalogue n'est jamais touchée (son image vient de
  * `front/src/assets/bol/`).

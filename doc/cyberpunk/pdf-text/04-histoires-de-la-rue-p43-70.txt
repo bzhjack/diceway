@@ -1,0 +1,1527 @@
+           PAR SEBASTIAN SZMYD
+
+
+
+
+                                  Histoires de la Rue
+                                                          Définir son parcours
+
+
+                Parcours : encourager l’interprétation, développer l’histoire des personnages
+                et trafiquer leur vision du monde postérieur à 1984.
+
+
+
+                                                                                            43
+  HISTOIRES DE LA RUE
+
+
+                     P    arcours
+
+                     C’est comme extirper un corps d’une cuve de clonage (si tant est que le clonage fonctionne ainsi) et se retrouver avec cet
+                     être à demi formé, encore tout dégouttant de liquide visqueux. Vous avez peut-être une vague idée de ce que vous allez
+Étape suivante :     faire de votre personnage, mais rien de plus.
+  caractéristiques
+   Page 73              Pour transformer cette enveloppe corporelle vide en un vrai Cyberpunk, il faut commencer par définir son parcours.
+                     Le parcours est un organigramme composé de « péripéties scénaristiques », conçu pour vous aider à pourvoir votre
+                     personnage d’une histoire authentique dans ce futur ténébreux. Cette section prend en compte vos origines géogra-
+Étape suivante :     phiques et ethniques, votre situation familiale, vos amis, vos ennemis, vos habitudes personnelles et même les événements
+  caractéristiques
+   Page 77
+                     importants qui ont jalonné chaque année de votre existence. Il s’agit avant tout d’un guide ; si vous obtenez un résultat qui
+                     ne correspond pas à votre vision du personnage, vous êtes libre de modifier son parcours à votre guise. Souvenez-vous :
+                     l’interprétation est primordiale dans Cyberpunk. Alors, n’hésitez pas à exploiter les informations qui ressortiront de votre
+Étape suivante :
+                     parcours. Génération d’aventures garantie !
+  caractéristiques
+   Page 78
+
+                                           « Je me souviens l’avoir entendu dire qu ’elle
+                                            était née à M iami , en 2004 ou dans ces
+                                           eaux- là … E lle était certaine de cette date ,
+                                              car elle se souvenait encore du moment
+                                               où les E uros ont balancé un rocher sur
+                                           Washington et du tir raté qui a rasé Tampa …
+
+                                        Elle avait des yeux bleus incroyables, d ’une
+                                       clarté profonde semblable à des cristaux , et un
+                                     sourire onirique tout droit sorti d ’un magazine .
+                                     Bien sûr , ses yeux , c ’étaient des Teknics 2350
+                                     et son sourire sortait vraiment d ’un catalogue , un
+                                     beau travail de biosculpture . E n fin de compte ,
+                                      peu importe ce qui était réel chez elle . Je l’aimais
+                                         quand même à la folie . Je suis comme ça . »
+
+
+                                                                                                    — Johnny Silverhand
+
+                     Les parcours personnels
+                     À présent, voyons ce que votre punk a dans le crâne (en dehors de ses implants cybernétiques). Vous devez jeter 1d10 ou
+                     1d6 par tableau pour définir des éléments de l’histoire de votre personnage, son style ou sa philosophie de vie. Parfois,
+                     vous serez amenés à effectuer plusieurs jets sur le même tableau. Si vous obtenez des résultats qui ne correspondent pas
+                     à votre vision du personnage, vous pouvez librement choisir une autre option en remplacement.
+
+
+
+
+ 44
+                                                                                             HISTOIRES DE LA RUE
+
+                                                       ▶ Origines culturelles ◀
+                L’univers de Cyberpunk est multiculturel et international. Vous devez apprendre à vivre aux côtés
+                de gens issus des quatre coins d’un monde fracturé et anarchique ou mourir à la première fois
+                                                                                                                              Exemple de
+                que vous regarderez de travers la mauvaise personne. Vos origines déterminent votre langue                     parcours
+                maternelle. Dans Cyberpunk RED, on part du principe que tout le monde connaît l’argot des
+                                                                                                                       Victoria a décidé de
+                Rues, le pidgin qui, au fil des évolutions, est devenu le langage universel du futur ténébreux, mais
+                                                                                                                       jouer une Netrunner. La
+                vous maîtrisez aussi une autre langue apprise sur les genoux de votre mère. Après avoir lancé          prochaine étape consiste
+                un dé pour déterminer votre culture d’origine, choisissez une des langues proposées dans la            donc à déterminer son
+                case adjacente. Vous commencez avec 4 points dans cette compétence de Langue.                          parcours. Elle commence
+                Il existe des centaines de langues autour du monde, mais pour cet ouvrage, nous avons établi           par ses origines culturelles
+                la liste des langues les plus courantes de l’Ère du Rouge pour chaque région. Si vous souhaitez        et décide de lancer les dés
+                que votre personnage parle une langue qui n’est pas mentionnée, notez votre choix à la place           plutôt que de choisir. Elle
+                des suggestions de la liste ci-dessous.                                                                aime bien l’idée de relier
+                                                                                                                       des résultats aléatoires
+                                                       Choisissez ou lancez 1d10.                                      pour les transformer en un
+                                                                                                                       historique de personnage
+                                   Votre origine                     La langue que vous connaissez                     cohérent.
+                    Jet
+                                    culturelle                              (choisissez-en une)                           Victoria obtient un
+                                                                                                                       6 sur son d10. Selon
+                                                                             Chinois, cree, créole, anglais,           le tableau des origines
+                     1              Amérique du Nord
+                                                                              français, navajo, espagnol               culturelles, cela signifie
+                                                                       Créole, anglais, allemand, guarani, maya,       que son personnage ou ses
+                     2          Amérique du Sud et centrale                                                            ascendants proviennent
+                                                                             portugais, quechua, espagnol
+                                                                                                                       d’Afrique subsaharienne.
+                                                                        Néerlandais, anglais, français, allemand,      Son MJ lui apprend que
+                     3               Europe de l’Ouest
+                                                                         italien, norvégien, portugais, espagnol       l’Afrique est le théâtre d’une
+                                                                              Anglais, finlandais, polonais,           révolution technologique
+                     4                Europe de l’Est                                                                  qui s’explique par les liens
+                                                                               roumain, russe, ukrainien
+                                                                                                                       privilégiés qu’elle entretient
+                                                                             Arabe, berbère, anglais, farsi,           avec les Orbitaux. Comme
+                     5        Moyen-Orient et Afrique du Nord
+                                                                                 français, hébreu, turc                la joueuse a de la famille
+                                                                       Arabe, anglais, français, haoussa, lingala,     en Éthiopie, elle décide que
+                     6             Afrique subsaharienne                                                               sa Netrunner est originaire
+                                                                         oromo, portugais, swahili, twi, yoruba
+                                                                                                                       de ce pays. Elle ne sait
+                                                                         Bengali, dari, anglais, hindi, népalais,      pas encore pourquoi son
+                     7                  Asie du Sud
+                                                                               singhalais, tamoul, urdu                personnage a quitté sa
+                                                                        Arabe, birman, anglais, philippin, hindi,      terre natale, mais Victoria
+                     8                Asie du Sud-Est                                                                  est certaine qu’elle trouvera
+                                                                       indonésien, khmer, malaisien, vietnamien
+                                                                                                                       une idée en poursuivant son
+                                                                          Cantonais, anglais, japonais, coréen,        parcours.
+                     9                 Asie de l’Est
+                                                                                  mandarin, mongol                        Enfin, elle consulte la liste
+                                                                           Anglais, français, hawaïen, maori,          des langues. Elle ne voit
+                    10          Océanie et îles du Pacifique                                                           pas l’amharique, la langue
+                                                                               pama-nyungan, tahitien
+                                                                                                                       officielle de l’Éthiopie, mais
+                                                                                                                       la règle l’autorise à l’ajouter
+                                                                                                                       sur sa fiche de personnage
+                                                                                                                       pour des questions de
+                                                                                                                       logique. Victoria marque
+                                                                                                                       que sa Netrunner possède
+                                                                                                                       la compétence Langue
+                                                                                                                       (amharique) au niveau 4.
+
+
+
+
+                                                                                                                                                 45
+  HISTOIRES DE LA RUE
+
+                                                     ▶ Votre personnalité ◀
+                Ce tableau définit votre caractère. Êtes-vous plutôt du genre à vous tenir à l’écart de la meute,
+                à rester seul pour laisser votre esprit calculateur s’épanouir ? Êtes-vous un fêtard qui adore
+                mettre la pagaille ? Un professionnel compétent et assuré qui a toujours un plan de secours ?
+                                                      Choisissez ou lancez 1d10.
+
+                    Jet                                          Quel est votre caractère ?
+
+                     1         Timide et réservé.
+                     2         Rebelle, antisocial et violent.
+                     3         Arrogant, prétentieux et distant.
+                     4         Lunatique, imprudent et têtu.
+                     5         Maniaque, pointilleux et nerveux.
+                     6         Stable et réfléchi.
+                     7         Désordonné et étourdi.
+                     8         Discret et manipulateur.
+                     9         Intellectuel perdu dans son monde.
+                     10        Chaleureux et extraverti.
+
+
+
+
+                                                                                                                    PAR HÉLIO FRAZÃO
+
+
+
+
+ 46
+                                                                                              HISTOIRES DE LA RUE
+
+                                                   ▶ Tenue et style ◀
+                Dans Cyberpunk, votre apparence constitue pour la Rue un aperçu de ce que vous
+                êtes. Vos vêtements, votre coupe de cheveux, vos accessoires personnels déterminent
+                                                                                                                                   Exemple de
+                les relations que vous entretenez avec les autres, qu’elles soient bonnes ou mauvaises.                             parcours
+                Petit conseil : un Corpo avec une tenue décontractée qui arbore une iroquoise multi-
+                                                                                                                            Victoria connaît à présent
+                colore et des cicatrices rituelles risque de passer à côté de la promotion de ses rêves.                    l’origine culturelle de
+                   Le style vestimentaire est un indicateur de votre allure plutôt qu’une description                       sa Netrunner (Afrique
+                détaillée de chaque vêtement que vous portez. Vous pouvez porter une veste de                               subsaharienne) et sa
+                costume taillée sur mesure, une veste à franges nomade, une veste de style urbain                           personnalité (stable et
+                flash avec un col lumineux high-tech ou encore une veste en cuir, élimée et déchirée,                       réfléchie). L’étape suivante
+                                                                                                                            est la tenue et le style, qui se
+                aux couleurs de votre gang. Il s’agit toujours du même vêtement (une veste), mais son
+                                                                                                                            divisent en trois catégories :
+                apparence dépend de la tenue favorite de votre personnage.
+                                                                                                                            le style vestimentaire, la
+                              Choisissez ou jetez 1d10 pour chaque colonne.                                                 coupe de cheveux et les
+                                                                                                                            accessoires.
+                                                                                                                               Victoria obtient un 4
+                    Jet                   Style vestimentaire                                 Coupe de cheveux
+                                                                                                                            pour le style vestimentaire :
+                     1                Générique (standard, coloré, modulable)                            Iroquoise          cadre sup. Pour la coupe de
+                                                                                                                            cheveux, le résultat est un
+                     2           Décontracté (confort, souplesse, pratique sportive)                  Longs et sales        9 : courts et bouclés. Enfin,
+                     3          Urbain flash (tape à l’œil, technologique, streetwear)              Courts et hérissés      pour les accessoires, elle
+                                                                                                                            obtient 5 : anneau de nez.
+                     4               Cadre sup (leadership, présence, autorité)                         Ébouriffés
+                                                                                                                               Visiblement, son
+                     5          Haute couture (inédit, grand couturier, sur-mesure)                       Chauve            personnage aime bien
+                     6                    Bohème (pastoral, rétro, liberté)                                Rasé             rester impeccable pour
+                                                                                                                            avoir l’air professionnel.
+                     7               Vagabond (sans-abri, guenilles, clochard)                         Teinture vive        En y réfléchissant, Victoria
+                     8             Couleurs du gang (dangereux, violent, rebelle)                  Courts et bien coiffés   décide que sa Netrunner
+                                                                                                                            tient cet aspect de sa
+                     9                  Âme nomade (Western, élimé, tribal)                          Courts et bouclés      famille qui lui a transmis
+                     10                Pop asiatique (coloré, cosplay, kawaii)                        Longs et raides       l’importance de la tenue
+                                                                                                                            vestimentaire dès son plus
+                                                                                                                            jeune âge, notamment lors
+                                                Choisissez ou jetez 1d10.                                                   des rencontres avec des
+                                                                                                                            étrangers. « Les étrangers
+                       Jet                                      Accessoires favoris                                         regardent rarement ce qui
+                                                                                                                            se cache sous la surface,
+                          1                                                   Tatouages                                     avait l’habitude de lui
+                          2                                            Lunettes de soleil                                   dire son père. Fais en
+                                                                                                                            sorte que ton apparence
+                          3                                            Cicatrices rituelles                                 clame haut et fort ton
+                          4                                              Gants de punk                                      professionnalisme. » La
+                                                                                                                            Netrunner préfère les tenues
+                          5                                              Anneau de nez                                      soignées et a des cheveux
+                          6                                     Piercing de la langue (ou autre)                            courts, qu’elle garde coiffés
+                                                                                                                            au naturel. L’anneau de
+                          7                                      Implants ongulaires originaux
+                                                                                                                            nez est sa petite touche
+                          8                                        Bottes cloutées ou à talons                              nostalgique, puisqu’elle l’a
+                                                                                                                            reçu en cadeau avant de
+                          9                                                   Mitaines
+                                                                                                                            quitter l’Éthiopie.
+                         10                                      Lentilles de contact originales
+
+
+
+
+                                                                                                                                                       47
+  HISTOIRES DE LA RUE
+
+                                           ▶ Vos motivations et vos relations ◀
+                                        Choisissez ou jetez 1d10 pour chaque colonne.
+
+                          Quelle est votre valeur
+                Jet                                                Que pensez-vous des gens en général ?
+                            fondamentale ?
+
+                 1                  L’argent                                                 Rien de spécial.
+                 2                 L’honneur                                                 Rien de spécial.
+                 3              La parole donnée                                   J’apprécie tout le monde ou presque.
+                 4                L’honnêteté                                      Je déteste tout le monde ou presque.
+                 5                 Le savoir                Les gens sont des outils. Je les utilise pour arriver à mes fins, puis je les jette.
+                 6               La vengeance                                       La vie de chaque individu compte.
+                 7                  L’amour                                    J’élimine les gens qui me barrent la route.
+                 8                 Le pouvoir                     On ne peut faire confiance à personne. Je ne compte que sur moi.
+                 9                 La famille                   Éliminons tout le monde et laissons les cafards dominer ce qu’il reste !
+                 10                 L’amitié                                           Les gens sont merveilleux !
+
+
+                                       ▶ Qu’est qui vous tient le plus à cœur ? ◀
+                      Choisissez ou jetez 1d10.                                           Choisissez ou jetez 1d10.
+
+                Jet    Qui compte le plus dans votre vie ?                   Jet                  À quoi tenez-vous le plus ?
+
+                1                      Un parent                               1                                     Une arme
+                2                 Un frère ou une sœur                         2                                      Un outil
+                3                      Un amant                                3                                   Un vêtement
+                4                        Un ami                                4                                     Une photo
+                5                      Vous-même                               5                              Un livre ou un journal
+                6               Un animal de compagnie                         6                                   Une chanson
+                7              Un professeur ou un mentor                      7                           Un instrument de musique
+                8               Une personnalité publique                      8                                     Un bijou
+                9                       Un héros                               9                                     Un jouet
+                10                      Personne                              10                                     Une lettre
+
+
+
+
+                       Oui, le Grand Bozo, l’A rracheur de Bras, emmène son
+                      ours en peluche préféré partout où il va . O serais - tu
+                        te moquer du Grand B ozo , l’A rracheur de B ras ?
+                                                                                                            — le Grand Bozo
+                                                                                                                L’Arracheur de Bras
+
+
+
+ 48
+                                                                                                         HISTOIRES DE LA RUE
+
+                Votre histoire
+                Maintenant qu’on sait à peu près à quoi vous ressemblez, il est temps de savoir comment vous
+                êtes devenu celui ou celle que vous êtes : partons à la recherche de votre histoire.                                                Exemple de
+                                                 ▶ Vos origines familiales ◀                                                                          parcours
+                Qui êtes-vous et d’où venez-vous ? Êtes-vous né avec une cuillère en argent dans la bouche ou bien                            Victoria s’attarde cette fois
+                tabassiez-vous votre frère pour lui piquer sa part du rat crevé que vous aviez déniché ensemble ?                             sur les valeurs qui l’animent
+                                                                                                                                              (le savoir), son ressenti
+                                                       Choisissez ou jetez 1d10.                                                              vis-à-vis des gens (elle
+                                                                                                                                              n’a pas spécialement d’a
+                          Origine                                                                                                             priori), la personne qui
+                  Jet                                                             Description
+                          sociale                                                                                                             compte le plus dans sa vie
+                                                                                                                                              – un ou une ami(e) –
+                                                  Famille riche, influente, qui engage des serviteurs, possède des maisons de luxe            et l’objet auquel elle tient
+                             Cadres
+                   1                              et le meilleur de ce qui se fait. Des agents de sécurité privés ont toujours assuré         énormément (un jouet).
+                          corporatistes
+                                                          votre protection. Vous êtes passé par une école privée de renom.                    Son origine sociale est la
+                                                                                                                                              prochaine sur la liste.
+                                                    Famille aisée dotée d’une grande maison située dans un quartier tranquille,
+                           Managers                                                                                                              Elle obtient un 6,
+                   2                               de belles voitures, etc. Parfois vos parents engageaient des aides à domicile,
+                          corporatistes                                                                                                       habitants des zones de
+                                                   mais c’était assez rare. Vous êtes passé par des écoles privées et corporatistes.
+                                                                                                                                              combat. Compte tenu du
+                                           Le milieu de la classe moyenne. Votre famille habitait dans un conapt agréable ou une maison       portrait que Victoria a
+                           Techniciens
+                   3                      de la Petite couronne, elle roulait en monospace et avait accès aux écoles techniques gérées par    commencé à ébaucher
+                          corporatistes                                                                                                       pour sa Netrunner, elle
+                                          les corporations. Ç’avait des airs de vie aux États-Unis dans les années 50, saupoudrée de 1984.
+                                                                                                                                              trouve le résultat illogique
+                                           Votre foyer était un assemblage de remorques pétaradantes, de voitures et d’énormes kombis.
+                           Meute de                                                                                                           et opte plutôt pour des
+                   4                       Vous avez appris à vous battre et à conduire très tôt, mais votre famille a toujours été là pour   techniciens corporatistes.
+                           Nomades
+                                                vous. Vous aviez des aliments frais en abondance. Vous avez fait l’école à la maison.         Ses parents s’occupaient
+                                               Vous avez vécu dans un foyer sauvage et violent, là où le gang a réussi à s’implanter.         du parc automobile
+                                                  Vous avez enduré le froid, la faim et la peur. Vous ne connaissez probablement              d’une entreprise
+                   5         Gang                                                                                                             éthiopienne spécialisée
+                                               pas vos vrais parents. L’éducation ? Le gang vous a appris à vous battre, tuer et voler :
+                                                                    c’est tout ce que vous aviez besoin de savoir.                            dans l’exportation de
+                                                                                                                                              marchandises de luxe pour
+                           Habitants        Vous meniez une existence plus enviable qu’un membre de gang, dans un bâtiment décrépit           les Orbitaux. Elle a grandi
+                   6      des zones de        et lourdement fortifié de la zone de combat. De temps en temps, vous aviez faim, mais           dans un milieu protégé et
+                             combat             vous aviez droit à un lit et à des repas réguliers. Vous avez fait l’école à la maison.       a hérité de l’affinité de sa
+                                           Vous viviez dans des voitures, des bennes à ordure ou des modules de transport abandonnés.         famille pour la technologie,
+                                            Quand vous aviez de la chance. Vous aviez souvent faim, froid et peur, jusqu’à ce que vous        mais elle s’est orientée vers
+                   7       Sans-abri                                                                                                          le Netrunning à la place de
+                                                     deveniez assez costaud pour défendre votre maigre pitance. L’éducation ?
+                                                                                                                                              la mécanique automobile.
+                                                                    L’école de la vie, spécialité patate de forain.
+                                               Vous avez grandi dans l’une des mégastructures gigantesques bâties après la Guerre.
+                           Rats des
+                   8                            Un minuscule conapt et des croquettes pour toute nourriture, un lit pas trop froid.
+                         mégastructures
+                                                 Des résidents éduqués ou bien une corporation locale avaient monté une école.
+                                               Votre famille a pris la route pour aller s’installer dans une ville ou un village fantôme
+                                                à rebâtir. Une vie de pionnier, remplie de dangers, mais avec tout de même son lot
+                   9       Néo-colons
+                                               de repas frugaux et un endroit sûr pour dormir. Les adultes assuraient votre éducation
+                                                                          quand ils avaient un peu de temps.
+                                                  Vous changiez sans cesse d’endroit en fonction du « boulot » de vos parents,
+                                                  allant de l’appartement de luxe au conapt urbain en passant par la décharge
+                  10      Edgerunners
+                                            quand vous étiez en cavale. Vous avez goûté à tout ce qui se fait en matière de nourriture,
+                                                                     du repas gastronomique à la croquette.
+
+
+
+
+                                                                                                                                                                     49
+  HISTOIRES DE LA RUE
+
+                           ▶ Votre environnement ◀                                                        ▶ Crise familiale ◀
+                Dans quel contexte avez-vous grandi ? Dans quel genre                      À l’Ère du Rouge, le monde poursuit sa reconstruction après
+                d’endroit traîniez-vous avec vos frères et sœurs ? Gardez-                 la catastrophe de la guerre mondiale et d’autres désastres.
+                vous le souvenir d’une atmosphère calme et sereine ?                       Votre famille n’en est peut-être pas sortie indemne. Quelle
+                De danger permanent ? D’oppression étouffante ? Un                         histoire se cache derrière votre nom ?
+                épisode de votre vie a peut-être radicalement changé                                     Choisissez ou jetez 1d10.
+                votre existence.
+                              Choisissez ou jetez 1d10.                                           Jet                    Histoire familiale
+
+                               Environnement dans lequel vous                                      1            Une trahison a totalement ruiné votre famille.
+                    Jet
+                                        avez grandi                                                                   Votre famille a tout perdu à cause
+                                                                                                   2
+                                                                                                                        d’une gestion catastrophique.
+                     1       Vous écumiez la Rue, libéré de la surveillance des adultes.
+                                                                                                                    Votre famille a été exilée ou chassée
+                                     Vous étiez dans une zone corpo protégée                       3
+                     2                                                                                        de son foyer/sa nation/sa corporation d’origine.
+                                        du reste de la ville par des murs.
+                                                                                                              Votre famille est en prison. Vous seul êtes parvenu
+                     3          Dans une meute nomade sans cesse en mouvement.                     4
+                                                                                                                                à vous échapper.
+                                     Dans une meute nomade spécialisée dans                        5            Votre famille a disparu ; il ne reste que vous.
+                     4
+                                      le transport (maritime, aérien, routier).
+                                                                                                   6         Votre famille a été tuée. Vous êtes le seul survivant.
+                                    Dans un quartier décrépit autrefois luxueux
+                     5                                                                                                Votre famille est impliquée dans
+                                      où l’on peine à repousser les boosters.
+                                                                                                               un complot à grande échelle, une organisation
+                                          Au cœur de la zone de combat,                            7
+                     6                                                                                         ou une association, comme une mafia familiale
+                                      dans un bâtiment effondré ou un squat.                                           ou un groupe révolutionnaire.
+                                       Dans une immense « mégastructure »                                          Une succession de malheurs a éparpillé
+                     7                                                                             8
+                                       contrôlé par une corpo ou par la ville.                                         votre famille aux quatre vents.
+                                 Dans les ruines d’un village ou d’une ville déserte                         Votre famille est victime d’une vendetta héréditaire
+                     8                                                                             9
+                                          revendiquée par des néo-colons.                                           qui dure depuis plusieurs générations.
+                                   Dans une Nation Flottille (une ville offshore)                                  Vous avez hérité d’une dette familiale ;
+                     9
+                                      où transitaient toutes sortes de gens.                      10                vous devez régler cette affaire avant
+                                      Dans un gratte-ciel de luxe corporatiste,                                       de pouvoir passer à autre chose.
+                    10
+                                        au-dessus de la plèbe grouillante.
+
+
+
+
+                                                                                                                                                           PAR HÉLIO FRAZÃO
+
+
+
+
+ 50
+                                                                                                      HISTOIRES DE LA RUE
+
+                                                                           ▶ Vos amis ◀
+                Tout n’est pas noir. Vous êtes parfois en contact avec des gens qui veillent sur vous.
+                         Jetez 1d10 et soustrayez 7 au résultat (minimum 0) pour connaître votre nombre d’amis.
+                         Pour chaque ami, choisissez un résultat ou lancez 1d10 afin d’en apprendre plus sur eux.
+
+                   Jet                                                           Relation d’amitié
+
+                     1                                             Il/elle est comme un grand frère ou une grande sœur.
+                     2                                               Il/elle est comme un petit frère ou une petite sœur.
+                     3                                                           Un professeur ou un mentor.
+                     4                                                     Un partenaire ou un collègue de travail.
+                     5                                                                 Un ancien amant.
+                     6                                                                 Un vieil ennemi.
+                     7                                                     Il/elle est comme un père ou une mère.
+                     8                                                                Un ami d’enfance.
+                     9                                                       Vous vous êtes connus dans la Rue.
+                    10                                                       Quelqu’un qui partage vos intérêts.
+
+
+                                                                       ▶ Vos ennemis ◀
+                L’inimitié est un mode de vie dans l’univers de Cyberpunk. Tôt ou tard, vous allez froisser quelqu’un, alors autant savoir qui
+                sont vos ennemis, la cause de leur animosité et les moyens dont ils disposent pour vous remettre les pendules à l’heure.
+                   Tout d’abord, lancez 1d10 et soustrayez 7 (minimum 0) au résultat pour connaître votre nombre
+                     d’ennemis. Puis, pour chaque ennemi, choisissez qui a été lésé dans l’affaire entre lui et vous,
+                  et faites un jet par colonne. Une fois que vous savez tout de votre adversaire, consultez le tableau
+                          Vengeance ! pour connaître sa réaction si jamais vous avez le malheur de le croiser.
+
+                                                                    Choisissez la raison
+                   Jet                 Ennemi                                                                             Quels sont ses soutiens ?
+                                                                     de votre inimitié
+
+                                                                       A jeté le discrédit ou terni                           Il ne peut compter que sur lui,
+                    1                  Ancien ami.
+                                                                        la réputation de l’autre.                            mais il ne compte pas vous lâcher.
+                                                                      A causé la perte d’un amant,
+                    2                Ex-compagnon.                                                                             Il ne peut compter que sur lui.
+                                                                        d’un ami ou d’un proche.
+                    3           Un membre de la famille.         Responsable d’une humiliation terrible.                            Lui et un ami proche.
+                                                                     A insulté l’autre en le traitant
+                    4              Ennemi d’enfance.                                                                           Lui et quelques amis (1d6/2).
+                                                                       de lâche ou d’autre chose.
+                    5       Quelqu’un qui travaille pour vous.       A trahi ou abandonné l’autre.                            Lui et quelques amis (1d10/2).
+                               Une personne pour laquelle            A décliné les avances ou l’offre
+                    6                                                                                                   Un gang (au moins 1d10 + 5 personnes).
+                                    vous travaillez.                       d’emploi de l’autre.
+                              Un partenaire ou un collègue
+                    7                                               Vous ne pouvez pas vous sentir.                         Les flics du quartier ou des Justiciers.
+                                       de travail.
+                    8              Cadre corporatiste.                    Rivalité amoureuse.                      Un puissant chef de gang ou une corporation mineure.
+                    9          Membre du gouvernement.                  Rivalité professionnelle.                                 Une corporation influente.
+                                                                     L’un de vous a accusé l’autre                              Une ville, un gouvernement
+                   10        Membre d’un gang de boosters.
+                                                                  d’un crime qu’il n’avait pas commis.                      ou une organisation administrative.
+
+
+
+                                                                                                                                                                          51
+  HISTOIRES DE LA RUE
+
+                                                              ▶ Vengeance ! ◀
+                La situation n’est pas si mal, jusqu’à ce que les vieilles rancœurs remontent à la surface. Quand vous vous
+                rencontrez, vos éventreurs vous démangent. Alors que va-t-il se passer le jour où vous vous retrouverez face
+                à face ?
+                                                       Choisissez ou jetez 1d10.
+
+                    Jet                                               Comment réagissez-vous ?
+
+                    1-2                                                    « Mieux vaut éviter cette ordure. »
+                    3-4                                                      « Je vais t'arracher la tête ! »
+                    5-6                                    Un coup bas, discret et vicieux, ça défoule toujours.
+                    7-8                                                   Une bonne vieille agression verbale.
+                     9                                                Un piège raffiné pour le faire accuser à tort.
+                     10                                        Une tentative d'assassinat ou de blessure grave.
+
+                                                                                      ▶ Votre tragédie amoureuse ◀
+                                                                           Si tout le monde vivait heureux, on ne serait pas dans l’uni-
+                                                                           vers de Cyberpunk, pas vrai ? Vous avez probablement
+                                                                           déjà eu une relation amoureuse, mais rien ne dit qu’elle
+                                                                           a duré.
+                                                                              Peu nous importent les histoires qui se finissent bien, nous
+                                                                           voulons tout savoir sur les monstres qui vous ont arraché
+                                                                           le cœur. L’identité de vos partenaires, leur genre et autres
+                                                                           détails ne sont pas non plus importants, mais vous êtes libre
+                                                                           d’exploiter les tableaux des parcours personnels pour ima-
+                                                                           giner l’apparence de vos amants, leur caractère et vos points
+                                                                           communs. Non pas que ça vous ait réussi, n’est-ce pas ?
+                                                                             Lancez 1d10 et soustrayez 7 (minimum 0) pour
+                                                                             connaître le nombre de tragédies amoureuses
+                                                                              que vous avez vécues, puis jetez un dé sur le
+                                                                              tableau ci-dessous pour en connaître l’issue.
+
+                                                        PAR HUNTANG             Jet                        Que s’est-il passé ?
+
+                                                                                 1                     Votre amant est mort dans un accident.
+                                                                                 2          Votre amant a disparu dans des circonstances mystérieuses.
+                                                                                 3                     Vous n’étiez pas faits l’un pour l’autre.
+                                                                                                      Une vendetta ou vos objectifs personnels
+                                                                                 4
+                                                                                                          ont eu raison de votre relation.
+                                                                                 5                        Votre amant s’est fait kidnapper.
+                                                                                                     Votre amant est devenu fou ou a succombé
+                                                                                 6
+                                                                                                                à la cyberpsychose.
+                                                                                 7                              Votre amant s’est suicidé.
+                                                                                 8                 Votre amant a été tué dans un affrontement.
+                                                                                 9                        Un rival vous a mis sur la touche.
+                                                                                10                    Votre amant a été emprisonné ou exilé.
+
+
+
+ 52
+                                                                                                 HISTOIRES DE LA RUE
+
+                Les derniers détails
+                Vous connaissez votre histoire, votre style vestimentaire et votre vie amoureuse tumultueuse. Il est temps de poser les derniers
+                détails de votre portrait en choisissant ce que vous attendez de la vie.
+
+                                                             ▶ Votre but dans la vie ◀
+                                                                Choisissez ou lancez 1d10.
+
+                     Jet                                                                 Objectif
+
+                      1                                                Vous débarrasser de votre mauvaise réputation.
+                      2                                                         Devenir puissant et important.
+                      3                                                           Quitter la Rue à tout prix.
+                      4                                                 Faire souffrir tous ceux qui vous ont offensé.
+                      5                                             Oublier votre passé, laisser vos démons derrière vous.
+                      6                                    Traquer les personnes responsables de votre situation et les faire payer.
+                      7                                                  Reprendre ce qui vous appartient de droit.
+                      8                                           Sauver, si possible, tous les membres de votre entourage.
+                      9                                                          Obtenir gloire et renommée.
+                     10                                                             Être craint et respecté.
+
+
+
+
+                P    arcours des rôles
+
+                La vie se compose d’éléments universels ainsi que de matériaux très spécifiques. Entre autres, votre métier (que vous
+                travailliez de jour, de nuit, à mi-temps… nous ne vous jugeons pas) a un impact majeur sur votre existence. Les difficultés
+                auxquelles un Justicier endurci est confronté dans la Rue n’ont rien à voir avec la vie pailletée d’un Rockeur, mais tous deux
+                vivent des expériences qu’aucun Corpo dorloté et abreuvé de privilèges n’imaginerait dans ses rêves les plus fous. C’est
+                pourquoi nous avons conçu une série de parcours dédiés à chacun des rôles pour compléter les parcours personnels.
+                Amusez-vous bien !
+
+
+
+
+                     Rockeur                      Solo                       Netrunner                              Techie             Medtech
+                     page 54                    page 55                       page 56                              page 58             page 60
+
+
+
+
+                      Média                  Corporatiste                      Justicier                            Fixer              Nomade
+                     page 62                   page 63                         page 65                             page 66             page 68
+
+
+
+
+                                                                                                                                                   53
+                         ROCKEUR
+                         ▶ Quel genre de Rockeur êtes-vous ? ◀                                          ▶ Qui vous cherche des noises ? ◀
+                                      Choisissez ou lancez 1d10.                                                    Choisissez ou lancez 1d6.
+
+                            Jet                        Type                                           Jet                                   Ennemi
+          Pour plus
+                               1                      Musicien                                         1                       Un ancien membre qui se sent trahi.
+ d’informations sur
+les divertissements
+                               2                       Slameur                                                          Un groupe ou un artiste rival qui veut récupérer
+  dans Cyberpunk                                                                                       2
+                                                                                                                                    votre part de marché.
+     RED, voyez la             3                    Artiste de rue
+  Page 329                                                                                             3             Des corporatistes qui n’apprécient pas votre message.
+                               4                     Performeur
+                                                                                                                          Des critiques et des influenceurs qui veulent
+                               5                      Comédien                                         4
+                                                                                                                                     saboter votre carrière.
+                               6                       Orateur                                                           Une star médiatique déjà installée qui se sent
+                                                                                                       5
+                               7                      Politicard                                                            menacée par votre célébrité naissante.
+                               8                       Rappeur                                                       Un ex ou une figure médiatique qui désire se venger
+                                                                                                       6
+                                                                                                                               pour des raisons personnelles.
+                               9                           DJ
+                            10                             Idol
+                                                                                                           ▶ Où pratiquez-vous votre art ? ◀
+                                                                                                                    Choisissez ou lancez 1d6.
+
+                                                                                                                   Jet                          Lieu
+                                   ▶ Êtes-vous dans un groupe ?                             groupe
+                                                                                                                    1                      Cafés alternatifs
+                                        Un artiste solo ? ◀
+                                                                                                                    2                        Clubs privés
+                                             Choisissez.
+                                                                                                                    3                        Bars miteux
+                                                    solo                                                            4                   Performances urbaines
+                                                                                                                    5                       Boîtes de nuit
+
+                                      ▶ Étiez-vous autrefois                                                        6                   Sur le puits de données
+                                       dans un groupe ? ◀
+                         Avez-vous fait partie d’un groupe ? Avez-vous                                     solo
+                          toujours été un artiste solo ? Choisissez.
+
+
+                                                                  ▶ Pourquoi êtes-vous parti ? ◀
+                groupe                                                   Choisissez ou lancez 1d6.
+
+                          Jet                                                      Cause de votre départ
+
+                           1                                           Vous étiez un abruti, alors le reste du groupe vous a expulsé.
+                           2                                         On vous a surpris au lit avec la rom régulière d’un autre membre.
+                           3                                            Le reste du groupe est mort dans un « accident » tragique.
+                           4                                Des ennemis ont assassiné les autres membres ou forcé la séparation du groupe.
+                           5                                          Le groupe s’est séparé pour cause de « divergences créatives ».
+                           6                                                   Vous avez décidé de tenter une carrière solo.
+
+
+
+
+  54
+                                                                                                                               SOLO
+                                                 ▶ Quel genre de Solo êtes-vous ? ◀
+                                          Choisissez avec l’aide de votre MJ ou lancez 1d6.
+
+                 Jet                                                                        Type
+
+                    1                                                                   Garde du corps.
+                    2                                                             Un tas de muscles à louer.
+                    3                           Un homme de main corporatiste qui accepte d’autres contrats pour arrondir les fins de mois.
+                    4                                          Spécialiste en opérations secrètes indépendant ou corporatiste.
+                    5                                                                   Vengeur à louer.
+                    6                                                       Assassin à louer ou chasseur de primes.
+
+
+
+
+                                          ▶ Quels principes moraux vous guident ? ◀
+                                                              Choisissez ou lancez 1d6.
+
+                Jet                                                          Éthique personnelle
+
+                1                                          Vous œuvrez toujours pour le bien en éliminant les « méchants ».
+                2                                 Vous épargnez toujours les innocents (personnes âgées, femmes, enfants, animaux).
+                3                               De temps à autre, vous dérapez et commettez des actes répréhensibles, mais c’est rare.
+                4                    Vous êtes impitoyable et recherchez uniquement le profit ; vous travaillez pour n’importe qui, tant que ça paie.
+                5                                          Vous êtes prêt à outrepasser les règles (et la loi) pour finir le taff.
+                6                 Vous êtes le mal incarné. Vous dégotez sans cesse des contrats illégaux et condamnables ; en réalité, vous adorez ça.
+
+
+
+
+                 ▶ Qui vous cherche des noises ? ◀                                            ▶ Sur quel terrain opérez-vous ? ◀
+                          Choisissez ou lancez 1d6.                                                        Choisissez ou lancez 1d6.
+
+                    Jet                        Ennemi                                          Jet                                   Territoire
+
+                      1          Une corporation qui vous garde rancune.                        1                               Une zone corporatiste
+                      2     Un gang de boosters auquel vous vous êtes attaqué.                  2                               Les zones de combat
+                                  Un Justicier corrompu ou qui vous croit                       3                                    La ville entière
+                      3
+                                            coupable d’un délit.
+                                                                                                4                          Le territoire d’une corporation
+                      4         Un Solo rival engagé par une autre corpo.
+                      5      Un Fixer qui vous considère comme une menace.                      5                      Le territoire d’un Fixer ou d’un contact
+                      6     Un Solo rival qui vous considère comme sa némésis.                  6                        Là où vous mène l’appât du gain
+
+
+
+
+                                                                                                                                                                  55
+                                     NETRUNNER
+                                                                                 ▶ Quel Runner êtes-vous ? ◀
+                                                                      Choisissez avec l’aide de votre MJ ou lancez 1d6.
+
+                                          Jet                                                                             Type
+
+                                            1                                                             Hackeur qui travaille en indépendant.
+       Un chapitre
+  entier est dédié                          2                                                        « Clone » corporatiste qui bosse pour le patron.
+   au Netrunning.
+     Il commence                            3                                        Hacktiviste qui pirate les systèmes et dévoile les méfaits des grands méchants.
+  Page 195
+                                            4                                                            Vous piratez les systèmes pour le plaisir.
+                                            5                                                             Membre d’une équipe d’indépendants.
+                                            6                           Vous piratez pour le Média, le politicien ou le Justicier qui vous emploie lorsqu’il a besoin de vos talents.
+
+
+
+
+                                                                 ▶ Avez-vous un partenaire ou travaillez-vous seul ? ◀
+                                                                       Choisissez si vous travaillez seul ou en équipe.
+
+
+
+                                                                    ▶ À quoi ressemble votre espace de travail ? ◀
+
+
+
+                                                travaille seul
+                                                                                        Choisissez ou lancez 1d6.
+
+                                                                       Jet                                  Espace de travail
+
+                                                                        1                                Votre bureau est tapissé d’écrans.
+
+
+
+
+               travaille en équipe
+                                                                        2                         La version virtuelle paraît beaucoup plus sympa.
+                                                                        3                                 Un lit crasseux couvert de câbles.
+                                                                        4                        Un espace corporatiste modulaire et ergonomique.
+                                                                        5                                 Minimaliste, propre et ordonné.
+                                                                        6                           Il a envahi la totalité de votre espace privé.
+
+
+                                                                  ▶ Si vous avez un partenaire, qui est-ce ? ◀
+                                                                                Choisissez ou lancez 1d6.
+
+                                      Jet                                                               Partenaire
+
+                                      1                                                               Membre de la famille.
+                                      2                                                                     Vieil ami.
+                                      3                                                          Partenaire de travail et amant.
+                                      4                                         Partenaire secret qui serait une IA vagabonde. C’est ce qu’on dit.
+                                      5                                               Partenaire secret qui a des connexions avec un gang.
+                                      6                                           Partenaire secret qui a des connexions avec une corporation.
+
+
+
+
+ 56
+                                                                             NETRUNNER
+                                   ▶ Avez-vous d’autres clients ? ◀
+                                                                                                                                Exemple
+                                                                                                                             de parcours
+                                            Choisissez ou lancez 1d6.
+                                                                                                                        Victoria passe au parcours
+                      Jet                                            Clientèle                                          spécifique des Netrunners.
+                                                                                                                        Elle obtient un 1 sur le
+                      1                               Les Fixers du coin vous envoient des clients.                     premier tableau, ce qui
+                                              Un gang local qui protège votre espace de travail pendant                 signifie qu’elle joue une
+                      2                                                                                                 hackeuse indépendante.
+                                                 que vous êtes à la recherche de menaces virtuelles.
+                                                                                                                        Elle décide que son
+                      3                Cadres corporatistes qui vous engagent pour leurs « projets top secret ».        personnage travaille seul.
+                                             Solos ou autres combattants qui vous engagent pour assurer                 Son espace de travail est,
+                      4                                                                                                 comme l’indique son jet
+                                                       la sécurité de leurs systèmes personnels.
+                                                                                                                        de 5, minimaliste, propre
+                                                  Nomades ou Fixers qui vous engagent pour assurer                      et ordonné. Elle obtient à
+                      5
+                                                     la sécurité de leurs systèmes domestiques.                         nouveau un 5 et découvre
+                      6        Vous n’êtes au service de personne et vendez les données que vous dénichez sur le NET.   que, parmi ses clients,
+                                                                                                                        elle compte des Fixers
+                                                                                                                        locaux qui recourent à ses
+                ▶ Comment vous procurez-vous vos programmes ? ◀                                                         services pour sécuriser
+                                                                                                                        leurs systèmes. Elle déniche
+                                       Choisissez ou lancez 1d6.                                                        ses programmes sur les
+                                                                                                                        marchés de nuit (résultat
+                Jet                                          Comment ?                                                  6), et il semblerait qu’une
+                                                                                                                        IA vagabonde ou qu’un
+                 1                       Vous farfouillez dans des zones abandonnées de la ville.                       Fantôme du NET la
+                 2                     Vous les volez aux Netrunners dont vous brûlez la cervelle.                      poursuive (résultat 1) !
+                                                                                                                           Victoria prend le temps
+                 3          Votre Fixer local vous fournit des programmes en échange de missions de piratage.
+                                                                                                                        de la réflexion et décide
+                 4           Les corporatistes vous fournissent des programmes en paiement de vos services.             que Maryam, sa Netrunner,
+                                                                                                                        a quitté son foyer après
+                 5                       Vous avez vos entrées dans des entrepôts corporatistes.
+                                                                                                                        que sa candidature pour
+                                     Quand c’est possible, vous vous rendez sur les marchés de nuit                     un poste chez les Orbitaux
+                 6
+                                                     pour acheter des programmes.                                       en sécurité du NET a été
+                                                                                                                        rejetée. Quand elle est
+                                                                                                                        arrivée à Night City, elle
+                            ▶ Qui vous cherche des noises ? ◀                                                           a eu du mal à trouver du
+                                                                                                                        travail. Heureusement, un
+                                       Choisissez ou lancez 1d6.                                                        ami l’a présentée à des
+                                                                                                                        Fixers qui avaient bien
+                Jet                                            Ennemi                                                   besoin de ses compétences
+                                                                                                                        pour assurer la protection
+                              Vous pensez qu’une IA vagabonde ou un Fantôme du NET est à vos trousses.                  de leurs données. Mais quel
+                1
+                                           Dans les deux cas, vous êtes dans de sales draps.                            est ce nouvel ennemi ? Avant
+                                                                                                                        de quitter l’Afrique, Maryam
+                2                       Des Netrunners rivaux qui ne peuvent pas vous sacquer.
+                                                                                                                        s’est introduite dans une
+                3                  Des corporatistes qui veulent profiter en exclusivité de vos talents.                ancienne forteresse de
+                                                                                                                        données qui est passée sous
+                                 Des Justiciers qui vous considèrent comme un hackeur mal intentionné
+                4                                                                                                       les radars de Netwatch à
+                                                          et veulent vous coincer.
+                                                                                                                        l’époque du nettoyage de
+                5                        D’anciens clients qui ont le sentiment d’avoir été lésés.                      l’ancien NET. Peut-être que
+                6               Un Fixer ou un autre client qui veut profiter en exclusivité de vos talents.            sa découverte a trouvé le
+                                                                                                                        moyen de la suivre jusqu’à
+                                                                                                                        Night City.
+
+
+
+
+                                                                                                                                               57
+                                 TECHIE
+                                 ▶ Quel genre de Techie êtes-vous ? ◀                                          ▶ À quoi ressemble votre espace
+                                          Choisissez ou lancez 1d10.                                                    de travail ? ◀
+                                                                                                                       Choisissez ou lancez 1d6.
+                                    Jet                        Type
+                                                                                                         Jet                         Espace de travail
+                                    1                  Technicien cybernétique
+                                    2                         Mécanicien                                   1                           Un bazar tapissé de plans.
+                                    3                       Touche-à-tout                                                       Tout est classé selon un code couleur,
+                                                                                                           2
+                                                                                                                                   mais cela reste un cauchemar.
+                                    4                        Électronicien
+                                                                                                                               Vous avez tout informatisé et effectuez
+                                    5                     Fabricant d’armes                                3
+                                                                                                                                  des sauvegardes tous les jours.
+                                    6                         Savant fou
+                                                                                                           4                     Vous concevez tout sur votre Agent.
+                                    7            Spécialiste en drones et en robotique
+                                                                                                                                 Vous conservez tout au cas où vous
+                                                                                                           5
+                                    8                    Mécanicien industriel                                                       en auriez besoin plus tard.
+                                    9                        Récupérateur                                  6         Vous êtes le seul à comprendre votre système de classement.
+                                    10                  Mécanicien de marine
+
+
+                                                                                                                                 travaille
+                                                                                                                                   seul
+
+                                                     ▶ Avez-vous un partenaire ou travaillez-vous seul ? ◀
+                                                                  Choisissez si vous travaillez seul ou en équipe.
+
+
+
+                                                        ▶ Si vous avez un partenaire, qui est-ce ?◀
+
+
+
+           travaille en équipe
+                                                                              Choisissez ou lancez 1d6.
+
+                                   Jet                                                            Partenaire
+
+                                    1                                                           Membre de la famille
+                                    2                                                                  Vieil ami
+                                    3                                                       Partenaire de travail et amant
+                                    4                                                                   Mentor
+                                    5                                            Partenaire secret qui a des connexions avec un gang
+                                    6                                         Partenaire secret qui a des connexions avec une corporation
+
+
+
+                                                          Quoi ? C’est ça que tu cherches ? okay,
+                                                             mais je vais devoir appliquer le tarif
+                                                            spécial . J’en aurai bien besoin pour
+                                                       me laver les yeux à la javel après coup.
+                                                                                                                                             — Torch
+
+
+ 58
+                                                                                                                 TECHIE
+                        ▶ Quels sont vos principaux clients ? ◀                                                            Les espaces
+                                        Choisissez ou lancez 1d6.
+                                                                                                                            de travail
+                 Jet                                           Clientèle                                             Le livre contient des règles
+                                                                                                                     sur les Logements
+                    1                          Les Fixers du coin vous envoient des clients.                         (cf. page 377), c’est-
+                    2         Un gang local qui protège en retour votre espace de travail ou votre demeure.          à-dire l’endroit où vous
+                                                                                                                     dormez. Elles sont très
+                    3          Des cadres corporatistes qui vous engagent pour leurs « projets top secret ».         importantes. En effet,
+                    4   Solos ou autres combattants qui vous engagent pour assurer l’entretien de leur armement.     lorsqu’on est épuisé, on
+                                                                                                                     subit des pénalités sur ses
+                    5   Nomades ou Fixers qui apportent à réparer les technologies qu’ils « trouvent par hasard ».   jets à cause du manque de
+                    6      Vous ne travaillez pour personne d’autre et vendez ce que vous inventez ou réparez.       sommeil.
+                                                                                                                        Certains rôles, comme
+                                                                                                                     le Netrunner et le Techie,
+                                                                                                                     font un jet sur un tableau
+                              ▶ Où vous fournissez-vous ? ◀
+                                                                                                                     d’espace de travail
+                                      Choisissez ou lancez 1d6.                                                      quand ils déterminent
+                                                                                                                     leur parcours. Le résultat
+                Jet                                 Approvisionnement                                                obtenu ne représente pas
+                                                                                                                     l’emplacement exact du
+                1                    Vous fouillez les décombres des zones abandonnées de la ville.                  logement du personnage,
+                                                                                                                     mais plutôt le type de
+                2                   Vous récupérez du matériel sur les cadavres après les fusillades.
+                                                                                                                     surface dont il dispose pour
+                3           Votre Fixer local vous apporte du matériel en échange de services de réparation.         son activité professionnelle.
+                                                                                                                     Ce peut être un espace
+                4              Les corporatistes vous fournissent du matériel en paiement de vos services.
+                                                                                                                     séparé par un rideau du
+                5                        Vous avez vos entrées dans des entrepôts corporatistes.                     reste de l’appartement
+                6       Quand c’est possible, vous vous rendez sur les marchés de nuit pour acheter du matériel.     qu’il loue, un bureau libre
+                                                                                                                     prêté par son partenaire,
+                                                                                                                     ou n’importe quel coin de
+                                                                                                                     table où il peut s’étaler
+                           ▶ Qui vous cherche des noises ? ◀                                                         temporairement.
+                                                                                                                        L’espace de travail
+                                      Choisissez ou lancez 1d6.
+                                                                                                                     d’un personnage ne
+                Jet                                               Qui ?                                              compte jamais comme
+                                                                                                                     un Logement. Si un
+                 1        Un gang des zones de combat qui souhaite que vous travailliez exclusivement pour lui.      personnage dort dans un
+                                                                                                                     espace de travail qui ne
+                 2                       Un Techie rival qui s’efforce de vous voler votre clientèle.                fait pas partie du logement
+                 3             Des corporatistes qui souhaitent que vous travailliez exclusivement pour eux.         qu’il occupe (une pièce
+                                                                                                                     libre de son conapt, par
+                 4          Un fabricant bien établi qui considère que vos créations représentent une menace.        exemple), on considère
+                 5                        Un ancien client qui a l’impression de s’être fait avoir.                  qu’il a passé la nuit dans
+                                                                                                                     un véhicule lorsqu’on
+                 6               Un Techie rival qui cherche à vous écraser pour récupérer votre matériel.
+                                                                                                                     détermine la qualité de son
+                                                                                                                     sommeil.
+
+
+
+
+                                                                                                                                            59
+                                      MEDTECH
+                                                                             ▶ Quel genre de Medtech êtes-vous ? ◀
+                                                                          Choisissez avec l’aide de votre MJ ou lancez 1d10.
+
+                                         Jet                                                                                      Type
+      Vous voulez
+  savoir comment                            1                                                                                    Chirurgien
+      on rafistole
+        les gens ?
+                                            2                                                                                Médecin généraliste
+     Rendez-vous                            3                                                                     Membre de Trauma Team
+  Page 219
+                                            4                                                                                    Psychiatre
+                                            5                                                         Thérapeute spécialisé dans la cyberpsychose
+                                            6                                                                                    Charcudoc
+                                            7                                                                   Opérateur de cryosystèmes
+                                            8                                                                                   Pharmacien
+                                            9                                                                                Sculpteur corporel
+                                         10                                                                             Pathologiste judiciaire
+
+
+
+
+                                                                ▶ Avez-vous un partenaire ou travaillez-vous seul ? ◀
+                                                                             Choisissez si vous travaillez seul ou en équipe.
+
+
+
+
+                                                                                                                                              ▶ À quoi ressemble votre
+
+
+
+                travaille en équipe
+                                                                                                                                                espace de travail ? ◀
+                                      ▶ Parlez-nous de votre partenaire. ◀
+                                                                                                                                               Choisissez ou lancez 1d6.
+
+
+                                                                                                            travaille seul
+                                                Choisissez ou lancez 1d6.
+                                                                                                                                     Jet                    Espace de travail
+                                       Jet                       Partenaire
+                                                                                                                                      1           Vous le stérilisez tous les matins, sans exception.
+                                        1                   Votre groupe Trauma Team
+                                                                                                                                               Ce n’est plus ce qui se fait de mieux, mais vous avez
+                                                                                                                                      2
+                                        2                          Un vieil ami                                                                                     votre confort.
+                                        3                 Partenaire de travail et amant                                                            Votre matériel cryo sert aussi à rafraîchir les
+                                                                                                                                      3
+                                        4                      Membre de la famille                                                                                   boissons.
+
+                                        5       Partenaire secret qui a des connexions avec un gang                                               Vous avez surtout du matériel à usage unique et
+                                                                                                                                      4
+                                                                                                                                                         rangé sous une forme compactée.
+  Trauma Team :                                       Partenaire secret qui a des connexions
+                                        6                                                                                             5         Vos patients préféreraient des locaux plus propres.
+    corporation de                                             avec une corporation
+   secours médical
+         premium.                                                                                                                                  Tout est méticuleusement ordonné, aiguisé et
+                                                                                                                                      6
+         Pour plus                                                                                                                                                    stérilisé.
+ d’informations, cf.
+  Page 279
+
+
+
+
+  60
+                                                                                       MEDTECH
+                                                         ▶ Quels sont vos principaux clients ? ◀
+                                                                         Choisissez ou lancez 1d6.
+
+                                   Jet                                                      Clientèle
+
+                                   1                                         Les Fixers du coin vous envoient des clients.
+                                   2              Un gang local qui protège votre espace de travail ou votre demeure en échange de soins médicaux.
+                                   3                     Des cadres corporatistes qui vous engagent pour des projets médicaux « top secret ».
+                                   4                           Solos ou autres combattants qui vous engagent pour bénéficier de soins.
+                                   5                                   Nomades ou Fixers qui vous envoient des clients blessés.
+                                   6                                      Vous travaillez essentiellement pour Trauma Team.
+
+
+
+                                                 ▶ Où vous fournissez-vous ? ◀
+                                                         Choisissez ou lancez 1d6.
+
+                      Jet                                             Approvisionnement
+
+                          1                 Vous fouillez les caisses de matériel médical dans les zones abandonnées de la ville.
+                          2                           Vous récupérez du matériel sur les cadavres après les fusillades.
+                          3                       Votre Fixer local vous apporte du matériel en échange de soins médicaux.
+                          4              Les corporatistes ou Trauma Team vous fournissent du matériel en paiement de vos services.
+                          5                        Vous avez vos entrées dans des entrepôts corporatistes ou hospitaliers.
+                          6               Quand c’est possible, vous vous rendez sur les marchés de nuit pour acheter du matériel.
+
+
+
+
+                PAR HÉLIO FRAZÃO
+
+
+
+
+                                                                                                                                                     61
+                     MEDIA
+                     ▶ Quel genre de Média êtes-vous ? ◀                                                ▶ Comment communiquez-vous
+                              Choisissez ou lancez 1d6.                                                     avec votre public ? ◀
+                                                                                                                    Choisissez ou lancez 1d6.
+                       Jet                         Type
+   Pour en savoir                                                                                 Jet                                  Publications
+       plus sur la
+                        1                          Blogueur
+ manière dont les       2                      Écrivain (livres)                                    1                                  Magazine mensuel
+ gens s’informent
+         en 2045,       3                          Vidéaste                                         2                                         Blog
+     rendez-vous
+ Page 326               4                      Documentariste                                       3                                     Chaîne vidéo
+                        5                 Journaliste d’investigation                               7                                 Chaîne d’information
+                        6                          Graffeur                                         5                                  Vente de « livres »
+                                                                                                    6                                     Screamsheets
+
+
+
+
+                                            ▶ Respectez-vous la déontologie journalistique ? ◀
+                                                                        Choisissez ou lancez 1d6.
+
+                        Jet                                                  Sens de l’éthique
+
+                         1         Vous êtes un reporter impartial et honnête, très attaché à l’éthique. Vous ne rapportez que des faits vérifiables.
+                                                       Vous êtes un reporter impartial et honnête, mais vous êtes prêt à croire
+                         2
+                                                                  les rumeurs et les bruits de couloir, si besoin est.
+                                                  De temps à autre, vous faites un faux pas et allez à l’encontre de la déontologie,
+                         3
+                                                              mais c’est rare. Vous avez quand même des principes.
+                         4               Vous êtes prêt à outrepasser les lois et les règles pour coincer les méchants, mais uniquement eux.
+                         5           Vous êtes impitoyable et prêt à tout pour faire le buzz, quitte à violer les lois. Vous êtes un vrai fouineur.
+                                         Vous êtes pourri jusqu’à la moelle. Vous acceptez des pots-de-vin, publiez des reportages illégaux
+                         6
+                                                 qui vont à l’encontre de la déontologie. Vous vendez votre plume au plus offrant.
+
+
+
+
+                                             ▶ Quel genre d’histoires voulez-vous raconter ? ◀
+                                                                        Choisissez ou lancez 1d6.
+
+                       Jet                                                                     Histoires
+
+                        1                                                                    Intrigues politiques
+                        2                                                                          Écologie
+                        3                                                                     Vie des célébrités
+                        4                                                               Les travers des corporations
+                        5                                                                         Éditoriaux
+                        6                                                                        Propagande
+
+
+
+ 62
+                                                        CORPORATISTE
+                                    ▶ Pour quel genre de corporation travaillez-vous ? ◀
+                                             Choisissez avec l’aide de votre MJ ou lancez 1d10.
+
+                Jet                                                              Type d’entreprise
+
+                 1                                                                          Finance
+                 2                                                                 Médias et communications
+                 3                                                          Technologies médicales et cybernétiques
+                 4                                                               Laboratoire et biotechnologies
+                 5                                              Alimentation, textile et autres biens de consommation courante
+                 6                                                                    Production d’énergie
+                 7                                                            Produits électroniques et robotique
+                 8                                                                  Service aux entreprises
+                 9                                                                   Service à la personne
+                10                                                                     Immobilier et BTP
+
+
+
+
+                                           ▶ Dans quel département travaillez-vous ? ◀
+                                                                  Choisissez ou lancez 1d6.
+
+                Jet                                                                  Département
+
+                 1                                                                     Approvisionnement
+                 2                                                                         Production
+                 3                                                                Recherche et développement
+                 4                                                                    Ressources humaines
+                 5                                                       Relations publiques/communication/publicité
+                 6                                                                   Fusions et acquisitions
+
+
+
+
+                        ▶ Votre entreprise a-t-elle un impact positif ou négatif ? ◀
+                                                          Choisissez ou lancez 1d6.
+
+                Jet                                                  Éthique de l’entreprise
+
+                1                             Elle œuvre toujours pour le bien commun et met en avant des pratiques éthiques.
+                2                                  Le fonctionnement de l’entreprise repose sur la transparence et l’équité.
+                3                                L’entreprise fait quelques écarts sur le chemin de l’éthique, mais c’est rare.
+                4                                       Elle est prête à bafouer les règles pour obtenir ce qu’elle veut.
+                5                L’entreprise est impitoyable et recherche uniquement le profit, quitte à commettre des actes répréhensibles.
+                6     Le diable incarné. L’entreprise adopte un comportement contraire à l’éthique et s’aventure sans cesse sur le terrain de l’illégalité.
+
+
+
+
+                                                                                                                                                              63
+                CORPORATISTE
+                                                       ▶ Où est implantée votre entreprise ? ◀
+          Corporatistes                                                 Choisissez ou lancez 1d6.
+          et Justiciers
+                                                 Jet                                     Implantation
+         dans un jeu punk
+                                                   1                                            Une ville
+      Dans notre monde, on
+      a malheureusement                            2                                         Plusieurs villes
+      l’habitude de voir les gens                  3                                         Dans tout l’État
+      qui ont un semblant de
+      pouvoir écraser ceux qui en                  4                                       Dans tout le pays
+      sont dénués. Cette situation                 5             Internationale, elle possède des bureaux dans quelques métropoles
+      se vérifie d’autant plus dans
+      l’univers de Cyberpunk, où                   6                       Internationale, elle possède des bureaux partout
+      les corpos et les forces de
+      police se trouvent en haut
+      de l’échelle des puissances.
+      Ne nous voilons pas la
+      face. Si vous incarnez
+      un Corporatiste ou un
+                                            ▶ Qui cherche des noises à votre groupe ? ◀
+      Justicier, vous ne serez                                 Choisissez ou lancez 1d6.
+      pas forcément du côté des
+      gentils.                        Jet                                            Ennemi
+         Vous devez quand même
+      vous interroger. Dans un        1                               Une corporation rivale du même secteur.
+      monde où les Edgerunners        2                                      La justice vous tient à l’œil.
+      s’indignent de la tyrannie
+      des autorités, où se place      3                                Un Média local veut signer votre perte.
+      votre Justicier ou votre        4                 Au sein de l’entreprise, plusieurs départements sont à couteaux tirés.
+      Corporatiste ? Sont-ce des
+      individus égocentriques         5                            Le gouvernement local n’aime pas votre boîte.
+      qui se servent des autres       6                Les corporations internationales prévoient une prise de contrôle hostile.
+      personnages pour arriver
+      à leurs fins ? Sont-ce des
+      gamins qui ont réussi, mais
+      qui continuent de traîner
+      avec leur bande de potes,                     ▶ Vos relations avec le patron ◀
+      pris entre deux mondes ?
+      Ou bien sont-ce des
+                                                               Choisissez ou lancez 1d6.
+      rêveurs qui ont des étoiles
+      plein les yeux et aspirent      Jet                                   Relations actuelles
+      à bousculer le système de
+      l’intérieur ?                    1                   Votre patron vous conseille tout en prenant garde à ses ennemis.
+        Toutes ces histoires sont      2      Votre patron vous donne carte blanche et refuse de connaître le détail de vos opérations.
+      valables. Mais faites quand      3                  Votre patron est un microgestionnaire qui se mêle de votre travail.
+      même attention. Vous savez
+      ce qu’on dit : le pouvoir                              Votre patron est un fou dont les accès de rage imprévisibles
+                                       4
+      corrompt.                                                     sont contrebalancés par une paranoïa discrète.
+                                       5                        Votre patron est sympa et vous protège de vos rivaux.
+                                       6           Votre patron, menacé par votre ascension fulgurante, prévoit de vous éliminer.
+
+
+
+
+ 64
+                                                                                                 JUSTICIER
+                ▶ Dans quelle division travaillez-vous ? ◀                                              ▶ Jusqu’où s’étend la juridiction
+                       Choisissez avec l’aide de votre MJ                                                    de votre brigade ? ◀
+                                  ou lancez 1d6.                                                                  Choisissez ou lancez 1d6.
+                   Jet                      Département
+                                                                                                            Jet                                 Juridiction
+                   1                            Gardiennage
+                                                                                                             1                                 Zones corporatistes
+                   2                   Patrouille et maintien de l’ordre
+                                                                                                             2                                 Quartiers du centre
+                   3                         Enquêtes criminelles
+                                                                                                             3                                  Zones de combat
+                   4                           Équipe d’assaut
+                                                                                                             4                            Quartiers périphériques
+                   5                         Patrouille motorisée
+                                                                                                             5                            Zones en reconstruction
+                   6                           Affaires internes
+                                                                                                             6                                   Grande Route
+
+
+
+
+                                                            ▶ Votre brigade est-elle corrompue ? ◀
+                                                                               Choisissez ou lancez 1d6.
+
+                                 Jet                                                         Niveau de corruption
+
+                                  1                                               Force de police intègre qui ne transige pas sur l’éthique.
+                                  2                                         Force de police intègre, mais qui ne plaisante pas avec les criminels.
+                                  3                                        Votre brigade commet parfois des actes douteux, mais c’est assez rare.
+                                  4                                            Votre brigade contourne les règles pour coincer les méchants.
+                                  5                        Votre unité sans merci est déterminée à prendre le contrôle de la Rue, quitte à transgresser la loi.
+                                  6                Votre unité est pourrie jusqu’à l’os. Elle accepte des pots-de-vin et s’adonne à des activités illégales et douteuses.
+
+
+
+
+                            ▶ Qui cherche des noises                                              ▶ Quelle est votre cible principale ? ◀
+                              à votre brigade ? ◀                                                                 Choisissez ou lancez 1d6.
+                                Choisissez ou lancez 1d6.
+                                                                                                      Jet                          Cible prioritaire
+                           Jet                           Ennemi
+                                                                                                       1                                 Crime organisé
+                            1                          Crime organisé                                  2                               Gangs de boosters
+                            2                        Gangs de boosters                                 3                                       Dealers
+                            3                       L’inspection générale                              4                              Politiciens corrompus
+                            4                       Politiciens corrompus                              5                                 Contrebandiers
+                            5                          Contrebandiers                                  6                                        Voyous
+                            6                              Voyous
+
+
+
+
+                                                                                                                                                                            65
+                                     FIXER
+                                                                              ▶ Quel genre de Fixer êtes-vous ? ◀
+                                                                       Choisissez avec l’aide de votre MJ ou lancez 1d10.
+
+                                     Jet                                                                                   Type
+
+     Marché de                        1                                                       Vous jouez les négociateurs pour des gangs rivaux.
+    nuit : marché
+        éphémère                      2                                    Vous fournissez des marchandises rares ou exotiques à une clientèle triée sur le volet.
+     organisé par
+  des Fixers pour
+                                      3                                                   Vous négociez des contrats pour des Solos ou des Techies.
+       vendre des                     4                               Vous alimentez régulièrement les marchés de nuit en nourriture, en médicaments ou en drogues.
+  marchandises à
+   la sauvette. Cf.                   5                          Vous fournissez des marchandises illégales telles que des drogues de synthèse ou de l’armement militaire.
+  Page 337
+                                      6                                  Vous fournissez des Techies et des Medtechs en pièces de rechange et en matériel médical.
+                                      7                            Vous organisez des marchés de nuit qui fonctionnent bien, même si vous n’en êtes pas le propriétaire.
+                                      8         Vous négociez des contrats auprès de collectivités qui souhaitent acquérir des machines industrielles, des véhicules militaires et des aéronefs.
+                                      9                  Vous êtes un intermédiaire entre les consommateurs et les braqueurs qui pillent les corporations ou les zones de combat.
+                                      10                                       Vous êtes l’agent attitré d’un Média, d’un Rockeur ou d’une meute de Nomades.
+
+
+
+
+                                                             ▶ Avez-vous un partenaire ou travaillez-vous seul ? ◀
+                                                                      Choisissez si vous travaillez seul ou en équipe.
+
+
+
+                                                                                                                                         ▶ À quoi ressemble
+
+
+
+               travaille en équipe
+                                                                                                                                         votre « bureau » ? ◀
+                                     ▶ Parlez-nous de votre partenaire ◀
+
+
+                                                                                                                travaille seul
+                                                                                                                                        Choisissez ou lancez 1d6.
+                                               Choisissez ou lancez 1d6.
+                                                                                                                                  Jet                       Bureau
+                                       Jet                          Partenaire
+                                                                                                                                             Vous n’en avez pas. Vous préférez rester
+                                                                                                                                  1
+                                           1                      Membre de la famille                                                                   en mouvement.
+                                           2                          Un vieil ami                                                2                Une table dans le bar du coin.
+                                           3                 Partenaire de travail et amant                                                   Tout passe par la messagerie du puits
+                                                                                                                                  3
+                                           4                             Mentor                                                              de données et des cachettes anonymes.
+
+                                                               Partenaire secret qui a des                                                      Une pièce libre dans un entrepôt,
+                                           5                                                                                      4
+                                                                connexions avec un gang                                                          une boutique ou une clinique.
+
+                                                         Partenaire secret qui a des connexions                                   5                  Un bâtiment abandonné.
+                                           6
+                                                                  avec une corporation                                            6                Le vestibule d’un hôtel cube.
+
+
+
+
+ 66
+                                                                                                                       FIXER
+                                                     ▶ Quels sont vos clients secondaires ? ◀
+                                                                      Choisissez ou lancez 1d6.
+
+                                  Jet                                                           Clientèle
+
+                                  1                    Les Rockeurs ou les Médias du coin qui veulent obtenir des dates de concerts ou des contacts.
+                                  2                                Les gangs locaux qui protègent en retour votre bureau ou votre foyer.
+                                  3                            Les corporatistes qui ont besoin de matériel pour leurs « projets top secret ».
+                                  4                               Des Solos et autres gros bras qui cherchent des contrats ou des contacts.
+                                  5         Des Nomades et des Fixers qui ont besoin d’un intermédiaire pour conclure des accords et finaliser des transactions.
+                                  6                  Des politiciens locaux ou des corporatistes qui ont besoin de vous pour dénicher des informations.
+
+
+                                             ▶ Qui vous cherche des noises ? ◀
+                                                         Choisissez ou lancez 1d6.
+
+                 Jet                                                           Ennemi
+
+                     1                    Les gangs des zones de combat qui veulent être les seuls à bénéficier de vos services.
+                     2                                 Des Fixers rivaux qui cherchent à vous voler votre clientèle.
+                     3                           Des corporatistes qui veulent être les seuls à bénéficier de vos services.
+                     4                  L’ennemi d’un ancien client qui veut « boucler l’affaire », en vous éliminant par exemple.
+                     5                                 Un ancien client qui a l’impression de s’être fait arnaquer.
+                     6                   Un Fixer rival qui cherche à vous couler pour récupérer vos ressources et votre matériel.
+
+
+
+
+                PAR EVE VENTRUE
+
+
+
+
+                                                                                                                                                                   67
+                        NOMADE
+                         ▶ Quelle taille fait votre meute ? ◀                                         ▶ Si votre meute voyage
+                                 Choisissez ou lancez 1d6.                                            sur terre, que fait-elle ? ◀
+                                                                                                       Choisissez ou lancez 1d6.
+                        Jet                  Taille de la meute
+                                                                                                Jet                        Type
+ Il existe plusieurs     1                 Une tribu ou une famille étendue
+         groupes de
+           Nomades,      2                    Une vingtaine de membres                          1                          Gogang
+         comme les                                                                              2                  Transport de passagers
+  Aldecaldos, qui        3                 Entre trente et quarante membres
+    participent à la
+                         4                 Plus d’une centaine de membres                       3              Chautauqua/université populaire
+  reconstruction de
+     Night City ; les
+                         5      Une famille de sang (plusieurs centaines de membres)            4               Spectacle itinérant/kermesse
+   Jode, d’anciens
+        fermiers du             Une famille associée (composée de plusieurs familles de         5               Ouvriers agricoles saisonniers
+        Midwest ; la     6
+        Nation du                                        sang)                                  6                 Transport de marchandises
+ Sang, spécialisée
+  dans les voyages                                                                              7                    Protection de convoi
+   de plaisance ; et
+      les Meta qui
+                                                                                                8                       Contrebande
+    regroupent des                                                                              9                        Mercenariat
+    vétérans laissés
+       pour compte                                                                              10                       Construction
+                                                                                  terre
+        des guerres
+        d’Amérique
+           centrale.
+
+
+
+
+                                 ▶ Votre meute voyage-t-elle sur terre, sur mer ou dans les airs ? ◀
+                                               Choisissez entre des Nomades de terre, de mer ou de l’air.
+
+
+
+
+               air       ▶ Si votre meute est aérienne,                                         ▶ Si votre meute est maritime,
+                                que fait-elle ? ◀                                                      que fait-elle ? ◀
+                                                                                          mer
+                              Choisissez ou lancez 1d6.                                               Choisissez ou lancez 1d6.
+
+                        Jet                       Type                                          Jet                   Type
+
+                        1                      Pirates de l’air                                  1                    Piraterie
+                        2                Transport de marchandises                               2            Transport de marchandises
+                        3                  Transport de passagers                                3             Transport de passagers
+                        4               Protection de convois aériens                            4                  Contrebande
+                        5                       Contrebande                                      5               Troupes de support
+                        6                    Troupes de support                                  6              Combats sous-marins
+
+
+
+
+  68
+                                                                                                      NOMADE
+                               ▶ Que faites-vous pour la meute ? ◀
+                                              Choisissez ou lancez 1d6.
+                                                                                                                Des Nomades
+                                                                                                                dans la ville
+                              Jet                                        Rôle
+                                                                                                           En 2045, les Nomades
+                               1                               Ambassadeur (diplomatie)                    contrôlent les autoroutes
+                               2                            Éclaireur (protection, armement)               et les voies maritimes. Vous
+                                                                                                           voulez que votre cargaison
+                               3                             Pilote/conducteur de véhicules                aille d’un point A à un point
+                               4                         Routier (acheminement de conteneurs)              B ? Vous allez certainement
+                                                                                                           passer un accord avec
+                               5                                 Contrebandier solitaire                   des Nomades dans un
+                               6                     Approvisionnement (carburant, véhicules, etc.)        port ou un centre de dépôt
+                                                                                                           qu’ils contrôlent. Ce sont
+                                                                                                           également des experts en
+                                                                                                           construction qui mettent en
+                                                                                                           œuvre leurs talents pour
+                                                                                                           rebâtir ce que la Quatrième
+                                                                                                           Guerre corporatiste a
+                      ▶ Quelle est la philosophie de la meute ? ◀                                          brisé. Vous voyez ce
+                                   Choisissez ou lancez 1d6.                                               mégabâtiment original
+                                                                                                           là-bas ? Une centaine
+                Jet                                      Philosophie                                       de Nomades travaillent
+                                                                                                           probablement sur ce
+                                       Toujours faire le bien ; votre meute accepte les autres             chantier. De nos jours,
+                1                                                                                          plusieurs familles nomades
+                                          tels qu’ils sont, elle veut juste aller de l’avant.
+                                                                                                           possèdent des enclaves
+                2             Elle fonctionne comme une entreprise familiale honnête et équitable.         permanentes à Night City
+                3               Il lui arrive de commettre des actes répréhensibles, mais c’est rare.      ou en périphérie. Vous ne
+                                                                                                           devriez pas avoir trop de
+                4            La meute s’affranchit des règles qui se dressent entre elle et ses besoins.
+                                                                                                           mal à expliquer la raison
+                                   Elle est égoïste et impitoyable, prête à commettre des atrocités        de la présence de votre
+                5
+                                                      si cela lui permet d’avancer.                        Nomade en ville.
+                                                                                                              Mais pourquoi
+                                     Le mal incarné. Vous semez la terreur sur les autoroutes,
+                6                                                                                          traînerait-il avec une
+                                             multipliant les massacres et les pillages.
+                                                                                                           bande de sédentaires (des
+                                                                                                           non Nomades) ? Trouvez
+                                                                                                           une raison personnelle.
+                                                                                                           Établissez des liens avec un
+                                                                                                           ou plusieurs personnages
+                      ▶ Qui cherche des noises à votre meute ? ◀                                           du groupe. Peut-être qu’on
+                                   Choisissez ou lancez 1d6.                                               vous a désignés, le Fixer
+                                                                                                           de la meute et vous, pour
+                 Jet                                           Ennemi                                      surveiller les environs ?
+                                                                                                           Peut-être que la meute doit
+                  1                                          Crime organisé                                une faveur au Medtech ?
+                                                                                                           Discutez-en avec le MJ
+                  2                                        Gangs de boosters
+                                                                                                           et les autres joueurs. Vous
+                  3                                        Dealers de drogues                              finirez bien par trouver.
+                  4                                         Politiciens véreux
+                  5                        Meute rivale qui travaille dans le même domaine
+                  6                                        Policiers corrompus
+
+
+
+
+                                                                                                                                  69
+                                                                                      Fini d’être
+                                                                                      le gringalet
+                                                                                      de la bande
+                                                                                          avec
+                                                                                      Pro Kibble.
+
+                                                                                   Une recette conçue
+                                                                                     scientifiquement
+                                                                                      pour rendre les
+                                                                                    fibres moléculaires
+                                                                                   de vos muscles plus
+                                                                                     puissantes, plus
+                                                                                  rapides et plus saines
+                                                                                    avec ses 12 acides
+                                                                                    aminés créotiques.
+                                                                                      En plus, c’est
+                                                                                         délicieux !
+                                                               es. Si vous
+                                                   ut des chosdes cyberoptiques
+                                       jusqu’au bo          r
+                   us  all ez vraiment vous faire installe ctères, chapeau !
+                Vo           le temps de         petits cara          t poussé.
+                avez pris ur lire ce texte ende votre engagemene pour ça,
+                efficaces po détail témoigne ai nerd, et rien qu
+                Ce souci du ! Vous êtes un vr .
+                Félicitationsadorons, Choomba
+                nous vous
+
+
+                                                                                                           Vous allez vraiment jusqu’au bout des choses. Si vous
+                                                                                                           avez pris le temps de vous faire installer des cyberoptiques
+                                                                                                           efficaces pour lire ce texte en petits caractères, chapeau !
+                                                                                                           Ce souci du détail témoigne de votre engagement poussé.
+                                                                                                           Félicitations ! Vous êtes un vrai nerd, et rien que pour ça,
+                                                                                                           nous vous adorons, Choomba.
+
+
+
+
+

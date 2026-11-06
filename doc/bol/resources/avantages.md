@@ -1,6 +1,6 @@
 # Avantages
 
-Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) et le seeder
+Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/bol/pdf-text/07-maj-mythic-plus.txt`) et le seeder
 `backend/database/seeders/BolAvantageSeeder.php`.
 
 ## Remarques

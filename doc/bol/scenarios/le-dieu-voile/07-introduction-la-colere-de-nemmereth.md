@@ -4,7 +4,7 @@
 Fiche de session : [introduction/01-fiche-de-session.md](introduction/01-fiche-de-session.md). Personnages
 récurrents : [personnages-recurrents.md](personnages-recurrents.md).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent, les notes au MJ en gras, le bloc de stats à sa place. Les
 renvois « page N » sont ceux du livre (Satarla : livre p. 12-23, voir `02-satarla.md` ; la prophétie des os : livre

@@ -6,7 +6,7 @@ Il resume les regles de creation de heros a respecter dans l'UI, en priorite pou
 Source principale :
 - `Pdf BoL Mythic Livre de base VF 1.3.pdf`
 - Chapitre 2 `Creer un heros`
-- Mise a jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) : prime sur le livre de base la ou elle change une regle (voir `Ajouts Mythic+`)
+- Mise a jour Mythic+ (`doc/bol/pdf-text/07-maj-mythic-plus.txt`) : prime sur le livre de base la ou elle change une regle (voir `Ajouts Mythic+`)
 
 Usage conseille :
 - Quand on demande de "se recaler sur les regles de creation", relire ce fichier avant d'editer le code.
@@ -158,7 +158,7 @@ Important :
 ## Ajouts Mythic+
 
 Reference :
-- `doc/pdf-text/07-maj-mythic-plus.txt`
+- `doc/bol/pdf-text/07-maj-mythic-plus.txt`
 
 Avantages et desavantage :
 - `Prestance` : `+1 aura`, plafond d'aura releve (voir `Attributs`)
@@ -238,7 +238,7 @@ Points a garder en tete :
 
 ## Races jouables (p. 90-95)
 
-Avec l'accord du MJ ; non modelisees dans l'app (voir `doc/rules/01-creation-heros.md`).
+Avec l'accord du MJ ; non modelisees dans l'app (voir `doc/bol/rules/01-creation-heros.md`).
 
 Regles :
 - chaque race a sa propre liste d'avantages et de desavantages ; a la creation, on ne choisit que dans cette liste, la liste generale ne s'ouvre qu'en depensant des points d'experience (p. 90)

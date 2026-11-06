@@ -1,6 +1,6 @@
 # Références BoL
 
-Base de travail Markdown construite à partir du document `doc/pdf/Pdf BoL Mythic Livre de base VF 1.3.pdf` et, pour les catégories volumineuses, recoupée avec les seeders du projet.
+Base de travail Markdown construite à partir du document `doc/bol/pdf/Pdf BoL Mythic Livre de base VF 1.3.pdf` et, pour les catégories volumineuses, recoupée avec les seeders du projet.
 
 Objectif : disposer d'une référence locale exploitable sans rouvrir le PDF à chaque fois.
 

@@ -2,7 +2,7 @@
 
 Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
-Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
+Règles de référence : `doc/bol/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/bol/rules/exemples-de-jets.md`.
 
 Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et retient ce qui se calcule, et laisse le MJ corriger à la main.
 
@@ -151,7 +151,7 @@ Les options impossibles restent visibles et focalisables (`aria-disabled`), leur
 
 ## 6 ter. La magie en combat
 
-Règles : `doc/rules/05-alchimie-foi-sorcellerie.md` (livre p. 146-157), avec ce que l'application a interprété.
+Règles : `doc/bol/rules/05-alchimie-foi-sorcellerie.md` (livre p. 146-157), avec ce que l'application a interprété.
 
 ### La foi (livre p. 146)
 

@@ -1,0 +1,142 @@
+                                                               INT     Compétences de Contrôle                     NIV CARAC BASE    Compétences d’Éducation          NIV   CARAC BASE   Compétences de Technique                 NIV CARAC BASE
+                                                                       Conduite de véhicule terrestre (RÉF)                          Guide local (INT)                                   Aérotech (TECH)
+                                                                       Équitation (RÉF)                                                         Quartier d’origine                       Armurerie (TECH)
+                                                               RÉF     Pilotage de véhicule aérien (x2) (RÉF)                                                                            Arts plastiques (TECH)
+                                                                       Pilotage de véhicule maritime (RÉF)                                                                               Assistance médicale (x2) (TECH)
+
+                                                                       Compétences de Combat                       NIV CARAC BASE    Langue (INT)                                        Contrefaçon (TECH)
+                                                              DEX      Arme de mêlée (DEX)                                                      Argot                                    Crochetage (TECH)
+
+                                                                       Art martial (x2) (DEX)                                                                                            Cybertech (TECH)
+
+                                                                       Bagarre (DEX)                                                                                                     Électronique (TECH)
+                                                             TECH      Esquive (DEX)                                                 Science (INT)                                       Explosifs (x2) (TECH)
+                Pseudo                                                                                                                                                                   Maritech (TECH)
+                                                                       Compétences de Corps                        NIV CARAC BASE
+                                                                                                                                                                                         Photos et films (TECH)
+                                                                       Athlétisme (DEX)
+                Rôle                                         PRES                                                                    Survie en milieu hostile (INT)                      Pickpocket (TECH)
+                                                                       Contorsion (DEX)
+                                                                                                                                     Tactique (INT)                                      Premiers secours (TECH)
+                                                                       Danse (DEX)
+                Capacité                     RANG                                                                                                                                        Sécurité électronique (x2) (TECH)
+                de rôle                       RANK                     Discrétion (DEX)                                              Compétences de Représentation    NIV CARAC BASE
+                                                              VOL                                                                                                                        Terratech (TECH)
+                                                                       Endurance (VOL)                                               Instrument (TECH)
+                Notes
+                                                                       Résistance à la torture/aux drogues (VOL)                                                                         Compétences de Tir                       NIV CARAC BASE
+                                                                                                                                                                                         Armes d’épaule (RÉF)
+                                                                       Compétences d’Éducation                     NIV CARAC BASE
+                                                              CHA                                                                    Jeu d’acteur (PRES)                                 Armes lourdes (x2) (RÉF)
+                                                                       Bibliothèque (INT)
+                                                              SUR
+                                                                                                                                                                                         Pistolet (RÉF)
+                                                                       Bureaucratie (INT)                                            Compétences de Sociabilité       NIV CARAC BASE
+                                                                                                                                                                                         Tir à l’arc (RÉF)
+                                                                       Composition (INT)                                             Connaissance de la rue (PRES)
+                                                           MOUV                                                                                                                          Tir automatique (x2) (RÉF)
+                                                                       Comptabilité (INT)                                            Conversation (EMP)
+                                                                       Connaissance (INT)                                            Corruption (PRES)                                   Compétences de Vigilance                 NIV CARAC BASE
+                                                                       Criminologie (INT)                                            Habillement et style (PRES)                         Concentration (VOL)
+                                                              COR
+                                                                       Cryptographie (INT)                                           Interrogatoire (PRES)                               Dissimulation/Révélation d’objet (INT)
+                                                                       Déduction (INT)                                               Look (PRES)                                         Lecture sur les lèvres (INT)
+                                            Humanité                   Dressage (INT)                                                Négoce (PRES)                                       Perception (INT)
+                                                              EMP
+                                                                       Gestion d’affaires (INT)                                      Persuasion (PRES)                                   Pistage (INT)
+                                   SUR                        SUR
+                                                                       Jeux de hasard (INT)                                          Psychologie (EMP)
+
+                          Points de santé        Blessures critiques   ARMES ET ARMURE                                                                                                             Att/
+                                                                                                                                           Arme                             DG     Munitions      round
+                                                                                                                                                                                                                  Notes
+                            SUR
+
+
+                Blessure                                               Armure                                          PA     Pénalité
+                grave
+                                                                       Tête
+                 -2 à toutes les actions                Addictions     Corps
+                   en blessure grave
+                                                                       Bouclier
+                       Sauvegarde contre
+                                  la mort                                    L a pénalité s’applique à RÉF, DEX et MOUV
+                                                                                                               Alias      Équipement                            Notes
+
+                Points                                      Événements
+                d’amélioration                SUR           de réputation
+
+                Réputation
+
+
+                PARCOURS
+                Origines                                         Personnalité
+                culturelles
+
+
+                Tenue et coiffure                                Accessoire
+                                                                 favori
+
+
+                Quelle est                                       Que pensez-vous des
+                votre valeur                                     gens en général ?
+                fondamentale ?
+
+                À qui tenez-vous                                 À quoi tenez-vous
+                le plus ?                                        le plus ?
+
+
+                Origines familiales                              E nvironnement
+
+
+                C rise familiale                                 But dans la vie                                                 Munitions
+                                                                                                                               Eurodollars (ED)
+                Amis                                             Tragédies amoureuses
+                                                                                                                          Style vestimentaire
+
+
+
+
+                                                                                                                          Logement                      Loyer           Niveau de vie
+
+
+                E nnemis              Qui ?         Pourquoi ?        Que peuvent-ils faire ?   Que va-t-il se passer ?
+                                                                                                                          Parcours spécifique au rôle
+                 CYBERMATÉRIEL
+                                                                  Kit cyberaudio   Données                                                           Cyberimplant interne   Données
+
+
+
+
+                    Cyberœil droit                          Données                      Cyberœil gauche                      Données
+
+
+
+
+                                                                                                                                                     Cyberimplant externe   Données
+
+                   Cyberbras droit                        Données                        Cyberbras gauche                     Données
+
+
+
+
+                       Pour un cyberimplant qui nécessite un                                          Pour un cyberimplant qui ne nécessite pas
+                                                                                                                                                     Cyberfashion           Données
+                cyberimplant de base (par exemple un cyberœil),                                         de cyberimplant de base (par exemple
+                   cochez la case pour indiquer que vous avez                                          un cyberimplant interne), contentez-vous
+                    l’implant de base. Inscrivez les extensions                                     d’inscrire chaque cyberimplant dans les lignes
+                            dans les lignes en dessous.                                                  en dessous du nom de la catégorie.
+
+
+                                                                  Câblage neural   Données
+
+
+
+
+                                                                                                                                                     Cyborgimplant          Données
+
+
+
+
+                   Cyberjambe droite                       Données                       Cyberjambe gauche                    Données
+

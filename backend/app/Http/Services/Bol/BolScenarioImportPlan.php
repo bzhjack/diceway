@@ -7,7 +7,7 @@ use App\Exceptions\Bol\ScenarioImportException;
 /**
  * Le contenu d'un fichier d'import de scénario, contrôlé et résolu sans toucher à la base : chaque nom du
  * catalogue (région, carrière, arme…) devient un id, chaque valeur est bornée comme à la saisie. Toutes les
- * erreurs sont relevées d'un coup, avec leur chemin dans le fichier. Format : `doc/scenarios/format-import.md`.
+ * erreurs sont relevées d'un coup, avec leur chemin dans le fichier. Format : `doc/bol/scenarios/format-import.md`.
  */
 final class BolScenarioImportPlan
 {

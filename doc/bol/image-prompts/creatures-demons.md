@@ -3,10 +3,10 @@
 Prompts pour regénérer (via ChatGPT) les portraits des **75 créatures** du
 bestiaire (`BolCreatureSeeder.php`) et des **3 démons** (`BolDemonSeeder.php`),
 dans le même style que les bannières des bibliothèques
-(`doc/image-prompts/headers.md`, en particulier `header-creatures.webp` et
+(`doc/bol/image-prompts/headers.md`, en particulier `header-creatures.webp` et
 `header-demons.webp`) : illustration peinte et encrée façon BD fantasy des
 années 80, fort contraste, ombres profondes. Même démarche que
-`doc/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
+`doc/bol/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
 Les créatures 55 à 63 (bestiaire du Beshaar), 64 à 74 (bestiaire du Khanat,
 *Chroniques Lémuriennes 1.2*) et 75 (Roi-Sorcier mort-vivant, livre p. 128) n'ont encore aucun portrait ; les créatures 43 à 48

@@ -13,7 +13,7 @@ use JsonException;
 use Throwable;
 
 /**
- * Importe un scénario écrit en JSON (format : `doc/scenarios/format-import.md`) dans la bibliothèque d'un
+ * Importe un scénario écrit en JSON (format : `doc/bol/scenarios/format-import.md`) dans la bibliothèque d'un
  * compte : scénario, PNJ, créatures, démons et scènes. Relancer la commande met l'import précédent à jour.
  */
 class BolImportScenario extends Command

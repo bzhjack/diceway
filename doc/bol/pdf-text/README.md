@@ -1,6 +1,6 @@
 # Extractions texte du PDF de règles
 
-Texte extrait de `doc/pdf/Pdf BoL Mythic Livre de base VF 1.3.pdf` (217 pages) via :
+Texte extrait de `doc/bol/pdf/Pdf BoL Mythic Livre de base VF 1.3.pdf` (217 pages) via :
 
 ```bash
 pdftotext -layout -f <première page PDF> -l <dernière page PDF> "Pdf BoL Mythic Livre de base VF 1.3.pdf" <fichier>.txt
@@ -20,7 +20,7 @@ Les noms de fichiers indiquent les pages **livre**.
 | `05-magie-p138-157.txt` | Alchimie, foi, sorcellerie | 138-157 |
 | `06-progression-p164-166.txt` | Progression et suivants | 164-166 |
 
-Mise à jour vers l'édition Mythic+ : `07-maj-mythic-plus.txt`, extrait de `doc/pdf/MaJ_Mythic.pdf` (3 pages, `pdftotext -layout`) —
+Mise à jour vers l'édition Mythic+ : `07-maj-mythic-plus.txt`, extrait de `doc/bol/pdf/MaJ_Mythic.pdf` (3 pages, `pdftotext -layout`) —
 nouveaux avantages et désavantage, armes régionales, « Juste une égratignure » en d6B (livre p. 58).
 
-Usage : vérifier l'alignement de `doc/rules/*.md` avec le texte du livre sans relancer `pdftotext`.
+Usage : vérifier l'alignement de `doc/bol/rules/*.md` avec le texte du livre sans relancer `pdftotext`.

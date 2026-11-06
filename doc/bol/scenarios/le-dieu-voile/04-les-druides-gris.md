@@ -2,7 +2,7 @@
 
 *Livre p. 33-35 (PDF p. 35-37). Auteur : Vincent Basset.*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`), les blocs de statistiques en tableaux. Les renvois « page N » sont ceux du livre (Sanctuaire Noir : livre p. 31, cf. `03-halakh.md`).*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`. Les encadrés du livre sont rendus en citations (`>`), les blocs de statistiques en tableaux. Les renvois « page N » sont ceux du livre (Sanctuaire Noir : livre p. 31, cf. `03-halakh.md`).*
 
 Les druides gris servent Nemmereth du Long Sommeil, le dieu de la mort, qui possède la particularité unique d’appartenir au panthéon des vingt dieux communément adorés en Lémurie, mais d’être aussi compté au nombre des dieux sombres, ces divinités maléfiques vouées à la destruction et au mal. Cette spécificité brouille quelque peu la perception que les autorités et les cultes divins ont des druides gris, dont ils condamnent les pratiques tout en reconnaissant qu’ils servent, de manière dévoyée et sacrilège, un dieu qu’il est légitime de vénérer.
 

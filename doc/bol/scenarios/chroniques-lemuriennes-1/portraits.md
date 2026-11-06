@@ -3,10 +3,10 @@
 Prompts pour générer (via ChatGPT) les portraits des fiches créées par l'import des cinq aventures du recueil
 (`app/*.json`) qui n'en ont pas encore : **30 PNJ et 2 créatures** (état au 2026-11-02).
 
-Les PNJ suivent le style des PNJ du catalogue (`doc/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
+Les PNJ suivent le style des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
 fantasy des années 80. La dominante est propre au recueil, qui mène du Khanat aux jungles de Qush : bleu acier /
 gris froid contrasté par la lumière chaude d'une torche. Les créatures suivent le style du bestiaire du catalogue
-(`doc/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le commentaire de chaque
+(`doc/bol/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le commentaire de chaque
 fiche ; quand le livre ne décrit pas un personnage, la phrase s'en tient à ce qu'il dit de son rôle et de son peuple.
 
 ## Où vont les portraits
@@ -46,7 +46,7 @@ poser ; l'image suit quand la planche du catalogue est refaite.
 | `cl1-mariage-amer` | `crocator` | Crocator | `front/src/assets/bol/bestiary/11.jpg` |
 | `cl1-mariage-amer` | `necrophage` | Nécrophage | `front/src/assets/bol/bestiary/50.jpg` (ancien style jusqu'à la planche C9) |
 
-Les planches C du catalogue sont dans `doc/image-prompts/creatures-demons.md`.
+Les planches C du catalogue sont dans `doc/bol/image-prompts/creatures-demons.md`.
 
 ## Consignes de planche — PNJ
 
@@ -58,11 +58,11 @@ tête de chaque planche P, suivie de la liste de ses six personnages :
 > Les six personnages, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
 
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
-de `doc/image-prompts/pnj.md`, en remplaçant sa dominante vert émeraude sombre / teal par le bleu acier / gris froid.
+de `doc/bol/image-prompts/pnj.md`, en remplaçant sa dominante vert émeraude sombre / teal par le bleu acier / gris froid.
 
 ## Consignes de planche — créatures
 
-À coller en tête de la planche B1 (préambule de `doc/image-prompts/creatures-demons.md`), suivie de la liste de ses
+À coller en tête de la planche B1 (préambule de `doc/bol/image-prompts/creatures-demons.md`), suivie de la liste de ses
 créatures :
 
 > Planche de portraits illustrés de créatures : une image paysage 3:2 (1536×1024) découpée en une grille de 3 colonnes × 2 lignes de portraits carrés de taille identique, accolés sans marge, sans bordure, sans cadre ni séparateur visible (chaque portrait remplit sa case jusqu'au bord, et rien ne déborde sur la case voisine). Même style pour tous : pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Chaque portrait montre une seule créature, la tête et le haut du corps en gros plan (ou la bête entière quand elle est petite), centrée dans sa case, entière dans le cadre, contre-plongée dramatique pour les grandes bêtes : la créature domine le cadre et fixe le spectateur. Scène diurne, sans lune, lumière dorée d'un soleil bas. Dominante chromatique ambre / ocre, ciel embrasé façon tempête de sable, avec en fond un décor flou de son habitat (jungle, désert, marais, montagne, mer…) dans les mêmes tons chauds. Aucun personnage humain, aucun texte, légende, numéro, logo ni watermark.
@@ -147,7 +147,7 @@ magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
 ```
 
 Si ChatGPT ne respecte pas la grille (cases décalées, portraits verticaux), recadrer à la main chaque case en carré
-autour du visage, comme pour la planche C des PNJ du catalogue (`doc/image-prompts/pnj.md`).
+autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`).
 
 ## Avancement
 

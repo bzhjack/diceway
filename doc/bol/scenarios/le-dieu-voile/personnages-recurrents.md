@@ -1,13 +1,13 @@
 # Le Dieu voilé — Registre des personnages récurrents
 
-*Saga d’import : `dieu-voile`. Source : `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (page PDF = page
+*Saga d’import : `dieu-voile`. Source : `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf` (page PDF = page
 livre + 2), parcouru de la PDF p. 46 à 199 : chaque chapitre survolé, ses blocs de stats et ses « Protagonistes » lus.*
 
 ## Pourquoi ce registre
 
 L’import se fait chapitre par chapitre, dans l’ordre : `intro.json`, puis `ch1.json` à `ch5.json`, tous dans la saga
 `dieu-voile`. Un personnage cité dans une distribution sans être défini dans le fichier est cherché parmi ceux qu’un
-import **précédent** de la même saga a créés (voir `doc/scenarios/format-import.md`).
+import **précédent** de la même saga a créés (voir `doc/bol/scenarios/format-import.md`).
 
 Or plusieurs personnages agissent dès l’introduction alors que leurs stats ne viennent qu’au chapitre 5 (Jorkus, Lok
 Kozaar, Hilario). Décision : **tous les personnages récurrents sont définis dans `app/intro.json`**, distribués ou

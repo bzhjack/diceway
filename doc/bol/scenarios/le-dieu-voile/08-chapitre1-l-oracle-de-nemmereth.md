@@ -5,7 +5,7 @@ collaboration d’Arnaud Prié et Andrea Salvatores. Fiche de session :
 [chapitre-1/01-fiche-de-session.md](chapitre-1/01-fiche-de-session.md). Personnages récurrents :
 [personnages-recurrents.md](personnages-recurrents.md). Données de l’app : [app/ch1.json](app/ch1.json).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent, les notes au MJ en gras, les blocs de stats à leur place
 (ceux des « Protagonistes », livre p. 84-85, en fin de chapitre comme dans le livre). Les renvois « page N » sont ceux du

@@ -23,7 +23,7 @@ export const DIFFICULTES_SORT: readonly DifficulteSort[] = [
 ];
 
 /** Les quatre puissances de sort (livre p. 149-153 et table p. 151). Les dégâts au-delà du 1er cercle sont une interprétation
- * (`doc/rules/05-alchimie-foi-sorcellerie.md`). */
+ * (`doc/bol/rules/05-alchimie-foi-sorcellerie.md`). */
 export const CERCLES_SORT: readonly CercleSortInfo[] = [
   {cercle: 0, label: 'Charme', coutBase: 1, coutMin: 1, difficultes: ['automatique', 'tres-facile', 'facile'], degats: '1', conditions: 'Aucune condition. Jet seulement s’il affecte directement une créature.'},
   {

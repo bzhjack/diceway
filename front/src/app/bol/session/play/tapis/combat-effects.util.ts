@@ -425,7 +425,7 @@ export function degatsMainsNues(effets: readonly CombatEffect[], carte: string):
 }
 
 /** Héros surpris ou pris en embuscade : un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque
- * (`doc/resources/armures.md`) ; au premier round, le camp des héros n'en a pas. Le MJ peut retirer l'effet. */
+ * (`doc/bol/resources/armures.md`) ; au premier round, le camp des héros n'en a pas. Le MJ peut retirer l'effet. */
 export function effetSurpris(porteur: string): NewEffect {
   return {origine: SANS_BOUCLIER, libelle: 'surpris', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: true};
 }

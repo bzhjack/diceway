@@ -3,10 +3,10 @@
 Prompts pour générer (via ChatGPT) les portraits des fiches créées par l'import de la saga (`app/ch1.json` à
 `app/ch5.json`) qui n'en ont pas encore : **24 PNJ, 3 créatures et 3 démons** (état au 2026-11-02).
 
-Les PNJ suivent le style des PNJ du catalogue (`doc/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
+Les PNJ suivent le style des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
 fantasy des années 80, dominante bleu nuit profond / ocre sable brûlé contrastée par la lumière chaude d'une torche,
 pour rester dans les nuits du désert et des ports de la saga. Les créatures et les démons suivent celui du bestiaire
-du catalogue (`doc/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le
+du catalogue (`doc/bol/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le
 commentaire de chaque fiche ; quand le livre ne décrit pas un personnage, la phrase tranche ce qu'un illustrateur
 doit trancher, sans contredire le texte.
 
@@ -53,10 +53,10 @@ tête de chaque planche P, suivie de la liste de ses six personnages :
 > Les six personnages, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
 
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
-de `doc/image-prompts/pnj.md`.
+de `doc/bol/image-prompts/pnj.md`.
 
 Pour les créatures (planche B1) et les démons (planche D1), reprendre les consignes de planche de
-`doc/image-prompts/creatures-demons.md` (« Consignes de planche — créatures » et « — démons »).
+`doc/bol/image-prompts/creatures-demons.md` (« Consignes de planche — créatures » et « — démons »).
 
 ## Planches
 
@@ -136,7 +136,7 @@ magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
 ```
 
 Si ChatGPT ne respecte pas la grille (cases décalées, portraits verticaux), recadrer à la main chaque case en carré
-autour du visage, comme pour la planche C des PNJ du catalogue (`doc/image-prompts/pnj.md`).
+autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`).
 
 ## Avancement
 

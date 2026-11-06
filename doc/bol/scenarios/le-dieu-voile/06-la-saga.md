@@ -3,7 +3,7 @@
 *Livre p. 44-51 (PDF p. 46-53). Auteur : Vincent Basset, avec la collaboration d’Arnaud Prié et Andrea Salvatores.
 En annexe, la chronologie récapitulative de la saga (aide de jeu V, livre p. 195, PDF p. 197).*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques Lemuriennes 2.0 Le Dieu voilé.pdf`
 (page PDF = page livre + 2). Le livre est en deux colonnes, avec des encadrés : les encadrés sont rendus en citations
 (`>`) et placés à la fin de la section qu’ils accompagnent. Les renvois « page N » sont ceux du livre.*
 

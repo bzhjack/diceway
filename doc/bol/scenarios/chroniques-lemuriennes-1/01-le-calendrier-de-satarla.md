@@ -2,7 +2,7 @@
 
 *Livre p. 6-9 (PDF p. 8-11 ; la PDF p. 12 est blanche) — tableau des mois repris en annexe, livre p. 131 (PDF p. 133). Auteur : Andrea Salvatores.*
 
-*Transcription relue et remise en ordre de lecture à la main depuis `doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
+*Transcription relue et remise en ordre de lecture à la main depuis `doc/bol/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`.*
 
 La diversité des peuples et des nations de la Lémurie n’a jamais permis la mise en place d’un système calendaire commun à l’ensemble du continent. Certaines régions vivent simplement au rythme des phases de la lune et du cycle des saisons, tandis que d’autres ont adopté des calendriers plus formels.
 

@@ -3,7 +3,7 @@
 *Une aventure prête à jouer* — **Arnaud Prié** (crédits du supplément).
 
 Source : *Chroniques Lémuriennes 1.2* (Ludospherik), pour *Barbarians of Lemuria* —
-livre p. 42-57, PDF p. 44-59 (`doc/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`).
+livre p. 42-57, PDF p. 44-59 (`doc/bol/pdf/Pdf BoL Chroniques-Lémuriennes 1.2.pdf`).
 
 Texte extrait avec `pdftotext -layout` et relu le 2026-10-23 : colonnes et encadrés remis dans
 l'ordre de lecture, blocs de stats à leur place (« Les protagonistes »). Les encadrés du livre sont

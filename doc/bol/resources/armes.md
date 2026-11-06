@@ -1,6 +1,6 @@
 # Armes
 
-Source principale : chapitre 2, pages 49-50 du livre, avec la mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`).
+Source principale : chapitre 2, pages 49-50 du livre, avec la mise à jour Mythic+ (`doc/bol/pdf-text/07-maj-mythic-plus.txt`).
 
 ## Catégories de dégâts
 

@@ -5,7 +5,7 @@ Un fichier JSON par chapitre décrit le scénario, ses personnages et ses scène
 
 ```bash
 # depuis la racine du dépôt (le conteneur ne monte que app/ : copier le fichier d'abord)
-docker cp doc/scenarios/la-perle-du-beshaar/app/ch1.json diceway:/tmp/ch1.json
+docker cp doc/bol/scenarios/la-perle-du-beshaar/app/ch1.json diceway:/tmp/ch1.json
 docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email> --dry-run   # tout vérifier
 docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>             # importer
 ```

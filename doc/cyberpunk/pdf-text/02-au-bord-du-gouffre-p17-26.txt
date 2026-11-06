@@ -1,0 +1,544 @@
+           PAR HUNTANG
+
+
+
+
+                                   Au bord du gouffre
+                                                   Introduction à Cyberpunk
+
+                         « I’m not a man or a machine
+                         I’m just something in between.
+                         I’m all love, a dynamo
+                         So push the button and let me go. »
+                                                               Lovin’ Every Minute of It
+                                                                1984 Zomba Enterprises Inc. (ASCAP)
+
+
+
+                                                                                                      17
+  AU BORD DU GOUFFRE
+
+                                                    Vous voulez devenir un Cyberpunk ?
+
+                                                              Ou juste en avoir l’air ?
+                                                   Avant de larguer votre matelas pour vous joindre à la fête,
+                                                   nous avons deux trois choses à vous dire.
+                                                      Tout d’abord, parlons du titre. Cyberpunk est une
+  Vous voulez en savoir plus                       combinaison de deux mots : cyber, abréviation de « cyber-
+  sur le cybermatériel ?                           nétique » qui désigne la fusion de l’homme et de la machine,
+        Rendez-vous page 107                       et punk, un mouvement musical du début des années 1980
+                                                   qui incarnait pleinement l’idée de violence, de rébellion et
+                                                   de contestation sociale aux accents nihilistes. Le terme a
+                                                   été popularisé à l’époque précédant l’Effondrement par un
+                                                   groupe d’écrivains spécialisés dans la science-fiction pétrie
+                                                   de « techno-mélange ». Leurs œuvres mettaient en scène un
+                                                   assemblage profilé de rock, de pop, de sexe, de drogue et de
+                                                   technologie très tendance et dernier cri, en général greffée
+                                                   sur le corps des personnages. Les archétypes Cyberpunk
+                                                   des années 80 vont du technobarbare écumant un monde
+                                                   postapocalyptique aux jet-setteurs cyberpucés dotés de
+                                                   corps artificiels.
+  Vous voulez en savoir plus sur
+                                                       Bien sûr, de notre point de vue éclairé d’habitant de l’Ère
+  les néocorpos ?
+                                                   du Rouge, tous ces ressorts nous paraissent datés. Après tout,
+        Rendez-vous page 264
+                                                   vous avez probablement trouvé cet article dans la base de
+                                                   données de votre ordinateur perso. Vous avez utilisé le câble
+                                                   Kamakura 19, directement branché à vos ports d’interface
+                                                   neuronale. Vous avez l’habitude de vous raccorder à ces
+                                                   appareils pour préparer du café, de vous « connecter » à
+                                                   votre Merco pour rouler jusqu’au magasin. Mais comprenez
+                                                   bien : en 1987, tout cela paraissait visionnaire. Personne
+                                                   n’avait de port d’interface. Vous ne pouviez pas contacter
+                                                   les gens avec votre Agent. Les drogues de synthèse étaient
+                                                   illégales. Dans la plupart des villes, vous pouviez vous prome-
+                                                   ner sans veste blindée. Le NET n’existait même pas. Certes il
+  Vous voulez en savoir plus sur les armes ?       a aujourd’hui disparu, mais à l’époque, personne n’imaginait
+        Rendez-vous page 91                        ce concept.
+
+
+
+                                                          Toujours sur le fil du
+                                                            rasoir . Telle est
+                                                        la voie du         C yberpunk .
+                                                                   — Johnny Silverhand sur le tard
+
+
+
+  Vous voulez en savoir plus sur le netrunning ?
+        Rendez-vous page 195
+
+
+
+ 18
+                                                                                    AU BORD DU GOUFFRE
+
+
+                L   e krach de 1994
+
+                Aujourd’hui nous sommes mieux renseignés. Les livres d’histoire
+                racontent en détail le krach de 1994, quand la communauté
+                européenne a fondé la Bourse mondiale et que l’économie
+                des États-Unis et de l’Union soviétique s’est effondrée.
+                  À cette époque, les deux pays faisaient partie des
+                superpuissances, ils n’étaient pas encore devenus un duo
+                de nations de seconde zone bourrées d’armes, agitant la              Vous voulez en savoir plus sur Night City ?
+                menace d’une frappe nucléaire sous l’œil vigilant de l’Agence              Rendez-vous page 283
+                de défense spatiale européenne. Pour l’instant, les propul-
+                seurs Tycho sont toujours prêts à catapulter des rochers sur
+                Moscou et Washington, ce qui devrait nous éviter la guerre
+                nucléaire que l’on attend depuis 1944. Par chance, la cail-
+                lasse ne coûte rien.
+                  Et jusqu’à présent, les corpos n’ont utilisé qu’une seule
+                ogive nucléaire.
+
+
+
+                L   a Quatrième Guerre
+                    corporatiste
+                                                                                     Vous voulez en savoir plus sur
+                Si l’on revient quelques années en arrière, les corporations         les personnalités majeures ?
+                contrôlaient tout ou presque et constituaient des gouver-                  Rendez-vous page 304
+                nements à part entière. Mais c’était sans compter sur cette
+                guerre ignoble et généralisée entre les deux mégacorpora-
+                tions les plus puissantes, Arasaka Security et Militech Arms,
+                laquelle s’est terminée par une explosion nucléaire au centre-
+                ville de Night City, cadeau de l'un des camps. Vous voyez
+                bien ce que ça a donné.
+
+
+
+                C    e qui nous manque
+
+                Malgré les atrocités de cette époque de guerre, vous pouvez
+                                                                                     Vous voulez en savoir plus sur les gangs ?
+                vous rendre n’importe où avec un seul passeport — l’aspect
+                positif de la mondialisation. Le cours des devises qui ont
+                                                                                           Rendez-vous page 308
+                survécu reste constant et l’eurodollar est toujours la monnaie
+                de référence dans le monde entier. Personne ne se plaint des
+                contrats à vie que font signer les corporations ni de l’abolition
+                des syndicats ; en ces temps troublés, ils ne manquent même
+                pas aux habitants. Tel est le prix à payer pour vivre en sécu-
+                rité dans une société stable, n’est-ce pas ?
+
+
+
+                L   a vie dans la Rue
+
+                Après tout, vous pourriez vivre dans la Rue, à seize dans            Vous voulez en savoir plus sur
+                un appartement parmi les huit mille appartements du quar-            les lieux incontournables ?
+                tier, à partager votre ration de crédits toutes les semaines                Rendez-vous page 310
+
+
+
+                                                                                                                          19
+  AU BORD DU GOUFFRE
+
+                                                 pour acheter de la nourriture. C’est sûr, ce n’est pas l’idéal,
+                                                 entre les gangs de boosters qui rôdent dans les galeries
+                                                 marchandes et les problèmes de criminalité organisée dans
+                                                 les hautes sphères, mais cela vaut mieux que de finir dans
+                                                 la Rue. Au moins, les méga-arcologies ont des flics (payés
+                                                 par les corporations, d’accord, mais ça revient moins cher
+                                                 que de réunir les fonds pour engager votre propre Solo !)
+                                                 Par ailleurs, les réseaux médiatiques s’assurent que tous les
+  Vous voulez en savoir plus                     appartements aient un accès câblé direct à la télévision, à
+  sur les transports ?                           la radio et aux diffuseurs de sensation, histoire de vous tenir
+        Rendez-vous page 322                     occupé le samedi soir.
+                                                   Où en étions-nous ? Ah oui, vous vouliez être un Cyberpunk.
+
+
+
+                                                 Q    uand la réalité dépasse
+                                                      la fiction
+
+                                                 Voici un peu de contexte supplémentaire pour vous donner
+                                                 matière à réflexion : quand les fondateurs du mouvement
+                                                 ont donné naissance au genre cyberpunk, ils partaient du
+                                                 principe que ce qu’ils décrivaient n’arriverait jamais ou bien
+                                                 se produirait dans un futur lointain. Ils ne se doutaient pas que
+  Vous voulez en savoir plus
+                                                 les savants d’Allemagne de l’Ouest développaient des circuits
+  sur les divertissements ?
+                                                 « organiques » à la fin des années 1980, ou que l’armée de
+        Rendez-vous page 329                     l’air des États-Unis travaillait sur des systèmes d’armement
+                                                 contrôlés par la pensée. On commençait à peine à utiliser les
+                                                 fibres musculaires synthétiques myomar pour la fabrication
+                                                 de prothèses, et peu de gens auraient pu se projeter dans
+                                                 les années 1990, à l’époque où les implants dans les bras et
+                                                 les jambes devinrent possibles. La bio-ingénierie en était à
+                                                 ses balbutiements, donnant naissance au Frostban™ et à de
+                                                 nouvelles variétés de maïs, mais ces créations étaient sans
+                                                 commune mesure avec les espèces animales employées (sans
+                                                 succès) pour la terraformation des colonies de Mars.
+  Vous voulez en savoir plus                        Il aura fallu quinze ans pour que les nouvelles technologies
+  sur l’alimentation ?                           transforment cette vision en réalité. L’armée a commencé par
+         Rendez-vous page 328                    utiliser la cybernétique pour créer des pilotes et des « soldats
+                                                 parfaits ». Ces expérimentations ont débouché sur l’invention
+                                                 de prothèses de membres, d’yeux synthétiques et de greffes
+                                                 mécaniques destinées à d’autres parties du corps. Les cir-
+                                                 cuits organiques ont établi un lien direct entre l’homme et les
+                                                 ordinateurs. Combiné avec un système de télécommunication
+                                                 moderne et les transmissions satellitaires, les fondations du
+                                                 NET, qui enveloppait autrefois le monde entier (à présent hors
+                                                 service grâce à la guerre et aux R.A.G.E.U.X.), étaient en
+                                                 place. L’entrée en force des nouvelles avancées technolo-
+                                                 giques provoqua un technochoc culturel.
+
+
+  Vous voulez en savoir plus sur les drogues ?
+        Rendez-vous page 227
+
+
+
+ 20
+                                                                                    AU BORD DU GOUFFRE
+
+
+                T    echnochoc
+
+                Le technochoc : la technologie a excédé les capacités de
+                compréhension et d’acceptation des êtres humains. Soudain,
+                les gens ont eu la trouille. Ils sont devenus irrationnels, vio-
+                lents. Des familles se sont brisées, des proches se sont déchi-
+                rés. Les gens se sentaient démunis dans un univers hostile. La
+                société tout entière s’est enlisée, victime d’une psychose de
+                masse. C’est ce que l’on appelle aujourd’hui l’Effondrement.         Vous voulez en savoir plus
+                                                                                     sur l’Effondrement ?
+                   On peut classer les réactions au technochoc en trois grands
+                                                                                            Rendez-vous page 244
+                courants. L’immense majorité a adopté une attitude passive ;
+                les gens attendaient les consignes de leurs leaders maintenant
+                que les avancées technologiques avaient métamorphosé
+                leurs vies déracinées. Un groupe plus réduit s’est efforcé de
+                remonter le temps et a fondé un mouvement néo-luddite.
+                Le dernier courant a décidé de saisir l’avenir à bras-le-corps.
+                Guidées par les écrits visionnaires des années 1980, ces têtes
+                brûlées ont instauré le mouvement Cyberpunk.
+
+
+
+                B    ienvenue dans le futur sombre
+
+                OK, vous êtes prêt.
+                                                                                     Vous voulez en savoir plus
+                                                                                     sur les Années folles ?
+                   En bon Cyberpunk, vous attrapez la technologie à la gorge               Rendez-vous page 258
+                et vous ne la lâchez pas. Vous n’avez pas peur de tester les
+                dernières améliorations, les cybertechnologies et les trou-
+                vailles de la bio-ingénierie. Vous avez des ports d’interface
+                sur les poignets, des armes dans les bras, des lasers dans les
+                yeux, des programmes bio-informatiques dans le cerveau.
+                Vous devenez la voiture que vous conduisez, l’aérodyne que
+                vous pilotez, les fusils que vous maniez. Vous plongez tête
+                la première dans les systèmes informatiques, utilisant votre
+                esprit pour foncer à la vitesse de la lumière à travers les nou-
+                veaux réseaux des micro-nets, les Forteresses de données
+                et les intelligences artificielles. Avec vos doigts de cyborg,       Vous voulez en savoir plus
+                vous déverrouillez les serrures numériques ; avec vos sens           sur la 4e Guerre corporatiste ?
+                augmentés, vous pressentez le futur.                                       Rendez-vous page 251
+                  Le Cyberpunk, c’est aussi une attitude. Vous portez les
+                vêtements les plus branchés, vous connaissez les bonnes per-
+                sonnes et suivez le bon mouvement. Vous planifiez vos crimes
+                dans les boîtes et les bars les plus sélectifs. Des ennemis, vous
+                en avez un certain nombre : armées corporatistes, gangs de
+                motards cybernétiques, assassins en armure énergétique et
+                Netrunners vissés à leur ordinateur. Pour vous défendre, vous
+                pouvez compter sur vos nerfs d’acier, vos combines, votre air
+                bravache et le smartgun, ou flingue intelligent, Minami 10 qui
+                pend à votre ceinture.
+                                                                                     Vous voulez en savoir plus
+                  Vous êtes prêt ? Évidemment que vous l’êtes. Vous brûlez
+                d’impatience.                                                        sur l’Ère du Rouge ?
+                                                                                            Rendez-vous page 257
+                     Voilà, vous êtes un Cyberpunk.
+
+                                                                                                                       21
+  AU BORD DU GOUFFRE
+
+
+                                      I ntroduction                                          Bruce a décidé d’incarner un Solo, un mer-
+                                                                                          cenaire endurci dénommé Gron Helstrom. En
+                                        au jeu de rôle
+                                                                                          réfléchissant sur l’attitude de son personnage,
+      Lexique du jeu                                                                      Bruce s’imagine qu’un type tel que Gron a
+                                      Si Cyberpunk est votre premier jeu de               soif d’action. Il dit : « Gron attrape le premier
+      Action : ce qu’un               rôle, relax ! Contrairement à ce que vous           voyou qui lui tombe sous la main par le col de
+        personnage entreprend         pourriez croire, cela n’a rien de bien sorcier.     sa veste bon marché et grogne : “Où est le bar
+        pour comprendre ou            Il s’agit simplement de faire semblant d’être       le plus proche ?” ».
+        influencer le monde qui       quelqu’un d’autre en suivant des règles struc-
+        l’entoure.                                                                          Dave a décidé de jouer un Justicier, Jord
+                                      turées, comme quand, gamin, vous jouiez aux
+                                                                                          Mattersly, un détective en herbe perspicace
+      Caractéristique : aussi         gendarmes et aux voleurs. Le jeu de rôle met
+                                                                                          qui enquête sur des mystères — plus c’est
+        appelées CARAC. Les           l’accent sur les descriptions orales et la narra-
+                                                                                          bizarre, mieux c’est. Jord est un intellectuel,
+        attributs physiques,          tion, ainsi les joueurs décrivent les actions au
+                                                                                          pas un combattant, c’est pourquoi Dave tente
+        psychiques et sociaux         lieu de les mimer.
+                                                                                          une autre approche : « Jord oblige Gron
+        constitutifs de chaque
+                                        (Quant aux autres, vous voudrez certaine-         à lâcher le voyou et s’explique : “Veuillez
+        individu.
+                                      ment sauter ce passage et reprendre votre           excuser l’enthousiasme de mon ami. Nous
+      Compétence : un                 lecture plus loin. Tous les joueurs n’ont pas       sommes juste à la recherche d’un endroit pour
+        domaine dans lequel           commencé en 1997 avec un Clerc/Ninja/               boire et discuter tranquillement.” »
+        le personnage s’est           Solo de niveau 170, armé d’une épée éner-
+        entraîné, par exemple                                                                Lisa joue le rôle de Spyder, une Netrunner/
+                                      gétique maudite récupérée sur le cadavre
+        Pistolets ou Sciences.                                                            hackeuse rusée qui tient un peu du Robin des
+                                      d’un demi-dieu vaincu au cours d’une partie
+        Se mesure en niveaux.                                                             Bois. À cause de ses tendances paranoïaques,
+                                      précédente. Passez cette étape ; on s’occupe
+                                                                                          elle scanne les habitants qui évoluent autour
+      d10 : un dé à dix faces         de mettre les nouveaux joueurs au diapason,
+                                                                                          de l’équipe. « Que voit Spyder dans la
+      d100 : lancez deux d10.         compris ?)
+                                                                                          foule ? »
+        Utilisez un dé pour les
+        dizaines et l’autre pour      Comment fonctionne le JDR ?                            Comme Mike est le MJ, il réfléchit à la ques-
+        les unités afin d’obtenir                                                         tion. Il fait nuit, le groupe se promène dans un
+        un résultat compris entre     Pas d’inquiétude, on va vous montrer ça.            quartier mal famé de la ville et Gron vient de
+        1 et 100.                                                                         secouer un des habitants. Il décrit : « Eh bien,
+                                      ▶ Une session de jeu typique ◀                      Spyder aperçoit trois silhouettes massives qui
+      d6 : un dé à six faces
+                                      Mike, Bruce, Dave et Lisa se sont réunis pour       se déplacent discrètement dans l’obscurité. Les
+      Équipe : un groupe de           une session de jeu de rôle. Ils s’installent        rayons de la lune se reflètent sur leurs armes
+        personnages joueurs.          confortablement dans le salon de Mike où les        dégainées et leurs implants cybernétiques
+      Initiative : l’ordre dans       joueurs ont la place de poser leurs livres, leurs   tandis qu’ils se rapprochent de vous. »
+        lequel les personnages        dés et un assortiment de victuailles (prélude          Après un instant de réflexion, Lisa réagit :
+        agissent pendant une          essentiel à toute bonne séance de jeu de rôle).     « Je peux utiliser ma capacité Interface pour
+        scène. Particulièrement                                                           prendre le contrôle d’un armement de défense
+                                         En tant que maître de jeu, Mike démarre la
+        important pour les
+                                      session en décrivant la scène où se déroule         du quartier ? »
+        épisodes de tension,
+        comme les combats.            l’action. Il commence : « Vous venez d’entrer          Mike répond : « Il va te falloir un certain
+                                      tous les trois dans Night City. Il est environ      temps pour détecter un appareil, puis t’intro-
+      Jet : lancer un dé et ajouter   neuf heures du soir, et les rues obscures,          duire dans le réseau. Les boosters ont accéléré
+        le résultat à une CARAC       venteuses, sont poisseuses d’humidité et de la
+        + Compétence pour                                                                 l’allure. »
+                                      crasse accumulée depuis des années dans ce
+        connaître l’issue d’une                                                             « Spyder se tourne vers Gron et Jord »,
+                                      quartier miséreux. De timides rayons de lune
+        action.                                                                           lance Lisa sur le vif. Pas évident de se sortir
+                                      projettent des ombres démesurées tandis que
+      Joueur : une personne                                                               de ce traquenard. Gron les a fait repérer en
+                                      vous arpentez la rue, croisant des mendiants
+        réelle incarnant un                                                               pleine Rue. Ce soir, le sang va couler.
+                                      et des gangs de boosters à la recherche d’une
+        personnage dans le jeu.       proie facile. »                                       « Hé les gars, on a problème… »
+
+
+
+
+ 22
+                                                                                    AU BORD DU GOUFFRE
+
+                Qu’est-ce qu’un personnage ?                         film qui ne contrôlerait pas tous les acteurs.
+
+                                                                                                                        Lexique du jeu
+                                                                     Mais il est aussi extrêmement gratifiant. Le MJ
+                La plupart d’entre vous utiliseront ces règles       se sert du contexte de l’univers du jeu pour
+                pour jouer des personnages (les personnages          développer les intrigues auxquelles les per-
+                                                                                                                        Maître de jeu : aussi
+                joueurs ou PJ), des avatars que vous contrôlez       sonnages joueurs vont participer ; il peut sinon
+                                                                                                                         appelé MJ. La personne
+                qui évoluent dans l’univers fictionnel de 2045.      s’inspirer d’aventures existantes comme celles
+                                                                                                                         chargée de planter le
+                Nous avons conçu ce livre pour que vous              qu’on trouve dans cet ouvrage. Le MJ décrit
+                                                                                                                         décor, d’incarner les PNJ
+                puissiez définir clairement les actions et les       la situation aux joueurs telle que leurs person-    et d’arbitrer les règles.
+                pensées de vos personnages et la manière             nages la perçoivent et en retour les joueurs
+                dont cela se répercute dans les règles.              décrivent les actions de leurs personnages         Mission : un scénario
+                                                                     pour répondre à cette situation. De là, l’in-       avec un objectif défini
+                  Un personnage est un rôle que l’on joue au                                                             dans lequel les PJ jouent
+                pied levé dans une session de jeu de rôle, qui       trigue se déploie, le MJ ajoute des obstacles,
+                                                                                                                         sous la direction du MJ.
+                ressemble fort à du théâtre d’improvisation. Par     des PNJ et d’autres éléments à son récit tandis
+                                                                                                                         Aussi appelé scénario,
+                exemple, si votre groupe voulait rejouer le film     que de leur côté, les joueurs réfléchissent
+                                                                                                                         aventure ou tâche.
+                Blade Runner, Rick Deckard serait l’un des per-      constamment aux faits et gestes de leurs alter
+                                                                     ego. De cette manière, les joueurs et le MJ        Personnage joueur :
+                sonnages. À la façon d’Harrison Ford, le joueur
+                                                                     créent une histoire, main dans la main.              alias PJ. Personnage
+                qui incarnerait Rick dans cette aventure s’effor-                                                         incarné par un joueur.
+                cerait de donner une incarnation crédible de
+                son personnage dans chaque scène du « film ».                    ▶ Devenir MJ,                          Personnage non
+                                                                            oui, mais comment ? ◀                         joueur : alias PNJ.
+                    ▶ Costume obligatoire ? ◀                                                                             Un personnage incarné
+                                                                     Le mieux est d’essayer. Dans les nombreux
+                Non. Bien qu’il existe une catégorie spécifique                                                           par le MJ.
+                                                                     encarts qui émaillent ce livre, vous trouverez
+                de jeu de rôle qu’on appelle le GN (ou jeu           une foule d’exemples sur la façon d’intégrer       Rôle : une catégorie de
+                de rôle grandeur nature, où les participants         les règles dans vos parties. Les talents de          personnage. Chaque
+                enfilent un costume), la majorité des parties        conteur restent les plus importants — donner         rôle possède une
+                se déroulent autour d’une table de salon, où         une description percutante du monde où vos           capacité inédite.
+                les joueurs imaginent les scènes décrites par        camarades évoluent, et imaginer des pro-           Round : un round
+                le MJ puis font agir leur personnage selon ce        blèmes délicats et des situations épineuses.         comprend le tour de
+                qui leur semble être la réaction la plus logique     Mettez de la difficulté, mais n’écrasez pas          chacun des personnages
+                dans une situation donnée. Inutile de fabriquer      pour autant vos joueurs. Il est aussi primor-        impliqués dans une
+                un costume, de brandir des armes en plas-            dial que le MJ se comporte en juge impartial         scène.
+                tique ou (Dieu merci !) d’arpenter des tunnels       concernant l’application des règles et des         Temps mort : la période
+                d’évacuation à la nuit tombée. Pour tout dire,       effets de jeu. Retenez bien ceci : si vous êtes      entre deux missions
+                l’une des meilleures parties dont nous ayons         ennuyeux et injuste, personne ne voudra jouer        durant laquelle les
+                jamais entendu parler s’est déroulée dans une        dans votre « film ». Bonne chance !                  personnages peuvent
+                tranchée, en Irak, où une bande de soldats de                                                             se détendre, récupérer,
+                l’armée américaine s’est retrouvée bloquée.                                                               poursuivre des objectifs
+                                                                     Et les règles dans tout ça ?
+                Oui, on pourrait faire remarquer qu’ils avaient                                                           secondaires et mener
+                un costume adapté (des armes, du matériel,           La résolution des situations qui adviennent          une existence (presque)
+                des protections), mais vous n’êtes pas obligé        en cours de partie nécessite en général plus         normale.
+                de pousser le vice aussi loin.                       que du simple bon sens. Par exemple, si vous       Tour : le temps nécessaire
+                                                                     n’avez jamais été pris dans une fusillade, vous      pour qu’un personnage
+                Qu’est-ce qu’un maître de jeu ?                      aurez du mal à imaginer l’ensemble des impli-        accomplisse une action.
+                                                                     cations d’une telle scène. Les règles sont un        Dure environ 3 secondes.
+                L’un de vous endossera le rôle du maître de jeu      moyen de résoudre ces situations de manière        XdY : cette formule vous
+                (ou arbitre) : il présente l’histoire aux joueurs,   juste et cohérente. Lorsque l’issue d’un événe-     indique le nombre de
+                contrôle tous les personnages autres que ceux        ment est incertaine, vous devez jeter des dés,      dés à jeter et leur type.
+                des joueurs (qu’on appelle personnages non           que ce soient des dés à dix (d10) ou à              Par exemple, 1d6 signifie
+                joueurs ou PNJ) et applique les règles du jeu.       six faces (d6), puis le résultat du jet vous        que vous devez lancer
+                Le MJ doit avoir une connaissance solide des         donne des indications sur le déroulement de         un seul d6.
+                règles et du contexte fictionnel. Il s’agit du       la scène. Enfin, le MJ applique les effets du
+                rôle le plus exigeant en matière d’énergie et        résultat et les règles qu’ils impliquent.
+                d’imagination, à la façon d’un réalisateur de
+
+                                                                                                                                               23
+  AU BORD DU GOUFFRE
+
+
+                A    rgot de la Rue                                           Exotique : personne biosculptée qui possède des carac-
+                                                                                téristiques en théorie absentes du corps humain normal,
+                                                                                comme de la fourrure, de longues oreilles, des crocs, etc.
+                         Lexique de termes courants                           Frigo à viande : terme employé par les Netrunners pour
+                              à l’Ère du Rouge                                  désigner le monde réel.
+                                                                              Gang de poseurs : groupe dont les membres ont adopté
+                Ère du Rouge : expression populaire qui désigne la             un style ou une apparence spécifique, ou bien ont
+                  période allant de 2023 à la fin des années 30, déri-         recouru à des opérations de sculpture corporelle.
+                  vant de la couleur rouge du ciel, conséquence de la         Go LEO : voyage dans l’orbite basse de la terre (Low Earth
+                  Quatrième Guerre corporatiste.                               Orbit), c’est-à-dire visiter une station spatiale du système
+                Baraka : un emplacement en or, comme les locaux aban-          solaire.
+                 donnés d’une corporation.                                    Gyro : petit hélicoptère mono ou biplace, surtout utilisé
+                Booster : membre d’un gang qui affectionne la cyberné-         par la police et les escouades d’assaut des corporations.
+                 tique, les vestes en cuir et la violence gratuite.           Hydro : argot pour dihydrogène, un carburant utilisé
+                Charcudoc : chirurgien spécialisé dans l’implantation de       pour un nombre considérable de véhicules dans les
+                 matériel cybernétique illégal.                                années 2000.
+
+                Chiller : être cool, être ensemble.                           IA : intelligence artificielle ; ordinateur conscient de sa
+                                                                                propre existence.
+                CHOOH2 (« tchoutou ») : argot pour alcool, dérivé du
+                 carburant qui alimente les véhicules. La majorité des        Input/jack : terme technique pour désigner un partenaire
+                                                                                occasionnel.
+                 moyens de transport de l’Ère du Rouge fonctionne avec
+                 une forme d’alcool raffiné qui brûle à une température       Justicier : officiers de police et autres flics. Le terme tire
+                 plus élevée que le méthanol.                                   son origine de la force de police du capitaine Max
+                                                                                Hammerman déployée après la guerre qu’on appelait
+                Choombatta/Choomba : terme néo afro-américain
+                                                                                « les Justiciers » dans la Rue. Ce terme argotique a fini
+                 pour désigner un membre de la famille ou un ami.
+                                                                                par désigner tous les agents du maintien de l’ordre.
+                Chromeur : fan de heavy métal du XXIe siècle. Voyez
+                                                                              Kombi : un grand véhicule pouvant transporter des
+                 aussi Rock chromatique.
+                                                                               passagers et des marchandises. Très populaire chez
+                Clavier : argot pour désigner une console d’interface          les Nomades qui s’en servent de logement lorsqu’ils
+                  informatique équipée de commandes manuelles. On              sillonnent les routes.
+                  utilise aussi le mot « terminal ».                          Marché de minuit : marché temporaire et top secret que
+                Conapt : un appartement en copropriété dans une Zone           des Fixers de haut vol mettent sur pied pour vendre des
+                 Corporatiste.                                                 marchandises on ne peut plus illégales. Les pointures du
+                Décâbler : devenir violent, attaquer quelqu’un sans raison.    monde du crime organisent souvent leurs réunions dans
+                                                                               des salles privées à l’occasion d’un Marché de minuit.
+                Dorphs : argot pour endorphines de synthèse, une drogue
+                                                                              Marché de nuit : marché temporaire, non cautionné par
+                 qui accroît la capacité de régénération, diminue les
+                                                                               les autorités, organisé par des groupes de Fixers avec un
+                 effets de la fatigue et produit une « poussée » qui donne
+                                                                               solide réseau de relations. À l’Ère du Rouge, les marchés
+                 un second souffle au consommateur.
+                                                                               de nuit sont l’endroit idéal pour dénicher du matériel et
+                Drogues de combat : séries de drogues de synthèse              des implants cybernétiques.
+                 destinées à améliorer la vitesse, l’endurance et les
+                                                                              Navi : terme argotique pour un aérodyne (un AV), un
+                 réflexes d’un individu.
+                                                                               véhicule volant ressemblant à une automobile, propulsé
+                Encéphalo plat : désigne une personne ou une chose             par des turboréacteurs.
+                  morte.                                                      Netrunning : interaction avec un système cyberspatial,
+                Être cyborgué : se faire implanter le plus de cybermaté-       piratage des programmes et des commandes. Avant la
+                  riel possible avant de franchir la ligne rouge.              Quatrième Guerre corporatiste, signifiait surfer sur le
+                                                                               réseau mondial du NET.
+
+
+
+
+ 24
+                                                                              AU BORD DU GOUFFRE
+
+                Petite couronne : une banlieue sûre où vivent principale-    Rock chromatique : genre de heavy métal qui se
+                  ment des cadres corporatistes issus de la classe moyenne    caractérise par une dominante de sons électroniques,
+                  et leurs familles.                                          des rythmes simples et des paroles violentes.
+                Polymère jetable : pistolet en plastique polymère de         Rom régulier : terme désignant le partenaire d’une
+                 faible valeur, tirant des munitions de 5 mm à 9 mm.          relation durable.
+                Pseudo : un surnom ; le nom professionnel par lequel on      Ronins : assassins et mercenaires indépendants, réputés
+                  vous connaît dans la rue.                                   pour leur manque de fiabilité.
+                Puce : enregistrement de données qui se présente en          La Rue : là où vous vivez, tard le soir. Désigne aussi la
+                 général sous la forme de petites fiches en plastique          subculture, la communauté underground.
+                 coloré.                                                     Samouraï : assassin ou mercenaire corporatiste, payé
+                Se pucer : acheter du matériel cybernétique pour la           pour protéger les biens de la corporation ou effec-
+                 première fois. S’intégrer à un groupe. Se connecter à        tuer des assauts sur les propriétés des entreprises
+                 une machine.                                                 concurrentes.
+                R.A.G.E.U.X. : (Rache-drone Autonome Généré par              Stuffer : avoir des relations sexuelles. Passer l’éponge sur
+                  Émulateur à Usage d’eXtermination) forme létale de           quelque chose.
+                  programme GLACE qui a envahi l’ancien NET après la         Terminal de données : borne d’information qu’on
+                  mort de son créateur, le Netrunner de légende Rache          trouve à tous les coins de rue, équipée d’un écran, de
+                  Bartmoss.                                                    ports pour se raccorder au CitiNet et d’un clavier.
+                                                                             Le Visage : le représentant d’une mégacorporation pour
+                                                                               les affaires légales.
+
+
+
+
+                   PAR NEIL BRANQUINHO
+
+
+
+
+                                                                                                                                            25
+                                                                           15 : 56
+
+
+
+                                               Video
+                Tendances neoncade                  body lotto             scott brown             madqueens   blood rain    elf game
+
+    Vous avez aimé Combat Cabb : the Next Generation…
+
+
+
+
+                                                                                         classic
+
+    N54 Chaîne d’info en continu                                                   Combat Cabb Classic Saison 13
+    N54 • 150k spectateurs !                                                       Combat Cabb Classic • 53k spectateurs !
+
+    Tom & Gold
+    T&G • 500k spectateurs !
+    Les frontières entre téléréalité et sitcom se brouillent dans cette émission
+    plusieurs fois primée de 2044 ! Quand Gold, figure des PopMédias,
+    quitte l’univers de la musique aux mains des corporations et fait un
+    retour aux sources dans la banlieue de Night City qui l’a vue grandir,
+    elle se lie d’amitié avec Tom, vétéran de la 4e Guerre corporatiste et
+    patron d’un magasin de matériel informatique. Ensemble, dans une
+
+                                                                                     T&G
+    voiture équipée d’une IA dénommée T1G3R, ils découvrent la réalité de
+    l’existence dans un monde où chacun survit au jour le jour. Sponsorisé
+    par Zhirafa.
+
+
+
+
+

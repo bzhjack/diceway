@@ -1,5 +1,5 @@
 // Ids des entrées de référence portant des règles spéciales de création BoL.
-// Les données viennent des seeders backend (cf. /doc/resources/) ; ces ids sont stables.
+// Les données viennent des seeders backend (cf. /doc/bol/resources/) ; ces ids sont stables.
 
 /** Alchimiste — au-dessus du rang 2, chaque rang exige un désavantage ; points de création = rang. */
 export const CARRIERE_ALCHIMISTE_ID = 1;

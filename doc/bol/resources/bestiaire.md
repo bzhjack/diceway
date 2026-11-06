@@ -2,7 +2,7 @@
 
 Source principale : chapitre 5, section `Bestiaire de la Lémurie` et `Table de création des créatures`.
 
-Ce fichier sert de catalogue de travail pour le projet, en priorité à partir des créatures déjà présentes dans les seeders. Parmi les morts-vivants du livre (p. 127-128), seuls ceux qui ont un profil y figurent ; les squelettes et zombies (piétaille) n'en ont pas : voir `doc/rules/04-pnj-creatures-demons.md`.
+Ce fichier sert de catalogue de travail pour le projet, en priorité à partir des créatures déjà présentes dans les seeders. Parmi les morts-vivants du livre (p. 127-128), seuls ceux qui ont un profil y figurent ; les squelettes et zombies (piétaille) n'en ont pas : voir `doc/bol/rules/04-pnj-creatures-demons.md`.
 
 ## Créatures actuellement disponibles dans le projet
 
