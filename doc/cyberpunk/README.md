@@ -9,4 +9,4 @@
 | `rules/` | Règles mécaniques en neuf fiches, de la création au netrunning et à l'économie. Commencer par `00-index.md`. |
 | `resources/` | Données de référence : rôles, armes, armures, équipement, cybermatériel, Marché de nuit, PNJ, parcours. Voir son README. |
 | `specs/` | Ce que l'application doit respecter à la création des fiches. |
-| `plans/` | Notes de travail datées sur la partie Cyberpunk de l'application. |
+| `plans/` | Notes de travail datées. `2026-11-06-architecture-multi-jeu.md` : comment Cyberpunk s'installe à côté de BoL, et les étapes. |
