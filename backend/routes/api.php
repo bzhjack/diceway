@@ -14,6 +14,8 @@ use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
+use App\Http\Controllers\Cpr\CprPersonnageController;
+use App\Http\Controllers\Cpr\CprReferenceController;
 use App\Http\Controllers\Bol\BolCarriereController;
 use App\Http\Controllers\Bol\BolArmureController;
 use App\Http\Controllers\Bol\BolArmeController;
@@ -195,4 +197,15 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/scene/{id}/distribution', [BolSceneController::class, 'replaceDistribution']);
     Route::delete('/bol/scene/delete/{id}', [BolSceneController::class, 'delete']);
 
+    /**
+     * CYBERPUNK RED
+     **/
+    // Données de référence (rôles, compétences, tables de CARAC…)
+    Route::get('/cpr/reference', [CprReferenceController::class, 'getAll']);
+    // Fiches de personnage (la fiche entière en un document)
+    Route::get('/cpr/personnages', [CprPersonnageController::class, 'index']);
+    Route::get('/cpr/personnages/{id}', [CprPersonnageController::class, 'show']);
+    Route::post('/cpr/personnages', [CprPersonnageController::class, 'store']);
+    Route::put('/cpr/personnages/{id}', [CprPersonnageController::class, 'update']);
+    Route::delete('/cpr/personnages/{id}', [CprPersonnageController::class, 'destroy']);
 });

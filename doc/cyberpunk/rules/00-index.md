@@ -40,8 +40,7 @@ Les pages citées sont celles du livre. **Page PDF = page livre + 4** (ex. livre
 
 - Les noms de règles sont ceux de la VF ; les formulations sont paraphrasées.
 - Le tableau de base : `CARAC + compétence + 1d10`, contre un SD ou en opposition, et il faut **dépasser** (l'égalité profite au défenseur).
-- Ce qui est incertain, contradictoire dans la VF ou laissé au MJ est signalé dans le fichier concerné. Points ouverts à ce jour :
-  - la ligne d'implants de départ du **Solo** (PH 14 annoncée pour une somme de 21, et deux mégadrénalines possibles) : `06-cybermateriel-et-humanite.md` ;
-  - ce que reçoit un **Nomade** créé au rang 4 dans son garage familial : `03-capacites-de-role.md`.
+- Ce qui est incertain, contradictoire dans la VF ou laissé au MJ est signalé dans le fichier concerné. Deux points ont été tranchés le
+  2026-11-06 pour l'application (implants de départ du Solo, garage du Nomade au rang 4) : voir `../plans/2026-11-06-architecture-multi-jeu.md`.
 
 Les tables de ces fiches ont été vérifiées contre la mise en page du PDF quand l'extraction brute mélangeait les colonnes : portées, blessures critiques, implants de départ, drones, points d'amélioration.

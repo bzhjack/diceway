@@ -95,7 +95,7 @@ Liste de Hare : image de soi grandiose ; besoin de stimulation ; sournois et man
 | Fixer | agent interne, analyseur de stress vocal ou amplificateur audio, kit cyberaudio, poche subdermique | 16 (−2 EMP) |
 | Nomade | câblage neural, étripeurs ou ports d'interface neuronale | 14 (−2 EMP) |
 
-Les PH totales sont celles du livre et correspondent à la somme des PH fixes du catalogue, sauf pour le **Solo** : biomoniteur 0 + câblage neural 7 + étripeurs 7 + sandevistan 7 = 21, pour 14 annoncés. De plus, le Solo reçoit un sandevistan et peut choisir une mégadrénaline, alors que la règle n'en autorise qu'une à la fois. La ligne du Solo est donc à arbitrer (probable erreur de la VF).
+Les PH totales sont celles du livre et correspondent à la somme des PH fixes du catalogue, sauf pour le **Solo** : biomoniteur 0 + câblage neural 7 + étripeurs 7 + sandevistan 7 = 21, pour 14 annoncés. De plus, le Solo reçoit un sandevistan et peut choisir une mégadrénaline, alors que la règle n'en autorise qu'une à la fois. Décision du 2026-11-06 pour l'application : la liste du livre telle quelle, avec la PH réellement calculée (voir `../plans/2026-11-06-architecture-multi-jeu.md`).
 
 ### Vendre son âme (option, accord du MJ)
 

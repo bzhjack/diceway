@@ -158,6 +158,14 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 - `play/tapis/turn-assistant` holds its inputs and outputs; the screen is in the `tas-*` blocks; state and rules are in six stores, one per step of the turn, each depending only on the earlier ones: `TurnContextStore`, `TurnLoadoutStore`, `TurnAttackStore`, `TurnDamageStore`, `TurnCibleStore`, `TurnFlowStore`. Its stylesheets have no encapsulation and are scoped to `.tas-scope`, set on the assistant and on the panel of its popover: a new overlay needs `cdkConnectedOverlayPanelClass="tas-scope"`.
 - `bol_fight_session.scenario_id` is the only source of a table's current chapter (the strip, the home page, saving the table as a scene): never infer it from the current scene. It is chosen in « Nouvelle partie », or from the menu of the partie's card; the strip only shows it as text. A partie stays on its scénario (`BolScenario::dansLeScenario`): loading or saving a scene moves it server-side only within that scénario, or gives an improvised partie its scénario; `PATCH …/scenario` answers 422 otherwise. An improvised partie cannot take a scénario its compagnie already plays (`BolFightSession::peutPasserSur`).
 
+## Cyberpunk RED (second game, being modelled)
+
+- Same pattern as BoL with the `cpr` prefix: tables `cpr_*`, models `App\Models\Cpr\Cpr*`, services `App\Http\Services\Cpr\`, controllers `App\Http\Controllers\Cpr\`, routes `/api/cpr/...`; front (to come) in `front/src/app/cpr/`, pages under `/cpr/...`, types in `front/src/app/cpr/models/cpr-*.model.ts`. BoL keeps its routes at the root. Plan and progress: `doc/cyberpunk/plans/2026-11-06-architecture-multi-jeu.md` — tick it as work lands.
+- Reference data ships **in migrations** (each one creates its table and inserts the book's rows), not seeders: `php artisan migrate` is enough on each machine, and tests get the data for free. A later fix is a new migration that updates rows without touching accounts' sheets. Book rows have `user_id` null; catalogue tables keep a nullable `user_id` for items an account may create later.
+- `GET /api/cpr/reference` (`CprReferenceData`, cached one hour) serves every catalogue in one call; a migration that changes a list forgets its cache key.
+- Rules: `doc/cyberpunk/rules/` (start at `00-index.md`); data: `doc/cyberpunk/resources/`; rulebook text: `doc/cyberpunk/pdf-text/` (PDF page = book page + 4). Two VF inconsistencies were settled for the app (Solo starting cyberware, Nomad garage at rank 4): see the plan's « Décisions ».
+- After pulling new `cpr_*` migrations: `docker exec diceway php artisan migrate`.
+
 ## Backend architecture (`backend/`)
 
 - **RESTful API** — about 100 routes in `routes/api.php`, grouped under `sanctum` auth middleware.
