@@ -28,15 +28,6 @@ class ForgotController extends Controller
             : response(['message' => __($status)], 404);
     }
 
-    /**
-     * Redirection suite à l'envoi du mail de reset
-     */
-    public function reset(Request $request, $token)
-    {
-        $email = $request->input('email');
-        return redirect('/reset/' . $token . '/' . urlencode($email));
-    }
-
     public function reset_password(Request $request)
     {
         $request->validate([

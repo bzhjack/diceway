@@ -2,6 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {BolSceneEntry, BolSceneModel} from '../../../models/bol-scene.model';
 import {
   distributionSummary,
+  ignoresMessage,
   loadMessage,
   moveScene,
   needsLoadChoice,
@@ -136,6 +137,18 @@ describe('normalizeTitre', () => {
 
   it('cuts a title longer than 120 characters', () => {
     expect(normalizeTitre('a'.repeat(200))).toHaveLength(120);
+  });
+});
+
+describe('ignoresMessage', () => {
+  it('ne dit rien sans personnage ignoré', () => {
+    expect(ignoresMessage(0)).toBe('');
+    expect(ignoresMessage(undefined)).toBe('');
+  });
+
+  it('accorde selon le nombre', () => {
+    expect(ignoresMessage(1)).toBe('1 personnage a été ignoré (déjà sur la table ou supprimé de la bibliothèque).');
+    expect(ignoresMessage(2)).toBe('2 personnages ont été ignorés (déjà sur la table ou supprimés de la bibliothèque).');
   });
 });
 

@@ -54,6 +54,7 @@ export class CreatureLibraryPageComponent extends BolLibraryPageBase<BolCreature
   protected readonly deleteTexts: LibraryDeleteTexts<BolCreatureModel> = {
     title: 'Supprimer la créature',
     name: (item) => item.nom,
+    consequence: 'Cette fiche quitte aussi les scènes qui la citent ; les tables où elle est posée gardent leur copie.',
     error: 'La suppression de la créature a échoué.',
   };
 

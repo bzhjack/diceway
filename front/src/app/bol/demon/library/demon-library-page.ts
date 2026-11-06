@@ -54,6 +54,7 @@ export class DemonLibraryPageComponent extends BolLibraryPageBase<BolDemonModel>
   protected readonly deleteTexts: LibraryDeleteTexts<BolDemonModel> = {
     title: 'Supprimer le démon',
     name: (item) => item.nom,
+    consequence: 'Cette fiche quitte aussi les scènes qui la citent ; les tables où elle est posée gardent leur copie.',
     error: 'La suppression du démon a échoué.',
   };
 

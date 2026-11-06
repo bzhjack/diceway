@@ -1,3 +1,4 @@
+import {CombatOutcome} from './combat-turn.model';
 import {ActionRollCarriere} from './action-roll.model';
 import {InitiativeKind} from './initiative.model';
 
@@ -33,6 +34,10 @@ interface AfterCombatWounded extends RecoveryTraits {
 export interface AfterCombatDialogData {
   readonly wounded: readonly AfterCombatWounded[];
   readonly healers: readonly AfterCombatHealer[];
+  /** Le camp qui vient de tomber a ouvert la boîte : elle dit l'issue. Absent quand le MJ termine lui-même le combat. */
+  readonly outcome?: CombatOutcome | null;
+  /** Avec une issue : les héros encore mourants, qu'on peut secourir avant de terminer. */
+  readonly mourants?: readonly string[];
 }
 
 /** Ce qu'un blessé récupère en tout, repos et soins compris. */

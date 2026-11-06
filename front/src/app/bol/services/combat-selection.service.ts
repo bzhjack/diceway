@@ -1,30 +1,14 @@
 import {effect, Injectable, inject, signal} from '@angular/core';
-import {Observable, forkJoin} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {creatureImage} from '../creature/library/creature-card/creature-card.component';
 import {demonImage} from '../demon/library/demon-card/demon-card.component';
 import {heroImage} from '../hero/library/hero-card/hero-card.component';
 import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
-import {BolFightSessionService} from './bol-fight-session.service';
 import {BolHerosService} from './bol-heros.service';
 import {BolPnjService} from './bol-pnj.service';
-import {
-  BolFightSessionCreatePayload,
-  BolFightSessionModel,
-  CombatCamp,
-  InitiativeResultat,
-} from '../models/bol-fight-session.model';
-import {CombatantKind, CombatCatalogEntry, SelectedCombatant, AmbushState} from '../models/combat-selection.model';
-
-/**
- * Notion de camp mise de côté côté IHM pour l'instant (une seule zone
- * combattants) — le backend l'exige encore, donc on l'assigne par défaut
- * selon le type (héros joueurs -> 'heros', tout le reste -> 'adversaires').
- */
-function defaultCampFor(kind: CombatantKind): CombatCamp {
-  return kind === 'hero' ? 'heros' : 'adversaires';
-}
+import {CombatantKind, CombatCatalogEntry, SelectedCombatant} from '../models/combat-selection.model';
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
 
@@ -33,13 +17,10 @@ const STORAGE_KEY = 'diceway-combat-selection';
 
 interface PersistedDraft {
   readonly combatants: SelectedCombatant[];
-  /** Résultat du jet de réaction choisi par héros (catalogId -> résultat), avant même le lancement du combat. */
-  readonly heroInitiative: Record<string, InitiativeResultat>;
-  readonly ambushState: AmbushState;
 }
 
 function restoreDraft(): PersistedDraft {
-  const empty: PersistedDraft = {combatants: [], heroInitiative: {}, ambushState: null};
+  const empty: PersistedDraft = {combatants: []};
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -61,11 +42,7 @@ function restoreDraft(): PersistedDraft {
           );
         })
       : [];
-    const heroInitiative =
-      obj.heroInitiative && typeof obj.heroInitiative === 'object' ? obj.heroInitiative : {};
-    const ambushState = obj.ambushState === 'heroes_ambush' || obj.ambushState === 'heroes_ambushed' ? obj.ambushState : null;
-
-    return {combatants, heroInitiative, ambushState};
+    return {combatants};
   } catch {
     return empty;
   }
@@ -78,7 +55,6 @@ export class CombatSelectionService {
   private readonly pnjService = inject(BolPnjService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly demonsService = inject(BolDemonsService);
-  private readonly fightSessionService = inject(BolFightSessionService);
 
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
@@ -87,17 +63,11 @@ export class CombatSelectionService {
 
   private readonly initialDraft = restoreDraft();
   readonly combatants = signal<readonly SelectedCombatant[]>(this.initialDraft.combatants);
-  readonly heroInitiative = signal<ReadonlyMap<string, InitiativeResultat>>(
-    new Map(Object.entries(this.initialDraft.heroInitiative) as [string, InitiativeResultat][]),
-  );
-  readonly ambushState = signal<AmbushState>(this.initialDraft.ambushState);
 
   constructor() {
     effect(() => {
       const draft: PersistedDraft = {
         combatants: this.combatants() as SelectedCombatant[],
-        heroInitiative: Object.fromEntries(this.heroInitiative()) as Record<string, InitiativeResultat>,
-        ambushState: this.ambushState(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -205,91 +175,15 @@ export class CombatSelectionService {
     this.combatants.update((list) => [...list, {catalogId, qty: 1}]);
   }
 
-  incQty(catalogId: string): void {
+  private incQty(catalogId: string): void {
     this.combatants.update((list) => list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty + 1} : c)));
-  }
-
-  decQty(catalogId: string): void {
-    this.combatants.update((list) => {
-      const target = list.find((c) => c.catalogId === catalogId);
-      if (!target) {
-        return list;
-      }
-      if (target.qty <= 1) {
-        return list.filter((c) => c.catalogId !== catalogId);
-      }
-      return list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty - 1} : c));
-    });
   }
 
   remove(catalogId: string): void {
     this.combatants.update((list) => list.filter((c) => c.catalogId !== catalogId));
-    this.setHeroInitiative(catalogId, null);
-  }
-
-  /** Présélectionne les héros de la dernière table, sans jamais écraser une sélection déjà commencée. */
-  preselectHeroes(heroIds: readonly string[]): void {
-    if (this.combatants().length > 0) {
-      return;
-    }
-
-    this.combatants.set(heroIds.map((id) => ({catalogId: `hero:${id}`, qty: 1})));
-  }
-
-  /** Résultat du jet de réaction choisi pour un héros, avant même le lancement du combat. */
-  setHeroInitiative(catalogId: string, resultat: InitiativeResultat | null): void {
-    this.heroInitiative.update((map) => {
-      if (!resultat && !map.has(catalogId)) {
-        return map;
-      }
-
-      const next = new Map(map);
-      if (resultat) {
-        next.set(catalogId, resultat);
-      } else {
-        next.delete(catalogId);
-      }
-      return next;
-    });
-  }
-
-  setAmbushState(state: AmbushState): void {
-    this.ambushState.set(state);
   }
 
   reset(): void {
     this.combatants.set([]);
-    this.heroInitiative.set(new Map());
-    this.ambushState.set(null);
-  }
-
-  launch(titre?: string | null, scenarioId: string | null = null): Observable<BolFightSessionModel> {
-    return this.fightSessionService.create(this.buildCreatePayload(titre, scenarioId));
-  }
-
-  private buildCreatePayload(titre: string | null | undefined, scenarioId: string | null): BolFightSessionCreatePayload {
-    const byKind = (kind: CombatantKind) =>
-      this.combatants().filter((c) => this.entryFor(c.catalogId)?.kind === kind);
-
-    return {
-      titre: titre ?? null,
-      scenario_id: scenarioId,
-      heros: byKind('hero').map((c) => ({
-        heroId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('hero'),
-        resultat: this.heroInitiative().get(c.catalogId) ?? null,
-      })),
-      pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('pnj')})),
-      creatures: byKind('creature').map((c) => ({
-        creatureId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('creature'),
-        qty: c.qty,
-      })),
-      demons: byKind('demon').map((c) => ({
-        demonId: this.entryFor(c.catalogId)!.sourceId,
-        camp: defaultCampFor('demon'),
-        qty: c.qty,
-      })),
-    };
   }
 }

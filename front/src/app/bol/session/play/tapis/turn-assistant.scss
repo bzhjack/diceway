@@ -482,11 +482,6 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     color: var(--dw-forge-bone);
   }
 
-  .tas-fixed {
-    font: 400 1.3rem 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
-  }
-
   .tas-note,
   .tas-wait {
     margin: 0;

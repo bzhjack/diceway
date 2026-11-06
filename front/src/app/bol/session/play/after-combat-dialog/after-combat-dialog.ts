@@ -16,7 +16,7 @@ function toggled(set: ReadonlySet<number>, index: number): ReadonlySet<number> {
   return next;
 }
 
-/** « Après combat » (02-actions-combat.md, « Récupération », livre p. 65-66), ouvert par « Terminer le combat » : pour chaque blessé du
+/** « Après combat » (02-actions-combat.md, « Récupération », livre p. 65-66), ouvert par « Terminer le combat », ou de lui-même quand un camp tombe (il dit alors l'issue) : pour chaque blessé du
  * camp des héros, le court repos d'après combat (la moitié des points perdus pendant ce combat, les dégâts à mains nues en entier ; rien
  * sous 0, rien pour une blessure d'avant le combat ; 1 point de plus avec Récupération rapide, rien pour un Souffreteux) et, si un
  * héros a une carrière de soins, les soins médicaux (le rang du soigneur, tout de suite). Le MJ décoche ce qui ne s'applique pas ; rien

@@ -85,7 +85,7 @@ export class SessionPlayPageComponent {
       return;
     }
 
-    this.table.loadSession(id);
+    this.table.entrer(id);
   }
 
   /** Échap replie la carte dépliée, sauf si un dialogue est ouvert, ou si un menu ou un popover vient de le

@@ -5,6 +5,7 @@ namespace App\Http\Services\Bol;
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Exceptions\Bol\FuiteImpossibleException;
+use App\Models\Bol\BolCompagnie;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
@@ -31,9 +32,11 @@ class BolFightSessionService
 
         $session = BolFightSession::create([
             'user_id'     => $userId,
+            'compagnie_id' => $data['compagnie_id'] ?? null,
             'titre'       => $data['titre'] ?? null,
             'statut'      => $this->determineInitialStatut($data),
             'scenario_id' => $this->ownScenarioId($userId, $data['scenario_id'] ?? null),
+            'jouee_le'    => now(),
         ]);
 
         $this->syncHeros($session->id, $data['heros'] ?? []);
@@ -42,6 +45,28 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /**
+     * Une nouvelle partie : la compagnie sur un scénario (sans chapitre : on improvise), avec son nom et ses héros d'aujourd'hui. La partie
+     * que la compagnie a déjà sur ce scénario, s'il y en a une, à la place d'en créer une autre.
+     *
+     * @return array{partie: BolFightSession, existante: bool}
+     */
+    public function creerPartie(string $userId, BolCompagnie $compagnie, mixed $scenarioId): array
+    {
+        $chapitre = $this->ownScenarioId($userId, $scenarioId);
+        $existante = $compagnie->partieSurLeScenario($chapitre);
+        if ($existante) {
+            return ['partie' => $existante, 'existante' => true];
+        }
+
+        return ['existante' => false, 'partie' => $this->createSession($userId, [
+            'compagnie_id' => $compagnie->id,
+            'titre'        => $compagnie->nom,
+            'scenario_id'  => $chapitre,
+            'heros'        => $compagnie->heros->map(fn (BolHeros $heros) => ['heroId' => $heros->id, 'camp' => 'heros'])->all(),
+        ])];
     }
 
     /** Le scénario d'une table doit être celui du compte ; un autre, ou un inconnu, est ignoré. */
@@ -124,32 +149,6 @@ class BolFightSessionService
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
     }
 
-    /** Persiste l'ordre d'initiative réordonné manuellement (glisser-déposer du ruban). */
-    public function updateOrder(string $sessionId, string $userId, array $ordre): ?BolFightSession
-    {
-        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session) {
-            return null;
-        }
-
-        $session->update(['ordre_manuel' => array_values($ordre)]);
-
-        return $this->getSessionWithRelations($sessionId);
-    }
-
-    /** Persiste les positions des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` => {x, y} en pourcentage. */
-    public function updatePositions(string $sessionId, string $userId, array $positions): ?BolFightSession
-    {
-        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session) {
-            return null;
-        }
-
-        $session->update(['positions_jetons' => $positions]);
-
-        return $this->getSessionWithRelations($sessionId);
-    }
-
     /**
      * Bascule une session `libre` en `combat` (ou, déjà en combat, enregistre un nouveau jet de réaction) — les adversaires sont déjà en place via addCombatant().
      *
@@ -226,68 +225,66 @@ class BolFightSessionService
             return null;
         }
 
-        $this->quitterLeCombat($session, 'libre');
+        $this->quitterLeCombat($session);
 
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Fin d'un combat : plus de jet de réaction, d'ordre réordonné ni d'état du tour ; la session passe au `statut` donné. */
-    private function quitterLeCombat(BolFightSession $session, string $statut): void
+    /** Fin d'un combat : plus de jet de réaction ni d'état du tour ; la table repasse en mode libre. */
+    private function quitterLeCombat(BolFightSession $session): void
     {
         BolFightSessionHeros::where('fight_session_id', $session->id)->update(['initiative_resultat' => null]);
 
-        $session->update(['statut' => $statut, 'ordre_manuel' => null, 'etat_combat' => null]);
+        $session->update(['statut' => 'libre', 'etat_combat' => null]);
     }
 
     /**
-     * Clôt la table : elle passe `terminee`, quitte l'accueil (bandeau « Table ouverte », chapitre « sur la table ce soir ») et reste
-     * dans les sessions du compte. Une table en combat le termine d'abord, comme « Terminer », sans les soins d'après combat (qui se
-     * choisissent à l'écran). Null si la table est introuvable.
+     * Pose la partie sur ce chapitre, sans toucher à ce qui est sur sa table : `BolSceneService::changerDeChapitre` s'occupe du reste. Un
+     * chapitre d'un autre scénario, d'un autre compte, ou `null` pour une partie liée : `false`. `null` si la table n'est pas du compte.
      */
-    public function closeSession(string $sessionId, string $userId): ?BolFightSession
+    public function poserSurChapitre(string $sessionId, string $userId, mixed $scenarioId): BolFightSession|false|null
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session) {
             return null;
         }
 
-        if ($session->statut === 'combat') {
-            $this->quitterLeCombat($session, 'terminee');
-        } else {
-            $session->update(['statut' => 'terminee']);
+        $chapitre = $this->ownScenarioId($userId, $scenarioId);
+        if (!$session->peutPasserSur($chapitre)) {
+            return false;
         }
+        $session->update(['scenario_id' => $chapitre]);
+
+        return $session;
+    }
+
+    /** Le MJ dit que la partie a fini son scénario, ou se ravise. `false` pour une partie improvisée ; `null` si la table n'est pas du compte. */
+    public function marquerScenarioTermine(string $sessionId, string $userId, bool $termine): BolFightSession|false|null
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+        if ($session->scenario_id === null) {
+            return false;
+        }
+        $session->update(['scenario_termine' => $termine]);
 
         return $this->getSessionWithRelations($sessionId);
     }
 
     /**
-     * Passe la table sur un autre chapitre (« Reprendre » de l'accueil, chapitre changé) : mêmes héros, même état ; ses scènes déjà jouées
-     * restent jouées, et on charge à la table la scène voulue du nouveau chapitre. Un chapitre qui n'est pas du compte, ou `null` : on
-     * improvise. `null` si la table n'est pas du compte.
+     * On entre à la table : elle devient la dernière partie jouée (le bandeau de l'accueil, l'ordre des parties). Les autres parties n'en
+     * sont pas touchées. Null si la table n'est pas du compte.
      */
-    public function changerChapitre(string $sessionId, string $userId, mixed $scenarioId): ?BolFightSession
+    public function jouer(string $sessionId, string $userId): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session) {
             return null;
         }
 
-        $session->update(['scenario_id' => $this->ownScenarioId($userId, $scenarioId)]);
-
-        return $this->getSessionWithRelations($sessionId);
-    }
-
-    /** Rouvre une table close (« Reprendre » depuis les sessions) : elle redevient `libre` ; une table encore ouverte ne change pas. */
-    public function reopenSession(string $sessionId, string $userId): ?BolFightSession
-    {
-        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session) {
-            return null;
-        }
-
-        if ($session->statut === 'terminee') {
-            $session->update(['statut' => 'libre']);
-        }
+        $session->update(['jouee_le' => now()]);
 
         return $this->getSessionWithRelations($sessionId);
     }

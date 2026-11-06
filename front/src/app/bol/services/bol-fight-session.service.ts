@@ -1,11 +1,11 @@
 import {RessourceMagique} from '../session/models/magie-combat.model';
+import {browserStorage, ISSUE_ANNONCEE} from '../session/play/table-state.util';
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {AsyncSubject, catchError, concatMap, defer, EMPTY, Observable, Subject, tap, throwError, timeout} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
 import {
   BolFightSessionAddCombatantPayload,
-  BolFightSessionCreatePayload,
   BolFightSessionHerosModel,
   BolFightSessionModel,
   BolFightSessionSummaryModel,
@@ -61,12 +61,13 @@ export class BolFightSessionService {
     return this.inOrder(this.http.get<BolFightSessionModel>(`${this.base}/${id}`));
   }
 
-  create(payload: BolFightSessionCreatePayload): Observable<BolFightSessionModel> {
-    return this.http.post<BolFightSessionModel>(`${this.base}/create`, payload);
+  /** Une nouvelle partie : cette compagnie (son nom, ses héros d'aujourd'hui) sur ce chapitre (null : on improvise). */
+  creerPartie(compagnieId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
+    return this.http.post<BolFightSessionModel>(`${this.base}/create`, {compagnie_id: compagnieId, scenario_id: scenarioId});
   }
 
   delete(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.base}/delete/${id}`);
+    return this.http.delete<boolean>(`${this.base}/delete/${id}`).pipe(tap(() => browserStorage()?.removeItem(ISSUE_ANNONCEE + id)));
   }
 
   addCombatant(sessionId: string, payload: BolFightSessionAddCombatantPayload): Observable<BolFightSessionModel> {
@@ -116,17 +117,6 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/ressource`, {ressource, delta}));
   }
 
-  updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre}));
-  }
-
-  updatePositions(
-    sessionId: string,
-    positions: Readonly<Record<string, {x: number; y: number}>>,
-  ): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/positions`, {positions}));
-  }
-
   /** Démarre le combat. `exclus` : clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat. */
   startCombat(sessionId: string, exclus: readonly string[] = []): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {exclus}));
@@ -136,19 +126,21 @@ export class BolFightSessionService {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {}));
   }
 
-  /** Passe la table sur un autre chapitre (null : on improvise) : mêmes héros, même état. */
+  /** Passe la partie sur un autre chapitre de son scénario, et charge sa première scène : les héros restent, les figurants de l'ancienne
+   * scène partent (une partie improvisée qui reçoit son scénario ne perd rien). */
   changerChapitre(sessionId: string, scenarioId: string | null): Observable<BolFightSessionModel> {
     return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario`, {scenario_id: scenarioId}));
   }
 
-  /** Clôt la table (`terminee`) ; en combat, le termine d'abord, sans les soins d'après combat. */
-  close(sessionId: string): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/close`, {}));
+  /** Le MJ dit que la partie a fini son scénario, ou se ravise. */
+  marquerScenarioTermine(sessionId: string, termine: boolean): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/scenario-termine`, {termine}));
   }
 
-  /** Rouvre une table close : elle redevient `libre` (une table encore ouverte ne change pas). */
-  reopen(sessionId: string): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/reopen`, {}));
+  /** On entre à la table : elle devient la dernière partie jouée, et charge la première scène de son chapitre si elle n'en a aucune. Aucune
+   * autre partie n'en est touchée. */
+  jouer(sessionId: string): Observable<BolFightSessionModel> {
+    return this.inOrder(this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/jouer`, {}));
   }
 
   /** Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). */

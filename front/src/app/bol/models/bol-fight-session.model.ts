@@ -7,8 +7,8 @@ export type CombatantAttitude = 'hostile' | 'mefiant' | 'neutre' | 'amical';
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
-/** Où en est la session : `libre` (table sans combat), `combat` (rounds en cours) ou `terminee`. */
-type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
+/** Où en est la partie : `libre` (table sans combat) ou `combat` (rounds en cours). */
+type BolFightSessionStatut = 'libre' | 'combat';
 
 /** État d'un combat en cours tel que gardé en base (cf. `combat-turn.util.ts`). */
 export interface EtatCombatDto {
@@ -35,11 +35,11 @@ export interface BolSessionSceneRef {
  * combat et sa scène courante. */
 export interface BolFightSessionModel {
   id: string | null;
+  /** Après un chargement automatique de scène (création, arrivée à la table, changement de chapitre) : les figurants qu'il a laissés de côté. */
+  figurants_ignores?: number;
   user_id?: string | null;
   titre: string | null;
   statut: BolFightSessionStatut;
-  /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
-  ordre_manuel?: string[] | null;
   /** Position des jetons de l'ancien battlefield (plus utilisée depuis le tapis) — clé `PlayToken.key` → {x, y} en pourcentage. */
   positions_jetons?: Record<string, {x: number; y: number}> | null;
   /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */
@@ -201,17 +201,6 @@ interface BolFightSessionPnjModel {
   pouvoir_courant?: number | null;
   armes: BolFightSessionArmeModel[] | null;
   pnj?: {user_id: string | null; origines: {avatar: string | null}};
-}
-
-/** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */
-export interface BolFightSessionCreatePayload {
-  titre?: string | null;
-  /** Scénario de la table dès sa création — absent ou null si on improvise. */
-  scenario_id?: string | null;
-  heros: {heroId: string; camp: CombatCamp; resultat?: InitiativeResultat | null}[];
-  pnjs: {pnjId: string; camp: CombatCamp}[];
-  creatures: {creatureId: string; camp: CombatCamp; qty: number}[];
-  demons: {demonId: string; camp: CombatCamp; qty: number}[];
 }
 
 /** Payload d'ajout d'un seul combattant à une session déjà lancée. */

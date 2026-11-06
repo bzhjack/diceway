@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Bol;
 use App\Exceptions\Bol\CombatWithoutAdversaryException;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Exceptions\Bol\FuiteImpossibleException;
+use App\Exceptions\Bol\SceneLoadNotAllowedException;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCompagnieService;
 use App\Http\Services\Bol\BolFightSessionService;
+use App\Http\Services\Bol\BolSceneService;
 use App\Http\Services\Bol\BolSceneDistribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +18,11 @@ use Illuminate\Validation\Rule;
 
 class BolFightSessionController extends Controller
 {
-    public function __construct(private readonly BolFightSessionService $fightSessionService) {}
+    public function __construct(
+        private readonly BolFightSessionService $fightSessionService,
+        private readonly BolCompagnieService $compagnieService,
+        private readonly BolSceneService $sceneService,
+    ) {}
 
     public function getAll()
     {
@@ -33,6 +40,12 @@ class BolFightSessionController extends Controller
 
     public function create(Request $request)
     {
+        // Une partie prend le nom et les héros de sa compagnie ; une table sans compagnie (les scripts de test) se crée toujours nommée.
+        if ($request->filled('compagnie_id')) {
+            return $this->creerPartie($request);
+        }
+        $request->validate(['titre' => 'required|string|max:255']);
+
         $session = $this->fightSessionService->createSession(Auth::id(), [
             'titre'       => $request->titre,
             'scenario_id' => $request->scenario_id,
@@ -43,6 +56,23 @@ class BolFightSessionController extends Controller
         ]);
 
         return response()->json($session);
+    }
+
+    private function creerPartie(Request $request)
+    {
+        $compagnie = $this->compagnieService->trouver((string) $request->input('compagnie_id'), Auth::id());
+        if (!$compagnie) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        if ($compagnie->heros()->doesntExist()) {
+            return response()->json(['error' => 'Cette compagnie n’a pas de héros : ajoutez-lui en un d’abord.'], 422);
+        }
+        ['partie' => $partie, 'existante' => $existante] = $this->sceneService->creerPartie(Auth::id(), $compagnie, $request->input('scenario_id'));
+        if ($existante) {
+            return response()->json(['error' => 'Cette compagnie joue déjà ce scénario.', 'partie_id' => $partie->id], 422);
+        }
+
+        return response()->json($partie);
     }
 
     public function delete(string $id)
@@ -177,28 +207,6 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
-    public function updateOrder(Request $request, string $id)
-    {
-        $session = $this->fightSessionService->updateOrder($id, Auth::id(), $request->input('ordre', []));
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
-    public function updatePositions(Request $request, string $id)
-    {
-        $session = $this->fightSessionService->updatePositions($id, Auth::id(), $request->input('positions', []));
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
     public function startCombat(Request $request, string $id)
     {
         $data = $request->validate(['exclus' => 'sometimes|array', 'exclus.*' => 'string']);
@@ -227,37 +235,48 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
-    public function close(string $id)
-    {
-        $session = $this->fightSessionService->closeSession($id, Auth::id());
-
-        if (!$session) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        return response()->json($session);
-    }
-
     public function changerChapitre(Request $request, string $id)
     {
-        $session = $this->fightSessionService->changerChapitre($id, Auth::id(), $request->input('scenario_id'));
+        try {
+            $session = $this->sceneService->changerDeChapitre($id, Auth::id(), $request->input('scenario_id'));
+        } catch (SceneLoadNotAllowedException) {
+            return response()->json(['error' => 'Terminez le combat avant de changer de chapitre.'], 409);
+        }
 
-        if (!$session) {
+        if ($session === null) {
             return response()->json(['error' => 'Not found'], 404);
+        }
+        if ($session === false) {
+            return response()->json(['error' => 'Ce chapitre n’est pas du scénario de la partie.'], 422);
         }
 
         return response()->json($session);
     }
 
-    public function reopen(string $id)
+    public function marquerScenarioTermine(Request $request, string $id)
     {
-        $session = $this->fightSessionService->reopenSession($id, Auth::id());
+        $data = $request->validate(['termine' => 'required|boolean']);
+        $session = $this->fightSessionService->marquerScenarioTermine($id, Auth::id(), $data['termine']);
+
+        if ($session === null) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+        if ($session === false) {
+            return response()->json(['error' => 'Une partie improvisée n’a pas de scénario à terminer.'], 422);
+        }
+
+        return response()->json($session);
+    }
+
+    public function jouer(string $id)
+    {
+        $session = $this->fightSessionService->jouer($id, Auth::id());
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);
         }
 
-        return response()->json($session);
+        return response()->json($this->sceneService->chargerLaPremiereScene(Auth::id(), $session));
     }
 
     public function updateHeroInitiative(Request $request, string $id, int $herosPivotId)

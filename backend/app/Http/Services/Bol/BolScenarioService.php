@@ -2,8 +2,11 @@
 
 namespace App\Http\Services\Bol;
 
+use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolScenario;
+use App\Models\Bol\BolScene;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /** Les chapitres du compte (`BolScenario`), chacun avec son scénario (`saga` : son id et son nom ; null pour un one shot). */
 class BolScenarioService
@@ -53,8 +56,29 @@ class BolScenarioService
         return $scenario->load('saga:id,titre');
     }
 
-    public function delete(string $id): void
+    /**
+     * Supprime un chapitre du compte, ses scènes avec lui, et l'oublie dans le souvenir des parties passées dessus. `false`, sans rien toucher :
+     * une partie est dessus, elle redeviendrait improvisée sans que personne l'ait demandé.
+     */
+    public function supprimer(string $id, string $userId): bool
     {
-        BolScenario::where('id', $id)->where('user_id', Auth::id())->delete();
+        return DB::transaction(function () use ($id, $userId) {
+            $chapitre = BolScenario::where('id', $id)->where('user_id', $userId)->lockForUpdate()->first();
+            if (!$chapitre) {
+                return true;
+            }
+            if (BolFightSession::where('scenario_id', $id)->exists()) {
+                return false;
+            }
+            BolScene::where('scenario_id', $id)->where('user_id', $userId)->get()->each->delete();
+            BolFightSession::where('user_id', $userId)->whereNotNull('chapitres_quittes')->get()->each(function (BolFightSession $partie) use ($id): void {
+                if (in_array($id, $partie->chapitres_quittes, true)) {
+                    $partie->update(['chapitres_quittes' => array_values(array_diff($partie->chapitres_quittes, [$id]))]);
+                }
+            });
+            $chapitre->delete();
+
+            return true;
+        });
     }
 }

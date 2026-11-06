@@ -25,7 +25,7 @@ export abstract class BolLibraryPageBase<TItem extends {id?: string | number | n
       this.dialog,
       {
         title: this.deleteTexts.title,
-        message: `Voulez-vous supprimer "${this.deleteTexts.name(item)}" ?`,
+        message: `Voulez-vous supprimer "${this.deleteTexts.name(item)}" ?${this.deleteTexts.consequence ? ` ${this.deleteTexts.consequence}` : ''}`,
         confirmLabel: 'Supprimer',
       },
       {width: '380px'},

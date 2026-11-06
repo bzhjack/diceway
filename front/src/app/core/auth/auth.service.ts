@@ -94,12 +94,6 @@ export class AuthService {
     );
   }
 
-  initProfileFromLocalToken(): Promise<AuthUser | null> {
-    return new Promise((resolve) => {
-      this.refreshProfile().subscribe((user) => resolve(user));
-    });
-  }
-
   loginWithGoogle(): void {
     this.oauth.initLoginFlow();
   }

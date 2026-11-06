@@ -1,11 +1,26 @@
-<h2 mat-dialog-title class="acd-title">
-  <mat-icon>local_bar</mat-icon>
-  Après combat
-</h2>
+@if (data.outcome; as issue) {
+  <h2 mat-dialog-title class="acd-title" [class]="'acd-title--' + issue">
+    <mat-icon aria-hidden="true">{{ issue === 'victoire' ? 'emoji_events' : 'heart_broken' }}</mat-icon>
+    {{ issue === 'victoire' ? 'Victoire' : 'Défaite' }}
+  </h2>
+} @else {
+  <h2 mat-dialog-title class="acd-title">
+    <mat-icon aria-hidden="true">local_bar</mat-icon>
+    Après combat
+  </h2>
+}
 
 <mat-dialog-content class="acd-content">
+  @if (data.outcome; as issue) {
+    <p class="acd-issue">{{ issue === 'victoire' ? 'Plus aucun adversaire ne tient debout.' : 'Plus aucun héros ni allié ne tient debout.' }}</p>
+    @if (data.mourants?.length) {
+      <p class="acd-warn">
+        {{ data.mourants!.length > 1 ? 'Encore mourants' : 'Encore mourant' }} : {{ data.mourants!.join(', ') }}. On peut encore {{ data.mourants!.length > 1 ? 'les' : 'le' }} secourir avant de terminer.
+      </p>
+    }
+  }
   <p class="acd-lead">
-    Le combat se termine : la session repasse en mode libre, les personnages restent sur la table. Un court repos, une gorgée d'eau ou
+    Le combat se termine : la table repasse en mode libre, les personnages restent sur la table. Un court repos, une gorgée d'eau ou
     de vin : chacun récupère la moitié des points perdus pendant ce combat, et la totalité des dégâts reçus à mains nues. Sous 0, il faut d’abord être
     secouru.
   </p>
@@ -70,6 +85,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-stroked-button type="button" mat-dialog-close>{{ data.outcome ? 'Continuer' : 'Annuler' }}</button>
   <button mat-flat-button type="button" cdkFocusInitial (click)="finish()">Terminer le combat</button>
 </mat-dialog-actions>

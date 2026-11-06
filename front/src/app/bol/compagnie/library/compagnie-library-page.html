@@ -1,0 +1,57 @@
+<section class="dw-page xl:px-8">
+  <div class="mx-auto flex max-w-[1000px] flex-col gap-4">
+    <dw-library-header title="Compagnies" description="Une compagnie, c’est un nom et des héros. Une partie l’associe ensuite à un scénario, et elle peut en jouer plusieurs.">
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalCount() }} compagnie{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button type="button" (click)="ouvrir(null)"><mat-icon>add</mat-icon> Nouvelle compagnie</button>
+        </div>
+        <button mat-stroked-button routerLink="/"><mat-icon svgIcon="gi-return" /> Retour à l'accueil</button>
+      </ng-container>
+    </dw-library-header>
+
+    <mat-card appearance="outlined" class="cl-content-card">
+      <dw-library-toolbar placeholder="Rechercher une compagnie" [withFilters]="false" [(searchTerm)]="searchTerm">
+        <dw-tag dwToolbarCount>{{ visibleCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
+
+      <div class="cl-list">
+        @for (ligne of lignes(); track ligne.compagnie.id) {
+          <div class="cl-row">
+            <div class="cl-row-main">
+              <p class="cl-row-title">{{ ligne.compagnie.nom }}</p>
+              <p class="cl-row-meta">{{ ligne.heros }} · {{ ligne.parties }}</p>
+            </div>
+            <div class="cl-row-actions">
+              <button mat-stroked-button type="button" [attr.aria-label]="'Modifier ' + ligne.compagnie.nom" (click)="ouvrir(ligne.compagnie)">
+                <mat-icon>edit</mat-icon> Modifier
+              </button>
+              <!-- Un bouton désactivé ne montre pas de bulle : elle est sur ce qui l'entoure. -->
+              <span [matTooltip]="ligne.compagnie.parties ? 'Supprimez d’abord ses parties.' : ''">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'Supprimer ' + ligne.compagnie.nom"
+                  [disabled]="ligne.compagnie.parties > 0"
+                  (click)="supprimer(ligne.compagnie)"
+                >
+                  <mat-icon svgIcon="gi-trash" />
+                </button>
+              </span>
+            </div>
+          </div>
+        } @empty {
+          <p class="cl-empty">
+            @if (totalCount() === 0) {
+              Aucune compagnie pour l'instant : créez-en une pour lancer une partie.
+            } @else {
+              Aucune compagnie ne correspond à cette recherche.
+            }
+          </p>
+        }
+      </div>
+    </mat-card>
+  </div>
+</section>

@@ -281,6 +281,42 @@ describe('TurnAssistantComponent', () => {
   });
 
   describe('une carte sans arme', () => {
+    it('la carte des dégâts n’apparaît qu’une fois le jet d’attaque fait', async () => {
+      const carte = () => (fixture.nativeElement as HTMLElement).querySelector('li[bol-tas-degats]');
+
+      await viser();
+      expect(carte()).toBeNull();
+      expect(texte()).not.toContain('Après un coup qui touche');
+
+      await saisirAttaque('8');
+      expect(carte()).not.toBeNull();
+    });
+
+    it('avant même de viser, pas de carte des dégâts', async () => {
+      await rendre();
+
+      expect((fixture.nativeElement as HTMLElement).querySelector('li[bol-tas-degats]')).toBeNull();
+    });
+
+    it('un coup raté garde la carte, avec « Fin du tour »', async () => {
+      await viser();
+
+      await saisirAttaque('2');
+
+      expect((fixture.nativeElement as HTMLElement).querySelector('li[bol-tas-degats]')?.textContent).toContain('Pas de dégâts : le coup est raté.');
+      expect(bouton('Fin du tour')).toBeDefined();
+    });
+
+    it('la fourchette des dégâts n’est dite qu’une fois : dans leur addition, pas en tête de carte', async () => {
+      await viser();
+
+      await saisirAttaque('8');
+
+      const carte = (fixture.nativeElement as HTMLElement).querySelector('li[bol-tas-degats]')!;
+      expect(carte.querySelector('.tas-goal')).toBeNull();
+      expect(carte.querySelector('dw-roll-sum')?.textContent).toMatch(/\d+ à \d+/);
+    });
+
     it('une créature frappe d’une case comme les armes : une patte, ses dégâts dessous', async () => {
       await rendre({card: carte({kind: 'creature', degats: 'd6B'}), armes: [], ownedArmes: []});
 
@@ -289,7 +325,6 @@ describe('TurnAssistantComponent', () => {
       expect(cas?.getAttribute('aria-label')).toBe('Dégâts, d6B');
       expect(cas?.querySelector('mat-icon')?.getAttribute('data-mat-icon-name')).toBe('gi-paw');
       expect(cas?.querySelector('em')?.textContent?.trim()).toBe('d6B');
-      expect(zone.querySelector('.tas-fixed')).toBeNull();
     });
 
     it('un démon frappe avec son icône de démon', async () => {
@@ -844,7 +879,7 @@ describe('TurnAssistantComponent', () => {
       await cliquer('Déf. totale');
 
       expect(texte()).toContain('Pas de sort ce round');
-      expect(texte()).toContain('Pas de dégâts ce round');
+      expect(element.querySelector('li[bol-tas-degats]')).toBeNull();
       expect(element.querySelector('input[aria-label^="Total des deux dés du sort"]')).toBeNull();
       expect(events.ressources).toEqual([]);
     });

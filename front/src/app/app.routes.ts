@@ -87,12 +87,15 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
-    // « Ouvrir une table » est un dialogue de l'accueil : cette adresse (menu du compte, palette de la table, retour de « Créer un héros »)
+    // « Nouvelle partie » est un dialogue de l'accueil : cette adresse (menu du compte, palette de la table, retour de « Créer un héros »)
     // y mène, avec son chapitre, et l'accueil l'ouvre.
     path: 'session/new',
     redirectTo: ({queryParams}) => {
       const scenario: unknown = queryParams['scenario'];
-      return inject(Router).createUrlTree(['/'], {queryParams: {table: 'nouvelle', scenario: typeof scenario === 'string' ? scenario : null}});
+      // Au retour de « Créer un héros » depuis « Nouvelle compagnie », c'est elle qui se rouvre.
+      const table = queryParams['compagnie'] ? 'compagnie' : 'nouvelle';
+      const nom: unknown = queryParams['nom'];
+      return inject(Router).createUrlTree(['/'], {queryParams: {table, scenario: typeof scenario === 'string' ? scenario : null, nom: typeof nom === 'string' ? nom : null}});
     },
   },
   {
@@ -112,6 +115,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/session/library/session-library-page').then(
         (module) => module.SessionLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/companies',
+    loadComponent: () =>
+      import('./bol/compagnie/library/compagnie-library-page').then(
+        (module) => module.CompagnieLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },

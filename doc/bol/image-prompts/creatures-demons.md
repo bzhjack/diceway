@@ -8,9 +8,7 @@ dans le même style que les bannières des bibliothèques
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/bol/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
-Les créatures 55 à 63 (bestiaire du Beshaar), 64 à 74 (bestiaire du Khanat,
-*Chroniques Lémuriennes 1.2*) et 75 (Roi-Sorcier mort-vivant, livre p. 128) n'ont encore aucun portrait ; les créatures 43 à 48
-et les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
+Les 75 créatures ont leur portrait ; les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
 Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
 
 ## Fichiers attendus
@@ -34,12 +32,12 @@ renommage.
 | Planche | Ids | Planche | Ids |
 | --- | --- | --- | --- |
 | ✅ C1 | 1 à 6 | ✅ C7 | 37 à 42 |
-| ✅ C2 | 7 à 12 | C8 | 43 à 48 |
+| ✅ C2 | 7 à 12 | ✅ C8 | 43 à 48 |
 | ✅ C3 | 13 à 18 | ✅ C9 | 49 à 54 |
-| ✅ C4 | 19 à 24 | C10 | 55 à 60 |
-| ✅ C5 | 25 à 30 | C11 | 61 à 66 |
-| ✅ C6 | 31 à 36 | C12 | 67 à 72 |
-| | | C13 | 73 à 75 |
+| ✅ C4 | 19 à 24 | ✅ C10 | 55 à 60 |
+| ✅ C5 | 25 à 30 | ✅ C11 | 61 à 66 |
+| ✅ C6 | 31 à 36 | ✅ C12 | 67 à 72 |
+| | | ✅ C13 | 73 à 75 |
 | | | D | démons 1 à 3 |
 
 Ordre des cases : ligne du haut de gauche à droite, puis ligne du bas de gauche
@@ -122,14 +120,14 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 41. ✅ Uzeg : sorte de petit rat sans pelage, yeux d'un vert brillant et longs crocs venimeux (de la taille d'un petit chien), dans un égout sombre.
 > 42. ✅ Venator : petit prédateur rapide qui marche sur ses deux pattes postérieures, version miniature d'un chark, un peu plus petit qu'un homme, plaines et jungles.
 
-### C8 — créatures 43 à 48
+### ✅ C8 — créatures 43 à 48
 
-> 43. Ver des glaces : gros ver à la fourrure blanche qui se confond avec la neige, gueule ronde devant la tête, terres gelées et montagnes.
-> 44. Xolag : amas amiboïde d'une grotte humide, deux longs pseudopodes qui saisissent de petits animaux, corps gélatineux et luisant.
-> 45. Xolth : limace gigantesque et hideuse, aveugle, corps amiboïde gélatineux qui enveloppe ses proies, rôdant dans des catacombes ou une cité ensevelie, immense dans le cadre.
-> 46. Yorth : grand prédateur de 2,5 mètres avec une crête osseuse pointue sur le dos et deux cornes atrophiées au sommet du crâne, couleur adaptée au terrain, jungle ou montagne.
-> 47. Zathog : ignoble reptile des marais ressemblant à un crocator géant, peau grise ou gris-brun épaisse, énorme gueule hérissée de plusieurs rangées de crocs venimeux.
-> 48. Main cavaleuse : main humaine coupée et animée par sorcellerie, rampant sur ses doigts, peau grise et nécrosée, dans un antre de sorcier éclairé de bougies, gros plan (palette plus froide, exception à l'ambre).
+> 43. ✅ Ver des glaces : gros ver à la fourrure blanche qui se confond avec la neige, gueule ronde devant la tête, terres gelées et montagnes.
+> 44. ✅ Xolag : amas amiboïde d'une grotte humide, deux longs pseudopodes qui saisissent de petits animaux, corps gélatineux et luisant.
+> 45. ✅ Xolth : limace gigantesque et hideuse, aveugle, corps amiboïde gélatineux qui enveloppe ses proies, rôdant dans des catacombes ou une cité ensevelie, immense dans le cadre.
+> 46. ✅ Yorth : grand prédateur de 2,5 mètres avec une crête osseuse pointue sur le dos et deux cornes atrophiées au sommet du crâne, couleur adaptée au terrain, jungle ou montagne.
+> 47. ✅ Zathog : ignoble reptile des marais ressemblant à un crocator géant, peau grise ou gris-brun épaisse, énorme gueule hérissée de plusieurs rangées de crocs venimeux.
+> 48. ✅ Main cavaleuse : main humaine coupée et animée par sorcellerie, rampant sur ses doigts, peau grise et nécrosée, dans un antre de sorcier éclairé de bougies, gros plan (palette plus froide, exception à l'ambre).
 
 ### ✅ C9 — créatures 49 à 54
 
@@ -140,38 +138,38 @@ préambule, en remplaçant « planche » par « portrait carré unique ».
 > 53. ✅ Dragon de feu : grand lézard carnivore à la peau grise et écailleuse, corps irradiant une chaleur qui fait frémir l'air, nageant dans la lave d'une grotte volcanique, vapeurs toxiques.
 > 54. ✅ Essaim de fourmis d'os : nuée de fourmis blanches dont les corps ressemblent à de petits os, déferlant sur le sable et sur des ossements, gros plan de la masse grouillante.
 
-### C10 — créatures 55 à 60
+### ✅ C10 — créatures 55 à 60
 
-> 55. Hyène du Beshaar : hyène efflanquée du désert, pelage ras et tacheté, mâchoires puissantes, sourire sauvage, dunes du Beshaar.
-> 56. Meneuse de meute (hyène du Beshaar) : la plus grande et la plus ancienne hyène de la meute, cicatrices au museau, regard calculateur, parée de quelques colifichets d'os, le reste de la meute en silhouettes floues.
-> 57. Hyène géante : hyène monstrueuse, taille d'un cheval, mâchoires capables de broyer les os, regard affamé, désert.
-> 58. Qal'efr : la « pieuvre des sables », piégeur redoutable : tentacules jaillissant d'un entonnoir de sable aux pentes lisses, créature à demi enfouie au centre du piège.
-> 59. Spicomallos : bête placide mais lourdement cuirassée, immenses pointes qui hérissent sa cuirasse, domestiquée par les tribus beshaaries pour briser la roche, la guerre et la charge.
-> 60. Ver des sables : scolopendre gigantesque à des dizaines de paires de pattes, jaillissant du sable, énorme gueule ouverte et deux langues gluantes déployées, désert.
+> 55. ✅ Hyène du Beshaar : hyène efflanquée du désert, pelage ras et tacheté, mâchoires puissantes, sourire sauvage, dunes du Beshaar.
+> 56. ✅ Meneuse de meute (hyène du Beshaar) : la plus grande et la plus ancienne hyène de la meute, cicatrices au museau, regard calculateur, parée de quelques colifichets d'os, le reste de la meute en silhouettes floues.
+> 57. ✅ Hyène géante : hyène monstrueuse, taille d'un cheval, mâchoires capables de broyer les os, regard affamé, désert.
+> 58. ✅ Qal'efr : la « pieuvre des sables », piégeur redoutable : tentacules jaillissant d'un entonnoir de sable aux pentes lisses, créature à demi enfouie au centre du piège.
+> 59. ✅ Spicomallos : bête placide mais lourdement cuirassée, immenses pointes qui hérissent sa cuirasse, domestiquée par les tribus beshaaries pour briser la roche, la guerre et la charge.
+> 60. ✅ Ver des sables : scolopendre gigantesque à des dizaines de paires de pattes, jaillissant du sable, énorme gueule ouverte et deux langues gluantes déployées, désert.
 
-### C11 — créatures 61 à 66
+### ✅ C11 — créatures 61 à 66
 
-> 61. Gardien de bronze : statue de bronze sans socle d'un guerrier géant, masses à la place des mains et cloche en guise de tête, patine verdâtre, éveillée par la lumière du soleil, ruines à demi englouties par le sable.
-> 62. Momie noire d'humain : mort-vivant desséché hanté par la magie impie des sables noirs, bandelettes sombres et suintantes, maladie visible sur la peau, sable noir autour.
-> 63. Momie noire de coursier des sables : le grand oiseau coureur des sables en version momie noire, plumage pourri, bandelettes noires, yeux éteints, sable noir autour.
-> 64. Arctodus : ours géant à face courte, dressé sur ses pattes arrière (près de quatre mètres), pouces opposables griffus, regard d'une intelligence presque humaine, quelques os et une lance grossière à ses pieds ; steppe et taïga enneigées sous un soleil bas.
-> 65. Bubalus des neiges : bovin trapu au long manteau de poils noirs, quatre redoutables cornes recourbées, haleine fumante dans l'air glacé, le troupeau serré en arrière-plan ; toundra et montagne enneigées.
-> 66. Eucladocéros : cervidé géant du Grand Nord, immense ramure de longs bois acérés en forme de buisson, regard grave et sage de gardien de la forêt, une lueur magique ténue entre les bois ; taïga de conifères enneigée.
+> 61. ✅ Gardien de bronze : statue de bronze sans socle d'un guerrier géant, masses à la place des mains et cloche en guise de tête, patine verdâtre, éveillée par la lumière du soleil, ruines à demi englouties par le sable.
+> 62. ✅ Momie noire d'humain : mort-vivant desséché hanté par la magie impie des sables noirs, bandelettes sombres et suintantes, maladie visible sur la peau, sable noir autour.
+> 63. ✅ Momie noire de coursier des sables : le grand oiseau coureur des sables en version momie noire, plumage pourri, bandelettes noires, yeux éteints, sable noir autour.
+> 64. ✅ Arctodus : ours géant à face courte, dressé sur ses pattes arrière (près de quatre mètres), pouces opposables griffus, regard d'une intelligence presque humaine, quelques os et une lance grossière à ses pieds ; steppe et taïga enneigées sous un soleil bas.
+> 65. ✅ Bubalus des neiges : bovin trapu au long manteau de poils noirs, quatre redoutables cornes recourbées, haleine fumante dans l'air glacé, le troupeau serré en arrière-plan ; toundra et montagne enneigées.
+> 66. ✅ Eucladocéros : cervidé géant du Grand Nord, immense ramure de longs bois acérés en forme de buisson, regard grave et sage de gardien de la forêt, une lueur magique ténue entre les bois ; taïga de conifères enneigée.
 
-### C12 — créatures 67 à 72
+### ✅ C12 — créatures 67 à 72
 
-> 67. Morska : morse gigantesque (quinze à vingt mètres), peau noire et grise couturée de cicatrices, défenses d'ivoire démesurées, émergeant d'une mer froide entre des blocs de banquise, vagues glacées.
-> 68. Tigre bleu : grand félin à la fourrure rayée blanche teintée de bleu, deux canines en sabre, yeux saphir étincelants et hypnotiques qui fixent le spectateur ; taïga enneigée.
-> 69. Xalibu : gros renne sauvage de l'Arctique, bois majestueux et acérés, épaisse fourrure blanche, grise et brune, immense troupeau flou derrière lui ; toundra.
-> 70. Yi qi : rapace de la taille d'un petit aigle, serres et bec crochu, ailes membraneuses de chauve-souris, plumage doré irisé de bleu et de vert, en vol, gueule ouverte ; steppe et montagnes.
-> 71. Gardien du Royaume Putride : guerrier mort-vivant momifié par le froid, au port noble et arrogant, antique armure lourde dont la cuirasse porte un croissant de lune encadré de trois étoiles en triangle, givre sur l'armure, squelettes en armes derrière lui ; forêt froide (palette froide bleutée, exception à l'ambre).
-> 72. Leng shi : fantôme translucide d'une créature morte de froid, silhouette spectrale pâle qui gémit, cristaux de givre en suspension, dépouille gelée à demi ensevelie sous la neige au premier plan ; grande taïga au crépuscule glacé (palette froide bleutée, exception à l'ambre).
+> 67. ✅ Morska : morse gigantesque (quinze à vingt mètres), peau noire et grise couturée de cicatrices, défenses d'ivoire démesurées, émergeant d'une mer froide entre des blocs de banquise, vagues glacées.
+> 68. ✅ Tigre bleu : grand félin à la fourrure rayée blanche teintée de bleu, deux canines en sabre, yeux saphir étincelants et hypnotiques qui fixent le spectateur ; taïga enneigée.
+> 69. ✅ Xalibu : gros renne sauvage de l'Arctique, bois majestueux et acérés, épaisse fourrure blanche, grise et brune, immense troupeau flou derrière lui ; toundra.
+> 70. ✅ Yi qi : rapace de la taille d'un petit aigle, serres et bec crochu, ailes membraneuses de chauve-souris, plumage doré irisé de bleu et de vert, en vol, gueule ouverte ; steppe et montagnes.
+> 71. ✅ Gardien du Royaume Putride : guerrier mort-vivant momifié par le froid, au port noble et arrogant, antique armure lourde dont la cuirasse porte un croissant de lune encadré de trois étoiles en triangle, givre sur l'armure, squelettes en armes derrière lui ; forêt froide (palette froide bleutée, exception à l'ambre).
+> 72. ✅ Leng shi : fantôme translucide d'une créature morte de froid, silhouette spectrale pâle qui gémit, cristaux de givre en suspension, dépouille gelée à demi ensevelie sous la neige au premier plan ; grande taïga au crépuscule glacé (palette froide bleutée, exception à l'ambre).
 
-### C13 — créatures 73 à 75 (les trois cases du haut, le reste en fond noir uni)
+### ✅ C13 — créatures 73 à 75 (les trois cases du haut, le reste en fond noir uni)
 
-> 73. Mogmaï : esprit frappeur invisible d'un ancien palais xi lu, montré par ses effets : vaisselle, bibelots et un tabouret en lévitation autour d'un vieux jouet de bois (une toupie qui tourne sans fin), porte qui claque, une ombre vague et tourmentée dans la poussière ; intérieur sombre (palette froide, exception à l'ambre).
-> 74. Windoku : revenant géant et terrifiant mêlant l'arctodus et le xalibu, corps sombre, émacié et racorni, bois de renne sur un crâne d'ours, regard glaçant ; forêt froide et toundra (palette froide, exception à l'ambre).
-> 75. Roi-Sorcier mort-vivant : ancien roi-sorcier revenu de la tombe, visage blafard et squelettique aux orbites luisantes, couronne antique ternie et robe de sorcier en lambeaux, épée à la main, magie noire crépitant au bout de ses doigts décharnés, regard d'une malfaisance démente ; crypte obscure aux colonnes effondrées (palette froide, exception à l'ambre).
+> 73. ✅ Mogmaï : esprit frappeur invisible d'un ancien palais xi lu, montré par ses effets : vaisselle, bibelots et un tabouret en lévitation autour d'un vieux jouet de bois (une toupie qui tourne sans fin), porte qui claque, une ombre vague et tourmentée dans la poussière ; intérieur sombre (palette froide, exception à l'ambre).
+> 74. ✅ Windoku : revenant géant et terrifiant mêlant l'arctodus et le xalibu, corps sombre, émacié et racorni, bois de renne sur un crâne d'ours, regard glaçant ; forêt froide et toundra (palette froide, exception à l'ambre).
+> 75. ✅ Roi-Sorcier mort-vivant : ancien roi-sorcier revenu de la tombe, visage blafard et squelettique aux orbites luisantes, couronne antique ternie et robe de sorcier en lambeaux, épée à la main, magie noire crépitant au bout de ses doigts décharnés, regard d'une malfaisance démente ; crypte obscure aux colonnes effondrées (palette froide, exception à l'ambre).
 > 4. à 6. : laisser vides (fond noir uni).
 
 ## Démons
@@ -220,7 +218,7 @@ la planche ou générer le portrait seul avec la même phrase.
 
 ## Avancement
 
-État au 2026-11-03. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
+État au 2026-11-05. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
 la carte affiche l'avatar vide.
 
 | Planche | Ids | État | Date | Remarque |
@@ -232,12 +230,12 @@ la carte affiche l'avatar vide.
 | ✅ C5 | 25 à 30 | fait | 2026-11-03 | Colonnes décalées d'1 px (coupures à 513 et 1025) : découpe sur les coupures mesurées, 3 px rognés par bord. |
 | ✅ C6 | 31 à 36 | fait | 2026-11-03 | Grille respectée ; 3 px rognés par bord. |
 | ✅ C7 | 37 à 42 | fait | 2026-11-03 | Grille respectée ; 3 px rognés par bord. |
-| C8 | 43 à 48 | à faire (ancien) | | |
+| ✅ C8 | 43 à 48 | fait | 2026-11-04 | Colonnes exactes, ligne coupée à 511 : découpe sur les coupures mesurées, 3 px rognés par bord. |
 | ✅ C9 | 49 à 54 | fait | 2026-11-02 | Grille respectée à 1 px près, filet noir entre les cases : rogner 3 px par bord. |
-| C10 | 55 à 60 | à faire (**aucune**) | | Priorité : bestiaire du Beshaar sans image. |
-| C11 | 61 à 66 | à faire (**aucune**) | | Priorité : bestiaires du Beshaar et du Khanat sans image. |
-| C12 | 67 à 72 | à faire (**aucune**) | | Priorité : bestiaire du Khanat sans image. |
-| C13 | 73 à 75 | à faire (**aucune**) | | Priorité : bestiaire du Khanat et Roi-Sorcier mort-vivant (ajouté au catalogue le 2026-11-02) sans image. |
+| ✅ C10 | 55 à 60 | fait | 2026-11-04 | Colonne coupée à 511, le reste exact : découpe sur les coupures mesurées, 3 px rognés par bord. |
+| ✅ C11 | 61 à 66 | fait | 2026-11-04 | Colonne coupée à 511, le reste exact : découpe sur les coupures mesurées, 3 px rognés par bord. |
+| ✅ C12 | 67 à 72 | fait | 2026-11-05 | Grille exacte, 3 px rognés par bord. 72 (Leng shi) recadré sur sa tête, en haut à gauche de la case, que le médaillon coupait : carré de 320 px à partir de (1027, 515), sans la dépouille du premier plan. |
+| ✅ C13 | 73 à 75 | fait | 2026-11-05 | Grille exacte avec filet noir de 2 px, 3 px rognés par bord. ChatGPT a rempli une 4e case (second Roi-Sorcier) : 75 vient de la case du bas à gauche, plus lisible en médaillon que celle du haut à droite. |
 | D | démons 1 à 3 | à faire (ancien) | | |
 
-Ordre conseillé pour la suite : C10 à C13 d'abord (21 créatures sans aucune image), puis D, puis C8.
+Reste la planche D.

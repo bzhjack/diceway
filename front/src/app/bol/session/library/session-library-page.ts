@@ -15,8 +15,7 @@ import {BolFightSessionSummaryModel} from '../../models/bol-fight-session.model'
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 
-/** Liste des tables lancées par l'utilisateur, closes comprises, avec accès pour reprendre (une table close est d'abord rouverte) ou
- * supprimer chacune. */
+/** « Mes parties » : toutes les parties du compte, à reprendre ou à supprimer. */
 @Component({
   selector: 'bol-session-library-page',
   imports: [
@@ -48,27 +47,17 @@ export class SessionLibraryPageComponent {
   protected readonly totalCount = computed(() => this.sessions.data().length);
   protected readonly visibleCount = computed(() => this.filteredSessions().length);
 
-  /** Retourne à la table ; une table close est d'abord rouverte (`libre`) : elle redevient la table ouverte de l'accueil. */
+  /** Retourne à la table de la partie ; l'y entrer en fait la dernière partie jouée. */
   protected reprendre(session: BolFightSessionSummaryModel): void {
-    const ouvrir = () => void this.router.navigate(['/session', session.id, 'play']);
-    if (session.statut !== 'terminee') {
-      ouvrir();
-      return;
-    }
-    this.fightSessionService.reopen(session.id).subscribe({
-      next: ouvrir,
-      error: (error: unknown) => {
-        this.snackBar.open(extractApiErrorMessage(error, 'Impossible de rouvrir la table.'), 'Fermer', {duration: 5000});
-      },
-    });
+    void this.router.navigate(['/session', session.id, 'play']);
   }
 
   protected askDelete(session: BolFightSessionSummaryModel): void {
     confirmDialog(
       this.dialog,
       {
-        title: 'Supprimer ce combat',
-        message: `Voulez-vous supprimer "${session.titre ?? 'ce combat'}" ? Cette action est irréversible.`,
+        title: 'Supprimer la partie',
+        message: `Voulez-vous supprimer "${session.titre || 'cette partie'}" ? Cette action est irréversible.`,
         confirmLabel: 'Supprimer',
       },
       {width: '380px'},
@@ -84,7 +73,7 @@ export class SessionLibraryPageComponent {
       next: () => this.sessions.refresh(),
       error: (error: unknown) => {
         this.snackBar.open(
-          extractApiErrorMessage(error, 'La suppression du combat a échoué.'),
+          extractApiErrorMessage(error, 'La suppression de la partie a échoué.'),
           'Fermer',
           {duration: 5000},
         );

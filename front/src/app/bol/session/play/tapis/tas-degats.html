@@ -1,10 +1,5 @@
 <span class="tas-lbl" id="tas-l3">Les dégâts</span>
 @if (damage.hasDamageStep()) {
-  <span class="tas-goal">
-    @if (damage.damageSpan(); as span) {
-      <b>{{ span }}</b>
-    }
-  </span>
   <span class="tas-stack">
     <span class="tas-r1">
       <!-- Des dégâts fixes n'ont pas de jet : la case n'apparaît que pour un dé, ou pour le total de dégâts spéciaux -->
@@ -193,19 +188,6 @@
     <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
   } @else {
     <button #endButton mat-flat-button type="button" class="tas-apply" (click)="flow.requestEndTurn()">Fin du tour</button>
-  }
-} @else {
-  <!-- Avant le coup, ce que l'arme peut faire à cette cible : la colonne annonce la fourchette. -->
-  @if (turn.target() && !loadout.defenseTotale() && !turn.actionPerdue() && (!loadout.sortMode() || loadout.sortModel().blessant)) {
-    <dw-roll-sum aria-label="Calcul des dégâts à venir" [pending]="true" [terms]="damage.damageSum()" />
-  }
-  @if (loadout.sortMode() && !loadout.defenseTotale()) {
-    <span class="tas-wait">{{ loadout.sortModel().blessant ? 'Si le sort réussit : ' + loadout.sortDegats() + ', sans vigueur ni armure.' : 'Ce sort ne blesse pas.' }}</span>
-  } @else {
-    <span class="tas-wait">{{ loadout.defenseTotale() ? 'Pas de dégâts ce round.' : 'Après un coup qui touche.' }}</span>
-  }
-  @if (damage.intangible() && !loadout.defenseTotale() && !loadout.sortMode()) {
-    <ng-container *ngTemplateOutlet="intangible" />
   }
 }
 

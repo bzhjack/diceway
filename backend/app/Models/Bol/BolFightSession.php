@@ -16,9 +16,46 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'etat_combat'];
+    protected $fillable = ['user_id', 'compagnie_id', 'titre', 'statut', 'positions_jetons', 'scene_id', 'scenario_id', 'scenes_jouees', 'chapitres_quittes', 'scenario_termine', 'jouee_le', 'etat_combat'];
     protected $hidden = ['created_at', 'updated_at'];
-    protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array', 'scenes_jouees' => 'array', 'etat_combat' => 'array'];
+    protected $casts = ['positions_jetons' => 'array', 'scenes_jouees' => 'array', 'chapitres_quittes' => 'array', 'scenario_termine' => 'boolean', 'jouee_le' => 'datetime', 'etat_combat' => 'array'];
+
+    /**
+     * Une table qui passe d'un chapitre à un autre (« Changer de chapitre », ou une scène d'un autre chapitre chargée) a fini le premier :
+     * il compte désormais comme joué. Passer en partie improvisée ne finit rien. Et une partie qui change de chapitre rejoue : son scénario
+     * n'est plus marqué fini.
+     */
+    protected static function booted(): void
+    {
+        static::updating(function (BolFightSession $session) {
+            if ($session->isDirty('scenario_id')) {
+                $session->scenario_termine = false;
+            }
+            $quitte = $session->getOriginal('scenario_id');
+            if (!$session->isDirty('scenario_id') || $quitte === null || $session->scenario_id === null) {
+                return;
+            }
+            $session->chapitres_quittes = array_values(array_unique([...($session->chapitres_quittes ?? []), (string) $quitte]));
+        });
+    }
+
+    public function compagnie(): BelongsTo
+    {
+        return $this->belongsTo(BolCompagnie::class, 'compagnie_id', 'id');
+    }
+
+    /**
+     * La partie peut-elle passer sur ce chapitre ? Elle reste sur son scénario ; improvisée, elle en prend un, sauf si sa compagnie le joue
+     * déjà dans une autre partie.
+     */
+    public function peutPasserSur(?string $chapitreId): bool
+    {
+        if (!BolScenario::dansLeScenario($this->scenario_id, $chapitreId)) {
+            return false;
+        }
+
+        return $this->scenario_id !== null || $this->compagnie?->partieSurLeScenario($chapitreId) === null;
+    }
 
     public function heros(): HasMany
     {

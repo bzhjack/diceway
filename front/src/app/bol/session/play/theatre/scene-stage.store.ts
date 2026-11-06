@@ -52,7 +52,6 @@ export class SceneStageStore {
   /** Scénario de la table d'après la page, ou choisi dans la frise pour l'afficher sans attendre. */
   private readonly scenarioIdState = signal<string | null>(null);
   private readonly regionNomsState = signal<ReadonlyMap<number, string>>(new Map());
-  readonly regionNoms = this.regionNomsState.asReadonly();
 
   private readonly rideauState = signal<RideauEtat>('ouvert');
   readonly rideau = this.rideauState.asReadonly();

@@ -59,6 +59,7 @@ export class PnjLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> {
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le PNJ',
     name: (item) => item.origines.nom ?? 'ce PNJ',
+    consequence: 'Cette fiche quitte aussi les scènes qui la citent ; les tables où elle est posée gardent leur copie.',
     error: 'La suppression du PNJ a échoué.',
   };
 

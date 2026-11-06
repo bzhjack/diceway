@@ -14,6 +14,7 @@ use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /** Les PNJ, des fiches de héros dont le `type` n'est pas `H`. */
 class BolPnjService
@@ -163,6 +164,6 @@ class BolPnjService
 
     public function delete(BolHeros $pnj): void
     {
-        $pnj->delete();
+        DB::transaction(fn () => $pnj->delete());
     }
 }

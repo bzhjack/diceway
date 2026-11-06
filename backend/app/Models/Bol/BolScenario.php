@@ -21,8 +21,47 @@ class BolScenario extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = ['numero' => 'integer'];
 
+    /** Un scénario n'existe que par ses chapitres : il part avec le dernier, qu'on le supprime ou qu'un nouveau titre le range ailleurs. */
+    protected static function booted(): void
+    {
+        $sansChapitre = function (?string $sagaId): void {
+            if ($sagaId !== null && !self::where('saga_id', $sagaId)->exists()) {
+                BolSaga::whereKey($sagaId)->delete();
+            }
+        };
+        static::updated(function (BolScenario $chapitre) use ($sansChapitre): void {
+            if ($chapitre->wasChanged('saga_id')) {
+                $sansChapitre($chapitre->getOriginal('saga_id'));
+            }
+        });
+        static::deleted(function (BolScenario $chapitre) use ($sansChapitre): void {
+            BolImportRef::where('entity_kind', 'scenario')->where('entity_id', $chapitre->id)->delete();
+            $sansChapitre($chapitre->saga_id);
+        });
+    }
+
     public function saga(): BelongsTo
     {
         return $this->belongsTo(BolSaga::class, 'saga_id', 'id');
+    }
+
+    /**
+     * Une partie peut-elle passer du chapitre `$depuis` au chapitre `$vers` ? Oui si elle n'a pas encore de scénario (improvisée), ou si
+     * les deux chapitres sont du même scénario : le même chapitre, ou la même saga. Une partie liée ne redevient pas improvisée.
+     */
+    public static function dansLeScenario(?string $depuis, ?string $vers): bool
+    {
+        if ($depuis === null) {
+            return true;
+        }
+        if ($vers === null) {
+            return false;
+        }
+        if ($depuis === $vers) {
+            return true;
+        }
+        $sagas = self::whereIn('id', [$depuis, $vers])->pluck('saga_id', 'id');
+
+        return $sagas[$depuis] !== null && $sagas[$depuis] === ($sagas[$vers] ?? null);
     }
 }

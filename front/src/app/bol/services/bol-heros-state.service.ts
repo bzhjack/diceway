@@ -107,9 +107,6 @@ export class BolHerosStateService {
         (item) => item.type === 'D' && item.carriere === true
       ) ?? []
   );
-  readonly allHerosDesavantages = computed(
-    () => this.currentHeros()?.traits?.filter((item) => item.type === 'D') ?? []
-  );
   readonly heroismCost = computed(() => {
     const advantageCount = this.currentHeroAvantages().length;
     const regionalDisadvantageCount = this.currentHeroRegionalDesavantages().length;

@@ -3,11 +3,11 @@
 
     <!-- Header card -->
     <dw-library-header
-      title="Mes tables"
-      description="Retrouvez les tables déjà ouvertes, en combat, en cours ou closes, pour reprendre le suivi de l'initiative et des points de vie."
+      title="Mes parties"
+      description="Toutes vos parties, chacune avec sa compagnie : reprenez-en une, ou supprimez celles qui sont finies."
     >
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalCount() }} table{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
+        <dw-tag>{{ totalCount() }} partie{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
         @if (visibleCount() !== totalCount()) {
           <dw-tag>{{ visibleCount() }} visibles</dw-tag>
         }
@@ -15,7 +15,7 @@
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
           <button mat-flat-button routerLink="/session/new">
-            <mat-icon>add</mat-icon> Nouvelle table
+            <mat-icon>add</mat-icon> Nouvelle partie
           </button>
         </div>
         <button mat-stroked-button routerLink="/">
@@ -26,7 +26,7 @@
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="cl-content-card">
-      <dw-library-toolbar placeholder="Rechercher une table" [withFilters]="false" [(searchTerm)]="searchTerm">
+      <dw-library-toolbar placeholder="Rechercher une partie" [withFilters]="false" [(searchTerm)]="searchTerm">
         <dw-tag dwToolbarCount>{{ visibleCount() }} entrées</dw-tag>
       </dw-library-toolbar>
 
@@ -34,12 +34,10 @@
         @for (session of filteredSessions(); track session.id) {
           <div class="cl-row">
             <div class="cl-row-main">
-              <p class="cl-row-title">{{ session.titre || 'Session sans titre' }}</p>
+              <p class="cl-row-title">{{ session.titre || 'Table sans nom' }}</p>
               <p class="cl-row-meta">
                 {{ session.heros_count }} héros · {{ session.adversaires_count }} adversaires
-                @if (session.statut === 'terminee') {
-                  <dw-tag>Close</dw-tag>
-                } @else if (session.statut === 'combat') {
+                @if (session.statut === 'combat') {
                   <dw-tag>En combat</dw-tag>
                 }
               </p>
@@ -51,7 +49,7 @@
               <button
                 mat-icon-button
                 (click)="askDelete(session)"
-                [attr.aria-label]="'Supprimer ' + (session.titre || 'cette session')"
+                [attr.aria-label]="'Supprimer ' + (session.titre || 'cette partie')"
               >
                 <mat-icon svgIcon="gi-trash" />
               </button>
@@ -60,9 +58,9 @@
         } @empty {
           <p class="cl-empty">
             @if (totalCount() === 0) {
-              Aucune table pour l'instant — ouvrez-en une depuis « Nouvelle table ».
+              Aucune partie pour l'instant : créez-en une depuis « Nouvelle partie ».
             } @else {
-              Aucune table ne correspond à cette recherche.
+              Aucune partie ne correspond à cette recherche.
             }
           </p>
         }

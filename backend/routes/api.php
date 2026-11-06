@@ -21,6 +21,7 @@ use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolAccueilController;
+use App\Http\Controllers\Bol\BolCompagnieController;
 use App\Http\Controllers\Bol\BolScenarioController;
 use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
@@ -154,6 +155,10 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
 
     // Scénarios
+    Route::get('/bol/compagnie', [BolCompagnieController::class, 'getAll']);
+    Route::post('/bol/compagnie/create', [BolCompagnieController::class, 'create']);
+    Route::post('/bol/compagnie/update', [BolCompagnieController::class, 'update']);
+    Route::delete('/bol/compagnie/delete/{id}', [BolCompagnieController::class, 'delete']);
     Route::get('/bol/scenario', [BolScenarioController::class, 'getAll']);
     Route::get('/bol/scenario/{id}', [BolScenarioController::class, 'getOne']);
     Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);
@@ -174,13 +179,11 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/vilenie', [BolFightSessionController::class, 'adjustVilenie']);
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/fuite', [BolFightSessionController::class, 'fuiteOpportune']);
     Route::patch('/bol/fight-session/{id}/combatant/pnj/{pivotId}/ressource', [BolFightSessionController::class, 'adjustPnjRessource']);
-    Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
-    Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
     Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
     Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
-    Route::patch('/bol/fight-session/{id}/close', [BolFightSessionController::class, 'close']);
-    Route::patch('/bol/fight-session/{id}/reopen', [BolFightSessionController::class, 'reopen']);
+    Route::patch('/bol/fight-session/{id}/jouer', [BolFightSessionController::class, 'jouer']);
     Route::patch('/bol/fight-session/{id}/scenario', [BolFightSessionController::class, 'changerChapitre']);
+    Route::patch('/bol/fight-session/{id}/scenario-termine', [BolFightSessionController::class, 'marquerScenarioTermine']);
     Route::patch('/bol/fight-session/{id}/etat-combat', [BolFightSessionController::class, 'updateCombatState']);
     Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
 

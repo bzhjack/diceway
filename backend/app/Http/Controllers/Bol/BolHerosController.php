@@ -85,6 +85,9 @@ class BolHerosController extends Controller
         if (!$bolHeros || Gate::denies('delete', $bolHeros)) {
             return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
         }
+        if ($this->bolHerosService->enCombat($bolHeros)) {
+            return response()->json(['message' => 'Ce héros est en plein combat à une table : terminez d’abord le combat.'], Response::HTTP_CONFLICT);
+        }
         // Delete the resource
         $this->bolHerosService->delete($bolHeros);
 

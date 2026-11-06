@@ -1,7 +1,7 @@
-import {computed, effect, inject, Injectable, untracked} from '@angular/core';
+import {computed, DestroyRef, effect, inject, Injectable, untracked} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {catchError, EMPTY, forkJoin, map, Observable, of, switchMap, take, tap} from 'rxjs';
+import {catchError, EMPTY, finalize, forkJoin, map, Observable, of, Subscription, switchMap, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
@@ -11,16 +11,15 @@ import {combatOutcome, horsCombat, tientDebout} from '../tapis/combat-turn.util'
 import {degatsMainsNues} from '../tapis/combat-effects.util';
 import {CombatOutcome} from '../../models/combat-turn.model';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {CombatOutcomeDialogComponent} from '../combat-outcome-dialog/combat-outcome-dialog';
-import {CombatOutcomeDialogData} from '../../models/combat-outcome-dialog.model';
 import {AfterCombatDialogComponent} from '../after-combat-dialog/after-combat-dialog';
 import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../../models/after-combat-dialog.model';
 import {bestHealingCareer, peutSecourir} from '../../rescue.util';
+import {browserStorage, ISSUE_ANNONCEE} from '../table-state.util';
 import {heroDetails} from '../tapis/tapis.util';
 import {TableStore} from './table.store';
 import {CombatTurnStore} from './combat-turn.store';
 
-/** La fin d'un combat : l'annonce de l'issue quand un camp tombe, puis « Après combat », qui enregistre la récupération des blessés et rend la session au mode libre. */
+/** La fin d'un combat : « Après combat », ouvert par le MJ ou de lui-même quand un camp tombe, qui enregistre la récupération des blessés et rend la table au mode libre. */
 @Injectable()
 export class CombatEndService {
   private readonly fightSessionService = inject(BolFightSessionService);
@@ -33,30 +32,44 @@ export class CombatEndService {
   /** Un camp n'a plus personne debout (hors de combat, paralysé ou retiré du combat) : le combat est gagné ou perdu, une boîte l'annonce. */
   private readonly combatOutcome = computed(() => (this.table.mode() === 'combat' ? combatOutcome(this.table.cards(), this.combat.etat().exclus, this.combat.etat().effets) : null));
 
-  /** La dernière issue annoncée : la boîte ne revient que si l'issue change (un héros relevé, puis retombé…). */
-  private lastOutcome: CombatOutcome | null = null;
+  /** L'issue déjà annoncée : lue une fois du stockage, puis tenue ici (sans stockage disponible, elle ne doit pas s'annoncer sans fin). */
+  private issue: {readonly sessionId: string; readonly outcome: CombatOutcome | null} | null = null;
+  /** « Après combat » se prépare ou est ouvert : un second n'a pas lieu d'être. */
+  private enCours = false;
+  /** L'annonce qui attend qu'une autre boîte (« Défier la mort »…) se ferme ; une seule à la fois. */
+  private attente: Subscription | null = null;
 
   constructor() {
-    // Un camp vient de tomber : la boîte de fin de combat s'ouvre, une fois par issue.
+    // Un camp vient de tomber : « Après combat » s'ouvre, une fois par issue, même si on revient sur la table entre-temps.
     effect(() => {
+      const sessionId = this.table.session()?.id;
       const outcome = this.combatOutcome();
       untracked(() => {
-        const previous = this.lastOutcome;
-        this.lastOutcome = outcome;
-        if (outcome && outcome !== previous) {
-          this.announceOutcome(outcome);
+        // La table n'est pas encore lue : on n'en sait rien, et surtout pas que l'issue a été démentie.
+        if (!sessionId || outcome === this.issueAnnoncee(sessionId)) {
+          return;
+        }
+        if (outcome) {
+          this.announceOutcome(sessionId, outcome);
+        } else {
+          this.attente?.unsubscribe();
+          this.retenirIssue(sessionId, null);
         }
       });
     });
+    // On quitte la table : une annonce en attente n'a plus à s'ouvrir, et reste à faire au retour.
+    inject(DestroyRef).onDestroy(() => this.attente?.unsubscribe());
   }
 
   /** « Terminer le combat » : la boîte « Après combat » montre ce que chaque blessé récupère (repos, dégâts à mains nues, soins
-   * médicaux) ; validée, elle l'enregistre et la session repasse en mode libre. Annulée, le combat continue. */
-  askEndCombat(): void {
+   * médicaux) ; validée, elle l'enregistre et la table repasse en mode libre. Annulée, le combat continue. `outcome` : un camp vient de
+   * tomber, elle le dit. */
+  askEndCombat(outcome: CombatOutcome | null = null): void {
     const sessionId = this.table.session()?.id;
-    if (!sessionId) {
+    if (!sessionId || this.enCours) {
       return;
     }
+    this.enCours = true;
     const effets = this.combat.etat().effets;
     const blesses = this.table.cards().filter(
       (card) => card.camp === 'heros' && card.vitaliteMax !== null && card.vitaliteMax > 0 && card.vitaliteCourante !== null && card.vitaliteCourante < card.vitaliteMax,
@@ -77,8 +90,9 @@ export class CombatEndService {
             ...traitsDeRecuperation(fiches.get(card.key)?.traits),
           }));
           const healers = this.combatHealers(fiches, effets);
+          const mourants = this.table.cards().filter((card) => card.camp === 'heros' && horsCombat(card, effets) === 'mourant').map((card) => card.nom);
           return this.dialog
-            .open<AfterCombatDialogComponent, AfterCombatDialogData, readonly AfterCombatGain[]>(AfterCombatDialogComponent, {width: '600px', data: {wounded, healers}})
+            .open<AfterCombatDialogComponent, AfterCombatDialogData, readonly AfterCombatGain[]>(AfterCombatDialogComponent, {width: '600px', data: {wounded, healers, outcome, mourants}})
             .afterClosed();
         }),
         switchMap((gains) => {
@@ -95,6 +109,7 @@ export class CombatEndService {
             switchMap(() => this.fightSessionService.endCombat(sessionId)),
           );
         }),
+        finalize(() => (this.enCours = false)),
       )
       .subscribe({
         next: (session) => this.table.session.set(session),
@@ -132,30 +147,43 @@ export class CombatEndService {
       .filter((healer): healer is AfterCombatHealer => healer !== null);
   }
 
-  /** La boîte de fin de combat : « Terminer le combat » ouvre « Après combat », « Continuer » laisse le temps de secourir un mourant. Si
-   * une autre boîte est ouverte (« Défier la mort »…), elle attend qu'elle se ferme, et ne s'ouvre que si l'issue tient toujours. */
-  private announceOutcome(outcome: CombatOutcome): void {
+  /** Un camp vient de tomber : « Après combat » s'ouvre. Si une autre boîte est ouverte (« Défier la mort »…), il attend qu'elle se ferme, et ne
+   * s'ouvre que si l'issue tient toujours. S'il est déjà ouvert, il n'y a rien à ajouter. */
+  private announceOutcome(sessionId: string, outcome: CombatOutcome): void {
+    this.attente?.unsubscribe();
+    this.attente = null;
+    if (this.enCours) {
+      this.retenirIssue(sessionId, outcome);
+      return;
+    }
+    // L'issue n'est retenue qu'une fois annoncée : si l'attente tourne court, elle reste à annoncer.
     const open = (): void => {
-      if (this.combatOutcome() !== outcome) {
-        return;
+      if (this.combatOutcome() === outcome) {
+        this.retenirIssue(sessionId, outcome);
+        this.askEndCombat(outcome);
       }
-      const effets = this.combat.etat().effets;
-      const mourants = this.table.cards()
-        .filter((card) => card.camp === 'heros' && horsCombat(card, effets) === 'mourant')
-        .map((card) => card.nom);
-      this.dialog
-        .open<CombatOutcomeDialogComponent, CombatOutcomeDialogData, boolean>(CombatOutcomeDialogComponent, {width: '440px', data: {outcome, mourants}})
-        .afterClosed()
-        .subscribe((end) => {
-          if (end) {
-            this.askEndCombat();
-          }
-        });
     };
     if (this.dialog.openDialogs.length > 0) {
-      this.dialog.afterAllClosed.pipe(take(1)).subscribe(open);
+      this.attente = this.dialog.afterAllClosed.pipe(take(1)).subscribe(open);
     } else {
       open();
+    }
+  }
+
+  private issueAnnoncee(sessionId: string): CombatOutcome | null {
+    if (this.issue?.sessionId === sessionId) {
+      return this.issue.outcome;
+    }
+    const issue = browserStorage()?.getItem(ISSUE_ANNONCEE + sessionId);
+    return issue === 'victoire' || issue === 'defaite' ? issue : null;
+  }
+
+  private retenirIssue(sessionId: string, outcome: CombatOutcome | null): void {
+    this.issue = {sessionId, outcome};
+    if (outcome) {
+      browserStorage()?.setItem(ISSUE_ANNONCEE + sessionId, outcome);
+    } else {
+      browserStorage()?.removeItem(ISSUE_ANNONCEE + sessionId);
     }
   }
 }
