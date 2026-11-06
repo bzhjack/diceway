@@ -219,7 +219,7 @@ Au rang 10, ce sont toujours les deux mêmes agents qui reviennent jusqu'à la f
 ## Nomade — Moto
 
 - **Familiarité** : ajoute son rang de Moto à Conduite de véhicule terrestre, Pilotage de véhicule aérien, Pilotage de véhicule maritime, Aérotech, Terratech et Maritech.
-- **Garage familial** : à chaque rang gagné, soit un véhicule standard de son rang ou moins, soit une amélioration de son rang ou moins sur un véhicule familial. Le livre ne dit pas explicitement ce que reçoit un Nomade créé au rang 4 ; la lecture logique est un choix par rang, soit quatre (véhicules ou améliorations de rang 4 au plus). À arbitrer.
+- **Garage familial** : à chaque rang gagné, soit un véhicule standard de son rang ou moins, soit une amélioration de son rang ou moins sur un véhicule familial. Le livre ne dit pas explicitement ce que reçoit un Nomade créé au rang 4 ; décision du 2026-11-06 pour l'application : un choix par rang, soit quatre (véhicules ou améliorations de rang 4 au plus).
 - Un seul véhicule familial à la fois ; échange possible le lendemain matin si la famille est proche.
 - Véhicule familial détruit : la famille le répare en 1 semaine contre 500 ED (dispense possible si fauché, au prix de la réputation). Les petites réparations sont à sa charge.
 - **Rang 10** : chef de famille ; utilise tous les véhicules familiaux à la fois, achète les nouveaux au prix du marché et les améliorations 1 000 ED pièce.
