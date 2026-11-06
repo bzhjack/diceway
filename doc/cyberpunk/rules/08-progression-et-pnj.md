@@ -64,7 +64,7 @@ Dix profils prêts à l'emploi : bases de compétence déjà calculées (CARAC +
 - **Sbires** : garde du corps, booster, gangster nomade, agent de sécurité.
 - **Lieutenants et mini-boss** : six profils plus forts (responsable de la sécurité, éclaireur nomade, jusqu'au cyberpsycho bardé d'implants).
 
-Les profils complets relèvent de `resources/` (à faire).
+Profils complets : `../resources/pnjs.md`.
 
 ## Rencontres de l'Ère du Rouge (p. 416-424)
 

@@ -2,7 +2,7 @@
 
 Pages source : p. 333-386 (« La nouvelle économie de la Rue »). Texte : `doc/cyberpunk/pdf-text/16-economie-de-la-rue-p333-386.txt`.
 
-Le catalogue du Marché de nuit (p. 340-376 : armes, munitions, accessoires, armures, équipement, vêtements, cyberimplants, services) relève de `resources/` (à faire). Ce qui suit, ce sont les règles.
+Le catalogue du Marché de nuit (p. 340-376) est dans `../resources/` : `armes.md`, `armures.md`, `equipement.md`, `cybermateriel.md`, `marche-de-nuit.md`. Ce qui suit, ce sont les règles.
 
 ## Catégories de prix
 
@@ -117,6 +117,6 @@ Le Fixer peut augmenter la paie (+20 % au rang 5-6, × 2 sur un Contrat dangereu
 | Gain moyen | 200 | 300 | 600 |
 | Gros gain | 300 | 500 | 800 |
 
-Exemple (Solo) : 1 garde du corps pour un client lambda (petit gain) ; 2 client aisé (moyen) ; 3 assassinat ou extraction délicate (moyen) ; 4 vigile pour un Fixer, une corpo ou un gang (petit) ; 5 profil bas (semaine blanche) ; 6 tueur à gages pour une corpo locale (petit). Les tables des dix rôles relèvent de `resources/`.
+Exemple (Solo) : 1 garde du corps pour un client lambda (petit gain) ; 2 client aisé (moyen) ; 3 assassinat ou extraction délicate (moyen) ; 4 vigile pour un Fixer, une corpo ou un gang (petit) ; 5 profil bas (semaine blanche) ; 6 tueur à gages pour une corpo locale (petit). Les tables des dix rôles : `../resources/roles.md`.
 
 Une seule ligne sort de ces échelles : Nomade, 5 (client conduit sans heurt), 100 / 200 / 300.

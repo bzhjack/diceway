@@ -2,7 +2,7 @@
 
 Pages source : p. 27-120 (« L'âme et la nouvelle machine », « Histoires de la Rue », « Paré pour le futur », fin de « Fusionner le cyber et le punk »). Texte : `doc/cyberpunk/pdf-text/03-roles-p27-42.txt`, `04-histoires-de-la-rue-p43-70.txt`, `05-caracteristiques-competences-equipement-p71-106.txt`, `06-cybermateriel-p107-120.txt`.
 
-Les tables à recopier (profils de CARAC par rôle, niveaux de compétences du Rat des Rues, équipement et attirail de départ par rôle, tables du parcours) relèvent de `resources/` (à faire).
+Les tables à recopier sont dans `../resources/` : profils de CARAC, compétences du Rat des Rues, équipement, attirail et cyberimplants de départ dans `roles.md` ; tables du parcours dans `parcours.md`.
 
 ## Trois méthodes
 

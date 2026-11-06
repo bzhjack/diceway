@@ -1,6 +1,6 @@
 # Cybermatériel, Humanité et cyberpsychose
 
-Pages source : p. 107-120 (« Fusionner le cyber et le punk ») et p. 229-232 (thérapie, cyberpsychose). Le catalogue complet des cyberimplants est au Marché de nuit, p. 358-363 (à reporter dans `resources/`). Texte : `doc/cyberpunk/pdf-text/06-cybermateriel-p107-120.txt`, `11-trauma-team-p219-232.txt`.
+Pages source : p. 107-120 (« Fusionner le cyber et le punk ») et p. 229-232 (thérapie, cyberpsychose). Catalogue complet (p. 358-366) : `../resources/cybermateriel.md`. Texte : `doc/cyberpunk/pdf-text/06-cybermateriel-p107-120.txt`, `11-trauma-team-p219-232.txt`.
 
 ## Cyberimplant ou cyberaccessoire
 

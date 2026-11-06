@@ -6,7 +6,7 @@ Objectif de ce dossier :
 
 - Ne garder que les mécanismes exploitables en jeu ou en implémentation.
 - Laisser de côté la fiction, l'histoire du monde, la description de Night City et les conseils de MJ sans règle.
-- Garder les catalogues longs (profils de CARAC, équipement de départ, Marché de nuit, PNJ) pour `resources/`, avec ici seulement ce qu'il faut pour comprendre les règles.
+- Laisser les catalogues longs (profils de CARAC, équipement de départ, Marché de nuit, PNJ, parcours) à `../resources/`, avec ici seulement ce qu'il faut pour comprendre les règles.
 
 ## Fichiers
 
