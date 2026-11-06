@@ -10,6 +10,8 @@ use Illuminate\Validation\ValidationException;
 /** Les fiches de personnage : lecture, et enregistrement de la fiche entière (ses lignes sont remplacées dans une transaction). */
 class CprPersonnageService
 {
+    public function __construct(private readonly CprCreationRegles $regles) {}
+
     /** Le catalogue de chaque type d'objet ; seules ses lignes du livre et celles du compte sont utilisables. */
     private const CATALOGUES = [
         'equipement' => 'cpr_equipement',
@@ -38,6 +40,7 @@ class CprPersonnageService
     public function save(array $donnees, string $userId, ?CprPersonnage $personnage = null): CprPersonnage
     {
         $this->verifierLesReferences($donnees, $userId);
+        $this->verifierLaCreation($donnees, $personnage);
 
         return DB::transaction(function () use ($donnees, $userId, $personnage) {
             $personnage ??= new CprPersonnage();
@@ -86,6 +89,40 @@ class CprPersonnageService
                 $personnage->cyber()->whereKey($ids[$implant['cle']])->update(['parent_id' => $ids[$implant['parent']]]);
             }
         }
+    }
+
+    /**
+     * Les règles de création (CprCreationRegles) valent pour un PJ qui a une méthode de création : en brouillon, et au passage de brouillon à
+     * actif (où tout doit être complet). Elles portent sur la fiche entière : le document, complété par la fiche existante pour ce qu'il
+     * n'envoie pas.
+     */
+    private function verifierLaCreation(array $donnees, ?CprPersonnage $personnage): void
+    {
+        $fiche = [...($personnage ? $this->document($personnage) : []), ...$donnees];
+        $avant = $personnage?->statut ?? 'brouillon';
+        $apres = $fiche['statut'] ?? 'brouillon';
+        if (($fiche['type'] ?? 'pj') !== 'pj' || empty($fiche['methode']) || $avant === 'actif') {
+            return;
+        }
+        $erreurs = $this->regles->verifier($fiche, $apres === 'actif');
+        if ($erreurs) {
+            throw ValidationException::withMessages($erreurs);
+        }
+    }
+
+    /** Une fiche enregistrée, sous la forme du document qu'on envoie pour l'enregistrer. */
+    private function document(CprPersonnage $personnage): array
+    {
+        $personnage->loadMissing(CprPersonnage::RELATIONS);
+        $document = $personnage->only(['type', 'statut', 'methode', 'role_id', 'profil_jet', 'humanite', ...CprPersonnage::CARACS]);
+        foreach (['roles', 'competences', 'armes', 'armures', 'objets'] as $relation) {
+            $document[$relation] = $personnage->$relation->map(fn ($ligne) => $ligne->toArray())->all();
+        }
+        $document['cyber'] = $personnage->cyber->map(fn ($ligne) => [
+            'cle' => (string) $ligne->id, 'cyber_id' => $ligne->cyber_id, 'parent' => $ligne->parent_id ? (string) $ligne->parent_id : null,
+            'cote' => $ligne->cote, 'precision' => $ligne->precision, 'ph' => $ligne->ph,
+        ])->all();
+        return $document;
     }
 
     /** Un objet du catalogue n'est utilisable que s'il est du livre ou du compte ; un objet cité doit exister dans son catalogue. */

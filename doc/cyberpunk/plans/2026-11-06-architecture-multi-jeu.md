@@ -1,6 +1,6 @@
 # Cyberpunk RED dans Diceway — architecture et plan
 
-Date : 2026-11-06. Statut : étape 1 terminée le 2026-11-06 ; étape 2 à lancer (voir « Avancement » et « Décisions »).
+Date : 2026-11-06. Statut : étapes 1 et 2 terminées (2026-11-06 et 2026-11-07) ; étape 3 (écrans) à lancer.
 
 ## Pourquoi
 
@@ -164,8 +164,32 @@ appliquées, défaites puis réappliquées sur une base SQLite jetable.
   par personne) ; dans le document, un implant cite sa pièce mère par une clé locale (`cle`, `parent`) que le serveur traduit en
   `parent_id` ; une liste absente du document est laissée telle quelle, une liste présente remplace les lignes ; armes, armures, implants
   et objets doivent être du livre ou du compte.
-- [ ] **2.2 Calculs côté serveur**
-- [ ] **2.3 Règles de création**
+- [x] **2.2 Calculs côté serveur** (2026-11-07) : `CprPersonnageCalcul`, bloc `calcule` ajouté aux réponses de lecture et d'enregistrement
+  d'une fiche, test `CprPersonnageCalculTest` (12 tests, sur les exemples du livre : 45 PS pour COR 7 et VOL 6, EMP 4 pour 44 d'Humanité).
+  Le bloc donne CARAC (avec implants) et CARAC effectives (avec la pénalité d'armure), PS, seuil de blessure grave, sauvegarde, Humanité
+  actuelle et maximum, EMP actuelle, PH totale, Chance, PA tête et corps (et PS des boucliers), Initiative, base de chaque compétence,
+  emplacements de chaque pièce mère et des catégories sans pièce mère, alertes. **Interprétations** (le livre ne tranche pas) : plusieurs
+  bonus pour une même compétence ne se cumulent pas, le plus élevé compte ; un bonus sous condition (« pour l'ouïe ») est listé sans entrer
+  dans la base ; l'Initiative ne compte que les bonus permanents (Kerenzikov, Réaction d'Initiative du Solo), pas le sandevistan qui
+  s'active ; l'Humanité de départ, tant qu'elle n'est pas enregistrée, vaut EMP × 10 − PH payée. Les capacités de rôle prises en compte pour
+  l'instant : Moto du Nomade (ajoutée aux compétences de conduite et de mécanique) et Réaction d'Initiative du Solo ; les spécialités du
+  Techie et du Medtech attendront leur format de `details` (2.3).
+- [x] **2.3 Règles de création** (2026-11-07) : `CprCreationRegles`, appelé par `CprPersonnageService` pour un PJ qui a une méthode,
+  test `CprCreationReglesTest` (12 tests). **Brouillon** : rien ne dépasse (bornes, points, budgets), la fiche peut être incomplète ;
+  **activation** (brouillon → actif) : tout est complet ; une fiche active et un PNJ n'y sont plus soumis. Les règles portent sur la fiche
+  entière (le document complété par la fiche existante). Contrôles : rôle unique au rang 4 et sa capacité répartie ; Rat des Rues (ligne de
+  CARAC et compétences exactes) ; Edgerunner (CARAC dans la colonne du rôle, 86 points sur ses 20 compétences entre 2 et 6) ; Formule
+  complète (62 points de CARAC entre 2 et 8, 86 points de compétences jusqu'à 6, achats dans 2 550 ED, vêtements et cyberfashion dans 800 ED
+  dont le dépassement passe sur le budget principal) ; dotation (une alternative par groupe, le reste acheté dans 500 ED, qualité et
+  accessoires comptés) ; compétences de base à 2, langue d'origine gratuite au niveau 4, pas de compétence réservée achetée ; PH fixe des
+  implants et Humanité de départ. **Formats de `details`** fixés (voir l'en-tête de `CprCreationRegles`) : spécialités du Techie (2 × rang,
+  chacune au plus le rang), du Medtech (rang ; Médicaments et Cryosystèmes jusqu'à 5 ; un médicament choisi par point), répartition du
+  Solo (au plus le rang, avec les paliers du livre), garage du Nomade (autant de choix que le rang, de ce rang au plus). Les calculs en
+  tiennent compte : Chirurgie (2 niveaux par point) et Techniques médicales du Medtech, Expert sur le terrain du Techie. Contrôle croisé :
+  un Rat des Rues de chacun des 10 rôles, construit depuis les tables de référence, s'active sans erreur. Les alertes d'implants (deux
+  mégadrénalines du Solo qui prend le Kerenzikov, emplacements) restent des alertes, pas des refus.
+
+**Étape 2 terminée le 2026-11-07** : 7 tables de fiche, 5 routes, calculs et règles de création ; 35 tests de fiche, suite complète à 418 tests.
 
 À faire sur chaque poste après un pull : `docker exec diceway php artisan migrate` (les tables `cpr_*` se créent et se remplissent).
 

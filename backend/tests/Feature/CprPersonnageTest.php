@@ -39,7 +39,7 @@ class CprPersonnageTest extends TestCase
 
         $fiche = $this->getJson("/api/cpr/personnages/{$id}")->assertOk();
         $fiche->assertJsonPath('pseudo', 'Kelsa')
-            ->assertJsonPath('methode', 'edgerunner')
+            ->assertJsonPath('methode', null)
             ->assertJsonPath('statut', 'brouillon')
             ->assertJsonPath('role_id', $this->id('cpr_role', 'solo'))
             ->assertJsonPath('ref', 8)
@@ -167,13 +167,13 @@ class CprPersonnageTest extends TestCase
         $this->assertSame(0, CprPersonnage::count());
     }
 
-    /** Un Solo Edgerunner complet : rôle, CARAC, compétences, arme, armure, implants posés dans leur pièce mère, munitions. */
+    /** Un Solo complet, sans méthode de création : rôle, CARAC, compétences, arme, armure, implants posés dans leur pièce mère, munitions. */
     private function fiche(): array
     {
         return [
             'pseudo' => 'Kelsa',
             'joueur' => 'Laure',
-            'methode' => 'edgerunner',
+            'methode' => null, // l'enregistrement seul ; les règles de création ont leurs tests (CprCreationReglesTest)
             'role_id' => $this->id('cpr_role', 'solo'),
             'int' => 6, 'ref' => 8, 'dex' => 7, 'tech' => 4, 'pres' => 6, 'vol' => 6, 'cha' => 6, 'mouv' => 6, 'cor' => 7, 'emp' => 5,
             'eddies' => 500,
