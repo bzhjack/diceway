@@ -1,13 +1,14 @@
 # Prompts — portraits des Chroniques lémuriennes 1
 
-Prompts pour générer (via ChatGPT) les portraits des fiches créées par l'import des cinq aventures du recueil
-(`app/*.json`) qui n'en ont pas encore : **30 PNJ et 2 créatures** (état au 2026-11-02).
+Prompts pour générer (via ChatGPT) les portraits des PNJ créés par l'import des cinq aventures du recueil
+(`app/*.json`) : **51 PNJ**. Les créatures et les démons du recueil, qui suivent le style du catalogue, sont dans
+`doc/bol/image-prompts/creatures-demons-scenarios.md`.
 
 Les PNJ suivent le style des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
 fantasy des années 80. La dominante est propre au recueil, qui mène du Khanat aux jungles de Qush : bleu acier /
-gris froid contrasté par la lumière chaude d'une torche. Les créatures suivent le style du bestiaire du catalogue
-(`doc/bol/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le commentaire de chaque
-fiche ; quand le livre ne décrit pas un personnage, la phrase s'en tient à ce qu'il dit de son rôle et de son peuple.
+gris froid contrasté par la lumière chaude d'une torche. Les descriptions viennent du livre, reprises dans le commentaire
+de chaque fiche ; quand le livre ne décrit pas un personnage, la phrase s'en tient à ce qu'il dit de son rôle et de son
+peuple.
 
 ## Où vont les portraits
 
@@ -27,6 +28,11 @@ catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de l
   docker exec diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --dry-run
   docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email>
   ```
+
+Les 21 PNJ des planches P6 à P9 portent aujourd'hui l'illustration en noir et blanc du livre : pour la remplacer, ajouter
+`--force`. Les illustrations du livre ne sont pas dans le dépôt, et `bol:prune-portraits` supprime celles qui ne sont
+plus sur une fiche. Pour les garder, copier le dossier avant :
+`docker cp diceway:/var/www/html/storage/app/public/portraits ./portraits-livre`.
 
 ## Fiches du catalogue
 
@@ -60,19 +66,6 @@ tête de chaque planche P, suivie de la liste de ses six personnages :
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
 de `doc/bol/image-prompts/pnj.md`, en remplaçant sa dominante vert émeraude sombre / teal par le bleu acier / gris froid.
 
-## Consignes de planche — créatures
-
-À coller en tête de la planche B1 (préambule de `doc/bol/image-prompts/creatures-demons.md`), suivie de la liste de ses
-créatures :
-
-> Planche de portraits illustrés de créatures : une image paysage 3:2 (1536×1024) découpée en une grille de 3 colonnes × 2 lignes de portraits carrés de taille identique, accolés sans marge, sans bordure, sans cadre ni séparateur visible (chaque portrait remplit sa case jusqu'au bord, et rien ne déborde sur la case voisine). Même style pour tous : pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Chaque portrait montre une seule créature, la tête et le haut du corps en gros plan (ou la bête entière quand elle est petite), centrée dans sa case, entière dans le cadre, contre-plongée dramatique pour les grandes bêtes : la créature domine le cadre et fixe le spectateur. Scène diurne, sans lune, lumière dorée d'un soleil bas. Dominante chromatique ambre / ocre, ciel embrasé façon tempête de sable, avec en fond un décor flou de son habitat (jungle, désert, marais, montagne, mer…) dans les mêmes tons chauds. Aucun personnage humain, aucun texte, légende, numéro, logo ni watermark.
->
-> Les six créatures, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
-
-B1 n'a que deux créatures : remplacer la fin par « Les deux créatures, dans l'ordre (ne remplir que les deux
-premières cases de la ligne du haut, le reste en fond noir uni) : ». Générer plutôt deux portraits uniques revient au
-même prix (même préambule, en remplaçant « planche » par « portrait carré unique »).
-
 ## Planches
 
 | Planche | Saga | Clés (cases 1 à 6) |
@@ -82,7 +75,10 @@ même prix (même préambule, en remplaçant « planche » par « portrait carr�
 | P3 | `cl1-la-tour-d-ajhaskar` | `dramik`, `ilda`, `kurik`, `otos`, `ilkhta`, `rirtu` |
 | P4 | `cl1-les-trois-coffres` | `rutgarr`, `acolyte`, `assassin`, `assim`, `shan`, `lana` |
 | P5 | `cl1-les-trois-coffres` (cases 1 à 5), `cl1-la-tour-d-ajhaskar` (case 6) | `ram-verda`, `homme-de-main`, `arbaletrier`, `faldir`, `grooth`, `guerrier-xaliir` |
-| B1 | `cl1-mariage-amer` | `serpent-sacre`, `jeune-elasmotherium` (2 cases, les 4 autres en fond noir uni) |
+| P6 | `cl1-un-ennui-mortel` | `lai-mai`, `sharthal`, `qi-xian`, `muntal-zombie`, `kamai-zombie`, `garde-zombie` |
+| P7 | `cl1-un-ennui-mortel` (cases 1 à 3), `cl1-mariage-amer` (cases 4 à 6) | `arlouk-zombie`, `lo-han-zombie`, `koubrog-zombie`, `tourmar`, `eormo`, `spirr` |
+| P8 | `cl1-le-plus-vieux-reve-de-lom` (cases 1 à 4), `cl1-les-trois-coffres` (case 5), `cl1-la-tour-d-ajhaskar` (case 6) | `joanna`, `jaoor`, `oiseau`, `eclaireur`, `parsi`, `robos` |
+| P9 | `cl1-la-tour-d-ajhaskar` | `ajhaskar`, `nyssa`, `momie` (3 cases, les 3 autres en fond noir uni) |
 
 ### P1 — Mariage amer : Satarla et les Kavaar
 
@@ -129,10 +125,42 @@ même prix (même préambule, en remplaçant « planche » par « portrait carr�
 > 5. Grooth du plateau de Lhend : homme primitif efflanqué par la faim, front bas, arcades lourdes, poils drus, peaux de bête, gourdin noueux, regard affamé, poussière rougeâtre soulevée par le vent sur un plateau désolé.
 > 6. Guerrier xaliir : guerrière xaliir d'une trentaine d'années à la peau et aux cheveux bruns, cheveux tressés de perles d'os, tunique de cuir, bijoux de bois et d'ivoire, scarification sur l'épaule gauche, épieu de bois durci au feu, jungle sombre.
 
-### B1 — Mariage amer : créatures (deux cases)
+### P6 — Un ennui mortel : la forteresse de Shelang
 
-> 1. Serpent sacré : serpent femelle géant aux écailles noires comme l'onyx, tête massive dressée hors d'une fosse, langue fourchue, petits serpents grouillant sur ses anneaux, offrandes pourrissantes et fumées d'encens dans une petite pyramide de pierre noire ; pénombre enfumée (exception à la scène diurne).
-> 2. Jeune elasmotherium : jeune rhinocéros massif, encore petit pour son espèce, corne unique encore courte, peau poussiéreuse, yeux affolés, beuglant de peur et prêt à charger, herbes hautes des plaines de Klaar.
+> 1. Laï Maï : jeune épouse xi lu d'une beauté froide, teint bistre, yeux bridés, longs cheveux de jais sous une haute coiffe de cérémonie ornée, riches soieries, expression aimable et distante où perce la folie, laboratoire obscur et cornues à la lueur d'une lampe.
+> 2. Sharthal : jeune guerrier ghataï fort comme un bubalus, peau cuivrée, yeux en amande, large visage carré à l'air borné, casque à cimier, épaulières lamellaires ornées, épée au côté, couloir de pierre grise du donjon sous la torche.
+> 3. Qi Xian le Fétide : cadavre momifié emmuré, crâne desséché aux orbites creuses, peau noircie, front percé d'un trou, longs cheveux blancs pendants, mâchoire ouverte sur un murmure dément, vu par un trou irrégulier dans un mur de pierre, lueur d'une lampe sur le bord du trou.
+> 4. Muntal le Sourd (zombie) : vieux seigneur ghataï de plus de soixante-dix ans, peau cuivrée devenue blafarde, traces bleutées de strangulation autour du cou, petit trou percé au milieu du front, épaules nues et décharnées, frénésie meurtrière dans le regard, cimeterre levé, chambre de pierre grise ; palette livide, sans torche (exception à la lumière chaude).
+> 5. Kamaï le bourreau (zombie) : colosse à la cagoule pourpre qui ne laisse voir que les yeux et la bouche, percée d'un trou au front, torse massif et blafard, grande hache posée sur l'épaule, gestes mécaniques, cour de pierre grise ; palette livide, sans torche (exception à la lumière chaude).
+> 6. Soldat zombie (en armes) : soldat ghataï de la garnison, teint blafard, cheveux roux dépassant d'un casque à rabats de fourrure, armure lamellaire, regard vide de cadavre et rictus de haine, petit trou percé au front, épée au poing, chemin de ronde dans le brouillard gelé ; palette livide, sans torche (exception à la lumière chaude).
+
+### P7 — Un ennui mortel : les notables morts ; Mariage amer : les mariés
+
+> 1. Arlouk l'intendante (zombie) : petite femme raide d'âge mûr, peau cireuse, chignon serré sous une petite toque, gilet sombre boutonné, petit trou au front, regard vide, solide battoir à linge à la main et chausses sales dans l'autre, buanderie de pierre ; palette livide, sans torche (exception à la lumière chaude).
+> 2. Lo Han le prêtre (zombie) : vieux prêtre au visage rond et affaissé, longue moustache tombante, calotte brodée, robe croisée, trou sanglant au milieu du front, couteau sacrificiel levé, chapelle de pierre ; palette livide, sans torche (exception à la lumière chaude).
+> 3. Koubrog de Stalheim (zombie) : maître-brasseur valgardien, énorme barbe hirsute, bedaine dilatée de façon impossible, écume noirâtre de bière qui s'écoule de sa bouche et du petit trou de son front, yeux éteints, maillet de tonnelier, cave à tonneaux ; palette livide, sans torche (exception à la lumière chaude).
+> 4. Tourmar Latia : jeune homme fier et ambitieux, fils d'éleveurs enrichis, large mâchoire, cheveux bruns frisés coupés court, sourcils épais, moustache, dents serrées d'indignation, riche tunique de marié un peu trop voyante, villa de Satarla aux lampes de fête.
+> 5. Eormo : pilote des airs d'une vingtaine d'années, teint olivâtre, traits anguleux, beauté virile et martiale, longs cheveux noirs ceints d'un bandeau, corps tatoué de serpents entrelacés, yeux sombres teintés de violet par la férocine, rictus de rage, épée longue, palissade de bambous à la torche.
+> 6. S'pirr, la slorth : corps de python blême aux reflets iridescents long de près de quatre mètres, visage de femme chauve aux traits lisses, grands yeux verts, deux canines en crochets, expression de supériorité divine, anneaux enroulés autour d'une stèle ; petite pyramide de pierre noire, fumées d'encens (violet sombre).
+
+### P8 — Le plus vieux rêve de Lôm : le Peuple des Cimes ; Les trois coffres ; La tour d'Ajhaskar
+
+> 1. Joanna Lôm : montagnarde trapue, nattes rousses, peau opaline tachée de son, regard obstiné et un peu exalté, vêtue de cuir et de peaux, col de fourrure, fronde à la ceinture, montagnes de l'Axos au crépuscule et lueur d'un feu de camp.
+> 2. Jaoor, chaman du Peuple des Cimes : homme-oiseau élancé au long visage arrogant, nez en bec d'aigle, grandes ailes de plumes sombres repliées, coiffe de plumes, talismans de plumes, d'os et de perles sur la poitrine, collier de crocs, bâton-sceptre, crâne posé dans l'ombre derrière lui, grotte de corniche à la torche.
+> 3. Homme-oiseau du Peuple des Cimes : jeune chasseuse élancée, cheveux courts ébouriffés par le vent, long nez fin, grandes ailes de plumes sombres déployées, sans armure, simple pagne et tunique de cuir, regard sauvage et craintif, fléchettes à la main, falaises de l'Axos sous un ciel d'orage.
+> 4. Éclaireur du Peuple des Cimes : homme-oiseau élancé et nerveux, visage long à la mâchoire étroite, plumes sombres sur les bras, grandes ailes, brassards et harnais de cuir, javeline prête à être lancée, corniche et vide derrière lui à la lueur d'un brasero.
+> 5. Parsi : vieil astronome adepte de Nemmereth, visage défiguré par une atroce balafre, barbe grise, capuchon pointu, regard hanté, longue béquille à la main, bergerie encombrée de livres et d'une lunette, lueur d'une lampe à huile.
+> 6. Robos : disciple de sorcier d'une vingtaine d'années, blond aux yeux bleus, teint frais, cheveux ondulés au vent, visage de bon garçon et lent à comprendre, robe de toile écrue tachée d'encre, lance primitive à la main, jungle nocturne et lueur d'une torche.
+
+### P9 — La tour d'Ajhaskar (trois cases)
+
+Remplacer la fin des consignes par : « Les trois personnages, dans l'ordre (ne remplir que les trois cases de la ligne
+du haut, le reste en fond noir uni) : ».
+
+> 1. Ajhaskar : sorcier de plus de soixante-dix ans d'une taille de près de deux mètres, peau brune, épaisse chevelure noire sans un fil d'argent, yeux verts aux pupilles verticales de fauve, visage long et impitoyable, robe de brocart rouge sombre, bagues et colliers de talismans, cabinet de tour encombré à la lueur d'une lampe.
+> 2. Nyssa : chasseresse xaliir belle et athlétique, cheveux bruns en longue natte, yeux noirs, visage farouche, brassière et pagne de cuir, couteau de silex à la ceinture, jungle de la Vallée de la Lune et lueur d'une torche.
+> 3. Époux momifié de Labashaah : ancien homme vidé de son énergie vitale, sec comme une momie du désert, torse décharné aux côtes saillantes, crâne chauve à longues mèches rares, yeux blancs écarquillés, accroupi dans une niche de grotte, lueur rouge lointaine.
+> 4. à 6. : laisser vides (fond noir uni).
 
 ## Découpe
 
@@ -154,4 +182,4 @@ autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-p
 | Planches | État |
 | --- | --- |
 | P1 à P5 | à faire |
-| B1 | à faire |
+| P6 à P9 | à faire (remplacent les illustrations du livre) |

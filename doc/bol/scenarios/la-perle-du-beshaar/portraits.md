@@ -1,12 +1,12 @@
 # Prompts — portraits de la Perle du Beshaar
 
-Prompts pour générer (via ChatGPT) les portraits des fiches créées par l'import de la saga (`app/ch1.json` à
-`app/ch5.json`) qui n'en ont pas encore : **24 PNJ, 3 créatures et 3 démons** (état au 2026-11-02).
+Prompts pour générer (via ChatGPT) les portraits des PNJ créés par l'import de la saga (`app/ch1.json` à
+`app/ch5.json`) : **41 PNJ**. Les créatures et les démons de la saga, qui suivent le style du catalogue, sont dans
+`doc/bol/image-prompts/creatures-demons-scenarios.md`.
 
 Les PNJ suivent le style des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
 fantasy des années 80, dominante bleu nuit profond / ocre sable brûlé contrastée par la lumière chaude d'une torche,
-pour rester dans les nuits du désert et des ports de la saga. Les créatures et les démons suivent celui du bestiaire
-du catalogue (`doc/bol/image-prompts/creatures-demons.md`). Les descriptions viennent du livre, reprises dans le
+pour rester dans les nuits du désert et des ports de la saga. Les descriptions viennent du livre, reprises dans le
 commentaire de chaque fiche ; quand le livre ne décrit pas un personnage, la phrase tranche ce qu'un illustrateur
 doit trancher, sans contredire le texte.
 
@@ -27,8 +27,10 @@ catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de l
   docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --saga=perle-du-beshaar
   ```
 
-Les autres fiches de la saga (Surdral, Arjanek, Karstus, Djaloum, Salishmè, Léhéné, Dazzandroth…) ont déjà un
-portrait.
+Les 17 PNJ des planches P5 à P7 portent aujourd'hui l'illustration en noir et blanc du livre : pour la remplacer, ajouter
+`--force`. Les illustrations du livre ne sont pas dans le dépôt, et `bol:prune-portraits` supprime celles qui ne sont
+plus sur une fiche. Pour les garder, copier le dossier avant :
+`docker cp diceway:/var/www/html/storage/app/public/portraits ./portraits-livre`.
 
 ## Fiches du catalogue
 
@@ -55,9 +57,6 @@ tête de chaque planche P, suivie de la liste de ses six personnages :
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
 de `doc/bol/image-prompts/pnj.md`.
 
-Pour les créatures (planche B1) et les démons (planche D1), reprendre les consignes de planche de
-`doc/bol/image-prompts/creatures-demons.md` (« Consignes de planche — créatures » et « — démons »).
-
 ## Planches
 
 | Planche | Clés (cases 1 à 6) |
@@ -66,8 +65,9 @@ Pour les créatures (planche B1) et les démons (planche D1), reprendre les cons
 | P2 | `guerrier-ilemah`, `pietaille-ilemah`, `guerrier-beckeram`, `pietaille-beckeram`, `fossoyeur`, `villageois-aljanir` |
 | P3 | `pranma`, `gerro`, `asyr`, `nahuet`, `acrobate`, `musicien` |
 | P4 | `faux-garde`, `mercenaire-temple`, `druide-noir`, `krum`, `pirate-coriace`, `pirate` |
-| B1 | `tentacule`, `fille-djidaa`, `golem` (3 cases, les 3 autres en fond noir uni) |
-| D1 | `ghashtalarann`, `limier`, `piqueur` (3 cases, les 3 autres en fond noir uni) |
+| P5 | `arjanek`, `karstus`, `surdral`, `lehene`, `shammaz`, `mercenaire` |
+| P6 | `djaloum`, `villageois`, `isimba`, `guerrier-issa`, `salishme` (5 cases, la 6ᵉ en fond noir uni) |
+| P7 | `oglar`, `zutesh`, `jarvik`, `kutas`, `dazzandroth`, `noye` |
 
 ### P1 — introduction et chapitre 1 : Satarla et la Jalinha ; chapitre 2 : la piste
 
@@ -105,24 +105,35 @@ Pour les créatures (planche B1) et les démons (planche D1), reprendre les cons
 > 5. Pirate (coriace) : pirate massif à la peau très sombre, crâne rasé couvert de tatouages, anneaux d'or aux oreilles, sabre d'abordage, sourire carnassier, plage d'une crique avec une galère de guerre au mouillage.
 > 6. Pirate : jeune pirate maigre et superstitieux, dents gâtées, foulard crasseux, amulette serrée dans le poing, coutelas à la ceinture, regard nerveux tourné vers des ruines où montent des lueurs étranges.
 
-### B1 — créatures : le sanctuaire, le puits des princes, le palais de Tolometh (trois cases)
+### P5 — introduction et chapitres 1 et 4 : Arjanek et Malakut
 
-Consignes de planche — créatures du catalogue, en remplaçant la fin par : « Les trois créatures, dans l'ordre (ne
-remplir que les trois cases de la ligne du haut, le reste en fond noir uni) : ». Les trois vivent dans le noir :
-chaque case précise son éclairage, en exception à la scène diurne.
+> 1. Maître Arjanek : négociant en épices de Parsool d'une trentaine d'années, belle stature, cheveux châtain clair mi-longs, teint pâle, noble allure, regard enthousiaste et sincère d'érudit naïf, pourpoint soigné à col montant, étagères de vieux manuscrits et sacs d'épices dans la pénombre.
+> 2. Karstus : ancien soldat satarlan d'une cinquantaine d'années, athlétique, cheveux et barbe blonds teintés d'argent, bandeau de cuir sur le front, visage buriné, regard silencieux et vigilant, armure légère, port martial, épée au côté, ruelle de Malakut à la lanterne.
+> 3. Surdral Prados : petit homme mince d'une soixantaine d'années, teint bistre, cheveux noirs bouclés parsemés d'argent, longues moustaches et barbiche soignée, toque brodée, sourire chaleureux et raffiné, pommeau d'ivoire d'une canne sous la main, salon luxueux de Malakut aux lampes de cuivre.
+> 4. Léhéné : femme d'une beauté troublante, longs cheveux noirs sous un voile léger, yeux verts pailletés d'or, regard hypnotique, robe drapée, bijoux discrets, aucun trait démoniaque visible, niche de pierre sculptée et fumées de parfum.
+> 5. Shammaz : Malakuti trapu, vétéran de plusieurs guerres, teint olivâtre, cheveux noirs bouclés, moustache, visage balafré, sourire de bretteur sûr de lui, armure ornée aux épaulières, une lame dans chaque main, salle de garde d'une villa sous la torche.
+> 6. Mercenaire beshaari : homme du désert recruté à Badhasar, visage maigre et sombre, regard en coin méfiant de qui se rendra si le combat tourne mal, turban de toile roulé, épée courbe levée, campement nocturne au milieu des rochers.
 
-> 1. Tentacule de la mosaïque : long tentacule de pieuvre aux ventouses luisantes, chair aux nuances de bleu et de vert piquée de tesselles d'or, jaillissant d'un sol de mosaïque sous-marine (algues, poissons, coquillages) couvert d'eau jusqu'à la cheville et fouettant l'air ; vieux sanctuaire de bois aux murs nus, pénombre bleu-vert, seule lumière la lueur orangée de deux bougies.
-> 2. Fille de Djidaâ : cadavre de jeune princesse beshaarie momifié « naturellement », peau parcheminée tendue sur les os, soieries élimées et souillées, lourds bijoux d'or beshaaris, haine des vivants au fond des orbites, s'extirpant d'un sarcophage de pierre au fond d'une grotte funéraire ; ténèbres, lueur de torches venue d'en haut.
-> 3. Golem de Tolometh : squelette humain entièrement recouvert de berniques, de coques et de coraux, à la forme vaguement humaine, orbites vides, s'avançant à grands pas dandinants ; salle caverneuse de nacre humide et ruisselante, éclairée de quelques torches (palette froide nacre et bleu).
+### P6 — chapitres 2 et 3 : le Beshaar (cinq cases)
 
-### D1 — démons : Malakut et les marais (trois cases)
+Remplacer la fin des consignes par : « Les cinq personnages, dans l'ordre (ligne du haut de gauche à droite, puis les
+deux premières cases de la ligne du bas ; la dernière case en fond noir uni) : ».
 
-Consignes de planche — démons du catalogue, telles quelles (elles prévoient déjà trois démons sur la ligne du haut,
-le reste en fond noir uni).
+> 1. Djaloum ut Beckéram : noble beshaari d'une trentaine d'années, trapu, yeux vairons (l'un marron, l'autre vert), cheveux d'un noir luisant, traits sévères taillés à la serpe, turban orné d'une broche, manteau de voyage, chef d'une escorte funéraire, dunes sous la lune et lueur d'un flambeau.
+> 2. Villageois nata urdu : vieil homme du « peuple de l'eau » à la peau sombre, barbe blanche frisée, large chapeau conique de vannerie, vêtement de toile claire, visage doux d'un paysan pacifique, vieille lance à la main, canaux et palmiers d'une oasis à la nuit tombante.
+> 3. Isimba : cheffe des guerriers issa, peau sombre, cheveux ras sous un bandeau, longue balafre en travers du visage, bras scarifiés en forme d'écailles, baudrier de guerre, vipère rouge du désert lovée autour du cou, regard de défi, lance dressée, désert du sud sous une torche.
+> 4. Guerrier issa : homme du « peuple des serpents » au visage rond, peau scarifiée d'écailles, longue langue fourchue sortie de la bouche, yeux fixes de fanatique, haute coiffe conique de tissu, lance au poing, rochers du désert du sud.
+> 5. Salishmè, slorth couronnée : créature d'un autre âge, buste de serpent de huit mètres aux écailles blêmes dont les anneaux s'enroulent derrière elle, visage pâle d'une beauté froide, yeux mordorés, oreilles effilées, couronne de protubérances osseuses, langue fine et fourchue, rangs de perles anciennes, tourbillon de sable ocre dans la nuit (peau blême, sans lumière de torche : exception).
+> 6. : laisser vide (fond noir uni).
 
-> 1. Ghashtalarann : démon de l'illusion, humanoïde courtaud au corps flasque et gélatineux, visage de masque de cire fondu aux traits indéfinissables, quatre petits yeux placés de travers au-dessus d'une bouche aux lèvres molles, poings durs comme le roc ; cave voûtée qui se démultiplie en dédale illusoire de portes et d'escaliers.
-> 2. Limier de Bazaal Dûl : lévrier démoniaque efflanqué et écorché, chair rougeâtre et suintante, bouquets de petites cornes sur le crâne, yeux brasillant d'une lueur mauvaise, gueule hérissée de deux rangées de crocs, surgissant d'un miroitement de l'air à l'orée des marais.
-> 3. Piqueur de Bazaal Dûl : démon chasseur au corps humanoïde trapu et musculeux, cuir squameux aux teintes automnales parsemé de touffes de fourrure épaisse, visage aux traits canins, crâne protubérant couronné de deux cornes torsadées rouge sombre, mains griffues serrant un lourd épieu de chasse de bois noir et huileux, nuage de fumée nauséabonde.
+### P7 — chapitres 4 et 5 : les marais, les pirates et Tolometh
+
+> 1. Oglar : druide de lourde carrure, plein d'embonpoint, presque chauve, petits yeux ternes, lèvre rongée par une plaie purulente, robe de bure crasseuse, grande corne de Bazaal Dûl en bandoulière, marais de Kasht sous la lanterne.
+> 2. Zutesh : druide noir maigre sous un capuchon sombre, long visage revêche, menton en galoche, médaillon des druides noirs, cierge noir à la main, loggia d'une tour ouverte sur le port, la nuit.
+> 3. Jarvik Barbe-de-feu : capitaine pirate colossal, barbe rousse tressée, balafre de l'oreille mutilée jusqu'au nez, foulard sur le crâne, corset de cuir crasseux, regard basculé dans la folie, bouche ouverte sur un rugissement, hache d'abordage, pont d'une galère sous un fanal.
+> 4. Kutas : maître d'une troupe de baladins, grand gaillard aux épaules larges, cheveux poivre et sel en courte queue de cheval, barbe taillée, visage de bonhomie et sourire engageant que démentent des yeux de tueur sans pitié, dague à la main, roulotte de saltimbanques à la lanterne.
+> 5. Dazzandroth Zant : tout petit vieillard difforme, Haut Mage déchu, crâne allongé et bosselé, peau tavelée fine comme du papier, grands yeux sombres d'une vitalité surnaturelle, mains jointes du bout des doigts, grand col de fourrure, air qui tremble autour de lui, trône d'une salle caverneuse de nacre.
+> 6. Noyé : squelette rongé par les poissons, couvert de coquillages et d'algues, orbites vides, mâchoire pendante, eau ruisselante ; salle caverneuse de nacre humide, palette froide nacre et bleu, sans torche (exception à la lumière chaude).
 
 ## Découpe
 
@@ -132,7 +143,7 @@ Si les cases sont bien alignées (ImageMagick, depuis le dossier de la planche) 
 magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
 # case-0 … case-5 (lignes de gauche à droite, du haut vers le bas) ; renommer d'après le tableau des planches :
 # P1 → marsus.png, pretre.png, marin.png, gallus.png, tertus.png, pillard.png ; etc.
-# B1 et D1 : seules case-0 à case-2 servent.
+# P6 : case-5 ne sert pas.
 ```
 
 Si ChatGPT ne respecte pas la grille (cases décalées, portraits verticaux), recadrer à la main chaque case en carré
@@ -143,4 +154,4 @@ autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-p
 | Planches | État |
 | --- | --- |
 | P1 à P4 | à faire |
-| B1, D1 | à faire |
+| P5 à P7 | à faire (remplacent les illustrations du livre) |

@@ -8,8 +8,11 @@ dans le même style que les bannières des bibliothèques
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/bol/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 
-Les 75 créatures ont leur portrait ; les 3 démons ont encore le rendu réaliste d'avril, qui ne colle plus au style.
+Les 75 créatures et les 3 démons ont leur portrait dans ce style.
 Ce qui est fait est marqué ✅ (état dans « Avancement », en bas).
+
+Les créatures et les démons hors du livre de base (fiches des scénarios) ont leurs propres planches :
+`doc/bol/image-prompts/creatures-demons-scenarios.md`.
 
 ## Fichiers attendus
 
@@ -38,12 +41,12 @@ renommage.
 | ✅ C5 | 25 à 30 | ✅ C11 | 61 à 66 |
 | ✅ C6 | 31 à 36 | ✅ C12 | 67 à 72 |
 | | | ✅ C13 | 73 à 75 |
-| | | D | démons 1 à 3 |
+| | | ✅ D | démons 1 à 3 |
 
 Ordre des cases : ligne du haut de gauche à droite, puis ligne du bas de gauche
 à droite.
 
-✅ : portrait fait dans ce style et déposé dans `front/src/assets/bol/` (le reste est à générer).
+✅ : portrait fait dans ce style et déposé dans `front/src/assets/bol/`.
 
 ## Consignes de planche — créatures
 
@@ -183,9 +186,9 @@ dominante de `header-demons.webp`.
 >
 > Les trois démons, dans l'ordre (ligne du haut de gauche à droite ; ne remplir que les trois cases du haut, le reste en fond noir uni) :
 
-> 1. Zullthegg : créature dégingandée et simiesque qui se déplace à quatre pattes, mais peut se redresser sur ses pattes arrière et dominer d'une bonne tête un homme de taille moyenne, membres trop longs, regard sombre ; démon mineur.
-> 2. Vul'mazzanlu, la chose-singe : démon inférieur typique de ceux invoqués par un sorcier, raisonnablement intelligent mais prompt à perdre son sang-froid, simiesque, sourire de supériorité qui laisse deviner la frustration.
-> 3. Mazallakos le Voilé : démon majeur, calme, vigilant et patient, rempli de ressentiment envers les mortels qui voudraient l'asservir ; silhouette haute et imposante, enveloppée d'un voile ou d'une robe de ténèbres qui masque presque son visage, deux yeux seulement brillent dans l'ombre.
+> 1. ✅ Zullthegg : créature dégingandée et simiesque qui se déplace à quatre pattes, mais peut se redresser sur ses pattes arrière et dominer d'une bonne tête un homme de taille moyenne, membres trop longs, regard sombre ; démon mineur.
+> 2. ✅ Vul'mazzanlu, la chose-singe : démon inférieur typique de ceux invoqués par un sorcier, raisonnablement intelligent mais prompt à perdre son sang-froid, simiesque, sourire de supériorité qui laisse deviner la frustration.
+> 3. ✅ Mazallakos le Voilé : démon majeur, calme, vigilant et patient, rempli de ressentiment envers les mortels qui voudraient l'asservir ; silhouette haute et imposante, enveloppée d'un voile ou d'une robe de ténèbres qui masque presque son visage, deux yeux seulement brillent dans l'ombre.
 
 ## Découpe
 
@@ -218,8 +221,7 @@ la planche ou générer le portrait seul avec la même phrase.
 
 ## Avancement
 
-État au 2026-11-05. « Ancien » : l'image d'avril 2026, réaliste, qui ne suit pas ce style. « Aucune » : pas de fichier,
-la carte affiche l'avatar vide.
+État au 2026-11-06 : toutes les planches sont faites.
 
 | Planche | Ids | État | Date | Remarque |
 | --- | --- | --- | --- | --- |
@@ -236,6 +238,4 @@ la carte affiche l'avatar vide.
 | ✅ C11 | 61 à 66 | fait | 2026-11-04 | Colonne coupée à 511, le reste exact : découpe sur les coupures mesurées, 3 px rognés par bord. |
 | ✅ C12 | 67 à 72 | fait | 2026-11-05 | Grille exacte, 3 px rognés par bord. 72 (Leng shi) recadré sur sa tête, en haut à gauche de la case, que le médaillon coupait : carré de 320 px à partir de (1027, 515), sans la dépouille du premier plan. |
 | ✅ C13 | 73 à 75 | fait | 2026-11-05 | Grille exacte avec filet noir de 2 px, 3 px rognés par bord. ChatGPT a rempli une 4e case (second Roi-Sorcier) : 75 vient de la case du bas à gauche, plus lisible en médaillon que celle du haut à droite. |
-| D | démons 1 à 3 | à faire (ancien) | | |
-
-Reste la planche D.
+| ✅ D | démons 1 à 3 | fait | 2026-11-06 | Filets noirs à x = 511 et x = 1023-1024, portraits jusqu'à y = 511 : 3 px rognés par bord. 1 (Zullthegg) recadré sur sa tête, en haut à droite de la case, que le médaillon coupait : carré de 360 px à partir de (149, 3). |

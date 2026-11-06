@@ -10,8 +10,8 @@ que `dashboard-header.webp` (workspace). Générées en une seule image
 - `header-creatures.webp`
 - `header-demons.webp`
 
-Encore manquantes (à générer et découper de la même façon) : intendance,
-armes, armures — voir prompts plus bas.
+Générées ensuite de la même façon (prompts plus bas) : `header-intendance.webp`,
+`header-armes.webp`, `header-armures.webp`.
 
 ## Consignes communes
 
@@ -74,6 +74,6 @@ attendus dans `front/src/assets/bol/` : `herbe.jpg` (déjà en place),
 
 | Bannière | Fichier | Date |
 | --- | --- | --- |
-| Héros, PNJ, créatures, démons, intendance, armes, armures | `header-*.png` | 2026-07-17 |
+| Héros, PNJ, créatures, démons, intendance, armes, armures | `header-*.webp` | 2026-07-17 |
 | Combat | `header-combat.webp` | 2026-10-02 |
 | Fond de battlemap | — | sans objet (battlemap retirée, textures supprimées) |

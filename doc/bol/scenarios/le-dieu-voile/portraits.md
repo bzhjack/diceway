@@ -1,11 +1,11 @@
 # Prompts — portraits du Dieu voilé
 
-Prompts pour générer (via ChatGPT) les portraits des fiches créées par l'import de la saga (`app/intro.json` à
-`app/ch5.json`) qui n'en ont pas encore : **60 PNJ, 5 créatures et 2 démons** (état au 2026-11-02).
+Prompts pour générer (via ChatGPT) les portraits des PNJ créés par l'import de la saga (`app/intro.json` à
+`app/ch5.json`) : **89 PNJ**. Les créatures et les démons de la saga, qui suivent le style du catalogue, sont dans
+`doc/bol/image-prompts/creatures-demons-scenarios.md`.
 
 Les PNJ suivent le style des PNJ du catalogue (`doc/bol/image-prompts/pnj.md`) : illustration peinte et encrée façon BD
 fantasy des années 80, dominante vert émeraude sombre / teal contrastée par la lumière chaude d'une torche. Les
-créatures et les démons suivent celui du bestiaire du catalogue (`doc/bol/image-prompts/creatures-demons.md`). Les
 descriptions viennent du livre, reprises dans le commentaire de chaque fiche.
 
 ## Où vont les portraits
@@ -25,18 +25,14 @@ catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de l
   docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --saga=dieu-voile
   ```
 
-## Déjà illustrées par le livre (2026-10-23)
+## Illustrées par le livre
 
-Le livre illustre 32 fiches du Dieu voilé (29 PNJ et 3 créatures). Leur illustration, recadrée, a été posée en avatar
-sur le compte de Lionel ; ces fiches n'ont pas besoin de prompt :
+Les 29 PNJ des planches P11 à P15 portent aujourd'hui l'illustration en noir et blanc du livre, recadrée et posée en
+avatar sur le compte de Lionel le 2026-10-23 : pour la remplacer, ajouter `--force`.
 
-`jia`, `nirmus`, `kurta`, `coren`, `jorkus`, `hilario`, `matius`, `intro-amrita`, `ch1-messager`, `ch1-rajka`,
-`ch1-bekti`, `ch1-daruk`, `ch1-assassin`, `ch1-drajit`, `ch1-rassa`, `ch2-angus`, `ch2-albel`, `ch2-solmus`,
-`ch2-roumal`, `ch3-oda-unjab`, `ch3-kamatt`, `ch3-narubio`, `ch3-samazar`, `ch4-casmar`, `ch4-toursa`,
-`ch4-druide-voile`, `ch4-druide-jaune`, `ch4-bon-docteur`, `ch4-graak` ; créatures `ch2-momie-royale`,
-`ch2-momie-enfant`, `ch5-ver-a-soie`.
-
-Les illustrations du livre ne sont pas dans le dépôt (supplément du commerce, usage personnel).
+Les illustrations du livre ne sont pas dans le dépôt (supplément du commerce, usage personnel), et
+`bol:prune-portraits` supprime celles qui ne sont plus sur une fiche. Pour les garder, copier le dossier avant :
+`docker cp diceway:/var/www/html/storage/app/public/portraits ./portraits-livre`.
 
 ## Fiches du catalogue
 
@@ -64,9 +60,6 @@ tête de chaque planche P, suivie de la liste de ses six personnages :
 Pour **un seul portrait**, reprendre la phrase du personnage avec le préambule « Portrait illustré carré (1:1) »
 de `doc/bol/image-prompts/pnj.md`.
 
-Pour les créatures (planche B1) et les démons (planche D1), reprendre les consignes de planche de
-`doc/bol/image-prompts/creatures-demons.md` (« Consignes de planche — créatures » et « — démons »).
-
 ## Planches
 
 | Planche | Clés (cases 1 à 6) |
@@ -81,8 +74,11 @@ Pour les créatures (planche B1) et les démons (planche D1), reprendre les cons
 | P8 | `ch3-marin-pretre-rouge`, `ch3-amrazh`, `ch3-marek`, `ch3-michka`, `ch3-garde-du-guet`, `ch3-garde-filonier` |
 | P9 | `ch3-julak`, `ch3-menni`, `ch4-ilsda`, `ch4-atti`, `ch4-acolyte`, `ch4-chasseur-grooth` |
 | P10 | `ch5-druide-fou`, `ch5-chef-grooth`, `ch5-guerrier-grooth`, `ch5-garde-grooth`, `ch5-guerrier-des-jungles`, `ch5-fanatique-du-harem` |
-| B1 | `intro-bubalus-zombie`, `ch5-macaque-hurleur`, `ch5-blob-attrapeur`, `ch5-parturiente-maudite`, `ch5-rejeton-parturiente` (5 cases, la 6ᵉ en fond noir uni) |
-| D1 | `ch3-demon-fuligineux`, `ch3-forgeur-de-zaggath` (2 cases, les 4 autres en fond noir uni) |
+| P11 | `jia`, `nirmus`, `coren`, `kurta`, `jorkus`, `hilario` |
+| P12 | `matius`, `intro-amrita`, `ch1-messager`, `ch1-rajka`, `ch1-bekti`, `ch1-daruk` |
+| P13 | `ch1-assassin`, `ch1-drajit`, `ch1-rassa`, `ch2-angus`, `ch2-albel`, `ch2-solmus` |
+| P14 | `ch2-roumal`, `ch3-oda-unjab`, `ch3-kamatt`, `ch3-samazar`, `ch3-narubio`, `ch4-casmar` |
+| P15 | `ch4-toursa`, `ch4-druide-jaune`, `ch4-druide-voile`, `ch4-bon-docteur`, `ch4-graak` (5 cases, la 6ᵉ en fond noir uni) |
 
 ### P1 — introduction : Satarla et la nef volante
 
@@ -174,23 +170,53 @@ Pour les créatures (planche B1) et les démons (planche D1), reprendre les cons
 > 5. Guerrier des jungles : guerrier qushite, peau sombre, peintures de guerre, plumes, arc court et lance, feu de camp dans une cour de fort.
 > 6. Fanatique du harem : jeune homme ou jeune femme du harem du dieu voilé, voiles de soie, poudre d'or sur la peau, regard extatique et fanatisé, vapeurs de brasero.
 
-### B1 — créatures : l'introduction et l'île (cinq cases)
+### P11 — les figures de la saga : Satarla, Lok Kozaar, le dieu voilé
 
-> 1. Bubalus zombie : bovidé massif ressemblant à un bison, robe beige, cornes couronnées de fleurs fanées, flancs peints de symboles mystiques, gorge tranchée béante, yeux morts, qui charge en se relevant d'un bûcher funéraire ; lumière de torches (exception à la scène diurne).
-> 2. Macaque hurleur : petit singe au pelage beige rongé de gale, yeux jaunes et luisants, longues canines découvertes dans un hurlement, bondissant d'une branche de la jungle.
-> 3. Blob attrapeur : énorme moisissure jaune et verruqueuse qui enveloppe le tronc et les branches d'un grand banian, lianes cinglantes, crânes humains traversés de racines suspendus aux branches, jungle humide.
-> 4. Parturiente maudite : statue d'Afyra enceinte couchée sur son piédestal, devenue chair : visage de tentacules autour d'un œil unique, corps de pierre marbré de veines jaunâtres, sang jaune fluorescent ; fond de temple en ruine plongé dans la pénombre (exception à la scène diurne), seule lueur le jaune fluorescent.
-> 5. Rejeton de la parturiente : petit être vaguement humanoïde de moins d'un mètre, corps suintant et grumeleux, visage mou et lisse sans yeux ni bouche, mucus jaunâtre, sol du même temple en ruine.
+> 1. Jia : jeune femme xi lu, longs cheveux noirs luisants relevés en chignon, traits d'une exquise finesse, pendants d'oreille discrets, robe à col croisé, regard intelligent, un peu perdu après la mort de son père, comptoir marchand de la rue de la Conque à la lanterne.
+> 2. Nirmus, prêtre de Nemmereth : haut dignitaire d'une cinquantaine d'années, front rasé jusqu'à la moitié du crâne, longs cheveux gris sur la nuque, traits austères, yeux bleu-gris pénétrants, robes noires aux manches galonnées, cordelette rouge des citoyens de Satarla, bureau du grand temple à la lueur d'un cierge.
+> 3. Coren : jeune homme du Cloaque pas très grand, cheveux châtains en bataille, sourire en coin, allure canaille, gilet usé sur une chemise ouverte, ruelle sombre sous une lanterne.
+> 4. Kurta : Halakhi courtaud au teint brun, fine barbiche, mèches noires sous une calotte et un capuchon clair, yeux sombres de cobra aux aguets, deux kriss à peine devinés, toits de terre la nuit.
+> 5. Jorkus, le dieu voilé : vieillard de plus de soixante-dix ans, voile de gaze collé au visage qui laisse deviner un nez proéminent de corbeau, de petits yeux enfoncés et une bouche béante, corps flasque et ridé couvert de poudre d'or, bras levé au-dessus de la tête, sanctuaire en ruine où luit la poudre d'or à la torche.
+> 6. Hilario : mercenaire satarlan, ancien soldat, blond à courte barbe, cheveux en désordre, yeux bleus rongés par le doute, cuir de campagne usé, épée longue, couloir de Fort Junia à la torche.
+
+### P12 — introduction et chapitre 1 : Halakh et le Sanctuaire Noir
+
+> 1. Matius, frère d'Hilario : jeune homme brun émacié, joues creuses, barbe clairsemée, cheveux en désordre agrippés d'une main, regard fuyant et halluciné, tunique d'hospice, cellule de bois de l'hospice d'Afyra.
+> 2. Capitaine Amrita : jeune femme blonde aux cheveux courts, profil décidé, moue revêche et air de défi, pourpoint clouté, garde de sabre en forme d'hippocampe, quai nocturne et mâts d'un petit voilier.
+> 3. Messager de Nemmereth : acolyte de l'oracle au crâne rasé, visage sombre et impassible, foulard noué au cou et remonté en bâillon, tunique de laine écrue, kriss à la ceinture, colonnes noires du Sanctuaire Noir à la torche.
+> 4. Rajka, lieutenant de l'Ombre sanglante : Halakhi assez grand, nez busqué, yeux enfoncés sous d'épais sourcils froncés, l'œil gauche d'une blancheur laiteuse, mèches noires échappées d'un turban, robes banales, ruelle d'Halakh sous une lanterne.
+> 5. Bekti, maître de l'Ombre sanglante : gaillard plus tout jeune, sec comme un coup de trique, longues moustaches noires tombantes, turban à aigrette, cape sombre, regard de vipère rouge, kriss à la main, cave d'une taverne.
+> 6. Daruk, tavernier du Puits sec : ancien assassin manchot du bras gauche, crâne chauve, barbe noire fournie, visage faussement naïf, large carrure dans une chemise grossière, chope sur son comptoir, taverne enfumée.
+
+### P13 — chapitres 1 et 2 : Halakh et Satarla
+
+> 1. Assassin de l'Ombre sanglante : silhouette vêtue de noir, cagoule et voile qui ne laissent voir que des yeux durs, kriss levé dans un élan, toits de terre sous un ciel nocturne.
+> 2. Drajit, aubergiste du Coursier bleu : Halakhi replet aux cheveux poivre et sel, grosse moustache, bonnet de laine, visage affable creusé par la peur, auberge sous une lampe à huile.
+> 3. Rassa, matriarche des Kalindhit : jeune Halakhie d'une trentaine d'années, visage potelé, grands yeux noirs, pli amer à la bouche, voile sur les cheveux, nourrisson emmailloté endormi contre son épaule, salle de terre battue à la lueur d'une lampe.
+> 4. Angus le Bubalus : géant valgardien riant à gorge déployée, longue tignasse blonde, chemise d'un blanc douteux tendue sur ses épaules, petit singe capucin au collier de diamants perché sur son épaule, chope énorme, taverne de L'Échange.
+> 5. Albel, serveuse de L'Échange : jeune femme brune d'une vingtaine d'années, longs cheveux noirs à frange droite, grands yeux noirs, joli sourire triste, simple robe de servante, taverne à la lueur d'une lampe.
+> 6. Solmus : homme de quarante ans passés, courte barbe blonde, teint hâlé, solide carrure de soldat, regard calculateur, lourdes robes de brocart d'astrologue brodées d'étoiles, salle d'astrologie à la lanterne.
+
+### P14 — chapitres 2 à 4 : Roumal, Urceb et la Dent Noire
+
+> 1. Roumal Jânn : colosse à la peau d'ébène, bandeau de tissu sur le crâne, bras couverts de scarifications rituelles, chemise de serviteur tendue sur son torse, huche à bûches portée sur le dos, regard hostile, cour d'une villa à la torche.
+> 2. Oda Unjab, le Prêtre Rouge : crâne rasé, sourcils épilés, visage rond et empâté démenti par des yeux noirs perçants, tatouages géométriques sur la poitrine, cuirasse alchimique, bague à tête de salamandre tenant un rubis, forge de la Dent Noire aux lueurs de braise.
+> 3. Kamatt, sentinelle kalukan : garde du corps colossal qui n'a PAS de tête ni de cou (ses épaules se rejoignent en une ligne lisse), un unique gros œil au centre de la poitrine, peau noire de jais ornée de tatouages argentés, torse musculeux, maillet de forge tenu droit, immobile comme une statue, cabine sombre d'un chebek ; l'œil tient lieu de visage, centré dans la case.
+> 4. Samazar le Magnifique : gredin d'une quarantaine d'années, maigre et musclé comme un chat de gouttière, joues creusées non sans noblesse, cheveux et courte barbe en bataille, vêtements de cuir noir, galerie antique de l'Urceb-du-dessous à la torche.
+> 5. Narubio, Protecteur de la ville : homme d'une cinquantaine d'années solidement charpenté, visage sévère rasé de frais, cheveux tirés en arrière, tunique noire sur une chemise de mailles, épée au côté, rempart d'Urceb sous un fanal.
+> 6. Maître Casmar, le Bambin : notable portant un masque grotesque, en haut les traits poupins d'un nourrisson, en bas le visage ridé et édenté d'un vieillard, chapeau à plume de bourgeois, atelier de chandelier aux cierges allumés.
+
+### P15 — chapitre 4 : la Compagnie des Masques et le clan des falaises (cinq cases)
+
+Remplacer la fin des consignes par : « Les cinq personnages, dans l'ordre (ligne du haut de gauche à droite, puis les
+deux premières cases de la ligne du bas ; la dernière case en fond noir uni) : ».
+
+> 1. Toursa, le Prince Jaune : vieux majordome sous un masque doré, visage déformé penché de côté, yeux ronds, langue pendante dans un sourire dément, robe de cérémonie jaune, médaillon, temple souterrain de Morgazzon aux cierges.
+> 2. Druide jaune de la Compagnie des Masques : adepte encapuchonné portant un masque grotesque et difforme, long nez crochu, paille portée à la bouche pour souffler une poudre hallucinogène, temple souterrain à la lueur des cierges.
+> 3. Le druide voilé : fanatique au crâne rasé, voile de gaze cousu sur le front et tout autour du crâne, peau gonflée et suppurante sous le fil, voile taché, yeux fiévreux, bave au menton, robe crasseuse, mains levées en prière devant un autel, fumées jaunâtres.
+> 4. Le Bon Docteur : alchimiste dément sous un capuchon, masque couvert de pustules aux yeux suintants, joue droite déformée par une énorme tumeur, petit pot de grès à la main, laboratoire encombré de cierges hallucinogènes.
+> 5. Graak Deux-Crânes : grooth massif à l'allure absolument bestiale, crinière hirsute, gueule hurlante aux énormes crocs, collier de cuir où pendent des bouts d'os et un crâne humain, hache de pierre, toit d'un donjon sous un ciel d'orage et la lueur d'un brasier.
 > 6. : laisser vide (fond noir uni).
-
-### D1 — démons : Urceb (deux cases)
-
-Consignes de planche — démons du catalogue, en remplaçant la fin par : « Les deux démons, dans l'ordre (ne remplir que
-les deux premières cases de la ligne du haut, le reste en fond noir uni) : ». Pour ces deux-là, générer plutôt deux
-portraits uniques revient au même prix.
-
-> 1. Démon fuligineux : nuage bouillonnant de suie opaque, à peine une forme, d'où percent des volutes en forme de bras et une gueule devinée, qui jaillit d'une faille au fond d'une cave et étouffe toute lumière ; seule la flamme d'une bougie enchantée résiste dans un coin.
-> 2. Forgeur de Zaggath : démon majeur au corps râblé de minerai en fusion, trois fois la taille d'un homme, visage odieusement humain à la bouche immense hérissée de crocs diamantins, petits yeux d'obsidienne, crinière de flammes, chaleur qui déforme l'air ; dominante rouge et orange de forge plutôt que le pourpre.
 
 ## Découpe
 
@@ -210,4 +236,4 @@ autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-p
 | Planches | État |
 | --- | --- |
 | P1 à P10 | à faire |
-| B1, D1 | à faire |
+| P11 à P15 | à faire (remplacent les illustrations du livre) |

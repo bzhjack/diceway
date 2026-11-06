@@ -5,8 +5,8 @@ global (`BolPnjSeeder.php`), dans le même style que les bannières des
 bibliothèques (`doc/bol/image-prompts/headers.md`, en particulier `header-pnj.webp`) :
 illustration peinte et encrée façon BD fantasy des années 80, ombres
 profondes, dominante vert émeraude sombre / teal contrastée par la lumière
-chaude de torches. Les portraits actuels sont des rendus réalistes qui ne
-collent plus à ce style.
+chaude de torches. Les 15 portraits actuels sont dans ce style (état dans
+« Avancement », en bas).
 
 ## Fichiers attendus
 
@@ -95,7 +95,12 @@ leur univers (voir leur prompt) tout en gardant la même facture.
 
 ### 12 — Sentinelle kalukan
 
-> Une sentinelle kalukan, garde du corps de la Reine Sorcière : colosse impassible au visage figé et sans émotion, yeux vides, peau pâle d'automate ou de mort-vivant, armure moyenne de plates sombres gravées de runes, épée lourde tenue droite devant lui, bouclier au bras. Posture immobile et menaçante. Lueur rouge de braise dans l'ombre, fond de forteresse volcanique.
+Dans le livre, les kalukans n'ont ni tête ni bouche : un seul gros œil au centre de la poitrine, le corps couvert de
+tatouages de sorcellerie. La sentinelle n'a aucune armure, un bouclier et un tulwar. Les consignes communes réclament un
+visage, ce qui ferait revenir une tête : coller ce prompt seul, à leur place. Ici, c'est l'œil qui va au centre du
+médaillon.
+
+> Portrait illustré carré (1:1), style pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Une sentinelle kalukan, garde du corps de la Reine Sorcière, vue de face en contre-plongée légère, des épaules à la taille. Important : cet être n'a PAS de tête, PAS de cou, PAS de visage, PAS de bouche : ses épaules massives se rejoignent en une ligne lisse et continue, rien ne dépasse au-dessus. Un unique gros œil grand ouvert, froid et sans émotion, s'ouvre au centre de sa poitrine, exactement au centre de l'image. Corps colossal d'homme musclé, sans armure, torse nu à la peau gris sombre couvert de tatouages de sorcellerie, grand tulwar (cimeterre) tenu d'une main, bouclier à l'autre bras, ni l'un ni l'autre ne masquant l'œil. Posture immobile et menaçante. Fond flou de forteresse volcanique, lueur rouge de braise sur un côté du torse. Aucun texte, logo, watermark ni cadre dans l'image.
 
 ## Rivaux
 
@@ -150,7 +155,7 @@ carrées de 512×512, puis réduites à 400×400. 1024×1024 n'est pas un multip
 > 3. Matelot de Parsool : vétéran sexagénaire trapu au visage rond, crâne dégarni sous un foulard, favoris et barbe blancs, rides profondes, peau tannée par le sel, un œil plissé, sabre en main, gilet de cuir sur chemise ouverte, air bougon, pont de navire et cordages.
 > 4. Pilote de nef volante de Satarla : jeune noble élégant et un peu hautain, lunettes d'aviateur relevées sur le front, cape de qualité, armure légère de cuir ouvragé, épée au côté, coque d'une nef volante dans un ciel de nuit.
 > 5. Sergent du guet : guerrier d'âge mûr aux tempes grises et au visage fermé, casque de métal, moustache grise, armure moyenne de mailles et de cuir, bouclier au bras, porte de cité et torches du guet.
-> 6. Sentinelle kalukan : colosse impassible au visage figé et sans émotion, yeux vides, peau pâle d'automate, armure moyenne de plates sombres gravées de runes, épée lourde tenue droite, lueur rouge de braise et forteresse volcanique.
+> 6. Sentinelle kalukan : colosse qui n'a PAS de tête ni de cou (ses épaules se rejoignent en une ligne lisse), un unique gros œil froid au centre de la poitrine et de la case, sans armure, torse nu à la peau gris sombre couvert de tatouages de sorcellerie, grand tulwar et bouclier qui ne masquent pas l'œil, lueur rouge de braise et forteresse volcanique.
 
 ### Planche C — rivaux 13 à 15
 
@@ -190,5 +195,6 @@ nouveau style.
 | A | 1 à 6 | fait | 2026-10-23 |
 | B | 7 à 12 | fait | 2026-10-23 |
 | C | 13 à 15 | fait (recadrée, voir plus haut) | 2026-10-23 |
+| 12 seul | Sentinelle kalukan | à refaire : le portrait actuel montre une tête et une armure, contre le livre | |
 
-Les 15 portraits sont dans le nouveau style : rien à regénérer.
+Les 15 portraits sont dans le nouveau style ; reste à refaire le 12, avec son prompt individuel.
