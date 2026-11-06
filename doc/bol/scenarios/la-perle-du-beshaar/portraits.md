@@ -40,10 +40,10 @@ ni à poser ; l'image suit quand la planche du catalogue est refaite.
 
 | Clé | Fiche du catalogue | Image |
 | --- | --- | --- |
-| `dinohyus` | Dinohyus | `front/src/assets/bol/bestiary/12.jpg` |
-| `phororacos` | Phororacos | `front/src/assets/bol/bestiary/32.jpg` (ancien style jusqu'à la planche C6) |
-| `cathgan` | Cathgan (chapitres 2 et 3, une seule fiche) | `front/src/assets/bol/bestiary/8.jpg` |
-| `scorpion` | Scorpion-araignée géant | `front/src/assets/bol/bestiary/37.jpg` (ancien style jusqu'à la planche C7) |
+| ✅ `dinohyus` | Dinohyus | `front/src/assets/bol/bestiary/12.jpg` |
+| ✅ `phororacos` | Phororacos | `front/src/assets/bol/bestiary/32.jpg` |
+| ✅ `cathgan` | Cathgan (chapitres 2 et 3, une seule fiche) | `front/src/assets/bol/bestiary/8.jpg` |
+| ✅ `scorpion` | Scorpion-araignée géant | `front/src/assets/bol/bestiary/37.jpg` |
 
 ## Consignes de planche — PNJ
 

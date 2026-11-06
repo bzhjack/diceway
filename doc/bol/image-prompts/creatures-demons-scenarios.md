@@ -39,7 +39,7 @@ ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Décou
 
 | Planche | Consignes | Fichiers (cases 1 à 6, sans `.png`) |
 | --- | --- | --- |
-| CS1 | plein jour | `cl1-mariage-amer--jeune-elasmotherium`, `dieu-voile--ch5-macaque-hurleur`, `dieu-voile--ch5-blob-attrapeur`, `cl1-les-trois-coffres--gardien-rouge`, `dieu-voile--intro-bubalus-zombie`, `perle-du-beshaar--crabe` |
+| ✅ CS1 | plein jour | `cl1-mariage-amer--jeune-elasmotherium`, `dieu-voile--ch5-macaque-hurleur`, `dieu-voile--ch5-blob-attrapeur`, `cl1-les-trois-coffres--gardien-rouge`, `dieu-voile--intro-bubalus-zombie`, `perle-du-beshaar--crabe` |
 | CS2 | pénombre | `perle-du-beshaar--fille-djidaa`, `perle-du-beshaar--djidaa`, `dieu-voile--ch2-momie-royale`, `dieu-voile--ch2-momie-enfant`, `perle-du-beshaar--slorth-automate`, `perle-du-beshaar--ver-des-sables` |
 | CS3 | pénombre | `cl1-un-ennui-mortel--arctodus-empaille`, `cl1-un-ennui-mortel--nuee-vermine`, `cl1-la-tour-d-ajhaskar--andrak-obsidienne`, `cl1-la-tour-d-ajhaskar--xolth-juvenile`, `cl1-mariage-amer--serpent-sacre`, `dieu-voile--ch5-ver-a-soie` |
 | CS4 | pénombre | `perle-du-beshaar--tentacule`, `perle-du-beshaar--hippocampe`, `perle-du-beshaar--golem`, `cl1-les-trois-coffres--gardienne-bleue`, `dieu-voile--ch5-parturiente-maudite`, `dieu-voile--ch5-rejeton-parturiente` |
@@ -64,14 +64,14 @@ ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Décou
 
 ## Planches de créatures
 
-### CS1 — plein jour
+### ✅ CS1 — plein jour
 
-> 1. Jeune elasmotherium : jeune rhinocéros massif, encore petit pour son espèce, corne unique encore courte, peau poussiéreuse, yeux affolés, beuglant de peur et prêt à charger, herbes hautes des plaines de Klaar.
-> 2. Macaque hurleur : petit singe au pelage beige rongé de gale, yeux jaunes et luisants, longues canines découvertes dans un hurlement, bondissant d'une branche de la jungle.
-> 3. Blob attrapeur : énorme moisissure jaune et verruqueuse qui enveloppe le tronc et les branches d'un grand banian, lianes cinglantes, crânes humains traversés de racines suspendus aux branches, jungle humide.
-> 4. Gardien du Puits : statue animée de près de trois mètres en pierre rouge sombre, guerrier barbu et enturbanné au visage majestueux, long trident à la main, regard de défi ; fond d'un puits de pierre éclairé par le soleil, grande porte de bronze derrière lui, ossements épars dans la poussière.
-> 5. Bubalus zombie : bovidé massif ressemblant à un bison, robe beige, cornes couronnées de fleurs, flancs peints de symboles mystiques, gorge tranchée rouge et béante, yeux vides, tête baissée, prêt à charger ; vaste cour intérieure d'un temple, autel sacrificiel et mince colonnette de pierre à l'arrière-plan, fin d'après-midi.
-> 6. Crabe de sable : crabe géant fait de sable compact, pinces levées, grains qui ruissellent de sa carapace, grosse perle opalescente de la taille d'une pastèque logée dans une cavité de son dos ; sanctuaire taillé dans la roche aux fresques bleues effacées, seule lumière le soleil bas entrant par la porte et dorant la poussière.
+> 1. ✅ Jeune elasmotherium : jeune rhinocéros massif, encore petit pour son espèce, corne unique encore courte, peau poussiéreuse, yeux affolés, beuglant de peur et prêt à charger, herbes hautes des plaines de Klaar.
+> 2. ✅ Macaque hurleur : petit singe au pelage beige rongé de gale, yeux jaunes et luisants, longues canines découvertes dans un hurlement, bondissant d'une branche de la jungle.
+> 3. ✅ Blob attrapeur : énorme moisissure jaune et verruqueuse qui enveloppe le tronc et les branches d'un grand banian, lianes cinglantes, crânes humains traversés de racines suspendus aux branches, jungle humide.
+> 4. ✅ Gardien du Puits : statue animée de près de trois mètres en pierre rouge sombre, guerrier barbu et enturbanné au visage majestueux, long trident à la main, regard de défi ; fond d'un puits de pierre éclairé par le soleil, grande porte de bronze derrière lui, ossements épars dans la poussière.
+> 5. ✅ Bubalus zombie : bovidé massif ressemblant à un bison, robe beige, cornes couronnées de fleurs, flancs peints de symboles mystiques, gorge tranchée rouge et béante, yeux vides, tête baissée, prêt à charger ; vaste cour intérieure d'un temple, autel sacrificiel et mince colonnette de pierre à l'arrière-plan, fin d'après-midi.
+> 6. ✅ Crabe de sable : crabe géant fait de sable compact, pinces levées, grains qui ruissellent de sa carapace, grosse perle opalescente de la taille d'une pastèque logée dans une cavité de son dos ; sanctuaire taillé dans la roche aux fresques bleues effacées, seule lumière le soleil bas entrant par la porte et dorant la poussière.
 
 ### CS2 — caveaux et tombeaux à la torche
 
@@ -138,5 +138,6 @@ livres : les phrases les couvrent d'un collier de pierre et de fourrure pour pas
 
 | Planches | État |
 | --- | --- |
-| CS1 à CS4 | à faire |
+| ✅ CS1 | fait le 2026-11-06 : grille exacte, 3 px rognés par bord, découpe régulière, posée sur les fiches avec `--force` |
+| CS2 à CS4 | à faire |
 | DS1, DS2 | à faire |

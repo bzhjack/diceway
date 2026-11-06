@@ -42,11 +42,11 @@ poser ; l'image suit quand la planche du catalogue est refaite.
 
 | Clé | Fiche du catalogue | Image |
 | --- | --- | --- |
-| `ch2-soldat` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
-| `ch4-sergent-du-guet` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
-| `ch4-marin-des-airs` | Pilote de nef volante de Satarla | `front/src/assets/bol/pnj/10.jpg` |
-| `ch5-azhdarkho` | Azhdarkho | `front/src/assets/bol/bestiary/3.jpg` |
-| `ch5-fangeux` | Fangeux | `front/src/assets/bol/bestiary/18.jpg` |
+| ✅ `ch2-soldat` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
+| ✅ `ch4-sergent-du-guet` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
+| ✅ `ch4-marin-des-airs` | Pilote de nef volante de Satarla | `front/src/assets/bol/pnj/10.jpg` |
+| ✅ `ch5-azhdarkho` | Azhdarkho | `front/src/assets/bol/bestiary/3.jpg` |
+| ✅ `ch5-fangeux` | Fangeux | `front/src/assets/bol/bestiary/18.jpg` |
 
 ## Consignes de planche — PNJ
 

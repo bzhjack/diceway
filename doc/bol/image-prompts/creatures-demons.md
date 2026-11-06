@@ -18,8 +18,8 @@ Les créatures et les démons hors du livre de base (fiches des scénarios) ont 
 
 | Type | Dossier | Nom du fichier | Lu par |
 | --- | --- | --- | --- |
-| Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 75) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
-| Démon | `front/src/assets/bol/demon/` | `<id>.jpg` (id 1 à 3) | `tapis.util.ts`, `combat-play.util.ts` |
+| ✅ Créature | `front/src/assets/bol/bestiary/` | `<id>.jpg` (id 1 à 75) | `creature-card.component.ts`, `tapis.util.ts`, `combat-play.util.ts` |
+| ✅ Démon | `front/src/assets/bol/demon/` | `<id>.jpg` (id 1 à 3) | `tapis.util.ts`, `combat-play.util.ts` |
 
 Format actuel : carrés de 400×400 (JPEG). Les portraits sont affichés en
 médaillon rond dans l'ordre de passage et les cartes de combat : garder la tête

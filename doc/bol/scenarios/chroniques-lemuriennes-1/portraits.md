@@ -42,15 +42,15 @@ poser ; l'image suit quand la planche du catalogue est refaite.
 
 | Saga | Clé | Fiche du catalogue | Image |
 | --- | --- | --- | --- |
-| `cl1-la-tour-d-ajhaskar` | `jenko` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
-| `cl1-le-plus-vieux-reve-de-lom` | `mythunga` | Mythunga | `front/src/assets/bol/bestiary/28.jpg` (ancien style jusqu'à la planche C5) |
-| `cl1-le-plus-vieux-reve-de-lom` | `ours` | Ours des cavernes / ours polaire | `front/src/assets/bol/bestiary/29.jpg` (ancien style jusqu'à la planche C5) |
-| `cl1-les-trois-coffres` | `necropede` | Nécropède | `front/src/assets/bol/bestiary/49.jpg` (ancien style jusqu'à la planche C9) |
-| `cl1-les-trois-coffres` | `hyene` | Hyène du Beshaar | aucune avant la planche C10 (`bestiary/55.jpg`) |
-| `cl1-les-trois-coffres` | `meneuse` | Meneuse de meute (hyène du Beshaar) | aucune avant la planche C10 (`bestiary/56.jpg`) |
-| `cl1-mariage-amer` | `venator` | Venator | `front/src/assets/bol/bestiary/42.jpg` (ancien style jusqu'à la planche C7) |
-| `cl1-mariage-amer` | `crocator` | Crocator | `front/src/assets/bol/bestiary/11.jpg` |
-| `cl1-mariage-amer` | `necrophage` | Nécrophage | `front/src/assets/bol/bestiary/50.jpg` (ancien style jusqu'à la planche C9) |
+| ✅ `cl1-la-tour-d-ajhaskar` | `jenko` | Sergent du guet | `front/src/assets/bol/pnj/11.jpg` |
+| ✅ `cl1-le-plus-vieux-reve-de-lom` | `mythunga` | Mythunga | `front/src/assets/bol/bestiary/28.jpg` |
+| ✅ `cl1-le-plus-vieux-reve-de-lom` | `ours` | Ours des cavernes / ours polaire | `front/src/assets/bol/bestiary/29.jpg` |
+| ✅ `cl1-les-trois-coffres` | `necropede` | Nécropède | `front/src/assets/bol/bestiary/49.jpg` |
+| ✅ `cl1-les-trois-coffres` | `hyene` | Hyène du Beshaar | `front/src/assets/bol/bestiary/55.jpg` |
+| ✅ `cl1-les-trois-coffres` | `meneuse` | Meneuse de meute (hyène du Beshaar) | `front/src/assets/bol/bestiary/56.jpg` |
+| ✅ `cl1-mariage-amer` | `venator` | Venator | `front/src/assets/bol/bestiary/42.jpg` |
+| ✅ `cl1-mariage-amer` | `crocator` | Crocator | `front/src/assets/bol/bestiary/11.jpg` |
+| ✅ `cl1-mariage-amer` | `necrophage` | Nécrophage | `front/src/assets/bol/bestiary/50.jpg` |
 
 Les planches C du catalogue sont dans `doc/bol/image-prompts/creatures-demons.md`.
 

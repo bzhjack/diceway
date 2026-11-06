@@ -17,21 +17,21 @@ générer en carré (1:1, 1024×1024 ou plus), puis réduire à 400×400 en JPEG
 
 | id | PNJ | Type |
 | --- | --- | --- |
-| 1 | Archer de Tyrus | coriace |
-| 2 | Barbare tribal | coriace |
-| 3 | Assassin halakhi | coriace |
-| 4 | Champion gladiateur | coriace |
-| 5 | Chef de bande | coriace |
-| 6 | Druide jaune d’Oomis | coriace |
-| 7 | Garde jemadar | coriace |
-| 8 | Guetteur homme-oiseau | coriace |
-| 9 | Matelot de Parsool | coriace |
-| 10 | Pilote de nef volante de Satarla | coriace |
-| 11 | Sergent du guet | coriace |
-| 12 | Sentinelle kalukan | coriace |
-| 13 | Methyn Sarr, la Reine Sorcière | rival |
-| 14 | Jesharek Jool | rival |
-| 15 | Kalzatan l’Imposteur | rival |
+| ✅ 1 | Archer de Tyrus | coriace |
+| ✅ 2 | Barbare tribal | coriace |
+| ✅ 3 | Assassin halakhi | coriace |
+| ✅ 4 | Champion gladiateur | coriace |
+| ✅ 5 | Chef de bande | coriace |
+| ✅ 6 | Druide jaune d’Oomis | coriace |
+| ✅ 7 | Garde jemadar | coriace |
+| ✅ 8 | Guetteur homme-oiseau | coriace |
+| ✅ 9 | Matelot de Parsool | coriace |
+| ✅ 10 | Pilote de nef volante de Satarla | coriace |
+| ✅ 11 | Sergent du guet | coriace |
+| ✅ 12 | Sentinelle kalukan | coriace |
+| ✅ 13 | Methyn Sarr, la Reine Sorcière | rival |
+| ✅ 14 | Jesharek Jool | rival |
+| ✅ 15 | Kalzatan l’Imposteur | rival |
 
 ## Consignes communes
 
@@ -49,51 +49,51 @@ leur univers (voir leur prompt) tout en gardant la même facture.
 
 ## Coriaces
 
-### 1 — Archer de Tyrus
+### ✅ 1 — Archer de Tyrus
 
 > Un archer d'élite de l'armée de Tyrus, homme d'âge mûr, barbe courte et regard concentré, bandant un arc long orné vers le spectateur, corde tendue près de la joue, carquois de flèches à l'épaule. Armure légère de cuir clouté, manteau bleu de Tyrus rejeté sur l'épaule. Lumière de torche orangée sur le visage.
 
-### 2 — Barbare tribal
+### ✅ 2 — Barbare tribal
 
 > Un barbare tribal massif à la peau claire et hâlée de rousseur, cheveux longs roux-blond emmêlés et barbe tressée, yeux bleu clair, peintures de guerre bleues sur le visage et la poitrine, cicatrices, fourrures et cuir sur les épaules, la lame d'une grande épée à deux mains dressée derrière la tête. Armure légère de cuir et d'os. Expression féroce, mâchoire serrée. Fond de jungle sombre et brume.
 
-### 3 — Assassin halakhi
+### ✅ 3 — Assassin halakhi
 
 > Un assassin de la cité montagneuse d'Halakh, mince et silencieux, capuche et foulard sombres ne laissant voir que des yeux perçants, un kriss à lame ondulée tenu bas devant lui, quelques couteaux de lancer glissés à la bandoulière. Aucune armure, vêtements sombres ajustés. Silhouette dans l'ombre, éclairée seulement d'un trait de lumière chaude sur les yeux et la lame.
 
-### 4 — Champion gladiateur
+### ✅ 4 — Champion gladiateur
 
 > Un champion gladiateur de l'arène, homme noir athlétique à la tête rasée et au visage lisse, marqué de cicatrices de combats contre des hommes et des bêtes, casque ouvert, épée à la main et bouclier rond levé devant l'épaule. Armure moyenne de plates et de cuir, épaulière ouvragée. Regard calme et dur, sans sourire, sable de l'arène et poussière dorée en arrière-plan, foule floue dans l'ombre.
 
-### 5 — Chef de bande
+### ✅ 5 — Chef de bande
 
 > Le chef d'une bande de voyous des ruelles : homme maigre au teint cireux, visage étroit et nez long, cheveux grisonnants plaqués en arrière, regard fuyant et rusé, dent en or, balafre à la joue, un gourdin cloué sur l'épaule et une dague glissée à la ceinture. Aucune armure, veste de cuir usée et foulard. Ruelle étroite et sombre éclairée par une lanterne, ombres de complices en arrière-plan très flou.
 
-### 6 — Druide jaune d'Oomis
+### ✅ 6 — Druide jaune d'Oomis
 
 > Un druide fou, adorateur de Morgazzon : homme maigre aux yeux écarquillés et brillants, barbe emmêlée, robe jaune safran en lambeaux, feuillages et ossements dans les cheveux, un coutelas de bronze à la main. Aucune armure. Expression exaltée et inquiétante, sourire dément. Fond de forêt brumeuse aux troncs tordus, lueurs verdâtres.
 
-### 7 — Garde jemadar
+### ✅ 7 — Garde jemadar
 
 > Une garde d'élite de la reine de Malakut (la Garde jemadar), guerrière gracieuse et redoutable, visage fier, tenant devant elle le khastok, une longue lance au fer effilé, un couteau à la ceinture. Armure légère de cuir et de métal aux ornements de danseuse, tissus colorés et bijoux. Palais de pierre sculptée et torches en arrière-plan flou.
 
-### 8 — Guetteur homme-oiseau
+### ✅ 8 — Guetteur homme-oiseau
 
 > Un guetteur homme-oiseau : humanoïde élancé aux traits d'oiseau de proie (bec crochu, yeux ronds et jaunes, plumes sombres sur la tête et les bras), perché sur un rocher et brandissant une fronde ou une poignée de fléchettes. Aucune armure, sangles de cuir légères. Falaises de roche et ciel de nuit orageux derrière lui.
 
-### 9 — Matelot de Parsool
+### ✅ 9 — Matelot de Parsool
 
 > Un vétéran de la marine de Parsool, sexagénaire trapu, visage rond et large, crâne dégarni sous un foulard noué sur la tête, favoris et barbe blancs, rides profondes, peau tannée par le sel et le soleil, un œil plissé, sabre à la main et dague à la ceinture. Aucune armure, chemise ouverte et gilet de cuir. Air de vieux loup de mer bougon. Pont de navire, cordages et voile en arrière-plan, lanterne de bord.
 
-### 10 — Pilote de nef volante de Satarla
+### ✅ 10 — Pilote de nef volante de Satarla
 
 > Le cadet d'une famille noble de Satarla, pilote de la marine aérienne : jeune homme élégant et un peu hautain, lunettes d'aviateur relevées sur le front, cape et vêtements de qualité, épée au côté et arbalète à la main. Armure légère de cuir ouvragé. Ciel de nuit avec la coque d'une nef volante à l'arrière-plan, lanternes dorées.
 
-### 11 — Sergent du guet
+### ✅ 11 — Sergent du guet
 
 > Un sergent du guet, guerrier d'âge mûr aux tempes grisonnantes et au visage fermé, casque de métal, moustache grise, épée courte ou gourdin d'officier à la main, bouclier au bras. Armure moyenne de mailles et de cuir. Regard d'autorité fatiguée. Porte de cité en pierre et torches du guet en arrière-plan.
 
-### 12 — Sentinelle kalukan
+### ✅ 12 — Sentinelle kalukan
 
 Dans le livre, les kalukans n'ont ni tête ni bouche : un seul gros œil au centre de la poitrine, le corps couvert de
 tatouages de sorcellerie. La sentinelle n'a aucune armure, un bouclier et un tulwar. Les consignes communes réclament un
@@ -104,15 +104,15 @@ médaillon.
 
 ## Rivaux
 
-### 13 — Methyn Sarr, la Reine Sorcière
+### ✅ 13 — Methyn Sarr, la Reine Sorcière
 
 > Methyn Sarr, la Reine Sorcière de la Côte de Feu : femme à la beauté terrible et arrogante, yeux perçants couleur de braise, longue chevelure noire comme du charbon tressée de pierreries flamboyantes et d'amulettes, baudrier de guerre ouvragé sur une tenue sombre, une dague rituelle à la ceinture. Des flammes de Zaggath, le Seigneur du Feu, dansent autour d'une main levée et éclairent son visage. Dominante chromatique rouge braise / orangé profond sur fond sombre (exception à la dominante teal), forteresse volcanique derrière elle.
 
-### 14 — Jesharek Jool
+### ✅ 14 — Jesharek Jool
 
 > Jesharek Jool, alchimiste et magicien renommé de Tyrus : vieil homme rabougri de plus de soixante-dix ans, visage ridé et peu amène, barbe clairsemée, yeux fatigués derrière un regard acéré, robe de savant couverte de taches, un bâton à la main, une dague et des fioles à la ceinture. Laboratoire encombré d'alambics, de cornues et de grimoires derrière lui, lueur de fioles verdâtres et bougies. Dominante vert émeraude / ambre.
 
-### 15 — Kalzatan l'Imposteur
+### ✅ 15 — Kalzatan l'Imposteur
 
 > Kalzatan l'Imposteur (de son vrai nom Ferk), sorcier né esclave à Zalut qui a pris la place et l'apparence de son maître : homme dans la force de l'âge, visage séduisant mais faux, sourire trop large, regard fiévreux et paranoïaque, robes de sorcier somptueuses mal ajustées, une épée à la ceinture. Une seconde silhouette ou un reflet déformé flotte derrière son visage, trahissant l'illusion. Énergie violette du Néant qui s'échappe de ses mains. Dominante teal / violet sombre.
 
@@ -127,9 +127,9 @@ carrées de 512×512, puis réduites à 400×400. 1024×1024 n'est pas un multip
 
 | Planche | Cases (ligne 1 : gauche → droite, puis ligne 2) | ids |
 | --- | --- | --- |
-| A | Archer, Barbare, Assassin / Gladiateur, Chef de bande, Druide | 1 à 6 |
-| B | Garde jemadar, Guetteur, Matelot / Pilote, Sergent, Sentinelle | 7 à 12 |
-| C | Methyn Sarr, Jesharek, Kalzatan (3 cases, la 2ᵉ ligne vide) | 13 à 15 |
+| ✅ A | Archer, Barbare, Assassin / Gladiateur, Chef de bande, Druide | 1 à 6 |
+| ✅ B | Garde jemadar, Guetteur, Matelot / Pilote, Sergent, Sentinelle | 7 à 12 |
+| ✅ C | Methyn Sarr, Jesharek, Kalzatan (3 cases, la 2ᵉ ligne vide) | 13 à 15 |
 
 ### Consignes de planche
 
@@ -139,32 +139,32 @@ carrées de 512×512, puis réduites à 400×400. 1024×1024 n'est pas un multip
 >
 > Les six personnages, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
 
-### Planche A — coriaces 1 à 6
+### ✅ Planche A — coriaces 1 à 6
 
-> 1. Archer de Tyrus : homme d'âge mûr, barbe courte, regard concentré, bandant un arc long orné vers le spectateur, carquois à l'épaule, armure légère de cuir clouté, manteau bleu de Tyrus.
-> 2. Barbare tribal : colosse à la peau claire, longs cheveux roux-blond emmêlés, barbe tressée, yeux bleu clair, peintures de guerre bleues, cicatrices, fourrures et cuir, une grande épée à deux mains dressée derrière la tête, expression féroce.
-> 3. Assassin halakhi : mince et silencieux, capuche et foulard sombres ne laissant voir que les yeux, un kriss à lame ondulée tenu bas, couteaux de lancer à la bandoulière, dans l'ombre.
-> 4. Champion gladiateur : homme noir athlétique à la tête rasée et au visage lisse, cicatrisé, casque ouvert, épée en main et bouclier rond levé, armure moyenne de plates et de cuir, regard calme et dur sans sourire, sable et poussière dorée derrière lui.
-> 5. Chef de bande : homme maigre au teint cireux, visage étroit, nez long, cheveux grisonnants plaqués en arrière, regard fuyant et rusé, dent en or, balafre à la joue, gourdin cloué sur l'épaule, dague à la ceinture, veste de cuir usée, ruelle sombre.
-> 6. Druide jaune d'Oomis : homme maigre aux yeux écarquillés, barbe emmêlée, robe jaune safran en lambeaux, feuillages et ossements dans les cheveux, coutelas de bronze, sourire dément, forêt brumeuse verdâtre.
+> 1. ✅ Archer de Tyrus : homme d'âge mûr, barbe courte, regard concentré, bandant un arc long orné vers le spectateur, carquois à l'épaule, armure légère de cuir clouté, manteau bleu de Tyrus.
+> 2. ✅ Barbare tribal : colosse à la peau claire, longs cheveux roux-blond emmêlés, barbe tressée, yeux bleu clair, peintures de guerre bleues, cicatrices, fourrures et cuir, une grande épée à deux mains dressée derrière la tête, expression féroce.
+> 3. ✅ Assassin halakhi : mince et silencieux, capuche et foulard sombres ne laissant voir que les yeux, un kriss à lame ondulée tenu bas, couteaux de lancer à la bandoulière, dans l'ombre.
+> 4. ✅ Champion gladiateur : homme noir athlétique à la tête rasée et au visage lisse, cicatrisé, casque ouvert, épée en main et bouclier rond levé, armure moyenne de plates et de cuir, regard calme et dur sans sourire, sable et poussière dorée derrière lui.
+> 5. ✅ Chef de bande : homme maigre au teint cireux, visage étroit, nez long, cheveux grisonnants plaqués en arrière, regard fuyant et rusé, dent en or, balafre à la joue, gourdin cloué sur l'épaule, dague à la ceinture, veste de cuir usée, ruelle sombre.
+> 6. ✅ Druide jaune d'Oomis : homme maigre aux yeux écarquillés, barbe emmêlée, robe jaune safran en lambeaux, feuillages et ossements dans les cheveux, coutelas de bronze, sourire dément, forêt brumeuse verdâtre.
 
-### Planche B — coriaces 7 à 12
+### ✅ Planche B — coriaces 7 à 12
 
-> 1. Garde jemadar : guerrière gracieuse et fière de la garde de la reine de Malakut, tenant le khastok (longue lance au fer effilé), armure légère ornée de bijoux et de tissus colorés, palais de pierre sculptée derrière elle.
-> 2. Guetteur homme-oiseau : humanoïde élancé aux traits d'oiseau de proie (bec crochu, yeux ronds jaunes, plumes sombres), perché sur un rocher, brandissant une fronde, ciel d'orage.
-> 3. Matelot de Parsool : vétéran sexagénaire trapu au visage rond, crâne dégarni sous un foulard, favoris et barbe blancs, rides profondes, peau tannée par le sel, un œil plissé, sabre en main, gilet de cuir sur chemise ouverte, air bougon, pont de navire et cordages.
-> 4. Pilote de nef volante de Satarla : jeune noble élégant et un peu hautain, lunettes d'aviateur relevées sur le front, cape de qualité, armure légère de cuir ouvragé, épée au côté, coque d'une nef volante dans un ciel de nuit.
-> 5. Sergent du guet : guerrier d'âge mûr aux tempes grises et au visage fermé, casque de métal, moustache grise, armure moyenne de mailles et de cuir, bouclier au bras, porte de cité et torches du guet.
-> 6. Sentinelle kalukan : colosse qui n'a PAS de tête ni de cou (ses épaules se rejoignent en une ligne lisse), un unique gros œil froid au centre de la poitrine et de la case, sans armure, torse nu à la peau gris sombre couvert de tatouages de sorcellerie, grand tulwar et bouclier qui ne masquent pas l'œil, lueur rouge de braise et forteresse volcanique.
+> 1. ✅ Garde jemadar : guerrière gracieuse et fière de la garde de la reine de Malakut, tenant le khastok (longue lance au fer effilé), armure légère ornée de bijoux et de tissus colorés, palais de pierre sculptée derrière elle.
+> 2. ✅ Guetteur homme-oiseau : humanoïde élancé aux traits d'oiseau de proie (bec crochu, yeux ronds jaunes, plumes sombres), perché sur un rocher, brandissant une fronde, ciel d'orage.
+> 3. ✅ Matelot de Parsool : vétéran sexagénaire trapu au visage rond, crâne dégarni sous un foulard, favoris et barbe blancs, rides profondes, peau tannée par le sel, un œil plissé, sabre en main, gilet de cuir sur chemise ouverte, air bougon, pont de navire et cordages.
+> 4. ✅ Pilote de nef volante de Satarla : jeune noble élégant et un peu hautain, lunettes d'aviateur relevées sur le front, cape de qualité, armure légère de cuir ouvragé, épée au côté, coque d'une nef volante dans un ciel de nuit.
+> 5. ✅ Sergent du guet : guerrier d'âge mûr aux tempes grises et au visage fermé, casque de métal, moustache grise, armure moyenne de mailles et de cuir, bouclier au bras, porte de cité et torches du guet.
+> 6. ✅ Sentinelle kalukan : colosse qui n'a PAS de tête ni de cou (ses épaules se rejoignent en une ligne lisse), un unique gros œil froid au centre de la poitrine et de la case, sans armure, torse nu à la peau gris sombre couvert de tatouages de sorcellerie, grand tulwar et bouclier qui ne masquent pas l'œil, lueur rouge de braise et forteresse volcanique.
 
-### Planche C — rivaux 13 à 15
+### ✅ Planche C — rivaux 13 à 15
 
 La dominante teal est volontairement relâchée pour les rivaux (une couleur
 par personnage). Lignes de la grille : ne remplir que les trois cases du haut.
 
-> 1. Methyn Sarr, la Reine Sorcière : beauté terrible et arrogante, yeux couleur de braise, longue chevelure noire tressée de pierreries flamboyantes et d'amulettes, baudrier de guerre ouvragé, une main levée d'où dansent les flammes de Zaggath qui éclairent son visage ; dominante rouge braise / orangé profond, forteresse volcanique derrière elle.
-> 2. Jesharek Jool : alchimiste et magicien de Tyrus, vieil homme rabougri de plus de soixante-dix ans, visage ridé et peu amène, barbe clairsemée, regard acéré, robe de savant tachée, bâton en main, fioles à la ceinture, laboratoire d'alambics et de grimoires derrière lui ; dominante vert émeraude / ambre.
-> 3. Kalzatan l'Imposteur : sorcier né esclave qui a pris l'apparence de son maître, homme dans la force de l'âge au visage séduisant mais faux, sourire trop large, regard fiévreux, robes somptueuses mal ajustées, un reflet déformé flottant derrière son visage, énergie violette du Néant qui s'échappe de ses mains ; dominante teal / violet sombre.
+> 1. ✅ Methyn Sarr, la Reine Sorcière : beauté terrible et arrogante, yeux couleur de braise, longue chevelure noire tressée de pierreries flamboyantes et d'amulettes, baudrier de guerre ouvragé, une main levée d'où dansent les flammes de Zaggath qui éclairent son visage ; dominante rouge braise / orangé profond, forteresse volcanique derrière elle.
+> 2. ✅ Jesharek Jool : alchimiste et magicien de Tyrus, vieil homme rabougri de plus de soixante-dix ans, visage ridé et peu amène, barbe clairsemée, regard acéré, robe de savant tachée, bâton en main, fioles à la ceinture, laboratoire d'alambics et de grimoires derrière lui ; dominante vert émeraude / ambre.
+> 3. ✅ Kalzatan l'Imposteur : sorcier né esclave qui a pris l'apparence de son maître, homme dans la force de l'âge au visage séduisant mais faux, sourire trop large, regard fiévreux, robes somptueuses mal ajustées, un reflet déformé flottant derrière son visage, énergie violette du Néant qui s'échappe de ses mains ; dominante teal / violet sombre.
 > 4. à 6. : laisser vides (fond noir uni).
 
 ### Découpe
@@ -192,9 +192,9 @@ nouveau style.
 
 | Planche | Ids | État | Date |
 | --- | --- | --- | --- |
-| A | 1 à 6 | fait | 2026-10-23 |
-| B | 7 à 12 | fait | 2026-10-23 |
-| C | 13 à 15 | fait (recadrée, voir plus haut) | 2026-10-23 |
-| 12 seul | Sentinelle kalukan | à refaire : le portrait actuel montre une tête et une armure, contre le livre | |
+| ✅ A | 1 à 6 | fait | 2026-10-23 |
+| ✅ B | 7 à 12 | fait | 2026-10-23 |
+| ✅ C | 13 à 15 | fait (recadrée, voir plus haut) | 2026-10-23 |
+| ✅ 12 seul | Sentinelle kalukan | refait d'après le livre (sans tête ni armure) ; carré de 860 px à partir de (200, 0), pour rapprocher l'œil du centre du médaillon | 2026-11-06 |
 
-Les 15 portraits sont dans le nouveau style ; reste à refaire le 12, avec son prompt individuel.
+✅ : portrait fait dans ce style et déposé dans `front/src/assets/bol/pnj/`. Les 15 portraits sont faits : rien à regénérer.
