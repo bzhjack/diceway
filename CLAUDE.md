@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Frontend**: Angular 22 app in `/front/`
 - **Backend**: Laravel 13 REST API in `/backend/`
-- Game documentation: one folder per game under `/doc/` — `/doc/bol/` (Barbarians of Lemuria), `/doc/cyberpunk/` (Cyberpunk RED, being modelled; rulebook text in `doc/cyberpunk/pdf-text/`, PDF page = book page + 4); layout in `doc/README.md`
+- Game documentation: one folder per game under `/doc/` — `/doc/bol/` (Barbarians of Lemuria), `/doc/cyberpunk/` (Cyberpunk RED, being modelled; rules in `doc/cyberpunk/rules/` from `00-index.md`, rulebook text in `doc/cyberpunk/pdf-text/`, PDF page = book page + 4); layout in `doc/README.md`
 
 
 ## Commands

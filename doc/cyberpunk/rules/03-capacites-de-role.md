@@ -6,7 +6,7 @@ Pages source : p. 143-165. Texte : `doc/cyberpunk/pdf-text/08-resolution-des-act
 
 - À l'Ère du Rouge, le rôle n'est pas un emploi mais une identité : chacun est son propre patron et cherche les missions de son rôle.
 - Chaque rôle a **une capacité de rôle**, notée en **rangs de 1 à 10**. Un personnage créé commence au **rang 4** (le MJ peut autoriser plus).
-- Les rangs s'achètent avec des points d'amélioration (`08-progression.md`).
+- Les rangs s'achètent avec des points d'amélioration (`08-progression-et-pnj.md`).
 
 ## Multiclassage
 
@@ -219,7 +219,7 @@ Au rang 10, ce sont toujours les deux mêmes agents qui reviennent jusqu'à la f
 ## Nomade — Moto
 
 - **Familiarité** : ajoute son rang de Moto à Conduite de véhicule terrestre, Pilotage de véhicule aérien, Pilotage de véhicule maritime, Aérotech, Terratech et Maritech.
-- **Garage familial** : à chaque rang gagné, soit un véhicule standard de son rang ou moins, soit une amélioration de son rang ou moins sur un véhicule familial. (À la création, au rang 4 : à préciser avec `01-creation-personnage.md`.)
+- **Garage familial** : à chaque rang gagné, soit un véhicule standard de son rang ou moins, soit une amélioration de son rang ou moins sur un véhicule familial. Le livre ne dit pas explicitement ce que reçoit un Nomade créé au rang 4 ; la lecture logique est un choix par rang, soit quatre (véhicules ou améliorations de rang 4 au plus). À arbitrer.
 - Un seul véhicule familial à la fois ; échange possible le lendemain matin si la famille est proche.
 - Véhicule familial détruit : la famille le répare en 1 semaine contre 500 ED (dispense possible si fauché, au prix de la réputation). Les petites réparations sont à sa charge.
 - **Rang 10** : chef de famille ; utilise tous les véhicules familiaux à la fois, achète les nouveaux au prix du marché et les améliorations 1 000 ED pièce.
