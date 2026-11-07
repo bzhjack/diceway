@@ -161,10 +161,11 @@ See `creature-library-page.html` or `pnj-library-page.html` as reference.
 ## Cyberpunk RED (second game, being modelled)
 
 - Same pattern as BoL with the `cpr` prefix: tables `cpr_*`, models `App\Models\Cpr\Cpr*`, services `App\Http\Services\Cpr\`, controllers `App\Http\Controllers\Cpr\`, routes `/api/cpr/...`; front (to come) in `front/src/app/cpr/`, pages under `/cpr/...`, types in `front/src/app/cpr/models/cpr-*.model.ts`. BoL keeps its routes at the root. Plan and progress: `doc/cyberpunk/plans/2026-11-06-architecture-multi-jeu.md` — tick it as work lands.
-- Reference data ships **in migrations** (each one creates its table and inserts the book's rows), not seeders: `php artisan migrate` is enough on each machine, and tests get the data for free. A later fix is a new migration that updates rows without touching accounts' sheets. Book rows have `user_id` null; catalogue tables keep a nullable `user_id` for items an account may create later.
-- `GET /api/cpr/reference` (`CprReferenceData`, cached one hour) serves every catalogue in one call; a migration that changes a list forgets its cache key.
+- Reference data (the book's rows) lives in `backend/database/data/cpr/<table>.php`, one row per line, each with a **fixed `id`**: the only source. The migrations create the tables and fill them through `CprReferenceCatalogue`, so `php artisan migrate` is enough on each machine and tests get the data for free. To fix data: edit the file, then `docker exec diceway php artisan cpr:reference` (`--dry-run` first; table names as arguments to limit it): it updates by id, adds new rows, never deletes (sheets may cite a row), reports book rows missing from their file, and clears the cache. Never change or reuse an id: a new row takes the next id of its file. Images are named by id, e.g. `front/src/assets/cpr/cyber/<id>.webp`.
+- Book rows have `user_id` null and ids below 10 000; catalogue tables keep a nullable `user_id` for items an account may create later, whose ids start at 10 000 (`CprReferenceCatalogue::ID_DES_COMPTES`).
+- `GET /api/cpr/reference` (`CprReferenceData`, cached one hour) serves every catalogue in one call; `cpr:reference` and the migrations forget its cache keys.
 - Rules: `doc/cyberpunk/rules/` (start at `00-index.md`); data: `doc/cyberpunk/resources/`; rulebook text: `doc/cyberpunk/pdf-text/` (PDF page = book page + 4). Two VF inconsistencies were settled for the app (Solo starting cyberware, Nomad garage at rank 4): see the plan's « Décisions ».
-- After pulling new `cpr_*` migrations: `docker exec diceway php artisan migrate`.
+- After pulling new `cpr_*` migrations: `docker exec diceway php artisan migrate`; after pulling changed files in `database/data/cpr/`: `docker exec diceway php artisan cpr:reference`.
 
 ## Backend architecture (`backend/`)
 

@@ -1,0 +1,16 @@
+<?php
+
+// Données de référence de Cyberpunk RED : table cpr_armure. Seule source de ces lignes (voir CprReferenceCatalogue) ;
+// l'id est fixe et ne se réutilise jamais. Après une modification : php artisan cpr:reference.
+
+return [
+    ['id' => 1, 'code' => 'cuir', 'nom' => 'Cuir', 'type' => 'armure', 'pa' => 4, 'ps' => null, 'penalite' => 0, 'prix' => 20, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Cuir fin renforcé aux épaules, aux hanches et au ventre ; prisé des Nomades et des motards.', 'ordre' => 1],
+    ['id' => 2, 'code' => 'kevlar', 'nom' => 'Kevlar®', 'type' => 'armure', 'pa' => 7, 'ps' => null, 'penalite' => 0, 'prix' => 50, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Vêtements, gilets, vestes, costumes, même bikinis.', 'ordre' => 2],
+    ['id' => 3, 'code' => 'tenue_pare_balles_legere', 'nom' => 'Tenue pare-balles légère', 'type' => 'armure', 'pa' => 11, 'ps' => null, 'penalite' => 0, 'prix' => 100, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Kevlar® et maillage plastique dans la trame du tissu.', 'ordre' => 3],
+    ['id' => 4, 'code' => 'combinaison_connectee', 'nom' => 'Combinaison connectée', 'type' => 'armure', 'pa' => 11, 'ps' => null, 'penalite' => 0, 'prix' => 1000, 'tete_et_corps' => true, 'emplacements_materiel' => 1, 'description' => 'Combinaison moulante au gel absorbant ; range la cyberconsole et les câbles d’interface. Portée sur la tête et le corps (PA 11 chacun), réparée d’un coup, une seule à la fois. Ajoute à la cyberconsole reliée un emplacement réservé au matériel informatique.', 'ordre' => 4],
+    ['id' => 5, 'code' => 'tenue_pare_balles_moyenne', 'nom' => 'Tenue pare-balles moyenne', 'type' => 'armure', 'pa' => 12, 'ps' => null, 'penalite' => 2, 'prix' => 100, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Plaques de plastique robuste sur maillage de Kevlar®.', 'ordre' => 5],
+    ['id' => 6, 'code' => 'tenue_pare_balles_lourde', 'nom' => 'Tenue pare-balles lourde', 'type' => 'armure', 'pa' => 13, 'ps' => null, 'penalite' => 2, 'prix' => 500, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Kevlar® dense, couches de plastique et de treillage.', 'ordre' => 6],
+    ['id' => 7, 'code' => 'flak', 'nom' => 'Flak', 'type' => 'armure', 'pa' => 15, 'ps' => null, 'penalite' => 4, 'prix' => 500, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Gilet et pantalon à plaques métalliques contre les explosifs et les gros calibres.', 'ordre' => 7],
+    ['id' => 8, 'code' => 'metalgear', 'nom' => 'Metalgear®', 'type' => 'armure', 'pa' => 18, 'ps' => null, 'penalite' => 4, 'prix' => 5000, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Plaques de métal et de plastique sur une combinaison maillée.', 'ordre' => 8],
+    ['id' => 9, 'code' => 'bouclier_balistique', 'nom' => 'Bouclier balistique', 'type' => 'bouclier', 'pa' => null, 'ps' => 10, 'penalite' => 0, 'prix' => 100, 'tete_et_corps' => false, 'emplacements_materiel' => 0, 'description' => 'Polycarbonate transparent, manié à une main ; une action pour l’équiper ou le lâcher. Encaisse les dégâts sur ses PS.', 'ordre' => 9],
+];

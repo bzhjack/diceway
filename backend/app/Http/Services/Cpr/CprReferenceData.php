@@ -18,8 +18,8 @@ use App\Models\Cpr\CprVehicule;
 use App\Models\Cpr\CprVetement;
 use Illuminate\Support\Facades\Cache;
 
-/** Les listes de référence de Cyberpunk RED : les mêmes pour tous les comptes, gardées en cache (les migrations qui les modifient vident
- * leurs clés). */
+/** Les listes de référence de Cyberpunk RED : les mêmes pour tous les comptes, gardées en cache (CprReferenceCatalogue, donc les migrations et
+ * `cpr:reference`, vident leurs clés). */
 class CprReferenceData
 {
     /** Une heure, en secondes, comme les listes de BoL. */

@@ -46,22 +46,29 @@ Les routes de BoL restent à la racine : on ne les déplace pas (liens, favoris,
 Le chemin `bol/` reste celui des types d'une zone BoL ; `CLAUDE.md` gagnera une section Cyberpunk qui reprend les conventions
 (préfixe, zones `front/src/app/cpr/<zone>/models/`).
 
-## Données de référence : par migration
+## Données de référence : fichiers de données, ids fixes
 
-Chez BoL, les premières données de référence sont venues de seeders lancés à la main (`DatabaseSeeder` ne les appelle pas). Les
-corrections suivantes sont passées par des migrations idempotentes (`add_mythic_plus_reference_data`, `fix_reference_data_from_rulebook_audit`).
+Chez BoL, les premières données de référence sont venues de seeders lancés à la main (`DatabaseSeeder` ne les appelle pas), avec des ids
+fixes : les images sur disque portent l'id de leur ligne (`/assets/bol/bestiary/<id>.jpg`). Les corrections suivantes sont passées par des
+migrations idempotentes (`add_mythic_plus_reference_data`, `fix_reference_data_from_rulebook_audit`).
 
-**Pour Cyberpunk, tout passe par migration** : chaque migration crée sa table **et** y insère les lignes du livre, à partir de constantes
-PHP recopiées de `doc/cyberpunk/resources/`. Conséquences :
+**Pour Cyberpunk, les lignes du livre sont dans `backend/database/data/cpr/<table>.php`**, une ligne par enregistrement, chacune avec
+son `id` fixe. Ces fichiers sont la seule source : `CprReferenceCatalogue` les lit, les migrations l'appellent pour remplir leurs tables, la
+commande `php artisan cpr:reference` aussi. Conséquences :
 
 - sur chaque poste, `php artisan migrate` suffit (pas de seeder à se rappeler) ;
 - les tests (`RefreshDatabase`, SQLite en mémoire) ont les données sans rien faire ;
-- une correction ultérieure se fait par une nouvelle migration qui met à jour sans toucher aux fiches des comptes, comme chez BoL ;
+- **une correction** : modifier le fichier, puis `php artisan cpr:reference` (option `--dry-run` pour voir ce qui changerait, tables en
+  argument pour n'en traiter que certaines). La commande met à jour par id, ajoute les lignes nouvelles, ne supprime jamais rien (des fiches
+  peuvent citer une ligne) et signale les lignes du livre qui ne sont plus dans leur fichier ; elle vide le cache ;
+- **un id ne change ni ne se réutilise** : une ligne ajoutée prend l'id suivant de son fichier. Les images se rangent sous cet id, par
+  exemple `front/src/assets/cpr/cyber/<id>.webp` pour `cpr_cyber` ;
 - les lignes du catalogue ont `user_id` null ; chaque table de catalogue garde une colonne `user_id` pour accueillir plus tard les objets
-  créés par un compte (comme `bol_arme`).
+  créés par un compte (comme `bol_arme`). Leurs ids commencent à 10 000 (`CprReferenceCatalogue::ID_DES_COMPTES`, posé par la
+  synchronisation) : le livre reste en dessous, et un ajout du livre ne tombe jamais sur un objet de compte.
 
-Les données servies au front sont mises en cache comme `BolReferenceData` (un `CprReferenceData`, clés `cpr_*`, vidées par les
-migrations qui modifient les listes).
+Les données servies au front sont mises en cache comme `BolReferenceData` (un `CprReferenceData`, clés `cpr_*`, vidées par la
+synchronisation et par le `down` des migrations).
 
 ## Étapes
 
@@ -191,6 +198,11 @@ appliquées, défaites puis réappliquées sur une base SQLite jetable.
 
 **Étape 2 terminée le 2026-11-07** : 7 tables de fiche, 5 routes, calculs et règles de création ; 35 tests de fiche, suite complète à 418 tests.
 
+- [x] **Ids fixes et réinjection** (2026-11-07) : les données des 8 migrations de référence sont sorties dans `database/data/cpr/` (17 fichiers,
+  ids inchangés : ceux de l'ordre d'insertion), lues par `CprReferenceCatalogue` ; commande `cpr:reference` ; test `CprReferenceCatalogueTest`
+  (7 tests), suite complète à 425 tests. Contrôle : les nouvelles migrations, sur une base vide, redonnent exactement les fichiers. Sur la base
+  du poste, la commande n'a rien trouvé à changer et a posé le départ des ids de compte à 10 000.
+
 À faire sur chaque poste après un pull : `docker exec diceway php artisan migrate` (les tables `cpr_*` se créent et se remplissent).
 
 ### Étape 2 — la fiche de personnage (tables, API, calculs)
@@ -283,5 +295,5 @@ Retenu par défaut, à revoir si besoin :
 ## Mise à jour de `CLAUDE.md` (à la fin de l'étape 1)
 
 - Project Overview : les deux jeux.
-- Une section « Cyberpunk RED » : préfixe `cpr`, zones front, routes `/cpr`, données de référence par migration, où sont les règles.
+- Une section « Cyberpunk RED » : préfixe `cpr`, zones front, routes `/cpr`, données de référence dans `database/data/cpr/` (ids fixes, `cpr:reference`), où sont les règles.
 - Business rules : renvoyer vers `doc/cyberpunk/resources/` et `doc/cyberpunk/rules/` pour Cyberpunk.
