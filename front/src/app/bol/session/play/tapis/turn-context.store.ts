@@ -17,7 +17,7 @@ const DICE_TIMEOUT_MS = 12000;
  * par où ils signalent à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme) ; aucun d'eux ne parle à un service.
  * S'y ajoute ce que les étapes partagent : les dés 3D, les éléments où passe la main, le popover des effets, les cœurs de vitalité.
  */
-const ATTAQUE_ICONE: Record<TapisKind, string> = {hero: 'gi-sword', pnj: 'gi-sword', creature: 'gi-paw', demon: 'gi-demon'};
+const ATTAQUE_ICONE: Record<TapisKind, string> = {hero: 'sword', pnj: 'sword', creature: 'pets', demon: 'bolt'};
 
 @Injectable()
 export class TurnContextStore {
@@ -27,6 +27,8 @@ export class TurnContextStore {
 
   /** L'icône de la case d'une carte qui frappe sans arme : une patte, un démon, sinon une épée (comme sur les fiches). */
   readonly attaqueIcone = computed(() => ATTAQUE_ICONE[this.card().kind]);
+  /** L'épée est une icône SVG enregistrée (app.ts), les autres des ligatures Material Icons. */
+  readonly attaqueIconeSvg = computed(() => this.attaqueIcone() === 'sword');
 
   readonly armes = computed(() => this.host.armes());
 

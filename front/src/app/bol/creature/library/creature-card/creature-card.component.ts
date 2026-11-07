@@ -47,7 +47,7 @@ export class CreatureCardComponent {
 
     return [
       {
-        icon: 'gi-quill',
+        icon: 'edit',
         tooltip: 'Modifier',
         routerLink: ['/create/creature', this.creature().id],
         state: {returnUrl: '/library/creatures'},
@@ -60,10 +60,10 @@ export class CreatureCardComponent {
   }
 
   protected gauges(): readonly EntityCardGauge[] {
-    return [{icon: 'gi-heart', value: this.creature().vitalite, label: 'Vitalité', accent: 'pv'}];
+    return [{icon: 'favorite', value: this.creature().vitalite, label: 'Vitalité', accent: 'pv'}];
   }
 
   protected chips(): readonly EntityCardChip[] {
-    return [{icon: 'gi-sparkles', value: this.creature().capacites.length, tooltip: 'Capacités'}];
+    return [{icon: 'auto_awesome', value: this.creature().capacites.length, tooltip: 'Capacités'}];
   }
 }

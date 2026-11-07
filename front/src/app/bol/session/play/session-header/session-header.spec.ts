@@ -25,7 +25,7 @@ describe('SessionHeaderComponent', () => {
     const lien = retour(await rendre('libre'))!;
 
     expect(lien.getAttribute('href')).toBe('/');
-    expect(lien.querySelector('mat-icon')?.getAttribute('data-mat-icon-name')).toBe('gi-home');
+    expect(lien.querySelector('mat-icon')?.textContent?.trim()).toBe('home');
   });
 
   it('en combat, pas de retour à l’accueil : « Terminer » ramène à la table', async () => {

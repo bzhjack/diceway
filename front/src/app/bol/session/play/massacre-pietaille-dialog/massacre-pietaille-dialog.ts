@@ -13,7 +13,7 @@ import {tombesMassacre} from '../tapis/options-heroiques.util';
   imports: [MatButtonModule, MatCheckboxModule, MatDialogModule, MatIconModule],
   template: `
     <h2 mat-dialog-title class="mpm-title">
-      <mat-icon svgIcon="gi-swords" />
+      <mat-icon svgIcon="sword" />
       Massacrer la piétaille
     </h2>
     <mat-dialog-content class="mpm-content">

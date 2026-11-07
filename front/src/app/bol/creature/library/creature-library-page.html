@@ -19,14 +19,14 @@
             <mat-icon>add</mat-icon> Créer une créature
           </button>
           <button mat-stroked-button routerLink="/library/demons">
-            <mat-icon svgIcon="gi-demon" /> Voir les démons
+            <mat-icon>bolt</mat-icon> Voir les démons
           </button>
           <button mat-stroked-button routerLink="/library/pnjs">
-            <mat-icon svgIcon="gi-masks" /> Voir les PNJ
+            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
           </button>
         </div>
         <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
-          <mat-icon svgIcon="gi-return" /> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
+          <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
       </ng-container>
     </dw-library-header>
@@ -65,11 +65,5 @@
       </dw-library-grid>
     </mat-card>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

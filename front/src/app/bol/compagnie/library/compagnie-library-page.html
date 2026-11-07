@@ -8,7 +8,7 @@
         <div class="flex flex-wrap gap-1.5">
           <button mat-flat-button type="button" (click)="ouvrir(null)"><mat-icon>add</mat-icon> Nouvelle compagnie</button>
         </div>
-        <button mat-stroked-button routerLink="/"><mat-icon svgIcon="gi-return" /> Retour à l'accueil</button>
+        <button mat-stroked-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à l'accueil</button>
       </ng-container>
     </dw-library-header>
 
@@ -37,7 +37,7 @@
                   [disabled]="ligne.compagnie.parties > 0"
                   (click)="supprimer(ligne.compagnie)"
                 >
-                  <mat-icon svgIcon="gi-trash" />
+                  <mat-icon>delete</mat-icon>
                 </button>
               </span>
             </div>

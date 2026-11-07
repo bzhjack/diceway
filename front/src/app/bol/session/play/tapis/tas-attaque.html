@@ -54,7 +54,7 @@
           (blur)="turn.restoreInput(attackInput, attack.diceSum())"
         />
         <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" [attr.aria-label]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + loadout.diceCount() + 'd6 à l’écran'" (click)="flow.roll()">
-          <mat-icon svgIcon="gi-dice" />
+          <mat-icon>casino</mat-icon>
         </button>
       </span>
       <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attack.attackRowDice()" [total]="attack.diceSum()" [slots]="loadout.diceCount()" />
@@ -63,10 +63,10 @@
       <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="turn.rolling()" [attr.inert]="turn.rolling() ? '' : null">
         <div class="tas-mj-row">
           <button type="button" class="tas-chip tas-chip--de tas-chip--bonus" [attr.aria-pressed]="loadout.gmDie() === 'bonus'" aria-label="Dé de bonus du MJ" matTooltip="Dé de bonus, quand les circonstances aident : 3d6 à l'attaque, on garde les deux meilleurs" (click)="loadout.toggleGmDie('bonus')">
-            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
+            <mat-icon aria-hidden="true">casino</mat-icon>
           </button>
           <button type="button" class="tas-chip tas-chip--de tas-chip--malus" [attr.aria-pressed]="loadout.gmDie() === 'malus'" aria-label="Dé de malus du MJ" matTooltip="Dé de malus, quand les circonstances gênent (ivresse, obscurité…) : 3d6 à l'attaque, on garde les deux moins bons" (click)="loadout.toggleGmDie('malus')">
-            <mat-icon svgIcon="gi-dice" aria-hidden="true" />
+            <mat-icon aria-hidden="true">casino</mat-icon>
           </button>
           <dw-value-stepper [(value)]="loadout.freeModifier" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
         </div>
@@ -96,7 +96,7 @@
       }
       @if (attack.canFavor()) {
         <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Faveur divine : relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + turn.unPointAttaquant()" (click)="flow.divineFavor()">
-          <mat-icon svgIcon="gi-reroll" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+          <mat-icon aria-hidden="true">replay</mat-icon> <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
         </button>
       }
       @if (attack.canLegendary()) {

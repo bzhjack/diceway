@@ -9,7 +9,7 @@
             <div class="space-y-3">
               <div class="flex items-center gap-3">
                 <div class="ip-icon">
-                  <mat-icon svgIcon="gi-medal" />
+                  <mat-icon>military_tech</mat-icon>
                 </div>
                 <div class="flex min-w-0 flex-1 flex-col gap-2">
                   <p class="ip-eyebrow">
@@ -37,10 +37,10 @@
 
           <div class="library-header-actions">
             <button mat-flat-button routerLink="/library/heroes">
-              <mat-icon svgIcon="gi-group" /> Ouvrir la bibliothèque des héros
+              <mat-icon>group</mat-icon> Ouvrir la bibliothèque des héros
             </button>
             <button mat-stroked-button routerLink="/">
-              <mat-icon svgIcon="gi-return" /> Retour à l'accueil
+              <mat-icon>arrow_back</mat-icon> Retour à l'accueil
             </button>
           </div>
         </div>
@@ -59,7 +59,11 @@
                     <div
                       class="ip-entry-icon"
                     >
-                      <mat-icon [svgIcon]="entry.icon" />
+                      @if (entry.icon === 'sword') {
+                        <mat-icon svgIcon="sword" />
+                      } @else {
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                      }
                     </div>
                     <div class="space-y-1">
                       <p class="ip-entry-kicker">
@@ -89,11 +93,5 @@
       }
     </div>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

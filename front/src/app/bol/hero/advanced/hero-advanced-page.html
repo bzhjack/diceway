@@ -5,9 +5,9 @@
         @if (!editMode()) {
           <!-- ===== BROUILLON (étape 1) ===== -->
           <form class="dw-creation-form" (submit)="onDraftSubmit($event)">
-            <dw-form-header icon="gi-sparkles" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
+            <dw-form-header icon="auto_fix_high" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
               <button mat-stroked-button type="button" (click)="goBack()">
-                <mat-icon svgIcon="gi-return" /> Retour
+                <mat-icon>arrow_back</mat-icon> Retour
               </button>
             </dw-form-header>
 
@@ -49,16 +49,16 @@
         } @else {
           <form class="dw-creation-form" (submit)="onFormSubmit($event)">
             <!-- ===== EN-TÊTE ===== -->
-            <dw-form-header icon="gi-sparkles" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
+            <dw-form-header icon="auto_fix_high" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
               @if (warnCount() > 0) {
                 <p dwFormHeaderNote class="hap-warn-badge">{{ warnCount() }} avertissement(s) à traiter avant activation</p>
               }
               <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
-                <mat-icon svgIcon="gi-return" /> Retour
+                <mat-icon>arrow_back</mat-icon> Retour
               </button>
 
               <button mat-flat-button type="submit" [disabled]="submitDisabled()">
-                <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+                <mat-icon>check</mat-icon> {{ submitLabel() }}
                 @if (formDirty()) {
                   <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
                 }
@@ -71,7 +71,7 @@
                   [disabled]="activateDisabled()"
                   (click)="confirmActivation()"
                 >
-                  <mat-icon svgIcon="gi-laurels" /> Activer le héros
+                  <mat-icon>check</mat-icon> Activer le héros
                 </button>
               }
             </dw-form-header>
@@ -81,14 +81,14 @@
                 <span class="hap-warn-compact">{{ warnCount() }} avertissement(s)</span>
               }
               <button mat-flat-button type="submit" [disabled]="submitDisabled()">
-                <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+                <mat-icon>check</mat-icon> {{ submitLabel() }}
                 @if (formDirty()) {
                   <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
                 }
               </button>
               @if (!activeValue()) {
                 <button mat-stroked-button type="button" [disabled]="activateDisabled()" (click)="confirmActivation()">
-                  <mat-icon svgIcon="gi-laurels" /> Activer
+                  <mat-icon>check</mat-icon> Activer
                 </button>
               }
             </dw-compact-bar>
@@ -252,11 +252,5 @@
       </mat-card-content>
     </mat-card>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

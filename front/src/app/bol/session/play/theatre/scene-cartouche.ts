@@ -21,12 +21,12 @@ import {lieuTexte} from './theatre.util';
           @if (lieu(); as lieu) {
             @if (point()) {
               <button type="button" class="ctc-lieu-carte" [attr.aria-label]="lieu + ' : voir sur la carte'" (click)="voirCarte()">
-                <mat-icon svgIcon="gi-marker" aria-hidden="true" />
+                <mat-icon aria-hidden="true">place</mat-icon>
                 <span class="ctc-lieu-texte">{{ lieu }}</span>
-                <mat-icon class="ctc-lieu-icone" svgIcon="gi-map" aria-hidden="true" />
+                <mat-icon class="ctc-lieu-icone" aria-hidden="true">map</mat-icon>
               </button>
             } @else {
-              <mat-icon svgIcon="gi-marker" aria-hidden="true" />
+              <mat-icon aria-hidden="true">place</mat-icon>
               <span>{{ lieu }}</span>
             }
           }

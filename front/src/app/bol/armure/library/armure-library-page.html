@@ -24,11 +24,11 @@
             {{ formVisible() && !editingId() ? 'Création en cours' : 'Nouvelle armure' }}
           </button>
           <button mat-stroked-button routerLink="/library/weapons">
-            <mat-icon svgIcon="gi-demon" /> Voir l'arsenal
+            <mat-icon>bolt</mat-icon> Voir l'arsenal
           </button>
         </div>
         <button mat-stroked-button routerLink="/intendance">
-          <mat-icon svgIcon="gi-return" /> Retour à l'intendance
+          <mat-icon>arrow_back</mat-icon> Retour à l'intendance
         </button>
       </ng-container>
     </dw-library-header>
@@ -157,7 +157,7 @@
                         [attr.aria-label]="'Modifier : ' + armor.armure"
                         (click)="startEdit(armor)"
                       >
-                        <mat-icon svgIcon="gi-quill" />
+                        <mat-icon>edit</mat-icon>
                       </button>
                       <button
                         mat-icon-button
@@ -166,7 +166,7 @@
                         [attr.aria-label]="'Supprimer : ' + armor.armure"
                         (click)="askDelete(armor)"
                       >
-                        <mat-icon svgIcon="gi-trash" />
+                        <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   }
@@ -188,11 +188,5 @@
       </mat-card-content>
     </mat-card>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

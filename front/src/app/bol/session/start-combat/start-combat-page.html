@@ -31,7 +31,7 @@
               [matTooltip]="rules"
               matTooltipClass="scd-tooltip"
             >
-              <mat-icon svgIcon="gi-info" />
+              <mat-icon>info_outline</mat-icon>
             </button>
           </div>
         </div>
@@ -49,7 +49,7 @@
             matTooltip="Embuscade, dé du MJ pour tous, malus adverse"
             (click)="optionsOpen.set(!optionsOpen())"
           >
-            <mat-icon svgIcon="gi-tune" /> Options
+            <mat-icon>tune</mat-icon> Options
             @if (ambushBonus(); as bonus) {
               <b class="scd-options-bonus" aria-hidden="true">{{ bonus }}</b>
               <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
@@ -62,7 +62,7 @@
             <!-- Le dé du MJ pour tous : un petit dé vert (bonus) ou rouge (malus) -->
             @if (globalGmDie(); as gm) {
               <span [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')"
-                ><mat-icon svgIcon="gi-dice" /><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
+                ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
               >
             }
           </button>
@@ -148,11 +148,11 @@
           @if (pendingHeroes().length > 0 || loading()) {
             @if (noAdversary()) {
               <button mat-stroked-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon svgIcon="gi-dice" /> Lancer pour tous
+                <mat-icon>casino</mat-icon> Lancer pour tous
               </button>
             } @else {
               <button mat-flat-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
-                <mat-icon svgIcon="gi-dice" /> Lancer pour tous
+                <mat-icon>casino</mat-icon> Lancer pour tous
               </button>
             }
           }
@@ -160,12 +160,12 @@
           <!-- Démarrer, dès que tous les héros ont lancé et qu'il y a un adversaire -->
           @if (canStart()) {
             <button #startButton mat-flat-button type="button" [disabled]="starting()" (click)="start()">
-              <mat-icon svgIcon="gi-swords" />
+              <mat-icon>play_arrow</mat-icon>
               {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
             </button>
           } @else {
             <button #startButton mat-stroked-button type="button" disabled>
-              <mat-icon svgIcon="gi-swords" />
+              <mat-icon>play_arrow</mat-icon>
               {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
             </button>
           }
@@ -199,7 +199,7 @@
           (addClicked)="openAddAdversary()"
         />
         @if (noAdversary()) {
-          <span class="scd-warn" role="status"><mat-icon svgIcon="gi-warning" aria-hidden="true" /> Aucun adversaire</span>
+          <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
         }
       </div>
     </header>
@@ -253,7 +253,7 @@
                     role="img"
                     [attr.aria-label]="'Vitalité ' + (card.hero.vitalite ?? '—') + ' sur ' + (card.hero.vitaliteMax ?? '—')"
                   >
-                    <mat-icon svgIcon="gi-heart" aria-hidden="true" />
+                    <mat-icon aria-hidden="true">favorite</mat-icon>
                     <span class="scd-vit-bar" aria-hidden="true"
                       ><i [class.scd-vit-bar--low]="card.vitaliteLow" [style.width.%]="card.vitalitePercent"></i
                     ></span>
@@ -327,7 +327,7 @@
                       matTooltip="Lancer à l’écran"
                       (click)="rollFor(card.hero)"
                     >
-                      <mat-icon svgIcon="gi-dice" />
+                      <mat-icon>casino</mat-icon>
                     </button>
                   </span>
 
@@ -358,7 +358,7 @@
                             matTooltip="Échec critique : il agit en dernier, et gagne 1 point d’héroïsme"
                             (click)="toggleOption(card)"
                           >
-                            <mat-icon svgIcon="gi-skull" aria-hidden="true" />
+                            <mat-icon svgIcon="skull" aria-hidden="true" />
                             <span class="scd-cost" aria-hidden="true"
                               >+1 <span class="scd-gem"></span
                             ></span>
@@ -372,7 +372,7 @@
                             matTooltip="Succès légendaire, pour 1 point d’héroïsme : +1 à ses attaques tout le combat"
                             (click)="toggleOption(card)"
                           >
-                            <mat-icon svgIcon="gi-crown" aria-hidden="true" />
+                            <mat-icon svgIcon="crown" aria-hidden="true" />
                             <span class="scd-cost" aria-hidden="true"
                               >−1 <span class="scd-gem"></span
                             ></span>
@@ -386,7 +386,7 @@
                             matTooltip="Succès héroïque, pour 1 point d’héroïsme : au round 1, coriaces et piétaille ne jouent pas"
                             (click)="toggleOption(card)"
                           >
-                            <mat-icon svgIcon="gi-laurels" aria-hidden="true" />
+                            <mat-icon aria-hidden="true">star</mat-icon>
                             <span class="scd-cost" aria-hidden="true"
                               >−1 <span class="scd-gem"></span
                             ></span>
@@ -405,7 +405,7 @@
                             "
                             (click)="divineFavor(card)"
                           >
-                            <mat-icon svgIcon="gi-favor" aria-hidden="true" />
+                            <mat-icon aria-hidden="true">wb_sunny</mat-icon>
                             <span class="scd-cost" aria-hidden="true"
                               >−1 <span class="scd-gem"></span
                             ></span>
@@ -434,10 +434,10 @@
                       matTooltip="Modificateurs : dé du MJ, carrière utile"
                       (click)="toggleMods(card.hero.pivotId)"
                     >
-                      <mat-icon svgIcon="gi-tune" aria-hidden="true" />
+                      <mat-icon aria-hidden="true">tune</mat-icon>
                       <!-- Ce qui est accordé, comme sur le bouton des options : un petit dé vert ou rouge, le bonus de la carrière -->
                       @if (card.gmDie; as gm) {
-                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon svgIcon="gi-dice" /></span>
+                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon>casino</mat-icon></span>
                       }
                       @if (card.career; as career) {
                         <b class="scd-mods-career" aria-hidden="true">+{{ career.value }}</b>
@@ -538,7 +538,7 @@
                     matTooltip="Voir la fiche"
                     (click)="openSheet(card.hero)"
                   >
-                    <mat-icon svgIcon="gi-sheet" aria-hidden="true" />
+                    <mat-icon aria-hidden="true">description</mat-icon>
                   </button>
                   <button
                     type="button"
@@ -556,7 +556,7 @@
                     "
                     (click)="toggleExcluded('hero', card.hero.pivotId)"
                   >
-                    <mat-icon [svgIcon]="card.excluded ? 'gi-return' : 'gi-exit'" aria-hidden="true" />
+                    <mat-icon aria-hidden="true">{{ card.excluded ? 'undo' : 'person_off' }}</mat-icon>
                   </button>
                 </span>
               </li>
@@ -566,12 +566,6 @@
           </ol>
           <p class="scd-hint">
             Tape le total annoncé à table : la saisie passe d’elle-même au héros suivant.
-          </p>
-          <p class="scd-credit">
-            Icônes :
-            <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-            (Lorc, Delapouite et contributeurs),
-            <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
           </p>
         }
       </section>

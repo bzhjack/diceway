@@ -22,7 +22,7 @@
           />
           @if (!damage.specialDamage()) {
             <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="damage.rollDamage()">
-              <mat-icon svgIcon="gi-dice" />
+              <mat-icon>casino</mat-icon>
             </button>
           }
         </span>
@@ -52,7 +52,7 @@
               <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="damage.startEditProtection()">{{ term.value }}</button>
               @if (damage.protectionDie()) {
                 <button type="button" class="tas-mini" [disabled]="turn.rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="damage.rollProtection()">
-                  <mat-icon svgIcon="gi-dice" />
+                  <mat-icon>casino</mat-icon>
                 </button>
               }
               @if (damage.protectionFace() !== null || damage.protectionManual() !== null) {
@@ -94,7 +94,7 @@
         (click)="flow.parry()"
       >
         <ng-container *ngTemplateOutlet="targetFace" />
-        <mat-icon svgIcon="gi-shield" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
+        <mat-icon aria-hidden="true">shield</mat-icon> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
       </button>
     }
     @if (cible.canHumanShield()) {
@@ -106,7 +106,7 @@
         (click)="flow.humanShield()"
       >
         <ng-container *ngTemplateOutlet="targetFace" />
-        <mat-icon svgIcon="gi-group" aria-hidden="true" /> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
+        <mat-icon aria-hidden="true">group</mat-icon> <span class="tas-cost">−1 <span class="tas-gem tas-gem--foe" aria-hidden="true"></span></span>
       </button>
     }
   </span>
@@ -160,7 +160,7 @@
             (keydown.escape)="flow.cancelScratch($event)"
           />
           <button type="button" class="tas-dice-btn" [disabled]="turn.rolling()" aria-label="Lancer le dé de l’égratignure à l’écran" matTooltip="Lancer le dé de l’égratignure à l’écran" (click)="flow.rollScratch()">
-            <mat-icon svgIcon="gi-dice" />
+            <mat-icon>casino</mat-icon>
           </button>
         </span>
         <small class="tas-die-note">Juste une égratignure : d6B de vitalité rendue</small>

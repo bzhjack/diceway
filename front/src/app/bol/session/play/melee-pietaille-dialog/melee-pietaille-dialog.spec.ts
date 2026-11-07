@@ -41,7 +41,7 @@ describe('MeleePietailleDialogComponent', () => {
       ],
     });
     // L'icône du titre est un SVG enregistré par l'application : ici, une icône vide.
-    TestBed.inject(MatIconRegistry).addSvgIconLiteral('gi-swords', TestBed.inject(DomSanitizer).bypassSecurityTrustHtml('<svg></svg>'));
+    TestBed.inject(MatIconRegistry).addSvgIconLiteral('sword', TestBed.inject(DomSanitizer).bypassSecurityTrustHtml('<svg></svg>'));
     fixture = TestBed.createComponent(MeleePietailleDialogComponent);
     fixture.detectChanges();
     await fixture.whenStable();

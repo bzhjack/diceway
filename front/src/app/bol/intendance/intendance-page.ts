@@ -51,7 +51,7 @@ export class IntendancePageComponent {
         'Catalogue offensif stabilisé avec types, dégâts, portée et notes. C’est le point d’entrée pour gérer le stock jouable de la table.',
       route: '/library/weapons',
       buttonLabel: 'Ouvrir l’arsenal',
-      icon: 'gi-sword',
+      icon: 'sword',
       stats: [
         `${this.weapons().length} entrées`,
         `${this.meleeWeapons()} mêlée`,
@@ -65,7 +65,7 @@ export class IntendancePageComponent {
         'Catalogue défensif finalisé avec protections, malus et points de pouvoir. Il couvre armures, casques et boucliers utilisables dans les profils.',
       route: '/library/armors',
       buttonLabel: 'Ouvrir les armures',
-      icon: 'gi-shield',
+      icon: 'shield',
       stats: [
         `${this.armors().length} entrées`,
         `${this.shieldEntries()} boucliers`,

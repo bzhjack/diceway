@@ -217,7 +217,7 @@
             </button>
           } @else {
             <button mat-menu-item type="button" (click)="marquerTermine(partie, true)">
-              <mat-icon svgIcon="gi-flag" /><span>Marquer le scénario terminé</span>
+              <mat-icon>flag</mat-icon><span>Marquer le scénario terminé</span>
             </button>
           }
         } @else if (partie.enCombat) {
@@ -230,7 +230,7 @@
           </button>
         }
         <button mat-menu-item type="button" (click)="supprimer(partie)">
-          <mat-icon svgIcon="gi-trash" /><span>Supprimer la partie</span>
+          <mat-icon>delete</mat-icon><span>Supprimer la partie</span>
         </button>
       </ng-template>
     </mat-menu>
@@ -292,11 +292,5 @@
       </ul>
     </nav>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

@@ -7,17 +7,17 @@ const NIVEAUX = [1, 2, 3, 4] as const;
 
 /** L'icône de chaque moment et de chaque temps, dans le style de la table. */
 const ICONES: Record<SceneMoment | SceneMeteo, string> = {
-  aube: 'gi-sunrise',
-  jour: 'gi-sun',
-  crepuscule: 'gi-sunset',
-  nuit: 'gi-night',
-  clair: 'gi-sun',
-  couvert: 'gi-cloud',
-  pluie: 'gi-rain',
-  brume: 'gi-fog',
-  vent: 'gi-wind',
-  orage: 'gi-storm',
-  cendres: 'gi-ashes',
+  aube: 'wb_twilight',
+  jour: 'wb_sunny',
+  crepuscule: 'wb_twilight',
+  nuit: 'nights_stay',
+  clair: 'wb_sunny',
+  couvert: 'cloud',
+  pluie: 'umbrella',
+  brume: 'blur_on',
+  vent: 'air',
+  orage: 'thunderstorm',
+  cendres: 'local_fire_department',
 };
 
 /** Les puces d'ambiance d'une scène : moment, météo et danger (quatre crânes, allumés jusqu'au niveau).
@@ -27,17 +27,17 @@ const ICONES: Record<SceneMoment | SceneMeteo, string> = {
   imports: [MatIconModule],
   template: `
     @if (momentOption(); as moment) {
-      <span class="amb-puce"><mat-icon [svgIcon]="icones[moment.value]" aria-hidden="true" />{{ moment.label }}</span>
+      <span class="amb-puce"><mat-icon aria-hidden="true">{{ icones[moment.value] }}</mat-icon>{{ moment.label }}</span>
     }
     @if (meteoOption(); as meteo) {
-      <span class="amb-puce"><mat-icon [svgIcon]="icones[meteo.value]" aria-hidden="true" />{{ meteo.label }}</span>
+      <span class="amb-puce"><mat-icon aria-hidden="true">{{ icones[meteo.value] }}</mat-icon>{{ meteo.label }}</span>
     }
     @if (danger(); as niveau) {
       <span class="amb-puce" role="img" [attr.aria-label]="'Danger ' + niveau + ' sur 4'">
         Danger
         <span class="amb-cranes" aria-hidden="true">
           @for (n of niveaux; track n) {
-            <mat-icon svgIcon="gi-skull" [class.amb-crane--on]="n <= niveau" />
+            <mat-icon svgIcon="skull" [class.amb-crane--on]="n <= niveau" />
           }
         </span>
       </span>

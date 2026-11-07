@@ -57,16 +57,6 @@
   }
 }
 
-.dw-forge-credit {
-  margin: 0;
-  color: var(--dw-forge-stud-text);
-  font-size: 0.68rem;
-
-  a {
-    color: inherit;
-  }
-}
-
 // Les menus d'ajout et les dialogues s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à
 // l'écran. Le statbloc garde sa propre fiche.
 body:has(.dw-page) .cdk-overlay-container {

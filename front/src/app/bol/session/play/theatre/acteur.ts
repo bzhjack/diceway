@@ -8,7 +8,7 @@ import {cardAriaLabel, isLowVitalite, vitalitePercent} from '../tapis/tapis.util
 import {ATTITUDES} from './theatre.util';
 
 /** L'icône de chaque type, sur la carte et en repli du portrait. */
-const KIND_ICONS: Record<CombatantKind, string> = {hero: 'gi-sword', pnj: 'gi-group', creature: 'gi-paw', demon: 'gi-demon'};
+const KIND_ICONS: Record<CombatantKind, string> = {hero: 'person', pnj: 'group', creature: 'pets', demon: 'bolt'};
 
 /** Une carte de la troupe (ou un allié de la compagnie) : portrait en pied, rang, type, nom et barre de
  * vitalité. Sa taille dit son rang. Présentation seule : le clic, avec l'événement, est rendu au parent

@@ -32,7 +32,7 @@
           [matTooltip]="melee() === 'faite' ? 'Déjà résolue ce round : de nouveau possible au round suivant' : 'Piétaille contre piétaille : les pertes de chaque camp, sans jet d’attaque'"
           (click)="meleeRequested.emit()"
         >
-          <mat-icon svgIcon="gi-swords" /> Mêlée de piétaille
+          <mat-icon svgIcon="sword" /> Mêlée de piétaille
         </button>
       }
       <button
@@ -43,7 +43,7 @@
         matTooltip="Nouveau jet de réaction des héros"
         (click)="rerollRequested.emit()"
       >
-        <mat-icon svgIcon="gi-reroll" />
+        <mat-icon>replay</mat-icon>
       </button>
     }
     <button
@@ -54,7 +54,7 @@
       matTooltip="Rechercher ou lancer une action ( / )"
       (click)="searchRequested.emit()"
     >
-      <mat-icon svgIcon="gi-search" />
+      <mat-icon>search</mat-icon>
     </button>
     @if (mode() === 'libre') {
       <button
@@ -67,15 +67,15 @@
         [matTooltip]="coulissesOpen() ? 'Fermer les coulisses' : 'Coulisses : les personnages en réserve'"
         (click)="coulissesToggled.emit()"
       >
-        <mat-icon svgIcon="gi-masks" />
+        <mat-icon>theater_comedy</mat-icon>
       </button>
-      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="gi-swords" /> Démarrer un combat</button>
+      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
       <a mat-icon-button class="cp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
-        <mat-icon svgIcon="gi-home" />
+        <mat-icon>home</mat-icon>
       </a>
     } @else {
       <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
-      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon svgIcon="gi-flag" /> Terminer</button>
+      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer</button>
     }
     <bol-account-menu />
   </div>

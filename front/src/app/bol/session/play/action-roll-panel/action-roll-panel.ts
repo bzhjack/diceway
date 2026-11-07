@@ -26,7 +26,7 @@ import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {DwRollSumComponent} from '../../../../shared/roll-sum/roll-sum';
 
 /** Icône de chaque attribut sur son médaillon. */
-const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'gi-sprint', vigueur: 'gi-biceps', esprit: 'gi-brain', aura: 'gi-aura'};
+const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'bolt', vigueur: 'fitness_center', esprit: 'visibility', aura: 'star'};
 
 /** Un dé lancé, tel qu'il s'affiche sur le plateau : sa face, et s'il est gardé (un dé de bonus ou de malus en écarte). */
 interface RolledDie {

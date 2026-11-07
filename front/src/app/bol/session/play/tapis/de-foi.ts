@@ -33,7 +33,7 @@ interface DonDeFoi {
         [attr.aria-label]="verrou() === null ? 'Dé de foi' : 'Dé de foi. ' + verrou()"
         [matTooltip]="aide()"
       >
-        <mat-icon svgIcon="gi-favor" aria-hidden="true" />
+        <mat-icon aria-hidden="true">wb_sunny</mat-icon>
       </button>
     </span>
     <span class="tas-tag">Foi</span>

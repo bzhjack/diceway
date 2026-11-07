@@ -2,7 +2,7 @@
   <!-- En haut à droite de la carte, comme pour la cible : sa fiche et ses effets, ce qu'il peut faire au lieu d'attaquer, et « Fin du tour » -->
   <div ccActions class="tas-head-actions">
     <button type="button" class="tas-ib" aria-label="Voir la fiche" matTooltip="Voir la fiche" (click)="turn.sheetRequested.emit(turn.card())">
-      <mat-icon svgIcon="gi-sheet" aria-hidden="true" />
+      <mat-icon aria-hidden="true">description</mat-icon>
     </button>
     <button
       type="button"
@@ -16,7 +16,7 @@
       matTooltip="Effets en cours"
       (click)="turn.togglePop('effets')"
     >
-      <mat-icon svgIcon="gi-sparkles" aria-hidden="true" />
+      <mat-icon aria-hidden="true">auto_awesome</mat-icon>
       @if (cible.effetsCount() > 0) {
         <b class="tas-count tas-count--corner" aria-hidden="true">{{ cible.effetsCount() }}</b>
       }
@@ -39,11 +39,11 @@
     <!-- Ce qu'il peut faire au lieu d'attaquer, en icônes rondes : secourir un héros mourant, retarder son action -->
     @if (turn.canRescue()) {
       <button type="button" class="tas-ib" [disabled]="flow.attaqueEngagee()" aria-label="Secourir" matTooltip="Secourir : stabiliser un héros mourant, à la place de l’attaque. Termine le tour." (click)="turn.rescueRequested.emit()">
-        <mat-icon svgIcon="gi-rescue" aria-hidden="true" />
+        <mat-icon aria-hidden="true">medical_services</mat-icon>
       </button>
     }
     <button type="button" class="tas-ib" [disabled]="flow.attaqueEngagee()" aria-label="Retarder" matTooltip="Retarder : passe son tour en fin de round" (click)="turn.delayRequested.emit()">
-      <mat-icon svgIcon="gi-wait" aria-hidden="true" />
+      <mat-icon aria-hidden="true">hourglass_empty</mat-icon>
     </button>
     <!-- Quand la ligne des dégâts porte « Fin du tour » (coup raté ou joué), celui de la carte s'efface, sauf en défense totale -->
     @if (loadout.defenseTotale() || !flow.endTurnInLine()) {
@@ -219,7 +219,7 @@
         <ul class="tas-picks tas-picks--arme" aria-label="Attaque sans arme">
           <li>
             <span class="tas-pick tas-pick--arme tas-pick--fige" role="img" [attr.aria-label]="'Dégâts, ' + p.degats">
-              <span class="tas-med tas-med--arme" aria-hidden="true"><mat-icon [svgIcon]="turn.attaqueIcone()" /></span>
+              <span class="tas-med tas-med--arme" aria-hidden="true">@if (turn.attaqueIconeSvg()) {<mat-icon svgIcon="sword" />} @else {<mat-icon>{{ turn.attaqueIcone() }}</mat-icon>}</span>
               <em aria-hidden="true">{{ p.degats }}</em>
             </span>
           </li>
@@ -308,7 +308,7 @@
           <ul class="tas-picks tas-picks--arme" aria-label="Attaque sans arme">
             <li>
               <span class="tas-pick tas-pick--arme tas-pick--fige" role="img" [attr.aria-label]="'Dégâts, ' + turn.card().degats">
-                <span class="tas-med tas-med--arme" aria-hidden="true"><mat-icon [svgIcon]="turn.attaqueIcone()" /></span>
+                <span class="tas-med tas-med--arme" aria-hidden="true">@if (turn.attaqueIconeSvg()) {<mat-icon svgIcon="sword" />} @else {<mat-icon>{{ turn.attaqueIcone() }}</mat-icon>}</span>
                 <em aria-hidden="true">{{ turn.card().degats }}</em>
               </span>
             </li>

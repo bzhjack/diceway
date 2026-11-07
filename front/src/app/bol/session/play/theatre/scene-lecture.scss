@@ -236,17 +236,6 @@
 }
 
 // Le crédit des icônes (licence CC BY), tout au bout des notes.
-.lec-credit {
-  flex: none;
-  margin: 0.4rem 0 0;
-  color: var(--dw-surface-600);
-  font-size: 0.68rem;
-
-  a {
-    color: inherit;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .lec-chevron {
     transition: none;

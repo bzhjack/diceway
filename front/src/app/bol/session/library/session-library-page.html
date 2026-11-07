@@ -19,7 +19,7 @@
           </button>
         </div>
         <button mat-stroked-button routerLink="/">
-          <mat-icon svgIcon="gi-return" /> Retour à l'accueil
+          <mat-icon>arrow_back</mat-icon> Retour à l'accueil
         </button>
       </ng-container>
     </dw-library-header>
@@ -51,7 +51,7 @@
                 (click)="askDelete(session)"
                 [attr.aria-label]="'Supprimer ' + (session.titre || 'cette partie')"
               >
-                <mat-icon svgIcon="gi-trash" />
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
@@ -67,11 +67,5 @@
       </div>
     </mat-card>
 
-    <p class="dw-forge-credit">
-      Icônes :
-      <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-      (Lorc, Delapouite et contributeurs),
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-    </p>
   </div>
 </section>

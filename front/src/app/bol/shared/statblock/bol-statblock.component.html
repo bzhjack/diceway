@@ -7,7 +7,7 @@
           <img class="bs-portrait-img" [src]="imageSrc()" alt="" (error)="onAvatarError()" />
         </button>
       } @else {
-        <mat-icon [svgIcon]="kindIcon()" />
+        <mat-icon>{{ kindIcon() }}</mat-icon>
       }
     </div>
 
@@ -38,11 +38,11 @@
     <div class="bs-actions">
       @if (data().editRoute) {
         <a mat-stroked-button class="bs-edit" [routerLink]="data().editRoute" [state]="navigationState()">
-          <mat-icon svgIcon="gi-quill" /> Modifier la fiche
+          <mat-icon>edit</mat-icon> Modifier la fiche
         </a>
         @if (data().advancedEditRoute) {
           <a mat-stroked-button class="bs-edit" [routerLink]="data().advancedEditRoute" [state]="navigationState()">
-            <mat-icon svgIcon="gi-tune" /> Édition avancée
+            <mat-icon>tune</mat-icon> Édition avancée
           </a>
         }
       }

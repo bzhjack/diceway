@@ -9,7 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
     <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
       <div class="flex items-center gap-3">
         <div class="dw-fh-icon">
-          <mat-icon [svgIcon]="icon()" />
+          <mat-icon>{{ icon() }}</mat-icon>
         </div>
         <div class="space-y-1">
           <p class="dw-fh-eyebrow">{{ eyebrow() }}</p>

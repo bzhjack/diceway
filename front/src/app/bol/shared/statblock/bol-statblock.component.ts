@@ -13,7 +13,7 @@ import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 const KIND_LABEL: Record<SheetKind, string> = {hero: 'Héros', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
-const KIND_ICON: Record<SheetKind, string> = {hero: 'gi-sword', pnj: 'gi-group', creature: 'gi-paw', demon: 'gi-demon'};
+const KIND_ICON: Record<SheetKind, string> = {hero: 'person', pnj: 'group', creature: 'pets', demon: 'bolt'};
 
 /** Une famille de tuiles du statbloc : son titre et ses chiffres. */
 interface TileGroup {

@@ -41,7 +41,7 @@ import {acteLabel} from './theatre.util';
               >
                 <span class="sca-num" aria-hidden="true">
                   @if (acte.statut === 'jouee') {
-                    <mat-icon svgIcon="gi-check" />
+                    <mat-icon>check</mat-icon>
                   } @else {
                     {{ acte.numero }}
                   }

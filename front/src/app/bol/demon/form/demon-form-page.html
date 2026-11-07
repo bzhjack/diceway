@@ -3,9 +3,9 @@
     <mat-card appearance="outlined">
       <mat-card-content>
         <form class="dw-creation-form" (submit)="onFormSubmit($event)">
-          <dw-form-header icon="gi-demon" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
+          <dw-form-header icon="bolt" [eyebrow]="pageEyebrow()" [title]="pageTitle()">
             <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
-              <mat-icon svgIcon="gi-return" />
+              <mat-icon>arrow_back</mat-icon>
               {{ returnUrl() === '/library/demons' ? 'Retour à la bibliothèque' : 'Retour' }}
             </button>
 
@@ -14,7 +14,7 @@
               type="submit"
               [disabled]="pending() || loading() || demonForm().invalid()"
             >
-              <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+              <mat-icon>check</mat-icon> {{ submitLabel() }}
               @if (formDirty()) {
                 <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
               }
@@ -72,12 +72,6 @@
             }
           </div>
 
-          <p class="dw-forge-credit">
-            Icônes :
-            <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>
-            (Lorc, Delapouite et contributeurs),
-            <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>
-          </p>
         </form>
       </mat-card-content>
     </mat-card>

@@ -22,7 +22,7 @@ import {MatIconModule} from '@angular/material/icon';
                 <mat-icon>close</mat-icon> Annuler
               </button>
               <button mat-flat-button [disabled]="submitting()" (click)="submitted.emit()">
-                <mat-icon svgIcon="gi-check" /> {{ submitLabel() }}
+                <mat-icon>check</mat-icon> {{ submitLabel() }}
               </button>
             </div>
           </div>

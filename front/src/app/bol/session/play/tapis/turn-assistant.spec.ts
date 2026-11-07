@@ -323,14 +323,14 @@ describe('TurnAssistantComponent', () => {
       const zone = element.querySelector('.tas-zone--armes')!;
       const cas = zone.querySelector('.tas-pick--fige');
       expect(cas?.getAttribute('aria-label')).toBe('Dégâts, d6B');
-      expect(cas?.querySelector('mat-icon')?.getAttribute('data-mat-icon-name')).toBe('gi-paw');
+      expect(cas?.querySelector('mat-icon')?.textContent?.trim()).toBe('pets');
       expect(cas?.querySelector('em')?.textContent?.trim()).toBe('d6B');
     });
 
     it('un démon frappe avec son icône de démon', async () => {
       await rendre({card: carte({kind: 'demon', degats: 'd6+1'}), armes: [], ownedArmes: []});
 
-      expect(element.querySelector('.tas-zone--armes .tas-pick--fige mat-icon')?.getAttribute('data-mat-icon-name')).toBe('gi-demon');
+      expect(element.querySelector('.tas-zone--armes .tas-pick--fige mat-icon')?.textContent?.trim()).toBe('bolt');
     });
   });
 
