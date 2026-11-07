@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolAccueilModel, BolAccueilPartie, BolAccueilScenario} from '../../models/bol-accueil.model';
-import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosDuCompte, scenariosLibresPour, situerScenario, teinteDeScenario} from './accueil.util';
+import {bandeauDePartie, chapitresDuScenario, depuisQuand, partiesDeLAccueil, pluriel, scenariosDuCompte, scenariosLibresPour, situerScenario, teinteDeScenario} from './accueil.util';
 import {chapitre} from '../chapitre.testing';
 
 const S: BolAccueilScenario[] = [
@@ -237,7 +237,7 @@ describe('bandeauDePartie', () => {
     {id: 's4', titre: 'La nuit'},
   ];
 
-  it('dit où en est l’histoire : la saga, le chapitre sur ceux de la saga, la scène, la compagnie et ses héros', () => {
+  it('dit où en est l’histoire : la saga, le chapitre, la scène, la compagnie et ses héros', () => {
     const bandeau = bandeauDePartie(
       partie({
         statut: 'combat',
@@ -254,10 +254,8 @@ describe('bandeauDePartie', () => {
       id: 't',
       histoire: 'Perle du Beshaar',
       teinte: 3,
-      chapitre: 'Chapitre 1 sur 3',
-      scene: 'Scène 4 sur 4',
       titre: 'Les Lames de Satarla',
-      sceneEnCours: 'La nuit',
+      ligne: {avant: '1. Sacrilège à Satarla — scène 4 sur 4 : ', scene: 'La nuit', apres: ' · combat engagé'},
       enCombat: true,
       scenes: [
         {etat: 'jouee', texte: 'Scène 1, La taverne : jouée'},
@@ -265,7 +263,6 @@ describe('bandeauDePartie', () => {
         {etat: 'a-jouer', texte: 'Scène 3, Le temple : à jouer'},
         {etat: 'en-cours', texte: 'Scène 4, La nuit : en cours'},
       ],
-      scenesJouees: '2 scènes jouées sur 4',
       heros: [{id: 'h1', nom: 'Axel', portrait: null, initiale: 'A'}],
       filAriane: 'Les Lames de Satarla › Perle du Beshaar › Chapitre 1 › Scène 4 · La nuit',
     });
@@ -273,24 +270,62 @@ describe('bandeauDePartie', () => {
 
   it('nomme l’introduction, et un chapitre sans numéro par son nom', () => {
     expect(bandeauDePartie(partie({scenario_id: 'dvi'}), S)).toMatchObject({
-      chapitre: 'Introduction',
-      scene: null,
-      scenesJouees: null,
+      ligne: {avant: 'Introduction : La colère de Nemmereth', scene: null, apres: ''},
       filAriane: 'Les Lames de Satarla › Le Dieu voilé › Introduction',
     });
-    expect(bandeauDePartie(partie({scenario_id: 'clm'}), S)).toMatchObject({chapitre: null, filAriane: 'Les Lames de Satarla › Chroniques lémuriennes › Mariage amer'});
+    expect(bandeauDePartie(partie({scenario_id: 'clm'}), S)).toMatchObject({
+      ligne: {avant: 'Mariage amer', scene: null, apres: ''},
+      filAriane: 'Les Lames de Satarla › Chroniques lémuriennes › Mariage amer',
+    });
   });
 
   it('dit « One shot » hors saga, « Sans scénario » quand on improvise, « Table sans nom » sans nom', () => {
-    expect(bandeauDePartie(partie({scenario_id: 'ps'}), S)).toMatchObject({histoire: 'One shot', chapitre: null, teinte: 0});
+    expect(bandeauDePartie(partie({scenario_id: 'ps'}), S)).toMatchObject({histoire: 'One shot', teinte: 0});
     expect(bandeauDePartie(partie({scenario_id: null, titre: null}), S)).toMatchObject({
       histoire: 'Sans scénario',
       titre: 'Table sans nom',
+      ligne: null,
       filAriane: 'Table sans nom › Sans scénario',
     });
   });
 
+  it('dit le combat d’une partie improvisée, seul', () => {
+    expect(bandeauDePartie(partie({scenario_id: null, statut: 'combat'}), S).ligne).toEqual({avant: '', scene: null, apres: 'Combat engagé'});
+  });
+
   it('ne situe pas une scène qui n’est pas de ce chapitre', () => {
-    expect(bandeauDePartie(partie({scenes: SCENES, scene_id: 'ailleurs'}), S)).toMatchObject({scene: null, sceneEnCours: null});
+    expect(bandeauDePartie(partie({scenario_id: 'p1', scenes: SCENES, scene_id: 'ailleurs'}), S).ligne).toEqual({
+      avant: '1. Sacrilège à Satarla',
+      scene: null,
+      apres: '',
+    });
+  });
+});
+
+describe('depuisQuand', () => {
+  const maintenant = new Date(2026, 10, 7, 21, 0);
+  const il = (jours: number) => new Date(2026, 10, 7 - jours, 20, 0).toISOString();
+
+  it('compte en jours du calendrier : aujourd’hui, hier, puis il y a…', () => {
+    expect(depuisQuand(il(0), maintenant)).toBe('aujourd’hui');
+    expect(depuisQuand(il(1), maintenant)).toBe('hier');
+    expect(depuisQuand(il(3), maintenant)).toBe('il y a 3 jours');
+    expect(depuisQuand(il(7), maintenant)).toBe('il y a 1 semaine');
+    expect(depuisQuand(il(20), maintenant)).toBe('il y a 2 semaines');
+    expect(depuisQuand(il(95), maintenant)).toBe('il y a 3 mois');
+    expect(depuisQuand(il(800), maintenant)).toBe('il y a 2 ans');
+  });
+
+  it('ne dit rien sans date, ou d’une date illisible', () => {
+    expect(depuisQuand(null, maintenant)).toBeNull();
+    expect(depuisQuand('pas une date', maintenant)).toBeNull();
+  });
+});
+
+describe('pluriel', () => {
+  it('accorde au-delà de un', () => {
+    expect(pluriel(0, 'arme')).toBe('0 arme');
+    expect(pluriel(1, 'arme')).toBe('1 arme');
+    expect(pluriel(54, 'arme')).toBe('54 armes');
   });
 });

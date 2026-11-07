@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Frontend**: Angular 22 app in `/front/`
 - **Backend**: Laravel 13 REST API in `/backend/`
 - Game documentation: one folder per game under `/doc/` — `/doc/bol/` (Barbarians of Lemuria), `/doc/cyberpunk/` (Cyberpunk RED, being modelled; rules in `doc/cyberpunk/rules/` from `00-index.md`, reference data in `doc/cyberpunk/resources/`, rulebook text in `doc/cyberpunk/pdf-text/`, PDF page = book page + 4); layout in `doc/README.md`
+- **Reference screen**: the smallest screen Diceway is designed for is a desktop browser window of about **1440 × 704 CSS px** (the home page was given as the reference on 2026-11-07: a 1795 × 880 px capture at 125 % scaling, where `.acc-cadre`, 1360 CSS px, measures 1700 px). Lay out and mock up screens at that size first: what a screen is for should fit without scrolling. No phone or tablet layouts.
 
 
 ## Commands

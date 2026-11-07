@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
@@ -22,35 +22,46 @@ import {CompagnieDialogData} from '../models/compagnie-dialog.model';
 import {OpenTableData, OpenTableResultat} from '../models/open-table.model';
 import {CompagnieDialogComponent} from '../new/compagnie-dialog/compagnie-dialog';
 import {OpenTableDialogComponent} from '../new/open-table-dialog/open-table-dialog';
-import {bandeauDePartie, chapitresDuScenario, partiesDeLAccueil, scenariosLibresPour} from './accueil.util';
+import {bandeauDePartie, chapitresDuScenario, depuisQuand, partiesDeLAccueil, pluriel, scenariosLibresPour} from './accueil.util';
 import {ignoresMessage} from '../play/scene-list/scene.util';
 import {libelleDeChapitre} from '../scenario.util';
 
 interface AccueilBibliotheque {
-  readonly cle: keyof BolAccueilComptes;
+  /** Son illustration (`acc-biblio--<cle>`). */
+  readonly cle: string;
   readonly label: string;
   readonly route: string;
-  /** Le lien pour créer une fiche de cette bibliothèque, quand il y en a un. */
-  readonly creer?: {readonly route: string; readonly ariaLabel: string};
+  readonly compte: (comptes: BolAccueilComptes) => number;
+  /** Une ligne sous le nom, quand la tuile en regroupe plusieurs. */
+  readonly detail?: (comptes: BolAccueilComptes) => string;
+  /** De quoi créer une fiche de cette bibliothèque : une page, ou (route null) le dialogue « Nouvelle compagnie ». */
+  readonly creer?: {readonly route: string | null; readonly ariaLabel: string};
 }
 
 const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
-  {cle: 'heros', label: 'Héros', route: '/library/heroes', creer: {route: '/create/hero', ariaLabel: 'Créer un héros'}},
-  {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', creer: {route: '/create/pnj', ariaLabel: 'Créer un PNJ'}},
-  {cle: 'creatures', label: 'Créatures', route: '/library/creatures', creer: {route: '/create/creature', ariaLabel: 'Créer une créature'}},
-  {cle: 'demons', label: 'Démons', route: '/library/demons', creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
-  {cle: 'armes', label: 'Armes', route: '/library/weapons'},
-  {cle: 'armures', label: 'Armures', route: '/library/armors'},
-  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies'},
-  {cle: 'sessions', label: 'Parties', route: '/library/sessions'},
+  {cle: 'heros', label: 'Héros', route: '/library/heroes', compte: (c) => c.heros, creer: {route: '/create/hero', ariaLabel: 'Créer un héros'}},
+  {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', compte: (c) => c.pnjs, creer: {route: '/create/pnj', ariaLabel: 'Créer un PNJ'}},
+  {cle: 'creatures', label: 'Créatures', route: '/library/creatures', compte: (c) => c.creatures, creer: {route: '/create/creature', ariaLabel: 'Créer une créature'}},
+  {cle: 'demons', label: 'Démons', route: '/library/demons', compte: (c) => c.demons, creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
+  {
+    cle: 'intendance',
+    label: 'Intendance',
+    route: '/intendance',
+    compte: (c) => c.armes + c.armures,
+    detail: (c) => `${pluriel(c.armes, 'arme')} · ${pluriel(c.armures, 'armure')}`,
+  },
+  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies', compte: (c) => c.compagnies, creer: {route: null, ariaLabel: 'Nouvelle compagnie'}},
 ];
 
-/** Accueil, sur `/` : la dernière partie jouée (où en est son histoire, scénario › chapitre › scène, et sa compagnie) à reprendre, puis
- * toutes les parties en carrousel (leur compagnie, leur scénario, leurs chapitres en pastilles pour elles, de quoi les reprendre, changer
- * de chapitre ou les supprimer), puis les bibliothèques avec leur nombre de fiches et de quoi en créer. */
+/** Les autres parties que la colonne du bandeau montre ; les suivantes sont dans « Toutes les parties ». */
+const AUTRES_PARTIES = 4;
+
+/** Accueil, sur `/` : en grand, la dernière partie jouée (son scénario, sa compagnie, ses chapitres et les scènes du chapitre en cours, ses
+ * héros) à reprendre, et à côté les autres parties récentes (de quoi les reprendre, changer de chapitre ou les supprimer) ; puis les
+ * bibliothèques avec leur nombre de fiches et de quoi en créer. Le tout tient sur l'écran de référence (1440 × 704). */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
+  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,10 +79,6 @@ export class AccueilPageComponent {
   protected readonly error = signal(false);
   /** L'accueil n'a pas encore répondu : on ne sait pas encore s'il y a des parties. */
   protected readonly chargement = computed(() => this.data() === null && !this.error());
-  /** Le carrousel des parties est à son début, à sa fin (les deux : tout tient, sans flèches). */
-  protected readonly railDebut = signal(true);
-  protected readonly railFin = signal(true);
-  private readonly rail = viewChild<ElementRef<HTMLElement>>('rail');
 
   protected readonly parties = computed(() => {
     const data = this.data();
@@ -79,11 +86,31 @@ export class AccueilPageComponent {
   });
 
   /** La dernière partie jouée, pour le bandeau ; null sans partie. */
-  protected readonly bandeau = computed(() => {
+  private readonly derniereLue = computed(() => {
     const data = this.data();
-    const derniere = data?.parties.find((partie) => partie.id === data.derniere);
-    return data && derniere ? bandeauDePartie(derniere, data.scenarios) : null;
+    return data?.parties.find((partie) => partie.id === data.derniere) ?? null;
   });
+
+  protected readonly bandeau = computed(() => {
+    const derniere = this.derniereLue();
+    return derniere ? bandeauDePartie(derniere, this.data()?.scenarios ?? []) : null;
+  });
+
+  /** Sa carte : son scénario, ses chapitres en pastilles, ce que son menu propose. */
+  protected readonly derniere = computed(() => this.parties().find((partie) => partie.derniere) ?? null);
+
+  /** « hier », « il y a 3 jours »… ; null sans date. */
+  protected readonly jouee = computed(() => depuisQuand(this.derniereLue()?.jouee_le ?? null, new Date()));
+
+  /** Après quelle pastille vient la barre des scènes : le chapitre en cours, sinon le dernier (-1 sans pastille : la barre seule). */
+  protected readonly placeDesScenes = computed(() => {
+    const reperes = this.derniere()?.reperes ?? [];
+    const enCours = reperes.findIndex((repere) => repere.etat === 'en-cours');
+    return enCours >= 0 ? enCours : reperes.length - 1;
+  });
+
+  /** Les autres parties, de la plus récemment jouée à la plus ancienne, les premières seulement. */
+  protected readonly autres = computed(() => this.parties().filter((partie) => !partie.derniere).slice(0, AUTRES_PARTIES));
 
   /** Pas de partie sans compagnie : « + Partie » attend qu'il y en ait une. */
   protected readonly aDesCompagnies = computed(() => (this.data()?.compagnies.length ?? 0) > 0);
@@ -96,7 +123,14 @@ export class AccueilPageComponent {
 
   protected readonly bibliotheques = computed(() => {
     const comptes = this.data()?.comptes ?? null;
-    return BIBLIOTHEQUES.map((bibliotheque) => ({...bibliotheque, compte: comptes ? comptes[bibliotheque.cle] : null}));
+    return BIBLIOTHEQUES.map((bibliotheque) => ({
+      cle: bibliotheque.cle,
+      label: bibliotheque.label,
+      route: bibliotheque.route,
+      creer: bibliotheque.creer ?? null,
+      compte: comptes ? bibliotheque.compte(comptes) : null,
+      detail: comptes && bibliotheque.detail ? bibliotheque.detail(comptes) : null,
+    }));
   });
 
   constructor() {
@@ -117,37 +151,6 @@ export class AccueilPageComponent {
         this.nouvellePartie(scenario);
       }
     });
-    // Le carrousel n'existe qu'une fois l'accueil arrivé ; sa largeur change avec la fenêtre.
-    effect((onCleanup) => {
-      const rail = this.rail()?.nativeElement;
-      if (!rail || typeof ResizeObserver === 'undefined') {
-        return;
-      }
-      const observateur = new ResizeObserver(() => this.mesurerRail());
-      observateur.observe(rail);
-      onCleanup(() => observateur.disconnect());
-    });
-  }
-
-  protected mesurerRail(): void {
-    const rail = this.rail()?.nativeElement;
-    if (!rail) {
-      return;
-    }
-    this.railDebut.set(rail.scrollLeft <= 1);
-    this.railFin.set(rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 1);
-  }
-
-  /** Une carte de plus ou de moins ; le magnétisme du carrousel la cale contre le bord. */
-  protected defiler(sens: 1 | -1): void {
-    const rail = this.rail()?.nativeElement;
-    if (!rail) {
-      return;
-    }
-    const carte = rail.firstElementChild instanceof HTMLElement ? rail.firstElementChild.offsetWidth : rail.clientWidth;
-    const ecart = parseFloat(getComputedStyle(rail).columnGap) || 0;
-    const doux = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-    rail.scrollBy({left: sens * (carte + ecart), behavior: doux ? 'smooth' : 'auto'});
   }
 
   /** Le dialogue « Nouvelle partie » : une compagnie sur un scénario, avec ce que l'accueil a déjà lu. Il mène à la table ; s'il manque une

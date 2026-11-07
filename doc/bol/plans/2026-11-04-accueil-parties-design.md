@@ -16,6 +16,14 @@ un nom de compagnie et un scénario.
 > « + Partie » associe une compagnie à un scénario. Une compagnie joue plusieurs scénarios, chacun une fois ; la modifier vaut pour ses
 > prochaines parties. Là où ce document décrit « Nouvelle partie » avec le nom et les héros, cette mise à jour l'emporte. Voir `CLAUDE.md`.
 
+> **Mise à jour du 2026-11-07 : la dernière partie, puis les bibliothèques (maquette D).** L'accueil tient sur l'écran de référence
+> (1440 × 704 px CSS). Le bandeau est titré par le **scénario** de la dernière partie jouée (« avec » sa compagnie, « jouée hier ») ; une seule
+> progression : les pastilles des chapitres, avec la barre des scènes après celui en cours ; puis « Reprendre », son menu et ses héros. À sa
+> droite, une colonne « Autres parties » : les 4 plus récentes, une ligne chacune (scénario, compagnie, chapitre) qui mène à la table, son
+> menu, « + Partie » et « Toutes les parties » (`/library/sessions`). Le carrousel des cartes et le fil « Chapitre n sur m › Scène n sur m »
+> disparaissent. Les bibliothèques suivent en six grandes tuiles : Héros, PNJ, Créatures, Démons, Intendance (armes et armures), Compagnies.
+> Là où ce document décrit la rangée « Parties » et ses cartes, cette mise à jour l'emporte.
+
 ## Vocabulaire
 
 - **Partie** : une table (`BolFightSession`) vue depuis l'accueil, c'est-à-dire une compagnie (son nom, `titre`) qui joue un scénario.

@@ -3,6 +3,7 @@ import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 import {
   AccueilBandeau,
   AccueilHerosCarte,
+  AccueilLigneScene,
   AccueilPartie,
   AccueilRepere,
   AccueilScenarioChoix,
@@ -170,9 +171,9 @@ export function situerScenario(scenario: BolAccueilScenario, scenarios: readonly
 const ETAT_SCENE: Record<SceneEtat, string> = {jouee: 'jouée', 'en-cours': 'en cours', 'a-jouer': 'à jouer'};
 
 /**
- * La dernière partie jouée pour le bandeau : le fil de l'histoire (la saga de son chapitre, « One shot » pour un chapitre hors saga, « Sans
- * scénario » quand on improvise ; le chapitre ; la scène en cours et sa place), le nom de la compagnie, la barre des scènes du chapitre et
- * ses héros.
+ * La dernière partie jouée pour le bandeau : ce qu'on dit de son histoire (la saga de son chapitre, « One shot » pour un chapitre hors saga,
+ * « Sans scénario » quand on improvise), le nom de la compagnie, la ligne de la scène en cours (son chapitre, sa place, le combat), la barre
+ * des scènes du chapitre et ses héros.
  */
 export function bandeauDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilScenario[]): AccueilBandeau {
   const scenario = findScenario(scenarios, partie.scenario_id);
@@ -187,23 +188,59 @@ export function bandeauDePartie(partie: BolAccueilPartie, scenarios: readonly Bo
   });
   const indexEnCours = partie.scenes.findIndex((scene) => scene.id === partie.scene_id);
   const enCours = indexEnCours >= 0 ? partie.scenes[indexEnCours] : null;
-  const nbJouees = scenes.filter((scene) => scene.etat === 'jouee').length;
   const chapitre = situe ? (situe.chapitreCourt ?? (situe.saga ? situe.nom : null)) : null;
+  const enCombat = partie.statut === 'combat';
 
   return {
     id: partie.id,
     histoire,
     teinte: teinteDeScenario(scenario?.id ?? null, scenarios),
-    chapitre: situe?.chapitre ?? null,
-    scene: enCours ? `Scène ${indexEnCours + 1} sur ${scenes.length}` : null,
     titre,
-    sceneEnCours: enCours?.titre ?? null,
-    enCombat: partie.statut === 'combat',
+    ligne: ligneDeScene(scenario ? libelleDeChapitre(scenario.numero, scenario.titre) : null, enCours ? {place: `scène ${indexEnCours + 1} sur ${scenes.length}`, titre: enCours.titre} : null, enCombat),
+    enCombat,
     scenes,
-    scenesJouees: scenes.length ? `${nbJouees} ${nbJouees > 1 ? 'scènes jouées' : 'scène jouée'} sur ${scenes.length}` : null,
     heros: herosCartes(partie.heros),
     filAriane: [titre, histoire, chapitre, enCours ? `Scène ${indexEnCours + 1} · ${enCours.titre}` : null]
       .filter((morceau): morceau is string => morceau !== null)
       .join(' › '),
   };
+}
+
+/** « 1. Sacrilège à Satarla — scène 2 sur 3 : » + le nom de la scène + « · combat engagé » ; ce qui manque n'y est pas. */
+function ligneDeScene(chapitre: string | null, scene: {place: string; titre: string} | null, enCombat: boolean): AccueilLigneScene | null {
+  const avant = scene ? `${chapitre ? `${chapitre} — ` : ''}${scene.place} : ` : (chapitre ?? '');
+  const apres = enCombat ? (avant ? ' · combat engagé' : 'Combat engagé') : '';
+  return avant || apres ? {avant, scene: scene?.titre ?? null, apres} : null;
+}
+
+/** Depuis quand une partie n'a pas été jouée, en jours du calendrier : « aujourd'hui », « hier », « il y a 3 jours », « il y a 2 semaines »,
+ * « il y a 4 mois », « il y a 1 an » ; null sans date. */
+export function depuisQuand(iso: string | null, maintenant: Date): string | null {
+  const jouee = iso ? new Date(iso) : null;
+  if (!jouee || Number.isNaN(jouee.getTime())) {
+    return null;
+  }
+  const jour = (d: Date) => Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+  const jours = Math.round((jour(maintenant) - jour(jouee)) / 86_400_000);
+  if (jours <= 0) {
+    return 'aujourd’hui';
+  }
+  if (jours === 1) {
+    return 'hier';
+  }
+  if (jours < 7) {
+    return `il y a ${jours} jours`;
+  }
+  if (jours < 30) {
+    return `il y a ${pluriel(Math.floor(jours / 7), 'semaine')}`;
+  }
+  if (jours < 365) {
+    return `il y a ${Math.floor(jours / 30)} mois`;
+  }
+  return `il y a ${pluriel(Math.floor(jours / 365), 'an')}`;
+}
+
+/** « 1 arme », « 54 armes ». */
+export function pluriel(n: number, mot: string): string {
+  return `${n} ${mot}${n > 1 ? 's' : ''}`;
 }

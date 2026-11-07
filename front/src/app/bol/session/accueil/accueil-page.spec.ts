@@ -138,24 +138,30 @@ describe('AccueilPageComponent', () => {
   const texte = (el: Element | null | undefined) => el?.textContent?.trim().replace(/\s+/g, ' ') ?? null;
   const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
   const item = (libelle: string) => items().find((b) => texte(b)?.includes(libelle))!;
-  const cartes = (page: HTMLElement) => [...page.querySelectorAll('.acc-partie')];
+  const autres = (page: HTMLElement) => [...page.querySelectorAll('.acc-autre')];
 
-  it('montre la dernière partie jouée en tête : où elle en est, qui y est assis, et de quoi la reprendre', async () => {
+  it('montre la dernière partie jouée en grand : son scénario, sa compagnie, où elle en est, qui y est assis, de quoi la reprendre', async () => {
     const page = await rendre();
-    const fil = [...page.querySelectorAll('.acc-soir nav li')].map((li) => texte(li));
+    const soir = page.querySelector('.acc-soir')!;
 
-    expect(fil).toEqual(['Dernière partie jouée · Perle du Beshaar', 'Chapitre 1 sur 2', 'Scène 2 sur 3']);
-    expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Les Lames de Satarla');
-    expect(page.querySelector('.acc-soir-scene')?.textContent).toBe('La nuit du coup fourré');
-    expect([...page.querySelectorAll('.acc-scene')].map((li) => li.className)).toEqual([
+    expect(texte(soir.querySelector('.acc-soir-surtitre'))).toContain('Dernière partie jouée');
+    expect(texte(soir.querySelector('.acc-soir-titre'))).toBe('Perle du Beshaar');
+    expect(texte(soir.querySelector('.acc-soir-compagnie'))).toBe('avec Les Lames de Satarla');
+    expect([...soir.querySelectorAll('.acc-repere')].map((r) => r.querySelector('.sr-only')?.textContent)).toEqual([
+      '1. Sacrilège à Satarla : en cours',
+      "2. De sable et d'eau : à jouer",
+    ]);
+    expect([...soir.querySelectorAll('.acc-scene')].map((li) => li.className)).toEqual([
       'acc-scene acc-scene--jouee',
       'acc-scene acc-scene--en-cours',
       'acc-scene acc-scene--a-jouer',
     ]);
-    const heros = [...page.querySelectorAll('.acc-soir .acc-heros')];
+    expect(texte(soir.querySelector('.acc-soir-texte'))).toBe('1. Sacrilège à Satarla — scène 2 sur 3 : La nuit du coup fourré');
+    expect(soir.querySelector('.acc-soir-scene')?.textContent).toBe('La nuit du coup fourré');
+    const heros = [...soir.querySelectorAll('.acc-heros')];
     expect(heros.map((h) => texte(h))).toEqual(['A Axel', 'jadawin']);
     expect(heros[1].querySelector('img')?.getAttribute('src')).toBe('/api/bol/portraits/abc.png');
-    expect(page.querySelector<HTMLAnchorElement>('.acc-soir-actions a')?.getAttribute('href')).toBe('/session/t1/play');
+    expect(soir.querySelector<HTMLAnchorElement>('.acc-soir-actions a')?.getAttribute('href')).toBe('/session/t1/play');
     expect(page.textContent).not.toContain('Clore');
   });
 
@@ -165,50 +171,50 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-soir-texte')?.textContent).toContain('La nuit du coup fourré · combat engagé');
   });
 
-  it('montre une carte par partie, la dernière jouée marquée, puis « Nouvelle partie »', async () => {
+  it('à côté, les autres parties : une ligne chacune, qui mène à sa table, puis « Toutes les parties »', async () => {
     const page = await rendre();
-    const [lames, fils, sansNom] = cartes(page);
+    const [fils, sansNom] = autres(page);
 
-    expect(cartes(page).map((c) => texte(c.querySelector('.acc-partie-nom')))).toEqual([
-      'Les Lames de Satarla',
-      'Les Fils du Serpent',
-      'Table sans nom',
-    ]);
-    expect(lames.querySelector('.acc-partie-derniere')).not.toBeNull();
-    expect(fils.querySelector('.acc-partie-derniere')).toBeNull();
-    expect(texte(fils.querySelector('.acc-partie-scenario'))).toBe('Perle du Beshaar');
-    expect(texte(sansNom.querySelector('.acc-partie-scenario'))).toBe('Partie improvisée');
-    expect([...fils.querySelectorAll('.acc-repere')].map((r) => r.querySelector('.sr-only')?.textContent)).toEqual([
-      '1. Sacrilège à Satarla : joué',
-      "2. De sable et d'eau : en cours",
-    ]);
-    expect(texte(fils.querySelector('.acc-partie-heros'))).toBe('Balaram');
-    const reprendre = fils.querySelector<HTMLAnchorElement>('a.acc-partie-reprendre')!;
-    expect(reprendre.getAttribute('href')).toBe('/session/t2/play');
-    expect(texte(reprendre.querySelector('.acc-partie-reprendre-label'))).toBe('Reprendre');
-    expect(texte(reprendre.querySelector('.acc-partie-reprendre-titre'))).toBe("2. De sable et d'eau");
-    expect(texte(sansNom.querySelector('.acc-partie-reprendre-titre'))).toBe('Partie improvisée');
+    expect(autres(page).length).toBe(2);
+    expect(texte(fils.querySelector('.acc-autre-scenario'))).toBe('Perle du Beshaar');
+    expect(texte(fils.querySelector('.acc-autre-detail'))).toBe("Les Fils du Serpent · 2. De sable et d'eau");
+    expect(texte(sansNom.querySelector('.acc-autre-scenario'))).toBe('Partie improvisée');
+    expect(texte(sansNom.querySelector('.acc-autre-detail'))).toBe('Table sans nom');
+    expect(fils.querySelectorAll('a').length).toBe(1);
+    expect(fils.querySelector('a')?.getAttribute('href')).toBe('/session/t2/play');
     expect(page.querySelector('.acc-partie-nouvelle')?.getAttribute('aria-label')).toBe('Nouvelle partie');
+    expect(page.querySelector('.acc-autres-toutes')?.getAttribute('href')).toBe('/library/sessions');
+  });
+
+  it('ne montre que les quatre autres parties les plus récentes', async () => {
+    const parties = [0, 1, 2, 3, 4, 5].map((i) => ({...DATA.parties[1], id: `x${i}`, titre: `Compagnie ${i}`}));
+    const page = await rendre(of({...DATA, parties: [DATA.parties[0], ...parties]}));
+
+    expect(autres(page).map((ligne) => texte(ligne.querySelector('.acc-autre-detail'))?.split(' · ')[0])).toEqual([
+      'Compagnie 0',
+      'Compagnie 1',
+      'Compagnie 2',
+      'Compagnie 3',
+    ]);
+  });
+
+  it('seule, la dernière partie le dit dans la colonne', async () => {
+    const page = await rendre(of({...DATA, parties: [DATA.parties[0]]}));
+
+    expect(autres(page)).toEqual([]);
+    expect(texte(page.querySelector('.acc-autres-vide'))).toBe('Aucune autre partie.');
   });
 
   it('sans légende, chaque pastille donne le nom de son chapitre en bulle', async () => {
     const page = await rendre();
 
     expect(page.querySelector('.acc-legende')).toBeNull();
-    const pastille = page.querySelector<HTMLElement>('.acc-partie .acc-repere')!;
+    const pastille = page.querySelector<HTMLElement>('.acc-soir .acc-repere')!;
     pastille.dispatchEvent(new MouseEvent('mouseenter'));
     await new Promise((resolve) => setTimeout(resolve, 0));
     await stable();
 
     expect(document.querySelector('.mat-mdc-tooltip')?.textContent).toContain('1. Sacrilège à Satarla');
-  });
-
-  it('seul le bloc « Reprendre » mène à la table', async () => {
-    const page = await rendre();
-    const carte = cartes(page)[1];
-
-    expect(carte.querySelectorAll('a').length).toBe(1);
-    expect(carte.querySelector('a')?.classList).toContain('acc-partie-reprendre');
   });
 
   it('« + Partie » ouvre le dialogue qui associe une compagnie à un scénario', async () => {
@@ -389,17 +395,17 @@ describe('AccueilPageComponent', () => {
     expect(accueil).toHaveBeenCalledTimes(2);
   });
 
-  it('une carte terminée le dit, et permet de se raviser', async () => {
-    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, scenario_termine: true} : p))}));
-    expect(texte(cartes(page)[0].querySelector('.acc-partie-reprendre-titre'))).toBe('Scénario terminé');
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+  it('une partie terminée le dit, et permet de se raviser', async () => {
+    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't2' ? {...p, scenario_termine: true} : p))}));
+    expect(texte(autres(page)[0].querySelector('.acc-autre-detail'))).toBe('Les Fils du Serpent · Scénario terminé');
+    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
     await stable();
 
     expect(item('Marquer le scénario terminé')).toBeUndefined();
     item('Scénario pas encore terminé').click();
     await stable();
 
-    expect(marquer).toHaveBeenCalledWith('t1', false);
+    expect(marquer).toHaveBeenCalledWith('t2', false);
   });
 
   it('une partie improvisée n’a pas de scénario à marquer', async () => {
@@ -449,38 +455,46 @@ describe('AccueilPageComponent', () => {
 
   it('une lecture réussie après un échec efface l’erreur : les parties réapparaissent', async () => {
     const page = await rendre(throwError(() => new Error('réseau')), of(DATA));
-    expect(page.querySelector('.acc-parties')).toBeNull();
+    expect(page.querySelector('.acc-autres')).toBeNull();
 
     page.querySelector<HTMLButtonElement>('.acc-entete-actions button')!.click();
     await stable();
     TestBed.tick();
 
     expect(page.querySelector('[role="alert"]')).toBeNull();
-    expect(cartes(page).length).toBe(3);
+    expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Perle du Beshaar');
+    expect(autres(page).length).toBe(2);
   });
 
-  it('compte les fiches de chaque bibliothèque et ne propose de créer que des fiches', async () => {
+  it('compte les fiches de chaque bibliothèque, l’intendance réunit armes et armures', async () => {
     const page = await rendre();
     const tuiles = [...page.querySelectorAll('.acc-biblio')];
 
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-lien')?.getAttribute('aria-label'))).toEqual([
-      'Héros, 5', 'PNJ, 196', 'Créatures, 103', 'Démons, 15', 'Armes, 54', 'Armures, 6', 'Compagnies, 2', 'Parties, 3',
+      'Héros, 5', 'PNJ, 196', 'Créatures, 103', 'Démons, 15', 'Intendance, 60', 'Compagnies, 2',
     ]);
+    expect(tuiles[4].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/intendance');
+    expect(texte(tuiles[4].querySelector('.acc-biblio-detail'))).toBe('54 armes · 6 armures');
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-plus')?.getAttribute('aria-label') ?? null)).toEqual([
-      'Créer un héros', 'Créer un PNJ', 'Créer une créature', 'Créer un démon', null, null, null, null,
+      'Créer un héros', 'Créer un PNJ', 'Créer une créature', 'Créer un démon', null, 'Nouvelle compagnie',
     ]);
   });
 
-  it('sans compagnie, dit qu’il en faut une pour lancer une partie, et grise « + Partie »', async () => {
+  it('le « + » des compagnies ouvre « Nouvelle compagnie »', async () => {
+    const page = await rendre();
+
+    page.querySelector<HTMLButtonElement>('button.acc-biblio-plus[aria-label="Nouvelle compagnie"]')!.click();
+
+    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
+  });
+
+  it('sans compagnie, dit qu’il en faut une pour lancer une partie, sans proposer de partie', async () => {
     const page = await rendre(of({...DATA, derniere: null, parties: [], compagnies: []}));
 
     expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Aucune compagnie');
     expect(texte(page.querySelector('.acc-soir-texte'))).toContain('Il faut d’abord créer une compagnie pour lancer une partie');
-    expect(page.querySelector('.acc-soir nav')).toBeNull();
-    expect(cartes(page)).toEqual([]);
-    const plus = page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!;
-    expect(plus.disabled).toBe(true);
-    expect(texte(page.querySelector('.acc-partie-nouvelle-note'))).toContain('Crée d’abord une compagnie');
+    expect(page.querySelector('.acc-autres')).toBeNull();
+    expect(page.querySelector('.acc-partie-nouvelle')).toBeNull();
 
     [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Nouvelle compagnie'))!.click();
 
@@ -491,8 +505,7 @@ describe('AccueilPageComponent', () => {
     const page = await rendre(of({...DATA, derniere: null, parties: []}));
 
     expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Aucune partie');
-    expect(page.querySelector<HTMLButtonElement>('.acc-partie-nouvelle')!.disabled).toBe(false);
-    expect(page.querySelector('.acc-partie-nouvelle-note')).toBeNull();
+    expect(page.querySelector('.acc-autres')).toBeNull();
 
     [...page.querySelectorAll<HTMLButtonElement>('.acc-soir button')].find((b) => b.textContent?.includes('Partie'))!.click();
 

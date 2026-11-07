@@ -78,26 +78,28 @@ export interface AccueilSceneRepere {
   texte: string;
 }
 
+/** Ce que le bandeau dit de la scène en cours, en trois morceaux pour mettre le nom de la scène en valeur : « 1. Sacrilège à Satarla — scène 2
+ * sur 3 : », « La nuit du coup fourré », « · combat engagé ». `scene` est null sans scène chargée de ce chapitre. */
+export interface AccueilLigneScene {
+  avant: string;
+  scene: string | null;
+  apres: string;
+}
+
 /**
- * La dernière partie jouée, pour le bandeau : le fil de l'histoire (le scénario, ou « One shot », ou « Sans scénario » ; le chapitre ; la
- * scène), le nom de la compagnie, la scène en cours, la barre des scènes du chapitre et ses héros. `filAriane` le redit en une ligne, pour
- * la barre compacte.
+ * La dernière partie jouée, pour le bandeau : ce qu'on en dit (le scénario, ou « One shot », ou « Sans scénario »), le nom de la compagnie,
+ * où en est la scène, la barre des scènes du chapitre et ses héros. `filAriane` le redit en une ligne, pour la barre compacte.
  */
 export interface AccueilBandeau {
   id: string;
   /** « Perle du Beshaar », « One shot » ou « Sans scénario ». */
   histoire: string;
   teinte: number;
-  /** « Chapitre 1 sur 5 », « Introduction » ; null hors saga ou pour un chapitre sans numéro. */
-  chapitre: string | null;
-  /** « Scène 7 sur 10 » ; null sans scène chargée de ce chapitre. */
-  scene: string | null;
   titre: string;
-  sceneEnCours: string | null;
+  /** Le chapitre en cours, la scène chargée, le combat ; null quand il n'y a rien à en dire (une partie improvisée sans scène, hors combat). */
+  ligne: AccueilLigneScene | null;
   enCombat: boolean;
   scenes: AccueilSceneRepere[];
-  /** « 5 scènes jouées sur 10 » ; null sans scène. */
-  scenesJouees: string | null;
   heros: AccueilHerosCarte[];
   filAriane: string;
 }

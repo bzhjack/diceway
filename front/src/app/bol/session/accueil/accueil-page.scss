@@ -4,6 +4,7 @@
   display: block;
 }
 
+// L'écran de référence (1440 × 704) montre tout l'accueil sans défiler : l'en-tête, la dernière partie et les bibliothèques.
 .acc-cadre {
   display: flex;
   flex-direction: column;
@@ -12,7 +13,7 @@
   margin: 0 auto;
 }
 
-// ── L'en-tête : le titre de l'écran, et à droite de quoi ouvrir une table et le compte ────────────────────────────────────────────
+// ── L'en-tête : le titre de l'écran, et à droite de quoi créer une compagnie et le compte ──────────────────────────────────────────
 .acc-entete {
   display: flex;
   flex-wrap: wrap;
@@ -51,92 +52,63 @@
   gap: 0.5rem;
 }
 
-// ── La table ouverte : l'illustration du tableau de bord, sous un voile qui garde le texte lisible ─────────────────────────────────
+// ── Le bandeau : la dernière partie sur l'illustration du tableau de bord, et à sa droite la colonne des autres parties ─────────────
 .acc-soir {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   min-width: 0;
-  min-height: 21rem;
+  min-height: 20rem;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--dw-forge-recess);
   box-shadow:
-    0 0 0 1px var(--dw-color-legendary),
+    0 0 0 2px var(--dw-color-legendary),
     0 0 40px rgba(255, 140, 40, 0.25),
     0 16px 40px rgba(0, 0, 0, 0.5);
+
+  // Sur un écran étroit, les autres parties passent sous la dernière.
+  @media (max-width: 64rem) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .acc-soir-image {
   object-fit: cover;
-  object-position: center 25%;
+  object-position: 75% 30%;
 }
 
 .acc-soir-contenu {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 1rem;
-  height: 100%;
-  min-height: 21rem;
+  gap: 0.7rem;
+  min-width: 0;
   box-sizing: border-box;
-  padding: 1.75rem 2rem;
+  padding: 1.5rem 2rem;
   background:
-    radial-gradient(60% 60% at 20% 115%, rgba(255, 120, 30, 0.45), transparent 70%),
-    linear-gradient(90deg, rgba(11, 7, 5, 0.94), rgba(11, 7, 5, 0.78) 50%, rgba(11, 7, 5, 0.25));
+    radial-gradient(60% 60% at 20% 115%, rgba(255, 120, 30, 0.4), transparent 70%),
+    linear-gradient(90deg, rgba(11, 7, 5, 0.95), rgba(11, 7, 5, 0.85) 40%, rgba(11, 7, 5, 0.2) 80%);
 
-  // Sur un téléphone, le texte couvre toute l'image : le voile aussi.
   @media (max-width: 48rem) {
     padding: 1.25rem;
     background: rgba(11, 7, 5, 0.86);
   }
 }
 
-// Le fil de l'histoire : la saga (à sa couleur), le chapitre, la scène, séparés par « › ».
-.acc-fil {
+.acc-soir-surtitre {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   margin: 0;
-  padding: 0;
   font-size: 0.72rem;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  list-style: none;
-}
-
-.acc-fil-histoire,
-.acc-fil-etape {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--dw-radius-pill);
-}
-
-.acc-fil-histoire {
-  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
-  background: color-mix(in srgb, var(--saga) 18%, transparent);
   color: var(--saga-clair);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
 }
 
-.acc-fil-etape {
-  position: relative;
-  margin-left: 1rem;
-  border: 1px solid rgba(255, 214, 160, 0.45);
-  background: rgba(10, 6, 4, 0.6);
-  color: var(--dw-forge-bone);
-
-  &::before {
-    content: '›' / '';
-    position: absolute;
-    left: -1rem;
-    color: var(--dw-forge-bronze-text);
-  }
-}
-
-.acc-fil-feu {
+.acc-soir-feu {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -160,6 +132,17 @@
   }
 }
 
+.acc-soir-compagnie {
+  margin: 0.35rem 0 0;
+  font-size: 1.05rem;
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+
+  strong {
+    color: var(--dw-forge-name);
+  }
+}
+
 .acc-soir-texte {
   margin: 0;
   font-size: 1rem;
@@ -171,18 +154,57 @@
   color: var(--dw-forge-hot-text);
 }
 
-// La barre des scènes du chapitre : une case par scène, jouée (or), en cours (claire, qui rougeoie) ou à jouer (creuse).
-.acc-scenes {
+// Où en est l'histoire, sur une ligne : les chapitres en pastilles et, après celui en cours, ses scènes.
+.acc-progression {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.4rem;
-  max-width: 36rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Les chapitres du scénario d'une partie, en pastilles : joués par elle (pleins, à sa couleur), en cours (cerclé d'or), à jouer (creux).
+.acc-repere {
+  display: grid;
+  place-items: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  border-radius: var(--dw-radius-pill);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.acc-repere--joue {
+  border: 1px solid var(--saga);
+  background: var(--saga);
+  color: var(--dw-forge-recess);
+}
+
+.acc-repere--en-cours {
+  border: 2px solid var(--dw-color-legendary);
+  background: rgba(10, 6, 4, 0.85);
+  color: var(--dw-forge-bone);
+  box-shadow: 0 0 12px var(--saga);
+}
+
+.acc-repere--a-jouer {
+  border: 1px dashed rgba(255, 214, 160, 0.55);
+  background: rgba(10, 6, 4, 0.6);
+  color: var(--dw-forge-bone);
+}
+
+// La barre des scènes du chapitre en cours : une case par scène, jouée (or), en cours (claire, qui rougeoie) ou à jouer (creuse).
+.acc-progression-scenes {
+  padding: 0 0.4rem;
 }
 
 .acc-scenes-barre {
-  display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
   margin: 0;
   padding: 0;
@@ -190,7 +212,8 @@
 }
 
 .acc-scene {
-  height: 0.6rem;
+  width: 0.85rem;
+  height: 0.45rem;
   border-radius: 4px;
   background: rgba(255, 214, 160, 0.18);
 }
@@ -204,53 +227,21 @@
   box-shadow: 0 0 10px var(--dw-forge-hot);
 }
 
-.acc-scenes-compte {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--dw-forge-bone);
-}
-
-// Reprendre la table (l'action principale, en or) et la clore (secondaire, cerclée).
+// Reprendre (l'action principale, en or), le menu de la partie, puis ses héros.
 .acc-soir-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-// La compagnie, dans le bandeau : un médaillon et un nom par héros, en pastilles.
-.acc-compagnie {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-}
-
-.acc-compagnie-titre {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--dw-color-bonus);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-}
-
-.acc-section-titre {
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--dw-color-rival);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-}
-
-.acc-section-titre--espace {
-  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.3rem;
 }
 
 .acc-compagnie-liste {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 0;
+  margin: 0 0 0 0.75rem;
   padding: 0;
   list-style: none;
 }
@@ -305,10 +296,9 @@
   white-space: nowrap;
 }
 
-.acc-note {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--dw-surface-700);
+.acc-partie-menu {
+  flex: none;
+  color: var(--dw-forge-bone);
 }
 
 .acc-erreur {
@@ -318,259 +308,147 @@
   gap: 0.75rem;
 }
 
-// ── Les parties : un carrousel, une carte chacune (la couleur et l'image de son scénario, ses chapitres en pastilles, son bouton) ──
-.acc-parties-tete {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.acc-rail-boutons {
-  display: flex;
-  gap: 0.25rem;
-  margin-left: auto;
-}
-
-.acc-parties {
-  // Les textes réservés aux lecteurs d'écran (`sr-only`, en absolu) se placent dans le carrousel : sans lui, ceux des cartes cachées à
-  // droite élargiraient la page.
+// La colonne des autres parties : une ligne chacune, la vignette de son scénario, son nom, sa compagnie et son chapitre.
+.acc-autres {
   position: relative;
   display: flex;
-  gap: 1.1rem;
-  margin: 0;
-  // De quoi voir l'ombre des cartes et le cadre du focus, que le défilement rognerait.
-  padding: 0.2rem 0.2rem 1rem;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 0.2rem;
-  scrollbar-color: var(--dw-forge-bronze-dim) transparent;
-  scrollbar-width: thin;
-  list-style: none;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 22rem;
+  box-sizing: border-box;
+  padding: 1rem 0.75rem 0.85rem;
+  border-left: 1px solid var(--dw-forge-bronze-edge);
+  background: rgba(11, 7, 5, 0.86);
 
-  @media (prefers-reduced-motion: no-preference) {
-    scroll-behavior: smooth;
+  @media (max-width: 64rem) {
+    width: auto;
+    border-top: 1px solid var(--dw-forge-bronze-edge);
+    border-left: 0;
   }
 }
 
-// Un peu plus de trois cartes sur grand écran, une et un bout sur un téléphone : on voit qu'il y en a d'autres.
-.acc-partie {
-  position: relative;
+.acc-autres-tete {
   display: flex;
-  flex: 0 0 clamp(16.5rem, 30%, 24rem);
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
-  gap: 1.1rem;
-  min-width: 0;
-  min-height: 14rem;
-  box-sizing: border-box;
-  padding: 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--saga) 55%, transparent);
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, rgba(28, 19, 11, 0.05) 20%, rgba(28, 19, 11, 0.95) 100%),
-    linear-gradient(90deg, color-mix(in srgb, var(--saga) 35%, transparent), transparent),
-    var(--saga-image) center 30% / cover,
-    var(--dw-surface-100);
-  box-shadow:
-    0 0 18px color-mix(in srgb, var(--saga) 14%, transparent),
-    0 8px 14px rgba(0, 0, 0, 0.45);
-  scroll-snap-align: start;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0.35rem;
 }
 
-.acc-partie-tete {
+.acc-autres-titre {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--dw-forge-bone);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.acc-autres-liste {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-}
-
-// Les chapitres du scénario d'une partie, en pastilles : joués par elle (pleins, à sa couleur), en cours (cerclé d'or), à jouer (creux).
-.acc-reperes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.15rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.acc-repere {
-  display: grid;
-  place-items: center;
-  min-width: 2.1rem;
-  height: 2.1rem;
-  box-sizing: border-box;
-  padding: 0 0.5rem;
-  border-radius: var(--dw-radius-pill);
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.acc-repere--joue {
-  border: 1px solid var(--saga);
-  background: var(--saga);
-  color: var(--dw-forge-recess);
-}
-
-.acc-repere--en-cours {
-  border: 2px solid var(--dw-color-legendary);
-  background: rgba(10, 6, 4, 0.85);
-  color: var(--dw-forge-bone);
-  box-shadow: 0 0 12px var(--saga);
-}
-
-.acc-repere--a-jouer {
-  border: 1px dashed rgba(255, 214, 160, 0.55);
-  background: rgba(10, 6, 4, 0.6);
-  color: var(--dw-forge-bone);
-}
-
-.acc-partie-nom {
-  margin: 0;
-  // La place du menu, en haut à droite.
-  padding-right: 2.5rem;
-  overflow-wrap: anywhere;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.85rem;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--saga-clair);
-  text-shadow:
-    0 2px 0 var(--dw-forge-shade),
-    0 0 18px color-mix(in srgb, var(--saga) 60%, transparent);
-}
-
-.acc-partie-scenario {
-  margin: -0.35rem 0 0;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--dw-forge-bone);
-  text-shadow: 0 1px 2px var(--dw-forge-shade);
-}
-
-// Reprendre la partie : seul ce bloc mène à sa table.
-.acc-partie-reprendre {
+.acc-autre {
   display: flex;
-  width: 100%;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: 3.6rem;
-  box-sizing: border-box;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--saga);
   border-radius: 12px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--saga) 20%, transparent), rgba(10, 6, 4, 0.75));
-  color: var(--saga-clair);
-  text-decoration: none;
 
   &:hover {
-    border-color: var(--dw-forge-hot);
-    background-color: rgba(255, 170, 60, 0.08);
-  }
-
-  .mat-icon {
-    flex: none;
+    background: rgba(255, 170, 60, 0.08);
   }
 }
 
-.acc-partie-reprendre-texte {
+.acc-autre-lien {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: 12px;
+  color: var(--dw-forge-bone);
+  text-decoration: none;
+}
+
+.acc-autre-vignette {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--saga);
+  border-radius: 9px;
+  background: var(--saga-image) center / cover, var(--dw-surface-100);
+}
+
+.acc-autre-texte {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.acc-partie-reprendre-label {
-  font-size: 0.68rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.acc-partie-reprendre-titre {
+.acc-autre-scenario,
+.acc-autre-detail {
   overflow: hidden;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--dw-forge-bone);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.acc-partie-heros {
+.acc-autre-scenario {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--saga-clair);
+}
+
+.acc-autre-detail {
+  font-size: 0.8rem;
+  color: var(--dw-forge-caption);
+}
+
+.acc-autres-vide {
   margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--dw-forge-bone);
-  text-shadow: 0 1px 2px var(--dw-forge-shade);
-}
-
-.acc-partie-derniere {
-  align-self: flex-start;
-  padding: 0.1rem 0.45rem;
-  border-radius: var(--dw-radius-toggle);
-  background: var(--dw-color-legendary);
-  color: var(--dw-forge-recess);
-  font-size: 0.65rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.acc-partie-menu {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
   color: var(--dw-forge-bone);
 }
 
-// La dernière place du carrousel : de quoi créer une partie, en creux.
-.acc-partie-nouvelle-place {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  flex: 0 0 clamp(12rem, 20%, 16rem);
-  min-height: 14rem;
-  scroll-snap-align: start;
-}
-
-.acc-partie-nouvelle {
-  display: flex;
-  flex: 1;
+.acc-autres-toutes {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border: 1px dashed var(--dw-forge-bronze-dim);
-  border-radius: 16px;
-  background: transparent;
-  color: var(--dw-forge-gold);
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
+  gap: 0.3rem;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dw-forge-bronze-text);
+  text-decoration: none;
 
-  &:hover:not(:disabled) {
-    border-color: var(--dw-forge-hot);
-    background-color: rgba(255, 170, 60, 0.08);
+  &:hover {
+    color: var(--dw-forge-hot-text);
   }
 
-  &:disabled {
-    color: var(--dw-forge-bone);
-    cursor: not-allowed;
-    opacity: 0.6;
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
   }
 }
 
-.acc-partie-nouvelle-note {
+.acc-section-titre {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--dw-forge-bone);
-  text-align: center;
+  font-weight: 800;
+  color: var(--dw-color-rival);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.acc-section-titre--espace {
+  margin-bottom: 0.75rem;
 }
 
 // Le menu est dans un calque : hors de la carte, il reste à ce composant. Le chapitre en cours y est en gras.
@@ -588,10 +466,10 @@
   padding: 0.75rem 1rem;
 }
 
-// ── Les bibliothèques : une tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ─────────────────────────────
+// ── Les bibliothèques : une grande tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ───────────────────────
 .acc-bibliotheques {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: 0.75rem;
   margin: 0;
   padding: 0;
@@ -609,13 +487,13 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: 0.15rem;
-  min-height: 8rem;
+  min-height: 9rem;
   box-sizing: border-box;
-  padding: 0.9rem;
+  padding: 1rem 1.1rem;
   border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 12px;
+  border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(10, 6, 4, 0.15), rgba(10, 6, 4, 0.9)),
+    linear-gradient(180deg, rgba(10, 6, 4, 0.1), rgba(10, 6, 4, 0.9) 75%),
     var(--biblio-image) center 30% / cover,
     var(--dw-surface-100);
   color: var(--dw-forge-bone);
@@ -647,17 +525,13 @@
   --biblio-image: url('/assets/bol/header-demons.webp');
 }
 
-.acc-biblio--armes {
-  --biblio-image: url('/assets/bol/header-armes.webp');
-}
-
-.acc-biblio--armures {
-  --biblio-image: url('/assets/bol/header-armures.webp');
+.acc-biblio--compagnies {
+  --biblio-image: url('/assets/bol/header-combat.webp');
 }
 
 .acc-biblio-compte {
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 2.25rem;
+  font-size: 2.6rem;
   line-height: 1;
   color: var(--dw-forge-info-hot);
   text-shadow:
@@ -666,8 +540,14 @@
 }
 
 .acc-biblio-label {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+}
+
+.acc-biblio-detail {
+  font-size: 0.8rem;
+  color: var(--dw-forge-caption);
   text-shadow: 0 1px 2px var(--dw-forge-shade);
 }
 
@@ -679,8 +559,8 @@
   @include forge.stud;
 }
 
-.acc-partie-reprendre,
-.acc-partie-nouvelle,
+.acc-autre-lien,
+.acc-autres-toutes,
 .acc-heros,
 .acc-biblio-lien {
   &:focus-visible {
