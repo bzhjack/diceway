@@ -69,33 +69,16 @@
   margin-top: 0.4rem;
 }
 
-// ── La compagnie déjà sur ce scénario : ce qu'il en est, et de quoi reprendre sa partie ────────────────────────────────────────────
-.otd-deja {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-warn) 70%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--dw-color-warn) 12%, var(--dw-forge-recess));
-}
-
-.otd-compagnie-nom {
-  margin: 0;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.6rem;
-  line-height: 1.1;
-  color: var(--dw-forge-name);
-}
-
-// ── Les deux étapes, côte à côte : le scénario à gauche, qui est à table à droite ──────────────────────────────────────────────────
+// ── Les deux étapes, côte à côte : la compagnie à gauche, le scénario à droite ────────────────────────────────────────────────────
 .otd-colonnes {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.6rem;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: 1.75rem;
   align-items: start;
+
+  @media (max-width: 56rem) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .otd-etape {
@@ -135,55 +118,6 @@
   color: var(--dw-forge-bone);
   text-transform: none;
   letter-spacing: 0;
-}
-
-// Le chapitre de la future table, en carte : la bannière de sa saga (`dw-saga--N`, comme sa carte sur l'accueil), puis le chapitre.
-.otd-chapitre {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--saga) 60%, transparent);
-  border-radius: 12px;
-  @include forge.recess;
-}
-
-.otd-banniere {
-  height: 9.5rem;
-  background:
-    linear-gradient(180deg, transparent 40%, var(--dw-forge-recess)),
-    var(--saga-image) center 30% / cover;
-}
-
-.otd-chapitre-corps {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: -2.5rem;
-  padding: 0.85rem 1rem 1rem;
-}
-
-.otd-chapitre-place {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--saga-clair);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
-.otd-chapitre-nom {
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 2.1rem;
-  line-height: 1;
-  color: var(--dw-forge-hot-text);
-  overflow-wrap: anywhere;
-}
-
-.otd-chapitre-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding-top: 0.25rem;
 }
 
 // ── Les héros à table : une carte chacun (portrait, nom, « × »), deux par ligne ; « Ajouter un héros » dessous, sur toute la largeur ──
@@ -342,7 +276,198 @@
   color: var(--dw-forge-hot-text);
 }
 
-// ── Le choix en cours dans les menus du dialogue : la ligne en gras ──────────────────────────────────────────────────────────────
-.otd-menu-choisi {
-  font-weight: 800;
+// ── Les choix en liste, tous en vue : une compagnie ou un scénario par ligne, son bouton radio, le choisi cerclé d'or ─────────────
+.otd-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.otd-choix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 12px;
+  @include forge.recess;
+}
+
+.otd-choix--on {
+  border-color: var(--dw-color-legendary);
+  box-shadow: inset 0 0 0 1px var(--dw-color-legendary);
+}
+
+// Un scénario que la compagnie joue déjà : grisé, « Reprendre sa partie » à sa droite.
+.otd-choix--pris {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .otd-choix-ligne {
+    opacity: 0.65;
+  }
+
+  .otd-vignette {
+    filter: grayscale(0.7) brightness(0.6);
+  }
+}
+
+.otd-choix-ligne {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  cursor: pointer;
+
+  &:has(input:disabled) {
+    cursor: default;
+  }
+
+  input {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--dw-color-legendary);
+  }
+}
+
+.otd-choix-texte {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.otd-choix-detail {
+  font-size: 0.82rem;
+  color: var(--dw-forge-caption);
+}
+
+.otd-compagnie-nom {
+  overflow-wrap: anywhere;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  color: var(--dw-forge-name);
+}
+
+.otd-compagnie-heros {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+// Les héros d'une compagnie en médaillons qui se chevauchent : leur portrait, sinon leur initiale.
+.otd-medaillons {
+  display: flex;
+  flex: none;
+  padding-left: 0.35rem;
+
+  img,
+  .otd-medaillon-initiale {
+    width: 1.75rem;
+    height: 1.75rem;
+    box-sizing: border-box;
+    margin-left: -0.35rem;
+    border: 2px solid var(--dw-color-bonus);
+    border-radius: 50%;
+    background: var(--dw-forge-recess);
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.otd-medaillon-initiale {
+  display: grid;
+  place-items: center;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 0.85rem;
+  color: var(--dw-forge-hot-text);
+}
+
+// La vignette d'un scénario : l'image de sa saga (`dw-saga--N`, comme ses parties sur l'accueil).
+.otd-vignette {
+  flex: none;
+  width: 4rem;
+  height: 2.75rem;
+  border: 1px solid var(--saga);
+  border-radius: 8px;
+  background: var(--saga-image) center 30% / cover, var(--dw-surface-100);
+}
+
+.otd-scenario-nom {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dw-forge-bone);
+}
+
+.otd-reprendre {
+  flex: none;
+}
+
+// Les chapitres de départ du scénario choisi, en boutons à bascule ; le nom du choisi à leur suite. Alignés sur le texte, après le radio.
+.otd-depart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding-left: 1.95rem;
+}
+
+.otd-depart-titre {
+  font-size: 0.82rem;
+  color: var(--dw-forge-caption);
+}
+
+.otd-depart-chapitres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.otd-depart-chapitre {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: rgba(217, 164, 65, 0.18);
+    color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+.otd-depart-nom {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--dw-forge-name);
+}
+
+// « Nouvelle compagnie », sous la liste : la même pastille en pointillés, à la taille de son texte.
+.otd-ajout--court {
+  display: inline-flex;
+  min-height: 2.5rem;
 }

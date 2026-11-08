@@ -4,7 +4,6 @@ import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
@@ -12,7 +11,7 @@ import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar
 import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {chapitresDuScenario, herosCartes, scenariosDuCompte, situerScenario, teinteDeScenario} from '../../accueil/accueil.util';
+import {chapitresDuScenario, herosCartes, marqueDeChapitre, pluriel, scenariosDuCompte} from '../../accueil/accueil.util';
 import {OpenTableData, OpenTableResultat} from '../../models/open-table.model';
 import {findScenario, libelleDeChapitre} from '../../scenario.util';
 import {enumerer} from '../open-table.util';
@@ -20,12 +19,13 @@ import {ignoresMessage} from '../../play/scene-list/scene.util';
 
 /**
  * « Nouvelle partie », en dialogue sur l'accueil : une compagnie sur un scénario et son chapitre de départ (ou une partie improvisée), puis
- * « Créer la partie », qui mène à sa table. Elle prend le nom et les héros de sa compagnie. Une compagnie peut jouer plusieurs scénarios,
- * mais chacun une fois : sur un scénario qu'elle joue déjà, le dialogue propose de reprendre sa partie.
+ * « Créer la partie », qui mène à sa table. Tout est en vue, sans menu : les compagnies avec leurs héros à gauche, les scénarios à droite,
+ * les chapitres de départ sous celui choisi. Elle prend le nom et les héros de sa compagnie. Une compagnie peut jouer plusieurs scénarios,
+ * mais chacun une fois : ceux qu'elle joue déjà sont grisés, avec de quoi reprendre sa partie.
  */
 @Component({
   selector: 'bol-open-table-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RouterLink],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, RouterLink],
   templateUrl: './open-table-dialog.html',
   styleUrl: './open-table-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +54,13 @@ export class OpenTableDialogComponent {
     return compagnies.find((c) => c.id === this.compagnieId()) ?? (compagnies.length === 1 ? compagnies[0] : null);
   });
   protected readonly heros = computed(() => herosCartes(this.compagnie()?.heros ?? []));
+  /** Les compagnies à choisir, chacune avec ses héros (portrait ou initiale) et leurs noms en toutes lettres. */
+  protected readonly compagniesAChoisir = computed(() =>
+    this.compagnies().map((c) => {
+      const heros = herosCartes(c.heros);
+      return {id: c.id, nom: c.nom, heros, noms: heros.length ? enumerer(heros.map((h) => h.nom)) : 'Aucun héros'};
+    }),
+  );
   /** L'accueil a répondu, et le compte n'a aucune compagnie : il faut en créer une d'abord. */
   protected readonly sansCompagnie = computed(() => this.accueil() !== null && this.compagnies().length === 0);
   /** L'accueil n'a pas répondu : on ne sait rien des compagnies. */
@@ -61,44 +68,47 @@ export class OpenTableDialogComponent {
 
   private readonly scenarios = computed(() => this.accueil()?.scenarios ?? []);
   private readonly scenario = computed(() => findScenario(this.scenarios(), this.scenarioId()));
+  /** Sans chapitre de départ (ou avec un chapitre que le compte n'a pas), la partie est improvisée. */
+  protected readonly improvisee = computed(() => this.scenario() === null);
 
-  /** Le chapitre de départ, placé dans son scénario, avec la teinte du scénario (celle de ses parties sur l'accueil). */
-  protected readonly chapitre = computed(() => {
-    const scenario = this.scenario();
-    return scenario ? {...situerScenario(scenario, this.scenarios()), teinte: teinteDeScenario(scenario.id, this.scenarios())} : null;
-  });
-
-  /** La partie que la compagnie choisie a déjà sur ce scénario : on la reprend plutôt que d'en créer une autre. Une partie improvisée n'en
-   * empêche aucune. */
-  protected readonly partieExistante = computed(() => {
+  /**
+   * Les scénarios à choisir, les sagas puis les one shots : leur teinte, leur nombre de chapitres, s'il est choisi (le chapitre de départ est
+   * l'un des siens) et la partie que la compagnie choisie y a déjà (on la reprend plutôt que d'en créer une autre).
+   */
+  protected readonly scenariosAChoisir = computed(() => {
+    const courant = this.scenarioId();
     const compagnie = this.compagnie();
-    const chapitres = new Set(chapitresDuScenario(this.scenario()?.id ?? null, this.scenarios()).map((c) => c.id));
-    if (!compagnie || !chapitres.size) {
-      return null;
-    }
-    const partie = this.accueil()?.parties.find((p) => p.compagnie_id === compagnie.id && p.scenario_id !== null && chapitres.has(p.scenario_id));
-    return partie ? {id: partie.id, texte: `${compagnie.nom} joue déjà ${this.chapitre()?.saga ?? this.chapitre()?.nom}.`} : null;
+    const parties = compagnie ? (this.accueil()?.parties ?? []).filter((p) => p.compagnie_id === compagnie.id && p.scenario_id !== null) : [];
+    return scenariosDuCompte(this.scenarios()).map((choix) => {
+      const ids = new Set(choix.chapitres.map((c) => c.id));
+      return {
+        ...choix,
+        detail: choix.oneShot ? 'One shot' : pluriel(choix.chapitres.length, 'chapitre'),
+        choisi: courant !== null && ids.has(courant),
+        partieId: parties.find((p) => ids.has(p.scenario_id ?? ''))?.id ?? null,
+      };
+    });
   });
+
+  /** La partie que la compagnie choisie a déjà sur le scénario choisi : elle ne se crée pas deux fois. Une partie improvisée n'en empêche aucune. */
+  private readonly partieExistante = computed(() => this.scenariosAChoisir().find((s) => s.choisi)?.partieId ?? null);
 
   protected readonly canLaunch = computed(() => this.heros().length > 0 && !this.partieExistante() && !this.launching() && !this.loadingAccueil());
 
-  /** « Choisir un scénario » : les sagas, puis les one shots ; celui du chapitre choisi est en gras. */
-  protected readonly scenariosAChoisir = computed(() => {
-    const courant = new Set(chapitresDuScenario(this.scenarioId(), this.scenarios()).map((c) => c.id));
-    return scenariosDuCompte(this.scenarios()).map((choix) => ({...choix, choisi: choix.chapitres.some((c) => courant.has(c.id))}));
-  });
-
-  /** « Chapitre de départ » : les chapitres du scénario choisi, rien pour un one shot ; le choisi est en gras. */
+  /** Les chapitres de départ du scénario choisi, rien pour un one shot : leur marque (« Intro », « 1 »…), leur libellé, le choisi. */
   protected readonly chapitresDeDepart = computed(() => {
     if (!this.scenario()?.saga) {
       return [];
     }
     return chapitresDuScenario(this.scenarioId(), this.scenarios()).map((c) => ({
       id: c.id,
+      marque: marqueDeChapitre(c),
       libelle: libelleDeChapitre(c.numero, c.titre),
       choisi: c.id === this.scenarioId(),
     }));
   });
+
+  protected readonly chapitreChoisi = computed(() => this.chapitresDeDepart().find((c) => c.choisi)?.libelle ?? null);
 
   /** Un chapitre demandé que le compte n'a pas : le dialogue le dit, et la partie se crée sans lui. Rien tant que l'accueil n'a pas répondu. */
   protected readonly scenarioPerdu = computed(() => {
@@ -110,15 +120,17 @@ export class OpenTableDialogComponent {
       : 'Impossible de charger le chapitre : la partie sera improvisée.';
   });
 
-  /** La future partie en une ligne : « Les Lames · Tolometh, avec Axel, jadawin et jean ». */
+  /** La future partie en une ligne : « Les Lames · Perle du Beshaar, à partir de 3. Le tombeau d'Urzûlzalinaar ». Ses héros sont en vue,
+   * sous sa compagnie. */
   protected readonly resume = computed(() => {
+    const scenario = this.scenario();
+    const histoire = !scenario
+      ? 'Partie improvisée'
+      : scenario.saga
+        ? `${scenario.saga.titre}, à partir de ${libelleDeChapitre(scenario.numero, scenario.titre)}`
+        : scenario.titre;
     const compagnie = this.compagnie();
-    const histoire = this.chapitre()?.nom ?? 'Partie improvisée';
-    const noms = this.heros().map((h) => h.nom);
-    if (!compagnie) {
-      return histoire;
-    }
-    return noms.length ? `${compagnie.nom} · ${histoire}, avec ${enumerer(noms)}` : `${compagnie.nom} · ${histoire}`;
+    return compagnie ? `${compagnie.nom} · ${histoire}` : histoire;
   });
 
   constructor() {
@@ -135,9 +147,11 @@ export class OpenTableDialogComponent {
     this.scenarioId.set(id);
   }
 
-  /** Un scénario choisi : la partie part de son premier chapitre (l'introduction s'il y en a une). */
-  protected choisirScenario(chapitres: readonly {id: string}[]): void {
-    if (chapitres.length) {
+  /** Un scénario choisi : la partie part de son premier chapitre (l'introduction s'il y en a une) ; aucun : elle est improvisée. */
+  protected choisirScenario(chapitres: readonly {id: string}[] | null): void {
+    if (chapitres === null) {
+      this.scenarioId.set(null);
+    } else if (chapitres.length) {
       this.scenarioId.set(chapitres[0].id);
     }
   }

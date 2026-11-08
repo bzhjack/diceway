@@ -108,7 +108,7 @@ function nomDePartie(partie: BolAccueilPartie): string {
 const ETAT_CHAPITRE: Record<ChapitreEtat, string> = {joue: 'joué', 'en-cours': 'en cours', 'a-jouer': 'à jouer'};
 
 /** La marque d'un chapitre en pastille : son numéro, « Intro » pour l'introduction, son initiale sans numéro. */
-function marque(chapitre: BolAccueilScenario): string {
+export function marqueDeChapitre(chapitre: BolAccueilScenario): string {
   if (chapitre.numero === 0) {
     return 'Intro';
   }
@@ -127,7 +127,7 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
       ? []
       : chapitres.map((c) => {
           const libelle = libelleDeChapitre(c.numero, c.titre);
-          return {marque: marque(c), libelle, etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
+          return {marque: marqueDeChapitre(c), libelle, etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
         });
 
   return {

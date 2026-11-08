@@ -13,6 +13,7 @@
 
 <mat-dialog-content class="otd-contenu">
   <div class="otd-colonnes">
+    <!-- 1. La compagnie : une ligne chacune, ses héros en médaillons et en toutes lettres ; la seule du compte est choisie d'office. -->
     <section class="otd-etape" aria-labelledby="otd-table">
       <h3 id="otd-table" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">1</span> La compagnie</h3>
 
@@ -26,61 +27,94 @@
           <button mat-stroked-button type="button" (click)="creerUneCompagnie()"><mat-icon>add</mat-icon> Nouvelle compagnie</button>
         </div>
       } @else {
-        @if (compagnie(); as c) {
-          <p class="otd-compagnie-nom">{{ c.nom }}</p>
-          @if (heros().length) {
-            <ul class="otd-heros">
-              @for (h of heros(); track h.id) {
-                <li class="otd-heros-pastille">
-                  @if (h.portrait; as portrait) {
-                    <img dwAvatarFallback [src]="portrait" alt="" />
-                  } @else {
-                    <span class="otd-heros-initiale" aria-hidden="true">{{ h.initiale }}</span>
+        <div class="otd-liste" role="radiogroup" aria-labelledby="otd-table">
+          @for (c of compagniesAChoisir(); track c.id) {
+            <label class="otd-choix otd-choix-ligne" [class.otd-choix--on]="c.id === compagnie()?.id">
+              <input type="radio" name="otd-compagnie" [checked]="c.id === compagnie()?.id" (change)="choisirCompagnie(c.id)" />
+              <span class="otd-choix-texte">
+                <span class="otd-compagnie-nom">{{ c.nom }}</span>
+                <span class="otd-compagnie-heros">
+                  @if (c.heros.length) {
+                    <span class="otd-medaillons" aria-hidden="true">
+                      @for (h of c.heros; track h.id) {
+                        @if (h.portrait; as portrait) {
+                          <img dwAvatarFallback [src]="portrait" alt="" />
+                        } @else {
+                          <span class="otd-medaillon-initiale">{{ h.initiale }}</span>
+                        }
+                      }
+                    </span>
                   }
-                  <span class="otd-heros-nom">{{ h.nom }}</span>
-                </li>
-              }
-            </ul>
-          } @else {
+                  <span class="otd-choix-detail">{{ c.noms }}</span>
+                </span>
+              </span>
+            </label>
+          }
+        </div>
+        @if (compagnie(); as c) {
+          @if (!heros().length) {
             <p class="otd-alerte" role="alert">Cette compagnie n’a pas de héros : ajoute-lui en depuis la bibliothèque « Compagnies ».</p>
           }
         } @else {
           <p class="otd-note">« Créer la partie » attend une compagnie.</p>
         }
         <div>
-          <button mat-stroked-button type="button" [matMenuTriggerFor]="menuCompagnies">{{ compagnie() ? 'Changer de compagnie' : 'Choisir une compagnie' }}</button>
+          <button type="button" class="otd-ajout otd-ajout--court" (click)="creerUneCompagnie()"><mat-icon>add</mat-icon> Nouvelle compagnie</button>
         </div>
       }
     </section>
 
+    <!-- 2. Le scénario : la partie improvisée, puis les sagas et les one shots ; sous celui choisi, ses chapitres de départ. Ceux que la
+         compagnie joue déjà sont grisés, avec de quoi reprendre sa partie. -->
     <section class="otd-etape" aria-labelledby="otd-histoire">
       <h3 id="otd-histoire" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">2</span> Le scénario</h3>
-      @if (chapitre(); as c) {
-        <div class="otd-chapitre" [class]="'dw-saga--' + c.teinte">
-          <span class="otd-banniere" aria-hidden="true"></span>
-          <div class="otd-chapitre-corps">
-            <span class="otd-chapitre-place">{{ c.histoire }}{{ c.chapitre ? ' › ' + c.chapitre : '' }}</span>
-            <span class="otd-chapitre-nom">{{ c.nom }}</span>
-            <div class="otd-chapitre-actions">
-              <button mat-stroked-button type="button" [matMenuTriggerFor]="menuScenarios">Choisir un scénario</button>
-              @if (chapitresDeDepart().length) {
-                <button mat-stroked-button type="button" [matMenuTriggerFor]="menuChapitres">Chapitre de départ</button>
+      @if (loadingAccueil()) {
+        <p class="otd-note" role="status">Chargement des scénarios…</p>
+      } @else {
+        <div class="otd-liste" role="radiogroup" aria-labelledby="otd-histoire">
+          <div class="otd-choix dw-saga--0" [class.otd-choix--on]="improvisee()">
+            <label class="otd-choix-ligne">
+              <input type="radio" name="otd-scenario" [checked]="improvisee()" (change)="choisirScenario(null)" />
+              <span class="otd-vignette" aria-hidden="true"></span>
+              <span class="otd-choix-texte">
+                <span class="otd-scenario-nom">Partie improvisée</span>
+                <span class="otd-choix-detail">Sans scénario : il se choisit plus tard, depuis la carte de la partie</span>
+              </span>
+            </label>
+          </div>
+          @for (s of scenariosAChoisir(); track s.id) {
+            <div class="otd-choix" [class]="'dw-saga--' + s.teinte" [class.otd-choix--on]="s.choisi" [class.otd-choix--pris]="!!s.partieId">
+              <label class="otd-choix-ligne">
+                <input type="radio" name="otd-scenario" [checked]="s.choisi" [disabled]="!!s.partieId && !s.choisi" (change)="choisirScenario(s.chapitres)" />
+                <span class="otd-vignette" aria-hidden="true"></span>
+                <span class="otd-choix-texte">
+                  <span class="otd-scenario-nom">{{ s.nom }}</span>
+                  <span class="otd-choix-detail">{{ s.partieId ? 'Déjà joué par cette compagnie' : s.detail }}</span>
+                </span>
+              </label>
+              @if (s.partieId; as partieId) {
+                <a mat-button class="otd-reprendre" [routerLink]="['/session', partieId, 'play']" mat-dialog-close>Reprendre sa partie</a>
+              } @else if (s.choisi && chapitresDeDepart().length) {
+                <div class="otd-depart">
+                  <span id="otd-depart-titre" class="otd-depart-titre">Commencer au chapitre</span>
+                  <div class="otd-depart-chapitres" role="group" aria-labelledby="otd-depart-titre">
+                    @for (chapitre of chapitresDeDepart(); track chapitre.id) {
+                      <button
+                        type="button"
+                        class="otd-depart-chapitre"
+                        [attr.aria-pressed]="chapitre.choisi"
+                        [attr.aria-label]="chapitre.libelle"
+                        (click)="choisirChapitre(chapitre.id)"
+                      >
+                        {{ chapitre.marque }}
+                      </button>
+                    }
+                  </div>
+                  <span class="otd-depart-nom">{{ chapitreChoisi() }}</span>
+                </div>
               }
             </div>
-          </div>
-        </div>
-      } @else if (loadingAccueil() && scenarioId()) {
-        <p class="otd-note" role="status">Chargement du chapitre…</p>
-      } @else {
-        <div class="otd-chapitre dw-saga--0">
-          <span class="otd-banniere" aria-hidden="true"></span>
-          <div class="otd-chapitre-corps">
-            <span class="otd-chapitre-place">Sans scénario</span>
-            <span class="otd-chapitre-nom">Partie improvisée</span>
-            <div class="otd-chapitre-actions">
-              <button mat-stroked-button type="button" [matMenuTriggerFor]="menuScenarios" [disabled]="!scenariosAChoisir().length">Choisir un scénario</button>
-            </div>
-          </div>
+          }
         </div>
         @if (scenarioPerdu(); as message) {
           <p class="otd-alerte" role="alert">{{ message }}</p>
@@ -88,13 +122,6 @@
       }
     </section>
   </div>
-
-  @if (partieExistante(); as partie) {
-    <div class="otd-deja" role="status">
-      <span>{{ partie.texte }}</span>
-      <a mat-stroked-button [routerLink]="['/session', partie.id, 'play']" mat-dialog-close>Reprendre sa partie</a>
-    </div>
-  }
 </mat-dialog-content>
 
 <mat-dialog-actions class="otd-pied">
@@ -105,31 +132,3 @@
     <mat-icon>play_arrow</mat-icon> Créer la partie
   </button>
 </mat-dialog-actions>
-
-<mat-menu #menuCompagnies="matMenu">
-  @for (c of compagnies(); track c.id) {
-    <button mat-menu-item type="button" (click)="choisirCompagnie(c.id)">{{ c.nom }}</button>
-  }
-</mat-menu>
-<!-- « Choisir un scénario » : les sagas, puis les one shots ; la partie part du premier chapitre du scénario choisi, en gras. -->
-<mat-menu #menuScenarios="matMenu">
-  @for (scenario of scenariosAChoisir(); track scenario.id) {
-    <button mat-menu-item type="button" (click)="choisirScenario(scenario.chapitres)">
-      <span [class.otd-menu-choisi]="scenario.choisi">{{ scenario.nom }}</span>
-      @if (scenario.choisi) {
-        <span class="sr-only">, choisi</span>
-      }
-    </button>
-  }
-</mat-menu>
-<!-- « Chapitre de départ » : les chapitres du scénario choisi ; le choisi est en gras. -->
-<mat-menu #menuChapitres="matMenu">
-  @for (chapitre of chapitresDeDepart(); track chapitre.id) {
-    <button mat-menu-item type="button" (click)="choisirChapitre(chapitre.id)">
-      <span [class.otd-menu-choisi]="chapitre.choisi">{{ chapitre.libelle }}</span>
-      @if (chapitre.choisi) {
-        <span class="sr-only">, choisi</span>
-      }
-    </button>
-  }
-</mat-menu>

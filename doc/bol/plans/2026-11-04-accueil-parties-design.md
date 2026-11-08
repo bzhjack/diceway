@@ -24,6 +24,12 @@ un nom de compagnie et un scénario.
 > disparaissent. Les bibliothèques suivent en six grandes tuiles : Héros, PNJ, Créatures, Démons, Intendance (armes et armures), Compagnies.
 > Là où ce document décrit la rangée « Parties » et ses cartes, cette mise à jour l'emporte.
 
+> **Mise à jour du 2026-11-08 : « Nouvelle partie » tout en vue (maquette A).** Plus de menus dans le dialogue : à gauche les compagnies
+> en liste à boutons radio (leurs héros en médaillons et en toutes lettres, la seule du compte choisie d'office), « Nouvelle compagnie »
+> dessous ; à droite « Partie improvisée » puis les scénarios (vignette de leur saga, nombre de chapitres). Sous le scénario choisi, ses
+> chapitres de départ en boutons à bascule (« Intro », « 1 »…) et le nom du choisi. Un scénario que la compagnie joue déjà est grisé, avec
+> « Reprendre sa partie ». Le pied résume : « Compagnie · Scénario, à partir de 3. Chapitre ».
+
 ## Vocabulaire
 
 - **Partie** : une table (`BolFightSession`) vue depuis l'accueil, c'est-à-dire une compagnie (son nom, `titre`) qui joue un scénario.
