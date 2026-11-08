@@ -264,7 +264,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   protected readonly heroNom = computed(() => this.model().nom);
   /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
   protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
-  protected readonly titreCompact = computed(() => `Création avancée · ${this.heroNom().trim() || 'Nouveau héros'}`);
+  protected override readonly titreCompact = computed(() => `Création avancée · ${this.heroNom().trim() || 'Nouveau héros'}`);
   protected readonly heroJoueur = computed(() => this.model().joueur);
   protected readonly activeValue = computed(() => this.model().active);
   private readonly regionIdValue = computed(() => this.model().region_id);

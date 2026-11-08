@@ -20,6 +20,19 @@
             </button>
           </dw-form-header>
 
+          <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : le nom de la fiche, de quoi revenir et l'enregistrer. -->
+          <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="titreCompact()">
+            <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon> Retour
+            </button>
+            <button mat-flat-button type="submit" [disabled]="pending() || loading() || pnjForm().invalid()">
+              <mat-icon>check</mat-icon> {{ submitLabel() }}
+              @if (formDirty()) {
+                <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
+              }
+            </button>
+          </dw-compact-bar>
+
           <div class="grid gap-4">
             @if (loading()) {
               <div class="dw-section--loading">

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {applyEach, FieldTree, form, min, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
@@ -24,6 +24,7 @@ import {StatGroup} from '../../shared/models/stats-grid.model';
 import {HeroGeneralComponent} from './general/general.component';
 import {SummaryRailComponent} from '../../shared/summary-rail/summary-rail.component';
 import {HeroFormModel} from '../models/hero-form-page.model';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 import {ListPanelComponent} from '../../shared/list-panel/list-panel.component';
 
@@ -116,6 +117,7 @@ const HERO_FORM_LABELS: EntityFormLabels = {
   imports: [
     ListPanelComponent,
     DwFormHeaderComponent,
+    DwCompactBarComponent,
     MatButtonModule,
     MatCard,
     MatCardContent,
@@ -139,6 +141,8 @@ export class HeroFormPageComponent extends BolCharacterFormPageBase<HeroFormMode
   protected readonly regionList = this.herosStateService.regionList;
 
   protected readonly labels = HERO_FORM_LABELS;
+  /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
   protected readonly heroStatGroups = HERO_STAT_GROUPS;
   protected readonly newArmureEquipped = false;
 

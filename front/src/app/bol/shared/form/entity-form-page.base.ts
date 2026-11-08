@@ -21,7 +21,7 @@ import {EntityFormLabels} from '../models/entity-form-page.model';
  * La sous-classe fournit le formulaire (Signal Forms), les libellés et les opérations
  * spécifiques (chargement, hydratation, payload, création/mise à jour).
  */
-export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar: string | null}>
+export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {nom: string; avatar: string | null}>
   implements HasPendingChanges
 {
   protected readonly route = inject(ActivatedRoute);
@@ -45,6 +45,11 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar:
   protected readonly pageEyebrow = computed(() =>
     this.editMode() ? this.labels.editEyebrow : this.labels.createEyebrow,
   );
+  /** Le titre de la barre compacte, qui remplace l'en-tête une fois sorti de l'écran : « Modifier le héros · Axel ». */
+  protected readonly titreCompact = computed(() => {
+    const nom = this.model().nom.trim();
+    return nom ? `${this.pageTitle()} · ${nom}` : this.pageTitle();
+  });
   protected readonly submitLabel = computed(() => {
     if (this.pending()) {
       return 'Enregistrement...';

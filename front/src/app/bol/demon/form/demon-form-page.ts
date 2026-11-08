@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,6 +16,7 @@ import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
 import {DemonFormModel} from '../models/demon-form-page.model';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 import {EntityGeneralComponent} from '../../shared/entity-general/entity-general.component';
 
@@ -88,6 +89,7 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
   selector: 'bol-demon-form-page',
   imports: [
     DwFormHeaderComponent,
+    DwCompactBarComponent,
     MatCard,
     MatCardContent,
     MatButtonModule,
@@ -112,6 +114,8 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel,
   protected readonly pouvoirsList = this.demonStateService.pouvoirList;
 
   protected readonly labels = DEMON_FORM_LABELS;
+  /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
   protected readonly demonStatGroups = DEMON_STAT_GROUPS;
 
   protected readonly model = signal<DemonFormModel>(demonFormDefaults());

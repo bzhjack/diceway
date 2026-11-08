@@ -77,6 +77,9 @@
             </dw-form-header>
             <!-- Une fois l'en-tête sorti de l'écran, le même en petit reste en haut : enregistrer et activer sans remonter. -->
             <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="titreCompact()">
+              <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon> Retour
+              </button>
               @if (warnCount() > 0) {
                 <span class="hap-warn-compact">{{ warnCount() }} avertissement(s)</span>
               }

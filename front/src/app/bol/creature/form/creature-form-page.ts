@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {applyEach, FieldTree, form, FormField, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,6 +18,7 @@ import {StatGroup} from '../../shared/models/stats-grid.model';
 import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
 import {CreatureFormModel} from '../models/creature-form-page.model';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 import {EntityGeneralComponent} from '../../shared/entity-general/entity-general.component';
 
@@ -89,6 +90,7 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
   selector: 'bol-creature-form-page',
   imports: [
     DwFormHeaderComponent,
+    DwCompactBarComponent,
     FormField,
     MatCard,
     MatCardContent,
@@ -115,6 +117,8 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
   protected readonly capacitesList = this.creatureStateService.capaciteList;
 
   protected readonly labels = CREATURE_FORM_LABELS;
+  /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
   protected readonly creatureStatGroups = CREATURE_STAT_GROUPS;
 
   protected readonly model = signal<CreatureFormModel>(creatureFormDefaults());

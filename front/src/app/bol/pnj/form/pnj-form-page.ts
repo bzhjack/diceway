@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {applyEach, FieldTree, form, min, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
@@ -20,6 +20,7 @@ import {PnjGeneralComponent} from './general/pnj-general.component';
 import {PnjTypeOption} from '../models/pnj-general.model';
 import {SummaryRailComponent} from '../../shared/summary-rail/summary-rail.component';
 import {PnjFormModel} from '../models/pnj-form-page.model';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 import {ListPanelComponent} from '../../shared/list-panel/list-panel.component';
 
@@ -115,6 +116,7 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
   imports: [
     ListPanelComponent,
     DwFormHeaderComponent,
+    DwCompactBarComponent,
     MatButtonModule,
     MatCard,
     MatCardContent,
@@ -136,6 +138,8 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
 export class PnjFormPageComponent extends BolCharacterFormPageBase<PnjFormModel> {
   private readonly pnjService = inject(BolPnjService);
   protected readonly labels = PNJ_FORM_LABELS;
+  /** L'en-tête de la fiche, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwFormHeaderComponent, ElementRef<HTMLElement>>(DwFormHeaderComponent, {read: ElementRef});
   protected readonly typeOptions = PNJ_TYPE_OPTIONS;
   protected readonly pnjStatGroups = PNJ_STAT_GROUPS;
   // Un PNJ porte tout ce qu'il possède.
