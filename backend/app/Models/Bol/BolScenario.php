@@ -2,10 +2,12 @@
 
 namespace App\Models\Bol;
 
+use App\Http\Services\Bol\BolCache;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /** Un chapitre, au sens des écrans : son nom (`titre`), son numéro dans son scénario (0 pour l'introduction, null sans numéro) et son
  * scénario (`saga_id`, null pour un one shot). */
@@ -37,6 +39,10 @@ class BolScenario extends Model
         static::deleted(function (BolScenario $chapitre) use ($sansChapitre): void {
             BolImportRef::where('entity_kind', 'scenario')->where('entity_id', $chapitre->id)->delete();
             $sansChapitre($chapitre->saga_id);
+            // La liste des créatures, en cache, nomme les scénarios de chacune.
+            if ($chapitre->user_id !== null) {
+                Cache::forget(BolCache::creatures((string) $chapitre->user_id));
+            }
         });
     }
 

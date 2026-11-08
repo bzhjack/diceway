@@ -59,3 +59,36 @@
   align-items: center;
   justify-content: space-between;
 }
+
+// ── La variante compacte : une ligne, le titre à gauche, les compteurs, les boutons à droite ─────────────────────────────────────
+.dw-lh-card--compact .mat-mdc-card-content {
+  padding: 0.75rem 1.25rem;
+}
+
+.dw-lh-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.dw-lh-titre-court {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  .dw-lh-title {
+    font-size: 2rem;
+  }
+}
+
+.dw-lh-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.dw-lh-actions-court {
+  flex: 1;
+  justify-content: flex-end;
+}

@@ -1,32 +1,48 @@
 <mat-card
   appearance="outlined"
   class="dw-lh-card"
-  [class.dw-lh-card--image]="!!image()"
+  [class.dw-lh-card--image]="!!backgroundImage()"
+  [class.dw-lh-card--compact]="compact()"
   [style.background-image]="backgroundImage()"
 >
   <mat-card-content>
-    <div class="flex flex-col gap-4">
-      <div class="space-y-2.5">
-        <div class="space-y-1.5">
-          <p class="dw-lh-eyebrow">
-            Bibliothèque BOL
-          </p>
-          <h1 class="dw-lh-title">
-            {{ title() }}
-          </h1>
+    @if (compact()) {
+      <div class="dw-lh-ligne">
+        <div class="dw-lh-titre-court">
+          <p class="dw-lh-eyebrow">Bibliothèque BOL</p>
+          <h1 class="dw-lh-title">{{ title() }}</h1>
         </div>
-        @if (description()) {
-          <p class="dw-lh-description">
-            {{ description() }}
-          </p>
-        }
-        <div class="flex flex-wrap gap-1.5">
+        <div class="dw-lh-tags">
           <ng-content select="[dwHeaderTags]" />
         </div>
+        <div class="library-header-actions dw-lh-actions-court">
+          <ng-content select="[dwHeaderActions]" />
+        </div>
       </div>
-      <div class="library-header-actions">
-        <ng-content select="[dwHeaderActions]" />
+    } @else {
+      <div class="flex flex-col gap-4">
+        <div class="space-y-2.5">
+          <div class="space-y-1.5">
+            <p class="dw-lh-eyebrow">
+              Bibliothèque BOL
+            </p>
+            <h1 class="dw-lh-title">
+              {{ title() }}
+            </h1>
+          </div>
+          @if (description()) {
+            <p class="dw-lh-description">
+              {{ description() }}
+            </p>
+          }
+          <div class="flex flex-wrap gap-1.5">
+            <ng-content select="[dwHeaderTags]" />
+          </div>
+        </div>
+        <div class="library-header-actions">
+          <ng-content select="[dwHeaderActions]" />
+        </div>
       </div>
-    </div>
+    }
   </mat-card-content>
 </mat-card>

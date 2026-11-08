@@ -2,10 +2,331 @@
   display: block;
 }
 
-.creature-content-card {
-  overflow: hidden;
+// ── Les filtres à gauche, le tableau à droite ; sur un écran étroit, les filtres passent au-dessus ───────────────────────────────
+.cl-corps {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+
+  @media (max-width: 64rem) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-.creature-taille-field {
-  width: 14rem;
+.cl-filtres {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 0.9rem 0.6rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 14px;
+  background: var(--dw-forge-recess);
+
+  @media (max-width: 64rem) {
+    position: static;
+  }
+}
+
+.cl-facette {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cl-facette-titre {
+  margin: 0 0 0.35rem;
+  padding: 0 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--dw-forge-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.cl-facette-vide {
+  margin: 0;
+  padding: 0 0.6rem;
+  font-size: 0.8rem;
+  color: var(--dw-forge-caption);
+}
+
+// Une option de filtre : un bouton à bascule, rectangulaire, son nombre à droite.
+.cl-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 2.1rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 170, 60, 0.08);
+  }
+
+  &[aria-pressed='true'] {
+    background: rgba(217, 164, 65, 0.18);
+    box-shadow: inset 2px 0 0 var(--dw-color-legendary);
+    color: var(--dw-forge-name);
+    font-weight: 700;
+  }
+}
+
+.cl-option-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.cl-option-compte {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dw-forge-caption);
+}
+
+// Le point de couleur d'un scénario : la teinte de sa saga (`dw-saga--N`, comme sur l'accueil).
+.cl-point {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--saga);
+}
+
+.cl-rangs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0 0.5rem;
+}
+
+.cl-chip {
+  min-height: 2rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: rgba(217, 164, 65, 0.18);
+    color: var(--dw-forge-name);
+    font-weight: 700;
+  }
+}
+
+.cl-taille {
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+}
+
+.cl-effacer {
+  align-self: flex-start;
+  margin-left: 0.5rem;
+}
+
+.cl-option,
+.cl-chip,
+.cl-tri,
+.cl-nom {
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+// ── Le tableau : une ligne par créature ───────────────────────────────────────────────────────────────────────────────────────────
+.cl-cadre {
+  overflow-x: auto;
+}
+
+.cl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: var(--dw-forge-bone);
+
+  th {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--dw-forge-bronze-edge);
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--dw-forge-caption);
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+
+    &:first-child {
+      padding-left: 1rem;
+    }
+  }
+
+  td {
+    height: 2.6rem;
+    padding: 0 0.5rem;
+    border-bottom: 1px solid rgba(169, 121, 58, 0.18);
+    white-space: nowrap;
+
+    &:first-child {
+      padding-left: 0.75rem;
+    }
+  }
+
+  tbody tr:hover td {
+    background: rgba(255, 170, 60, 0.05);
+  }
+}
+
+.cl-num {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+
+  .cl-tri {
+    justify-content: center;
+  }
+}
+
+.cl-tri {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--dw-forge-hot-text);
+  }
+
+  .mat-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+// Le nom : un bouton qui ouvre le statbloc, avec le portrait de la créature.
+.cl-nom {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: 18rem;
+  padding: 0.2rem 0.3rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dw-forge-name);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover .cl-nom-texte {
+    text-decoration: underline;
+  }
+}
+
+.cl-portrait {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border: 1.5px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cl-nom-texte {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cl-rang {
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid;
+  border-radius: 5px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cl-rang--R {
+  border-color: color-mix(in srgb, var(--dw-color-rival) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-rival) 15%, transparent);
+  color: var(--dw-forge-alert);
+}
+
+.cl-rang--C {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  color: var(--dw-forge-name);
+}
+
+.cl-rang--P {
+  border-color: var(--dw-forge-bronze-dim);
+  color: var(--dw-forge-caption);
+}
+
+.cl-source {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+}
+
+.cl-provenance {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 5px;
+  font-size: 0.7rem;
+  color: var(--dw-forge-info);
+}
+
+.cl-provenance--mienne {
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-pnj) 12%, transparent);
+  color: var(--dw-color-pnj);
+}
+
+.cl-scenario {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--dw-forge-bone);
+}
+
+.cl-actions {
+  text-align: right;
+}
+
+.cl-vide {
+  padding: 2rem 1rem;
+  color: var(--dw-forge-caption);
+  text-align: center;
 }

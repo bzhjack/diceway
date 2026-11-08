@@ -1,3 +1,5 @@
+import {BolFicheScenario} from './bol-fiche-scenario.model';
+
 /** Une créature du bestiaire : attributs, vitalité, attaque, taille et capacités. */
 export interface BolCreatureModel {
   id: string | null;
@@ -26,6 +28,8 @@ export interface BolCreatureModel {
   taille: BolCreatureTailleModel;
   type?: 'P' | 'C' | 'R';
   rang?: 'rival' | 'coriace' | 'pietaille';
+  /** Les scénarios du compte qui l'ont créée ou la citent (liste du bestiaire seulement). */
+  scenarios?: BolFicheScenario[];
 }
 
 /** Capacité spéciale d'une créature, avec ses éventuels dés de bonus ou de malus. */

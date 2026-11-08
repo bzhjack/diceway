@@ -11,21 +11,32 @@ use Illuminate\Support\Facades\DB;
 
 class BolCreatureService
 {
+    public function __construct(private readonly BolScenariosDesFiches $scenariosDesFiches)
+    {
+    }
+
     public function getCreatureWithRelations($creatureId)
     {
         return BolCreature::with($this->creatureRelations())
             ->where('id', $creatureId)
             ->first();
     }
+    /** Les créatures du compte et du catalogue, chacune avec les scénarios du compte qui l'ont créée ou la citent (`scenarios`). */
     public function getCreaturesWithRelations()
     {
-        return BolCreature::with($this->creatureRelations())
+        $creatures = BolCreature::with($this->creatureRelations())
             ->where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->orderBy('user_id', 'desc')
             ->orderBy('id_taille')
             ->orderBy('nom')
             ->get();
+        $scenarios = $this->scenariosDesFiches->pour('creature', $creatures->pluck('id'), Auth::id() === null ? null : (string) Auth::id());
+        foreach ($creatures as $creature) {
+            $creature->setRelation('scenarios', collect($scenarios[(string) $creature->id] ?? []));
+        }
+
+        return $creatures;
     }
 
     /** La liste du compte, gardée en cache. */
