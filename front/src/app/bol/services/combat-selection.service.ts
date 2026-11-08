@@ -1,6 +1,6 @@
 import {effect, Injectable, inject, signal} from '@angular/core';
 import {forkJoin} from 'rxjs';
-import {creatureImage} from '../creature/library/creature-card/creature-card.component';
+import {creatureImage} from '../creature/creature.util';
 import {demonImage} from '../demon/library/demon-card/demon-card.component';
 import {heroImage} from '../hero/library/hero-card/hero-card.component';
 import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';

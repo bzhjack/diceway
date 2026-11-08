@@ -148,7 +148,9 @@ Every library page (list of entities) follows this structure:
 
 2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 
-See `creature-library-page.html` or `pnj-library-page.html` as reference.
+See `pnj-library-page.html` as reference for a gallery of cards.
+
+**Library in rows** (the bestiary, `creature-library-page`, is the reference; the other galleries are to follow): a compact header (`<dw-library-header [compact]="true">`, one line) with a `dw-compact-bar` once it scrolls out; on the left, the filters always in view (source: shared catalogue or the account's sheets, scenario, rank, size), each option with its count, as toggles (`aria-pressed`); on the right, the content card with `<dw-library-toolbar [withFilters]="false">` and a sortable table (`aria-sort`), square portraits, a click on the name opens the statblock, edit and delete only on the account's sheets. The scenarios of a sheet come from the API (`scenarios`, filled by `BolScenariosDesFiches` from `bol_import_ref`).
 
 ### Accessibility
 - All components must pass AXE checks and meet WCAG AA minimums (focus management, color contrast, ARIA attributes).

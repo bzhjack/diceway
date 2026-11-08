@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {BolCreatureModel} from '../../models/bol-creature.model';
@@ -15,10 +15,11 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {creatureStatblockData} from '../../shared/statblock/bol-statblock.builders';
-import {creatureImage} from './creature-card/creature-card.component';
+import {creatureImage} from '../creature.util';
 import {Observable} from 'rxjs';
 import {BolLibraryPageBase} from '../../shared/library/library-page.base';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
@@ -85,6 +86,7 @@ function valeurDeTri(creature: BolCreatureModel, tri: Tri): number | string {
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwCompactBarComponent,
     AvatarFallbackDirective,
   ],
   templateUrl: './creature-library-page.html',
@@ -101,6 +103,9 @@ export class CreatureLibraryPageComponent extends BolLibraryPageBase<BolCreature
     consequence: 'Cette fiche quitte aussi les scènes qui la citent ; les tables où elle est posée gardent leur copie.',
     error: 'La suppression de la créature a échoué.',
   };
+
+  /** L'en-tête de la page, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
   protected readonly tailles = this.creatureStateService.tailleList;
   protected readonly searchTaille = signal<number | ''>('');

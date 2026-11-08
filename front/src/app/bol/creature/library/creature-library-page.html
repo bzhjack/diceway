@@ -24,6 +24,16 @@
       </ng-container>
     </dw-library-header>
 
+    <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer une créature et revenir. -->
+    <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Bestiaire des créatures · ' + creatureCount() + (creatureCount() > 1 ? ' créatures' : ' créature')">
+      <button mat-flat-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
+        <mat-icon>add</mat-icon> Créer une créature
+      </button>
+      <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
+      </button>
+    </dw-compact-bar>
+
     <div class="cl-corps">
       <!-- Les filtres, toujours en vue : chacun dit combien de créatures il garde. -->
       <aside class="cl-filtres" aria-label="Filtres du bestiaire">

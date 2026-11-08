@@ -1,5 +1,7 @@
 :host {
   display: block;
+  // La hauteur de la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres et l'en-tête du tableau collent dessous.
+  --cl-sous-la-barre: 3.75rem;
 }
 
 // ── Les filtres à gauche, le tableau à droite ; sur un écran étroit, les filtres passent au-dessus ───────────────────────────────
@@ -16,7 +18,7 @@
 
 .cl-filtres {
   position: sticky;
-  top: 1rem;
+  top: calc(var(--cl-sous-la-barre) + 0.5rem);
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -154,8 +156,15 @@
 }
 
 // ── Le tableau : une ligne par créature ───────────────────────────────────────────────────────────────────────────────────────────
+// Le tableau ne défile de côté que sur un écran étroit : ailleurs, son en-tête colle sous la barre compacte.
+.cl-liste {
+  overflow: visible;
+}
+
 .cl-cadre {
-  overflow-x: auto;
+  @media (max-width: 64rem) {
+    overflow-x: auto;
+  }
 }
 
 .cl-table {
@@ -165,6 +174,10 @@
   color: var(--dw-forge-bone);
 
   th {
+    position: sticky;
+    top: var(--cl-sous-la-barre);
+    z-index: 1;
+    background: var(--dw-forge-table-head);
     padding: 0.55rem 0.5rem;
     border-bottom: 1px solid var(--dw-forge-bronze-edge);
     font-size: 0.7rem;
@@ -229,7 +242,7 @@
   }
 }
 
-// Le nom : un bouton qui ouvre le statbloc, avec le portrait de la créature.
+// Le nom : un bouton qui ouvre le statbloc, avec le portrait de la créature, en carré.
 .cl-nom {
   display: flex;
   align-items: center;
@@ -255,7 +268,7 @@
   width: 2rem;
   height: 2rem;
   border: 1.5px solid var(--dw-forge-bronze);
-  border-radius: 50%;
+  border-radius: 6px;
   object-fit: cover;
 }
 
