@@ -1,9 +1,9 @@
 import {effect, Injectable, inject, signal} from '@angular/core';
 import {forkJoin} from 'rxjs';
 import {creatureImage} from '../creature/creature.util';
-import {demonImage} from '../demon/library/demon-card/demon-card.component';
-import {heroImage} from '../hero/library/hero-card/hero-card.component';
-import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';
+import {demonImage} from '../demon/demon.util';
+import {heroImage} from '../hero/hero.util';
+import {pnjImage} from '../pnj/pnj.util';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
 import {BolHerosService} from './bol-heros.service';

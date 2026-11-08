@@ -1,18 +1,10 @@
 <section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
-    <!-- Header card -->
-    <dw-library-header
-      class="demon-header-card"
-      title="Bestiaire des démons"
-      description="Accès rapide à tous les démons disponibles dans la bibliothèque Barbarians of Lemuria."
-      image="/assets/bol/header-demons.webp"
-    >
+    <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
+    <dw-library-header title="Bestiaire des démons" image="/assets/bol/header-demons.webp" [compact]="true">
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalDemonCount() }} démons</dw-tag>
-        @if (demonCount() !== totalDemonCount()) {
-          <dw-tag>{{ demonCount() }} visibles</dw-tag>
-        }
+        <dw-tag>{{ totalCount() }} démons</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
@@ -32,39 +24,100 @@
       </ng-container>
     </dw-library-header>
 
-    <!-- Content card -->
-    <mat-card appearance="outlined" class="demon-content-card">
+    <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer un démon et revenir. -->
+    <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Bestiaire des démons · ' + demonCount() + (demonCount() > 1 ? ' démons' : ' démon')">
+      <button mat-flat-button routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
+        <mat-icon>add</mat-icon> Créer un démon
+      </button>
+      <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
+      </button>
+    </dw-compact-bar>
 
-      <!-- Toolbar -->
-      <dw-library-toolbar
-        placeholder="Rechercher un démon"
-        [(searchTerm)]="searchTerm"
-        [(checked)]="onlyCreations"
-        (cleared)="clearFilters()"
-      >
-        <mat-form-field dwToolbarFilter class="demon-categorie-field" subscriptSizing="dynamic">
-          <mat-icon matPrefix>filter_list</mat-icon>
-          <mat-select [formField]="categorieField">
-            <mat-option value="">Toutes les catégories</mat-option>
-            @for (categorie of categories() ?? []; track categorie.id) {
-              <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <dw-tag dwToolbarCount>{{ demonCount() }} entrées</dw-tag>
-      </dw-library-toolbar>
+    <div class="dw-lr-corps">
+      <!-- Les filtres, toujours en vue : chacun dit combien de démons il garde. -->
+      <aside class="dw-lr-filtres" aria-label="Filtres des démons">
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [rangs]="rangs()" [(source)]="source" [(scenarioId)]="scenarioId" [(rang)]="rang" />
 
-      <!-- Grille de cartes -->
-      <dw-library-grid [empty]="filteredDemons().length === 0" emptyMessage="Aucun démon ne correspond à cette recherche.">
-        @for (demon of filteredDemons(); track demon.id) {
-          <bol-demon-card
-            [demon]="demon"
-            (deleteRequested)="askDelete(demon)"
-            (statblockRequested)="openStatblock(demon)"
-          />
+        <section class="dw-lr-facette" aria-labelledby="dl-f-categorie">
+          <h2 id="dl-f-categorie" class="dw-lr-facette-titre">Catégorie</h2>
+          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
+            <mat-select [formField]="categorieField" aria-labelledby="dl-f-categorie">
+              <mat-option value="">Toutes les catégories</mat-option>
+              @for (categorie of categories() ?? []; track categorie.id) {
+                <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        @if (filtresActifs()) {
+          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+          </button>
         }
-      </dw-library-grid>
-    </mat-card>
+      </aside>
 
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher un démon, un pouvoir, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <dw-tag dwToolbarCount>{{ demonCount() }} {{ demonCount() > 1 ? 'démons' : 'démon' }}</dw-tag>
+        </dw-library-toolbar>
+
+        <div class="dw-lr-cadre">
+          <table class="dw-lr-table">
+            <caption class="sr-only">Les démons ; un clic sur un nom ouvre son statbloc.</caption>
+            <thead>
+              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+            </thead>
+            <tbody>
+              @for (ligne of lignes(); track ligne.demon.id) {
+                <tr>
+                  <td>
+                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.demon.nom + ', voir son statbloc'" (click)="openStatblock(ligne.demon)">
+                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
+                      <span class="dw-lr-nom-texte">{{ ligne.demon.nom }}</span>
+                    </button>
+                  </td>
+                  <td class="dl-categorie">{{ ligne.demon.categorie.categorie }}</td>
+                  <td class="dl-type"><span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
+                  <td class="dw-lr-num">{{ ligne.demon.vitalite }}</td>
+                  <td class="dw-lr-num">{{ ligne.demon.melee }}</td>
+                  <td class="dw-lr-num">{{ ligne.demon.tir }}</td>
+                  <td class="dw-lr-num">{{ ligne.demon.defense }}</td>
+                  <td>{{ ligne.demon.degats }}</td>
+                  <td>
+                    <span class="dw-lr-source">
+                      <span class="dw-lr-provenance" [class.dw-lr-provenance--mienne]="ligne.mien">{{ ligne.mien ? 'Mes fiches' : 'Catalogue' }}</span>
+                      @for (scenario of ligne.scenarios; track scenario.id) {
+                        <span class="dw-lr-scenario" [class]="'dw-saga--' + scenario.teinte"><span class="dw-lr-point" aria-hidden="true"></span>{{ scenario.titre }}</span>
+                      }
+                    </span>
+                  </td>
+                  <td class="dw-lr-actions">
+                    @if (ligne.mien) {
+                      <a
+                        mat-icon-button
+                        [routerLink]="['/create/demon', ligne.demon.id]"
+                        [state]="{ returnUrl: '/library/demons' }"
+                        [attr.aria-label]="'Modifier ' + ligne.demon.nom"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </a>
+                      <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.demon.nom" (click)="askDelete(ligne.demon)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="10" class="dw-lr-vide">Aucun démon ne correspond à ces filtres.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </mat-card>
+    </div>
   </div>
 </section>

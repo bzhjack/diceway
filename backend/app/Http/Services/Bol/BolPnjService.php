@@ -19,9 +19,14 @@ use Illuminate\Support\Facades\DB;
 /** Les PNJ, des fiches de héros dont le `type` n'est pas `H`. */
 class BolPnjService
 {
+    public function __construct(private readonly BolScenariosDesFiches $scenariosDesFiches)
+    {
+    }
+
+    /** Les PNJ du compte et du catalogue, chacun avec les scénarios du compte qui l'ont créé ou le citent (`scenarios`). */
     public function getPnjsWithRelations()
     {
-        return BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
+        $pnjs = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
             ->where('type', '!=', 'H')
             ->where(function ($query) {
                 $query->where('user_id', Auth::id())
@@ -30,6 +35,9 @@ class BolPnjService
             ->orderBy('user_id', 'desc')
             ->orderBy('nom')
             ->get();
+        $this->scenariosDesFiches->poser('pnj', $pnjs, Auth::id() === null ? null : (string) Auth::id());
+
+        return $pnjs;
     }
 
     public function getPnjWithRelations(string $id): ?BolHeros

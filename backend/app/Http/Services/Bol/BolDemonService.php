@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class BolDemonService
 {
+    public function __construct(private readonly BolScenariosDesFiches $scenariosDesFiches)
+    {
+    }
+
     public function getDemonWithRelations($DemonId)
     {
         return BolDemon::with($this->DemonRelations())
@@ -18,15 +22,19 @@ class BolDemonService
             ->first();
     }
 
+    /** Les démons du compte et du catalogue, chacun avec les scénarios du compte qui l'ont créé ou le citent (`scenarios`). */
     public function getDemonsWithRelations()
     {
-        return BolDemon::with($this->DemonRelations())
+        $demons = BolDemon::with($this->DemonRelations())
             ->where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->orderBy('user_id', 'desc')
             ->orderBy('id_categorie')
             ->orderBy('nom')
             ->get();
+        $this->scenariosDesFiches->poser('demon', $demons, Auth::id() === null ? null : (string) Auth::id());
+
+        return $demons;
     }
 
     /** La liste du compte, gardée en cache. */

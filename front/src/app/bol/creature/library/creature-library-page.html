@@ -4,7 +4,7 @@
     <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
     <dw-library-header title="Bestiaire des créatures" image="/assets/bol/header-creatures.webp" [compact]="true">
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalCreatureCount() }} créatures</dw-tag>
+        <dw-tag>{{ totalCount() }} créatures</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
@@ -34,52 +34,14 @@
       </button>
     </dw-compact-bar>
 
-    <div class="cl-corps">
+    <div class="dw-lr-corps">
       <!-- Les filtres, toujours en vue : chacun dit combien de créatures il garde. -->
-      <aside class="cl-filtres" aria-label="Filtres du bestiaire">
-        <section class="cl-facette" aria-labelledby="cl-f-source">
-          <h2 id="cl-f-source" class="cl-facette-titre">Source</h2>
-          @for (option of sources(); track option.cle) {
-            <button type="button" class="cl-option" [attr.aria-pressed]="source() === option.cle" (click)="source.set(option.cle)">
-              <span class="cl-option-label">{{ option.label }}</span>
-              <span class="cl-option-compte">{{ option.compte }}</span>
-            </button>
-          }
-        </section>
+      <aside class="dw-lr-filtres" aria-label="Filtres du bestiaire">
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [rangs]="rangs()" [(source)]="source" [(scenarioId)]="scenarioId" [(rang)]="rang" />
 
-        <section class="cl-facette" aria-labelledby="cl-f-scenario">
-          <h2 id="cl-f-scenario" class="cl-facette-titre">Scénario</h2>
-          @for (scenario of scenarios(); track scenario.id) {
-            <button
-              type="button"
-              class="cl-option"
-              [class]="'dw-saga--' + scenario.teinte"
-              [attr.aria-pressed]="scenarioId() === scenario.id"
-              (click)="basculerScenario(scenario.id)"
-            >
-              <span class="cl-point" aria-hidden="true"></span>
-              <span class="cl-option-label">{{ scenario.titre }}</span>
-              <span class="cl-option-compte">{{ scenario.compte }}</span>
-            </button>
-          } @empty {
-            <p class="cl-facette-vide">Aucun scénario importé ne cite encore de créature.</p>
-          }
-        </section>
-
-        <section class="cl-facette" aria-labelledby="cl-f-rang">
-          <h2 id="cl-f-rang" class="cl-facette-titre">Rang</h2>
-          <div class="cl-rangs">
-            @for (r of rangs(); track r.cle) {
-              <button type="button" class="cl-chip" [attr.aria-pressed]="rang() === r.cle" (click)="basculerRang(r.cle)">
-                {{ r.label }} · {{ r.compte }}
-              </button>
-            }
-          </div>
-        </section>
-
-        <section class="cl-facette" aria-labelledby="cl-f-taille">
-          <h2 id="cl-f-taille" class="cl-facette-titre">Taille</h2>
-          <mat-form-field class="cl-taille" subscriptSizing="dynamic">
+        <section class="dw-lr-facette" aria-labelledby="cl-f-taille">
+          <h2 id="cl-f-taille" class="dw-lr-facette-titre">Taille</h2>
+          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
             <mat-select [formField]="tailleField" aria-labelledby="cl-f-taille">
               <mat-option value="">Toutes les tailles</mat-option>
               @for (taille of tailles() ?? []; track taille.id) {
@@ -90,70 +52,48 @@
         </section>
 
         @if (filtresActifs()) {
-          <button mat-stroked-button type="button" class="cl-effacer" (click)="clearFilters()">
+          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
             <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
           </button>
         }
       </aside>
 
-      <mat-card appearance="outlined" class="cl-liste">
+      <mat-card appearance="outlined" class="dw-lr-liste">
         <dw-library-toolbar placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
           <dw-tag dwToolbarCount>{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</dw-tag>
         </dw-library-toolbar>
 
-        <div class="cl-cadre">
-          <table class="cl-table">
+        <div class="dw-lr-cadre">
+          <table class="dw-lr-table">
             <caption class="sr-only">Les créatures du bestiaire ; un clic sur un nom ouvre son statbloc.</caption>
             <thead>
-              <tr>
-                @for (colonne of colonnes(); track colonne.label) {
-                  <th scope="col" [class.cl-num]="colonne.num" [attr.aria-sort]="colonne.ariaSort">
-                    @if (colonne.cle; as cle) {
-                      <button type="button" class="cl-tri" (click)="trier(cle)">
-                        @if (colonne.titre; as titre) {
-                          <abbr [title]="titre">{{ colonne.label }}</abbr>
-                        } @else {
-                          {{ colonne.label }}
-                        }
-                        @if (colonne.icone; as icone) {
-                          <mat-icon aria-hidden="true">{{ icone }}</mat-icon>
-                        }
-                      </button>
-                    } @else if (colonne.titre; as titre) {
-                      <abbr [title]="titre">{{ colonne.label }}</abbr>
-                    } @else {
-                      {{ colonne.label }}
-                    }
-                  </th>
-                }
-                <th scope="col"><span class="sr-only">Actions</span></th>
-              </tr>
+              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
             </thead>
             <tbody>
               @for (ligne of lignes(); track ligne.creature.id) {
                 <tr>
                   <td>
-                    <button type="button" class="cl-nom" [attr.aria-label]="ligne.creature.nom + ', voir son statbloc'" (click)="openStatblock(ligne.creature)">
-                      <img dwAvatarFallback class="cl-portrait" [src]="ligne.image" alt="" loading="lazy" />
-                      <span class="cl-nom-texte">{{ ligne.creature.nom }}</span>
+                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.creature.nom + ', voir son statbloc'" (click)="openStatblock(ligne.creature)">
+                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
+                      <span class="dw-lr-nom-texte">{{ ligne.creature.nom }}</span>
                     </button>
                   </td>
                   <td class="cl-taille-cellule">{{ ligne.creature.taille.taille }}</td>
-                  <td class="cl-type-cellule"><span class="cl-rang" [class]="'cl-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
-                  <td class="cl-num">{{ ligne.creature.vitalite }}</td>
-                  <td class="cl-num">{{ ligne.creature.attaque }}</td>
-                  <td class="cl-num">{{ ligne.creature.defense }}</td>
+                  <td class="cl-type-cellule"><span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
+                  <td class="dw-lr-num">{{ ligne.creature.vitalite }}</td>
+                  <td class="dw-lr-num">{{ ligne.creature.attaque }}</td>
+                  <td class="dw-lr-num">{{ ligne.creature.defense }}</td>
                   <td>{{ ligne.creature.degats }}</td>
                   <td>{{ ligne.creature.protection }}</td>
                   <td>
-                    <span class="cl-source">
-                      <span class="cl-provenance" [class.cl-provenance--mienne]="ligne.mienne">{{ ligne.mienne ? 'Mes fiches' : 'Catalogue' }}</span>
+                    <span class="dw-lr-source">
+                      <span class="dw-lr-provenance" [class.dw-lr-provenance--mienne]="ligne.mienne">{{ ligne.mienne ? 'Mes fiches' : 'Catalogue' }}</span>
                       @for (scenario of ligne.scenarios; track scenario.id) {
-                        <span class="cl-scenario" [class]="'dw-saga--' + scenario.teinte"><span class="cl-point" aria-hidden="true"></span>{{ scenario.titre }}</span>
+                        <span class="dw-lr-scenario" [class]="'dw-saga--' + scenario.teinte"><span class="dw-lr-point" aria-hidden="true"></span>{{ scenario.titre }}</span>
                       }
                     </span>
                   </td>
-                  <td class="cl-actions">
+                  <td class="dw-lr-actions">
                     @if (ligne.mienne) {
                       <a
                         mat-icon-button
@@ -171,7 +111,7 @@
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="10" class="cl-vide">Aucune créature ne correspond à ces filtres.</td>
+                  <td colspan="10" class="dw-lr-vide">Aucune créature ne correspond à ces filtres.</td>
                 </tr>
               }
             </tbody>

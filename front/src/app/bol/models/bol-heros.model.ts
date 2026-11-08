@@ -4,6 +4,7 @@ import {BolHerosArmeModel} from "./bol-arme.model";
 import {BolHerosTraitsModel} from "./bol-trait.model";
 import {BolHerosLangueModel} from "./bol-langue.model";
 import {BolRegionModel} from "./bol-region.model";
+import {BolFicheScenario} from "./bol-fiche-scenario.model";
 
 /** Une fiche de personnage telle que l'API la renvoie : un héros ou un PNJ (même modèle, distingués par
  * `type`), avec ses attributs, son combat, ses ressources, son équipement, ses traits et ses carrières. */
@@ -23,6 +24,8 @@ export interface BolHerosModel {
   langues?: BolHerosLangueModel[] | number[];
   armures: BolHerosArmureModel[] | number[];
   armes: BolHerosArmeModel[] | number[];
+  /** Les scénarios du compte qui ont créé ou citent ce PNJ (liste des PNJ seulement). */
+  scenarios?: BolFicheScenario[];
 }
 
 /** Valeurs de combat d'un personnage ; les valeurs `*_effective` incluent les malus de l'équipement. */

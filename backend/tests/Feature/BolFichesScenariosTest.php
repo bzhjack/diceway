@@ -4,19 +4,23 @@ namespace Tests\Feature;
 
 use App\Http\Services\Bol\BolCache;
 use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolImportRef;
 use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\User;
+use Database\Seeders\BolCategorieSeeder;
 use Database\Seeders\BolTailleSeeder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-/** Le bestiaire dit de quel scénario du compte vient chaque créature, ou lequel la cite : son filtre « Scénario » s'en sert. */
-class BolCreatureScenariosTest extends TestCase
+/** Les bibliothèques (créatures, démons, PNJ) disent de quel scénario du compte vient chaque fiche, ou lequel la cite : leur filtre
+ * « Scénario » s'en sert. */
+class BolFichesScenariosTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,6 +30,7 @@ class BolCreatureScenariosTest extends TestCase
     {
         parent::setUp();
         (new BolTailleSeeder())->run();
+        Model::unguarded(fn () => (new BolCategorieSeeder())->run());
         $this->user = User::factory()->create();
         Sanctum::actingAs($this->user);
     }
@@ -83,18 +88,39 @@ class BolCreatureScenariosTest extends TestCase
         $this->assertSame([], $liste['Cathgan']['scenarios']);
     }
 
+    public function test_demons_and_npcs_name_their_scenarios_too(): void
+    {
+        $saga = $this->chapitres('perle-du-beshaar', 'Perle du Beshaar', ['ch1']);
+        DB::table('bol_demon')->insert(['id' => 'ilirk', 'user_id' => $this->user->id, 'nom' => 'Ilirk', 'vigueur' => 0, 'agilite' => 0, 'esprit' => 0, 'aura' => 0, 'melee' => 0, 'tir' => 0, 'defense' => 0, 'vitalite' => 20, 'degats' => 'd6', 'id_categorie' => 2]);
+        $this->ref('perle-du-beshaar', 'demon', 'ilirk');
+        $pnj = BolHeros::create(['nom' => 'Garde', 'joueur' => '', 'user_id' => $this->user->id, 'type' => 'C']);
+        $this->ref('perle-du-beshaar', 'pnj', $pnj->id);
+        $attendu = [['id' => $saga->id, 'titre' => 'Perle du Beshaar', 'one_shot' => false]];
+
+        $demons = collect($this->getJson('/api/bol/demon')->assertOk()->json())->keyBy('nom');
+        $pnjs = collect($this->getJson('/api/bol/pnj')->assertOk()->json())->keyBy('origines.nom');
+
+        $this->assertSame($attendu, $demons['Ilirk']['scenarios']);
+        $this->assertSame($attendu, $pnjs['Garde']['scenarios']);
+    }
+
     public function test_deleting_a_chapter_or_renaming_its_scenario_clears_the_cached_list(): void
     {
         $saga = $this->chapitres('dieu-voile', 'Le Dieu voilé', ['ch1', 'ch2']);
-        $cle = BolCache::creatures($this->user->id);
+        $cles = [BolCache::creatures($this->user->id), BolCache::demons($this->user->id)];
+        $remplir = fn () => array_map(fn ($cle) => Cache::put($cle, ['ancienne liste'], BolCache::TTL), $cles);
 
-        Cache::put($cle, ['ancienne liste'], BolCache::TTL);
+        $remplir();
         $saga->update(['titre' => 'Le Dieu dévoilé']);
-        $this->assertFalse(Cache::has($cle));
+        foreach ($cles as $cle) {
+            $this->assertFalse(Cache::has($cle));
+        }
 
-        Cache::put($cle, ['ancienne liste'], BolCache::TTL);
+        $remplir();
         BolScenario::where('saga_id', $saga->id)->first()->delete();
-        $this->assertFalse(Cache::has($cle));
+        foreach ($cles as $cle) {
+            $this->assertFalse(Cache::has($cle));
+        }
     }
 
     /** Une saga et ses chapitres, comme un import les crée : chacun avec sa référence d'import. */

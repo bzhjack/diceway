@@ -3,10 +3,10 @@ import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
-import {heroBadge} from '../../hero/library/hero-card/hero-card.component';
+import {heroBadge} from '../../hero/hero.util';
 import {bonusPeauDure, equippedProtection} from '../../session/combat-attack.util';
 import {isArmeEquipee} from '../arme/arme-equipee';
-import {pnjBadge} from '../../pnj/library/pnj-card/pnj-card.component';
+import {pnjBadge} from '../../pnj/pnj.util';
 import {BolStatblockChip, BolStatblockData, BolStatblockEntry, BolStatblockSection, BolStatblockTile} from '../models/bol-statblock.model';
 
 /** Mapping type BoL ('P'/'C'/'R') → libellé de rang. */

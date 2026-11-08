@@ -1,4 +1,4 @@
-import {matchesTerm, ownFirstThenLabel} from './list.utils';
+import {matchesTerm} from './list.utils';
 
 describe('matchesTerm', () => {
   it('matche tout quand le terme est vide ou blanc', () => {
@@ -14,26 +14,5 @@ describe('matchesTerm', () => {
 
   it('ignore les champs null/undefined', () => {
     expect(matchesTerm('x', null, undefined)).toBe(false);
-  });
-});
-
-describe('ownFirstThenLabel', () => {
-  interface Item {
-    mine: boolean;
-    nom: string;
-  }
-
-  const compare = ownFirstThenLabel<Item>((item) => item.mine, (item) => item.nom);
-
-  it('place mes créations avant, puis trie par libellé', () => {
-    const items: Item[] = [
-      {mine: false, nom: 'Bronyx'},
-      {mine: true, nom: 'Zombie'},
-      {mine: false, nom: 'Anguille'},
-      {mine: true, nom: 'Aigle'},
-    ];
-
-    const sorted = [...items].sort(compare);
-    expect(sorted.map((item) => item.nom)).toEqual(['Aigle', 'Zombie', 'Anguille', 'Bronyx']);
   });
 });

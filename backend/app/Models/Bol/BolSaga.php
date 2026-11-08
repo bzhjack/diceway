@@ -19,12 +19,13 @@ class BolSaga extends Model
     protected $fillable = ['user_id', 'titre', 'pitch', 'image'];
     protected $hidden = ['created_at', 'updated_at'];
 
-    /** La liste des créatures, en cache, nomme le scénario de chacune : un nouveau titre la rend fausse. */
+    /** Les listes des créatures et des démons, en cache, nomment le scénario de chacun : un nouveau titre les rend fausses. */
     protected static function booted(): void
     {
         static::updated(function (BolSaga $saga): void {
             if ($saga->wasChanged('titre') && $saga->user_id !== null) {
                 Cache::forget(BolCache::creatures((string) $saga->user_id));
+                Cache::forget(BolCache::demons((string) $saga->user_id));
             }
         });
     }

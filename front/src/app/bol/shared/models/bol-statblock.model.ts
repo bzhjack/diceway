@@ -55,6 +55,6 @@ export interface BolStatblockData {
   /** Route vers la fiche d'édition complète (même lien que le bouton "Modifier" des cartes de
    * bibliothèque) — `null` si l'entité n'a pas de fiche éditable dans ce contexte. */
   readonly editRoute: readonly [string, string] | null;
-  /** Édition avancée (héros/PNJ non "active", cf. `hero-card.component.ts`) — `null` sinon. */
+  /** Édition avancée (héros/PNJ non "active", comme dans la bibliothèque des héros) — `null` sinon. */
   readonly advancedEditRoute: readonly [string, string] | null;
 }

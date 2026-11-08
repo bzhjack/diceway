@@ -31,10 +31,7 @@ class BolCreatureService
             ->orderBy('id_taille')
             ->orderBy('nom')
             ->get();
-        $scenarios = $this->scenariosDesFiches->pour('creature', $creatures->pluck('id'), Auth::id() === null ? null : (string) Auth::id());
-        foreach ($creatures as $creature) {
-            $creature->setRelation('scenarios', collect($scenarios[(string) $creature->id] ?? []));
-        }
+        $this->scenariosDesFiches->poser('creature', $creatures, Auth::id() === null ? null : (string) Auth::id());
 
         return $creatures;
     }

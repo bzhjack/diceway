@@ -3,6 +3,7 @@
 namespace App\Http\Services\Bol;
 
 use App\Models\Bol\BolImportRef;
+use Illuminate\Database\Eloquent\Collection as Fiches;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,15 @@ use Illuminate\Support\Facades\DB;
  */
 class BolScenariosDesFiches
 {
+    /** Pose sur chaque fiche de la liste ses scénarios pour ce compte (`scenarios`, vide sans scénario). */
+    public function poser(string $kind, Fiches $fiches, ?string $userId): void
+    {
+        $scenarios = $this->pour($kind, $fiches->pluck('id'), $userId);
+        foreach ($fiches as $fiche) {
+            $fiche->setRelation('scenarios', collect($scenarios[(string) $fiche->id] ?? []));
+        }
+    }
+
     /**
      * @param iterable<string|int> $ids les fiches
      * @return array<string, list<array{id: string, titre: string, one_shot: bool}>> par id de fiche, triés par titre ; une fiche sans

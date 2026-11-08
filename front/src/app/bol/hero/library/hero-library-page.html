@@ -1,32 +1,17 @@
 <section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
-    <!-- Header card -->
-    <dw-library-header
-      title="Galerie des héros"
-      description="Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits."
-      image="/assets/bol/header-heros.webp"
-    >
+    <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
+    <dw-library-header title="Galerie des héros" image="/assets/bol/header-heros.webp" [compact]="true">
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
-        @if (heroCount() !== totalHeroCount()) {
-          <dw-tag>{{ heroCount() }} visibles</dw-tag>
-        }
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button
-            mat-flat-button
-            routerLink="/create/hero"
-            [state]="{ returnUrl: '/library/heroes' }"
-          >
+          <button mat-flat-button routerLink="/create/hero" [state]="{ returnUrl: '/library/heroes' }">
             <mat-icon>add</mat-icon> Créer un héros
           </button>
-          <button
-            mat-stroked-button
-            routerLink="/create/hero-advanced"
-            [state]="{ returnUrl: '/library/heroes' }"
-          >
+          <button mat-stroked-button routerLink="/create/hero-advanced" [state]="{ returnUrl: '/library/heroes' }">
             <mat-icon>star</mat-icon> Création avancée
           </button>
           <button mat-stroked-button routerLink="/library/pnjs">
@@ -42,31 +27,109 @@
       </ng-container>
     </dw-library-header>
 
-    <!-- Content card -->
-    <mat-card appearance="outlined" class="hero-content-card">
+    <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer un héros et revenir. -->
+    <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Galerie des héros · ' + heroCount() + ' héros'">
+      <button mat-flat-button routerLink="/create/hero" [state]="{ returnUrl: '/library/heroes' }">
+        <mat-icon>add</mat-icon> Créer un héros
+      </button>
+      <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
+      </button>
+    </dw-compact-bar>
 
-      <!-- Toolbar -->
-      <dw-library-toolbar
-        placeholder="Rechercher un héros"
-        checkboxLabel="En cours de création"
-        [(searchTerm)]="searchTerm"
-        [(checked)]="onlyPending"
-        (cleared)="clearFilters()"
-      >
-        <dw-tag dwToolbarCount>{{ heroCount() }} entrées</dw-tag>
-      </dw-library-toolbar>
+    <div class="dw-lr-corps">
+      <!-- Les filtres, toujours en vue : chacun dit combien de héros il garde. -->
+      <aside class="dw-lr-filtres" aria-label="Filtres des héros">
+        <section class="dw-lr-facette" aria-labelledby="hl-f-statut">
+          <h2 id="hl-f-statut" class="dw-lr-facette-titre">Statut</h2>
+          @for (option of statuts(); track option.cle) {
+            <button type="button" class="dw-lr-option" [attr.aria-pressed]="statut() === option.cle" (click)="statut.set(option.cle)">
+              <span class="dw-lr-option-label">{{ option.label }}</span>
+              <span class="dw-lr-option-compte">{{ option.compte }}</span>
+            </button>
+          }
+        </section>
 
-      <!-- Grille de cartes -->
-      <dw-library-grid [empty]="filteredHeroes().length === 0" emptyMessage="Aucun héros ne correspond à cette recherche.">
-        @for (hero of filteredHeroes(); track hero.id) {
-          <bol-hero-card
-            [hero]="hero"
-            (deleteRequested)="askDelete(hero)"
-            (statblockRequested)="openStatblock(hero)"
-          />
+        <section class="dw-lr-facette" aria-labelledby="hl-f-region">
+          <h2 id="hl-f-region" class="dw-lr-facette-titre">Région</h2>
+          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
+            <mat-select [formField]="regionField" aria-labelledby="hl-f-region">
+              <mat-option value="">Toutes les régions</mat-option>
+              @for (region of regions(); track region.id) {
+                <mat-option [value]="region.id">{{ region.nom }} · {{ region.compte }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        @if (filtresActifs()) {
+          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+          </button>
         }
-      </dw-library-grid>
-    </mat-card>
+      </aside>
 
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <dw-tag dwToolbarCount>{{ heroCount() }} héros</dw-tag>
+        </dw-library-toolbar>
+
+        <div class="dw-lr-cadre">
+          <table class="dw-lr-table">
+            <caption class="sr-only">Les héros ; un clic sur un nom ouvre son statbloc.</caption>
+            <thead>
+              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+            </thead>
+            <tbody>
+              @for (ligne of lignes(); track ligne.hero.id) {
+                <tr>
+                  <td>
+                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.nom + ', voir son statbloc'" (click)="openStatblock(ligne.hero)">
+                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
+                      <span class="dw-lr-nom-texte">{{ ligne.nom }}</span>
+                    </button>
+                  </td>
+                  <td class="hl-joueur">{{ ligne.hero.origines.joueur || '—' }}</td>
+                  <td class="hl-region">{{ ligne.hero.origines.region?.region ?? '—' }}</td>
+                  <td class="hl-statut">
+                    <span class="dw-lr-statut" [class.dw-lr-statut--en-cours]="!ligne.hero.active">{{ ligne.hero.active ? 'Actif' : 'En cours' }}</span>
+                  </td>
+                  <td class="dw-lr-num">{{ ligne.hero.ressources.vitalite }}</td>
+                  <td class="dw-lr-num">{{ ligne.hero.ressources.heroisme }}</td>
+                  <td><span class="dw-lr-texte-long hl-carrieres" [title]="ligne.carrieres">{{ ligne.carrieres || '—' }}</span></td>
+                  <td class="dw-lr-actions">
+                    <a
+                      mat-icon-button
+                      [routerLink]="['/create/hero', ligne.hero.id]"
+                      [state]="{ returnUrl: '/library/heroes' }"
+                      [attr.aria-label]="'Modifier ' + ligne.nom"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </a>
+                    @if (!ligne.hero.active) {
+                      <a
+                        mat-icon-button
+                        [routerLink]="['/create/hero-advanced', ligne.hero.id]"
+                        [state]="{ returnUrl: '/library/heroes' }"
+                        [attr.aria-label]="'Édition avancée de ' + ligne.nom"
+                      >
+                        <mat-icon>tune</mat-icon>
+                      </a>
+                    }
+                    <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.nom" (click)="askDelete(ligne.hero)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="dw-lr-vide">Aucun héros ne correspond à ces filtres.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </mat-card>
+    </div>
   </div>
 </section>

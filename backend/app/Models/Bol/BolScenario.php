@@ -39,9 +39,10 @@ class BolScenario extends Model
         static::deleted(function (BolScenario $chapitre) use ($sansChapitre): void {
             BolImportRef::where('entity_kind', 'scenario')->where('entity_id', $chapitre->id)->delete();
             $sansChapitre($chapitre->saga_id);
-            // La liste des créatures, en cache, nomme les scénarios de chacune.
+            // Les listes des créatures et des démons, en cache, nomment les scénarios de chacun.
             if ($chapitre->user_id !== null) {
                 Cache::forget(BolCache::creatures((string) $chapitre->user_id));
+                Cache::forget(BolCache::demons((string) $chapitre->user_id));
             }
         });
     }

@@ -1,3 +1,5 @@
+import {BolFicheScenario} from './bol-fiche-scenario.model';
+
 /** Un démon : attributs, vitalité, dégâts et pouvoirs. */
 export interface BolDemonModel {
   id: string | null;
@@ -28,7 +30,9 @@ export interface BolDemonModel {
     id: number;
   }[];
   categorie: BolDemonCategorieModel;
-  type?: 'P' | 'C' | 'R'
+  type?: 'P' | 'C' | 'R';
+  /** Les scénarios du compte qui l'ont créé ou le citent (liste des démons seulement). */
+  scenarios?: BolFicheScenario[]
 }
 
 /** Pouvoir d'un démon. */

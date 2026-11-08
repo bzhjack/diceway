@@ -1,61 +1,77 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
+import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCard} from '@angular/material/card';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
+import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
+import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
+import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
+import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
+import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
+import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {LibraryColonne, LibraryRang} from '../../shared/models/library-rows.model';
+import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
+import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {pnjStatblockData} from '../../shared/statblock/bol-statblock.builders';
-import {PnjCardComponent, pnjImage, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
-import {Observable} from 'rxjs';
-import {DwLibraryGridComponent} from '../../../shared/dw-library-grid/dw-library-grid';
-import {BolLibraryPageBase} from '../../shared/library/library-page.base';
-import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
+import {pnjImage} from '../pnj.util';
 
-type PnjType = 'P' | 'C' | 'R';
+type Tri = 'nom' | 'region' | 'type' | 'vitalite' | 'melee' | 'defense';
 
-interface PnjTypeOption {
-  readonly label: string;
-  readonly value: PnjType | '';
-}
+const COLONNES: readonly LibraryColonne<Tri>[] = [
+  {cle: 'nom', label: 'PNJ'},
+  {cle: 'region', label: 'Région'},
+  {cle: 'type', label: 'Type'},
+  {cle: 'vitalite', label: 'Vit.', titre: 'Vitalité', num: true},
+  {cle: 'melee', label: 'Mêlée', num: true},
+  {cle: 'defense', label: 'Déf.', titre: 'Défense', num: true},
+  {cle: null, label: 'Carrières'},
+  {cle: null, label: 'Source'},
+];
 
+/**
+ * Les PNJ, en lignes : à gauche les filtres (source, scénario, rang, région) avec leur nombre de PNJ, à droite le tableau, triable par
+ * colonne. Un clic sur un PNJ ouvre son statbloc ; les fiches du compte se modifient et se suppriment, celles du catalogue commun sont
+ * en lecture seule.
+ */
 @Component({
   selector: 'bol-pnj-library-page',
   imports: [
     FormField,
     RouterLink,
     MatButtonModule,
-    MatCheckboxModule,
+    MatCard,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
     MatSelectModule,
-    MatCard,
-    DwTagComponent,
+    AvatarFallbackDirective,
+    DwCompactBarComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
-    DwLibraryGridComponent,
-    PnjCardComponent,
+    DwTagComponent,
+    LibraryEnteteComponent,
+    LibraryFacettesComponent,
   ],
   templateUrl: './pnj-library-page.html',
-  styleUrl: './pnj-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> {
+export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tri> {
   private readonly pnjService = inject(BolPnjService);
   private readonly pnjs = refreshableResource(() => this.pnjService.pnjs());
+  protected readonly fiches = this.pnjs.data;
+  protected readonly libelleTout = 'Tous les PNJ';
+  protected readonly colonnesDefinies = COLONNES;
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le PNJ',
     name: (item) => item.origines.nom ?? 'ce PNJ',
@@ -63,39 +79,89 @@ export class PnjLibraryPageComponent extends BolLibraryPageBase<BolHerosModel> {
     error: 'La suppression du PNJ a échoué.',
   };
 
-  protected readonly typeOptions: PnjTypeOption[] = [
-    {label: 'Tous les profils', value: ''},
-    {label: 'Coriaces', value: 'C'},
-    {label: 'Rivaux', value: 'R'},
-    {label: 'Pietaille', value: 'P'},
-  ];
-  protected readonly searchType = signal<PnjType | ''>('');
-  protected readonly typeField = form(this.searchType);
-  protected readonly onlyCreations = signal(false);
+  /** L'en-tête de la page, que la barre compacte remplace une fois sorti de l'écran. */
+  protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
-  protected readonly filteredPnjs = computed(() =>
-    [...this.pnjs.data()]
-      .filter((pnj) => (this.onlyCreations() ? Boolean(pnj.user_id) : true))
-      .filter((pnj) => (this.searchType() ? pnj.type === this.searchType() : true))
-      .filter((pnj) =>
-        matchesTerm(
-          this.searchTerm(),
-          pnj.origines.nom,
-          pnj.origines.commentaire,
-          pnj.origines.region?.region,
-          pnjTypeLabel(pnj.type),
-          pnjLanguagesText(pnj),
+  /** Les régions des PNJ, par nom, chacune avec son nombre de PNJ. */
+  protected readonly regions = computed(() => {
+    const parId = new Map<number, {id: number; nom: string; compte: number}>();
+    for (const pnj of this.fiches()) {
+      const region = pnj.origines.region;
+      if (region?.id != null) {
+        parId.set(region.id, {id: region.id, nom: region.region, compte: (parId.get(region.id)?.compte ?? 0) + 1});
+      }
+    }
+    return [...parId.values()].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+  });
+  protected readonly searchRegion = signal<number | ''>('');
+  protected readonly regionField = form(this.searchRegion);
+
+  protected readonly filtresActifs = computed(() => this.facettesActives() || this.searchRegion() !== '' || this.searchTerm() !== '');
+
+  protected readonly filteredPnjs = computed(() => {
+    const region = this.searchRegion();
+    return this.trierLes(
+      this.filtrerParFacettes(this.fiches())
+        .filter((p) => region === '' || p.origines.region_id === region)
+        .filter((p) =>
+          matchesTerm(
+            this.searchTerm(),
+            p.origines.nom,
+            p.origines.commentaire,
+            p.origines.region?.region,
+            languesDe(p),
+            carrieresDe(p),
+            ...this.titresDesScenarios(p),
+          ),
         ),
-      )
-      .sort(ownFirstThenLabel((pnj) => Boolean(pnj.user_id), (pnj) => pnj.origines.nom ?? '')),
-  );
+    );
+  });
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
-  protected readonly totalPnjCount = computed(() => this.pnjs.data().length);
+
+  /** Les lignes du tableau : le PNJ, son portrait, son rang, ses carrières, ses scénarios avec leur teinte, s'il est au compte. */
+  protected readonly lignes = computed(() =>
+    this.filteredPnjs().map((pnj) => {
+      const rang = this.rangDe(pnj);
+      return {
+        pnj,
+        nom: this.nomDe(pnj),
+        image: pnjImage(pnj),
+        rang,
+        rangLabel: RANG_LABELS[rang],
+        carrieres: carrieresDe(pnj),
+        mien: Boolean(pnj.user_id),
+        scenarios: this.scenariosDe(pnj),
+      };
+    }),
+  );
+
+  protected rangDe(pnj: BolHerosModel): LibraryRang {
+    return pnj.type === 'R' || pnj.type === 'P' ? pnj.type : 'C';
+  }
+
+  protected valeurDeTri(pnj: BolHerosModel, cle: Tri): number | string {
+    switch (cle) {
+      case 'nom':
+        return this.nomDe(pnj);
+      case 'region':
+        return pnj.origines.region?.region ?? '';
+      case 'type':
+        return ORDRE_DES_RANGS[this.rangDe(pnj)];
+      case 'vitalite':
+        return pnj.ressources.vitalite;
+      default:
+        return pnj.combat[cle];
+    }
+  }
+
+  protected nomDe(pnj: BolHerosModel): string {
+    return pnj.origines.nom ?? '';
+  }
 
   protected clearFilters(): void {
     this.searchTerm.set('');
-    this.searchType.set('');
-    this.onlyCreations.set(false);
+    this.searchRegion.set('');
+    this.effacerFacettes();
   }
 
   protected openStatblock(pnj: BolHerosModel): void {

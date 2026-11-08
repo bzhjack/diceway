@@ -1,12 +1,12 @@
-:host {
-  display: block;
-  // Sous la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres et l'en-tête du tableau collent dessous, l'en-tête
-  // du tableau glissé sous son filet (1px) pour qu'aucune ligne ne se voie entre les deux.
-  --cl-sous-la-barre: calc(var(--dw-compact-bar-height) - 1px);
-}
+// Une bibliothèque en lignes (créatures, démons, PNJ, héros) : les filtres à gauche, toujours en vue, un tableau triable à droite. Le
+// bestiaire (`creature-library-page`) en est la référence ; les filtres partagés sont dans `bol-library-facettes`.
 
 // ── Les filtres à gauche, le tableau à droite ; sur un écran étroit, les filtres passent au-dessus ───────────────────────────────
-.cl-corps {
+.dw-lr-corps {
+  // Sous la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres et l'en-tête du tableau collent dessous, l'en-tête
+  // du tableau glissé sous son filet (1px) pour qu'aucune ligne ne se voie entre les deux.
+  --dw-lr-sous-la-barre: calc(var(--dw-compact-bar-height) - 1px);
+
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);
   gap: 1rem;
@@ -17,9 +17,9 @@
   }
 }
 
-.cl-filtres {
+.dw-lr-filtres {
   position: sticky;
-  top: calc(var(--cl-sous-la-barre) + 0.5rem);
+  top: calc(var(--dw-lr-sous-la-barre) + 0.5rem);
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -33,13 +33,13 @@
   }
 }
 
-.cl-facette {
+.dw-lr-facette {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
 
-.cl-facette-titre {
+.dw-lr-facette-titre {
   margin: 0 0 0.35rem;
   padding: 0 0.6rem;
   font-size: 0.7rem;
@@ -49,7 +49,7 @@
   letter-spacing: 0.18em;
 }
 
-.cl-facette-vide {
+.dw-lr-facette-vide {
   margin: 0;
   padding: 0 0.6rem;
   font-size: 0.8rem;
@@ -57,7 +57,7 @@
 }
 
 // Une option de filtre : un bouton à bascule, rectangulaire, son nombre à droite.
-.cl-option {
+.dw-lr-option {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -85,19 +85,19 @@
   }
 }
 
-.cl-option-label {
+.dw-lr-option-label {
   flex: 1;
   min-width: 0;
 }
 
-.cl-option-compte {
+.dw-lr-option-compte {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--dw-forge-caption);
 }
 
 // Le point de couleur d'un scénario : la teinte de sa saga (`dw-saga--N`, comme sur l'accueil).
-.cl-point {
+.dw-lr-point {
   flex: none;
   width: 0.5rem;
   height: 0.5rem;
@@ -105,14 +105,14 @@
   background: var(--saga);
 }
 
-.cl-rangs {
+.dw-lr-rangs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   padding: 0 0.5rem;
 }
 
-.cl-chip {
+.dw-lr-chip {
   min-height: 2rem;
   padding: 0 0.6rem;
   border: 1px solid var(--dw-forge-bronze-dim);
@@ -135,41 +135,41 @@
   }
 }
 
-.cl-taille {
+.dw-lr-select {
   width: 100%;
   padding: 0 0.5rem;
   box-sizing: border-box;
 }
 
-.cl-effacer {
+.dw-lr-effacer {
   align-self: flex-start;
   margin-left: 0.5rem;
 }
 
-.cl-option,
-.cl-chip,
-.cl-tri,
-.cl-nom {
+.dw-lr-option,
+.dw-lr-chip,
+.dw-lr-tri,
+.dw-lr-nom {
   &:focus-visible {
     outline: 2px solid var(--dw-forge-hot);
     outline-offset: 2px;
   }
 }
 
-// ── Le tableau : une ligne par créature ───────────────────────────────────────────────────────────────────────────────────────────
+// ── Le tableau : une ligne par fiche ───────────────────────────────────────────────────────────────────────────────────────────────
 // Le tableau tient dans la carte sur l'écran de référence (1440 px) ; plus étroit, il défile de côté plutôt que de déborder (son
 // en-tête ne colle alors plus sous la barre compacte).
-.cl-liste {
+.dw-lr-liste {
   overflow: visible;
 }
 
-.cl-cadre {
+.dw-lr-cadre {
   @media (max-width: 89rem) {
     overflow-x: auto;
   }
 }
 
-.cl-table {
+.dw-lr-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
@@ -177,7 +177,7 @@
 
   th {
     position: sticky;
-    top: var(--cl-sous-la-barre);
+    top: var(--dw-lr-sous-la-barre);
     z-index: 1;
     background: var(--dw-forge-table-head);
     padding: 0.55rem 0.4rem;
@@ -211,16 +211,16 @@
   }
 }
 
-.cl-num {
+.dw-lr-num {
   text-align: center;
   font-variant-numeric: tabular-nums;
 
-  .cl-tri {
+  .dw-lr-tri {
     justify-content: center;
   }
 }
 
-.cl-tri {
+.dw-lr-tri {
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
@@ -244,8 +244,8 @@
   }
 }
 
-// Le nom : un bouton qui ouvre le statbloc, avec le portrait de la créature, en carré.
-.cl-nom {
+// Le nom : un bouton qui ouvre le statbloc, avec le portrait de la fiche, en carré.
+.dw-lr-nom {
   display: flex;
   align-items: center;
   gap: 0.65rem;
@@ -260,12 +260,12 @@
   text-align: left;
   cursor: pointer;
 
-  &:hover .cl-nom-texte {
+  &:hover .dw-lr-nom-texte {
     text-decoration: underline;
   }
 }
 
-.cl-portrait {
+.dw-lr-portrait {
   flex: none;
   width: 2rem;
   height: 2rem;
@@ -274,12 +274,12 @@
   object-fit: cover;
 }
 
-.cl-nom-texte {
+.dw-lr-nom-texte {
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cl-rang {
+.dw-lr-rang {
   padding: 0.1rem 0.35rem;
   border: 1px solid;
   border-radius: 5px;
@@ -289,25 +289,25 @@
   letter-spacing: 0.08em;
 }
 
-.cl-rang--R {
+.dw-lr-rang--R {
   border-color: color-mix(in srgb, var(--dw-color-rival) 55%, transparent);
   background: color-mix(in srgb, var(--dw-color-rival) 15%, transparent);
   color: var(--dw-forge-alert);
 }
 
-.cl-rang--C {
+.dw-lr-rang--C {
   border-color: color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
   background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
   color: var(--dw-forge-name);
 }
 
-.cl-rang--P {
+.dw-lr-rang--P {
   border-color: var(--dw-forge-bronze-dim);
   color: var(--dw-forge-caption);
 }
 
 // La source sur deux petites lignes : le catalogue ou les fiches du compte, puis le scénario ; la ligne garde sa hauteur.
-.cl-source {
+.dw-lr-source {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -315,7 +315,7 @@
   line-height: 1.15;
 }
 
-.cl-provenance {
+.dw-lr-provenance {
   padding: 0 0.3rem;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 4px;
@@ -323,13 +323,13 @@
   color: var(--dw-forge-info);
 }
 
-.cl-provenance--mienne {
+.dw-lr-provenance--mienne {
   border-color: color-mix(in srgb, var(--dw-color-pnj) 45%, transparent);
   background: color-mix(in srgb, var(--dw-color-pnj) 12%, transparent);
   color: var(--dw-color-pnj);
 }
 
-.cl-scenario {
+.dw-lr-scenario {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -338,14 +338,40 @@
 }
 
 // Un en-tête abrégé garde le curseur de la page : le mot entier vient en bulle au survol.
-abbr[title] {
+.dw-lr-table abbr[title] {
   text-decoration: none;
   cursor: inherit;
 }
 
+// Un texte qui peut être long (les carrières) : coupé, le reste en bulle.
+.dw-lr-texte-long {
+  display: block;
+  max-width: 15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// L'état d'un héros : actif, ou encore en cours de création.
+.dw-lr-statut {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 5px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--dw-forge-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dw-lr-statut--en-cours {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  color: var(--dw-forge-name);
+}
+
 // Modifier et supprimer, en petits boutons ronds.
-.cl-actions {
-  width: 4.5rem;
+.dw-lr-actions {
+  width: 1%;
   text-align: right;
 
   .mat-mdc-icon-button {
@@ -356,7 +382,7 @@ abbr[title] {
   }
 }
 
-.cl-vide {
+.dw-lr-vide {
   padding: 2rem 1rem;
   color: var(--dw-forge-caption);
   text-align: center;
