@@ -121,6 +121,8 @@
   // rectangle aux coins à peine arrondis ; un bouton-icône seul est un cercle.
   --dw-radius-pill:   999px;
   --dw-radius-toggle: 6px;
+  // La hauteur de la barre compacte (`dw-compact-bar`), fixe : ce qui colle sous elle s'y cale.
+  --dw-compact-bar-height: 3.5rem;
 
   color-scheme: light;
 

@@ -2,7 +2,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
-    <dw-library-header title="Bestiaire des créatures" [compact]="true">
+    <dw-library-header title="Bestiaire des créatures" image="/assets/bol/header-creatures.webp" [compact]="true">
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalCreatureCount() }} créatures</dw-tag>
       </ng-container>
@@ -110,11 +110,17 @@
                   <th scope="col" [class.cl-num]="colonne.num" [attr.aria-sort]="colonne.ariaSort">
                     @if (colonne.cle; as cle) {
                       <button type="button" class="cl-tri" (click)="trier(cle)">
-                        {{ colonne.label }}
+                        @if (colonne.titre; as titre) {
+                          <abbr [title]="titre">{{ colonne.label }}</abbr>
+                        } @else {
+                          {{ colonne.label }}
+                        }
                         @if (colonne.icone; as icone) {
                           <mat-icon aria-hidden="true">{{ icone }}</mat-icon>
                         }
                       </button>
+                    } @else if (colonne.titre; as titre) {
+                      <abbr [title]="titre">{{ colonne.label }}</abbr>
                     } @else {
                       {{ colonne.label }}
                     }
@@ -132,16 +138,13 @@
                       <span class="cl-nom-texte">{{ ligne.creature.nom }}</span>
                     </button>
                   </td>
-                  <td class="cl-taille-cellule">
-                    {{ ligne.creature.taille.taille }}
-                    <span class="cl-rang" [class]="'cl-rang--' + ligne.rang">{{ ligne.rangLabel }}</span>
-                  </td>
+                  <td class="cl-taille-cellule">{{ ligne.creature.taille.taille }}</td>
+                  <td class="cl-type-cellule"><span class="cl-rang" [class]="'cl-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
                   <td class="cl-num">{{ ligne.creature.vitalite }}</td>
                   <td class="cl-num">{{ ligne.creature.attaque }}</td>
                   <td class="cl-num">{{ ligne.creature.defense }}</td>
                   <td>{{ ligne.creature.degats }}</td>
                   <td>{{ ligne.creature.protection }}</td>
-                  <td class="cl-num">{{ ligne.creature.capacites.length }}</td>
                   <td>
                     <span class="cl-source">
                       <span class="cl-provenance" [class.cl-provenance--mienne]="ligne.mienne">{{ ligne.mienne ? 'Mes fiches' : 'Catalogue' }}</span>

@@ -28,7 +28,7 @@ import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 type Source = 'tout' | 'catalogue' | 'miennes';
 /** Le rang d'une créature, donné par sa taille. */
 type Rang = 'R' | 'C' | 'P';
-type Tri = 'nom' | 'taille' | 'vitalite' | 'attaque' | 'defense' | 'capacites';
+type Tri = 'nom' | 'taille' | 'type' | 'vitalite' | 'attaque' | 'defense';
 
 const RANGS: readonly {cle: Rang; label: string}[] = [
   {cle: 'R', label: 'Rival'},
@@ -36,15 +36,19 @@ const RANGS: readonly {cle: Rang; label: string}[] = [
   {cle: 'P', label: 'Piétaille'},
 ];
 
-const COLONNES: readonly {cle: Tri | null; label: string; num?: boolean}[] = [
+/** Le tri par type va de la piétaille au rival. */
+const ORDRE_DES_RANGS: Record<Rang, number> = {P: 0, C: 1, R: 2};
+
+/** `titre` : le mot entier d'un en-tête abrégé, en bulle. */
+const COLONNES: readonly {cle: Tri | null; label: string; titre?: string; num?: boolean}[] = [
   {cle: 'nom', label: 'Créature'},
   {cle: 'taille', label: 'Taille'},
+  {cle: 'type', label: 'Type'},
   {cle: 'vitalite', label: 'Vit.', num: true},
   {cle: 'attaque', label: 'Att.', num: true},
   {cle: 'defense', label: 'Déf.', num: true},
   {cle: null, label: 'Dégâts'},
-  {cle: null, label: 'Protection'},
-  {cle: 'capacites', label: 'Capacités', num: true},
+  {cle: null, label: 'Prot.', titre: 'Protection'},
   {cle: null, label: 'Source'},
 ];
 
@@ -59,10 +63,10 @@ function valeurDeTri(creature: BolCreatureModel, tri: Tri): number | string {
   switch (tri) {
     case 'nom':
       return creature.nom;
+    case 'type':
+      return ORDRE_DES_RANGS[rangDe(creature)];
     case 'taille':
       return creature.id_taille;
-    case 'capacites':
-      return creature.capacites.length;
     default:
       return creature[tri];
   }

@@ -13,11 +13,11 @@ export class DwLibraryHeaderComponent {
   readonly description = input<string>('');
   /** Illustration de bannière optionnelle (même traitement que le header du dashboard). */
   readonly image = input<string | null>(null);
-  /** Une seule ligne fine (titre, compteurs, boutons), sans description ni illustration : la page garde sa hauteur pour ses fiches. */
+  /** Une seule ligne fine (titre, compteurs, boutons, sur l'illustration s'il y en a une), sans description : la page garde sa hauteur pour ses fiches. */
   readonly compact = input(false);
 
   protected readonly backgroundImage = computed(() => {
-    const src = this.compact() ? null : this.image();
+    const src = this.image();
     return src
       ? `linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%), ` +
         `linear-gradient(to top, rgba(12, 10, 6, 0.75) 0%, rgba(12, 10, 6, 0) 35%), ` +

@@ -1,7 +1,8 @@
 :host {
   display: block;
-  // La hauteur de la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres et l'en-tête du tableau collent dessous.
-  --cl-sous-la-barre: 3.75rem;
+  // Sous la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres et l'en-tête du tableau collent dessous, l'en-tête
+  // du tableau glissé sous son filet (1px) pour qu'aucune ligne ne se voie entre les deux.
+  --cl-sous-la-barre: calc(var(--dw-compact-bar-height) - 1px);
 }
 
 // ── Les filtres à gauche, le tableau à droite ; sur un écran étroit, les filtres passent au-dessus ───────────────────────────────
@@ -156,13 +157,14 @@
 }
 
 // ── Le tableau : une ligne par créature ───────────────────────────────────────────────────────────────────────────────────────────
-// Le tableau ne défile de côté que sur un écran étroit : ailleurs, son en-tête colle sous la barre compacte.
+// Le tableau tient dans la carte sur l'écran de référence (1440 px) ; plus étroit, il défile de côté plutôt que de déborder (son
+// en-tête ne colle alors plus sous la barre compacte).
 .cl-liste {
   overflow: visible;
 }
 
 .cl-cadre {
-  @media (max-width: 64rem) {
+  @media (max-width: 89rem) {
     overflow-x: auto;
   }
 }
@@ -178,7 +180,7 @@
     top: var(--cl-sous-la-barre);
     z-index: 1;
     background: var(--dw-forge-table-head);
-    padding: 0.55rem 0.5rem;
+    padding: 0.55rem 0.4rem;
     border-bottom: 1px solid var(--dw-forge-bronze-edge);
     font-size: 0.7rem;
     font-weight: 800;
@@ -194,8 +196,8 @@
   }
 
   td {
-    height: 2.6rem;
-    padding: 0 0.5rem;
+    height: 2.75rem;
+    padding: 0 0.4rem;
     border-bottom: 1px solid rgba(169, 121, 58, 0.18);
     white-space: nowrap;
 
@@ -247,7 +249,7 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  max-width: 18rem;
+  max-width: 13rem;
   padding: 0.2rem 0.3rem;
   border: 0;
   border-radius: 8px;
@@ -278,7 +280,6 @@
 }
 
 .cl-rang {
-  margin-left: 0.35rem;
   padding: 0.1rem 0.35rem;
   border: 1px solid;
   border-radius: 5px;
@@ -305,18 +306,20 @@
   color: var(--dw-forge-caption);
 }
 
+// La source sur deux petites lignes : le catalogue ou les fiches du compte, puis le scénario ; la ligne garde sa hauteur.
 .cl-source {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  line-height: 1.15;
 }
 
 .cl-provenance {
-  padding: 0.1rem 0.4rem;
+  padding: 0 0.3rem;
   border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 5px;
-  font-size: 0.7rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
   color: var(--dw-forge-info);
 }
 
@@ -330,12 +333,27 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--dw-forge-bone);
 }
 
+// Un en-tête abrégé garde le curseur de la page : le mot entier vient en bulle au survol.
+abbr[title] {
+  text-decoration: none;
+  cursor: inherit;
+}
+
+// Modifier et supprimer, en petits boutons ronds.
 .cl-actions {
+  width: 4.5rem;
   text-align: right;
+
+  .mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 2rem;
+    --mat-icon-button-icon-size: 1.15rem;
+
+    padding: 0.4rem;
+  }
 }
 
 .cl-vide {

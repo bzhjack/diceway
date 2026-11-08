@@ -91,7 +91,8 @@ describe('CreatureLibraryPageComponent', () => {
     const {noms, ligne, texte} = await rendre();
 
     expect(noms()).toEqual(['Andrak', 'Azhdarkho', 'Cathgan', 'Fille de Djidaâ', 'Momie royale']);
-    expect(texte(ligne('Cathgan').querySelector('.cl-taille-cellule'))).toBe('Très petite Piétaille');
+    expect(texte(ligne('Cathgan').querySelector('.cl-taille-cellule'))).toBe('Très petite');
+    expect(texte(ligne('Cathgan').querySelector('.cl-type-cellule'))).toBe('Piétaille');
     const source = (nom: string) => [...ligne(nom).querySelector('.cl-source')!.children].map((e) => texte(e));
     expect(source('Azhdarkho')).toEqual(['Catalogue', 'Le Dieu voilé']);
     expect(source('Momie royale')).toEqual(['Mes fiches', 'Le Dieu voilé']);
@@ -128,6 +129,14 @@ describe('CreatureLibraryPageComponent', () => {
 
     await cliquer(dieuVoile);
     expect(noms().length).toBe(5);
+  });
+
+  it('trie par type, de la piétaille au rival', async () => {
+    const {noms, bouton, cliquer} = await rendre();
+
+    await cliquer(bouton('.cl-tri', 'Type'));
+
+    expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ', 'Momie royale', 'Andrak', 'Azhdarkho']);
   });
 
   it('filtre par rang', async () => {
