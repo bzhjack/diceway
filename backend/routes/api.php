@@ -24,6 +24,7 @@ use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolAccueilController;
 use App\Http\Controllers\Bol\BolCompagnieController;
+use App\Http\Controllers\Bol\BolSagaController;
 use App\Http\Controllers\Bol\BolScenarioController;
 use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
@@ -166,6 +167,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);
     Route::post('/bol/scenario/update', [BolScenarioController::class, 'update']);
     Route::delete('/bol/scenario/delete/{id}', [BolScenarioController::class, 'delete']);
+    Route::patch('/bol/saga/{id}', [BolSagaController::class, 'update']);
+    Route::delete('/bol/saga/{id}', [BolSagaController::class, 'delete']);
 
     // Sessions de combat
     Route::get('/bol/fight-session', [BolFightSessionController::class, 'getAll']);

@@ -3,27 +3,34 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolArmureModel} from '../models/bol-armure.model';
 import {BolCatalogService} from '../services/bol-catalog.service';
-import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {HubPageComponent} from '../shared/hub/hub-page';
+import {HubEntry} from '../shared/models/hub-page.model';
 
-interface IntendanceLibraryEntry {
-  readonly title: string;
-  readonly kicker: string;
-  readonly description: string;
-  readonly route: string;
-  readonly buttonLabel: string;
-  readonly icon: string;
-  readonly stats: readonly string[];
-}
-
+/** L'Intendance : les catalogues d'armes et d'armures, sur la page d'accueil de bibliothèques partagée avec le Bestiaire. */
 @Component({
   selector: 'bol-intendance-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatCard, MatCardContent, DwTagComponent],
-  templateUrl: './intendance-page.html',
-  styleUrl: './intendance-page.scss',
+  imports: [RouterLink, MatButtonModule, MatIconModule, HubPageComponent],
+  template: `
+    <bol-hub-page
+      eyebrow="Outils MJ"
+      title="Intendance"
+      icon="military_tech"
+      image="/assets/bol/header-intendance.webp"
+      description="L'intendance devient l'espace du meneur pour cadrer l'équipement de la table. Tu y pilotes les catalogues d'armes et d'armures qui servent à préparer les héros, les PNJ, les adversaires et les scènes où le matériel doit rester lisible et cohérent."
+      [tags]="[totalEntries() + ' entrées actives', customEntries() + ' créations de table']"
+      [entries]="libraryEntries()"
+    >
+      <button mat-flat-button routerLink="/library/heroes">
+        <mat-icon>group</mat-icon> Ouvrir la bibliothèque des héros
+      </button>
+      <button mat-stroked-button routerLink="/">
+        <mat-icon>arrow_back</mat-icon> Retour à l'accueil
+      </button>
+    </bol-hub-page>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntendancePageComponent {
@@ -43,7 +50,7 @@ export class IntendancePageComponent {
     this.armors().filter((armor) => armor.categorie === 'bouclier').length,
   );
 
-  protected readonly libraryEntries = computed<readonly IntendanceLibraryEntry[]>(() => [
+  protected readonly libraryEntries = computed<readonly HubEntry[]>(() => [
     {
       title: 'Arsenal',
       kicker: 'Armes',

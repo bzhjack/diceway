@@ -91,8 +91,8 @@ describe('SceneStageStore', () => {
   it('ne charge qu’une fois sur un double clic', async () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
-    store.load(S2, 'replace').subscribe();
-    const second = await firstValueFrom(store.load(S2, 'replace'));
+    store.load(S2).subscribe();
+    const second = await firstValueFrom(store.load(S2));
     expect(second).toBeNull();
     vi.advanceTimersByTime(1000);
     expect(loadAs).toHaveBeenCalledTimes(1);
@@ -102,7 +102,7 @@ describe('SceneStageStore', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     const values: unknown[] = [];
-    store.load(S2, 'replace').subscribe((v) => values.push(v));
+    store.load(S2).subscribe((v) => values.push(v));
     expect(store.rideau()).toBe('ferme');
     expect(store.carton()).toEqual({titre: S2.titre});
     vi.advanceTimersByTime(1400);
@@ -123,7 +123,7 @@ describe('SceneStageStore', () => {
   it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
-    store.load(S2, 'replace').subscribe();
+    store.load(S2).subscribe();
     vi.advanceTimersByTime(3000);
     expect(store.rideau()).toBe('ferme');
     store.sync('sess', 's2', ['s1', 's2']);
@@ -134,7 +134,7 @@ describe('SceneStageStore', () => {
   it('rouvre le rideau au bout de 3 s si la page ne montre pas la session', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
-    store.load(S2, 'replace').subscribe();
+    store.load(S2).subscribe();
     vi.advanceTimersByTime(1400 + 2900);
     expect(store.rideau()).toBe('ferme');
     vi.advanceTimersByTime(100 + 250);
@@ -182,7 +182,7 @@ describe('SceneStageStore', () => {
   it('rouvre le rideau après une erreur', () => {
     loadAs.mockReturnValue(throwError(() => new Error('409')));
     store.sync('sess', 's1', []);
-    store.load(S2, 'replace').subscribe({error: () => undefined});
+    store.load(S2).subscribe({error: () => undefined});
     vi.advanceTimersByTime(1000);
     expect(store.rideau()).toBe('ouvert');
     expect(announceLoad).not.toHaveBeenCalled();

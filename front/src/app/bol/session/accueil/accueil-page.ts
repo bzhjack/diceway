@@ -41,8 +41,13 @@ interface AccueilBibliotheque {
 const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
   {cle: 'heros', label: 'Héros', route: '/library/heroes', compte: (c) => c.heros, creer: {route: '/create/hero', ariaLabel: 'Créer un héros'}},
   {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', compte: (c) => c.pnjs, creer: {route: '/create/pnj', ariaLabel: 'Créer un PNJ'}},
-  {cle: 'creatures', label: 'Créatures', route: '/library/creatures', compte: (c) => c.creatures, creer: {route: '/create/creature', ariaLabel: 'Créer une créature'}},
-  {cle: 'demons', label: 'Démons', route: '/library/demons', compte: (c) => c.demons, creer: {route: '/create/demon', ariaLabel: 'Créer un démon'}},
+  {
+    cle: 'bestiaire',
+    label: 'Bestiaire',
+    route: '/bestiaire',
+    compte: (c) => c.creatures + c.demons,
+    detail: (c) => `${pluriel(c.creatures, 'créature')} · ${pluriel(c.demons, 'démon')}`,
+  },
   {
     cle: 'intendance',
     label: 'Intendance',
@@ -50,6 +55,7 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
     compte: (c) => c.armes + c.armures,
     detail: (c) => `${pluriel(c.armes, 'arme')} · ${pluriel(c.armures, 'armure')}`,
   },
+  {cle: 'scenarios', label: 'Scénarios', route: '/library/scenarios', compte: (c) => c.scenarios},
   {cle: 'compagnies', label: 'Compagnies', route: '/library/companies', compte: (c) => c.compagnies, creer: {route: null, ariaLabel: 'Nouvelle compagnie'}},
 ];
 

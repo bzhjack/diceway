@@ -51,6 +51,24 @@ class BolSceneService
         });
     }
 
+    /** Une scène vide, au dernier rang de son chapitre (du compte, ou aucun) : elle se prépare dans la bibliothèque des scénarios, ses
+     * figurants se posent ensuite à la table. `null` pour le chapitre d'un autre compte. */
+    public function createVide(string $userId, string $titre, ?string $scenarioId): ?BolScene
+    {
+        if (!$this->scenarioAllowed($scenarioId, $userId)) {
+            return null;
+        }
+
+        return BolScene::create([
+            'user_id'      => $userId,
+            'scenario_id'  => $scenarioId,
+            'titre'        => $titre,
+            'ordre'        => $this->nextOrdre($userId, $scenarioId),
+            'notes'        => null,
+            'distribution' => [],
+        ])->load('scenario:id,titre');
+    }
+
     /**
      * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, règles du MJ,
      * pistes, illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la

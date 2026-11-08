@@ -1,7 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
-import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
+import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {titreDeChapitre} from '../../scenario.util';
@@ -177,8 +177,9 @@ export class SceneStageStore {
   /** Charge une scène sur la table, rideau fermé : il se ferme (fondu au noir) sur le carton du chroniqueur, la scène se
    * charge, puis il se rouvre une fois la session chargée montrée par la page (son `sync` suivant, au plus
    * `RIDEAU_ATTENTE_MAX_MS`), après une pause et pas avant la fin du carton. En cas d'erreur, il se rouvre après la
-   * pause. Émet `null` sans rien faire si un chargement est déjà en cours. */
-  load(scene: BolSceneModel, mode: SceneLoadMode): Observable<BolSceneLoadResult | null> {
+   * pause. La scène remplace ce qui est sur la table (les héros et leurs alliés restent). Émet `null` sans rien faire si un
+   * chargement est déjà en cours. */
+  load(scene: BolSceneModel): Observable<BolSceneLoadResult | null> {
     return defer(() => {
       const sessionId = this.sessionId();
       if (this.busy() || !sessionId) {
@@ -190,7 +191,7 @@ export class SceneStageStore {
       this.cartonState.set({titre: scene.titre});
       this.finCarton = Date.now() + durees.fermeture + cartonTenue(reduit);
       this.rideauState.set('ferme');
-      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode, false)]).pipe(
+      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, 'replace', false)]).pipe(
         map(([, result]) => result),
         tap({
           // Avant que l'appelant ne reçoive le résultat : la page qui pose la session appellera `sync` ensuite.

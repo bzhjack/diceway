@@ -57,6 +57,25 @@ class BolScenarioService
     }
 
     /**
+     * Supprime un scénario du compte, chacun de ses chapitres comme `supprimer` (leurs scènes avec eux) ; le scénario part avec le dernier.
+     * `false`, sans rien toucher : une partie joue l'un de ses chapitres.
+     */
+    public function supprimerScenario(string $sagaId, string $userId): bool
+    {
+        return DB::transaction(function () use ($sagaId, $userId) {
+            $chapitres = BolScenario::where('saga_id', $sagaId)->where('user_id', $userId)->lockForUpdate()->pluck('id');
+            if (BolFightSession::whereIn('scenario_id', $chapitres)->exists()) {
+                return false;
+            }
+            foreach ($chapitres as $id) {
+                $this->supprimer($id, $userId);
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * Supprime un chapitre du compte, ses scènes avec lui, et l'oublie dans le souvenir des parties passées dessus. `false`, sans rien toucher :
      * une partie est dessus, elle redeviendrait improvisée sans que personne l'ait demandé.
      */

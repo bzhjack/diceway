@@ -60,6 +60,8 @@ export interface BolAccueilComptes {
   armures: number;
   sessions: number;
   compagnies: number;
+  /** Les scénarios du compte : ses sagas et ses one shots. */
+  scenarios: number;
 }
 
 /** Réponse de `GET /api/bol/accueil` : tout ce que le tableau de bord affiche, en une requête. */

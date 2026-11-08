@@ -10,6 +10,7 @@ use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 
@@ -106,7 +107,7 @@ class BolAccueilService
      * Le nombre de fiches que chaque bibliothèque montre au compte : ses héros et ses tables ; pour le reste, ses fiches et celles du
      * catalogue.
      *
-     * @return array{heros: int, pnjs: int, creatures: int, demons: int, armes: int, armures: int, sessions: int}
+     * @return array{heros: int, pnjs: int, creatures: int, demons: int, armes: int, armures: int, sessions: int, compagnies: int, scenarios: int}
      */
     private function comptes(string $userId): array
     {
@@ -119,6 +120,7 @@ class BolAccueilService
             'armures'   => BolArmure::accessibleTo($userId)->count(),
             'sessions'  => BolFightSession::where('user_id', $userId)->count(),
             'compagnies' => BolCompagnie::where('user_id', $userId)->count(),
+            'scenarios' => BolSaga::where('user_id', $userId)->count() + BolScenario::where('user_id', $userId)->whereNull('saga_id')->count(),
         ];
     }
 

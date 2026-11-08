@@ -20,6 +20,25 @@ class BolSagaService
         return ['titre' => $titre, 'numero' => $numero, 'saga_id' => $saga === null ? null : $this->retrouverOuCreer($userId, $saga)->id];
     }
 
+    /**
+     * Renomme un scénario du compte. `null` : ce n'en est pas un ; `false` : le compte a déjà un scénario de ce nom (les chapitres le
+     * retrouvent par son nom, deux homonymes se confondraient).
+     */
+    public function renommer(string $id, string $userId, string $titre): BolSaga|false|null
+    {
+        $saga = BolSaga::where('id', $id)->where('user_id', $userId)->first();
+        if (!$saga) {
+            return null;
+        }
+        $homonyme = BolSaga::where('user_id', $userId)->where('id', '!=', $id)->whereRaw('lower(titre) = ?', [mb_strtolower($titre)])->exists();
+        if ($homonyme) {
+            return false;
+        }
+        $saga->update(['titre' => $titre]);
+
+        return $saga;
+    }
+
     public function retrouverOuCreer(string $userId, string $titre): BolSaga
     {
         return BolSaga::where('user_id', $userId)->whereRaw('lower(titre) = ?', [mb_strtolower($titre)])->first()

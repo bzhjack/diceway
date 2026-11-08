@@ -24,15 +24,13 @@ class BolSceneController extends Controller
         $data = $request->validate([
             'titre'       => 'required|string|max:120',
             'scenario_id' => 'nullable|string',
-            'session_id'  => 'required|string',
+            'session_id'  => 'nullable|string',
         ]);
 
-        $scene = $this->sceneService->createFromSession(
-            Auth::id(),
-            $data['titre'],
-            $data['scenario_id'] ?? null,
-            $data['session_id'],
-        );
+        // Depuis la table, la scène prend ce qui y est posé ; depuis la bibliothèque des scénarios, elle naît vide.
+        $scene = isset($data['session_id'])
+            ? $this->sceneService->createFromSession(Auth::id(), $data['titre'], $data['scenario_id'] ?? null, $data['session_id'])
+            : $this->sceneService->createVide(Auth::id(), $data['titre'], $data['scenario_id'] ?? null);
 
         return $scene ? response()->json($scene) : $this->notFound();
     }

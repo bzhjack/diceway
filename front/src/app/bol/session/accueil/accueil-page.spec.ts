@@ -85,7 +85,7 @@ const DATA: BolAccueilModel = {
     chapitre('p2', "Perle du Beshaar — 2. De sable et d'eau"),
     chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
   ],
-  comptes: {heros: 5, pnjs: 196, creatures: 103, demons: 15, armes: 54, armures: 6, sessions: 3, compagnies: 2},
+  comptes: {heros: 5, pnjs: 196, creatures: 103, demons: 15, armes: 54, armures: 6, sessions: 3, compagnies: 2, scenarios: 3},
 };
 
 describe('AccueilPageComponent', () => {
@@ -466,17 +466,20 @@ describe('AccueilPageComponent', () => {
     expect(autres(page).length).toBe(2);
   });
 
-  it('compte les fiches de chaque bibliothèque, l’intendance réunit armes et armures', async () => {
+  it('compte les fiches de chaque bibliothèque : le bestiaire réunit créatures et démons, l’intendance armes et armures', async () => {
     const page = await rendre();
     const tuiles = [...page.querySelectorAll('.acc-biblio')];
 
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-lien')?.getAttribute('aria-label'))).toEqual([
-      'Héros, 5', 'PNJ, 196', 'Créatures, 103', 'Démons, 15', 'Intendance, 60', 'Compagnies, 2',
+      'Héros, 5', 'PNJ, 196', 'Bestiaire, 118', 'Intendance, 60', 'Scénarios, 3', 'Compagnies, 2',
     ]);
-    expect(tuiles[4].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/intendance');
-    expect(texte(tuiles[4].querySelector('.acc-biblio-detail'))).toBe('54 armes · 6 armures');
+    expect(tuiles[2].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/bestiaire');
+    expect(texte(tuiles[2].querySelector('.acc-biblio-detail'))).toBe('103 créatures · 15 démons');
+    expect(tuiles[3].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/intendance');
+    expect(texte(tuiles[3].querySelector('.acc-biblio-detail'))).toBe('54 armes · 6 armures');
+    expect(tuiles[4].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/library/scenarios');
     expect(tuiles.map((t) => t.querySelector('.acc-biblio-plus')?.getAttribute('aria-label') ?? null)).toEqual([
-      'Créer un héros', 'Créer un PNJ', 'Créer une créature', 'Créer un démon', null, 'Nouvelle compagnie',
+      'Créer un héros', 'Créer un PNJ', null, null, null, 'Nouvelle compagnie',
     ]);
   });
 

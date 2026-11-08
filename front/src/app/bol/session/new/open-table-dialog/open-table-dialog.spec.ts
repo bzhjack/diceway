@@ -27,7 +27,7 @@ const ACCUEIL: BolAccueilModel = {
     chapitre('dv1', "Le Dieu voilé — 1. L'oracle de Nemmereth"),
     chapitre('ps', 'premier scénario'),
   ],
-  comptes: {heros: 3, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 0, compagnies: 3},
+  comptes: {heros: 3, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: 0, compagnies: 3, scenarios: 0},
 };
 
 const partie = (over: Partial<BolAccueilPartie>): BolAccueilPartie => ({

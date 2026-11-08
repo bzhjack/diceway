@@ -292,7 +292,7 @@ class BolAccueilTest extends TestCase
         $apres = $this->getJson('/api/bol/accueil')->assertOk()->json('comptes');
         $ajoutes = array_map(fn (string $cle) => $apres[$cle] - $avant[$cle], array_combine(array_keys($apres), array_keys($apres)));
 
-        $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1, 'compagnies' => 0], $ajoutes);
+        $this->assertSame(['heros' => 1, 'pnjs' => 2, 'creatures' => 2, 'demons' => 2, 'armes' => 2, 'armures' => 2, 'sessions' => 1, 'compagnies' => 0, 'scenarios' => 0], $ajoutes);
     }
 
 

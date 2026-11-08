@@ -1,0 +1,100 @@
+:host {
+  display: block;
+}
+
+// ── Le scénario choisi : son nom, et de quoi lui ajouter un chapitre, le renommer, le supprimer ────────────────────────────────────
+.sl-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+}
+
+.sl-surtitre {
+  margin: 0 0 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--dw-forge-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.sl-titre {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dw-forge-name);
+}
+
+.sl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sl-danger {
+  --mat-button-outlined-label-text-color: var(--dw-forge-error-text);
+}
+
+// ── Un chapitre : son nom et son pitch, ses actions, puis ses scènes ───────────────────────────────────────────────────────────────
+.sl-chapitre {
+  padding: 0.5rem 0 0.75rem;
+  border-bottom: 1px solid rgba(169, 121, 58, 0.25);
+}
+
+.sl-chapitre-tete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.25rem;
+}
+
+.sl-chapitre-texte {
+  min-width: 0;
+}
+
+.sl-chapitre-titre {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dw-forge-bone);
+}
+
+.sl-pitch {
+  margin: 0.3rem 0 0;
+  max-width: 60rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--dw-forge-caption);
+}
+
+.sl-scene-titre {
+  max-width: 22rem;
+}
+
+.sl-vide {
+  margin: 0;
+  padding: 0.25rem 1.25rem 0.5rem;
+  font-size: 0.85rem;
+  color: var(--dw-forge-caption);
+}
+
+.sl-rien {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 2rem 1.25rem;
+  color: var(--dw-forge-bone);
+
+  p {
+    margin: 0;
+  }
+}

@@ -13,8 +13,9 @@ export class BolSceneService {
     return this.http.get<BolSceneModel[]>(this.base);
   }
 
-  /** Crée une scène à partir de l'état actuel de la table (distribution lue côté serveur). */
-  create(titre: string, scenarioId: string | null, sessionId: string): Observable<BolSceneModel> {
+  /** Crée une scène : depuis une table, avec ce qui y est posé (distribution lue côté serveur) ; sans table (`sessionId` null, la
+   * bibliothèque des scénarios), vide, au dernier rang de son chapitre. */
+  create(titre: string, scenarioId: string | null, sessionId: string | null): Observable<BolSceneModel> {
     return this.http.post<BolSceneModel>(`${this.base}/create`, {
       titre,
       scenario_id: scenarioId,

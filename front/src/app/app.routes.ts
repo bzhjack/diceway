@@ -171,6 +171,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'library/scenarios',
+    loadComponent: () =>
+      import('./bol/scenario/library/scenario-library-page').then((module) => module.ScenarioLibraryPageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'bestiaire',
+    loadComponent: () => import('./bol/bestiaire/bestiaire-page').then((module) => module.BestiairePageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'intendance',
     loadComponent: () =>
       import('./bol/intendance/intendance-page').then((module) => module.IntendancePageComponent),

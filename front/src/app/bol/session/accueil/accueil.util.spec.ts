@@ -37,7 +37,7 @@ const accueil = (parties: BolAccueilPartie[], derniere = parties[0]?.id ?? null)
   parties,
   compagnies: [],
   scenarios: S,
-  comptes: {heros: 0, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: parties.length, compagnies: 0},
+  comptes: {heros: 0, pnjs: 0, creatures: 0, demons: 0, armes: 0, armures: 0, sessions: parties.length, compagnies: 0, scenarios: 0},
 });
 
 const carte = (over: Partial<BolAccueilPartie> = {}) => partiesDeLAccueil(accueil([partie(over)]))[0];
