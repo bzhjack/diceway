@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -19,7 +18,7 @@ interface DonDeFoi {
  * dé et décompte le point. */
 @Component({
   selector: 'bol-de-foi',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, DwValueStepperComponent],
+  imports: [MatIconModule, MatMenuModule, MatTooltipModule, DwValueStepperComponent],
   template: `
     <span class="dfo-row">
       <dw-value-stepper [value]="foi()" (valueChange)="stepped.emit($event - foi())" [min]="0" [ariaLabel]="'Points de foi de ' + pretre().nom" />
