@@ -1,4 +1,4 @@
-import {Subject} from 'rxjs';
+import {of, Subject, throwError} from 'rxjs';
 import {describe, expect, it} from 'vitest';
 import {EtatCombat} from '../models/combat-turn.model';
 import {EtatSaver} from './etat-saver';
@@ -76,5 +76,65 @@ describe('EtatSaver', () => {
     expect(saved).toHaveLength(1);
     saver.apply(jouer('hero-2'));
     expect(saved).toHaveLength(2);
+  });
+});
+
+describe('EtatSaver : un enregistrement en erreur', () => {
+  /** Chaque appel à `persist` rend la réponse suivante de `reponses` : `ok`, ou une erreur. `serveur` : l'état relu par `recover`. */
+  function monter(reponses: ('ok' | 'erreur')[], passe: boolean[]) {
+    let courant = base;
+    const saved: EtatCombat[] = [];
+    const errors: unknown[] = [];
+    const relus: EtatCombat[] = [];
+    const saver = new EtatSaver(
+      () => courant,
+      (etat) => {
+        saved.push(etat);
+        if (reponses.shift() === 'erreur') {
+          return throwError(() => new Error('réseau'));
+        }
+        courant = etat;
+        return of(undefined);
+      },
+      (error) => errors.push(error),
+      (voulu) => {
+        relus.push(voulu);
+        const ok = passe.shift() ?? false;
+        if (ok) {
+          courant = voulu;
+        }
+        return of(ok);
+      },
+    );
+    return {saver, saved, errors, relus, courant: () => courant};
+  }
+
+  it('la réponse s’est perdue mais le serveur l’a enregistré : rien n’est rejoué, aucune erreur', () => {
+    const {saver, saved, errors, courant} = monter(['erreur'], [true]);
+
+    saver.apply(jouer('hero-1'));
+
+    expect(saved).toHaveLength(1);
+    expect(errors).toEqual([]);
+    expect(courant().joues).toEqual(['hero-1']);
+  });
+
+  it('pas passé : les mises à jour sont rejouées une fois, sur l’état relu', () => {
+    const {saver, saved, errors, courant} = monter(['erreur', 'ok'], [false]);
+
+    saver.apply(jouer('hero-1'));
+
+    expect(saved).toHaveLength(2);
+    expect(errors).toEqual([]);
+    expect(courant().joues).toEqual(['hero-1']);
+  });
+
+  it('rejouées sans succès : l’erreur est dite, une seule fois', () => {
+    const {saver, saved, errors} = monter(['erreur', 'erreur'], [false, false]);
+
+    saver.apply(jouer('hero-1'));
+
+    expect(saved).toHaveLength(2);
+    expect(errors).toHaveLength(1);
   });
 });

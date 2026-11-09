@@ -7,7 +7,7 @@
     [round]="round()"
     [steps]="steps()"
     addLabel="Ajouter un combattant"
-    (stepClicked)="gaveBack.emit($event.key)"
+    (stepClicked)="onStep($event)"
     (addClicked)="addRequested.emit()"
   >
     @if (roundOneLock()) {

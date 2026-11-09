@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {desDeFoi, effetDeFoi, aDejaFeinte, appliquerEvenement, aUneTraceDeChute, dureeLibre, dureesLibres, effetActionSautee, effetAssomme, effetLibre, effetsDeLaFrise, sansTracesDeChute, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs, effetRechargement, enRechargement} from './combat-effects.util';
+import {annonceEffetsTombes, effetsTombes, desDeFoi, effetDeFoi, aDejaFeinte, appliquerEvenement, aUneTraceDeChute, dureeLibre, dureesLibres, effetActionSautee, effetAssomme, effetLibre, effetsDeLaFrise, sansTracesDeChute, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs, effetRechargement, enRechargement} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -624,5 +624,25 @@ describe('notes d’armes : le fléau et l’arbalète (livre p. 50)', () => {
   it('le rechargement se voit sur la frise', () => {
     const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('hero-1', 'Arbalète', 1)});
     expect(effetsDeLaFrise(effets, 'hero-1')).toEqual(['recharge : Arbalète · encore 2 rounds']);
+  });
+});
+
+describe('effetsTombes et leur annonce', () => {
+  const posture = effet({id: 'e-1'});
+  const parade = effet({id: 'e-2', origine: 'parade', porteur: 'pnj-7'});
+  const choc = effet({id: 'e-3', origine: 'renversement', porteur: 'pnj-7'});
+
+  it('ne garde que ceux qui ont quitté l’état sans être retirés à la main', () => {
+    expect(effetsTombes([posture, parade, choc], [choc], new Set(['e-2'])).map((e) => e.id)).toEqual(['e-1']);
+    expect(effetsTombes([posture], [posture], new Set())).toEqual([]);
+  });
+
+  it('les annonce par leur libellé et le nom de leur porteur ; rien sans effet tombé', () => {
+    const noms: Record<string, string> = {'hero-1': 'Axel', 'pnj-7': 'Bandit'};
+
+    expect(annonceEffetsTombes([posture, parade], (carte) => noms[carte])).toBe(
+      "Fin de l'effet posture défensive sur Axel. Fin de l'effet parade sur Bandit.",
+    );
+    expect(annonceEffetsTombes([], () => '')).toBeNull();
   });
 });

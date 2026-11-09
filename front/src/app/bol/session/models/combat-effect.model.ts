@@ -32,6 +32,9 @@ export interface CombatEffect {
   readonly cible?: string;
   /** Libellé libre, pour les effets ajoutés à la main. */
   readonly libelle?: string;
+  /** Une action perdue posée pendant le tour de son porteur : différée à son tour d'après, et de nouveau si on lui rend la main
+   * (`redifererActionsPerdues`). Celle qu'un adversaire inflige ensuite ne l'est pas : le tour rouvert est perdu. */
+  readonly auTourDuPorteur?: boolean;
 }
 
 /** Un effet à créer : l'identifiant est attribué par `appliquerEvenement`. */

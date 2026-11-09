@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {OrdreFriseStep} from '../../models/ordre-frise.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {OrdreFriseComponent} from '../../ordre-frise/ordre-frise';
 import {turnOrderFrise} from './combat-turn.util';
 
 /** Barre d'initiative : le round, puis l'ordre d'action en frise (la même que sur la page du jet de réaction), rang après rang de
  * réaction BoL (héros qui ont réussi, rivaux, coriaces, héros en échec, piétaille, échec critique). Le combattant actif est auréolé,
- * ceux qui ont joué s'estompent ; un clic sur un médaillon « a joué » lui rend la main. */
+ * ceux qui ont joué s'estompent ; un clic sur un médaillon « a joué » lui rend la main, sur un médaillon « retiré » le remet au combat. */
 @Component({
   selector: 'bol-turn-order',
   imports: [MatTooltipModule, OrdreFriseComponent],
@@ -25,10 +26,19 @@ export class TurnOrderComponent {
   readonly targetKey = input<string | null>(null);
 
   readonly gaveBack = output<string>();
+  readonly reintegrated = output<string>();
   readonly addRequested = output<void>();
 
   /** Les médaillons de la frise, dans l'ordre où ils jouent. */
   protected readonly steps = computed(() => turnOrderFrise(this.entries(), this.targetKey()));
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */
+  protected onStep(step: OrdreFriseStep): void {
+    if (step.excluded) {
+      this.reintegrated.emit(step.key);
+    } else {
+      this.gaveBack.emit(step.key);
+    }
+  }
+
   protected readonly roundOneLock = computed(() => this.round() === 1 && this.entries().some((entry) => entry.locked));
 }

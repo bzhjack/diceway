@@ -1,17 +1,18 @@
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {cartesVisibles} from '../../magie-combat.util';
-import {EMPTY, switchMap, tap} from 'rxjs';
+import {EMPTY, map, of, switchMap, tap} from 'rxjs';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {AttackChoice} from '../../models/attack-options.model';
-import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, poserEffet, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
+import {bloqueeCeRound, cibleAuHasard, commencerTour, effetsDerives, etatEnregistre, poserEffet, remettreAuCombat, retirerDuCombat, endTurn, giveBackTurn, herosMourants, hordeMates, normalizeEtat, orderCards, raisonHorsJeu, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from '../tapis/combat-turn.util';
 import {peutFuir} from '../tapis/fuite-opportune.util';
 import {disponibiliteMelee, pietailleDebout} from '../tapis/melee-pietaille.util';
 import {MeleeCamps, MeleeDisponibilite} from '../../models/melee-pietaille.model';
-import {NewEffect} from '../../models/combat-effect.model';
+import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {EtatSaver} from '../etat-saver';
-import {appliquerEvenement, effetsDeLaFrise, effetsDeTour, idAleatoire} from '../tapis/combat-effects.util';
+import {annonceEffetsTombes, appliquerEvenement, effetsDeLaFrise, effetsDeTour, effetsTombes, idAleatoire} from '../tapis/combat-effects.util';
 import {EtatCombat} from '../../models/combat-turn.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {findCard} from '../tapis/tapis.util';
@@ -26,6 +27,7 @@ export class CombatTurnStore {
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly table = inject(TableStore);
+  private readonly announcer = inject(LiveAnnouncer);
 
   /** État du combat gardé dans la session (round, cartes qui ont joué, défense totale). */
   readonly etat = computed<EtatCombat>(() => normalizeEtat(this.table.session()?.etat_combat));
@@ -146,6 +148,11 @@ export class CombatTurnStore {
    * atteint le même numéro de round soit annoncé aussi. */
   readonly roundCommenceIci = signal<{readonly round: number} | null>(null);
 
+  /** Les effets du dernier état vu en combat, pour annoncer ceux qui expirent ; `null` hors combat (le premier état n'annonce rien). */
+  private effetsVus: readonly CombatEffect[] | null = null;
+  /** Les effets que le MJ a retirés lui-même : il le sait, rien à annoncer. */
+  private readonly retiresALaMain = new Set<string>();
+
   /** Enregistre l'état du combat en série (cf. `EtatSaver`) ; la réponse porte la session à jour : l'affichage suit la base. */
   private readonly etatSaver = new EtatSaver(
     () => this.etat(),
@@ -167,6 +174,24 @@ export class CombatTurnStore {
         );
     },
     (error) => this.table.notifyError(error, "Impossible d'enregistrer l'état du combat."),
+    // La réponse a pu se perdre : la session relue dit si l'état y est passé. S'il y a fait commencer un round, c'est cet écran qui en
+    // joue le début, comme s'il avait reçu la réponse.
+    (voulu, avant) => {
+      const sessionId = this.table.sessionId();
+      if (!sessionId) {
+        return of(false);
+      }
+      return this.fightSessionService.fightSession(sessionId).pipe(
+        map((session) => {
+          this.table.session.set(session);
+          const passe = etatEnregistre(normalizeEtat(session.etat_combat), avant, voulu);
+          if (passe && voulu.round > avant.round) {
+            this.roundCommenceIci.set({round: voulu.round});
+          }
+          return passe;
+        }),
+      );
+    },
   );
 
   constructor() {
@@ -179,6 +204,23 @@ export class CombatTurnStore {
       if (key !== null) {
         untracked(() => this.saveEtat((etat) => commencerTour(this.orderedCards(), etat, idAleatoire)));
       }
+    });
+
+    // Un effet qui expire (fin de tour, de round, usage consommé) quitte la frise : un lecteur d'écran l'apprend.
+    effect(() => {
+      const enCombat = this.table.mode() === 'combat';
+      const effets = this.etat().effets;
+      untracked(() => {
+        const avant = this.effetsVus;
+        this.effetsVus = enCombat ? effets : null;
+        if (!enCombat || avant === null) {
+          return;
+        }
+        const annonce = annonceEffetsTombes(effetsTombes(avant, effets, this.retiresALaMain), (carte) => findCard(this.table.cards(), carte)?.nom ?? 'une carte');
+        if (annonce) {
+          void this.announcer.announce(annonce, 'polite');
+        }
+      });
     });
 
     // Un adversaire prend la main sans cible choisie : un héros au hasard est présélectionné comme cible ; le MJ peut en changer.
@@ -277,6 +319,16 @@ export class CombatTurnStore {
     this.snackBar.open(`${card.nom} est retiré du combat : il ne joue plus et ne compte plus pour l'issue.`, undefined, {duration: 4500});
   }
 
+  /** « Remettre au combat » (`remettreAuCombat`), depuis son médaillon barré de la frise : la carte retirée revient et joue de nouveau. */
+  reintegrate(key: string): void {
+    const card = findCard(this.table.cards(), key);
+    if (this.table.mode() !== 'combat' || !card || this.etat().fuis.includes(key) || !this.etat().exclus.includes(key)) {
+      return;
+    }
+    this.saveEtat((etat) => remettreAuCombat(etat, key));
+    this.snackBar.open(`${card.nom} revient au combat.`, undefined, {duration: 4000});
+  }
+
   /** La mêlée de piétaille de ce round est résolue (ou commencée) : elle ne se rejoue qu'au round suivant. Déjà retenue, rien n'est
    * enregistré de nouveau. */
   recordMelee(): void {
@@ -328,6 +380,7 @@ export class CombatTurnStore {
 
   /** Le MJ retire un effet (croix d'une puce ou du bloc « Effets en cours »). */
   onEffectRemoved(id: string): void {
+    this.retiresALaMain.add(id);
     this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'retrait-manuel', id})]}));
   }
 

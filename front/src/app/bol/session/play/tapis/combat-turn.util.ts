@@ -294,6 +294,37 @@ export function retirerDuCombat(etat: EtatCombat, key: string): EtatCombat {
   return {...etat, exclus: [...etat.exclus, key], effets: appliquerEvenement(etat.effets, {type: 'carte-retiree', carte: key})};
 }
 
+function memes(a: readonly string[], b: readonly string[]): boolean {
+  return a.length === b.length && a.every((cle) => b.includes(cle));
+}
+
+/**
+ * Un enregistrement dont la réponse s'est perdue est-il passé ? `serveur` : l'état relu ; `avant` : celui d'où partait la mise à jour ;
+ * `voulu` : celui qu'elle enregistrait. Quand elle change le déroulé (round, cartes qui ont joué, retirées, enfuies, mêlée), c'est lui qui
+ * fait foi — le serveur ne le change pas, mais il peut écarter des effets (ceux d'une carte hors combat) : rejouer une fin de tour passée
+ * ferait jouer la carte suivante. Sinon, ce sont ses effets : ceux qu'elle ajoute y sont, ceux qu'elle retire n'y sont plus.
+ */
+export function etatEnregistre(serveur: EtatCombat, avant: EtatCombat, voulu: EtatCombat): boolean {
+  const memeDeroule = (a: EtatCombat, b: EtatCombat) =>
+    a.round === b.round && a.melee === b.melee && memes(a.joues, b.joues) && memes(a.exclus, b.exclus) && memes(a.fuis, b.fuis);
+  if (!memeDeroule(avant, voulu)) {
+    return memeDeroule(serveur, voulu);
+  }
+  const ids = (etat: EtatCombat) => etat.effets.map((effet) => effet.id);
+  const ajoutes = ids(voulu).filter((id) => !ids(avant).includes(id));
+  const retires = ids(avant).filter((id) => !ids(voulu).includes(id));
+  return ajoutes.every((id) => ids(serveur).includes(id)) && retires.every((id) => !ids(serveur).includes(id));
+}
+
+/** « Remettre au combat » : une carte retirée revient, et joue de nouveau ; ses effets, partis avec le retrait, ne reviennent pas. Un rival
+ * enfui reste parti (« Fuite opportune » ne s'annule pas). Rend le même état s'il n'y a rien à changer. */
+export function remettreAuCombat(etat: EtatCombat, key: string): EtatCombat {
+  if (!etat.exclus.includes(key) || etat.fuis.includes(key)) {
+    return etat;
+  }
+  return {...etat, exclus: etat.exclus.filter((exclu) => exclu !== key)};
+}
+
 /** Les cartes relevées : leur vitalité repasse au-dessus de 0 alors qu'elles étaient à 0 ou moins (`avant` : la vitalité vue
  * précédemment, par clé), et elles portent une trace de chute (sombré, stabilisé, assommé) à oublier. Une carte vue pour la première fois
  * debout avec une trace (table d'avant cette règle) l'est aussi. Une carte encore debout, dont la trace vient d'être posée avant que sa
@@ -463,11 +494,12 @@ export function turnOrderFrise(entries: readonly TurnOrderEntry[], targetKey: st
       const target = entry.key === targetKey;
       const etat = `${TURN_STATUS_LABELS[entry.status]}${entry.locked ? ', bloqué ce round' : ''}`;
       const label = `${entry.nom}${entry.ally ? ' (allié)' : ''}, ${group.title.toLowerCase()}, ${etat}${entry.horsCombat ? ', ' + entry.horsCombat : ''}${target ? ', visé' : ''}`;
+      const retire = entry.horsCombat === 'retiré';
       const tooltip = [
         entry.nom + (entry.ally ? ' (allié des héros)' : ''),
         entry.horsCombat,
         entry.effets.length ? entry.effets.join(', ') : null,
-        entry.status === 'played' ? 'cliquer pour lui rendre la main' : null,
+        retire ? 'cliquer pour le remettre au combat' : entry.status === 'played' ? 'cliquer pour lui rendre la main' : null,
       ];
       return {
         key: entry.key,
@@ -479,13 +511,13 @@ export function turnOrderFrise(entries: readonly TurnOrderEntry[], targetKey: st
         tooltip: tooltip.filter((part) => part).join(' — '),
         link: index < group.entries.length - 1 ? 'court' : groupIndex < groups.length - 1 ? 'long' : null,
         blocked: entry.locked,
-        clickable: entry.status === 'played',
+        clickable: retire || entry.status === 'played',
         pressed: null,
         status: entry.status,
         target,
         down: entry.horsCombat !== null,
         effects: entry.effets.length > 0,
-        excluded: false,
+        excluded: retire,
       };
     }),
   );

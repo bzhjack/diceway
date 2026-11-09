@@ -52,6 +52,21 @@ export function libelleEffet(effet: Pick<CombatEffect, 'origine' | 'libelle'>): 
   return effet.libelle ?? ORIGINE_LIBELLE[effet.origine] ?? effet.origine;
 }
 
+/** Les effets qui ont quitté l'état d'un changement à l'autre sans que le MJ les retire (`retiresALaMain`) : ceux qui ont expiré (fin de
+ * tour, de round, usages consommés), à annoncer aux lecteurs d'écran. */
+export function effetsTombes(avant: readonly CombatEffect[], apres: readonly CombatEffect[], retiresALaMain: ReadonlySet<string>): CombatEffect[] {
+  const restants = new Set(apres.map((effet) => effet.id));
+  return avant.filter((effet) => !restants.has(effet.id) && !retiresALaMain.has(effet.id));
+}
+
+/** L'annonce des effets tombés, pour un lecteur d'écran : « Fin de l'effet posture défensive sur Axel. » ; `null` s'il n'y en a pas. */
+export function annonceEffetsTombes(effets: readonly CombatEffect[], nomDe: (carte: string) => string): string | null {
+  if (effets.length === 0) {
+    return null;
+  }
+  return effets.map((effet) => `Fin de l'effet ${libelleEffet(effet)} sur ${nomDe(effet.porteur)}.`).join(' ');
+}
+
 /** Un effet en toutes lettres : « + 1 posture défensive » ; une trace (valeur 0) n'a que son libellé (« bouclier dépensé »). */
 export function descriptionEffet(effet: CombatEffect): string {
   // Un effet d'action (dé de malus, action perdue) ne se chiffre pas : son libellé se suffit.
@@ -279,6 +294,7 @@ function effetValide(raw: unknown): CombatEffect | null {
   }
   const cible = texte(source['cible']);
   const libelle = texte(source['libelle']);
+  const auTourDuPorteur = source['auTourDuPorteur'] === true;
   return {
     id,
     origine,
@@ -290,6 +306,7 @@ function effetValide(raw: unknown): CombatEffect | null {
     manuel: source['manuel'] === true,
     ...(cible ? {cible} : {}),
     ...(libelle ? {libelle: libelle.slice(0, 60)} : {}),
+    ...(auTourDuPorteur ? {auTourDuPorteur} : {}),
   };
 }
 
@@ -503,7 +520,7 @@ export function effetTourSauteParalyse(porteur: string): NewEffect {
 
 /** « Perd sa prochaine action » posé sur la carte dont c'est le tour : différé à son prochain tour. Tout autre effet est rendu tel quel. */
 export function differerActionPerdue(effet: NewEffect): NewEffect {
-  return effet.origine === ACTION_PERDUE ? {...effet, origine: ACTION_PERDUE_DIFFEREE} : effet;
+  return effet.origine === ACTION_PERDUE ? {...effet, origine: ACTION_PERDUE_DIFFEREE, auTourDuPorteur: true} : effet;
 }
 
 /** Les actions perdues différées (de `porteur`, ou de toutes les cartes) deviennent ordinaires : le tour où elles ont été posées est fini.
@@ -513,12 +530,11 @@ function armerActionsPerdues(effets: readonly CombatEffect[], porteur?: string):
   return effets.some(armer) ? effets.map((effet) => (armer(effet) ? {...effet, origine: ACTION_PERDUE} : effet)) : effets;
 }
 
-/** « Rendre la main » à une carte : son tour rouvert est celui qu'elle a déjà joué, et l'action perdue armée à sa fin (`armerActionsPerdues`)
- * redevient différée, pour qu'elle ne lui coûte pas ce tour mais le suivant. Le registre ne dit pas qui l'a posée : une action perdue
- * qu'un adversaire lui aurait infligée depuis est différée de même — elle n'est jamais perdue, elle vaut pour son tour d'après. Rend la
- * même liste s'il n'y en a aucune. */
+/** « Rendre la main » à une carte : son tour rouvert est celui qu'elle a déjà joué, et l'action perdue posée pendant ce tour, armée à sa
+ * fin (`armerActionsPerdues`), redevient différée, pour qu'elle ne lui coûte pas ce tour mais le suivant. Celle qu'un adversaire lui a
+ * infligée depuis (sans `auTourDuPorteur`) reste armée : elle lui coûte le tour rouvert. Rend la même liste s'il n'y en a aucune. */
 export function redifererActionsPerdues(effets: readonly CombatEffect[], carte: string): readonly CombatEffect[] {
-  const armee = (effet: CombatEffect) => effet.porteur === carte && effet.origine === ACTION_PERDUE;
+  const armee = (effet: CombatEffect) => effet.porteur === carte && effet.origine === ACTION_PERDUE && effet.auTourDuPorteur === true;
   return effets.some(armee) ? effets.map((effet) => (armee(effet) ? {...effet, origine: ACTION_PERDUE_DIFFEREE} : effet)) : effets;
 }
 

@@ -34,6 +34,7 @@
           [legendaryActive]="b.legendaryActive"
           [announcement]="combat.turnAnnouncement()"
           (gaveBack)="combat.onGiveBackTurn($event)"
+          (reintegrated)="combat.reintegrate($event)"
           (addRequested)="commands.openAddCombatantDialog()"
         />
       }

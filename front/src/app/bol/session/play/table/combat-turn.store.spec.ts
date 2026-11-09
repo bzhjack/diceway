@@ -1,3 +1,4 @@
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -235,5 +236,65 @@ describe('CombatTurnStore : « Fuite opportune »', () => {
     expect(adjustVilenie).not.toHaveBeenCalled();
     expect(store.etat().fuis).toEqual([]);
     expect(store.etat().exclus).toEqual([]);
+  });
+});
+
+describe('CombatTurnStore : un effet qui expire est annoncé aux lecteurs d’écran', () => {
+  let store: CombatTurnStore;
+  let session: ReturnType<typeof signal<BolFightSessionModel | null>>;
+  const announce = vi.fn();
+
+  function monter(etatCombat: Partial<EtatCombat>): void {
+    TestBed.resetTestingModule();
+    announce.mockReset();
+    session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: etatCombat} as unknown as BolFightSessionModel);
+    const updateCombatState = vi.fn((_id: string, etat: Partial<EtatCombat>) => of({...session(), etat_combat: {depart: {}, ...etat}}));
+    TestBed.configureTestingModule({
+      providers: [
+        CombatTurnStore,
+        {
+          provide: TableStore,
+          useValue: {session, cards: signal([card('hero', 1), card('pnj', 7)]), board: signal({tokens: []}), mode: signal('combat'), sessionId: signal('s1'), notifyError: vi.fn()},
+        },
+        {provide: BolFightSessionService, useValue: {updateCombatState}},
+        {provide: BolHerosService, useValue: {}},
+        {provide: MatSnackBar, useValue: {open: vi.fn()}},
+        {provide: LiveAnnouncer, useValue: {announce}},
+      ],
+    });
+    store = TestBed.inject(CombatTurnStore);
+    TestBed.tick();
+  }
+
+  const posture = {
+    id: 'e-1',
+    origine: 'posture-defensive',
+    porteur: 'pnj-7',
+    stat: 'defense',
+    valeur: 1,
+    quand: 'subie',
+    duree: {type: 'debut-tour-porteur'},
+    manuel: false,
+  } as const;
+
+  it('l’effet « jusqu’à son prochain tour » tombe quand son porteur prend la main : annoncé', () => {
+    monter({round: 2, joues: [], effets: [posture], exclus: [], fuis: [], melee: null});
+    expect(announce).not.toHaveBeenCalled();
+
+    store.onEndTurn();
+    TestBed.tick();
+
+    expect(store.activeKey()).toBe('pnj-7');
+    expect(announce).toHaveBeenCalledWith("Fin de l'effet posture défensive sur pnj 7.", 'polite');
+  });
+
+  it('un effet retiré à la main par le MJ n’est pas annoncé', () => {
+    monter({round: 2, joues: [], effets: [posture], exclus: [], fuis: [], melee: null});
+
+    store.onEffectRemoved('e-1');
+    TestBed.tick();
+
+    expect(store.etat().effets).toEqual([]);
+    expect(announce).not.toHaveBeenCalled();
   });
 });

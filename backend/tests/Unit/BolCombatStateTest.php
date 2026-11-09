@@ -167,6 +167,15 @@ class BolCombatStateTest extends TestCase
         $this->assertTrue($kept['manuel']);
     }
 
+    public function test_keeps_the_mark_of_a_lost_action_posed_during_its_bearers_turn(): void
+    {
+        $perdue = $this->effet(['id' => 'e-3', 'origine' => 'action-perdue', 'stat' => 'action', 'valeur' => -1, 'quand' => 'attaque', 'duree' => ['type' => 'action-porteur']]);
+        $kept = BolCombatState::normalize(['round' => 1, 'effets' => [$perdue + ['auTourDuPorteur' => true], ['id' => 'e-4', 'auTourDuPorteur' => 'oui'] + $perdue]])['effets'];
+
+        $this->assertTrue($kept[0]['auTourDuPorteur']);
+        $this->assertArrayNotHasKey('auTourDuPorteur', $kept[1]);
+    }
+
     public function test_keeps_an_effect_that_lasts_a_number_of_rounds(): void
     {
         $regenere = $this->effet(['id' => 'e-2', 'stat' => 'action', 'valeur' => -1, 'quand' => 'attaque', 'duree' => ['type' => 'rounds', 'restants' => 2]]);

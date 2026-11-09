@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, cartesRelevees, commencerTour, retirerDuCombat, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, poserEffet, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cartesRelevees, commencerTour, etatEnregistre, remettreAuCombat, retirerDuCombat, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, turnOrderFrise, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, poserEffet, raisonHorsJeu, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -461,6 +461,13 @@ describe('turnOrderFrise', () => {
     ]);
   });
 
+  it('un retiré se clique pour revenir au combat : barré, et sa bulle le dit', () => {
+    const [step] = turnOrderFrise([entry('p1', 'coriace', {kind: 'pnj', status: 'skipped', horsCombat: 'retiré'})], null);
+
+    expect(step).toMatchObject({clickable: true, excluded: true, down: true});
+    expect(step.tooltip).toContain('cliquer pour le remettre au combat');
+  });
+
   it('ne laisse cliquer que celui qui a joué, et marque la cible, les effets et le hors de combat', () => {
     const frise = turnOrderFrise(
       [entry('h1', 'reussite', {status: 'played'}), entry('r1', 'rival', {kind: 'pnj', effets: ['Sonné'], horsCombat: 'mort'})],
@@ -717,6 +724,22 @@ describe('retirerDuCombat', () => {
     expect(retirerDuCombat(dejaRetire, 'pnj-7')).toBe(dejaRetire);
   });
 
+  it('« Remettre au combat » le fait revenir et jouer, sans ses effets ; un rival enfui reste parti', () => {
+    const order = ordered(KALENA, PRETRE, RORK);
+    const surPretre: CombatEffect = {...effetStabilise('pnj-7'), id: 'e-1'};
+    const retire = retirerDuCombat(etat(1, [], [surPretre]), 'pnj-7');
+
+    const revenu = remettreAuCombat(retire, 'pnj-7');
+
+    expect(revenu.exclus).toEqual([]);
+    expect(revenu.effets).toEqual([]);
+    expect(raisonHorsJeu(PRETRE, revenu)).toBeNull();
+    expect(turnState(order, revenu).statuses.get('pnj-7')).not.toBe('skipped');
+    const enfui = {...etat(1), exclus: ['pnj-7'], fuis: ['pnj-7']};
+    expect(remettreAuCombat(enfui, 'pnj-7')).toBe(enfui);
+    expect(remettreAuCombat(revenu, 'pnj-7')).toBe(revenu);
+  });
+
   it('a rival who fled stays « enfui »', () => {
     expect(raisonHorsJeu(PRETRE, {...etat(1), exclus: ['pnj-7'], fuis: ['pnj-7']})).toBe('enfui');
   });
@@ -836,6 +859,19 @@ describe('giveBackTurn : action perdue posée pendant son tour', () => {
     expect(turnState(order, round2).activeKey).toBe('pnj-7');
   });
 
+  it('une action perdue infligée par un adversaire après son tour lui coûte le tour rouvert', () => {
+    // Kalena a joué ; pendant le tour du prêtre, elle prend « Juste une égratignure ».
+    const inflige = poserEffet(order, etat(1, ['hero-1']), effetActionPerdue('hero-1'), ids);
+    expect(turnState(order, inflige).activeKey).toBe('pnj-7');
+    expect(inflige.effets.find((e) => e.porteur === 'hero-1')?.auTourDuPorteur).toBeUndefined();
+
+    const rendu = commencerTour(order, giveBackTurn(inflige, 'hero-1'), ids);
+
+    expect(rendu.joues).toContain('hero-1');
+    expect(perdSonAction(rendu.effets, 'hero-1')).toBe(false);
+    expect(turnState(order, rendu).activeKey).toBe('pnj-7');
+  });
+
   it('ne touche pas l’action perdue d’une carte à qui on ne rend pas la main', () => {
     const perdue: CombatEffect = {...effetActionPerdue('pnj-7'), id: 'e-1'};
     expect(perdSonAction(giveBackTurn(etat(1, ['hero-1'], [perdue]), 'hero-1').effets, 'pnj-7')).toBe(true);
@@ -945,5 +981,26 @@ describe('combatOutcome : une carte paralysée ne tient plus debout', () => {
 
   it('goes on while someone else stands in that camp', () => {
     expect(combatOutcome([KALENA, RORK, PRETRE], [], [paralyse('hero-1')])).toBeNull();
+  });
+});
+
+describe('etatEnregistre : une réponse perdue, l’enregistrement est-il passé ?', () => {
+  const trace: CombatEffect = {...effetStabilise('hero-1'), id: 'e-9'};
+  const avant = etat(1, ['hero-1']);
+
+  it('une fin de tour : le déroulé fait foi, même si le serveur a écarté un effet', () => {
+    const voulu = {...etat(2, []), effets: [trace]};
+
+    expect(etatEnregistre(etat(2, []), avant, voulu)).toBe(true);
+    expect(etatEnregistre(avant, avant, voulu)).toBe(false);
+  });
+
+  it('un effet ajouté ou retiré : il faut le retrouver, ou ne plus le trouver', () => {
+    const avecTrace = etat(1, ['hero-1'], [trace]);
+
+    expect(etatEnregistre(avecTrace, avant, avecTrace)).toBe(true);
+    expect(etatEnregistre(avant, avant, avecTrace)).toBe(false);
+    expect(etatEnregistre(avant, avecTrace, avant)).toBe(true);
+    expect(etatEnregistre(avecTrace, avecTrace, avant)).toBe(false);
   });
 });

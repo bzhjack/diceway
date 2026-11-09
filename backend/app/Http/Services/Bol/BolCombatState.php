@@ -212,6 +212,10 @@ class BolCombatState
         if (is_string($raw['libelle'] ?? null) && $raw['libelle'] !== '') {
             $effet['libelle'] = mb_substr($raw['libelle'], 0, 60);
         }
+        // Une action perdue posée pendant le tour de son porteur : « Rendre la main » la reporte au tour d'après.
+        if (($raw['auTourDuPorteur'] ?? false) === true) {
+            $effet['auTourDuPorteur'] = true;
+        }
 
         return $effet;
     }
