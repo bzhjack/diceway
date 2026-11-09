@@ -52,6 +52,7 @@ export class CombatBoardComponent {
   readonly choiceChanged = output<AttackChoice | null>();
   /** Les piétailles engagées dans la horde de la carte active. */
   readonly hordeChanged = output<readonly string[]>();
+  readonly ciblesAllieesChanged = output<boolean>();
   readonly targetSelected = output<TapisCard | null>();
   readonly sheetRequested = output<TapisCard>();
   readonly attackRolled = output<AttackRolled>();

@@ -1,20 +1,36 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, model, output} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {pointsRecuperes} from '../../magie-combat.util';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {heroismeGems} from '../../heroisme-spend.util';
-import {HeroResourcesData} from '../../models/hero-resources.model';
+import {HeroResourcesData, RecuperationMagique} from '../../models/hero-resources.model';
 import {TableChange} from '../../models/table-change.model';
 import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
 
+/** Les récupérations du livre : le pouvoir à midi ou minuit (1er cercle, 4 points), à la pleine lune (2e et 3e cercles, 4 points), tout
+ * pour les charmes (p. 155) ; la foi, un point par heure de dévotions (p. 146). */
+const RECUPERATIONS: readonly RecuperationMagique[] = [
+  {ressource: 'pouvoir', libelle: 'Midi ou minuit (1er cercle)', gain: 4},
+  {ressource: 'pouvoir', libelle: 'Pleine lune (2e et 3e cercles)', gain: 4},
+  {ressource: 'pouvoir', libelle: 'Charmes : réserve pleine', gain: null},
+  {ressource: 'foi', libelle: 'Dévotions, 1 h', gain: 1},
+  {ressource: 'foi', libelle: 'Dévotions, 2 h', gain: 2},
+  {ressource: 'foi', libelle: 'Dévotions, 3 h', gain: 3},
+  {ressource: 'foi', libelle: 'Dévotions, 4 h', gain: 4},
+];
+
 /** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
- * une rangée de gemmes pour l'héroïsme. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
+ * une rangée de gemmes pour l'héroïsme ; pour un prêtre ou un sorcier, sa foi et son pouvoir sur leur réserve maximale, et de quoi les
+ * récupérer. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
  * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
 @Component({
   selector: 'bol-hero-resources',
-  imports: [DwGemmesComponent, DwValueStepperComponent],
+  imports: [DwGemmesComponent, DwValueStepperComponent, MatIconModule, MatMenuModule],
   template: `
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
@@ -29,6 +45,29 @@ import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
         <button type="button" class="hrs-step" aria-label="Ajouter un point d’héroïsme" (click)="stepHeroisme(1)">+</button>
       </div>
     </div>
+    @if (recuperations().length) {
+      <div class="hrs-field">
+        <span class="hrs-label">Magie</span>
+        <div class="hrs-magie">
+          @if (data().foiMax !== null) {
+            <span class="hrs-reserve">Foi {{ foi() }}/{{ data().foiMax }}</span>
+          }
+          @if (data().pouvoirMax !== null) {
+            <span class="hrs-reserve">Pouvoir {{ pouvoir() }}/{{ data().pouvoirMax }}</span>
+          }
+          <button type="button" class="hrs-recuperer" [matMenuTriggerFor]="menuRecuperer" aria-label="Récupérer des points de foi ou de pouvoir">
+            <mat-icon aria-hidden="true">restore</mat-icon>
+          </button>
+        </div>
+        <mat-menu #menuRecuperer="matMenu">
+          @for (r of recuperations(); track r.libelle) {
+            <button mat-menu-item type="button" [disabled]="r.points === 0" (click)="recuperer(r)">
+              {{ r.libelle }} · {{ r.points ? '+' + r.points : 'réserve pleine' }}
+            </button>
+          }
+        </mat-menu>
+      </div>
+    }
   `,
   styles: `
     // Deux tuiles, du même style que les statistiques de combat de la carte : le libellé au-dessus, le stepper
@@ -55,6 +94,46 @@ import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
       --vs-heart-width: var(--hrs-heart-width, 2.1rem);
       --vs-heart-height: var(--hrs-heart-height, 1.9rem);
       --vs-heart-font: var(--hrs-heart-font, 0.8rem);
+    }
+
+    .hrs-magie {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-height: 1.9rem;
+    }
+
+    .hrs-reserve {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--dw-forge-bone);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hrs-recuperer {
+      display: grid;
+      place-items: center;
+      width: 1.6rem;
+      height: 1.6rem;
+      padding: 0;
+      border: 1px solid var(--dw-forge-bronze-dim);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--dw-forge-hot-text);
+      cursor: pointer;
+
+      .mat-icon {
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--dw-forge-hot);
+        outline-offset: 2px;
+      }
     }
 
     // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement.
@@ -156,6 +235,22 @@ export class HeroResourcesComponent {
     const max = this.data().vitaliteMax;
     return max > 0 ? Math.max(0, Math.min(100, (this.vitalite() / max) * 100)) : 0;
   });
+  protected readonly foi = linkedSignal(() => this.data().foi);
+  protected readonly pouvoir = linkedSignal(() => this.data().pouvoir);
+
+  /** Les récupérations possibles pour sa carrière, chacune avec ce qu'elle rendrait vraiment (0 : réserve déjà pleine). */
+  protected readonly recuperations = computed(() => {
+    const data = this.data();
+    return RECUPERATIONS.flatMap((r) => {
+      const max = r.ressource === 'foi' ? data.foiMax : data.pouvoirMax;
+      if (max === null) {
+        return [];
+      }
+      const courant = r.ressource === 'foi' ? this.foi() : this.pouvoir();
+      return [{...r, points: pointsRecuperes(courant, max, r.gain ?? max)}];
+    });
+  });
+
   /** Une gemme par point d'héroïsme, allumée s'il reste à dépenser. */
   protected readonly gems = computed(() => heroismeGems(this.heroisme()));
 
@@ -176,6 +271,27 @@ export class HeroResourcesComponent {
           duration: 5000,
         });
         this.vitalite.set(previous);
+      },
+    });
+  }
+
+  /** Rend des points de foi ou de pouvoir, sans dépasser la réserve maximale ; la fiche est mise à jour. */
+  protected recuperer(r: RecuperationMagique & {readonly points: number}): void {
+    if (r.points === 0) {
+      return;
+    }
+    const valeur = r.ressource === 'foi' ? this.foi : this.pouvoir;
+    const previous = valeur();
+    valeur.set(previous + r.points);
+    const data = this.data();
+    this.herosService.adjustRessource(data.herosId, r.ressource, r.points).subscribe({
+      next: (hero) => {
+        valeur.set(hero.ressources[r.ressource]);
+        this.snackBar.open(`${data.heroNom} récupère ${r.points} point${r.points > 1 ? 's' : ''} de ${r.ressource}.`, undefined, {duration: 4000});
+      },
+      error: (error: unknown) => {
+        this.snackBar.open(extractApiErrorMessage(error, 'Impossible de récupérer ces points.'), 'Fermer', {duration: 5000});
+        valeur.set(previous);
       },
     });
   }

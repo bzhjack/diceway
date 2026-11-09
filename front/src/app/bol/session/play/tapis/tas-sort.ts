@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
 import {DwRollSumComponent} from '../../../../shared/roll-sum/roll-sum';
@@ -15,7 +16,7 @@ import {TurnFlowStore} from './turn-flow.store';
  * jet dépense les points de pouvoir ; un sort qui blesse passe ensuite à la ligne des dégâts. */
 @Component({
   selector: 'li[bol-tas-sort]',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule, DwDiceRowComponent, DwRollSumComponent, DwValueStepperComponent],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, DwDiceRowComponent, DwRollSumComponent, DwValueStepperComponent],
   templateUrl: './tas-sort.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

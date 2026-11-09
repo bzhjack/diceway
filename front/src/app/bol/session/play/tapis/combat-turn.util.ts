@@ -400,11 +400,13 @@ export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   };
 }
 
-/** Cartes que la carte active peut désigner d'un clic : le camp d'en face, hors cartes hors combat ou exclues. */
+/** Cartes que la carte active peut désigner d'un clic : le camp d'en face, hors cartes hors combat ou exclues. `allies` : un sort qui ne
+ * blesse pas, qui peut aussi viser son camp — la carte active elle-même comprise. */
 export function targetableKeys(
   ordered: readonly OrderedCard[],
   activeKey: string | null,
   exclus: readonly string[] = [],
+  allies = false,
 ): ReadonlySet<string> {
   const active = ordered.find((entry) => entry.card.key === activeKey)?.card;
   if (!active) {
@@ -413,7 +415,7 @@ export function targetableKeys(
   return new Set(
     ordered
       .map((entry) => entry.card)
-      .filter((card) => card.camp !== active.camp && !isOut(card) && !exclus.includes(card.key))
+      .filter((card) => (allies || card.camp !== active.camp) && !isOut(card) && !exclus.includes(card.key))
       .map((card) => card.key),
   );
 }

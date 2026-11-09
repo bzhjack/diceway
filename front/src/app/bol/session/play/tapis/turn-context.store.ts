@@ -139,6 +139,10 @@ export class TurnContextStore {
     return this.host.hordeChanged;
   }
 
+  get ciblesAllieesChanged() {
+    return this.host.ciblesAllieesChanged;
+  }
+
   get targetSelected() {
     return this.host.targetSelected;
   }

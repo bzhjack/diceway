@@ -119,11 +119,31 @@
       <!-- La page a été rechargée après que le sort de ce tour a été payé : le jet ne redébite pas ces points. -->
       <span>· {{ credit }} {{ credit > 1 ? 'pts déjà payés' : 'pt déjà payé' }} ce tour-ci, avant le rechargement de la page : le jet ne les redébite pas.</span>
     }
-    @if (loadout.sortModel().cercle === 3) {
+    @if (loadout.sortModel().cercle === 3 && !(flow.sortLance() && turn.card().kind === 'hero')) {
       <span>· 3e cercle : 1 point de pouvoir perdu pour toujours (ou 1 point d’attribut), à reporter sur la fiche.</span>
     }
     @if (turn.target() && turn.targetStats()?.magie?.resistantMagie) {
       <span>· {{ turn.target()?.nom }}, résistant à la magie : sur un 6 au d6, le sort est sans effet.</span>
     }
   </p>
+  <!-- Le sort lancé, ses coûts au lanceur, chacun confirmé : la condition « blessures », et au 3e cercle la perte définitive. -->
+  @if (flow.sortLance() && loadout.sortModel().cercle > 0) {
+    <p class="tas-sort-couts">
+      <button type="button" class="tas-act" matTooltip="Si le sort a pris la condition « blessures » : le dé du cercle, au lanceur" (click)="flow.blessuresDuLanceur()">
+        <mat-icon aria-hidden="true">water_drop</mat-icon> Blessures du lanceur
+      </button>
+      @if (loadout.sortModel().cercle === 3 && turn.card().kind === 'hero') {
+        <button type="button" class="tas-act" [matMenuTriggerFor]="perte">
+          <mat-icon aria-hidden="true">heart_broken</mat-icon> Perte définitive…
+        </button>
+        <mat-menu #perte="matMenu" class="tas-scope">
+          <button mat-menu-item type="button" (click)="flow.perteDefinitive('pouvoir')">1 point de pouvoir, pour toujours</button>
+          <button mat-menu-item type="button" (click)="flow.perteDefinitive('vigueur')">1 point de Vigueur</button>
+          <button mat-menu-item type="button" (click)="flow.perteDefinitive('agilite')">1 point d’Agilité</button>
+          <button mat-menu-item type="button" (click)="flow.perteDefinitive('esprit')">1 point d’Esprit</button>
+          <button mat-menu-item type="button" (click)="flow.perteDefinitive('aura')">1 point d’Aura</button>
+        </mat-menu>
+      }
+    </p>
+  }
 }

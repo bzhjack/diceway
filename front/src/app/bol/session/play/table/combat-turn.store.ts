@@ -109,9 +109,13 @@ export class CombatTurnStore {
   /** Cible visée par la carte active (choisie dans l'assistant ou d'un clic sur sa carte). */
   private readonly targetKey = signal<string | null>(null);
 
-  /** Cartes que la carte active peut viser : le camp d'en face, hors combat exclu. */
+  /** La carte active prépare un sort qui ne blesse pas (l'assistant le dit) : elle peut viser son propre camp. */
+  readonly ciblesAlliees = signal(false);
+
+  /** Cartes que la carte active peut viser : le camp d'en face, hors combat exclu ; tout le monde en combat pour un sort qui ne blesse pas. */
   readonly targets = computed(() => {
-    const targetable = this.table.mode() === 'combat' ? targetableKeys(this.orderedCards(), this.turn().activeKey, this.etat().exclus) : new Set<string>();
+    const targetable =
+      this.table.mode() === 'combat' ? targetableKeys(this.orderedCards(), this.turn().activeKey, this.etat().exclus, this.ciblesAlliees()) : new Set<string>();
     return this.table.cards().filter((card) => targetable.has(card.key));
   });
 
@@ -373,7 +377,8 @@ export class CombatTurnStore {
     const attacker = this.activeCard();
     if (target === null) {
       this.targetKey.set(null);
-    } else if (attacker && attacker.key !== target.key) {
+    } else if (attacker && (attacker.key !== target.key || this.ciblesAlliees())) {
+      // Un sort qui ne blesse pas peut viser son lanceur lui-même.
       this.targetKey.set(target.key);
     }
   }

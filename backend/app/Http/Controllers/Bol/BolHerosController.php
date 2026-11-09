@@ -129,6 +129,19 @@ class BolHerosController extends Controller
         return response()->json($heros);
     }
 
+    /** Le prix d'un sort du 3e cercle : 1 point de pouvoir perdu pour toujours, ou 1 point d'attribut. */
+    public function perteDefinitive(Request $request, string $id)
+    {
+        $data = $request->validate(['cible' => 'required|in:pouvoir,vigueur,agilite,esprit,aura']);
+        $heros = $this->bolHerosService->perteDefinitive($id, Auth::id(), $data['cible']);
+
+        if (!$heros) {
+            return response()->json(['error' => 'Hero not found'], 404);
+        }
+
+        return response()->json($heros);
+    }
+
     /** Nomme (ou retire, avec une arme vide) l'arme favorite d'une fiche : l'étoile de la liste d'armes. */
     public function armeFavorite(Request $request, string $id)
     {

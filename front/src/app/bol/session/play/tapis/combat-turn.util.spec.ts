@@ -345,6 +345,10 @@ describe('targetableKeys', () => {
     expect([...targetableKeys(order, 'pnj-7')].sort()).toEqual(['hero-1', 'hero-2', 'pnj-8']);
   });
 
+  it('a spell that does not wound may target its own camp too, the caster included', () => {
+    expect([...targetableKeys(order, 'hero-1', [], true)].sort()).toEqual(['creature-3', 'hero-1', 'hero-2', 'pnj-7', 'pnj-8']);
+  });
+
   it('offers nothing when nobody is active', () => {
     expect(targetableKeys(order, null).size).toBe(0);
   });

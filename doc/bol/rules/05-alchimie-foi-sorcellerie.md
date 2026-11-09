@@ -189,8 +189,10 @@ Pas de catalogue de sorts : le joueur decrit l'effet, le MJ en fixe la puissance
 - Contre un sort, ni parade in extremis ni bouclier humain (interpretation : le livre ne les donne que contre un coup).
 - Succes heroique sur un sort : le MJ en renforce l'effet (interpretation : pas d'option de succes heroique de combat).
 - Resistant a la magie (p. 42) : rappele quand la cible l'a ; le d6 se lance a la table.
-- 3e cercle : la perte definitive d'1 point de pouvoir (ou d'attribut, p. 154) est rappelee, a reporter sur la fiche.
-- La condition « blessures » (d3, d6+1, 2d6+1 vitalite) n'est pas appliquee d'office : le MJ corrige la vitalite du sorcier sur son coeur.
+- 3e cercle : la perte definitive d'1 point de pouvoir (ou d'attribut, p. 154) se fait d'un clic une fois le sort lance (« Perte definitive… », heros seulement) : le pouvoir perdu (`pouvoir_perdu`) baisse la reserve maximale.
+- La condition « blessures » (d3, d6+1, 2d6+1 vitalite) se jette d'un clic une fois le sort lance (« Blessures du lanceur »), avec confirmation : le MJ le fait s'il a pris cette condition.
+- Un sort qui ne blesse pas peut viser son propre camp, le lanceur compris (« Peau ecailleuse » sur un allie) ; un sort qui blesse vise le camp d'en face.
+- Recuperation (p. 146 et 155) : « Recuperer » sur la carte ouverte d'un heros, sans depasser la reserve maximale.
 
 ### Echelle qualitative des cercles
 

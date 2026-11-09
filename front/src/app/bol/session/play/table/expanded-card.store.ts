@@ -1,3 +1,4 @@
+import {reservesMaximales} from '../../magie-combat.util';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Observable, take} from 'rxjs';
@@ -180,6 +181,10 @@ export class ExpandedCardStore {
         heroNom: card.nom,
         vitaliteCourante: card.vitaliteCourante ?? hero.ressources.vitalite,
         vitaliteMax: hero.ressources.vitalite,
+        foi: hero.ressources.foi ?? 0,
+        foiMax: reservesMaximales(hero).foi,
+        pouvoir: hero.ressources.pouvoir ?? 0,
+        pouvoirMax: reservesMaximales(hero).pouvoir,
       },
       actionRoll: {
         heroNom: card.nom,

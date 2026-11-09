@@ -16,27 +16,9 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 | # | Sujet | Effort |
 | --- | --- | --- |
-| 1 | Combat : sorcellerie, foi, pouvoir | M |
-| 2 | Combat : échec critique (si la table le demande) | — |
-| 3 | Images | hors code |
+| 1 | Images | hors code |
 
-## 1. Combat : sorcellerie, foi, pouvoir
-
-- **Coût d'un sort** : les blessures du lanceur et le point de pouvoir perdu au 3e cercle ne sont que rappelés (`tas-sort.html:123`) ;
-  les appliquer au lanceur, avec une confirmation.
-- **Sort sur un allié** : un sort ne vise que le camp d'en face (`targetableKeys`, `combat-turn.util.ts:385`) ; un sort de soin ou de
-  protection sur un allié se pose à la main. Ouvrir les cibles alliées aux sorts qui s'y prêtent.
-- **Récupération des points de foi et de pouvoir** : rien ne les rend (« retourner au temple » n'est qu'un message, `de-foi.ts:121`).
-  Un bouton de récupération (repos, temple) sur la fiche ou dans « Après combat ».
-- **Dé de foi** : il ne se donne que depuis la ligne de l'attaquant ou la carte de la cible (`tas-attaquant.html:102`, `tas-cible.html:39`).
-  À garder tel quel, sauf besoin à la table.
-
-## 2. Combat : échec critique (si la table le demande)
-
-- **Échec critique** : il rapporte 1 PH, mais l'issue défavorable (« ce round et le suivant ») reste au MJ. Voulu (§ 8 de l'état des
-  lieux) ; à revoir seulement si la table le demande.
-
-## 3. Images (hors code)
+## 1. Images (hors code)
 
 - `doc/bol/image-prompts/fonds-bibliotheques.md` : 6 fonds plein écran pour les bibliothèques (héros, PNJ, créatures, démons, armes,
   armures), à la résolution du fond des scénarios ; puis, page par page, `image` et `[fondPleinePage]="true"` sur l'en-tête (S).

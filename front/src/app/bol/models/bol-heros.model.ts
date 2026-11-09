@@ -74,6 +74,8 @@ export interface BolHerosRessources {
   heroisme: number;
   foi: number;
   pouvoir: number;
+  /** Points de pouvoir perdus pour toujours, un par sort du 3e cercle : ils baissent la réserve maximale. */
+  pouvoir_perdu?: number;
   vilenie: number;
   creation: number;
   experience: number;

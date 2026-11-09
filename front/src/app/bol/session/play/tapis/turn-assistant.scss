@@ -619,6 +619,14 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     color: var(--dw-forge-stud-text);
   }
 
+  // Le sort lancé : ses coûts au lanceur, des boutons qui demandent confirmation.
+  .tas-sort-couts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.25rem 0 0;
+  }
+
   .tas-die-note {
     flex: 1;
     min-width: 5rem;

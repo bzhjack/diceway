@@ -76,6 +76,8 @@ export class TurnAssistantComponent {
   readonly choiceChanged = output<AttackChoice | null>();
   /** Les piétailles engagées dans la horde : leur tour finit avec celui de la carte active. */
   readonly hordeChanged = output<readonly string[]>();
+  /** Un sort qui ne blesse pas se prépare : il peut viser son propre camp (soi, un allié). */
+  readonly ciblesAllieesChanged = output<boolean>();
   /** La carte choisie comme cible, ou `null` pour « Changer d'adversaire ». */
   readonly targetSelected = output<TapisCard | null>();
   /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */

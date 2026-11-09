@@ -81,3 +81,16 @@ export interface SortPaye {
   readonly reglages: SortSaisie | null;
   readonly libelle: string | null;
 }
+
+/** La condition « blessures » d'un sort, jetée : le dé de son cercle (« d6+1 ») et la vitalité que le lanceur perd. */
+export interface BlessuresSort {
+  readonly de: string;
+  readonly valeur: number;
+}
+
+/** Les réserves maximales d'une fiche : la foi (son rang de prêtre), le pouvoir (10 + rang de sorcier, moins les points perdus pour
+ * toujours) ; `null` sans la carrière. */
+export interface ReservesMaximales {
+  readonly foi: number | null;
+  readonly pouvoir: number | null;
+}

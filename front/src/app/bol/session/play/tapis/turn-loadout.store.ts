@@ -617,6 +617,9 @@ export class TurnLoadoutStore {
     effect(() => this.turn.choiceChanged.emit(this.choice()));
 
     effect(() => this.turn.hordeChanged.emit(this.horde().map((card) => card.key)));
+
+    // Un sort qui ne blesse pas (protection, malédiction…) peut viser son propre camp ; un sort qui blesse, l'attaque, le camp d'en face.
+    effect(() => this.turn.ciblesAllieesChanged.emit(this.sortMode() && !this.sortModel().blessant));
   }
 
   toggleHordeMate(key: string): void {

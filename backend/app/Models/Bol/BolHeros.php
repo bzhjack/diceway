@@ -23,7 +23,7 @@ class BolHeros extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = [
-        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation',
+        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'pouvoir_perdu', 'creation',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues', 'commentaire'
@@ -44,6 +44,7 @@ class BolHeros extends Model
         'active' => 'boolean',
 
         'pouvoir' => 'integer',
+        'pouvoir_perdu' => 'integer',
         'vilenie' => 'integer',
         'heroisme' => 'integer',
         'vitalite' => 'integer',
@@ -191,6 +192,7 @@ class BolHeros extends Model
             'foi' => $this->foi,
             'vilenie' => $this->vilenie,
             'pouvoir' => $this->pouvoir,
+            'pouvoir_perdu' => (int) $this->pouvoir_perdu,
             'creation' => $this->creation,
         ];
     }

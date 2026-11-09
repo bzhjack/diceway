@@ -179,6 +179,21 @@ class BolMagieCombatTest extends TestCase
         $this->patchJson("/api/bol/heros/{$pretre->id}/ressource", ['ressource' => 'foi', 'delta' => 3])->assertOk()->assertJsonPath('ressources.foi', 3);
     }
 
+    public function test_un_sort_du_3e_cercle_coute_un_point_de_pouvoir_pour_toujours_ou_un_point_d_attribut(): void
+    {
+        $heros = $this->fiche('H', ['pouvoir' => 8, 'esprit' => 0]);
+
+        $this->postJson("/api/bol/heros/{$heros->id}/perte-definitive", ['cible' => 'pouvoir'])
+            ->assertOk()
+            ->assertJsonPath('ressources.pouvoir_perdu', 1)
+            ->assertJsonPath('ressources.pouvoir', 8);
+        $this->postJson("/api/bol/heros/{$heros->id}/perte-definitive", ['cible' => 'esprit'])->assertOk()->assertJsonPath('attributs.esprit', -1);
+        $this->postJson("/api/bol/heros/{$heros->id}/perte-definitive", ['cible' => 'vitalite'])->assertUnprocessable();
+
+        $etranger = $this->fiche('H', [], User::factory()->create()->id);
+        $this->postJson("/api/bol/heros/{$etranger->id}/perte-definitive", ['cible' => 'pouvoir'])->assertNotFound();
+    }
+
     public function test_un_autre_compte_ne_touche_pas_a_la_foi_d_un_heros(): void
     {
         $autre = User::factory()->create();

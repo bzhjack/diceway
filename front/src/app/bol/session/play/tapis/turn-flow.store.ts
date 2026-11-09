@@ -18,7 +18,14 @@ import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
 import {TurnDamageStore} from './turn-damage.store';
 import {TurnCibleStore} from './turn-cible.store';
-import {effetSortPaye} from '../../magie-combat.util';
+import {blessuresDuSort, effetSortPaye} from '../../magie-combat.util';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {extractApiErrorMessage} from '../../../../core/api-error.utils';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {BolHerosService} from '../../../services/bol-heros.service';
+
+/** Les attributs, en clair, pour la perte définitive d'un sort du 3e cercle. */
+const PERTE_LIBELLES: Readonly<Record<'vigueur' | 'agilite' | 'esprit' | 'aura', string>> = {vigueur: 'Vigueur', agilite: 'Agilité', esprit: 'Esprit', aura: 'Aura'};
 
 /** Le déroulé du coup, de bout en bout : ce qui fait passer d'une étape à l'autre (le jet, l'application, la parade, la fin du tour), le coup joué qui reste écrit, et les cases allumées. */
 @Injectable()
@@ -30,6 +37,8 @@ export class TurnFlowStore {
   private readonly cible = inject(TurnCibleStore);
 
   private readonly dialog = inject(MatDialog);
+  private readonly herosService = inject(BolHerosService);
+  private readonly snackBar = inject(MatSnackBar);
 
   /** L'attaque est lancée ou jouée (ou le sort payé, même avant que la page soit rechargée) : il est trop tard pour retarder, secourir ou se
    * mettre en défense totale. */
@@ -289,6 +298,49 @@ export class TurnFlowStore {
     this.attack.sortPaid.set(paye);
     this.turn.ajusterRessource(this.turn.card(), 'pouvoir', -Math.max(0, cout - credit));
     this.noterSortPaye(paye);
+  }
+
+  /** La condition « blessures » du sort lancé (livre p. 152-153) : le dé de son cercle est jeté, et le lanceur perd cette vitalité si le MJ
+   * le confirme. */
+  blessuresDuLanceur(): void {
+    const lanceur = this.turn.card();
+    const blessures = blessuresDuSort(this.loadout.sortModel().cercle);
+    if (!blessures) {
+      return;
+    }
+    const points = `${blessures.valeur} point${blessures.valeur > 1 ? 's' : ''} de vitalité`;
+    confirmDialog(this.dialog, {
+      title: 'Blessures du lanceur',
+      message: `Condition « blessures » : ${blessures.de} = ${blessures.valeur}. ${lanceur.nom} perd ${points} ?`,
+      confirmLabel: `Appliquer −${blessures.valeur}`,
+    }).subscribe((confirme) => {
+      if (confirme) {
+        this.turn.vitaliteAdjusted.emit({card: lanceur, delta: -blessures.valeur});
+      }
+    });
+  }
+
+  /** Le prix d'un sort du 3e cercle (livre p. 154), sur la fiche du héros, après confirmation : 1 point de pouvoir perdu pour toujours, ou
+   * 1 point de l'attribut choisi (qui peut passer sous 0). */
+  perteDefinitive(cible: 'pouvoir' | 'vigueur' | 'agilite' | 'esprit' | 'aura'): void {
+    const lanceur = this.turn.card();
+    if (lanceur.kind !== 'hero' || !lanceur.sourceId) {
+      return;
+    }
+    const quoi = cible === 'pouvoir' ? '1 point de pouvoir de sa réserve maximale' : `1 point de ${PERTE_LIBELLES[cible]}`;
+    confirmDialog(this.dialog, {
+      title: 'Perte définitive',
+      message: `Sort du 3e cercle : ${lanceur.nom} perd pour toujours ${quoi}. La fiche est modifiée.`,
+      confirmLabel: 'Perdre ce point',
+    }).subscribe((confirme) => {
+      if (!confirme) {
+        return;
+      }
+      this.herosService.perteDefinitive(lanceur.sourceId!, cible).subscribe({
+        next: () => this.snackBar.open(`${lanceur.nom} a perdu pour toujours ${quoi}.`, undefined, {duration: 4500}),
+        error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, "Impossible d'enregistrer la perte."), 'Fermer', {duration: 5000}),
+      });
+    });
   }
 
   /** Tient à jour la trace « sort payé » de la carte (cf. `effetSortPaye`) : les anciennes tombent, la nouvelle dit ce qui est payé et

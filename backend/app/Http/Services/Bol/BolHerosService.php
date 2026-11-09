@@ -138,6 +138,25 @@ class BolHerosService
     }
 
     /**
+     * Le prix d'un sort du 3e cercle (livre p. 154) : 1 point de pouvoir perdu pour toujours (`pouvoir_perdu`, qui baisse la réserve
+     * maximale), ou à la place 1 point d'attribut, qui peut passer sous 0. En un seul ordre UPDATE, comme `ajusterEnBase`. `$cible` vient
+     * d'une liste fermée. Null si la fiche est introuvable ou la cible inconnue.
+     */
+    public function perteDefinitive(string $herosId, string $userId, string $cible): ?BolHeros
+    {
+        $colonnes = ['pouvoir' => ['pouvoir_perdu', '+'], 'vigueur' => ['vigueur', '-'], 'agilite' => ['agilite', '-'], 'esprit' => ['esprit', '-'], 'aura' => ['aura', '-']];
+        if (!isset($colonnes[$cible])) {
+            return null;
+        }
+        [$colonne, $sens] = $colonnes[$cible];
+        $modifiees = BolHeros::where('id', $herosId)
+            ->where('user_id', $userId)
+            ->update([$colonne => DB::raw("COALESCE({$colonne}, 0) {$sens} 1")]);
+
+        return $modifiees > 0 ? BolHeros::find($herosId) : null;
+    }
+
+    /**
      * Ajoute `delta` à une réserve de la fiche d'un héros du compte, bornée à 0, en un seul ordre UPDATE calculé par la base : deux
      * ajustements simultanés (deux écrans sur la même table) s'additionnent au lieu que le second écrase le premier, ce que ferait une
      * lecture puis une écriture. `$colonne` vient d'une liste fermée, jamais de la requête. Null si la fiche est introuvable.

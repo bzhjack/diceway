@@ -110,6 +110,7 @@
             [canRescue]="combat.rescuePatients().length > 0"
             [hordeMates]="combat.hordeMates()"
             (hordeChanged)="combat.hordeKeys.set($event)"
+            (ciblesAllieesChanged)="combat.ciblesAlliees.set($event)"
             [carrieres]="stats.activeCarrieres()"
             (delayRequested)="combat.onDelay()"
             (endTurnRequested)="combat.onEndTurn($event)"

@@ -151,6 +151,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
     Route::patch('/bol/heros/{id}/heroisme', [BolHerosController::class, 'adjustHeroisme']);
     Route::patch('/bol/heros/{id}/ressource', [BolHerosController::class, 'adjustRessource']);
+    Route::post('/bol/heros/{id}/perte-definitive', [BolHerosController::class, 'perteDefinitive']);
     Route::patch('/bol/heros/{id}/arme-favorite', [BolHerosController::class, 'armeFavorite']);
 
     // Traits régionaux

@@ -1,4 +1,5 @@
 import {describe, expect, it} from 'vitest';
+import {CARRIERE_PRETRE_ID, CARRIERE_SORCIER_ID} from '../bol-rules.constants';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {TapisCard} from './models/tapis.model';
 import {SortSaisie} from './models/magie-combat.model';
@@ -19,6 +20,9 @@ import {
   saisieSortParDefaut,
   sortSansJet,
   surcoutArmure,
+  blessuresDuSort,
+  pointsRecuperes,
+  reservesMaximales,
 } from './magie-combat.util';
 
 function saisie(over: Partial<SortSaisie> = {}): SortSaisie {
@@ -226,5 +230,33 @@ describe('la trace du sort payé', () => {
     const ancienne = {...effetSortPaye('hero-1', 6, saisie()), libelle: 'sort payé (6 pts de pouvoir)', id: 'e-1'};
 
     expect(sortPayeCeRound([ancienne], 'hero-1')).toMatchObject({points: 6, ids: ['e-1'], reglages: null});
+  });
+});
+
+describe('blessuresDuSort', () => {
+  const des = (...valeurs: number[]) => () => (valeurs.shift()! - 1) / 6;
+
+  it('jette le dé du cercle : d3, d6+1, 2d6+1 ; rien pour un charme', () => {
+    expect(blessuresDuSort(1, () => 0.99)).toEqual({de: 'd3', valeur: 3});
+    expect(blessuresDuSort(2, des(4))).toEqual({de: 'd6+1', valeur: 5});
+    expect(blessuresDuSort(3, des(6, 2))).toEqual({de: '2d6+1', valeur: 9});
+    expect(blessuresDuSort(0)).toBeNull();
+  });
+});
+
+describe('reservesMaximales et pointsRecuperes', () => {
+  const fiche = (carrieres: [number, number][], pouvoirPerdu = 0) =>
+    ({carrieres: carrieres.map(([carriere_id, value]) => ({carriere_id, value})), ressources: {pouvoir_perdu: pouvoirPerdu}}) as unknown as BolHerosModel;
+
+  it('la foi d’un prêtre est son rang ; le pouvoir d’un sorcier, 10 + son rang, moins ce qu’il a perdu pour toujours', () => {
+    expect(reservesMaximales(fiche([[CARRIERE_PRETRE_ID, 3]]))).toEqual({foi: 3, pouvoir: null});
+    expect(reservesMaximales(fiche([[CARRIERE_SORCIER_ID, 2]], 1))).toEqual({foi: null, pouvoir: 11});
+    expect(reservesMaximales(fiche([[CARRIERE_PRETRE_ID, 0]]))).toEqual({foi: null, pouvoir: null});
+  });
+
+  it('une récupération ne dépasse pas la réserve maximale', () => {
+    expect(pointsRecuperes(5, 12, 4)).toBe(4);
+    expect(pointsRecuperes(10, 12, 4)).toBe(2);
+    expect(pointsRecuperes(12, 12, 4)).toBe(0);
   });
 });

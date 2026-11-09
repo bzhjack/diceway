@@ -171,7 +171,10 @@ Règles : `doc/bol/rules/05-alchimie-foi-sorcellerie.md` (livre p. 146-157), ave
 - **Le jet** (« Le sort », à la place de l'attaque) : `2d6 + esprit + sorcier ± difficulté`, moins l'esprit de la cible pour un sort sur l'esprit, plus le modificateur du MJ ; 9 ou plus. Le dé du MJ, les dés de foi et « Magie des Rois-Sorciers » y jouent. Le premier jet (tapé ou lancé) paie le sort ; vider la case le rend. Sans assez de pouvoir, le jet reste fermé. Un charme automatique se lance d'un bouton, sans jet.
 - **Verdict** : le sort agit, ou échoue (le pouvoir reste dépensé) ; double 1 et double 6 comme à l'attaque ; pour un héros, faveur divine (relance sans repayer) et échec critique (+1 PH). Une fois lancé, le sort ne se règle plus et l'attaque n'est plus possible.
 - **Dégâts** : un sort qui blesse passe à la ligne des dégâts : le dé de sa puissance (1, d6, d6×2, d6×3), sans vigueur ni protection (que le MJ peut saisir), « Dégâts doublés » contre une vulnérabilité ; « Appliquer » comme pour un coup, puis « Fin du tour ». Ni parade in extremis ni bouclier humain contre un sort.
-- **Rappels** : sous le verdict, le coût ; au 3e cercle, le point de pouvoir perdu pour toujours (à reporter sur la fiche) ; une cible « Résistant à la magie » (d6 : sur 6, sans effet).
+- **Rappels** : sous le verdict, le coût ; une cible « Résistant à la magie » (d6 : sur 6, sans effet).
+- **Coûts au lanceur**, une fois le sort lancé, chacun confirmé : « Blessures du lanceur » jette le dé de la condition « blessures » de son cercle (d3, d6+1, 2d6+1, livre p. 152-153) et le retire à sa vitalité ; au 3e cercle, pour un héros, « Perte définitive… » retire pour toujours 1 point de pouvoir (`pouvoir_perdu` sur la fiche, qui baisse la réserve maximale) ou 1 point de l'attribut choisi (p. 154). Pour un PNJ, la perte reste rappelée.
+- **Cible alliée** : un sort qui ne blesse pas peut viser son propre camp, le lanceur compris (`targetableKeys` avec `allies`) ; un sort qui blesse, comme l'attaque, vise le camp d'en face.
+- **Récupération** : sur la carte ouverte d'un héros prêtre ou sorcier, la tuile « Magie » montre sa foi et son pouvoir sur leur réserve maximale (foi : rang de prêtre ; pouvoir : 10 + rang de sorcier − points perdus) ; « Récupérer » rend les points du livre (pouvoir : 4 à midi ou minuit, 4 à la pleine lune, tout pour les charmes ; foi : 1 par heure de dévotions), sans dépasser la réserve.
 - **Sans cible** : un sort qui ne blesse pas et ne vise pas un esprit (invocation, illusion) se lance sans cible ; son effet se décrit, ou se pose en effet (« + Effet »).
 
 ## 7. La mêlée de piétaille
@@ -234,9 +237,7 @@ Toutes les règles de combat du livre sont gérées. Les limites qui restent :
 - les jours qui suivent le combat ne sont pas suivis : le jet quotidien du soigneur n'est qu'un rappel ;
 - une créature compte comme sans arme en main : le désarmement est grisé contre elle, même contre un humanoïde armé (contre un démon, il reste ouvert et le MJ juge) ;
 - le dé de foi ne se donne que depuis la ligne de qui joue ou la carte de sa cible : un prêtre qui n'est ni l'un ni l'autre attend son tour (ou le MJ pose un dé de malus avec « + Effet » et corrige la foi à la main) ;
-- la condition d'incantation « blessures » n'est pas appliquée d'office (le MJ corrige la vitalité du sorcier), ni la perte définitive d'un point de pouvoir au 3e cercle (rappelée seulement) ;
-- un sort ne vise que les cartes d'en face : un sort sur un allié (« Peau écailleuse ») se pose en effet à la main ;
-- les points de pouvoir et de foi ne reviennent pas tout seuls (midi, minuit, temple) : le MJ corrige la fiche ;
+- la condition « blessures » n'est pas suivie : le MJ clique « Blessures du lanceur » s'il l'a prise ; la récupération ne sait pas quels points sont venus de charmes ou de quel cercle : le MJ choisit ;
 - le dé de foi d'un prêtre qui joue n'est pas fermé après son propre jet (il sert aussi à aider un allié).
 
 Hors du périmètre du combat :

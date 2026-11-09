@@ -1,7 +1,7 @@
 import {AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, CARRIERE_PRETRE_ID, CARRIERE_SORCIER_ID} from '../bol-rules.constants';
 import {BolHerosArmureModel} from '../models/bol-armure.model';
 import {BolHerosModel} from '../models/bol-heros.model';
-import {CercleSort, CercleSortInfo, CoutSort, DifficulteSort, RessourcesMagiques, SortPaye, SortSaisie} from './models/magie-combat.model';
+import {BlessuresSort, CercleSort, CercleSortInfo, CoutSort, DifficulteSort, RessourcesMagiques, ReservesMaximales, SortPaye, SortSaisie} from './models/magie-combat.model';
 import {CombatEffect, NewEffect} from './models/combat-effect.model';
 import {TapisCard} from './models/tapis.model';
 import {ATTACK_THRESHOLD, suggestedAttackResult} from './combat-resolution.util';
@@ -241,6 +241,38 @@ export function ressourcesMagiques(fiche: BolHerosModel, courant?: {readonly foi
     magieRoisSorciers: avantages.includes(AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID),
     resistantMagie: avantages.includes(AVANTAGE_RESISTANT_MAGIE_ID),
   };
+}
+
+/** La condition « blessures » d'un sort (livre p. 152-153), jetée : d3 au 1er cercle, d6+1 au 2e, 2d6+1 au 3e ; `null` pour un charme,
+ * qui n'a pas de condition. `random` rend un nombre de [0, 1[ (`Math.random`). */
+export function blessuresDuSort(cercle: CercleSort, random: () => number = Math.random): BlessuresSort | null {
+  const d = (faces: number) => 1 + Math.floor(random() * faces);
+  switch (cercle) {
+    case 1:
+      return {de: 'd3', valeur: d(3)};
+    case 2:
+      return {de: 'd6+1', valeur: d(6) + 1};
+    case 3:
+      return {de: '2d6+1', valeur: d(6) + d(6) + 1};
+    default:
+      return null;
+  }
+}
+
+/** Les réserves maximales d'une fiche (livre p. 146 et 148) : la foi, son rang de prêtre ; le pouvoir, 10 + son rang de sorcier, moins
+ * les points perdus pour toujours au 3e cercle (p. 154). `null` sans la carrière. */
+export function reservesMaximales(fiche: BolHerosModel): ReservesMaximales {
+  const pretre = rang(fiche, CARRIERE_PRETRE_ID);
+  const sorcier = rang(fiche, CARRIERE_SORCIER_ID);
+  return {
+    foi: pretre !== null && pretre > 0 ? pretre : null,
+    pouvoir: sorcier !== null ? Math.max(0, 10 + sorcier - (fiche.ressources?.pouvoir_perdu ?? 0)) : null,
+  };
+}
+
+/** Ce qu'une récupération rend vraiment : `gain` points, sans dépasser la réserve maximale ; 0 si elle est pleine. */
+export function pointsRecuperes(courant: number, max: number, gain: number): number {
+  return Math.max(0, Math.min(gain, max - courant));
 }
 
 /** Les êtres qu'un prêtre peut voir, pour un dé de foi : les cartes encore en combat (ni retirées ni enfuies) et debout. */

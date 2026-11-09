@@ -115,6 +115,11 @@ export class BolHerosService {
     return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/ressource`), {ressource, delta});
   }
 
+  /** Le prix d'un sort du 3e cercle (livre p. 154) : 1 point de pouvoir perdu pour toujours, ou 1 point de l'attribut choisi. */
+  perteDefinitive(id: string, cible: 'pouvoir' | 'vigueur' | 'agilite' | 'esprit' | 'aura'): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl(`bol/heros/${id}/perte-definitive`), {cible});
+  }
+
   /** Nomme l'arme favorite d'une fiche (héros ou PNJ) ; `null` la retire. Refusé (422) pour un avantage régional, qui l'impose. */
   setArmeFavorite(id: string, arme: string | null): Observable<BolHerosModel> {
     return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/arme-favorite`), {arme});
