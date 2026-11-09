@@ -33,7 +33,7 @@ class BolTitreChapitreTest extends TestCase
         );
     }
 
-    public function test_without_em_dash_or_with_an_empty_half_it_is_a_one_shot(): void
+    public function test_without_em_dash_or_with_an_empty_half_it_names_no_scenario(): void
     {
         $this->assertSame(['saga' => null, 'numero' => null, 'titre' => 'mon premier scénario'], BolTitreChapitre::decouper('  mon premier scénario '));
         $this->assertSame(['saga' => null, 'numero' => null, 'titre' => '— Orphelin'], BolTitreChapitre::decouper('— Orphelin'));

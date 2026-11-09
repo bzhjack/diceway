@@ -157,6 +157,8 @@ interface BolFightSessionDemonModel {
   vitalite_max: number;
   vitalite_courante: number;
   degats: string | null;
+  /** Sa taille (`bol_taille`) — absente des lignes posées avant qu'elle soit notée : moyenne. */
+  id_taille?: number | null;
   pouvoirs: BolFightSessionPouvoirModel[] | null;
   demon?: {avatar: string | null};
 }

@@ -21,8 +21,8 @@ class BolScenarioImportPlanTest extends TestCase
             'desavantage' => ['Cupide' => 4],
             'capacite'    => ['Attaque spéciale' => 2],
             'pouvoir'     => [],
-            'taille'      => ['Moyenne' => 4],
-            'categorie'   => [],
+            'taille'      => ['Moyenne' => 4, 'Grande' => 5],
+            'categorie'   => ['Majeur' => 3],
             'pnj'         => [],
             'creature'    => ['Dinohyus' => 'cat-dino'],
             'demon'       => [],
@@ -229,6 +229,19 @@ class BolScenarioImportPlanTest extends TestCase
         $plan = BolScenarioImportPlan::fromArray($this->data(), $this->catalog());
 
         $this->assertFalse($plan->personnages['hippocampe']['fields']['mort_vivant']);
+    }
+
+    public function test_a_demon_has_the_size_the_file_gives_it_or_a_medium_one(): void
+    {
+        $data = $this->data();
+        $demon = ['kind' => 'demon', 'nom' => 'Ilirk', 'categorie' => 'Majeur', 'vitalite' => 40, 'degats' => 'd6B'];
+        $data['personnages']['ilirk'] = $demon + ['taille' => 'Grande'];
+        $data['personnages']['limier'] = $demon;
+
+        $plan = BolScenarioImportPlan::fromArray($data, $this->catalog());
+
+        $this->assertSame(5, $plan->personnages['ilirk']['fields']['id_taille']);
+        $this->assertSame(4, $plan->personnages['limier']['fields']['id_taille']);
     }
 
     public function test_undead_is_true_or_false(): void

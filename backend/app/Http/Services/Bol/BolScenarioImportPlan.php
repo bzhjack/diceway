@@ -270,9 +270,12 @@ final class BolScenarioImportPlan
     private function demon(array $perso, string $path): array
     {
         $categorie = $this->text($perso, 'categorie', "$path.categorie", 255, true);
+        // La taille est facultative : un démon qui ne la dit pas est de taille Moyenne.
+        $taille = $this->text($perso, 'taille', "$path.taille", 255) ?? 'Moyenne';
         $fields = [
             'nom'          => $this->text($perso, 'nom', "$path.nom", 255, true) ?? '',
             'id_categorie' => $categorie === null ? null : $this->resolve('categorie', $categorie, "$path.categorie"),
+            'id_taille'    => $this->resolve('taille', $taille, "$path.taille"),
             'vitalite'     => $this->int($perso, 'vitalite', $path, 0, 127, null),
             'degats'       => $this->text($perso, 'degats', "$path.degats", 255, true),
             'commentaire'  => $this->text($perso, 'commentaire', "$path.commentaire", 5000),

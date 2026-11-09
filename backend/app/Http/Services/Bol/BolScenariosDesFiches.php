@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Les scénarios d'une fiche (créature, PNJ, démon) pour un compte : ceux dont l'import l'a créée, ou l'a reprise du catalogue. Une
  * référence d'import ne porte que le nom de fichier de sa saga (`dieu-voile`) : le scénario se retrouve par les chapitres que ce même
- * import a créés, puis leur saga ; un chapitre hors saga (one shot) est son propre scénario.
+ * import a créés, puis leur scénario.
  */
 class BolScenariosDesFiches
 {
@@ -25,7 +25,7 @@ class BolScenariosDesFiches
 
     /**
      * @param iterable<string|int> $ids les fiches
-     * @return array<string, list<array{id: string, titre: string, one_shot: bool}>> par id de fiche, triés par titre ; une fiche sans
+     * @return array<string, list<array{id: string, titre: string}>> par id de fiche, triés par titre ; une fiche sans
      *     scénario n'y est pas
      */
     public function pour(string $kind, iterable $ids, ?string $userId): array
@@ -42,18 +42,16 @@ class BolScenariosDesFiches
 
         $scenarioParImport = DB::table('bol_import_ref as r')
             ->join('bol_scenario as s', 's.id', '=', 'r.entity_id')
-            ->leftJoin('bol_saga as g', 'g.id', '=', 's.saga_id')
+            ->join('bol_saga as g', 'g.id', '=', 's.saga_id')
             ->where('r.user_id', $userId)
             ->where('r.entity_kind', BolImportRef::TYPE_SCENARIO)
             ->whereIn('r.saga', $refs->pluck('saga')->unique()->values())
-            ->get(['r.saga as import', 'g.id as saga_id', 'g.titre as saga_titre', 's.id as chapitre_id', 's.titre as chapitre_titre'])
+            ->get(['r.saga as import', 'g.id as saga_id', 'g.titre as saga_titre'])
             ->groupBy('import')
             ->map(function (Collection $chapitres): array {
                 $chapitre = $chapitres->first();
 
-                return $chapitre->saga_id !== null
-                    ? ['id' => (string) $chapitre->saga_id, 'titre' => $chapitre->saga_titre, 'one_shot' => false]
-                    : ['id' => (string) $chapitre->chapitre_id, 'titre' => $chapitre->chapitre_titre, 'one_shot' => true];
+                return ['id' => (string) $chapitre->saga_id, 'titre' => $chapitre->saga_titre];
             });
 
         return $refs->groupBy('entity_id')

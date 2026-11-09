@@ -283,9 +283,9 @@ describe('resolveAttackStats — une arme en main (désarmement, parade in extre
     expect((await firstValueFrom(resolveAttackStats(pnj, service([])))).arme).toBe(false);
   });
 
-  it('a creature or a demon fights with its natural weapons: nothing to disarm', async () => {
+  it('a creature fights with its natural weapons: nothing to disarm; a demon may hold one, the GM judges', async () => {
     const creature = {kind: 'creature', combat: {sourceId: 'c1', agilite: 0, vigueur: 0, melee: 0, tir: 0, attaque: 2, defense: 1, degats: 'd6', protection: null}} as unknown as PlayToken;
     expect((await firstValueFrom(resolveAttackStats(creature, service([])))).arme).toBe(false);
-    expect((await firstValueFrom(resolveAttackStats({...creature, kind: 'demon'} as PlayToken, service([])))).arme).toBe(false);
+    expect((await firstValueFrom(resolveAttackStats({...creature, kind: 'demon'} as PlayToken, service([])))).arme).toBeUndefined();
   });
 });

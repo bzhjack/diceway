@@ -17,10 +17,9 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | Effort |
 | --- | --- | --- |
 | 1 | Combat : sorcellerie, foi, pouvoir | M |
-| 2 | Combat : taille des démons, désarmement | S |
-| 3 | Combat : confort et robustesse | S à M |
-| 4 | Démons : création conforme au livre (facultatif) | M |
-| 5 | Images | hors code |
+| 2 | Combat : confort et robustesse | S à M |
+| 3 | Démons : création conforme au livre (facultatif) | M |
+| 4 | Images | hors code |
 
 ## 1. Combat : sorcellerie, foi, pouvoir
 
@@ -33,15 +32,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 - **Dé de foi** : il ne se donne que depuis la ligne de l'attaquant ou la carte de la cible (`tas-attaquant.html:102`, `tas-cible.html:39`).
   À garder tel quel, sauf besoin à la table.
 
-## 2. Combat : taille des démons, désarmement
-
-- Un démon n'a pas de taille : `tapis.util.ts:104` ne la lit que pour les créatures, `tailleDe` le compte « moyen »
-  (`options-heroiques.util.ts:14`), et la fiche de démon n'a pas de champ `taille` (constat de `doc/bol/specs/creation-demons.md`). Ajouter
-  le champ (back, formulaire, import) et le lire en combat.
-- Le désarmement est toujours grisé contre une créature ou un démon (`arme: false` d'office, `combat-attack.util.ts:170`). À trancher :
-  c'est juste pour une bête, moins pour un démon armé.
-
-## 3. Combat : confort et robustesse
+## 2. Combat : confort et robustesse
 
 - **Accessibilité** : un effet qui expire disparaît sans être annoncé aux lecteurs d'écran (`combat-turn.util.ts:366`) ; l'annoncer par
   `LiveAnnouncer` (S).
@@ -54,7 +45,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 - **Échec critique** : il rapporte 1 PH, mais l'issue défavorable (« ce round et le suivant ») reste au MJ. Voulu (§ 8 de l'état des
   lieux) ; à revoir seulement si la table le demande.
 
-## 4. Démons : création conforme au livre (facultatif)
+## 3. Démons : création conforme au livre (facultatif)
 
 `doc/bol/specs/creation-demons.md` assume une version « rapide » : la catégorie ne pré-remplit que vitalité et dégâts, rien n'est contrôlé.
 Si l'on veut la règle stricte, dans l'ordre de la spec :
@@ -64,7 +55,7 @@ Si l'on veut la règle stricte, dans l'ordre de la spec :
 - nombre de pouvoirs, en tenant compte de `Cuirassé` et `Vulnérabilité` (avertissement plutôt que refus) ;
 - vitalité et dégâts recalculés depuis la vigueur.
 
-## 5. Images (hors code)
+## 4. Images (hors code)
 
 - `doc/bol/image-prompts/fonds-bibliotheques.md` : 6 fonds plein écran pour les bibliothèques (héros, PNJ, créatures, démons, armes,
   armures), à la résolution du fond des scénarios ; puis, page par page, `image` et `[fondPleinePage]="true"` sur l'en-tête (S).

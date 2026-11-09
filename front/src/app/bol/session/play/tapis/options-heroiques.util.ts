@@ -7,7 +7,7 @@ import {isOut, PIETAILLE} from './combat-turn.util';
 /** Les tailles du référentiel (`bol_taille`), dans l'ordre de leur id : 4 = Moyenne. */
 const TAILLES: readonly string[] = ['Minuscule', 'Très petite', 'Petite', 'Moyenne', 'Grande', 'Très grande', 'Énorme', 'Massive', 'Colossale', 'Gigantesque', 'Immense', 'Monstrueuse'];
 
-/** Taille Moyenne : celle d'un héros, d'un PNJ ou d'un démon, dont la taille n'est pas notée. */
+/** Taille Moyenne : celle d'un héros ou d'un PNJ, dont la taille n'est pas notée, et d'un démon posé avant qu'elle le soit. */
 const TAILLE_MOYENNE = 4;
 
 function tailleDe(card: TapisCard): number {

@@ -167,6 +167,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);
     Route::post('/bol/scenario/update', [BolScenarioController::class, 'update']);
     Route::delete('/bol/scenario/delete/{id}', [BolScenarioController::class, 'delete']);
+    Route::get('/bol/saga', [BolSagaController::class, 'getAll']);
+    Route::post('/bol/saga/create', [BolSagaController::class, 'create']);
     Route::patch('/bol/saga/{id}', [BolSagaController::class, 'update']);
     Route::delete('/bol/saga/{id}', [BolSagaController::class, 'delete']);
 

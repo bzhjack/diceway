@@ -12,7 +12,7 @@ import {
 } from '../models/library-rows.model';
 import {BolLibraryPageBase} from './library-page.base';
 
-/** Couleurs des sagas (`dw-saga--1` à `--4`), comme sur l'accueil : dans l'ordre alphabétique de leur titre. 0 : un one shot. */
+/** Couleurs des scénarios (`dw-saga--1` à `--4`), comme sur l'accueil : dans l'ordre alphabétique de leur titre. */
 const TEINTES = 4;
 
 export const RANG_LABELS: Record<LibraryRang, string> = {R: 'Rival', C: 'Coriace', P: 'Piétaille'};
@@ -96,16 +96,15 @@ export abstract class BolFichesPageBase<
 
   /** Les scénarios qui ont créé ou citent au moins une fiche, par titre : leur teinte et leur nombre de fiches. */
   protected readonly scenarios = computed((): LibraryScenarioOption[] => {
-    const parId = new Map<string, {id: string; titre: string; oneShot: boolean; compte: number}>();
+    const parId = new Map<string, {id: string; titre: string; compte: number}>();
     for (const fiche of this.fiches()) {
       for (const scenario of fiche.scenarios ?? []) {
         const vu = parId.get(scenario.id);
-        parId.set(scenario.id, {id: scenario.id, titre: scenario.titre, oneShot: scenario.one_shot, compte: (vu?.compte ?? 0) + 1});
+        parId.set(scenario.id, {id: scenario.id, titre: scenario.titre, compte: (vu?.compte ?? 0) + 1});
       }
     }
     const tries = [...parId.values()].sort((a, b) => a.titre.localeCompare(b.titre, 'fr'));
-    const sagas = tries.filter((s) => !s.oneShot);
-    return tries.map((s) => ({id: s.id, titre: s.titre, compte: s.compte, teinte: s.oneShot ? 0 : (sagas.indexOf(s) % TEINTES) + 1}));
+    return tries.map((s, i) => ({id: s.id, titre: s.titre, compte: s.compte, teinte: (i % TEINTES) + 1}));
   });
 
   private readonly teinteDuScenario = computed(() => new Map(this.scenarios().map((s) => [s.id, s.teinte])));

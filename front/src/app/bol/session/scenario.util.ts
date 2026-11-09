@@ -24,7 +24,8 @@ export function libelleDeChapitre(numero: number | null | undefined, titre: stri
   return `${numero}. ${titre}`;
 }
 
-/** Un chapitre avec son scénario, d'un seul tenant : « Perle du Beshaar — 1. Sacrilège à Satarla » ; un one shot, son nom seul. */
+/** Un chapitre avec son scénario, d'un seul tenant : « Perle du Beshaar — 1. Sacrilège à Satarla » ; un chapitre à créer, sans scénario
+ * encore, son nom seul. */
 export function titreDeChapitre(chapitre: ChapitreNomme): string {
   const libelle = libelleDeChapitre(chapitre.numero, chapitre.titre);
   return chapitre.saga ? `${chapitre.saga.titre} — ${libelle}` : libelle;

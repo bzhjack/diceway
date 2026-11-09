@@ -10,7 +10,7 @@ import {BolPnjService} from '../../services/bol-pnj.service';
 import {personnage} from '../../shared/personnage.testing';
 import {PnjLibraryPageComponent} from './pnj-library-page';
 
-const DIEU_VOILE: BolFicheScenario = {id: 'dv', titre: 'Le Dieu voilé', one_shot: false};
+const DIEU_VOILE: BolFicheScenario = {id: 'dv', titre: 'Le Dieu voilé'};
 
 const PNJS: BolHerosModel[] = [
   personnage('Ajhaskar', {type: 'R', user: true, region: [6, 'Lysor'], vitalite: 11, carrieres: [['Sorcier', 2], ['Marchand', 1]], scenarios: [DIEU_VOILE]}),

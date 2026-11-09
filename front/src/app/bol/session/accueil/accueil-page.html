@@ -37,7 +37,7 @@
             <p class="acc-soir-surtitre"><span class="acc-soir-feu" aria-hidden="true"></span>Dernière partie jouée{{ jouee() ? ' ' + jouee() : '' }}</p>
             <div>
               <h2 id="acc-soir-titre" class="acc-soir-titre">{{ partie.scenario }}</h2>
-              <p class="acc-soir-compagnie">avec <strong>{{ bandeau.titre }}</strong></p>
+              <bol-compagnie-equipe class="acc-soir-compagnie" [nom]="bandeau.titre" [heros]="bandeau.heros" [liens]="true" [grand]="true" />
             </div>
             @if (partie.reperes.length || bandeau.scenes.length) {
               <ol class="acc-progression" [attr.aria-label]="'Où en est ' + partie.scenario">
@@ -84,24 +84,6 @@
               >
                 <mat-icon>more_vert</mat-icon>
               </button>
-              @if (bandeau.heros.length) {
-                <ul class="acc-compagnie-liste" aria-label="Autour de la table">
-                  @for (heros of bandeau.heros; track heros.id) {
-                    <li>
-                      <a class="acc-heros" [routerLink]="['/create/hero', heros.id]">
-                        <span class="acc-heros-medaillon" aria-hidden="true">
-                          @if (heros.portrait; as portrait) {
-                            <img dwAvatarFallback [src]="portrait" alt="" />
-                          } @else {
-                            {{ heros.initiale }}
-                          }
-                        </span>
-                        <span class="acc-heros-nom">{{ heros.nom }}</span>
-                      </a>
-                    </li>
-                  }
-                </ul>
-              }
             </div>
           }
         } @else if (error()) {
@@ -152,7 +134,7 @@
                     <span class="acc-autre-texte">
                       <span class="sr-only">Reprendre : </span>
                       <span class="acc-autre-scenario">{{ partie.scenario }}</span>
-                      <span class="acc-autre-detail">{{ partie.nom }}{{ partie.termine ? ' · Scénario terminé' : (partie.reprendre ? ' · ' + partie.reprendre : '') }}</span>
+                      <span class="acc-autre-detail"><span class="acc-autre-compagnie">{{ partie.nom }}</span>{{ partie.termine ? ' · Scénario terminé' : (partie.reprendre ? ' · ' + partie.reprendre : '') }}</span>
                     </span>
                   </a>
                   <button

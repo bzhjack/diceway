@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolDemonModel} from '../../models/bol-demon.model';
+import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {AddMenuEvent} from '../../shared/models/add-menu.model';
@@ -20,11 +21,15 @@ import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-b
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
 import {EntityGeneralComponent} from '../../shared/entity-general/entity-general.component';
 
+/** Taille Moyenne (`bol_taille`) : celle d'un démon dont on ne dit rien. */
+const TAILLE_MOYENNE = 4;
+
 function demonFormDefaults(): DemonFormModel {
   return {
     id: null,
     nom: '',
     id_categorie: null,
+    id_taille: TAILLE_MOYENNE,
     commentaire: '',
     vigueur: 0,
     agilite: 0,
@@ -107,10 +112,12 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
 })
 export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel, DemonFormModel> {
   private readonly demonStateService = inject(BolDemonStateService);
+  private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly demonsService = inject(BolDemonsService);
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly categorieOptions = computed(() => (this.categories() ?? []).map((item) => ({id: item.id, label: item.categorie})));
+  protected readonly tailleOptions = computed(() => (this.creatureStateService.tailleList() ?? []).map((item) => ({id: item.id, label: item.taille})));
   protected readonly pouvoirsList = this.demonStateService.pouvoirList;
 
   protected readonly labels = DEMON_FORM_LABELS;
@@ -220,6 +227,7 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel,
       id: demon.id,
       nom: demon.nom,
       id_categorie: demon.id_categorie,
+      id_taille: demon.id_taille ?? TAILLE_MOYENNE,
       commentaire: demon.commentaire ?? '',
       vigueur: demon.vigueur,
       agilite: demon.agilite,

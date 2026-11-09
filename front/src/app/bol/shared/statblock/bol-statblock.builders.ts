@@ -75,6 +75,7 @@ export function demonStatblockData(demon: BolDemonModel): BolStatblockData {
     chips: [
       {label: RANK_LABELS[demon.type ?? demon.categorie.type] ?? 'Coriace', variant: 'rose'},
       {label: demon.categorie.categorie, variant: 'muted'},
+      ...(demon.taille ? [{label: demon.taille.taille, variant: 'muted' as const}] : []),
     ],
     vitals: [
       {label: 'Vitalité', value: demon.vitalite, tone: 'health'},

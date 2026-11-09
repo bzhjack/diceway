@@ -36,13 +36,26 @@ class BolSagaTest extends TestCase
         $this->assertSame(1, BolSaga::where('user_id', $this->user->id)->count());
     }
 
-    public function test_a_chapter_without_em_dash_is_a_one_shot(): void
+    public function test_a_chapter_without_em_dash_goes_in_a_scenario_of_its_name(): void
     {
         $chapitre = $this->postJson('/api/bol/scenario/create', ['titre' => 'mon premier scénario'])->assertOk();
 
         $this->assertSame('mon premier scénario', $chapitre->json('titre'));
         $this->assertNull($chapitre->json('numero'));
-        $this->assertNull($chapitre->json('saga'));
+        $this->assertSame('mon premier scénario', $chapitre->json('saga.titre'));
+    }
+
+    public function test_the_migration_gives_each_lone_chapter_a_scenario_of_its_name(): void
+    {
+        BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Un ennui mortel']);
+        $seul = BolScenario::create(['user_id' => $this->user->id, 'titre' => 'premier scénario']);
+        $homonyme = BolScenario::create(['user_id' => $this->user->id, 'titre' => 'Un ennui mortel']);
+
+        (require database_path('migrations/2026_11_09_130000_un_scenario_pour_chaque_one_shot.php'))->up();
+
+        $this->assertSame('premier scénario', BolSaga::find($seul->fresh()->saga_id)?->titre);
+        $this->assertSame('Un ennui mortel (2)', BolSaga::find($homonyme->fresh()->saga_id)?->titre);
+        $this->assertSame(0, BolScenario::whereNull('saga_id')->count());
     }
 
     public function test_never_files_a_chapter_in_another_accounts_scenario(): void

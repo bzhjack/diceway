@@ -6,10 +6,12 @@
   <dw-avatar-picker [src]="avatarPreview()" [label]="avatarLabel()" (picked)="avatarClick.emit()" />
 
   <div class="grid gap-3 md:grid-cols-2">
-    <mat-form-field subscriptSizing="dynamic">
-      <mat-label>{{ nomLabel() }}</mat-label>
-      <input matInput id="nom" [formField]="nom()" />
-    </mat-form-field>
+    <div [class]="taille() ? 'md:col-span-2' : ''">
+      <mat-form-field subscriptSizing="dynamic" class="w-full">
+        <mat-label>{{ nomLabel() }}</mat-label>
+        <input matInput id="nom" [formField]="nom()" />
+      </mat-form-field>
+    </div>
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>{{ classementLabel() }}</mat-label>
@@ -19,6 +21,17 @@
         }
       </mat-select>
     </mat-form-field>
+
+    @if (taille(); as taille) {
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Taille</mat-label>
+        <mat-select [formField]="taille" [compareWith]="compareById()">
+          @for (option of tailleOptions(); track option.id) {
+            <mat-option [value]="option.id">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
 
     <div class="md:col-span-2">
       <mat-form-field subscriptSizing="dynamic" class="w-full">

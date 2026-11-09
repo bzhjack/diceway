@@ -31,23 +31,7 @@
           @for (c of compagniesAChoisir(); track c.id) {
             <label class="otd-choix otd-choix-ligne" [class.otd-choix--on]="c.id === compagnie()?.id">
               <input type="radio" name="otd-compagnie" [checked]="c.id === compagnie()?.id" (change)="choisirCompagnie(c.id)" />
-              <span class="otd-choix-texte">
-                <span class="otd-compagnie-nom">{{ c.nom }}</span>
-                <span class="otd-compagnie-heros">
-                  @if (c.heros.length) {
-                    <span class="otd-medaillons" aria-hidden="true">
-                      @for (h of c.heros; track h.id) {
-                        @if (h.portrait; as portrait) {
-                          <img dwAvatarFallback [src]="portrait" alt="" />
-                        } @else {
-                          <span class="otd-medaillon-initiale">{{ h.initiale }}</span>
-                        }
-                      }
-                    </span>
-                  }
-                  <span class="otd-choix-detail">{{ c.noms }}</span>
-                </span>
-              </span>
+              <bol-compagnie-equipe class="otd-choix-texte" [nom]="c.nom" [heros]="c.heros" />
             </label>
           }
         </div>
@@ -64,7 +48,7 @@
       }
     </section>
 
-    <!-- 2. Le scénario : la partie improvisée, puis les sagas et les one shots ; sous celui choisi, ses chapitres de départ. Ceux que la
+    <!-- 2. Le scénario : la partie improvisée, puis les scénarios du compte ; sous celui choisi, ses chapitres de départ. Ceux que la
          compagnie joue déjà sont grisés, avec de quoi reprendre sa partie. -->
     <section class="otd-etape" aria-labelledby="otd-histoire">
       <h3 id="otd-histoire" class="otd-etape-titre"><span class="otd-numero" aria-hidden="true">2</span> Le scénario</h3>

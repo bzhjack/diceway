@@ -16,8 +16,8 @@ const TAILLES: Record<string, BolCreatureTailleModel> = {
   moyenne: {id: 4, taille: 'Moyenne', type: 'C', vigueur: 0, vitalite: 10, degats: 'd6', deplacement: ''},
   grande: {id: 5, taille: 'Grande', type: 'R', vigueur: 0, vitalite: 20, degats: 'd6B', deplacement: ''},
 };
-const DIEU_VOILE: BolFicheScenario = {id: 'dv', titre: 'Le Dieu voilé', one_shot: false};
-const PERLE: BolFicheScenario = {id: 'pb', titre: 'Perle du Beshaar', one_shot: false};
+const DIEU_VOILE: BolFicheScenario = {id: 'dv', titre: 'Le Dieu voilé'};
+const PERLE: BolFicheScenario = {id: 'pb', titre: 'Perle du Beshaar'};
 
 function creature(
   nom: string,

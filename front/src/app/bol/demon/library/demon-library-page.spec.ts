@@ -16,7 +16,7 @@ const CATEGORIES: Record<string, BolDemonCategorieModel> = {
   inferieur: {id: 2, categorie: 'Inférieur', type: 'C', pouvoirs: 2, vitalite: 20, degats: 'd6'},
   majeur: {id: 3, categorie: 'Majeur', type: 'R', pouvoirs: 4, vitalite: 30, degats: 'd6B'},
 } as Record<string, BolDemonCategorieModel>;
-const PERLE: BolFicheScenario = {id: 'pb', titre: 'Perle du Beshaar', one_shot: false};
+const PERLE: BolFicheScenario = {id: 'pb', titre: 'Perle du Beshaar'};
 
 function demon(nom: string, over: {user?: boolean; categorie?: BolDemonCategorieModel; melee?: number; pouvoirs?: string[]; scenarios?: BolFicheScenario[]} = {}): BolDemonModel {
   const categorie = over.categorie ?? CATEGORIES['inferieur'];

@@ -4,18 +4,12 @@
     <!-- En-tête fin : la page garde sa hauteur pour les chapitres et leurs scènes. -->
     <dw-library-header title="Scénarios" image="/assets/bol/dashboard-header.webp" [fondPleinePage]="true" [compact]="true">
       <ng-container dwHeaderTags>
-        <dw-tag>{{ sagas().length }} scénarios</dw-tag>
-        <dw-tag>{{ oneShots().length }} one shots</dw-tag>
+        <dw-tag>{{ scenarios().length }} {{ scenarios().length > 1 ? 'scénarios' : 'scénario' }}</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
-        <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button type="button" (click)="nouveauScenario(false)">
-            <mat-icon>add</mat-icon> Nouveau scénario
-          </button>
-          <button mat-stroked-button type="button" (click)="nouveauScenario(true)">
-            <mat-icon>add</mat-icon> Nouveau one shot
-          </button>
-        </div>
+        <button mat-flat-button type="button" (click)="nouveauScenario()">
+          <mat-icon>add</mat-icon> Nouveau scénario
+        </button>
         <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
@@ -23,7 +17,7 @@
     </dw-library-header>
 
     <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Scénarios' + (selection() ? ' · ' + selection()?.titre : '')">
-      <button mat-flat-button type="button" (click)="nouveauScenario(false)">
+      <button mat-flat-button type="button" (click)="nouveauScenario()">
         <mat-icon>add</mat-icon> Nouveau scénario
       </button>
       <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
@@ -36,7 +30,7 @@
       <nav class="dw-lr-filtres" aria-label="Les scénarios">
         <section class="dw-lr-facette" aria-labelledby="sl-sagas">
           <h2 id="sl-sagas" class="dw-lr-facette-titre">Scénarios</h2>
-          @for (scenario of sagas(); track scenario.id) {
+          @for (scenario of scenarios(); track scenario.id) {
             <button type="button" class="dw-lr-option" [attr.aria-pressed]="selection()?.id === scenario.id" (click)="choisir(scenario.id)">
               <span class="dw-lr-option-label">{{ scenario.titre }}</span>
               <span class="dw-lr-option-compte">{{ scenario.chapitres.length }}</span>
@@ -45,63 +39,46 @@
             <p class="dw-lr-facette-vide">Aucun scénario.</p>
           }
         </section>
-        <section class="dw-lr-facette" aria-labelledby="sl-one-shots">
-          <h2 id="sl-one-shots" class="dw-lr-facette-titre">One shots</h2>
-          @for (scenario of oneShots(); track scenario.id) {
-            <button type="button" class="dw-lr-option" [attr.aria-pressed]="selection()?.id === scenario.id" (click)="choisir(scenario.id)">
-              <span class="dw-lr-option-label">{{ scenario.titre }}</span>
-              <span class="dw-lr-option-compte">{{ scenario.nombreDeScenes }}</span>
-            </button>
-          } @empty {
-            <p class="dw-lr-facette-vide">Aucun one shot.</p>
-          }
-        </section>
       </nav>
 
       <mat-card appearance="outlined" class="dw-lr-liste">
         @if (selection(); as scenario) {
           <header class="sl-entete">
             <div>
-              <p class="sl-surtitre">{{ scenario.oneShot ? 'One shot' : 'Scénario' }}</p>
+              <p class="sl-surtitre">Scénario</p>
               <h2 class="sl-titre">{{ scenario.titre }}</h2>
             </div>
             <div class="sl-actions">
-              @if (!scenario.oneShot) {
-                <button mat-stroked-button type="button" (click)="nouveauChapitre(scenario)">
-                  <mat-icon>add</mat-icon> Chapitre
-                </button>
-                <button mat-stroked-button type="button" (click)="renommer(scenario)">
-                  <mat-icon>edit</mat-icon> Renommer
-                </button>
-              }
+              <button mat-stroked-button type="button" (click)="nouveauChapitre(scenario)">
+                <mat-icon>add</mat-icon> Chapitre
+              </button>
+              <button mat-stroked-button type="button" (click)="renommer(scenario)">
+                <mat-icon>edit</mat-icon> Renommer
+              </button>
               <button mat-stroked-button type="button" class="sl-danger" (click)="supprimerScenario(scenario)">
                 <mat-icon>delete</mat-icon> Supprimer
               </button>
             </div>
           </header>
 
-          <!-- Les chapitres repliés : on en déplie un pour lire son pitch et ranger ses scènes. Un one shot, seul chapitre sans titre, reste ouvert. -->
+          <!-- Les chapitres repliés : on en déplie un pour lire son pitch et ranger ses scènes. -->
           @for (vue of scenario.chapitres; track vue.id) {
-            @let ouvert = scenario.oneShot || ouverts().has(vue.id);
-            <section class="sl-chapitre" [class.sl-chapitre--ouvert]="ouvert && !scenario.oneShot" [attr.aria-label]="vue.libelle">
+            @let ouvert = ouverts().has(vue.id);
+            <section class="sl-chapitre" [class.sl-chapitre--ouvert]="ouvert" [attr.aria-label]="vue.libelle">
               <div class="sl-chapitre-tete">
-                @if (!scenario.oneShot) {
-                  <h3 class="sl-chapitre-titre">
-                    <button
-                      type="button"
-                      class="sl-chapitre-bascule"
-                      [attr.aria-expanded]="ouvert"
-                      [attr.aria-controls]="ouvert ? 'sl-corps-' + vue.id : null"
-                      (click)="basculer(vue.id)"
-                    >
-                      <mat-icon class="sl-chevron" aria-hidden="true">chevron_right</mat-icon>
-                      <span class="sl-chapitre-nom">{{ vue.libelle }}</span>
-                      <span class="sl-chapitre-compte"> {{ vue.scenes.length }} {{ vue.scenes.length > 1 ? 'scènes' : 'scène' }}</span>
-                    </button>
-                  </h3>
-                } @else {
-                  <span class="sl-chapitre-compte sl-chapitre-compte--seul">{{ vue.scenes.length }} {{ vue.scenes.length > 1 ? 'scènes' : 'scène' }}</span>
-                }
+                <h3 class="sl-chapitre-titre">
+                  <button
+                    type="button"
+                    class="sl-chapitre-bascule"
+                    [attr.aria-expanded]="ouvert"
+                    [attr.aria-controls]="ouvert ? 'sl-corps-' + vue.id : null"
+                    (click)="basculer(vue.id)"
+                  >
+                    <mat-icon class="sl-chevron" aria-hidden="true">chevron_right</mat-icon>
+                    <span class="sl-chapitre-nom">{{ vue.libelle }}</span>
+                    <span class="sl-chapitre-compte"> {{ vue.scenes.length }} {{ vue.scenes.length > 1 ? 'scènes' : 'scène' }}</span>
+                  </button>
+                </h3>
                 <div class="sl-actions">
                   <button mat-stroked-button type="button" (click)="nouvelleScene(vue)">
                     <mat-icon>add</mat-icon> Scène
@@ -109,11 +86,9 @@
                   <button mat-icon-button type="button" [attr.aria-label]="'Modifier ' + vue.libelle" matTooltip="Modifier" (click)="modifierChapitre(scenario, vue)">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  @if (!scenario.oneShot) {
-                    <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + vue.libelle" matTooltip="Supprimer le chapitre" (click)="supprimerChapitre(vue)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  }
+                  <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + vue.libelle" matTooltip="Supprimer le chapitre" (click)="supprimerChapitre(vue)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 </div>
               </div>
 
@@ -168,16 +143,18 @@
                       </tbody>
                     </table>
                   } @else {
-                    <p class="sl-vide">Aucune scène : ajoutes-en une, prépare-la ici, puis pose ses figurants à la table.</p>
+                    <p class="sl-vide">Aucune scène : ajoutes-en une avec « Scène » ; ses figurants se posent ensuite à la table.</p>
                   }
                 </div>
               }
             </section>
+          } @empty {
+            <p class="sl-vide sl-vide--scenario">Aucun chapitre : ajoutes-en un avec « Chapitre ».</p>
           }
         } @else {
           <div class="sl-rien">
-            <p>Aucun scénario pour l’instant. Crée-en un : il naît avec son premier chapitre.</p>
-            <button mat-flat-button type="button" (click)="nouveauScenario(false)"><mat-icon>add</mat-icon> Nouveau scénario</button>
+            <p>Aucun scénario pour l’instant. Crée-en un : un nom suffit, ses chapitres s’ajoutent ensuite.</p>
+            <button mat-flat-button type="button" (click)="nouveauScenario()"><mat-icon>add</mat-icon> Nouveau scénario</button>
           </div>
         }
       </mat-card>

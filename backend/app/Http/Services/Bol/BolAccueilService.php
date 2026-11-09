@@ -120,7 +120,7 @@ class BolAccueilService
             'armures'   => BolArmure::accessibleTo($userId)->count(),
             'sessions'  => BolFightSession::where('user_id', $userId)->count(),
             'compagnies' => BolCompagnie::where('user_id', $userId)->count(),
-            'scenarios' => BolSaga::where('user_id', $userId)->count() + BolScenario::where('user_id', $userId)->whereNull('saga_id')->count(),
+            'scenarios' => BolSaga::where('user_id', $userId)->count(),
         ];
     }
 

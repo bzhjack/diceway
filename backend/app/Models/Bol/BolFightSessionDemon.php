@@ -16,6 +16,7 @@ class BolFightSessionDemon extends Model
         'melee', 'tir', 'defense',
         'vitalite_max', 'vitalite_courante',
         'degats',
+        'id_taille',
         'pouvoirs',
     ];
 
@@ -29,6 +30,7 @@ class BolFightSessionDemon extends Model
         'defense'             => 'integer',
         'vitalite_max'        => 'integer',
         'vitalite_courante'   => 'integer',
+        'id_taille'           => 'integer',
         'pouvoirs'            => 'array',
     ];
 

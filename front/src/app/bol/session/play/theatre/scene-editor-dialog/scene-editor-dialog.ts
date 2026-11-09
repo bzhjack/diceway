@@ -9,7 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, Observable} from 'rxjs';
+import {map, Observable, switchMap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../../core/api-error.utils';
 import {BolSceneModel, SceneMoment} from '../../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../../services/bol-catalog.service';
@@ -26,7 +26,8 @@ const JEU_MAX = 10000;
 const AUCUN = 'aucun';
 
 /** « Préparer la scène » : son décor (région, lieu, ambiance, illustration), le texte à lire aux joueurs,
- * les règles de la scène (« En jeu »), le secret du MJ et les pistes. Enregistre lui-même et se ferme avec la scène enregistrée. */
+ * les règles de la scène (« En jeu »), le secret du MJ et les pistes. Enregistre lui-même et se ferme avec la scène enregistrée ;
+ * une nouvelle scène (« Nouvelle scène ») est d'abord créée dans son chapitre, puis préparée. */
 @Component({
   selector: 'bol-scene-editor-dialog',
   imports: [
@@ -82,7 +83,8 @@ class SceneEditorDialogComponent {
   protected readonly lectureLength = computed(() => this.value().lecture.length);
   protected readonly pisteCount = computed(() => this.value().pistes.length);
   /** Aperçu du décor pour la valeur en cours : l'illustration, sinon l'image par défaut. */
-  protected readonly apercu = computed(() => sceneDecor({...this.data.scene, image: this.value().image}));
+  protected readonly apercu = computed(() => sceneDecor({image: this.value().image}));
+  protected readonly nouvelle = this.data.scene === null;
   protected readonly busy = signal(false);
 
   protected setMoment(change: MatButtonToggleChange): void {
@@ -106,7 +108,12 @@ class SceneEditorDialogComponent {
       return;
     }
     this.busy.set(true);
-    this.sceneService.update(this.data.scene.id, sceneChanges(this.value())).subscribe({
+    const changes = sceneChanges(this.value());
+    const data = this.data;
+    const enregistrement = data.scene
+      ? this.sceneService.update(data.scene.id, changes)
+      : this.sceneService.create(this.value().titre.trim(), data.chapitreId, null).pipe(switchMap((scene) => this.sceneService.update(scene.id, changes)));
+    enregistrement.subscribe({
       next: (scene) => this.ref.close(scene),
       error: (error: unknown) => {
         this.busy.set(false);

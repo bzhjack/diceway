@@ -4,13 +4,13 @@ export interface BolScenarioSaga {
   titre: string;
 }
 
-/** Un chapitre (`BolScenario`) : son nom, son numéro dans son scénario (0 pour l'introduction, null sans numéro) et son scénario (null
- * pour un one shot). */
+/** Un chapitre (`BolScenario`) : son nom, son numéro dans son scénario (0 pour l'introduction, null sans numéro) et son scénario (absent
+ * d'un chapitre à créer, qui se range par son titre). */
 export interface BolScenarioModel {
   id: string | null;
   user_id?: string | null;
   titre: string;
   pitch: string | null;
   numero?: number | null;
-  saga?: BolScenarioSaga | null;
+  saga?: BolScenarioSaga;
 }

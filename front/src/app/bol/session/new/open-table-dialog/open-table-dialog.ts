@@ -7,14 +7,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
-import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {CompagnieEquipeComponent} from '../../../compagnie/equipe/compagnie-equipe';
 import {BolAccueilModel} from '../../../models/bol-accueil.model';
 import {BolAccueilService} from '../../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {chapitresDuScenario, herosCartes, marqueDeChapitre, pluriel, scenariosDuCompte} from '../../accueil/accueil.util';
 import {OpenTableData, OpenTableResultat} from '../../models/open-table.model';
 import {findScenario, libelleDeChapitre} from '../../scenario.util';
-import {enumerer} from '../open-table.util';
 import {ignoresMessage} from '../../play/scene-list/scene.util';
 
 /**
@@ -25,7 +24,7 @@ import {ignoresMessage} from '../../play/scene-list/scene.util';
  */
 @Component({
   selector: 'bol-open-table-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, RouterLink],
+  imports: [CompagnieEquipeComponent, MatButtonModule, MatDialogModule, MatIconModule, RouterLink],
   templateUrl: './open-table-dialog.html',
   styleUrl: './open-table-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,11 +53,11 @@ export class OpenTableDialogComponent {
     return compagnies.find((c) => c.id === this.compagnieId()) ?? (compagnies.length === 1 ? compagnies[0] : null);
   });
   protected readonly heros = computed(() => herosCartes(this.compagnie()?.heros ?? []));
-  /** Les compagnies à choisir, chacune avec ses héros (portrait ou initiale) et leurs noms en toutes lettres. */
+  /** Les compagnies à choisir, chacune avec ses héros (portrait ou initiale). */
   protected readonly compagniesAChoisir = computed(() =>
     this.compagnies().map((c) => {
       const heros = herosCartes(c.heros);
-      return {id: c.id, nom: c.nom, heros, noms: heros.length ? enumerer(heros.map((h) => h.nom)) : 'Aucun héros'};
+      return {id: c.id, nom: c.nom, heros};
     }),
   );
   /** L'accueil a répondu, et le compte n'a aucune compagnie : il faut en créer une d'abord. */
@@ -72,7 +71,7 @@ export class OpenTableDialogComponent {
   protected readonly improvisee = computed(() => this.scenario() === null);
 
   /**
-   * Les scénarios à choisir, les sagas puis les one shots : leur teinte, leur nombre de chapitres, s'il est choisi (le chapitre de départ est
+   * Les scénarios à choisir, par nom : leur teinte, leur nombre de chapitres, s'il est choisi (le chapitre de départ est
    * l'un des siens) et la partie que la compagnie choisie y a déjà (on la reprend plutôt que d'en créer une autre).
    */
   protected readonly scenariosAChoisir = computed(() => {
@@ -83,7 +82,7 @@ export class OpenTableDialogComponent {
       const ids = new Set(choix.chapitres.map((c) => c.id));
       return {
         ...choix,
-        detail: choix.oneShot ? 'One shot' : pluriel(choix.chapitres.length, 'chapitre'),
+        detail: pluriel(choix.chapitres.length, 'chapitre'),
         choisi: courant !== null && ids.has(courant),
         partieId: parties.find((p) => ids.has(p.scenario_id ?? ''))?.id ?? null,
       };
@@ -95,12 +94,14 @@ export class OpenTableDialogComponent {
 
   protected readonly canLaunch = computed(() => this.heros().length > 0 && !this.partieExistante() && !this.launching() && !this.loadingAccueil());
 
-  /** Les chapitres de départ du scénario choisi, rien pour un one shot : leur marque (« Intro », « 1 »…), leur libellé, le choisi. */
+  /** Les chapitres de départ du scénario choisi : leur marque (« Intro », « 1 »…), leur libellé, le choisi. Rien à choisir pour un
+   * scénario d'un seul chapitre. */
   protected readonly chapitresDeDepart = computed(() => {
-    if (!this.scenario()?.saga) {
+    const chapitres = chapitresDuScenario(this.scenarioId(), this.scenarios());
+    if (chapitres.length < 2) {
       return [];
     }
-    return chapitresDuScenario(this.scenarioId(), this.scenarios()).map((c) => ({
+    return chapitres.map((c) => ({
       id: c.id,
       marque: marqueDeChapitre(c),
       libelle: libelleDeChapitre(c.numero, c.titre),

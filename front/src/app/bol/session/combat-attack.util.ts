@@ -166,8 +166,9 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     attaqueAvantages: c.attaqueAvantages ?? [],
     attaqueDesavantages: c.attaqueDesavantages ?? [],
     magie: sansMagie(c.esprit ?? 0),
-    // Une créature ou un démon frappe de ses armes naturelles : rien à lui faire lâcher.
-    ...(token.kind === 'creature' || token.kind === 'demon' ? {arme: false} : {}),
+    // Une créature frappe de ses armes naturelles : rien à lui faire lâcher. Un démon peut tenir une arme, ce que sa fiche ne dit pas :
+    // inconnu, le désarmement reste ouvert et le MJ juge.
+    ...(token.kind === 'creature' ? {arme: false} : {}),
   };
 
   // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche. Il porte tout ce qu'il

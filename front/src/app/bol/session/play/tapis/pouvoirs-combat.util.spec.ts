@@ -125,8 +125,10 @@ describe('poisonPossible', () => {
     expect(poisonPossible(poisonneux, card('creature', 4, {taille: 5}))).toBe(false);
   });
 
-  it('counts a demon, whose size is not known, as medium', () => {
-    expect(poisonPossible(poisonneux, card('demon', 5))).toBe(true);
+  it('reads the size of a demon too; a card placed before it was noted counts as medium', () => {
+    expect(poisonPossible(poisonneux, card('demon', 5, {taille: 4}))).toBe(true);
+    expect(poisonPossible(poisonneux, card('demon', 6, {taille: 6}))).toBe(false);
+    expect(poisonPossible(poisonneux, card('demon', 7))).toBe(true);
   });
 
   it('needs a poisonous attacker and a target', () => {

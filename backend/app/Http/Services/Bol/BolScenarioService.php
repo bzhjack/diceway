@@ -3,12 +3,13 @@
 namespace App\Http\Services\Bol;
 
 use App\Models\Bol\BolFightSession;
+use App\Models\Bol\BolSaga;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-/** Les chapitres du compte (`BolScenario`), chacun avec son scénario (`saga` : son id et son nom ; null pour un one shot). */
+/** Les chapitres du compte (`BolScenario`), chacun avec son scénario (`saga` : son id et son nom). */
 class BolScenarioService
 {
     public function __construct(private readonly BolSagaService $sagaService) {}
@@ -27,7 +28,7 @@ class BolScenarioService
     }
 
     /** Crée un chapitre : son titre d'un seul tenant (« Scénario — 1. Nom ») le range dans son scénario, retrouvé ou créé ; sans tiret
-     * cadratin, c'est un one shot. */
+     * cadratin, il est seul dans un scénario de son nom. */
     public function create(array $input): BolScenario
     {
         $userId = (string) Auth::id();
@@ -70,6 +71,8 @@ class BolScenarioService
             foreach ($chapitres as $id) {
                 $this->supprimer($id, $userId);
             }
+            // Le dernier chapitre l'emporte ; un scénario qui n'en avait aucun part ici.
+            BolSaga::where('id', $sagaId)->where('user_id', $userId)->delete();
 
             return true;
         });

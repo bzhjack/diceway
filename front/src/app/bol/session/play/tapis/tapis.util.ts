@@ -126,6 +126,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       attitude: d.attitude ?? null,
       vilenie: null,
       pouvoirs: pouvoirsDeCombat(d.pouvoirs),
+      taille: d.id_taille ?? null,
     });
   }
 

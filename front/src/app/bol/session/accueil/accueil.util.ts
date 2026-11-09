@@ -14,9 +14,6 @@ import {
 } from '../models/accueil.model';
 import {findScenario, libelleDeChapitre} from '../scenario.util';
 
-/** Le nom affiché d'un scénario hors saga, dans le fil d'une partie. */
-export const ONE_SHOT = 'One shot';
-
 /** Le nom d'une partie sans nom (une partie d'avant le nom obligatoire). */
 const SANS_NOM = 'Table sans nom';
 
@@ -32,25 +29,21 @@ function rang(numero: number | null): number {
   return numero ?? Number.MAX_SAFE_INTEGER;
 }
 
-/** Les chapitres du scénario d'un chapitre, dans l'ordre de lecture : ceux de sa saga, ou lui seul pour un one shot ; rien sans chapitre
- * ou pour un chapitre inconnu. */
+/** Les chapitres du scénario d'un chapitre, dans l'ordre de lecture ; rien sans chapitre ou pour un chapitre inconnu. */
 export function chapitresDuScenario(chapitreId: string | null, scenarios: readonly BolAccueilScenario[]): BolAccueilScenario[] {
   const chapitre = findScenario(scenarios, chapitreId);
   if (!chapitre) {
     return [];
   }
-  if (chapitre.saga === null) {
-    return [chapitre];
-  }
   const sagaId = chapitre.saga.id;
-  return scenarios.filter((s) => s.saga?.id === sagaId).sort(comparerChapitres);
+  return scenarios.filter((s) => s.saga.id === sagaId).sort(comparerChapitres);
 }
 
 /** Les sagas du compte, chacune une fois (par id), triées par nom : leur rang donne leur teinte. */
 function sagasTriees(scenarios: readonly BolAccueilScenario[]): {id: string; titre: string}[] {
   const sagas = new Map<string, string>();
   for (const s of scenarios) {
-    if (s.saga && !sagas.has(s.saga.id)) {
+    if (!sagas.has(s.saga.id)) {
       sagas.set(s.saga.id, s.saga.titre);
     }
   }
@@ -61,31 +54,25 @@ function teinteDeSagaId(sagaId: string, sagas: readonly {id: string}[]): number 
   return (sagas.findIndex((saga) => saga.id === sagaId) % TEINTES) + 1;
 }
 
-/** La teinte du scénario d'un chapitre : de 1 à 4 dans l'ordre alphabétique des sagas, la même pour toutes les parties qui le jouent ; 0 hors
- * saga, sans chapitre, ou pour un chapitre inconnu. */
+/** La teinte du scénario d'un chapitre : de 1 à 4 dans l'ordre alphabétique des scénarios, la même pour toutes les parties qui le jouent ;
+ * 0 sans chapitre, ou pour un chapitre inconnu. */
 export function teinteDeScenario(chapitreId: string | null, scenarios: readonly BolAccueilScenario[]): number {
   const saga = findScenario(scenarios, chapitreId)?.saga;
   return saga ? teinteDeSagaId(saga.id, sagasTriees(scenarios)) : 0;
 }
 
-/** Les scénarios à choisir pour une partie : les sagas par ordre alphabétique, puis les one shots, chacun avec ses chapitres. */
+/** Les scénarios à choisir pour une partie, par ordre alphabétique, chacun avec ses chapitres. */
 export function scenariosDuCompte(scenarios: readonly BolAccueilScenario[]): AccueilScenarioChoix[] {
   const sagas = sagasTriees(scenarios);
-  const choixDeSagas = sagas.map((saga): AccueilScenarioChoix => {
-    const chapitres = scenarios.filter((s) => s.saga?.id === saga.id).sort(comparerChapitres);
+  return sagas.map((saga): AccueilScenarioChoix => {
+    const chapitres = scenarios.filter((s) => s.saga.id === saga.id).sort(comparerChapitres);
     return {
       id: saga.id,
       nom: saga.titre,
-      oneShot: false,
       teinte: teinteDeSagaId(saga.id, sagas),
       chapitres: chapitres.map((c) => ({id: c.id, libelle: libelleDeChapitre(c.numero, c.titre)})),
     };
   });
-  const oneShots = scenarios
-    .filter((s) => s.saga === null)
-    .sort((a, b) => a.titre.localeCompare(b.titre, 'fr'))
-    .map((s): AccueilScenarioChoix => ({id: s.id, nom: s.titre, oneShot: true, teinte: 0, chapitres: [{id: s.id, libelle: s.titre}]}));
-  return [...choixDeSagas, ...oneShots];
 }
 
 /** Les scénarios qu'une partie improvisée peut prendre : tous, sauf ceux que sa compagnie joue déjà dans une autre partie (le serveur les refuse). */
@@ -122,18 +109,15 @@ function carteDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilS
   const joues = new Set(partie.chapitres_joues);
   const termine = courant !== null && partie.scenario_termine;
   const etat = (c: BolAccueilScenario): ChapitreEtat => (termine || (c.id !== courant?.id && joues.has(c.id)) ? 'joue' : c.id === courant?.id ? 'en-cours' : 'a-jouer');
-  const reperes: AccueilRepere[] =
-    courant?.saga == null
-      ? []
-      : chapitres.map((c) => {
-          const libelle = libelleDeChapitre(c.numero, c.titre);
-          return {marque: marqueDeChapitre(c), libelle, etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
-        });
+  const reperes: AccueilRepere[] = chapitres.map((c) => {
+    const libelle = libelleDeChapitre(c.numero, c.titre);
+    return {marque: marqueDeChapitre(c), libelle, etat: etat(c), texte: `${libelle} : ${ETAT_CHAPITRE[etat(c)]}`};
+  });
 
   return {
     id: partie.id,
     nom: nomDePartie(partie),
-    scenario: courant ? (courant.saga?.titre ?? courant.titre) : 'Partie improvisée',
+    scenario: courant ? courant.saga.titre : 'Partie improvisée',
     teinte: teinteDeScenario(courant?.id ?? null, scenarios),
     reperes,
     heros: herosCartes(partie.heros),
@@ -154,13 +138,9 @@ export function partiesDeLAccueil(data: BolAccueilModel): AccueilPartie[] {
 /** Où se place un chapitre parmi ceux du compte : son scénario et son chapitre, d'après son numéro et le nombre de chapitres du scénario. */
 export function situerScenario(scenario: BolAccueilScenario, scenarios: readonly BolAccueilScenario[]): ScenarioSitue {
   const {saga, numero, titre} = scenario;
-  if (saga === null) {
-    return {saga: null, histoire: ONE_SHOT, chapitre: null, chapitreCourt: null, nom: titre};
-  }
-  const total = scenarios.filter((s) => s.saga?.id === saga.id).length;
+  const total = scenarios.filter((s) => s.saga.id === saga.id).length;
   const court = numero === null ? null : numero === 0 ? 'Introduction' : `Chapitre ${numero}`;
   return {
-    saga: saga.titre,
     histoire: saga.titre,
     chapitre: numero === null ? null : numero === 0 ? 'Introduction' : `${court} sur ${total}`,
     chapitreCourt: court,
@@ -171,8 +151,8 @@ export function situerScenario(scenario: BolAccueilScenario, scenarios: readonly
 const ETAT_SCENE: Record<SceneEtat, string> = {jouee: 'jouée', 'en-cours': 'en cours', 'a-jouer': 'à jouer'};
 
 /**
- * La dernière partie jouée pour le bandeau : ce qu'on dit de son histoire (la saga de son chapitre, « One shot » pour un chapitre hors saga,
- * « Sans scénario » quand on improvise), le nom de la compagnie, la ligne de la scène en cours (son chapitre, sa place, le combat), la barre
+ * La dernière partie jouée pour le bandeau : ce qu'on dit de son histoire (le scénario de son chapitre, « Sans scénario » quand on
+ * improvise), le nom de la compagnie, la ligne de la scène en cours (son chapitre, sa place, le combat), la barre
  * des scènes du chapitre et ses héros.
  */
 export function bandeauDePartie(partie: BolAccueilPartie, scenarios: readonly BolAccueilScenario[]): AccueilBandeau {
@@ -188,7 +168,7 @@ export function bandeauDePartie(partie: BolAccueilPartie, scenarios: readonly Bo
   });
   const indexEnCours = partie.scenes.findIndex((scene) => scene.id === partie.scene_id);
   const enCours = indexEnCours >= 0 ? partie.scenes[indexEnCours] : null;
-  const chapitre = situe ? (situe.chapitreCourt ?? (situe.saga ? situe.nom : null)) : null;
+  const chapitre = situe ? (situe.chapitreCourt ?? situe.nom) : null;
   const enCombat = partie.statut === 'combat';
 
   return {

@@ -20,8 +20,8 @@ export interface AccueilHerosCarte {
 }
 
 /**
- * Une carte de la rangée « Parties » : le nom de la compagnie, son scénario (la saga, le nom d'un one shot, ou « Partie improvisée »), sa
- * teinte, ses chapitres en pastilles (une saga seulement), ses héros, et le chapitre que « Reprendre » nomme (null pour une partie
+ * Une carte de la rangée « Parties » : le nom de la compagnie, son scénario (ou « Partie improvisée »), sa teinte, ses chapitres en
+ * pastilles, ses héros, et le chapitre que « Reprendre » nomme (null pour une partie
  * improvisée). `termine` : le MJ a dit qu'elle a fini son scénario.
  */
 export interface AccueilPartie {
@@ -48,21 +48,18 @@ export interface AccueilChapitreChoix {
   libelle: string;
 }
 
-/** Un scénario à choisir (« Nouvelle partie », « Choisir un scénario ») : son nom, sa teinte et ses chapitres dans l'ordre de lecture ; un
- * one shot est un scénario d'un seul chapitre. */
+/** Un scénario à choisir (« Nouvelle partie », « Choisir un scénario ») : son nom, sa teinte et ses chapitres dans l'ordre de lecture. */
 export interface AccueilScenarioChoix {
-  /** L'id de la saga, ou celui du chapitre pour un one shot. */
+  /** L'id du scénario (`BolSaga`). */
   id: string;
   nom: string;
-  oneShot: boolean;
   teinte: number;
   chapitres: AccueilChapitreChoix[];
 }
 
-/** Où se place un chapitre : sa saga (null hors saga), ce qu'on en dit (« Perle du Beshaar », ou « One shot »), son chapitre (« Chapitre 5
- * sur 5 », « Introduction » ; `chapitreCourt` : « Chapitre 5 ») et son nom, sans numéro. */
+/** Où se place un chapitre : son scénario (« Perle du Beshaar »), son chapitre (« Chapitre 5 sur 5 », « Introduction » ; `chapitreCourt` :
+ * « Chapitre 5 ») et son nom, sans numéro. */
 export interface ScenarioSitue {
-  saga: string | null;
   histoire: string;
   chapitre: string | null;
   chapitreCourt: string | null;
@@ -87,12 +84,12 @@ export interface AccueilLigneScene {
 }
 
 /**
- * La dernière partie jouée, pour le bandeau : ce qu'on en dit (le scénario, ou « One shot », ou « Sans scénario »), le nom de la compagnie,
+ * La dernière partie jouée, pour le bandeau : ce qu'on en dit (le scénario, ou « Sans scénario »), le nom de la compagnie,
  * où en est la scène, la barre des scènes du chapitre et ses héros. `filAriane` le redit en une ligne, pour la barre compacte.
  */
 export interface AccueilBandeau {
   id: string;
-  /** « Perle du Beshaar », « One shot » ou « Sans scénario ». */
+  /** « Perle du Beshaar » ou « Sans scénario ». */
   histoire: string;
   teinte: number;
   titre: string;

@@ -45,12 +45,12 @@ export function regenerationsDuRound(cards: readonly TapisCard[], etat: EtatComb
 }
 
 /** Le poison d'un démon paralyse une créature de taille moyenne ou moins (« Poison ») : un héros ou un PNJ est de taille moyenne, une
- * créature a la sienne, un démon, dont la taille n'est pas notée, compte comme moyen (interprétation). */
+ * créature et un démon ont la leur (un démon posé avant qu'elle soit notée compte comme moyen). */
 export function poisonPossible(attaquant: TapisCard, cible: TapisCard | null): boolean {
   if (!attaquant.pouvoirs?.poison || !cible) {
     return false;
   }
-  return cible.kind !== 'creature' || (cible.taille ?? TAILLE_MOYENNE) <= TAILLE_MOYENNE;
+  return (cible.taille ?? TAILLE_MOYENNE) <= TAILLE_MOYENNE;
 }
 
 /** Les dégâts d'un coup contre un démon vulnérable à ce qui le frappe : doublés quand le MJ coche la faiblesse. */

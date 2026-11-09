@@ -54,6 +54,34 @@ class BolBibliothequeScenariosTest extends TestCase
         $this->assertSame('Le Dieu dévoilé', $saga->fresh()->titre);
     }
 
+    public function test_a_scenario_is_created_by_its_name_alone_unless_another_one_has_it(): void
+    {
+        $this->chapitre('Perle du Beshaar — 1. Sacrilège à Satarla');
+
+        $this->postJson('/api/bol/saga/create', ['titre' => 'perle du beshaar'])->assertStatus(422);
+        $id = $this->postJson('/api/bol/saga/create', ['titre' => '  Le Dieu voilé '])->assertOk()->assertJsonPath('titre', 'Le Dieu voilé')->json('id');
+
+        $this->assertSame(0, BolScenario::where('saga_id', $id)->count());
+        $this->getJson('/api/bol/saga')->assertOk()->assertJsonPath('0.titre', 'Le Dieu voilé')->assertJsonPath('1.titre', 'Perle du Beshaar');
+    }
+
+    public function test_the_list_shows_only_the_accounts_scenarios(): void
+    {
+        BolSaga::create(['user_id' => User::factory()->create()->id, 'titre' => 'Ailleurs']);
+        BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Chez moi']);
+
+        $this->getJson('/api/bol/saga')->assertOk()->assertJsonCount(1)->assertJsonPath('0.titre', 'Chez moi');
+    }
+
+    public function test_an_empty_scenario_is_deleted_too(): void
+    {
+        $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Vide']);
+
+        $this->deleteJson("/api/bol/saga/{$saga->id}")->assertOk();
+
+        $this->assertNull(BolSaga::find($saga->id));
+    }
+
     public function test_another_accounts_scenario_is_not_found(): void
     {
         $etranger = BolSaga::create(['user_id' => User::factory()->create()->id, 'titre' => 'Ailleurs']);
@@ -87,7 +115,7 @@ class BolBibliothequeScenariosTest extends TestCase
         $this->assertNotNull(BolScenario::find($chapitre['id']));
     }
 
-    public function test_the_home_page_counts_scenarios_and_one_shots(): void
+    public function test_the_home_page_counts_scenarios_a_lone_chapter_included(): void
     {
         $this->chapitre('Le Dieu voilé — 1. L’oracle de Nemmereth');
         $this->chapitre('Le Dieu voilé — 2. Envolé le Corbeau !');

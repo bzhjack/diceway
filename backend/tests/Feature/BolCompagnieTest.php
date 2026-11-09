@@ -324,16 +324,16 @@ class BolCompagnieTest extends TestCase
             ->assertJsonPath('partie_id', $premiere);
     }
 
-    /** Sans scénario, rien n'empêche une compagnie d'improviser plusieurs fois ; un one shot est un scénario. */
-    public function test_a_company_may_improvise_several_times_but_plays_a_one_shot_once(): void
+    /** Sans scénario, rien n'empêche une compagnie d'improviser plusieurs fois ; un scénario, elle ne le joue qu'une fois. */
+    public function test_a_company_may_improvise_several_times_but_plays_a_scenario_once(): void
     {
         $lames = $this->compagnie('Les Lames', [$this->hero('Axel')]);
-        $oneShot = BolScenario::create(['user_id' => $this->user->id, 'titre' => 'Un ennui mortel']);
+        $unique = BolScenario::create(['user_id' => $this->user->id, 'titre' => 'Un ennui mortel']);
 
         $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id])->assertOk();
         $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id])->assertOk();
-        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id, 'scenario_id' => $oneShot->id])->assertOk();
-        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id, 'scenario_id' => $oneShot->id])->assertUnprocessable();
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id, 'scenario_id' => $unique->id])->assertOk();
+        $this->postJson('/api/bol/fight-session/create', ['compagnie_id' => $lames->id, 'scenario_id' => $unique->id])->assertUnprocessable();
     }
 
     /** Une partie improvisée ne prend pas un scénario que sa compagnie joue déjà : ni par son menu, ni en chargeant une de ses scènes. */

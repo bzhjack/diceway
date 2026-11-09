@@ -42,7 +42,8 @@ class BolDemon extends Model
         'vitalite',
         'degats',
 
-        'id_categorie'
+        'id_categorie',
+        'id_taille',
     ];
     protected $casts = [
         'vigueur' => 'integer',
@@ -53,7 +54,8 @@ class BolDemon extends Model
         'tir' => 'integer',
         'defense' => 'integer',
         'vitalite' => 'integer',
-        'id_categorie' => 'integer'
+        'id_categorie' => 'integer',
+        'id_taille' => 'integer',
     ];
 
     public function pouvoirs(): HasMany
@@ -64,6 +66,12 @@ class BolDemon extends Model
     public function categorie(): HasOne
     {
         return $this->HasOne(BolCategorie::class, 'id', 'id_categorie');
+    }
+
+    /** Sa taille (`bol_taille`) : Moyenne par défaut ; elle compte en combat (renversement, poison). */
+    public function taille(): HasOne
+    {
+        return $this->HasOne(BolTaille::class, 'id', 'id_taille');
     }
 
     public function getTypeAttribute()

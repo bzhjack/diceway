@@ -49,7 +49,7 @@ describe('chapitresDuScenario', () => {
     expect(chapitresDuScenario('clm', S).map((c) => c.id)).toEqual(['clt', 'clm']);
   });
 
-  it('un one shot est son propre scénario ; sans chapitre, rien', () => {
+  it('un chapitre sans « — » est seul dans un scénario de son nom ; sans chapitre, rien', () => {
     expect(chapitresDuScenario('ps', S).map((c) => c.id)).toEqual(['ps']);
     expect(chapitresDuScenario(null, S)).toEqual([]);
     expect(chapitresDuScenario('inconnu', S)).toEqual([]);
@@ -57,27 +57,26 @@ describe('chapitresDuScenario', () => {
 });
 
 describe('scenariosDuCompte', () => {
-  it('liste les sagas par ordre alphabétique, puis les one shots, chacun avec ses chapitres et sa teinte', () => {
+  it('liste les scénarios par ordre alphabétique, chacun avec ses chapitres et sa teinte', () => {
     const choix = scenariosDuCompte(S);
 
     expect(choix.map((c) => c.nom)).toEqual([
       'Chroniques lémuriennes',
+      'la perle du Beshaar',
       'Le Dieu voilé',
       'Perle du Beshaar',
-      'la perle du Beshaar',
       'premier scénario',
     ]);
-    expect(choix[1]).toEqual({
+    expect(choix[2]).toEqual({
       id: 'saga:le dieu voilé',
       nom: 'Le Dieu voilé',
-      oneShot: false,
-      teinte: 2,
+      teinte: 3,
       chapitres: [
         {id: 'dvi', libelle: 'Introduction : La colère de Nemmereth'},
         {id: 'dv1', libelle: "1. L'oracle de Nemmereth"},
       ],
     });
-    expect(choix[4]).toEqual({id: 'ps', nom: 'premier scénario', oneShot: true, teinte: 0, chapitres: [{id: 'ps', libelle: 'premier scénario'}]});
+    expect(choix[4]).toEqual({id: 'saga:premier scénario', nom: 'premier scénario', teinte: 1, chapitres: [{id: 'ps', libelle: 'premier scénario'}]});
   });
 });
 
@@ -89,7 +88,7 @@ describe('scenariosLibresPour', () => {
     expect(noms('imp', [improvisee, partie({id: 'a', compagnie_id: 'c1', scenario_id: 'p2'})])).not.toContain('Perle du Beshaar');
   });
 
-  it('ne propose pas un one shot que sa compagnie joue déjà', () => {
+  it('ne propose pas un scénario d’un seul chapitre que sa compagnie joue déjà', () => {
     expect(noms('imp', [improvisee, partie({id: 'a', compagnie_id: 'c1', scenario_id: 'ps'})])).not.toContain('premier scénario');
   });
 
@@ -112,11 +111,11 @@ describe('scenariosLibresPour', () => {
 });
 
 describe('teinteDeScenario', () => {
-  it('donne à chaque saga une teinte stable, dans l’ordre alphabétique, et aucune hors saga', () => {
+  it('donne à chaque scénario une teinte stable, dans l’ordre alphabétique, et aucune sans chapitre', () => {
     expect(teinteDeScenario('clm', S)).toBe(1);
-    expect(teinteDeScenario('dv1', S)).toBe(2);
-    expect(teinteDeScenario('p10', S)).toBe(3);
-    expect(teinteDeScenario('ps', S)).toBe(0);
+    expect(teinteDeScenario('dv1', S)).toBe(3);
+    expect(teinteDeScenario('p10', S)).toBe(4);
+    expect(teinteDeScenario('ps', S)).toBe(1);
     expect(teinteDeScenario(null, S)).toBe(0);
   });
 });
@@ -128,7 +127,7 @@ describe('partiesDeLAccueil', () => {
     expect(carte({titre: '  '}).nom).toBe('Table sans nom');
   });
 
-  it('place le scénario : la saga, le nom d’un one shot, ou « Partie improvisée »', () => {
+  it('place le scénario, ou « Partie improvisée »', () => {
     expect(carte().scenario).toBe('Perle du Beshaar');
     expect(carte({scenario_id: 'ps'}).scenario).toBe('premier scénario');
     expect(carte({scenario_id: null}).scenario).toBe('Partie improvisée');
@@ -145,8 +144,8 @@ describe('partiesDeLAccueil', () => {
     expect(carte({scenario_id: 'clm'}).reperes.map((r) => r.marque)).toEqual(['L', 'M']);
   });
 
-  it('ne met pas de pastilles pour un one shot ni pour une partie improvisée', () => {
-    expect(carte({scenario_id: 'ps'}).reperes).toEqual([]);
+  it('un scénario d’un seul chapitre a une pastille ; une partie improvisée, aucune', () => {
+    expect(carte({scenario_id: 'ps'}).reperes.map((r) => r.marque)).toEqual(['P']);
     expect(carte({scenario_id: null}).reperes).toEqual([]);
   });
 
@@ -188,8 +187,8 @@ describe('partiesDeLAccueil', () => {
       accueil([partie({id: 'a', scenario_id: 'p2', chapitres_joues: ['p1']}), partie({id: 'b', scenario_id: 'p1'})]),
     );
 
-    expect(a.teinte).toBe(3);
-    expect(b.teinte).toBe(3);
+    expect(a.teinte).toBe(4);
+    expect(b.teinte).toBe(4);
     expect(a.reperes.map((r) => r.etat)).toEqual(['joue', 'en-cours', 'a-jouer']);
     expect(b.reperes.map((r) => r.etat)).toEqual(['en-cours', 'a-jouer', 'a-jouer']);
   });
@@ -214,7 +213,6 @@ describe('situerScenario', () => {
 
   it('place un chapitre dans sa saga, d’après son numéro', () => {
     expect(situer('p2')).toEqual({
-      saga: 'Perle du Beshaar',
       histoire: 'Perle du Beshaar',
       chapitre: 'Chapitre 2 sur 3',
       chapitreCourt: 'Chapitre 2',
@@ -222,10 +220,10 @@ describe('situerScenario', () => {
     });
   });
 
-  it('nomme l’introduction, garde le libellé d’un chapitre sans numéro, et dit « One shot » hors saga', () => {
+  it('nomme l’introduction, garde le libellé d’un chapitre sans numéro', () => {
     expect(situer('dvi')).toMatchObject({chapitre: 'Introduction', nom: 'La colère de Nemmereth'});
     expect(situer('clm')).toMatchObject({chapitre: null, nom: 'Mariage amer'});
-    expect(situer('ps')).toEqual({saga: null, histoire: 'One shot', chapitre: null, chapitreCourt: null, nom: 'premier scénario'});
+    expect(situer('ps')).toEqual({histoire: 'premier scénario', chapitre: null, chapitreCourt: null, nom: 'premier scénario'});
   });
 });
 
@@ -253,7 +251,7 @@ describe('bandeauDePartie', () => {
     expect(bandeau).toEqual({
       id: 't',
       histoire: 'Perle du Beshaar',
-      teinte: 3,
+      teinte: 4,
       titre: 'Les Lames de Satarla',
       ligne: {avant: '1. Sacrilège à Satarla — scène 4 sur 4 : ', scene: 'La nuit', apres: ' · combat engagé'},
       enCombat: true,
@@ -279,8 +277,8 @@ describe('bandeauDePartie', () => {
     });
   });
 
-  it('dit « One shot » hors saga, « Sans scénario » quand on improvise, « Table sans nom » sans nom', () => {
-    expect(bandeauDePartie(partie({scenario_id: 'ps'}), S)).toMatchObject({histoire: 'One shot', teinte: 0});
+  it('dit le scénario d’un seul chapitre, « Sans scénario » quand on improvise, « Table sans nom » sans nom', () => {
+    expect(bandeauDePartie(partie({scenario_id: 'ps'}), S)).toMatchObject({histoire: 'premier scénario', teinte: 1});
     expect(bandeauDePartie(partie({scenario_id: null, titre: null}), S)).toMatchObject({
       histoire: 'Sans scénario',
       titre: 'Table sans nom',

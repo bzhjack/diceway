@@ -16,10 +16,7 @@ function sansCadratin(texte: string): string {
   return texte.replace(/—/g, '-').trim();
 }
 
-/**
- * Un chapitre, à créer ou à modifier : son numéro dans son scénario (l'introduction, un numéro, ou aucun), son nom et son pitch. Pour un
- * nouveau scénario, il demande aussi le nom du scénario ; un one shot n'a ni scénario ni numéro.
- */
+/** Un chapitre d'un scénario, à créer ou à modifier : son numéro (l'introduction, un numéro, ou aucun), son nom et son pitch. */
 @Component({
   selector: 'bol-chapitre-dialog',
   imports: [FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule],
@@ -27,28 +24,19 @@ function sansCadratin(texte: string): string {
     <h2 mat-dialog-title>{{ data.titre }}</h2>
     <form (submit)="submit($event)">
       <mat-dialog-content class="chd-contenu">
-        @if (data.nommerLeScenario) {
-          <mat-form-field subscriptSizing="dynamic">
-            <mat-label>Nom du scénario</mat-label>
-            <input matInput cdkFocusInitial autocomplete="off" [formField]="chapitreForm.scenario" />
-          </mat-form-field>
-        } @else if (data.scenario) {
-          <p class="chd-scenario">Scénario : <strong>{{ data.scenario }}</strong></p>
-        }
+        <p class="chd-scenario">Scénario : <strong>{{ data.scenario }}</strong></p>
         <div class="chd-ligne">
-          @if (!data.oneShot) {
-            <mat-form-field class="chd-numero" subscriptSizing="dynamic">
-              <mat-label>Numéro</mat-label>
-              <mat-select [formField]="chapitreForm.numero">
-                <mat-option [value]="null">Sans numéro</mat-option>
-                @for (n of numeros; track n.value) {
-                  <mat-option [value]="n.value">{{ n.label }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          }
+          <mat-form-field class="chd-numero" subscriptSizing="dynamic">
+            <mat-label>Numéro</mat-label>
+            <mat-select [formField]="chapitreForm.numero">
+              <mat-option [value]="null">Sans numéro</mat-option>
+              @for (n of numeros; track n.value) {
+                <mat-option [value]="n.value">{{ n.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
           <mat-form-field class="chd-titre" subscriptSizing="dynamic">
-            <mat-label>{{ data.oneShot ? 'Nom du one shot' : 'Nom du chapitre' }}</mat-label>
+            <mat-label>Nom du chapitre</mat-label>
             <input matInput autocomplete="off" [formField]="chapitreForm.titre" />
           </mat-form-field>
         </div>
@@ -96,26 +84,21 @@ class ChapitreDialogComponent {
   private readonly ref = inject(MatDialogRef<ChapitreDialogComponent, ChapitreDialogResultat>);
   protected readonly numeros = NUMEROS;
 
-  private readonly value = signal({scenario: '', numero: this.data.numero, titre: this.data.chapitre, pitch: this.data.pitch});
+  private readonly value = signal({numero: this.data.numero, titre: this.data.chapitre, pitch: this.data.pitch});
   protected readonly chapitreForm = form(this.value, (path) => {
-    maxLength(path.scenario, 150);
     maxLength(path.titre, 150);
     maxLength(path.pitch, 2000);
   });
-  protected readonly valid = computed(() => {
-    const {scenario, titre} = this.value();
-    return this.chapitreForm().valid() && /\S/.test(titre) && (!this.data.nommerLeScenario || /\S/.test(scenario));
-  });
+  protected readonly valid = computed(() => this.chapitreForm().valid() && /\S/.test(this.value().titre));
 
   protected submit(event: Event): void {
     event.preventDefault();
     if (!this.valid()) {
       return;
     }
-    const {scenario, numero, titre, pitch} = this.value();
+    const {numero, titre, pitch} = this.value();
     this.ref.close({
-      scenario: this.data.nommerLeScenario ? sansCadratin(scenario) : null,
-      numero: this.data.oneShot ? null : numero,
+      numero,
       titre: sansCadratin(titre),
       pitch: pitch.trim(),
     });

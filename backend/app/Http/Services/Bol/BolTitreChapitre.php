@@ -5,7 +5,7 @@ namespace App\Http\Services\Bol;
 /**
  * Le titre d'un chapitre écrit d'un seul tenant, comme dans les fichiers d'import et à la création d'un chapitre à la table : « Perle du
  * Beshaar — 1. Sacrilège à Satarla ». Il se découpe en son scénario (« Perle du Beshaar »), son numéro (0 pour l'introduction, null sans
- * numéro) et son nom ; sans tiret cadratin, c'est un one shot, sans scénario. `recomposer` fait l'inverse.
+ * numéro) et son nom ; sans tiret cadratin, pas de scénario (le chapitre ira dans un scénario de son nom). `recomposer` fait l'inverse.
  */
 final class BolTitreChapitre
 {
@@ -46,7 +46,7 @@ final class BolTitreChapitre
         };
     }
 
-    /** Le titre d'un seul tenant : « Perle du Beshaar — 1. Sacrilège à Satarla », ou le nom seul d'un one shot. */
+    /** Le titre d'un seul tenant : « Perle du Beshaar — 1. Sacrilège à Satarla », ou le nom seul sans scénario. */
     public static function recomposer(?string $saga, ?int $numero, string $titre): string
     {
         return $saga === null ? $titre : $saga . self::SEPARATEUR . self::libelle($numero, $titre);

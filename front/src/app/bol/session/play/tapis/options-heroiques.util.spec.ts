@@ -41,6 +41,9 @@ describe('optionHeroiqueBloquee : renversement', () => {
   it('a big attacker knocks down a big target; heroes, PNJ and demons count as medium', () => {
     expect(optionHeroiqueBloquee('renversement', {attaquant: OURS, cible: TROLL, cibleArme: undefined})).toBeNull();
     expect(optionHeroiqueBloquee('renversement', {attaquant: card('demon', 4), cible: HEROS, cibleArme: undefined})).toBeNull();
+    expect(optionHeroiqueBloquee('renversement', {attaquant: HEROS, cible: card('demon', 5, {nom: 'Ilirk', taille: 7}), cibleArme: undefined})).toBe(
+      'Renversement impossible : Ilirk (Énorme) dépasse Krongar (Moyenne) de plus d’une catégorie de taille.',
+    );
   });
 });
 

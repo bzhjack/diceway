@@ -1,3 +1,4 @@
+import {BolCreatureTailleModel} from './bol-creature.model';
 import {BolFicheScenario} from './bol-fiche-scenario.model';
 
 /** Un démon : attributs, vitalité, dégâts et pouvoirs. */
@@ -21,6 +22,8 @@ export interface BolDemonModel {
   degats: string;
 
   id_categorie: number;
+  /** Sa taille (`bol_taille`), Moyenne par défaut : elle compte en combat (renversement, poison). */
+  id_taille: number;
 
   pouvoirs: {
     pouvoir: BolDemonPouvoirModel;
@@ -30,6 +33,7 @@ export interface BolDemonModel {
     id: number;
   }[];
   categorie: BolDemonCategorieModel;
+  taille?: BolCreatureTailleModel;
   type?: 'P' | 'C' | 'R';
   /** Les scénarios du compte qui l'ont créé ou le citent (liste des démons seulement). */
   scenarios?: BolFicheScenario[]

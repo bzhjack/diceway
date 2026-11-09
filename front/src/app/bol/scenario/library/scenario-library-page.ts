@@ -39,11 +39,10 @@ interface ChapitreVue {
   readonly scenes: readonly SceneVue[];
 }
 
-/** Un scénario (une saga, ou un one shot : son propre et seul chapitre). */
+/** Un scénario (`BolSaga`) : ses chapitres dans l'ordre, et son nombre de scènes. */
 interface ScenarioVue {
   readonly id: string;
   readonly titre: string;
-  readonly oneShot: boolean;
   readonly chapitres: readonly ChapitreVue[];
   readonly nombreDeScenes: number;
 }
@@ -54,10 +53,9 @@ function comparerChapitres(a: BolScenarioModel, b: BolScenarioModel): number {
   return rang(a.numero) - rang(b.numero) || a.titre.localeCompare(b.titre, 'fr');
 }
 
-/** Le titre d'un seul tenant que le serveur découpe : « Perle du Beshaar — 1. Sacrilège à Satarla » ; un one shot, son nom seul. */
-function titreComplet(scenario: string | null, numero: number | null, titre: string): string {
-  const libelle = libelleDeChapitre(numero, titre);
-  return scenario ? `${scenario} — ${libelle}` : libelle;
+/** Le titre d'un seul tenant que le serveur découpe : « Perle du Beshaar — 1. Sacrilège à Satarla ». */
+function titreComplet(scenario: string, numero: number | null, titre: string): string {
+  return `${scenario} — ${libelleDeChapitre(numero, titre)}`;
 }
 
 function sceneVue(scene: BolSceneModel): SceneVue {
@@ -71,9 +69,9 @@ function sceneVue(scene: BolSceneModel): SceneVue {
 }
 
 /**
- * La bibliothèque des scénarios : à gauche les scénarios du compte (ses sagas, puis ses one shots), à droite celui choisi, ses chapitres et
- * leurs scènes. Tout s'y crée, s'y renomme, s'y supprime : un scénario naît avec son premier chapitre ; une scène y naît vide, se prépare
- * (décor, texte à lire, pistes) avec l'éditeur de la table et se range ; ses figurants se posent ensuite à la table.
+ * La bibliothèque des scénarios : à gauche les scénarios du compte, à droite celui choisi, ses chapitres et leurs scènes. Tout s'y crée,
+ * s'y renomme, s'y supprime : un scénario naît de son seul nom ; une scène naît dans l'éditeur de la table (décor, texte à lire, pistes) et
+ * se range ; ses figurants se posent ensuite à la table.
  */
 @Component({
   selector: 'bol-scenario-library-page',
@@ -87,6 +85,7 @@ export class ScenarioLibraryPageComponent {
   private readonly sceneService = inject(BolSceneService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly sagasDuCompte = refreshableResource(() => this.scenarioService.sagas());
   private readonly chapitres = refreshableResource(() => this.scenarioService.scenarios());
   private readonly scenes = refreshableResource(() => this.sceneService.scenes());
 
@@ -96,7 +95,7 @@ export class ScenarioLibraryPageComponent {
 
   private readonly choisi = signal<string | null>(null);
 
-  /** Les scénarios : les sagas par nom, puis les one shots par nom ; chacun avec ses chapitres dans l'ordre et leurs scènes par rang. */
+  /** Les scénarios par nom, ceux sans chapitre compris ; chacun avec ses chapitres dans l'ordre et leurs scènes par rang. */
   protected readonly scenarios = computed((): ScenarioVue[] => {
     const scenesParChapitre = new Map<string, BolSceneModel[]>();
     for (const scene of this.scenes.data()) {
@@ -110,28 +109,25 @@ export class ScenarioLibraryPageComponent {
       libelle: libelleDeChapitre(chapitre.numero, chapitre.titre),
       scenes: [...(scenesParChapitre.get(chapitre.id ?? '') ?? [])].sort((a, b) => a.ordre - b.ordre).map(sceneVue),
     });
-    const scenario = (id: string, titre: string, oneShot: boolean, chapitres: BolScenarioModel[]): ScenarioVue => {
-      const vues = [...chapitres].sort(comparerChapitres).map(vue);
-      return {id, titre, oneShot, chapitres: vues, nombreDeScenes: vues.reduce((n, c) => n + c.scenes.length, 0)};
-    };
 
     const sagas = new Map<string, {titre: string; chapitres: BolScenarioModel[]}>();
-    const oneShots: ScenarioVue[] = [];
+    for (const saga of this.sagasDuCompte.data()) {
+      sagas.set(saga.id, {titre: saga.titre, chapitres: []});
+    }
     for (const chapitre of this.chapitres.data()) {
       if (chapitre.saga) {
         const saga = sagas.get(chapitre.saga.id) ?? {titre: chapitre.saga.titre, chapitres: []};
         saga.chapitres.push(chapitre);
         sagas.set(chapitre.saga.id, saga);
-      } else if (chapitre.id) {
-        oneShots.push(scenario(chapitre.id, chapitre.titre, true, [chapitre]));
       }
     }
-    const parNom = (a: ScenarioVue, b: ScenarioVue) => a.titre.localeCompare(b.titre, 'fr');
-    return [...[...sagas].map(([id, saga]) => scenario(id, saga.titre, false, saga.chapitres)).sort(parNom), ...oneShots.sort(parNom)];
+    return [...sagas]
+      .map(([id, saga]): ScenarioVue => {
+        const chapitres = [...saga.chapitres].sort(comparerChapitres).map(vue);
+        return {id, titre: saga.titre, chapitres, nombreDeScenes: chapitres.reduce((n, c) => n + c.scenes.length, 0)};
+      })
+      .sort((a, b) => a.titre.localeCompare(b.titre, 'fr'));
   });
-
-  protected readonly sagas = computed(() => this.scenarios().filter((s) => !s.oneShot));
-  protected readonly oneShots = computed(() => this.scenarios().filter((s) => s.oneShot));
 
   /** Le scénario montré : celui choisi, sinon le premier. */
   protected readonly selection = computed(() => this.scenarios().find((s) => s.id === this.choisi()) ?? this.scenarios()[0] ?? null);
@@ -159,22 +155,12 @@ export class ScenarioLibraryPageComponent {
 
   // ── Les scénarios ───────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-  /** Un nouveau scénario naît avec son premier chapitre ; un one shot est un scénario d'un seul chapitre, sans numéro. */
-  protected nouveauScenario(oneShot: boolean): void {
-    this.dialogueChapitre({
-      titre: oneShot ? 'Nouveau one shot' : 'Nouveau scénario',
-      confirmLabel: 'Créer',
-      nommerLeScenario: !oneShot,
-      scenario: null,
-      oneShot,
-      numero: oneShot ? null : 1,
-      chapitre: '',
-      pitch: '',
-    }).subscribe((resultat) => {
-      if (resultat) {
-        const titre = titreComplet(resultat.scenario, resultat.numero, resultat.titre);
-        this.enregistrer(this.scenarioService.create({titre, pitch: resultat.pitch || null}), 'Impossible de créer le scénario.', (chapitre) =>
-          this.choisi.set(chapitre.saga?.id ?? chapitre.id),
+  /** Un nouveau scénario naît de son seul nom ; ses chapitres s'ajoutent ensuite (« + Chapitre »). */
+  protected nouveauScenario(): void {
+    promptDialog(this.dialog, {title: 'Nouveau scénario', label: 'Nom du scénario', maxLength: 150, confirmLabel: 'Créer'}).subscribe((titre) => {
+      if (titre) {
+        this.enregistrer(this.scenarioService.creerScenario(titre.replace(/—/g, '-')), 'Impossible de créer le scénario.', (saga) =>
+          this.choisi.set(saga.id),
         );
       }
     });
@@ -193,20 +179,16 @@ export class ScenarioLibraryPageComponent {
   protected supprimerScenario(scenario: ScenarioVue): void {
     const scenes = scenario.nombreDeScenes;
     const chapitres = scenario.chapitres.length;
+    const contenu = chapitres
+      ? `, ${chapitres > 1 ? `ses ${chapitres} chapitres` : 'son chapitre'} et ${scenes > 1 ? `leurs ${scenes} scènes` : scenes === 1 ? 'sa scène' : 'leurs scènes'}`
+      : '';
     confirmDialog(
       this.dialog,
-      {
-        title: scenario.oneShot ? 'Supprimer le one shot' : 'Supprimer le scénario',
-        message: scenario.oneShot
-          ? `Supprimer « ${scenario.titre} » et ${scenes > 1 ? `ses ${scenes} scènes` : scenes === 1 ? 'sa scène' : 'ce qu’il contient'} ? Cette action est irréversible.`
-          : `Supprimer « ${scenario.titre} », ${chapitres > 1 ? `ses ${chapitres} chapitres` : 'son chapitre'} et ${scenes > 1 ? `leurs ${scenes} scènes` : scenes === 1 ? 'sa scène' : 'leurs scènes'} ? Cette action est irréversible.`,
-        confirmLabel: 'Supprimer',
-      },
+      {title: 'Supprimer le scénario', message: `Supprimer « ${scenario.titre} »${contenu} ? Cette action est irréversible.`, confirmLabel: 'Supprimer'},
       {width: '440px'},
     ).subscribe((confirme) => {
       if (confirme) {
-        const suppression = scenario.oneShot ? this.scenarioService.delete(scenario.id) : this.scenarioService.supprimerScenario(scenario.id);
-        this.enregistrer(suppression, 'Impossible de supprimer le scénario.', () => this.choisi.set(null));
+        this.enregistrer(this.scenarioService.supprimerScenario(scenario.id), 'Impossible de supprimer le scénario.', () => this.choisi.set(null));
       }
     });
   }
@@ -219,9 +201,7 @@ export class ScenarioLibraryPageComponent {
     this.dialogueChapitre({
       titre: 'Nouveau chapitre',
       confirmLabel: 'Créer',
-      nommerLeScenario: false,
       scenario: scenario.titre,
-      oneShot: false,
       numero: Math.max(0, ...numeros) + 1,
       chapitre: '',
       pitch: '',
@@ -236,17 +216,15 @@ export class ScenarioLibraryPageComponent {
   protected modifierChapitre(scenario: ScenarioVue, vue: ChapitreVue): void {
     const chapitre = vue.chapitre;
     this.dialogueChapitre({
-      titre: scenario.oneShot ? 'Modifier le one shot' : 'Modifier le chapitre',
+      titre: 'Modifier le chapitre',
       confirmLabel: 'Enregistrer',
-      nommerLeScenario: false,
-      scenario: scenario.oneShot ? null : scenario.titre,
-      oneShot: scenario.oneShot,
+      scenario: scenario.titre,
       numero: chapitre.numero ?? null,
       chapitre: chapitre.titre,
       pitch: chapitre.pitch ?? '',
     }).subscribe((resultat) => {
       if (resultat) {
-        const titre = titreComplet(scenario.oneShot ? null : scenario.titre, resultat.numero, resultat.titre);
+        const titre = titreComplet(scenario.titre, resultat.numero, resultat.titre);
         this.enregistrer(this.scenarioService.update({id: chapitre.id, titre, pitch: resultat.pitch || null}), 'Impossible d’enregistrer le chapitre.');
       }
     });
@@ -271,11 +249,16 @@ export class ScenarioLibraryPageComponent {
 
   // ── Les scènes ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-  /** Une scène vide, au dernier rang du chapitre, qui se déplie pour la montrer : elle se prépare ensuite, ses figurants se posent à la table. */
+  /** Une nouvelle scène, préparée d'emblée dans l'éditeur de la table, au dernier rang du chapitre, qui se déplie pour la montrer ; ses
+   * figurants se posent à la table. */
   protected nouvelleScene(vue: ChapitreVue): void {
-    promptDialog(this.dialog, {title: 'Nouvelle scène', label: 'Titre de la scène', maxLength: 120, confirmLabel: 'Créer'}).subscribe((titre) => {
-      if (titre && vue.chapitre.id) {
-        this.enregistrer(this.sceneService.create(titre, vue.chapitre.id, null), 'Impossible de créer la scène.', () => this.deplier(vue.id));
+    if (!vue.chapitre.id) {
+      return;
+    }
+    openSceneEditor(this.dialog, {scene: null, chapitreId: vue.chapitre.id, siblings: vue.scenes.map((s) => s.scene)}).subscribe((creee) => {
+      if (creee) {
+        this.deplier(vue.id);
+        this.scenes.refresh();
       }
     });
   }
@@ -321,6 +304,7 @@ export class ScenarioLibraryPageComponent {
     requete.subscribe({
       next: (resultat) => {
         ensuite?.(resultat);
+        this.sagasDuCompte.refresh();
         this.chapitres.refresh();
         this.scenes.refresh();
       },

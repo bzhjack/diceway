@@ -1,3 +1,4 @@
+import {CompagnieEquipeComponent} from '../../compagnie/equipe/compagnie-equipe';
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
@@ -15,7 +16,6 @@ import {BolCompagnieModel} from '../../models/bol-compagnie.model';
 import {BolAccueilService} from '../../services/bol-accueil.service';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
-import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {AccueilPartie, AccueilScenarioChoix} from '../models/accueil.model';
 import {CompagnieDialogData} from '../models/compagnie-dialog.model';
@@ -65,7 +65,7 @@ const AUTRES_PARTIES = 4;
  * bibliothèques avec leur nombre de fiches et de quoi en créer. Le tout tient sur l'écran de référence (1440 × 704). */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, AvatarFallbackDirective, DwCompactBarComponent],
+  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, CompagnieEquipeComponent, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -197,7 +197,7 @@ export class AccueilPageComponent {
   }
 
   /** Les chapitres du scénario d'une partie, pour « Changer de chapitre » : le courant est en gras, ceux qu'elle a joués sont marqués. Ses
-   * pastilles sont dans le même ordre (un one shot n'en a pas, et n'a qu'un chapitre, le courant). */
+   * pastilles sont dans le même ordre. */
   protected chapitresDe(partie: AccueilPartie): {id: string; libelle: string; courant: boolean; joue: boolean}[] {
     return chapitresDuScenario(partie.scenarioId, this.data()?.scenarios ?? []).map((c, i) => ({
       id: c.id,

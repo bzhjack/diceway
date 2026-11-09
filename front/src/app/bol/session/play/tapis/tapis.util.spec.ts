@@ -130,6 +130,12 @@ describe('buildTapisCards', () => {
     expect(card('pnj-7').mortVivant).toBeUndefined();
   });
 
+  it('tells the size of a demon; a demon placed before it was noted has none, and counts as medium', () => {
+    const s = session({demons: [{...DEMON, id_taille: 7}] as BolFightSessionModel['demons']});
+    expect(card('demon-9', s).taille).toBe(7);
+    expect(card('demon-9').taille).toBeNull();
+  });
+
   it('reads the combat powers of a demon', () => {
     const pouvoirs = [
       {pouvoir_id: 11, pouvoir: 'Régénération', detail: null, regeneration: true},

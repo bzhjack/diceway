@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
 
 /** Un chapitre, au sens des écrans : son nom (`titre`), son numéro dans son scénario (0 pour l'introduction, null sans numéro) et son
- * scénario (`saga_id`, null pour un one shot). */
+ * scénario (`saga_id`). */
 class BolScenario extends Model
 {
     use HasFactory, Uuids;
@@ -23,22 +23,11 @@ class BolScenario extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = ['numero' => 'integer'];
 
-    /** Un scénario n'existe que par ses chapitres : il part avec le dernier, qu'on le supprime ou qu'un nouveau titre le range ailleurs. */
+    /** Un chapitre supprimé quitte les références d'import. Son scénario reste, vide s'il n'en a plus : il ne part que supprimé lui-même. */
     protected static function booted(): void
     {
-        $sansChapitre = function (?string $sagaId): void {
-            if ($sagaId !== null && !self::where('saga_id', $sagaId)->exists()) {
-                BolSaga::whereKey($sagaId)->delete();
-            }
-        };
-        static::updated(function (BolScenario $chapitre) use ($sansChapitre): void {
-            if ($chapitre->wasChanged('saga_id')) {
-                $sansChapitre($chapitre->getOriginal('saga_id'));
-            }
-        });
-        static::deleted(function (BolScenario $chapitre) use ($sansChapitre): void {
+        static::deleted(function (BolScenario $chapitre): void {
             BolImportRef::where('entity_kind', 'scenario')->where('entity_id', $chapitre->id)->delete();
-            $sansChapitre($chapitre->saga_id);
             // Les listes des créatures et des démons, en cache, nomment les scénarios de chacun.
             if ($chapitre->user_id !== null) {
                 Cache::forget(BolCache::creatures((string) $chapitre->user_id));

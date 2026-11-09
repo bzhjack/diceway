@@ -92,7 +92,7 @@ describe('OpenTableDialogComponent', () => {
   const textes = (selecteur: string) => [...element.querySelectorAll(selecteur)].map((e) => e.textContent?.trim().replace(/\s+/g, ' '));
   /** La ligne d'une compagnie ou d'un scénario, d'après son nom. */
   const ligne = (nom: string) =>
-    [...element.querySelectorAll<HTMLElement>('.otd-choix')].find((c) => c.querySelector('.otd-compagnie-nom, .otd-scenario-nom')?.textContent?.trim() === nom)!;
+    [...element.querySelectorAll<HTMLElement>('.otd-choix')].find((c) => c.querySelector('.ceq-nom, .otd-scenario-nom')?.textContent?.trim() === nom)!;
   const radio = (nom: string) => ligne(nom).querySelector<HTMLInputElement>('input[type="radio"]')!;
   const chapitres = () => [...element.querySelectorAll<HTMLButtonElement>('.otd-depart-chapitre')];
 
@@ -115,8 +115,8 @@ describe('OpenTableDialogComponent', () => {
     it('montre toutes celles du compte, avec leurs héros, et attend qu’on en choisisse une', async () => {
       await ouvrir({scenarioId: 'p1', accueil: ACCUEIL});
 
-      expect(textes('.otd-compagnie-nom')).toEqual(['Les Lames', 'Les Fils', 'Les Anciens']);
-      expect(textes('.otd-choix-ligne .otd-compagnie-heros .otd-choix-detail')).toEqual(['Axel et Grimar', 'Balaram', 'Aucun héros']);
+      expect(textes('.ceq-nom')).toEqual(['Les Lames', 'Les Fils', 'Les Anciens']);
+      expect(textes('.otd-choix-ligne .ceq-noms')).toEqual(['Axel et Grimar', 'Balaram', 'Aucun héros']);
       expect(element.querySelectorAll('input[name="otd-compagnie"]:checked').length).toBe(0);
       expect(bouton('Créer la partie').disabled).toBe(true);
       expect(element.textContent).toContain('« Créer la partie » attend une compagnie.');
@@ -170,12 +170,12 @@ describe('OpenTableDialogComponent', () => {
   });
 
   describe('le scénario', () => {
-    it('propose la partie improvisée, puis les sagas et les one shots, avec leur nombre de chapitres', async () => {
+    it('propose la partie improvisée, puis les scénarios par nom, avec leur nombre de chapitres', async () => {
       await ouvrir({scenarioId: null, accueil: ACCUEIL});
 
       expect(textes('.otd-scenario-nom')).toEqual(['Partie improvisée', 'Le Dieu voilé', 'Perle du Beshaar', 'premier scénario']);
       expect(ligne('Perle du Beshaar').querySelector('.otd-choix-detail')?.textContent).toBe('3 chapitres');
-      expect(ligne('premier scénario').querySelector('.otd-choix-detail')?.textContent).toBe('One shot');
+      expect(ligne('premier scénario').querySelector('.otd-choix-detail')?.textContent).toBe('1 chapitre');
       expect(radio('Partie improvisée').checked).toBe(true);
     });
 
@@ -212,7 +212,7 @@ describe('OpenTableDialogComponent', () => {
       expect(texte('.otd-depart-nom')).toBe("3. Le tombeau d'Urzûlzalinaar");
     });
 
-    it('un one shot n’a pas de chapitre de départ à choisir', async () => {
+    it('un scénario d’un seul chapitre n’a pas de chapitre de départ à choisir', async () => {
       await ouvrir({scenarioId: 'ps', accueil: ACCUEIL});
 
       expect(radio('premier scénario').checked).toBe(true);

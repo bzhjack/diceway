@@ -9,7 +9,10 @@ function texte(raw: string): string | null {
 
 /** La valeur du formulaire de préparation pour une scène : les champs absents deviennent des textes vides,
  * un danger absent devient 0. */
-export function editorValue(scene: BolSceneModel): SceneEditorValue {
+export function editorValue(scene: BolSceneModel | null): SceneEditorValue {
+  if (!scene) {
+    return {titre: '', region_id: null, lieu: '', moment: null, meteo: null, danger: 0, image: '', lecture: '', jeu: '', notes: '', pistes: []};
+  }
   return {
     titre: scene.titre,
     region_id: scene.region_id,

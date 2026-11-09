@@ -144,7 +144,7 @@ export class SceneListComponent {
   protected newScenario(): void {
     promptDialog(this.dialog, {
       title: 'Nouveau chapitre',
-      // Un chapitre se range dans son scénario par son titre ; seul, c'est un one shot.
+      // Un chapitre se range dans son scénario par son titre ; sans « — », dans un scénario de son nom.
       label: 'Titre : « Scénario — Chapitre »',
       maxLength: SCENE_TITLE_MAX,
       confirmLabel: 'Créer',

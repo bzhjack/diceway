@@ -251,12 +251,11 @@ class BolAccueilTest extends TestCase
         $this->assertSame(['id', 'titre', 'numero', 'saga'], array_keys($scenarios[0]));
     }
 
-    /** Chaque chapitre dit son numéro et son scénario (son id et son nom) ; un one shot n'en a pas. */
+    /** Chaque chapitre dit son numéro et son scénario (son id et son nom). */
     public function test_each_chapter_names_its_scenario_and_number(): void
     {
         $saga = BolSaga::create(['user_id' => $this->user->id, 'titre' => 'Perle du Beshaar']);
         $chapitre = BolScenario::create(['user_id' => $this->user->id, 'saga_id' => $saga->id, 'numero' => 2, 'titre' => "De sable et d'eau"]);
-        $oneShot = $this->scenario('mon premier scénario');
 
         $scenarios = collect($this->getJson('/api/bol/accueil')->assertOk()->json('scenarios'))->keyBy('id');
 
@@ -264,7 +263,6 @@ class BolAccueilTest extends TestCase
             ['id' => $chapitre->id, 'titre' => "De sable et d'eau", 'numero' => 2, 'saga' => ['id' => $saga->id, 'titre' => 'Perle du Beshaar']],
             $scenarios[$chapitre->id],
         );
-        $this->assertSame(['id' => $oneShot->id, 'titre' => 'mon premier scénario', 'numero' => null, 'saga' => null], $scenarios[$oneShot->id]);
     }
 
 

@@ -43,7 +43,7 @@ class BolFichesScenariosTest extends TestCase
 
         $liste = collect($this->getJson('/api/bol/creature')->assertOk()->json())->keyBy('nom');
 
-        $this->assertSame([['id' => $saga->id, 'titre' => 'Le Dieu voilé', 'one_shot' => false]], $liste['Momie royale']['scenarios']);
+        $this->assertSame([['id' => $saga->id, 'titre' => 'Le Dieu voilé']], $liste['Momie royale']['scenarios']);
     }
 
     public function test_a_catalogue_creature_cited_by_several_scenarios_names_each_once(): void
@@ -60,18 +60,6 @@ class BolFichesScenariosTest extends TestCase
 
         $this->assertSame(['Le Dieu voilé', 'Perle du Beshaar'], array_column($liste['Cathgan']['scenarios'], 'titre'));
         $this->assertSame([], $liste['Loup']['scenarios']);
-    }
-
-    public function test_a_one_shot_is_its_own_scenario(): void
-    {
-        $chapitre = BolScenario::create(['user_id' => $this->user->id, 'saga_id' => null, 'titre' => 'premier scénario']);
-        $this->ref('premier', BolImportRef::TYPE_SCENARIO, $chapitre->id, 'ch');
-        $bete = $this->creature('Bête', $this->user->id);
-        $this->ref('premier', 'creature', $bete->id);
-
-        $liste = collect($this->getJson('/api/bol/creature')->assertOk()->json())->keyBy('nom');
-
-        $this->assertSame([['id' => $chapitre->id, 'titre' => 'premier scénario', 'one_shot' => true]], $liste['Bête']['scenarios']);
     }
 
     public function test_another_accounts_imports_do_not_show(): void
@@ -95,7 +83,7 @@ class BolFichesScenariosTest extends TestCase
         $this->ref('perle-du-beshaar', 'demon', 'ilirk');
         $pnj = BolHeros::create(['nom' => 'Garde', 'joueur' => '', 'user_id' => $this->user->id, 'type' => 'C']);
         $this->ref('perle-du-beshaar', 'pnj', $pnj->id);
-        $attendu = [['id' => $saga->id, 'titre' => 'Perle du Beshaar', 'one_shot' => false]];
+        $attendu = [['id' => $saga->id, 'titre' => 'Perle du Beshaar']];
 
         $demons = collect($this->getJson('/api/bol/demon')->assertOk()->json())->keyBy('nom');
         $pnjs = collect($this->getJson('/api/bol/pnj')->assertOk()->json())->keyBy('origines.nom');

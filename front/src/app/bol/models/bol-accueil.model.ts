@@ -1,12 +1,12 @@
 import {BolCompagnieModel} from './bol-compagnie.model';
 import {BolScenarioSaga} from './bol-scenario.model';
 
-/** Un chapitre de l'accueil : son nom, son numéro et son scénario (null pour un one shot), de quoi l'afficher et l'ouvrir. */
+/** Un chapitre de l'accueil : son nom, son numéro et son scénario, de quoi l'afficher et l'ouvrir. */
 export interface BolAccueilScenario {
   id: string;
   titre: string;
   numero: number | null;
-  saga: BolScenarioSaga | null;
+  saga: BolScenarioSaga;
 }
 
 /** Une scène du chapitre d'une partie. */
@@ -60,7 +60,7 @@ export interface BolAccueilComptes {
   armures: number;
   sessions: number;
   compagnies: number;
-  /** Les scénarios du compte : ses sagas et ses one shots. */
+  /** Les scénarios du compte. */
   scenarios: number;
 }
 

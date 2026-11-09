@@ -276,7 +276,8 @@
   color: var(--dw-forge-hot-text);
 }
 
-// ── Les choix en liste, tous en vue : une compagnie ou un scénario par ligne, son bouton radio, le choisi cerclé d'or ─────────────
+// ── Les choix en liste, tous en vue : une compagnie ou un scénario par ligne, le choisi cerclé d'or ──────────────────────────────
+// Chaque carte est un bouton radio : le radio natif reste (clavier, lecteurs d'écran) mais ne se voit pas ; la bordure dit le choix.
 .otd-liste {
   display: flex;
   flex-direction: column;
@@ -293,7 +294,17 @@
   @include forge.recess;
 }
 
-.otd-choix--on {
+.otd-choix:has(input:not(:disabled)):hover {
+  border-color: var(--dw-forge-bronze);
+}
+
+.otd-choix:has(input:focus-visible) {
+  outline: 2px solid var(--dw-forge-hot);
+  outline-offset: 2px;
+}
+
+.otd-choix--on,
+.otd-choix--on:has(input:not(:disabled)):hover {
   border-color: var(--dw-color-legendary);
   box-shadow: inset 0 0 0 1px var(--dw-color-legendary);
 }
@@ -314,7 +325,9 @@
 }
 
 .otd-choix-ligne {
+  position: relative;
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.85rem;
   min-width: 0;
@@ -325,11 +338,12 @@
   }
 
   input {
-    flex: none;
-    width: 1.1rem;
-    height: 1.1rem;
+    position: absolute;
+    width: 1px;
+    height: 1px;
     margin: 0;
-    accent-color: var(--dw-color-legendary);
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -344,51 +358,6 @@
 .otd-choix-detail {
   font-size: 0.82rem;
   color: var(--dw-forge-caption);
-}
-
-.otd-compagnie-nom {
-  overflow-wrap: anywhere;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.4rem;
-  line-height: 1.05;
-  color: var(--dw-forge-name);
-}
-
-.otd-compagnie-heros {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-width: 0;
-}
-
-// Les héros d'une compagnie en médaillons qui se chevauchent : leur portrait, sinon leur initiale.
-.otd-medaillons {
-  display: flex;
-  flex: none;
-  padding-left: 0.35rem;
-
-  img,
-  .otd-medaillon-initiale {
-    width: 1.75rem;
-    height: 1.75rem;
-    box-sizing: border-box;
-    margin-left: -0.35rem;
-    border: 2px solid var(--dw-color-bonus);
-    border-radius: 50%;
-    background: var(--dw-forge-recess);
-  }
-
-  img {
-    object-fit: cover;
-  }
-}
-
-.otd-medaillon-initiale {
-  display: grid;
-  place-items: center;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 0.85rem;
-  color: var(--dw-forge-hot-text);
 }
 
 // La vignette d'un scénario : l'image de sa saga (`dw-saga--N`, comme ses parties sur l'accueil).
@@ -411,13 +380,13 @@
   flex: none;
 }
 
-// Les chapitres de départ du scénario choisi, en boutons à bascule ; le nom du choisi à leur suite. Alignés sur le texte, après le radio.
+// Les chapitres de départ du scénario choisi, en boutons à bascule ; le nom du choisi à leur suite. Alignés sur le texte, après la vignette.
 .otd-depart {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 0.75rem;
-  padding-left: 1.95rem;
+  padding-left: 4.85rem;
 }
 
 .otd-depart-titre {

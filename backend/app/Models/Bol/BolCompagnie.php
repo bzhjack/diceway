@@ -32,7 +32,7 @@ class BolCompagnie extends Model
 
     /**
      * Sa partie sur le scénario de ce chapitre, s'il y en a une : une compagnie ne joue qu'une fois un scénario (un autre chapitre de la même
-     * saga, c'est le même scénario ; un one shot est son propre scénario). Sans chapitre, aucune : elle peut improviser autant qu'elle veut.
+     * saga, c'est le même scénario). Sans chapitre, aucune : elle peut improviser autant qu'elle veut.
      */
     public function partieSurLeScenario(?string $chapitreId): ?BolFightSession
     {

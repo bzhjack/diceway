@@ -35,7 +35,7 @@ docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>
 
 **Le titre du chapitre** s'écrit d'un seul tenant, `Scénario — Chapitre` : l'import le découpe. La partie avant le tiret cadratin
 désigne le scénario, retrouvé par son nom (sans tenir compte de la casse) parmi ceux du compte, ou créé. La partie après donne le numéro
-(`1. …`, ou `Introduction : …` pour le chapitre 0) et le nom du chapitre. Sans tiret cadratin, le chapitre est un one shot.
+(`1. …`, ou `Introduction : …` pour le chapitre 0) et le nom du chapitre. Sans tiret cadratin, le chapitre est seul dans un scénario de son nom.
 
 **Clés** (`saga`, `scenario.cle`, clés de personnage et de scène) :
 - caractères permis : minuscules, chiffres, `-` et `_` ;
@@ -111,6 +111,7 @@ Un personnage est soit une fiche créée pour le scénario, soit une référence
 ```jsonc
 "tolometh": {
   "kind": "demon", "nom": "…", "categorie": "Majeur",                  // Mineur | Inférieur | Majeur
+  "taille": "Grande",                                                   // facultatif, Moyenne par défaut
   "vigueur": 0, "agilite": 0, "esprit": 0, "aura": 0, "melee": 0, "tir": 0, "defense": 0,
   "vitalite": 40, "degats": "d6B",
   "pouvoirs": [{ "nom": "…", "detail": "…" }]

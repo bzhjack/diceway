@@ -6,7 +6,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {DwAvatarPickerComponent} from '../../../shared/dw-avatar-picker/dw-avatar-picker';
 import {EntityGeneralOption} from '../models/entity-general.model';
 
-/** Le bloc « Général » d'une créature ou d'un démon : portrait, nom, commentaire et ce qui les classe (taille, catégorie). */
+/** Le bloc « Général » d'une créature ou d'un démon : portrait, nom, commentaire et ce qui les classe (la taille d'une créature, la
+ * catégorie d'un démon, et sa taille dans une seconde liste, `taille`). */
 @Component({
   selector: 'bol-entity-general',
   imports: [FormField, MatFormFieldModule, MatInputModule, MatSelectModule, DwAvatarPickerComponent],
@@ -22,6 +23,9 @@ export class EntityGeneralComponent {
   readonly classementLabel = input.required<string>();
   readonly options = input.required<readonly EntityGeneralOption[]>();
   readonly compareById = input.required<(a: number | string | null, b: number | string | null) => boolean>();
+  /** Une seconde liste, la taille d'un démon : le nom prend alors toute la ligne, au-dessus des deux listes. */
+  readonly taille = input<FieldTree<number> | null>(null);
+  readonly tailleOptions = input<readonly EntityGeneralOption[]>([]);
   readonly avatarPreview = input<string | null>(null);
   readonly avatarLabel = input.required<string>();
   readonly showValidationHint = input(false);

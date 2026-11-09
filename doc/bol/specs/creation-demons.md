@@ -157,7 +157,7 @@ Regles :
 
 Implication projet :
 - la categorie demoniaque n'impose pas la taille visuelle
-- la page rapide n'a pas besoin d'un select `taille` pour rester compatible avec le livre
+- la fiche a une `taille` (`bol_taille`), Moyenne par défaut, choisie à côté de la catégorie : elle compte en combat (renversement, poison)
 
 ## Invocation et controle
 
@@ -189,7 +189,7 @@ Pour la page `demon-create` actuelle :
 - le reste peut rester editable librement tant qu'on assume une version `rapide` plutot que `strictement reglee`
 
 Constate dans le code (choix de l'appli) :
-- `demon-form-page.ts` ne pre-remplit que `vitalite` et `degats` depuis la categorie, et n'a pas de champ `taille`
+- `demon-form-page.ts` ne pre-remplit que `vitalite` et `degats` depuis la categorie ; la taille (Moyenne par défaut) ne depend pas de la categorie
 - ni le front ni `BolDemonService.php` ne controlent le budget d'attributs, le budget de combat ni le nombre de pouvoirs
 
 ## References utiles du livre

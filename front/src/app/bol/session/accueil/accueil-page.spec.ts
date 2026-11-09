@@ -146,7 +146,7 @@ describe('AccueilPageComponent', () => {
 
     expect(texte(soir.querySelector('.acc-soir-surtitre'))).toContain('Dernière partie jouée');
     expect(texte(soir.querySelector('.acc-soir-titre'))).toBe('Perle du Beshaar');
-    expect(texte(soir.querySelector('.acc-soir-compagnie'))).toBe('avec Les Lames de Satarla');
+    expect(texte(soir.querySelector('.acc-soir-compagnie .ceq-nom'))).toBe('Les Lames de Satarla');
     expect([...soir.querySelectorAll('.acc-repere')].map((r) => r.querySelector('.sr-only')?.textContent)).toEqual([
       '1. Sacrilège à Satarla : en cours',
       "2. De sable et d'eau : à jouer",
@@ -158,9 +158,11 @@ describe('AccueilPageComponent', () => {
     ]);
     expect(texte(soir.querySelector('.acc-soir-texte'))).toBe('1. Sacrilège à Satarla — scène 2 sur 3 : La nuit du coup fourré');
     expect(soir.querySelector('.acc-soir-scene')?.textContent).toBe('La nuit du coup fourré');
-    const heros = [...soir.querySelectorAll('.acc-heros')];
-    expect(heros.map((h) => texte(h))).toEqual(['A Axel', 'jadawin']);
-    expect(heros[1].querySelector('img')?.getAttribute('src')).toBe('/api/bol/portraits/abc.png');
+    const compagnie = soir.querySelector('.acc-soir-compagnie')!;
+    expect(texte(compagnie.querySelector('.ceq-noms'))).toBe('Axel et jadawin');
+    expect([...compagnie.querySelectorAll('.ceq-lien')].map((a) => a.getAttribute('href'))).toEqual(['/create/hero/h1', '/create/hero/h2']);
+    expect(texte(compagnie.querySelector('.ceq-initiale'))).toBe('A');
+    expect(compagnie.querySelector('img')?.getAttribute('src')).toBe('/api/bol/portraits/abc.png');
     expect(soir.querySelector<HTMLAnchorElement>('.acc-soir-actions a')?.getAttribute('href')).toBe('/session/t1/play');
     expect(page.textContent).not.toContain('Clore');
   });

@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables) et le 2026-11-09 (fin de la clôture des tables ; notes d'armes : fléau, gourdin, arbalète). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables) et le 2026-11-09 (fin de la clôture des tables ; notes d'armes : fléau, gourdin, arbalète ; taille des démons, désarmement). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/bol/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/bol/rules/exemples-de-jets.md`.
 
@@ -77,7 +77,7 @@ Les pouvoirs sont recopiés sur la carte à la table (`pouvoirs-combat.util.ts`,
 
 - **Régénération** : au début de chaque round, un démon debout reprend 1 de vitalité, sans dépasser son maximum ; la table l'annonce (`regenerationsDuRound`, `CombatWoundsService`). Un coup précis contre lui ne dure que 2 rounds.
 - **Intangible** : quand il est la cible, la carte « Les dégâts » prévient que seules la sorcellerie et l'alchimie le blessent ; le MJ décide.
-- **Poison** : quand le démon touche une cible de taille moyenne ou moins (héros et PNJ comptent comme moyens), la carte « Les dégâts » rappelle le jet de vigueur Difficile (−2) et propose « Paralysé ».
+- **Poison** : quand le démon touche une cible de taille moyenne ou moins (héros et PNJ comptent comme moyens, une créature ou un démon a sa taille), la carte « Les dégâts » rappelle le jet de vigueur Difficile (−2) et propose « Paralysé ».
 - **Vulnérabilité** : sur sa carte, une icône ronde (cœur brisé) à côté de son rang ; son texte entier est dans son nom (infobulle, lecteurs d'écran) et, au clic, dans un popover avec la règle du livre (un élément lui inflige des dégâts doublés, une chose d'ordinaire inoffensive des dégâts normaux) ; ce que la faiblesse a de propre au démon (un point d'héroïsme, une statuette à briser…) reste au MJ. Quand il est la cible, « Dégâts doublés » double les dégâts du coup.
 - **Avertissements** : les pouvoirs marqués « à prévenir » (Poison, Intangible) s'affichent sur sa carte, à côté de son rang.
 - **Morts-vivants** (case « Mort-vivant » de la fiche de créature, `bol_creature.mort_vivant`) : leurs cartes disent « Force vitale » ; à 0, la frise dit « détruit ».
@@ -145,9 +145,9 @@ Une pour un succès héroïque, deux pour un succès légendaire, la même deux 
 | Option | Ce que fait l'application |
 | --- | --- |
 | Coup dévastateur | +6 aux dégâts par exemplaire. |
-| Désarmement | Pas de jet de dégâts ; un bouton conclut le coup. Grisé (avec son infobulle) contre une cible sans arme en main : un héros sans arme équipée, un PNJ sans arme, une créature ou un démon. |
+| Désarmement | Pas de jet de dégâts ; un bouton conclut le coup. Grisé (avec son infobulle) contre une cible sans arme en main : un héros sans arme équipée, un PNJ sans arme, une créature. Ouvert contre un démon, qui peut tenir une arme : le MJ juge. |
 | Coup précis | Dé de malus sur la cible jusqu'à la fin du combat, posé quand le coup est appliqué. |
-| Renversement | Dé de malus à la prochaine action de la cible, posé quand le coup est appliqué. Grisé contre une cible plus grande de plus d'une catégorie que l'attaquant (livre p. 59 ; héros, PNJ et démons comptent comme moyens). |
+| Renversement | Dé de malus à la prochaine action de la cible, posé quand le coup est appliqué. Grisé contre une cible plus grande de plus d'une catégorie que l'attaquant (livre p. 59 ; héros et PNJ comptent comme moyens, une créature ou un démon a sa taille). |
 | Carnage | Nouvelle attaque immédiate annoncée ; plus aucune dépense d'héroïsme jusqu'à la fin du tour. Pris deux fois, si la première attaque qu'il donne rate, la ligne des dégâts le dit et propose « Attaque suivante (Carnage) ». |
 | Massacrer la piétaille | Seulement contre une piétaille (grisé sinon). « Appliquer » ouvre un dialogue : les dégâts sont le nombre de piétailles mises hors de combat, cochées d'office (la cible, puis les autres piétailles debout de son camp) ; le MJ coche ou décoche, et chacune est mise à 0. |
 
@@ -232,8 +232,7 @@ Toutes les règles de combat du livre sont gérées. Les limites qui restent :
 - pas d'annonce vocale des effets expirés ;
 - pas d'annulation d'un « Retirer du combat » : la carte revient en jeu après le combat, ou par un nouveau jet de réaction ;
 - les jours qui suivent le combat ne sont pas suivis : le jet quotidien du soigneur n'est qu'un rappel ;
-- la taille d'un démon n'est pas notée : il compte comme moyen pour le renversement ;
-- une créature ou un démon compte comme sans arme en main : le désarmement est grisé contre eux, même contre un humanoïde armé ;
+- une créature compte comme sans arme en main : le désarmement est grisé contre elle, même contre un humanoïde armé (contre un démon, il reste ouvert et le MJ juge) ;
 - le dé de foi ne se donne que depuis la ligne de qui joue ou la carte de sa cible : un prêtre qui n'est ni l'un ni l'autre attend son tour (ou le MJ pose un dé de malus avec « + Effet » et corrige la foi à la main) ;
 - la condition d'incantation « blessures » n'est pas appliquée d'office (le MJ corrige la vitalité du sorcier), ni la perte définitive d'un point de pouvoir au 3e cercle (rappelée seulement) ;
 - un sort ne vise que les cartes d'en face : un sort sur un allié (« Peau écailleuse ») se pose en effet à la main ;

@@ -58,7 +58,7 @@ class BolDemonService
         }
         Cache::forget(BolCache::demons(Auth::id()));
 
-        return BolDemon::with('categorie', 'pouvoirs.pouvoir')
+        return BolDemon::with($this->DemonRelations())
             ->where('user_id', Auth::id())
             ->where('id', $demon['id'])->first();
     }
@@ -105,7 +105,7 @@ class BolDemonService
     private function DemonRelations()
     {
         return [
-            'categorie', 'pouvoirs.pouvoir'
+            'categorie', 'taille', 'pouvoirs.pouvoir'
         ];
     }
 }

@@ -9,7 +9,7 @@ class BolSagaService
 {
     /**
      * Les champs d'un chapitre d'après son titre d'un seul tenant (« Perle du Beshaar — 1. Sacrilège à Satarla ») : son nom, son numéro et
-     * son scénario, retrouvé ou créé pour le compte. Sans tiret cadratin, un one shot.
+     * son scénario, retrouvé ou créé pour le compte. Sans tiret cadratin, le chapitre est seul dans un scénario de son nom.
      *
      * @return array{titre: string, numero: ?int, saga_id: ?string}
      */
@@ -17,7 +17,23 @@ class BolSagaService
     {
         ['saga' => $saga, 'numero' => $numero, 'titre' => $titre] = BolTitreChapitre::decouper($titreComplet);
 
-        return ['titre' => $titre, 'numero' => $numero, 'saga_id' => $saga === null ? null : $this->retrouverOuCreer($userId, $saga)->id];
+        return ['titre' => $titre, 'numero' => $numero, 'saga_id' => $this->retrouverOuCreer($userId, $saga ?? $titre)->id];
+    }
+
+    /** Les scénarios du compte, par nom : ceux qui n'ont pas encore de chapitre compris. */
+    public function duCompte(string $userId)
+    {
+        return BolSaga::where('user_id', $userId)->orderBy('titre')->get(['id', 'titre']);
+    }
+
+    /** Un nouveau scénario du compte, sans chapitre ; `false` : le compte a déjà un scénario de ce nom. */
+    public function creer(string $userId, string $titre): BolSaga|false
+    {
+        if ($this->homonyme($userId, $titre)) {
+            return false;
+        }
+
+        return BolSaga::create(['user_id' => $userId, 'titre' => $titre]);
     }
 
     /**
@@ -30,13 +46,21 @@ class BolSagaService
         if (!$saga) {
             return null;
         }
-        $homonyme = BolSaga::where('user_id', $userId)->where('id', '!=', $id)->whereRaw('lower(titre) = ?', [mb_strtolower($titre)])->exists();
-        if ($homonyme) {
+        if ($this->homonyme($userId, $titre, $id)) {
             return false;
         }
         $saga->update(['titre' => $titre]);
 
         return $saga;
+    }
+
+    /** Le compte a déjà un scénario de ce nom (sans tenir compte de la casse), autre que `$saufId`. */
+    private function homonyme(string $userId, string $titre, ?string $saufId = null): bool
+    {
+        return BolSaga::where('user_id', $userId)
+            ->when($saufId !== null, fn ($query) => $query->where('id', '!=', $saufId))
+            ->whereRaw('lower(titre) = ?', [mb_strtolower($titre)])
+            ->exists();
     }
 
     public function retrouverOuCreer(string $userId, string $titre): BolSaga

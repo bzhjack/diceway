@@ -316,11 +316,11 @@ class BolSessionScenarioTest extends TestCase
     {
         [$ch1] = $this->saga('Perle du Beshaar', 1);
         [$ailleurs] = $this->saga('Le Dieu voilé', 1);
-        $oneShot = $this->scenario('Un ennui mortel');
+        $unique = $this->scenario('Un ennui mortel');
         $etranger = $this->scenario('Étranger', User::factory()->create());
         $session = $this->tableSession($ch1->id);
 
-        foreach ([$ailleurs->id, $oneShot->id, $etranger->id, null] as $cible) {
+        foreach ([$ailleurs->id, $unique->id, $etranger->id, null] as $cible) {
             $this->patchJson("/api/bol/fight-session/{$session->id}/scenario", ['scenario_id' => $cible])
                 ->assertUnprocessable()
                 ->assertJsonPath('error', 'Ce chapitre n’est pas du scénario de la partie.');

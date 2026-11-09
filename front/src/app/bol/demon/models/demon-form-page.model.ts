@@ -5,6 +5,8 @@ export interface DemonFormModel {
   id: string | null;
   nom: string;
   id_categorie: number | null;
+  /** La taille (`bol_taille`), Moyenne (4) par défaut. */
+  id_taille: number;
   /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
   commentaire: string;
   vigueur: number;

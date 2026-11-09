@@ -29,6 +29,16 @@ export class BolScenarioService {
     return this.http.delete<boolean>(`${this.base}/delete/${id}`);
   }
 
+  /** Les scénarios du compte (`BolSaga`), par nom : ceux qui n'ont pas encore de chapitre compris. */
+  sagas(): Observable<BolScenarioSaga[]> {
+    return this.http.get<BolScenarioSaga[]>(apiUrl('bol/saga'));
+  }
+
+  /** Un nouveau scénario, par son seul nom, sans chapitre ; 422 si un autre scénario du compte porte ce nom. */
+  creerScenario(titre: string): Observable<BolScenarioSaga> {
+    return this.http.post<BolScenarioSaga>(apiUrl('bol/saga/create'), {titre});
+  }
+
   /** Renomme un scénario (`BolSaga`) ; 422 si un autre scénario du compte porte ce nom. */
   renommerScenario(id: string, titre: string): Observable<BolScenarioSaga> {
     return this.http.patch<BolScenarioSaga>(apiUrl(`bol/saga/${id}`), {titre});

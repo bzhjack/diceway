@@ -12,9 +12,10 @@ import {BolSceneService} from '../../services/bol-scene.service';
 import {ScenarioLibraryPageComponent} from './scenario-library-page';
 
 const DIEU_VOILE = {id: 'dv', titre: 'Le Dieu voilé'};
+/** Un scénario créé par son seul nom, encore sans chapitre. */
+const VIDE = {id: 'zv', titre: 'Zalut oubliée'};
 const CHAPITRES: BolScenarioModel[] = [
   {id: 'dv1', titre: 'L’oracle de Nemmereth', numero: 1, pitch: 'Cap au sud.', saga: DIEU_VOILE},
-  {id: 'ps', titre: 'premier scénario', numero: null, pitch: null, saga: null},
   {id: 'dvi', titre: 'La colère de Nemmereth', numero: 0, pitch: null, saga: DIEU_VOILE},
 ];
 
@@ -45,8 +46,10 @@ describe('ScenarioLibraryPageComponent', () => {
     const reponses: unknown[] = [];
     const open = vi.fn(() => ({afterClosed: () => of(reponses.shift())}));
     const scenarioService = {
+      sagas: vi.fn(() => of([DIEU_VOILE, VIDE])),
+      creerScenario: vi.fn(() => of({id: 'nouvelle', titre: 'Perle'})),
       scenarios: vi.fn(() => of(CHAPITRES)),
-      create: vi.fn(() => of({id: 'n1', titre: 'x', saga: {id: 'nouvelle', titre: 'Perle'}})),
+      create: vi.fn(() => of({id: 'n1', titre: 'x', saga: DIEU_VOILE})),
       update: vi.fn(() => of({})),
       delete: vi.fn(() => of(true)),
       renommerScenario: vi.fn(() => of({})),
@@ -86,10 +89,10 @@ describe('ScenarioLibraryPageComponent', () => {
     return {page, open, scenarioService, sceneService, snack, texte, bouton, cliquer, repondre};
   }
 
-  it('range les scénarios puis les one shots, et montre le premier : ses chapitres dans l’ordre, repliés, avec leur nombre de scènes', async () => {
+  it('range les scénarios par nom, ceux sans chapitre compris, et montre le premier : ses chapitres dans l’ordre, repliés', async () => {
     const {page, texte} = await rendre();
 
-    expect([...page.querySelectorAll('nav .dw-lr-option-label')].map((e) => texte(e))).toEqual(['Le Dieu voilé', 'premier scénario']);
+    expect([...page.querySelectorAll('nav .dw-lr-option-label')].map((e) => texte(e))).toEqual(['Le Dieu voilé', 'Zalut oubliée']);
     expect(texte(page.querySelector('.sl-titre'))).toBe('Le Dieu voilé');
     expect([...page.querySelectorAll('.sl-chapitre-nom')].map((e) => texte(e))).toEqual([
       'Introduction : La colère de Nemmereth',
@@ -98,7 +101,7 @@ describe('ScenarioLibraryPageComponent', () => {
     expect([...page.querySelectorAll('.sl-chapitre-compte')].map((e) => texte(e))).toEqual(['1 scène', '2 scènes']);
     expect([...page.querySelectorAll('.sl-chapitre-bascule')].map((b) => b.getAttribute('aria-expanded'))).toEqual(['false', 'false']);
     expect(page.querySelector('.sl-chapitre table')).toBeNull();
-    expect(page.querySelector('.sl-pitch')).toBeNull();
+    expect(page.textContent).not.toContain('one shot');
   });
 
   it('déplie un chapitre pour montrer son pitch et ses scènes par rang, le replie', async () => {
@@ -113,7 +116,6 @@ describe('ScenarioLibraryPageComponent', () => {
     const lignes = [...page.querySelectorAll('.sl-chapitre')[1].querySelectorAll('tbody tr')];
     expect(lignes.map((tr) => texte(tr.querySelector('.sl-scene-titre')))).toEqual(['Scène s0', 'Scène s1']);
     expect([...lignes[0].querySelectorAll('td')].slice(2, 6).map((td) => texte(td))).toEqual(['Halakh', 'Jour · Ciel clair', '1', '3']);
-    expect(page.querySelectorAll('.sl-chapitre')[0].querySelector('table')).toBeNull();
 
     await cliquer(bascule);
 
@@ -121,35 +123,49 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(page.querySelector('.sl-chapitre table')).toBeNull();
   });
 
-  it('un one shot montre ses scènes sans rien à déplier', async () => {
-    const {page, bouton, cliquer} = await rendre();
+  it('un scénario sans chapitre le dit, et se supprime sans parler de chapitres', async () => {
+    const {page, texte, bouton, cliquer, repondre, open, scenarioService} = await rendre();
+    await cliquer(bouton('Zalut oubliée'));
 
-    await cliquer(bouton('premier scénario'));
+    expect(texte(page.querySelector('.sl-vide--scenario'))).toBe('Aucun chapitre : ajoutes-en un avec « Chapitre ».');
 
-    expect(page.querySelector('.sl-chapitre-bascule')).toBeNull();
-    expect(page.querySelector('.sl-chapitre-corps')).not.toBeNull();
+    repondre(true);
+    await cliquer(bouton('Supprimer'));
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({message: 'Supprimer « Zalut oubliée » ? Cette action est irréversible.'})});
+    expect(scenarioService.supprimerScenario).toHaveBeenCalledWith('zv');
   });
 
-  it('un nouveau scénario naît avec son premier chapitre, puis la bibliothèque se relit', async () => {
+  it('un nouveau scénario naît de son seul nom, puis la bibliothèque se relit et le montre', async () => {
     const {bouton, cliquer, repondre, scenarioService, open} = await rendre();
-    repondre({scenario: 'Perle du Beshaar', numero: 1, titre: 'Sacrilège à Satarla', pitch: 'Un vol.'});
-    const lectures = scenarioService.scenarios.mock.calls.length;
+    repondre('Perle du Beshaar');
+    const lectures = scenarioService.sagas.mock.calls.length;
 
     await cliquer(bouton('Nouveau scénario'));
 
-    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({nommerLeScenario: true, numero: 1})});
-    expect(scenarioService.create).toHaveBeenCalledWith({titre: 'Perle du Beshaar — 1. Sacrilège à Satarla', pitch: 'Un vol.'});
-    expect(scenarioService.scenarios).toHaveBeenCalledTimes(lectures + 1);
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({title: 'Nouveau scénario', label: 'Nom du scénario'})});
+    expect(scenarioService.creerScenario).toHaveBeenCalledWith('Perle du Beshaar');
+    expect(scenarioService.sagas).toHaveBeenCalledTimes(lectures + 1);
   });
 
   it('un nouveau chapitre prend le numéro qui suit le dernier', async () => {
     const {bouton, cliquer, repondre, scenarioService, open} = await rendre();
-    repondre({scenario: null, numero: 2, titre: 'Envolé le Corbeau !', pitch: ''});
+    repondre({numero: 2, titre: 'Envolé le Corbeau !', pitch: ''});
 
     await cliquer(bouton('Chapitre'));
 
     expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({scenario: 'Le Dieu voilé', numero: 2})});
     expect(scenarioService.create).toHaveBeenCalledWith({titre: 'Le Dieu voilé — 2. Envolé le Corbeau !', pitch: null});
+  });
+
+  it('le premier chapitre d’un scénario vide porte le numéro 1', async () => {
+    const {bouton, cliquer, repondre, scenarioService, open} = await rendre();
+    await cliquer(bouton('Zalut oubliée'));
+    repondre({numero: 1, titre: 'Le réveil', pitch: ''});
+
+    await cliquer(bouton('Chapitre'));
+
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({scenario: 'Zalut oubliée', numero: 1})});
+    expect(scenarioService.create).toHaveBeenCalledWith({titre: 'Zalut oubliée — 1. Le réveil', pitch: null});
   });
 
   it('renomme le scénario', async () => {
@@ -161,16 +177,16 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(scenarioService.renommerScenario).toHaveBeenCalledWith('dv', 'Le Dieu dévoilé');
   });
 
-  it('supprime un scénario d’un bloc, un one shot par son chapitre', async () => {
-    const {bouton, cliquer, repondre, scenarioService} = await rendre();
+  it('supprime un scénario d’un bloc, ses chapitres et leurs scènes', async () => {
+    const {bouton, cliquer, repondre, scenarioService, open} = await rendre();
     repondre(true);
-    await cliquer(bouton('Supprimer'));
-    expect(scenarioService.supprimerScenario).toHaveBeenCalledWith('dv');
 
-    await cliquer(bouton('premier scénario'));
-    repondre(true);
     await cliquer(bouton('Supprimer'));
-    expect(scenarioService.delete).toHaveBeenCalledWith('ps');
+
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({
+      data: expect.objectContaining({message: 'Supprimer « Le Dieu voilé », ses 2 chapitres et leurs 3 scènes ? Cette action est irréversible.'}),
+    });
+    expect(scenarioService.supprimerScenario).toHaveBeenCalledWith('dv');
   });
 
   it('dit pourquoi le serveur refuse (une partie joue ce scénario)', async () => {
@@ -185,13 +201,13 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(snack.mock.calls[0][0]).toContain('Une partie joue un chapitre de ce scénario.');
   });
 
-  it('une nouvelle scène naît vide dans son chapitre, sans table, et le déplie', async () => {
-    const {page, bouton, cliquer, repondre, sceneService} = await rendre();
-    repondre('Le texte de l’oracle');
+  it('une nouvelle scène s’ouvre directement dans l’éditeur, rangée dans son chapitre, qui se déplie', async () => {
+    const {page, bouton, cliquer, repondre, open} = await rendre();
+    repondre({id: 'nouvelle', titre: 'Le texte de l’oracle'});
 
     await cliquer(bouton('Scène', page.querySelectorAll('.sl-chapitre')[1]));
 
-    expect(sceneService.create).toHaveBeenCalledWith('Le texte de l’oracle', 'dv1', null);
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scene: null, chapitreId: 'dv1', siblings: [expect.objectContaining({id: 's0'}), expect.objectContaining({id: 's1'})]}});
     expect(page.querySelectorAll('.sl-chapitre-bascule')[1].getAttribute('aria-expanded')).toBe('true');
   });
 

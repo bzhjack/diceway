@@ -1,11 +1,11 @@
 import {BolSceneModel, SceneMeteo, SceneMoment} from '../../models/bol-scene.model';
 
 /** Données du dialogue « Préparer la scène » : la scène, et les autres scènes de son scénario vers
- * lesquelles une piste peut mener. */
-export interface SceneEditorDialogData {
-  readonly scene: BolSceneModel;
-  readonly siblings: readonly BolSceneModel[];
-}
+ * lesquelles une piste peut mener. Une nouvelle scène n'a pas encore de fiche : `scene` est null et `chapitreId`
+ * dit où la créer, à la suite des autres. */
+export type SceneEditorDialogData =
+  | {readonly scene: BolSceneModel; readonly siblings: readonly BolSceneModel[]}
+  | {readonly scene: null; readonly chapitreId: string; readonly siblings: readonly BolSceneModel[]};
 
 /** Valeur du formulaire de préparation : des textes vides plutôt que `null`, et un danger à 0 pour
  * « aucun ». */

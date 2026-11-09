@@ -831,6 +831,7 @@ class BolFightSessionService
             'defense'      => $demon->defense,
             'vitalite_max' => $demon->vitalite,
             'degats'       => $demon->degats,
+            'id_taille'    => $demon->id_taille,
             'pouvoirs'     => BolCombatantCopies::pouvoirs($demon),
         ];
     }

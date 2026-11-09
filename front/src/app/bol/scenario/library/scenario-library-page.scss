@@ -121,10 +121,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.sl-chapitre-compte--seul {
-  padding-left: 0.5rem;
-}
-
 .sl-pitch {
   margin: 0;
   padding: 0 1.25rem 0.75rem 3.25rem;
@@ -143,6 +139,10 @@
   padding: 0.25rem 1.25rem 0.5rem;
   font-size: 0.85rem;
   color: var(--dw-forge-caption);
+}
+
+.sl-vide--scenario {
+  padding: 1rem 1.25rem;
 }
 
 .sl-rien {
