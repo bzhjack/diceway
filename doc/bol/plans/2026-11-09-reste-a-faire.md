@@ -17,7 +17,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | Effort |
 | --- | --- | --- |
 | 1 | Combat : sorcellerie, foi, pouvoir | M |
-| 2 | Combat : confort et robustesse | à décider |
+| 2 | Combat : échec critique (si la table le demande) | — |
 | 3 | Images | hors code |
 
 ## 1. Combat : sorcellerie, foi, pouvoir
@@ -31,9 +31,8 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 - **Dé de foi** : il ne se donne que depuis la ligne de l'attaquant ou la carte de la cible (`tas-attaquant.html:102`, `tas-cible.html:39`).
   À garder tel quel, sauf besoin à la table.
 
-## 2. Combat : confort et robustesse
+## 2. Combat : échec critique (si la table le demande)
 
-- **Les jours après le combat** ne sont pas suivis : le jet quotidien du soigneur reste un rappel (M, à décider si utile).
 - **Échec critique** : il rapporte 1 PH, mais l'issue défavorable (« ce round et le suivant ») reste au MJ. Voulu (§ 8 de l'état des
   lieux) ; à revoir seulement si la table le demande.
 
