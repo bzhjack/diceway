@@ -89,7 +89,7 @@ export class TurnCibleStore {
                 0,
                 attackBonus(a, this.loadout.isTir(), this.loadout.brawl()),
                 stats.defense,
-                sommeModificateurs(modificateursPour(this.turn.effets(), {jet: 'attaque', attaquant: this.turn.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})) +
+                sommeModificateurs(modificateursPour(this.turn.effets(), {jet: 'attaque', attaquant: this.turn.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes, ignoreBouclier: this.loadout.ignoreBouclier()})) +
                   sommeModificateurs(this.loadout.extraAttackTerms()),
                 this.turn.legendaryBonus() ? 1 : 0,
                 resolvePostureAttackModifier(this.loadout.choice()?.posture ?? null, stats.protection) +

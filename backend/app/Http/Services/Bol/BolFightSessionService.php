@@ -927,6 +927,10 @@ class BolFightSessionService
             'type'    => $ha->arme?->type,
             // Portée de base (« 3 m », « 9 m / 18 m ») : le facteur de portée d'un tir en dépend.
             'portee'  => $ha->arme?->portee,
+            // Les notes qui jouent en combat (livre p. 49-50) : le fléau, le gourdin, l'arbalète.
+            'ignore_bouclier' => (bool) $ha->arme?->ignore_bouclier,
+            'non_letal'       => (bool) $ha->arme?->non_letal,
+            'rechargement'    => $ha->arme?->rechargement,
             'equipee' => true,
         ])->values()->toArray();
 

@@ -11,7 +11,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {equippedArmes} from '../../../shared/arme/arme-equipee';
 import {tokenForCard} from '../tapis/combat-turn.util';
 import {appliquerEvenement, idAleatoire} from '../tapis/combat-effects.util';
-import {HeroismeChange, ResolvedCombatStats} from '../../models/combat-attack.model';
+import {AttackRolled, HeroismeChange, ResolvedCombatStats} from '../../models/combat-attack.model';
 import {heroDetails} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 import {RessourceChange} from '../../models/magie-combat.model';
@@ -71,7 +71,17 @@ export class CombatStatsStore {
         id: 1000 + index,
         arme_id: 1000 + index,
         equipee: true,
-        arme: {id: null, arme: a.nom ?? '', type: a.type ?? 'M', degats: a.degats, portee: a.portee ?? null, notes: null},
+        arme: {
+          id: null,
+          arme: a.nom ?? '',
+          type: a.type ?? 'M',
+          degats: a.degats,
+          portee: a.portee ?? null,
+          notes: null,
+          ignore_bouclier: a.ignore_bouclier ?? false,
+          non_letal: a.non_letal ?? false,
+          rechargement: a.rechargement ?? null,
+        },
       }));
   });
 
@@ -198,15 +208,16 @@ export class CombatStatsStore {
     }
   }
 
-  /** Un jet d'attaque vient d'être fait contre cette cible : le registre le sait (le petit bouclier est dépensé pour ce round). */
-  onAttackRolled(target: TapisCard): void {
+  /** Un jet d'attaque vient d'être fait contre cette cible : le registre le sait (le petit bouclier est dépensé pour ce round, sauf
+   * contre une arme qui l'ignore). */
+  onAttackRolled({target, ignoreBouclier}: AttackRolled): void {
     const attaquant = this.combat.activeCard()?.key;
     if (!attaquant) {
       return;
     }
     // Le petit bouclier de la cible, s'il en porte un, est dépensé pour ce round.
     const stats = this.combat.selectedTarget()?.key === target.key ? this.targetStats() : (this.targetsStats().get(target.key) ?? null);
-    const petitBouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0;
+    const petitBouclier = !ignoreBouclier && (stats?.bouclierMalusUneAttaque ?? 0) > 0;
     this.combat.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key, petitBouclier}, idAleatoire)]}));
   }
 

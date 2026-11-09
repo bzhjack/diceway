@@ -1,7 +1,7 @@
 import {computed, effect, inject, Injectable, linkedSignal, untracked} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
-import {aDejaFeinte, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, sansTerme} from './combat-effects.util';
+import {aDejaFeinte, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRechargement, effetRenversement, enRechargement, sansTerme} from './combat-effects.util';
 import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {egratignure} from '../../heroisme-spend.util';
@@ -419,7 +419,12 @@ export class TurnFlowStore {
       this.attack.feintNoted.set(true);
       this.turn.effectAdded.emit(effetFeinte(target.key, this.turn.card().key, career.label));
     }
-    this.turn.attackRolled.emit(target);
+    // Une arbalète qui tire se recharge ensuite (livre p. 50) ; déjà en rechargement, elle ne repart pas pour un tour de plus.
+    const rechargement = this.loadout.rechargementDuTir();
+    if (rechargement && !enRechargement(this.turn.effets(), this.turn.card().key, rechargement.arme)) {
+      this.turn.effectAdded.emit(effetRechargement(this.turn.card().key, rechargement.arme, rechargement.rounds));
+    }
+    this.turn.attackRolled.emit({target, ignoreBouclier: this.loadout.ignoreBouclier()});
   }
 
   /** Faveur divine : 1 point d'héroïsme, et tous les dés du jet d'attaque se relancent — à table ou à l'écran. Le second jet est gardé. */
@@ -476,7 +481,7 @@ export class TurnFlowStore {
     }
     this.freezePlayed(target);
     this.conclude(target);
-    const hit = {target, damage, unarmed: this.loadout.unarmed()};
+    const hit = {target, damage, unarmed: this.loadout.unarmed(), nonLetal: this.loadout.nonLetal()};
     this.turn.damageApplied.emit(hit);
     this.resetRoll();
     this.lastHit.set(hit);
@@ -583,7 +588,7 @@ export class TurnFlowStore {
       return;
     }
     this.turn.targetHeroismeAdjusted.emit({card: target, delta: -1});
-    this.turn.damageApplied.emit({target: sbire, damage: Math.max(1, sbire.vitaliteCourante ?? 1), unarmed: this.loadout.unarmed()});
+    this.turn.damageApplied.emit({target: sbire, damage: Math.max(1, sbire.vitaliteCourante ?? 1), unarmed: this.loadout.unarmed(), nonLetal: this.loadout.nonLetal()});
     this.freezePlayed(target);
     this.conclude(target, false);
     this.resetRoll();

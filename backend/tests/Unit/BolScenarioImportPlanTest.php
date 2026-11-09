@@ -182,6 +182,38 @@ class BolScenarioImportPlanTest extends TestCase
         $this->assertContains('personnages.hippocampe.degats : obligatoire', $errors);
     }
 
+    public function test_a_custom_weapon_carries_its_combat_notes(): void
+    {
+        $data = $this->data();
+        $data['personnages']['surdral']['armes'][1] += ['ignore_bouclier' => true, 'non_letal' => true, 'rechargement' => 2];
+
+        $custom = BolScenarioImportPlan::fromArray($data, $this->catalog())->personnages['surdral']['armes'][1]['custom'];
+
+        $this->assertTrue($custom['ignore_bouclier']);
+        $this->assertTrue($custom['non_letal']);
+        $this->assertSame(2, $custom['rechargement']);
+    }
+
+    public function test_a_custom_weapon_has_no_combat_note_unless_the_file_says_so(): void
+    {
+        $custom = BolScenarioImportPlan::fromArray($this->data(), $this->catalog())->personnages['surdral']['armes'][1]['custom'];
+
+        $this->assertFalse($custom['ignore_bouclier']);
+        $this->assertFalse($custom['non_letal']);
+        $this->assertNull($custom['rechargement']);
+    }
+
+    public function test_combat_notes_are_checked(): void
+    {
+        $data = $this->data();
+        $data['personnages']['surdral']['armes'][1] += ['ignore_bouclier' => 'oui', 'rechargement' => 0];
+
+        $errors = $this->errors($data);
+
+        $this->assertContains('personnages.surdral.armes[1].ignore_bouclier : true ou false', $errors);
+        $this->assertContains('personnages.surdral.armes[1].rechargement : un nombre de rounds, de 1 à 9', $errors);
+    }
+
     public function test_a_creature_may_be_undead(): void
     {
         $data = $this->data();

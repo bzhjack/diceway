@@ -46,6 +46,9 @@ class BolArmeService
         $arme->portee = $payload['portee'];
         $arme->notes = $payload['notes'];
         $arme->deux_mains = $payload['deux_mains'] ?? false;
+        $arme->ignore_bouclier = $payload['ignore_bouclier'] ?? false;
+        $arme->non_letal = $payload['non_letal'] ?? false;
+        $arme->rechargement = $payload['rechargement'] ?? null;
         $arme->save();
         $this->flushCache();
 

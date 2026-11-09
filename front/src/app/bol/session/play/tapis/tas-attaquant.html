@@ -260,6 +260,18 @@
               À deux mains <em>{{ loadout.degatsDeuxMains() }}</em>
             </button>
           }
+          <!-- Les notes de l'arme qui jouent en combat (livre p. 50) : le gourdin, le fléau, l'arbalète -->
+          @if (loadout.canNonLetal()) {
+            <button type="button" class="tas-chip" [attr.aria-pressed]="loadout.nonLetal()" matTooltip="Au choix (livre p. 50) : la cible ne passe pas sous 0, elle tombe assommée." (click)="loadout.toggleNonLetal()">Non létal</button>
+          }
+          @if (loadout.ignoreBouclier()) {
+            <span class="tas-chip" matTooltip="Livre p. 50 : ni le petit ni le grand bouclier de la cible ne jouent contre ce coup.">Ignore les boucliers</span>
+          }
+          @if (loadout.rechargeNote(); as note) {
+            <span class="tas-chip" [matTooltip]="note">Se recharge</span>
+          } @else if (loadout.rechargementDuTir(); as r) {
+            <span class="tas-chip" matTooltip="Après le tir, elle se recharge : elle ne tire plus avant que ces rounds soient passés.">Rechargement <em>{{ r.rounds }} {{ r.rounds > 1 ? 'rounds' : 'round' }}</em></span>
+          }
           @if (distance) {
             <span class="tas-segm tas-segm--mini" role="group" aria-label="Distance">
               <button type="button" class="tas-seg" [attr.aria-pressed]="!loadout.useTir()" (click)="loadout.useTir.set(false)"><b>Mêlée</b></button>

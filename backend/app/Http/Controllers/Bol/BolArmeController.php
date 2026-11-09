@@ -115,6 +115,9 @@ class BolArmeController extends Controller
             'portee' => ['nullable', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
             'deux_mains' => ['sometimes', 'boolean'],
+            'ignore_bouclier' => ['sometimes', 'boolean'],
+            'non_letal' => ['sometimes', 'boolean'],
+            'rechargement' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:9'],
         ]);
 
         $validated['portee'] = isset($validated['portee']) && $validated['portee'] !== '' ? $validated['portee'] : null;

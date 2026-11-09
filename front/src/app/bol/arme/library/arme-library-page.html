@@ -77,6 +77,13 @@
         </mat-form-field>
 
         <mat-checkbox class="md:col-span-2" [formField]="itemForm.deux_mains">Se tient à deux mains</mat-checkbox>
+        <!-- Les notes qui jouent en combat (livre p. 50) -->
+        <mat-checkbox class="md:col-span-2" [formField]="itemForm.ignore_bouclier">Ignore les boucliers (comme le fléau)</mat-checkbox>
+        <mat-checkbox class="md:col-span-2" [formField]="itemForm.non_letal">Peut assommer sans tuer (comme le gourdin)</mat-checkbox>
+        <div class="arme-rechargement">
+          <span>Rounds pour recharger après un tir (0 : aucun)</span>
+          <dw-value-stepper [formField]="itemForm.rechargement" ariaLabel="Rounds pour recharger après un tir" />
+        </div>
         </form>
       </bol-equipment-form-panel>
     }

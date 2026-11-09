@@ -56,6 +56,9 @@ export interface RollContext {
   readonly bouclier: number;
   /** Ce qu'un grand bouclier de la cible ajoute déjà à sa défense : rendu à l'attaquant si la cible perd le bénéfice de son bouclier. */
   readonly bouclierToutes: number;
+  /** L'attaquant frappe d'une arme qui ignore les boucliers (le fléau, livre p. 50) : ni le petit ni le grand bouclier de la cible ne
+   * jouent. */
+  readonly ignoreBouclier?: boolean;
   /** Noms des cartes (clé → nom), pour dire à qui est un effet dans la puce. */
   readonly noms?: Readonly<Record<string, string>>;
 }

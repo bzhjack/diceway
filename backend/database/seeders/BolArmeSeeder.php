@@ -51,14 +51,16 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Fléau',
                 'type' => 'M',
                 'degats' => 'd6',
-                'notes' => 'Ignore les boucliers.'
+                'notes' => 'Ignore les boucliers.',
+                'ignore_bouclier' => true
             ],
             [
                 'id' => 6,
                 'arme' => 'Gourdin',
                 'type' => 'M',
                 'degats' => 'd6M',
-                'notes' => 'Option : dégâts non létaux.'
+                'notes' => 'Option : dégâts non létaux.',
+                'non_letal' => true
             ],
             [
                 'id' => 7,
@@ -114,7 +116,8 @@ class BolArmeSeeder extends Seeder
                 'degats' => 'd6',
                 'portee' => '30m',
                 'notes' => 'Arme à deux mains ; rechargement : 1 round de combat',
-                'deux_mains' => true
+                'deux_mains' => true,
+                'rechargement' => 1
             ],
             [
                 'id' => 14,
@@ -123,7 +126,8 @@ class BolArmeSeeder extends Seeder
                 'degats' => 'd6B',
                 'portee' => '45m',
                 'notes' => 'Arme à deux mains ; rechargement : 2 rounds de combat',
-                'deux_mains' => true
+                'deux_mains' => true,
+                'rechargement' => 2
             ],
             [
                 'id' => 15,

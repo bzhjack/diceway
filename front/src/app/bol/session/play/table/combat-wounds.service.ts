@@ -331,16 +331,21 @@ export class CombatWoundsService {
 
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */
   onHitApplied(hit: AppliedHit): void {
-    // Une bagarre à mains nues ne fait pas passer sous 0 (livre p. 64) : la cible perd seulement connaissance, sans coma ni
-    // « Défier la mort ».
+    // Une bagarre à mains nues (livre p. 64), comme un coup de gourdin non létal (p. 50), ne fait pas passer sous 0 : la cible perd
+    // seulement connaissance, sans coma ni « Défier la mort ».
+    const sansTuer = hit.unarmed || hit.nonLetal === true;
     const before = hit.target.vitaliteCourante ?? 0;
-    const damage = hit.unarmed ? Math.min(hit.damage, Math.max(0, before)) : hit.damage;
+    const damage = sansTuer ? Math.min(hit.damage, Math.max(0, before)) : hit.damage;
     if (damage !== 0) {
       this.applyDamageTo(hit.target, -damage, this.stats.targetStats());
     }
-    // Les dégâts d'une bagarre se récupèrent en totalité après le combat : le registre les retient, et la cible mise à 0 est assommée.
-    if (hit.unarmed && damage > 0) {
-      const nouveaux = [effetDegatsMainsNues(hit.target.key, damage), ...(before - damage === 0 ? [effetAssomme(hit.target.key)] : [])];
+    // La cible mise à 0 est assommée ; les dégâts d'une bagarre, eux seuls, se récupèrent en totalité après le combat : le registre les
+    // retient.
+    const nouveaux =
+      sansTuer && damage > 0
+        ? [...(hit.unarmed ? [effetDegatsMainsNues(hit.target.key, damage)] : []), ...(before - damage === 0 ? [effetAssomme(hit.target.key)] : [])]
+        : [];
+    if (nouveaux.length > 0) {
       this.combat.saveEtat((etat) => ({
         ...etat,
         effets: nouveaux.reduce<readonly CombatEffect[]>((effets, effet) => appliquerEvenement(effets, {type: 'ajout-manuel', effet}, idAleatoire), etat.effets),

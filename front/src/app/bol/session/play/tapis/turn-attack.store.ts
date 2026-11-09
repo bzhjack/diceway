@@ -196,7 +196,7 @@ export class TurnAttackStore {
     const t = this.turn.targetStats();
     const target = this.turn.target();
     return target
-      ? modificateursPour(this.turn.effets(), {jet: 'attaque', attaquant: this.turn.card().key, cible: target.key, bouclier: t?.bouclierMalusUneAttaque ?? 0, bouclierToutes: t?.bouclierDefenseToutes ?? 0, noms: this.noms()})
+      ? modificateursPour(this.turn.effets(), {jet: 'attaque', attaquant: this.turn.card().key, cible: target.key, bouclier: t?.bouclierMalusUneAttaque ?? 0, bouclierToutes: t?.bouclierDefenseToutes ?? 0, ignoreBouclier: this.loadout.ignoreBouclier(), noms: this.noms()})
       : [];
   });
 

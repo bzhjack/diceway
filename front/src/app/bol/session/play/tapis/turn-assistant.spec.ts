@@ -2,12 +2,12 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {BolArmeModel, BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
+import {AppliedHit, AttackRolled, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {TapisCard} from '../../models/tapis.model';
 import {RessourceChange, RessourcesMagiques, SortSaisie} from '../../models/magie-combat.model';
 import {AttackChoice} from '../../models/attack-options.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
-import {effetDeFoi} from './combat-effects.util';
+import {effetDeFoi, effetRechargement} from './combat-effects.util';
 import {effetSortPaye, saisieSortParDefaut} from '../../magie-combat.util';
 import {MatDialog} from '@angular/material/dialog';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -78,7 +78,7 @@ describe('TurnAssistantComponent', () => {
   let element: HTMLElement;
   const events = {
     target: [] as (TapisCard | null)[],
-    rolled: [] as TapisCard[],
+    rolled: [] as AttackRolled[],
     applied: [] as AppliedHit[],
     endTurn: [] as boolean[],
     totalDefense: [] as boolean[],
@@ -195,7 +195,7 @@ describe('TurnAssistantComponent', () => {
 
       expect(texte()).toContain('Raté');
       expect(texte()).toContain('il manquait 2');
-      expect(events.rolled).toEqual([cible]);
+      expect(events.rolled).toEqual([{target: cible, ignoreBouclier: false}]);
       await cliquer('Fin du tour');
       expect(events.endTurn).toEqual([false]);
     });
@@ -212,7 +212,7 @@ describe('TurnAssistantComponent', () => {
       expect(texte()).toContain('= 5');
 
       await cliquer('Appliquer');
-      expect(events.applied).toEqual([{target: cible, damage: 5, unarmed: false}]);
+      expect(events.applied).toEqual([{target: cible, damage: 5, unarmed: false, nonLetal: false}]);
     });
 
     it('un double 1 rate toujours, un double 6 touche toujours', async () => {
@@ -277,6 +277,85 @@ describe('TurnAssistantComponent', () => {
 
       expect(tuile('Attaque')!.classList).not.toContain('tas-tile--note');
       expect(tuile('Attaque')!.querySelector('.sr-only')).toBeNull();
+    });
+  });
+
+  describe('les notes d’armes (livre p. 50)', () => {
+    const fleau = arme(3, {arme: 'Fléau', ignore_bouclier: true});
+    const gourdin = arme(4, {arme: 'Gourdin', degats: 'd6M', non_letal: true});
+    const arbalete = arme(5, {arme: 'Arbalète', type: 'T', portee: '30m', rechargement: 1});
+    const petitBouclier = stats({herosId: null, heroisme: null, bouclierMalusUneAttaque: 1});
+
+    it('le petit bouclier de la cible joue contre une épée', async () => {
+      await viser({targetStats: petitBouclier});
+
+      expect(texte()).toContain('8+');
+    });
+
+    it('le fléau ignore le petit bouclier, et ne le dépense pas', async () => {
+      await viser({armes: [fleau], ownedArmes: [fleau], targetStats: petitBouclier});
+
+      expect(texte()).toContain('Ignore les boucliers');
+      expect(texte()).toContain('7+');
+      await saisirAttaque('7');
+      expect(events.rolled).toEqual([{target: cible, ignoreBouclier: true}]);
+    });
+
+    it('le gourdin frappe en non létal si on le choisit', async () => {
+      await viser({armes: [gourdin], ownedArmes: [gourdin]});
+
+      await cliquer('Non létal');
+      expect(bouton('Non létal').getAttribute('aria-pressed')).toBe('true');
+      await saisirAttaque('8');
+      await saisirDegats('4');
+      await cliquer('Appliquer');
+
+      expect(events.applied).toEqual([{target: cible, damage: 5, unarmed: false, nonLetal: true}]);
+    });
+
+    it('sans le choix, le gourdin blesse comme une autre arme', async () => {
+      await viser({armes: [gourdin], ownedArmes: [gourdin]});
+
+      expect(bouton('Non létal').getAttribute('aria-pressed')).toBe('false');
+      await saisirAttaque('8');
+      await saisirDegats('4');
+      await cliquer('Appliquer');
+
+      expect(events.applied[0]?.nonLetal).toBe(false);
+    });
+
+    it('une autre arme ne propose pas le non létal', async () => {
+      await viser();
+
+      expect(texte()).not.toContain('Non létal');
+    });
+
+    it('l’arbalète qui tire part en rechargement', async () => {
+      await viser({armes: [arbalete], ownedArmes: [arbalete]});
+
+      expect(texte()).toContain('Rechargement 1 round');
+      await saisirAttaque('8');
+
+      expect(events.nouveaux).toContainEqual(expect.objectContaining({origine: 'rechargement', porteur: 'hero-1', libelle: 'recharge : Arbalète', duree: {type: 'rounds', restants: 2}}));
+    });
+
+    it('en rechargement, l’arbalète ne se prend pas : il passe à mains nues', async () => {
+      await viser({armes: [arbalete], ownedArmes: [arbalete], effets: [{...effetRechargement('hero-1', 'Arbalète', 1), id: 'e-1'}]});
+
+      const bouton = element.querySelector<HTMLButtonElement>('button[aria-label^="Arbalète"]')!;
+      expect(bouton.getAttribute('aria-disabled')).toBe('true');
+      expect(bouton.getAttribute('aria-pressed')).toBe('false');
+      expect(element.querySelector<HTMLButtonElement>('button[aria-label^="Mains nues"]')!.getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('une arbalète déjà en rechargement ne repart pas pour un tour de plus', async () => {
+      const seule = arme(6, {arme: 'Arbalète', type: 'T', portee: '30m', rechargement: 1});
+      await viser({card: carte({kind: 'pnj', key: 'pnj-2', rang: 'Piétaille', joueur: null, heroisme: null}), armes: [seule], ownedArmes: [seule], effets: [{...effetRechargement('pnj-2', 'Arbalète', 1), id: 'e-1'}]});
+
+      expect(texte()).toContain('Se recharge');
+      await saisirAttaque('8');
+
+      expect(events.nouveaux.filter((e) => e.origine === 'rechargement')).toEqual([]);
     });
   });
 

@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables) et le 2026-11-09 (fin de la clôture des tables ; notes d'armes : fléau, gourdin, arbalète). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/bol/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/bol/rules/exemples-de-jets.md`.
 
@@ -55,6 +55,9 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 - **Modificateur du MJ** : de −6 à +6, à côté du dé du MJ.
 - **Carrière** (manœuvre ou feinte) : le rang d'une carrière du héros, ou du rival (créé comme un héros, livre p. 66 ; `feinteAvecCarrieres`), à l'attaque ou aux dégâts. La feinte est notée sur la cible : retentée par le même attaquant, l'assistant le signale.
 - **PNJ** : considérés comme équipés de toutes leurs armes et armures.
+- **Fléau** (livre p. 50, `ignore_bouclier` de l'arme) : ni le petit ni le grand bouclier de la cible ne jouent ; le grand, déjà compté dans sa défense, est rendu à l'attaquant (« + N grand bouclier ignoré »), et le petit n'est pas dépensé pour le round (`AttackRolled.ignoreBouclier`). La case des armes l'annonce : « Ignore les boucliers ».
+- **Arbalète** (livre p. 50, `rechargement` de l'arme, en rounds) : son premier jet contre une cible pose sur le tireur l'effet « recharge : Arbalète » (`effetRechargement`), qui dure le round du tir plus 1 round complet (2 pour l'arbalète lourde) ; tant qu'il est là, l'arme est grisée (`enRechargement`) et il prend une autre arme, ou ses mains nues. Sans autre arme (piétaille arbalétrière), elle reste en main avec « Se recharge » : le MJ décide. L'effet se voit sur la frise et se retire à la main.
+- **Armes de jet** : une arme de mêlée qui a une portée (dague, hache, lance…) propose « Mêlée / Tir » ; lancée, sa vigueur compte pour moitié.
 
 ## 4. Le jet de dégâts
 
@@ -63,6 +66,7 @@ Formule : `dé de l'arme + vigueur − protection de la cible + effets en cours`
 - Dés : d3, d6, d6M (le moins bon de deux), d6B (le meilleur de deux).
 - À distance et à mains nues, la vigueur compte pour moitié (arrondie à l'inférieur).
 - Bagarre à mains nues : la case « Bagarre » fait jouer la vigueur à la place de l'agilité pour l'attaque. Un coup à mains nues ne fait pas passer sous 0 : la cible est assommée, sans coma ni « Défier la mort », et ses dégâts à mains nues reviennent en entier après le combat.
+- Gourdin (livre p. 50, `non_letal` de l'arme) : la case « Non létal », au choix, fait de même pour la chute (pas sous 0, assommée) ; ses dégâts restent des blessures, qui ne reviennent pas en entier (le livre ne le dit que des mains nues ; `AppliedHit.nonLetal`).
 - Avec moins de 0 en vigueur, les armes lourdes (d6B) sont grisées : elles ne se manient pas.
 - La protection est la valeur fixe de l'armure portée ; un casque y ajoute +1, seulement avec une armure (livre p. 52), et Peau dure +1, même sans armure (`equippedProtection`, `combat-attack.util.ts`). Un démon tire sa protection de ses pouvoirs : Cuirassé d6 (4), sinon Armure d6-2 (2) (`demonProtection`, `combat-play.util.ts`, noms comparés sans accents). Le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
 - « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort » ; sous −5, il se stabilise et ne perd plus de vitalité.
@@ -202,7 +206,7 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Nouveau jet de réaction** : il garde les cartes retirées et les rivaux enfuis, et les effets qui durent tout le combat (`BolCombatState::nouveauJet`).
 - **Sort** : le tour de l'assistant est identifié par le round et la carte (`turnKey`) ; un nouveau jet annule un échec critique accepté ; une fois ses dégâts appliqués, le sort est figé ; pas de sort en défense totale.
 - **Après combat** : seuls les soigneurs en état de soigner sont proposés.
-- **Clore la table** (menu de la table, bandeau de l'accueil) : termine d'abord un combat en cours, sans les soins d'après combat, puis passe la table au statut « terminée » ; « Mes sessions » la marque « Close » et « Reprendre » la rouvre.
+- **Clore la table** : retiré avec l'accueil par parties (`2026-11-04`). Une partie n'a plus que les statuts `libre` et `combat` et reste jusqu'à sa suppression (voir `CLAUDE.md`, « Parties ») : rien ne termine plus un combat de l'extérieur.
 - **Action perdue posée pendant son tour** : « Perd sa prochaine action » posé sur la carte active vise son prochain tour ; il est différé (origine `egratignure-differee`) et armé à la fin de son tour, ou au plus tard au round suivant (`poserEffet`, `combat-turn.util.ts`). Recharger la page ne fait donc plus sauter le tour en cours. Limite : « Rendre la main » à cette carte lui fait sauter le tour rouvert.
 - **Parade** : le choix « Bouclier / Arme » tient tant que le tour et le défenseur ne changent pas (`TurnCibleStore.parryWith`).
 - **Fiche de PNJ modifiée** : l'enregistrer met à jour ses lignes de table (stats, armes, foi, pouvoir) ; la foi ou le pouvoir déjà dépensés ne sont pas rendus, seulement ramenés au nouveau maximum. La vilénie de table n'est pas recalculée.

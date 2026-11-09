@@ -197,6 +197,19 @@ describe('SessionPlayPageComponent', () => {
       expect(service.applyDamage).toHaveBeenCalledWith('s1', 'pnj', 7, -2);
     });
 
+    it('au gourdin non létal, la cible tombe assommée à 0, mais ses blessures restent des blessures', async () => {
+      await rendre(session({pnjs: [pnjRow(7, 2) as never]}));
+      service.updateCombatState.mockClear();
+      const cible = table.cards().find((card) => card.key === 'pnj-7')!;
+
+      wounds.onHitApplied({target: cible, damage: 5, unarmed: false, nonLetal: true});
+      await stable();
+
+      expect(service.applyDamage).toHaveBeenCalledWith('s1', 'pnj', 7, -2);
+      const effets = (service.updateCombatState.mock.calls.at(-1)?.[1] as EtatCombatDto).effets as {origine: string}[];
+      expect(effets.map((e) => e.origine)).toEqual(['assomme']);
+    });
+
     it('quand tous les adversaires sont tombés, la fin du combat s’annonce une seule fois', async () => {
       await rendre(session({pnjs: [pnjRow(7, 0) as never]}));
       expect(dialogOpen).toHaveBeenCalledTimes(1);

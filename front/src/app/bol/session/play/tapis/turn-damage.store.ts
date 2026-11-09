@@ -38,8 +38,8 @@ export class TurnDamageStore {
   /** Les dégâts du coup : ceux de l'arme ou du profil, ou ceux du sort. */
   private readonly degats = computed(() => (this.sort() ? this.loadout.sortDegats() : this.loadout.degats()));
 
-  /** À mains nues : jamais pour un sort. */
-  private readonly unarmed = computed(() => !this.sort() && this.loadout.unarmed());
+  /** Un coup qui ne tue pas (à mains nues, ou au gourdin en non létal) : jamais pour un sort. */
+  private readonly sansTuer = computed(() => !this.sort() && this.loadout.sansTuer());
 
   /** Les dégâts de l'arme ou du profil, lus en entier (dé, multiplicateur, modificateur, ou valeur fixe) ; `null` pour des dégâts
    * spéciaux, dont le MJ tape le total. */
@@ -277,8 +277,8 @@ export class TurnDamageStore {
     const target = this.turn.target();
     const current = target?.vitaliteCourante ?? null;
     const damage = this.damage();
-    // Une bagarre à mains nues ne fait pas passer sous 0 : la cible est assommée.
-    const after = current !== null && damage !== null && damage > 0 ? (this.unarmed() ? Math.min(current, Math.max(0, current - damage)) : current - damage) : null;
+    // Une bagarre à mains nues, ou un coup non létal, ne fait pas passer sous 0 : la cible est assommée.
+    const after = current !== null && damage !== null && damage > 0 ? (this.sansTuer() ? Math.min(current, Math.max(0, current - damage)) : current - damage) : null;
     return {current, max: target?.vitaliteMax ?? null, after, loss: after === null || current === null ? 0 : current - after, out: after !== null && after <= 0};
   });
 

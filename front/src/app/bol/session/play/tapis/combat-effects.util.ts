@@ -25,6 +25,10 @@ const DE_FOI_BONUS = 'de-foi-bonus';
 const DE_FOI_MALUS = 'de-foi-malus';
 /** La carte est paralysée par le poison d'un démon : son tour est sauté (et compté) tant que le MJ ne retire pas l'effet. */
 const PARALYSE = 'paralyse';
+/** Trace : la carte recharge son arme (l'arbalète, livre p. 50) ; le libellé nomme l'arme. */
+const RECHARGEMENT = 'rechargement';
+/** Longueur maximale d'un libellé d'effet, celle que garde le serveur. */
+const LIBELLE_MAX = 60;
 
 const POSTURE_ORIGINE: Readonly<Record<string, string>> = {
   defensive: 'posture-defensive',
@@ -107,14 +111,17 @@ export function modificateursPour(effets: readonly CombatEffect[], contexte: Rol
   }
 
   // Le petit bouclier ne joue qu'une fois par round ; le grand joue contre toutes les attaques. Les deux tombent quand la carte perd
-  // le bénéfice de son bouclier.
+  // le bénéfice de son bouclier, ou contre une arme qui ignore les boucliers (le fléau) : le grand est alors rendu à l'attaquant, car il
+  // compte déjà dans la défense de la fiche.
   const sansBouclier = effets.some((effet) => effet.porteur === cible && effet.origine === SANS_BOUCLIER);
   const depense = effets.some((effet) => effet.porteur === cible && effet.origine === BOUCLIER_DEPENSE);
-  if (jet === 'attaque' && contexte.bouclier > 0 && !sansBouclier && !depense) {
+  const ignore = contexte.ignoreBouclier === true;
+  if (jet === 'attaque' && contexte.bouclier > 0 && !sansBouclier && !depense && !ignore) {
     termes.push({effetId: null, label: puce(-contexte.bouclier, 'bouclier'), valeur: -contexte.bouclier, tone: 'minus'});
   }
-  if (jet === 'attaque' && contexte.bouclierToutes > 0 && sansBouclier) {
-    termes.push({effetId: null, label: puce(contexte.bouclierToutes, 'grand bouclier perdu'), valeur: contexte.bouclierToutes, tone: 'plus'});
+  if (jet === 'attaque' && contexte.bouclierToutes > 0 && (sansBouclier || ignore)) {
+    const label = sansBouclier ? 'grand bouclier perdu' : 'grand bouclier ignoré';
+    termes.push({effetId: null, label: puce(contexte.bouclierToutes, label), valeur: contexte.bouclierToutes, tone: 'plus'});
   }
   return termes;
 }
@@ -524,7 +531,7 @@ export function sansActionPerdue(effets: readonly CombatEffect[], carte: string)
 /** Ce que la frise dit des effets d'une carte, en infobulle : ceux qui ont une valeur, et la trace d'un tour sauté. */
 export function effetsDeLaFrise(effets: readonly CombatEffect[], carte: string): readonly string[] {
   return effets
-    .filter((effet) => effet.porteur === carte && (effet.valeur !== 0 || effet.origine === ACTION_SAUTEE))
+    .filter((effet) => effet.porteur === carte && (effet.valeur !== 0 || effet.origine === ACTION_SAUTEE || effet.origine === RECHARGEMENT))
     .map((effet) => `${libelleEffet(effet)} · ${libelleDuree(effet.duree)}`);
 }
 
@@ -611,3 +618,20 @@ export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: st
     creer: effetActionPerdue,
   },
 ];
+
+/** Le libellé de l'effet qui recharge cette arme : il la nomme, coupé comme le serveur le garde. */
+function libelleRechargement(arme: string): string {
+  return `recharge : ${arme}`.slice(0, LIBELLE_MAX);
+}
+
+/** Une arme à recharger vient de tirer (l'arbalète : 1 round complet, l'arbalète lourde : 2 ; livre p. 50) : elle ne resservira qu'une
+ * fois ces rounds passés. L'effet compte le round du tir en plus : il tombe au début du round où elle est de nouveau prête. */
+export function effetRechargement(porteur: string, arme: string, rounds: number): NewEffect {
+  return {origine: RECHARGEMENT, libelle: libelleRechargement(arme), porteur, stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'rounds', restants: rounds + 1}, manuel: false};
+}
+
+/** Vrai si la carte est en train de recharger cette arme. */
+export function enRechargement(effets: readonly CombatEffect[], carte: string, arme: string): boolean {
+  const libelle = libelleRechargement(arme);
+  return effets.some((effet) => effet.porteur === carte && effet.origine === RECHARGEMENT && effet.libelle === libelle);
+}

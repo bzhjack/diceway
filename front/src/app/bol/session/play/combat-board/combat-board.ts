@@ -3,7 +3,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ActionRollCarriere} from '../../models/action-roll.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
+import {AppliedHit, AttackRolled, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
 import {RessourceChange} from '../../models/magie-combat.model';
@@ -54,7 +54,7 @@ export class CombatBoardComponent {
   readonly hordeChanged = output<readonly string[]>();
   readonly targetSelected = output<TapisCard | null>();
   readonly sheetRequested = output<TapisCard>();
-  readonly attackRolled = output<TapisCard>();
+  readonly attackRolled = output<AttackRolled>();
   readonly effectRemoved = output<string>();
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();

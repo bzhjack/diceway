@@ -20,9 +20,15 @@ class BolArme extends Model
         'portee',
         'notes',
         'deux_mains',
+        'ignore_bouclier',
+        'non_letal',
+        'rechargement',
     ];
     protected $casts = [
         'id' => 'integer',
         'deux_mains' => 'boolean',
+        'ignore_bouclier' => 'boolean',
+        'non_letal' => 'boolean',
+        'rechargement' => 'integer',
     ];
 }

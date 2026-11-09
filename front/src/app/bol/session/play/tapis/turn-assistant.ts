@@ -4,7 +4,7 @@ import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {ActionRollCarriere} from '../../models/action-roll.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
+import {AppliedHit, AttackRolled, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
 import {RessourceChange} from '../../models/magie-combat.model';
@@ -80,7 +80,7 @@ export class TurnAssistantComponent {
   readonly targetSelected = output<TapisCard | null>();
   /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */
   readonly sheetRequested = output<TapisCard>();
-  readonly attackRolled = output<TapisCard>();
+  readonly attackRolled = output<AttackRolled>();
   readonly effectRemoved = output<string>();
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();

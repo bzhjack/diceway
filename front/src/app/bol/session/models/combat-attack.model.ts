@@ -64,12 +64,21 @@ export interface VitaliteChange {
 /** Ce qu'une cible interpose dans une parade in extremis, et qui est brisé. */
 export type ObjetDeParade = 'bouclier' | 'arme';
 
+/** Un jet d'attaque vient d'être fait contre cette cible. `ignoreBouclier` : d'une arme qui ignore les boucliers (le fléau), qui ne
+ * dépense donc pas le petit bouclier de la cible. */
+export interface AttackRolled {
+  readonly target: TapisCard;
+  readonly ignoreBouclier: boolean;
+}
+
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
 export interface AppliedHit {
   readonly target: TapisCard;
   readonly damage: number;
   /** Porté à mains nues : ces dégâts se récupèrent en totalité après le combat. */
   readonly unarmed: boolean;
+  /** Porté en non létal (le gourdin, livre p. 50) : la cible ne passe pas sous 0, elle tombe assommée ; les dégâts restent des blessures. */
+  readonly nonLetal?: boolean;
   /** Paré in extremis par la cible (1 point d'héroïsme ou de vilénie) : ce qu'elle a interposé, et qui est brisé ; `sbire` pour le
    * « bouclier humain » d'un rival, dont le sbire encaisse le coup. */
   readonly parried?: ObjetDeParade | 'sbire';

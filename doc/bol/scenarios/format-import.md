@@ -79,7 +79,8 @@ Un personnage est soit une fiche créée pour le scénario, soit une référence
 - **Armes :**
   - une chaîne désigne une arme du catalogue ;
   - un objet avec `degats` crée une arme propre au scénario (`type` : `M` pour mêlée, `T` pour tir ; `portee`
-    `notes` et `deux_mains` — `true` si elle se tient à deux mains — facultatifs). Elle est créée dans la bibliothèque du compte, retrouvée par son nom au réimport.
+    `notes`, `deux_mains` — `true` si elle se tient à deux mains —, `ignore_bouclier` — `true` comme le fléau —, `non_letal` — `true`
+    si elle peut assommer sans tuer, comme le gourdin — et `rechargement` — rounds pour recharger, 1 à 9, comme l'arbalète — facultatifs). Elle est créée dans la bibliothèque du compte, retrouvée par son nom au réimport.
 - **Équipement :** le PNJ porte toutes ses armes et armures.
 - **Vilénie d'un rival :** sa valeur dans le livre, sinon 3, à signaler dans le commentaire de la fiche (consigne de Lionel du
   2026-10-23).

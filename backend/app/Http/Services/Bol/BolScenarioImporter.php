@@ -186,7 +186,7 @@ final class BolScenarioImporter
      * Une arme propre au scénario, dans la bibliothèque de l'utilisateur : retrouvée par son nom et mise à jour,
      * ou créée.
      *
-     * @param array<string, string|bool|null> $custom
+     * @param array<string, string|bool|int|null> $custom
      */
     private function customArme(string $userId, array $custom): int|string
     {

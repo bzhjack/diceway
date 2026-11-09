@@ -3,7 +3,7 @@ import {form, max, min} from '@angular/forms/signals';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ModifierTerm} from '../../models/combat-effect.model';
 import {netDiceModifier} from '../../action-roll.util';
-import {desDeFoi, doitUnDeDeMalus, POSTURE_DEFENSE} from './combat-effects.util';
+import {desDeFoi, doitUnDeDeMalus, enRechargement, POSTURE_DEFENSE} from './combat-effects.util';
 import {changerCercle, cercleSort, CERCLES_SORT, coutSort, degatsSort, difficulteSort, DIFFICULTES_SORT, pouvoirSuffisant, saisieSortParDefaut, sortPayeCeRound, sortSansJet} from '../../magie-combat.util';
 import {CercleSort, SortSaisie} from '../../models/magie-combat.model';
 import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
@@ -56,9 +56,19 @@ export class TurnLoadoutStore {
     (this.turn.attacker()?.vigueur ?? 0) < 0 ? new Set(this.displayArmes().filter(isHeavyWeapon).map((a) => a.id)) : new Set(),
   );
 
+  /** Les armes qu'il recharge encore (l'arbalète après un tir, livre p. 50) : elles ne tirent pas tant que l'effet est là. */
+  private readonly enRecharge = computed<ReadonlySet<number | undefined>>(() => {
+    const effets = this.turn.effets();
+    const carte = this.turn.card().key;
+    return new Set(this.displayArmes().filter((a) => (a.arme?.rechargement ?? 0) > 0 && enRechargement(effets, carte, a.arme?.arme ?? '')).map((a) => a.id));
+  });
+
+  /** Les armes qu'il ne peut pas prendre ce tour : trop lourdes pour lui, ou encore en rechargement. */
+  private readonly indisponibles = computed<ReadonlySet<number | undefined>>(() => new Set([...this.heavyForbidden(), ...this.enRecharge()]));
+
   readonly effectiveArme = computed(() => {
     const list = this.displayArmes();
-    const allowed = list.filter((a) => !this.heavyForbidden().has(a.id));
+    const allowed = list.filter((a) => !this.indisponibles().has(a.id));
     // Un tireur (son tir dépasse sa mêlée) part d'office sur son arme de tir : l'archer prend son arc, pas sa dague.
     const preferred = this.prefersTir() ? allowed.find((a) => a.arme?.type === 'T') : undefined;
     return allowed.find((a) => a.id === this.selectedArmeId()) ?? preferred ?? allowed[0] ?? list[0] ?? null;
@@ -97,6 +107,36 @@ export class TurnLoadoutStore {
   readonly deuxMains = computed(() => this.polyvalente() && this.deuxMainsChoisi() && this.deuxMainsInterdit() === null);
 
   readonly degatsDeuxMains = computed(() => degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, true));
+
+  /** Frappe d'une arme qui ignore les boucliers (le fléau, livre p. 50) : ni le petit ni le grand bouclier de la cible ne jouent. */
+  readonly ignoreBouclier = computed(() => !this.sortMode() && this.hordeSize() === 0 && this.effectiveArme()?.arme?.ignore_bouclier === true);
+
+  /** Dégâts non létaux (le gourdin, livre p. 50), au choix de l'attaquant : la cible ne passe pas sous 0, elle tombe assommée. */
+  private readonly nonLetalChoisi = linkedSignal<string, boolean>({source: () => this.turn.turnKey(), computation: () => false});
+
+  readonly canNonLetal = computed(() => !this.sortMode() && this.hordeSize() === 0 && !this.unarmed() && this.effectiveArme()?.arme?.non_letal === true);
+
+  readonly nonLetal = computed(() => this.canNonLetal() && this.nonLetalChoisi());
+
+  /** Le coup ne tue pas : à mains nues, ou d'une arme non létale choisie comme telle. La cible mise à 0 est assommée. */
+  readonly sansTuer = computed(() => this.unarmed() || this.nonLetal());
+
+  /** L'arme en main se recharge après ce tir (l'arbalète : 1 round complet, l'arbalète lourde : 2) ; `null` sinon. */
+  readonly rechargementDuTir = computed<{readonly arme: string; readonly rounds: number} | null>(() => {
+    const arme = this.effectiveArme()?.arme;
+    const rounds = arme?.rechargement ?? 0;
+    return !this.sortMode() && this.hordeSize() === 0 && arme && rounds > 0 ? {arme: arme.arme, rounds} : null;
+  });
+
+  /** L'arme en main se recharge encore : il n'en a pas d'autre à prendre. */
+  readonly rechargeNote = computed(() => {
+    const arme = this.effectiveArme();
+    return arme && this.enRecharge().has(arme.id) ? `${arme.arme?.arme ?? 'Son arme'} se recharge : elle ne tire pas ce round.` : null;
+  });
+
+  toggleNonLetal(): void {
+    this.nonLetalChoisi.update((choisi) => !choisi);
+  }
 
   /** Modificateur libre du MJ au jet d'attaque (circonstances), comme sur le jet d'action : il repart de 0 à chaque carte active. */
   readonly freeModifier = linkedSignal({source: () => this.turn.turnKey(), computation: () => 0});
@@ -591,9 +631,9 @@ export class TurnLoadoutStore {
     return this.isDualWieldSelected() && arme.id === this.effectiveOffHand()?.id ? 2 : null;
   }
 
-  /** Une arme qu'il ne peut pas prendre : trop lourde pour lui, ou impossible à deux armes. */
+  /** Une arme qu'il ne peut pas prendre : trop lourde pour lui, en rechargement, ou impossible à deux armes. */
   armeInterdite(arme: BolHerosArmeModel): boolean {
-    return this.heavyForbidden().has(arme.id) || (this.isDualWieldSelected() && !isDualWieldWeapon(arme));
+    return this.indisponibles().has(arme.id) || (this.isDualWieldSelected() && !isDualWieldWeapon(arme));
   }
 
   /** Son nom, et pourquoi il ne peut pas la prendre. */
@@ -601,6 +641,9 @@ export class TurnLoadoutStore {
     const nom = arme.arme?.arme ?? '';
     if (this.heavyForbidden().has(arme.id)) {
       return `${nom} · arme lourde : impossible à manier avec moins de 0 en vigueur`;
+    }
+    if (this.enRecharge().has(arme.id)) {
+      return `${nom} · se recharge : elle ne tire pas ce round`;
     }
     return this.isDualWieldSelected() && !isDualWieldWeapon(arme) ? `${nom} · pas à deux armes : il faut une vraie arme légère ou moyenne, tenue d’une main` : nom;
   }
@@ -689,7 +732,7 @@ export class TurnLoadoutStore {
   }
 
   private selectArme(id: number | undefined): void {
-    if (id !== undefined && this.heavyForbidden().has(id)) {
+    if (id !== undefined && this.indisponibles().has(id)) {
       return;
     }
     this.selectedArmeId.set(id ?? null);

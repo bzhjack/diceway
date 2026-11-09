@@ -170,6 +170,10 @@ interface BolFightSessionArmeModel {
   portee?: string | null;
   /** Équipée sur la fiche du PNJ à la pose — absent des lignes posées avant cette information. */
   equipee?: boolean;
+  /** Notes de combat de l'arme (fléau, gourdin, arbalète) — absentes des lignes posées avant cette information. */
+  ignore_bouclier?: boolean;
+  non_letal?: boolean;
+  rechargement?: number | null;
 }
 
 /** Un PNJ posé à la table : copie de ses statistiques et de ses armes au moment de l'ajout. */

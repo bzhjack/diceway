@@ -307,9 +307,14 @@ final class BolScenarioImportPlan
             $this->error("$path.type", 'M (mêlée) ou T (tir)');
         }
 
-        $deuxMains = $arme['deux_mains'] ?? false;
-        if (!is_bool($deuxMains)) {
-            $this->error("$path.deux_mains", 'true ou false');
+        foreach (['deux_mains', 'ignore_bouclier', 'non_letal'] as $drapeau) {
+            if (!is_bool($arme[$drapeau] ?? false)) {
+                $this->error("$path.$drapeau", 'true ou false');
+            }
+        }
+        $rechargement = $arme['rechargement'] ?? null;
+        if ($rechargement !== null && (!is_int($rechargement) || $rechargement < 1 || $rechargement > 9)) {
+            $this->error("$path.rechargement", 'un nombre de rounds, de 1 à 9');
         }
 
         return ['id' => null, 'custom' => [
@@ -318,7 +323,10 @@ final class BolScenarioImportPlan
             'type'   => is_string($type) ? $type : 'M',
             'portee' => $this->text($arme, 'portee', "$path.portee", 255),
             'notes'  => $this->text($arme, 'notes', "$path.notes", 1000),
-            'deux_mains' => $deuxMains === true,
+            'deux_mains' => ($arme['deux_mains'] ?? false) === true,
+            'ignore_bouclier' => ($arme['ignore_bouclier'] ?? false) === true,
+            'non_letal' => ($arme['non_letal'] ?? false) === true,
+            'rechargement' => is_int($rechargement) ? $rechargement : null,
         ]];
     }
 

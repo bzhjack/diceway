@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {form, FormField, maxLength, required} from '@angular/forms/signals';
+import {form, FormField, max, maxLength, min, required} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
@@ -17,6 +17,7 @@ import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwBadgeComponent} from '../../../shared/dw-badge/dw-badge';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
+import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
 import {EquipmentFormPanelComponent} from '../../shared/equipment-library/equipment-form-panel.component';
 import {BolEquipmentLibraryPageBase} from '../../shared/equipment-library/equipment-library-page.base';
 import {EquipmentLibraryTexts} from '../../shared/models/equipment-library.model';
@@ -33,6 +34,10 @@ interface WeaponDraft {
   portee: string;
   notes: string;
   deux_mains: boolean;
+  ignore_bouclier: boolean;
+  non_letal: boolean;
+  /** Rounds pour la recharger après un tir ; 0 : aucun. */
+  rechargement: number;
 }
 
 @Component({
@@ -52,6 +57,7 @@ interface WeaponDraft {
     DwBadgeComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DwValueStepperComponent,
     EquipmentFormPanelComponent,
   ],
   templateUrl: './arme-library-page.html',
@@ -85,6 +91,8 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
     maxLength(path.degats, 50);
     maxLength(path.portee, 50);
     maxLength(path.notes, 65535);
+    min(path.rechargement, 0);
+    max(path.rechargement, 9);
   });
 
   protected readonly filteredWeapons = computed(() =>
@@ -117,7 +125,7 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
   }
 
   protected emptyDraft(): WeaponDraft {
-    return {arme: '', type: 'M', degats: '', portee: '', notes: '', deux_mains: false};
+    return {arme: '', type: 'M', degats: '', portee: '', notes: '', deux_mains: false, ignore_bouclier: false, non_letal: false, rechargement: 0};
   }
 
   protected draftOf(weapon: BolArmeModel): WeaponDraft {
@@ -128,6 +136,9 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
       portee: weapon.portee ?? '',
       notes: weapon.notes ?? '',
       deux_mains: weapon.deux_mains ?? false,
+      ignore_bouclier: weapon.ignore_bouclier ?? false,
+      non_letal: weapon.non_letal ?? false,
+      rechargement: weapon.rechargement ?? 0,
     };
   }
 
@@ -140,6 +151,9 @@ export class ArmeLibraryPageComponent extends BolEquipmentLibraryPageBase<BolArm
       portee: this.nullableTrimmed(draft.portee),
       notes: this.nullableTrimmed(draft.notes),
       deux_mains: draft.deux_mains,
+      ignore_bouclier: draft.ignore_bouclier,
+      non_letal: draft.non_letal,
+      rechargement: draft.rechargement > 0 ? draft.rechargement : null,
     };
   }
 

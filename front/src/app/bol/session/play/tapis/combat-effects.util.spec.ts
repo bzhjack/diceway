@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {desDeFoi, effetDeFoi, aDejaFeinte, appliquerEvenement, aUneTraceDeChute, dureeLibre, dureesLibres, effetActionSautee, effetAssomme, effetLibre, effetsDeLaFrise, sansTracesDeChute, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {desDeFoi, effetDeFoi, aDejaFeinte, appliquerEvenement, aUneTraceDeChute, dureeLibre, dureesLibres, effetActionSautee, effetAssomme, effetLibre, effetsDeLaFrise, sansTracesDeChute, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetCoupPrecis, effetInconscient, effetParalyse, effetRenversement, estParalyse, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, perdSonAction, SANS_BOUCLIER, sommeModificateurs, effetRechargement, enRechargement} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -570,5 +570,59 @@ describe('effetDeFoi / desDeFoi (livre p. 146)', () => {
     expect(appliquerEvenement(effets, {type: 'fin-tour', carte: 'hero-1', crees: []})).toEqual([]);
     expect(normalizeEffets(effets)).toEqual(effets);
     expect(doitUnDeDeMalus([{...effetDeFoi('hero-1', 'malus', 'A'), id: 'e-1'}], 'hero-1')).toBe(false);
+  });
+});
+
+describe('notes d’armes : le fléau et l’arbalète (livre p. 50)', () => {
+  it('le fléau ignore le petit bouclier de la cible', () => {
+    expect(modificateursPour([], ctx({bouclier: 1, ignoreBouclier: true}))).toEqual([]);
+  });
+
+  it('le fléau rend le grand bouclier, déjà compté dans la défense de la cible', () => {
+    expect(modificateursPour([], ctx({bouclierToutes: 1, ignoreBouclier: true}))).toEqual([{effetId: null, label: '+ 1 grand bouclier ignoré', valeur: 1, tone: 'plus'}]);
+  });
+
+  it('un grand bouclier déjà perdu ne se rend qu’une fois', () => {
+    const perdu = effet({origine: SANS_BOUCLIER, valeur: 0});
+    expect(modificateursPour([perdu], ctx({bouclierToutes: 1, ignoreBouclier: true}))).toEqual([{effetId: null, label: '+ 1 grand bouclier perdu', valeur: 1, tone: 'plus'}]);
+  });
+
+  it('les autres défenses de la cible jouent toujours contre le fléau', () => {
+    const terms = modificateursPour([effet({valeur: 2, origine: 'defense-totale'})], ctx({bouclier: 1, ignoreBouclier: true}));
+    expect(sommeModificateurs(terms)).toBe(-2);
+  });
+
+  it('l’arbalète se recharge pendant le round qui suit le tir, et resservira au suivant', () => {
+    const tir = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('pnj-7', 'Arbalète', 1)});
+    expect(enRechargement(tir, 'pnj-7', 'Arbalète')).toBe(true);
+    const roundSuivant = appliquerEvenement(tir, {type: 'nouveau-round'});
+    expect(enRechargement(roundSuivant, 'pnj-7', 'Arbalète')).toBe(true);
+    expect(enRechargement(appliquerEvenement(roundSuivant, {type: 'nouveau-round'}), 'pnj-7', 'Arbalète')).toBe(false);
+  });
+
+  it('l’arbalète lourde demande 2 rounds complets', () => {
+    let effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('hero-1', 'Arbalète lourde', 2)});
+    effets = appliquerEvenement(effets, {type: 'nouveau-round'});
+    effets = appliquerEvenement(effets, {type: 'nouveau-round'});
+    expect(enRechargement(effets, 'hero-1', 'Arbalète lourde')).toBe(true);
+    expect(enRechargement(appliquerEvenement(effets, {type: 'nouveau-round'}), 'hero-1', 'Arbalète lourde')).toBe(false);
+  });
+
+  it('seule l’arme qui a tiré se recharge, et seulement pour son porteur', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('hero-1', 'Arbalète', 1)});
+    expect(enRechargement(effets, 'hero-1', 'Arc')).toBe(false);
+    expect(enRechargement(effets, 'hero-2', 'Arbalète')).toBe(false);
+  });
+
+  it('un nom trop long est coupé comme le serveur le garde, et l’arme se reconnaît encore', () => {
+    const nom = 'Arbalète de siège des remparts de Satarla, modèle à double arc';
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('hero-1', nom, 1)});
+    const garde = effets.map((e) => ({...e, libelle: e.libelle?.slice(0, 60)}));
+    expect(enRechargement(garde, 'hero-1', nom)).toBe(true);
+  });
+
+  it('le rechargement se voit sur la frise', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRechargement('hero-1', 'Arbalète', 1)});
+    expect(effetsDeLaFrise(effets, 'hero-1')).toEqual(['recharge : Arbalète · encore 2 rounds']);
   });
 });
