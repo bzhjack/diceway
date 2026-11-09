@@ -2,17 +2,27 @@
   display: block;
 }
 
-// L'illustration, fond fixe de toute la page : sous le contenu de `dw-page`, qui s'isole pour la garder au-dessus de sa propre suie
-// (`_forge-page.scss`).
+// L'illustration, fond fixe du haut de la page : sous le contenu de `dw-page`, qui s'isole pour la garder au-dessus de sa propre suie
+// (`_forge-page.scss`). Les illustrations sont des bandeaux (200 px de haut environ) : étirées sur tout l'écran, elles seraient floues ;
+// elles couvrent donc le haut et s'effacent vers le bas, où reparaît la suie de la page.
 .dw-lh-fond {
   position: fixed;
-  inset: 0;
+  inset: 0 0 auto;
+  height: 60vh;
   z-index: -1;
   pointer-events: none;
   background-color: var(--dw-library-header-bg);
   background-repeat: no-repeat;
   background-position: center top;
   background-size: cover;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 35%, transparent 100%);
+}
+
+// Une illustration assez haute pour tout l'écran (`fondPleinePage`) : elle le couvre, sans fondu.
+.dw-lh-fond--plein {
+  bottom: 0;
+  height: auto;
+  mask-image: none;
 }
 
 .dw-lh-eyebrow {

@@ -2,7 +2,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- En-tête fin : la page garde sa hauteur pour les chapitres et leurs scènes. -->
-    <dw-library-header title="Scénarios" image="/assets/bol/dashboard-header.webp" [compact]="true">
+    <dw-library-header title="Scénarios" image="/assets/bol/dashboard-header.webp" [fondPleinePage]="true" [compact]="true">
       <ng-container dwHeaderTags>
         <dw-tag>{{ sagas().length }} scénarios</dw-tag>
         <dw-tag>{{ oneShots().length }} one shots</dw-tag>

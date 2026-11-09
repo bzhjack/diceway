@@ -1,6 +1,6 @@
 <!-- L'illustration n'est pas dans le bandeau : elle est le fond de toute la page, fixe, derrière l'en-tête et les fiches. -->
 @if (backgroundImage(); as fond) {
-  <div class="dw-lh-fond" aria-hidden="true" [style.background-image]="fond"></div>
+  <div class="dw-lh-fond" aria-hidden="true" [class.dw-lh-fond--plein]="fondPleinePage()" [style.background-image]="fond"></div>
 }
 
 <!-- Chaque zone projetée n'a qu'un emplacement (la projection se décide à la compilation, pas dans un @if) : la variante compacte ne
