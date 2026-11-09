@@ -1,0 +1,106 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+
+  --ceq-medaillon: 1.75rem;
+}
+
+.ceq-nom {
+  overflow-wrap: anywhere;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  color: var(--dw-forge-name);
+}
+
+.ceq-heros {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+// Les héros en médaillons qui se chevauchent : leur portrait, sinon leur initiale.
+.ceq-medaillons {
+  display: flex;
+  flex: none;
+  padding-left: 0.35rem;
+
+  img,
+  .ceq-initiale {
+    width: var(--ceq-medaillon);
+    height: var(--ceq-medaillon);
+    box-sizing: border-box;
+    margin-left: -0.35rem;
+    border: 2px solid var(--dw-color-bonus);
+    border-radius: 50%;
+    background: var(--dw-forge-recess);
+  }
+
+  img {
+    object-fit: cover;
+    object-position: center 20%;
+  }
+}
+
+.ceq-initiale {
+  display: grid;
+  place-items: center;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 0.85rem;
+  color: var(--dw-forge-hot-text);
+}
+
+.ceq-noms {
+  min-width: 0;
+  font-size: 0.82rem;
+  color: var(--dw-forge-caption);
+}
+
+.ceq-lien {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--dw-forge-hot-text);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// Sur l'illustration de la dernière partie : plus grand, plus clair, une ombre pour rester lisible.
+:host(.ceq--grand) {
+  --ceq-medaillon: 2.25rem;
+
+  gap: 0.4rem;
+  text-shadow: 0 1px 2px var(--dw-forge-shade);
+
+  .ceq-nom {
+    font-size: 1.75rem;
+  }
+
+  .ceq-medaillons {
+    padding-left: 0.45rem;
+
+    img,
+    .ceq-initiale {
+      margin-left: -0.45rem;
+    }
+  }
+
+  .ceq-initiale {
+    font-size: 1.05rem;
+  }
+
+  .ceq-noms {
+    font-size: 0.95rem;
+    color: var(--dw-forge-bone);
+  }
+}
