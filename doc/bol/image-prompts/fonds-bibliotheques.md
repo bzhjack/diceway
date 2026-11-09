@@ -20,15 +20,15 @@ Les bannières `header-*.webp` restent en place : les tuiles de l'accueil s'en s
 - Aucun texte, logo, cadre ni watermark.
 - **Livraison** : exporter en WebP (`cwebp -q 82 fond-<page>.png -o fond-<page>.webp`) dans `front/src/assets/bol/`.
 
-## Héros — `fond-heros.webp`
+## ✅ Héros — `fond-heros.webp`
 
 > Illustration de fond plein écran, format paysage large (16:9 ou plus large, au moins 1920 × 800 px), style pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), fort contraste, ombres profondes. Deux ou trois aventuriers héroïques (un guerrier musclé épée levée, une archère, une prêtresse) en contre-plongée au sommet des marches d'un temple en ruine envahi par la jungle, placés dans le tiers haut de l'image et vers la gauche ; colonnes de pierre sculptées sur les bords, torches enflammées, lune rouge sang dans un ciel nuageux crépusculaire. La moitié basse de l'image descend vers des marches et des ruines plongées dans l'ombre, calmes, presque sans détail. Dominante rouge/orangé profond, lumière de feu chaude. Aucun texte, logo ni watermark.
 
-## PNJ — `fond-pnj.webp`
+## ✅ PNJ — `fond-pnj.webp`
 
 > Illustration de fond plein écran, format paysage large (16:9 ou plus large, au moins 1920 × 800 px), même style pulp sword & sorcery peint et encré (comics fantasy des années 1980). Une rue nocturne d'une cité antique : dans le tiers haut et sur les côtés, des silhouettes de personnages secondaires typés (un garde en armure, un marchand, un étranger encapuchonné, une mercenaire) éclairés par des lanternes et des torchères, façades de pierre, arches et palmiers qui montent vers un ciel nocturne. Le bas de l'image est une chaussée pavée dans la brume et l'ombre, calme et sombre. Dominante vert émeraude sombre / teal, contrastée par la lumière chaude des torches. Aucun texte, logo ni watermark.
 
-## Créatures — `fond-creatures.webp`
+## ✅ Créatures — `fond-creatures.webp`
 
 > Illustration de fond plein écran, format paysage large (16:9 ou plus large, au moins 1920 × 800 px), style pulp sword & sorcery peint et encré (comics fantasy des années 1980). Une créature monstrueuse massive, reptilienne et primordiale (grand saurien à crête), surgit de ruines englouties par la jungle : sa tête et son échine dominent le tiers haut de l'image, côté droit ; colonnes brisées et statues érodées sur les bords, poussière en suspension dans la lumière dorée d'un soleil bas (scène diurne, pas de lune), ciel embrasé façon tempête de sable. Le bas de l'image est un sol de ruines et de sable dans une pénombre ocre, calme. Dominante ambre/ocre. Aucun texte, logo ni watermark.
 
@@ -51,9 +51,9 @@ Une fois une image déposée dans `front/src/assets/bol/`, sur la page correspon
 
 | Page | Fichier | Page Angular |
 | --- | --- | --- |
-| Héros | `fond-heros.webp` | `bol/hero/library/hero-library-page.html` |
-| PNJ | `fond-pnj.webp` | `bol/pnj/library/pnj-library-page.html` |
-| Créatures | `fond-creatures.webp` | `bol/creature/library/creature-library-page.html` |
+| ✅ Héros | `fond-heros.webp` | `bol/hero/library/hero-library-page.html` |
+| ✅ PNJ | `fond-pnj.webp` | `bol/pnj/library/pnj-library-page.html` |
+| ✅ Créatures | `fond-creatures.webp` | `bol/creature/library/creature-library-page.html` |
 | Démons | `fond-demons.webp` | `bol/demon/library/demon-library-page.html` |
 | Armes | `fond-armes.webp` | `bol/arme/library/arme-library-page.html` |
 | Armures | `fond-armures.webp` | `bol/armure/library/armure-library-page.html` |

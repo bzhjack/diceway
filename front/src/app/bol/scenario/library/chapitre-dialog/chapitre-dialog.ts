@@ -1,3 +1,4 @@
+import {TextFieldModule} from '@angular/cdk/text-field';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {form, FormField, maxLength} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -9,6 +10,9 @@ import {Observable} from 'rxjs';
 import {ChapitreDialogData, ChapitreDialogResultat} from '../../models/chapitre-dialog.model';
 
 /** Les numéros proposés : l'introduction, puis 1 à 30. « Sans numéro » est la valeur `null`. */
+/** La longueur d'un pitch ; ceux des scénarios importés font jusqu'à 1 400 caractères. */
+const PITCH_MAX = 2000;
+
 const NUMEROS = [{value: 0, label: 'Introduction'}, ...Array.from({length: 30}, (_, i) => ({value: i + 1, label: String(i + 1)}))];
 
 /** Le tiret cadratin sépare le scénario du chapitre dans un titre d'un seul tenant : il ne peut pas être dans un nom. */
@@ -19,7 +23,7 @@ function sansCadratin(texte: string): string {
 /** Un chapitre d'un scénario, à créer ou à modifier : son numéro (l'introduction, un numéro, ou aucun), son nom et son pitch. */
 @Component({
   selector: 'bol-chapitre-dialog',
-  imports: [FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [FormField, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule, TextFieldModule],
   template: `
     <h2 mat-dialog-title>{{ data.titre }}</h2>
     <form (submit)="submit($event)">
@@ -40,9 +44,17 @@ function sansCadratin(texte: string): string {
             <input matInput autocomplete="off" [formField]="chapitreForm.titre" />
           </mat-form-field>
         </div>
-        <mat-form-field subscriptSizing="dynamic">
+        <!-- Le pitch grandit avec son texte, de 8 à 12 lignes : tout le dialogue tient sur l'écran de référence. -->
+        <mat-form-field class="chd-pitch" subscriptSizing="dynamic">
           <mat-label>Pitch</mat-label>
-          <textarea matInput rows="4" [formField]="chapitreForm.pitch"></textarea>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="8"
+            cdkAutosizeMaxRows="12"
+            [formField]="chapitreForm.pitch"
+          ></textarea>
+          <mat-hint align="end">{{ longueurDuPitch() }} / {{ pitchMax }}</mat-hint>
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions align="end">
@@ -56,7 +68,7 @@ function sansCadratin(texte: string): string {
       display: flex;
       flex-direction: column;
       gap: 0.9rem;
-      width: min(34rem, 80vw);
+      width: min(52rem, 88vw);
       padding-top: 0.5rem !important;
     }
 
@@ -76,6 +88,10 @@ function sansCadratin(texte: string): string {
     .chd-titre {
       flex: 1;
     }
+
+    .chd-pitch textarea {
+      line-height: 1.55;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,12 +99,14 @@ class ChapitreDialogComponent {
   protected readonly data = inject<ChapitreDialogData>(MAT_DIALOG_DATA);
   private readonly ref = inject(MatDialogRef<ChapitreDialogComponent, ChapitreDialogResultat>);
   protected readonly numeros = NUMEROS;
+  protected readonly pitchMax = PITCH_MAX;
 
   private readonly value = signal({numero: this.data.numero, titre: this.data.chapitre, pitch: this.data.pitch});
   protected readonly chapitreForm = form(this.value, (path) => {
     maxLength(path.titre, 150);
-    maxLength(path.pitch, 2000);
+    maxLength(path.pitch, PITCH_MAX);
   });
+  protected readonly longueurDuPitch = computed(() => this.value().pitch.length);
   protected readonly valid = computed(() => this.chapitreForm().valid() && /\S/.test(this.value().titre));
 
   protected submit(event: Event): void {
