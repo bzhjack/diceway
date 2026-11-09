@@ -58,7 +58,7 @@ class BolScenarioService
     }
 
     /**
-     * Supprime un scénario du compte, chacun de ses chapitres comme `supprimer` (leurs scènes avec eux) ; le scénario part avec le dernier.
+     * Supprime un scénario du compte, chacun de ses chapitres comme `supprimer` (leurs scènes avec eux), puis lui-même.
      * `false`, sans rien toucher : une partie joue l'un de ses chapitres.
      */
     public function supprimerScenario(string $sagaId, string $userId): bool
@@ -71,7 +71,6 @@ class BolScenarioService
             foreach ($chapitres as $id) {
                 $this->supprimer($id, $userId);
             }
-            // Le dernier chapitre l'emporte ; un scénario qui n'en avait aucun part ici.
             BolSaga::where('id', $sagaId)->where('user_id', $userId)->delete();
 
             return true;

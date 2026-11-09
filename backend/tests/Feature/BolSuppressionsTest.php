@@ -144,23 +144,23 @@ class BolSuppressionsTest extends TestCase
         $this->assertSame(1, BolSaga::count());
     }
 
-    public function test_a_scenario_goes_with_its_last_chapter(): void
+    public function test_a_scenario_stays_empty_when_its_last_chapter_goes(): void
     {
         [$chapitre] = $this->saga('Perle du Beshaar', 1);
 
         $this->deleteJson("/api/bol/scenario/delete/{$chapitre->id}")->assertOk();
 
-        $this->assertSame(0, BolSaga::count());
+        $this->assertSame(['Perle du Beshaar'], BolSaga::pluck('titre')->all());
     }
 
-    /** Renommer un chapitre peut le ranger ailleurs : le scénario qu'il quitte ne reste pas vide. */
-    public function test_a_scenario_goes_when_its_last_chapter_moves_elsewhere(): void
+    /** Renommer un chapitre peut le ranger ailleurs : le scénario qu'il quitte reste, vide. */
+    public function test_a_scenario_stays_empty_when_its_last_chapter_moves_elsewhere(): void
     {
         [$chapitre] = $this->saga('Perle du Beshaar', 1);
 
         $this->postJson('/api/bol/scenario/update', ['id' => $chapitre->id, 'titre' => 'Le Dieu voilé — 1. La fuite'])->assertOk();
 
-        $this->assertSame(['Le Dieu voilé'], BolSaga::pluck('titre')->all());
+        $this->assertEqualsCanonicalizing(['Perle du Beshaar', 'Le Dieu voilé'], BolSaga::pluck('titre')->all());
     }
 
     /** Sa ligne de table disparaîtrait en plein combat. */
