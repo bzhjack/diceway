@@ -80,6 +80,12 @@
               <bol-stats-grid [form]="statsForm" [groups]="demonStatGroups" />
             </div>
 
+            @if (conformite(); as conformite) {
+              <div class="dw-section--form">
+                <bol-demon-regles [conformite]="conformite" (recalculer)="recalculerVitalite($event)" />
+              </div>
+            }
+
             @if (errorMessage()) {
               <div class="dw-error-box">
                 {{ errorMessage() }}

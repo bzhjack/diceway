@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, untracked, viewChild} from '@angular/core';
 import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,6 +16,8 @@ import {PouvoirEntry} from '../../shared/models/pouvoir-list.model';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
+import {conformiteDemon} from './demon-regles.util';
+import {DemonReglesComponent} from './regles/demon-regles.component';
 import {DemonFormModel} from '../models/demon-form-page.model';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
@@ -101,6 +103,7 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
     MatIconModule,
     EntityGeneralComponent,
     DemonPouvoirsComponent,
+    DemonReglesComponent,
     StatsGridComponent,
   ],
   templateUrl: './demon-form-page.html',
@@ -169,6 +172,11 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel,
     }),
   );
 
+  /** Le démon en cours face aux règles de création de sa catégorie (« Selon le livre ») ; rien n'y est refusé. */
+  protected readonly conformite = computed(() =>
+    conformiteDemon(this.model(), this.selectedCategorie(), this.selectedPouvoirEntries().map((entry) => entry.label)),
+  );
+
   protected readonly showGeneralHint = computed(
     () => this.fieldError(this.demonForm.nom) || this.fieldError(this.demonForm.id_categorie),
   );
@@ -178,11 +186,16 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel,
     this.setupReferenceDefaults(
       this.selectedCategorie,
       (categorie) => categorie.id,
+      // Changer de catégorie règle la vitalité sur la sienne plus la vigueur (livre p. 129) et les dégâts sur son dé.
       (categorie) => ({
-        vitalite: categorie.vitalite ?? 0,
+        vitalite: (categorie.vitalite ?? 0) + untracked(() => this.model().vigueur),
         degats: categorie.degats ?? '0',
       }),
     );
+  }
+
+  protected recalculerVitalite(vitalite: number): void {
+    this.model.update((current) => ({...current, vitalite}));
   }
 
   protected onFormSubmit(event: Event): void {

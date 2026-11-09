@@ -235,18 +235,25 @@
   }
 
   // Le dé seul : vert pour le bonus, rouge pour le malus (trois classes : plus fort que les options, déclarées plus bas).
+  // Une case carrée fixe, l'icône calée au centre : sa hauteur de ligne par défaut la décalerait.
   .tas-mj .tas-chip.tas-chip--de {
     display: inline-flex;
+    flex: none;
     align-items: center;
     justify-content: center;
-    min-width: 1.5rem;
-    min-height: 1.5rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    min-width: 0;
+    min-height: 0;
     padding: 0;
+    line-height: 1;
 
     .mat-icon {
+      display: block;
       width: 1.05rem;
       height: 1.05rem;
       font-size: 1.05rem;
+      line-height: 1;
     }
   }
 

@@ -18,8 +18,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | --- | --- | --- |
 | 1 | Combat : sorcellerie, foi, pouvoir | M |
 | 2 | Combat : confort et robustesse | S à M |
-| 3 | Démons : création conforme au livre (facultatif) | M |
-| 4 | Images | hors code |
+| 3 | Images | hors code |
 
 ## 1. Combat : sorcellerie, foi, pouvoir
 
@@ -45,17 +44,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 - **Échec critique** : il rapporte 1 PH, mais l'issue défavorable (« ce round et le suivant ») reste au MJ. Voulu (§ 8 de l'état des
   lieux) ; à revoir seulement si la table le demande.
 
-## 3. Démons : création conforme au livre (facultatif)
-
-`doc/bol/specs/creation-demons.md` assume une version « rapide » : la catégorie ne pré-remplit que vitalité et dégâts, rien n'est contrôlé.
-Si l'on veut la règle stricte, dans l'ordre de la spec :
-
-- budget d'attributs selon la catégorie ;
-- budget des aptitudes de combat selon la catégorie ;
-- nombre de pouvoirs, en tenant compte de `Cuirassé` et `Vulnérabilité` (avertissement plutôt que refus) ;
-- vitalité et dégâts recalculés depuis la vigueur.
-
-## 4. Images (hors code)
+## 3. Images (hors code)
 
 - `doc/bol/image-prompts/fonds-bibliotheques.md` : 6 fonds plein écran pour les bibliothèques (héros, PNJ, créatures, démons, armes,
   armures), à la résolution du fond des scénarios ; puis, page par page, `image` et `[fondPleinePage]="true"` sur l'en-tête (S).

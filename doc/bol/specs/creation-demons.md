@@ -178,19 +178,21 @@ Remarque projet :
 - ce n'est pas une regle de construction du profil brut
 - mais c'est utile si on ajoute plus tard du contexte narratif ou des fiches d'invocation
 
-## Etat actuel recommande pour `front`
+## Etat actuel de `front`
 
-Pour la page `demon-create` actuelle :
-- `categorie` doit pre-remplir au minimum `vitalite` et `degats`
-- il serait pertinent de rajouter plus tard :
-  - un warning sur le nombre de pouvoirs selon la categorie
-  - une gestion speciale de `Cuirassé`
-  - une gestion speciale de `Vulnerabilite`
-- le reste peut rester editable librement tant qu'on assume une version `rapide` plutot que `strictement reglee`
+Un seul formulaire (`demon-form-page`), libre, avec un panneau « Selon le livre » (`demon/form/regles/`, regles dans
+`demon/form/demon-regles.util.ts`) mis a jour en direct ; rien n'y est refuse :
+- attributs : somme (les negatifs rendent leurs points) contre le budget de la categorie, maximum par attribut (inferieur `4`, majeur `6`,
+  aucun pour un mineur), pas sous `-2`, deux attributs sous `0` au plus ;
+- aptitudes de combat (`melee`, `tir`, `defense`) : somme contre le budget, meme maximum, pas sous `0` ; un budget non depense est une
+  information (« 4 points a repartir ») : Mazallakos, exemple du livre, laisse 4 points d'aptitudes ;
+- pouvoirs : nombre de la categorie, `Cuirassé` compte pour deux, `Vulnerabilite` en donne un de plus et n'en occupe pas ;
+- vitalite : base de la categorie plus la vigueur ; changer de categorie la regle, un ecart propose « Recalculer ».
 
-Constate dans le code (choix de l'appli) :
-- `demon-form-page.ts` ne pre-remplit que `vitalite` et `degats` depuis la categorie ; la taille (Moyenne par défaut) ne depend pas de la categorie
-- ni le front ni `BolDemonService.php` ne controlent le budget d'attributs, le budget de combat ni le nombre de pouvoirs
+Les degats restent le de de la categorie : le combat monte d'une categorie avec `Attaques devastatrices` (`demonDegats`). Les exemples
+du livre (Zullthegg, Vul'mazzanlu, Mazallakos) donnent le de sans y ajouter la vigueur.
+
+Le serveur (`BolDemonService.php`) ne controle rien.
 
 ## References utiles du livre
 
