@@ -34,13 +34,11 @@ interface AccueilBibliotheque {
   readonly compte: (comptes: BolAccueilComptes) => number;
   /** Une ligne sous le nom, quand la tuile en regroupe plusieurs. */
   readonly detail?: (comptes: BolAccueilComptes) => string;
-  /** De quoi créer une fiche de cette bibliothèque : une page, ou (route null) le dialogue « Nouvelle compagnie ». */
-  readonly creer?: {readonly route: string | null; readonly ariaLabel: string};
 }
 
 const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
-  {cle: 'heros', label: 'Héros', route: '/library/heroes', compte: (c) => c.heros, creer: {route: '/create/hero', ariaLabel: 'Créer un héros'}},
-  {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', compte: (c) => c.pnjs, creer: {route: '/create/pnj', ariaLabel: 'Créer un PNJ'}},
+  {cle: 'heros', label: 'Héros', route: '/library/heroes', compte: (c) => c.heros},
+  {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', compte: (c) => c.pnjs},
   {
     cle: 'bestiaire',
     label: 'Bestiaire',
@@ -56,7 +54,7 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
     detail: (c) => `${pluriel(c.armes, 'arme')} · ${pluriel(c.armures, 'armure')}`,
   },
   {cle: 'scenarios', label: 'Scénarios', route: '/library/scenarios', compte: (c) => c.scenarios},
-  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies', compte: (c) => c.compagnies, creer: {route: null, ariaLabel: 'Nouvelle compagnie'}},
+  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies', compte: (c) => c.compagnies},
 ];
 
 /** Les autres parties que la colonne du bandeau montre ; les suivantes sont dans « Toutes les parties ». */
@@ -133,7 +131,6 @@ export class AccueilPageComponent {
       cle: bibliotheque.cle,
       label: bibliotheque.label,
       route: bibliotheque.route,
-      creer: bibliotheque.creer ?? null,
       compte: comptes ? bibliotheque.compte(comptes) : null,
       detail: comptes && bibliotheque.detail ? bibliotheque.detail(comptes) : null,
     }));

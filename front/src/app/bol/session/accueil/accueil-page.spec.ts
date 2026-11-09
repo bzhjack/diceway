@@ -478,17 +478,7 @@ describe('AccueilPageComponent', () => {
     expect(tuiles[3].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/intendance');
     expect(texte(tuiles[3].querySelector('.acc-biblio-detail'))).toBe('54 armes · 6 armures');
     expect(tuiles[4].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/library/scenarios');
-    expect(tuiles.map((t) => t.querySelector('.acc-biblio-plus')?.getAttribute('aria-label') ?? null)).toEqual([
-      'Créer un héros', 'Créer un PNJ', null, null, null, 'Nouvelle compagnie',
-    ]);
-  });
-
-  it('le « + » des compagnies ouvre « Nouvelle compagnie »', async () => {
-    const page = await rendre();
-
-    page.querySelector<HTMLButtonElement>('button.acc-biblio-plus[aria-label="Nouvelle compagnie"]')!.click();
-
-    expect(open).toHaveBeenCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
+    expect(tuiles.every((t) => t.querySelectorAll('a, button').length === 1)).toBe(true);
   });
 
   it('sans compagnie, dit qu’il en faut une pour lancer une partie, sans proposer de partie', async () => {

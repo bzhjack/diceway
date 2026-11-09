@@ -265,17 +265,6 @@
                 <span class="acc-biblio-detail">{{ detail }}</span>
               }
             </a>
-            @if (bibliotheque.creer; as creer) {
-              @if (creer.route; as route) {
-                <a mat-icon-button class="acc-biblio-plus" [routerLink]="route" [attr.aria-label]="creer.ariaLabel">
-                  <mat-icon>add</mat-icon>
-                </a>
-              } @else {
-                <button mat-icon-button type="button" class="acc-biblio-plus" [attr.aria-label]="creer.ariaLabel" (click)="nouvelleCompagnie()">
-                  <mat-icon>add</mat-icon>
-                </button>
-              }
-            }
           </li>
         }
       </ul>
