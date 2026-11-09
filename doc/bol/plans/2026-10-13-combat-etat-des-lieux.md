@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables) et le 2026-11-09 (fin de la clôture des tables ; notes d'armes : fléau, gourdin, arbalète ; taille des démons, désarmement). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
+Date : 2026-10-13, corrigé le 2026-10-31, le 2026-11-02 (mêlée de piétaille, fuite opportune) et le 2026-11-03 (pouvoirs des démons, morts-vivants, petites limites de l'assistant ; foi et sorcellerie, § 6 ter ; corrections de la revue globale et clôture des tables) et le 2026-11-09 (fin de la clôture des tables ; notes d'armes : fléau, gourdin, arbalète ; taille des démons, désarmement ; effets annoncés, retour au combat, rendre la main, enregistrement relu). Ce document décrit le combat tel qu'il fonctionne dans l'application. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/bol/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/bol/rules/exemples-de-jets.md`.
 
@@ -16,7 +16,7 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
    - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
 
    Un héros relevé (sa vitalité repasse au-dessus de 0 : soins, cœur corrigé, reprise de ses esprits) oublie sa chute : les traces « sombré », « stabilisé » et « assommé » tombent (`cartesRelevees`, `sansTracesDeChute`, `CombatWoundsService`). S'il retombe dans le même combat, les règles s'appliquent de nouveau : on lui redemande de reprendre ses esprits, mourant il perd de nouveau 1 point par round, et un coup d'arme ne le laisse plus « assommé ».
-4 bis. **Retirer du combat** : sur la carte ouverte (« Fiche », ou un clic sur la carte), le bouton « Retirer du combat » demande confirmation, puis la carte sort du combat (`retirerDuCombat`, dans `exclus`) : elle ne joue plus, ne se vise plus et ne compte plus pour l'issue ; ses effets en cours tombent ; la frise la dit « retirée » ; sa fiche reste sur la table. Si c'était la carte active, la main passe. Une carte laissée hors du combat au démarrage est dite « retirée » elle aussi.
+4 bis. **Retirer du combat** : sur la carte ouverte (« Fiche », ou un clic sur la carte), le bouton « Retirer du combat » demande confirmation, puis la carte sort du combat (`retirerDuCombat`, dans `exclus`) : elle ne joue plus, ne se vise plus et ne compte plus pour l'issue ; ses effets en cours tombent ; la frise la dit « retirée » ; sa fiche reste sur la table. Si c'était la carte active, la main passe. Une carte laissée hors du combat au démarrage est dite « retirée » elle aussi. Son médaillon reste dans la frise, barré : un clic la remet au combat (`remettreAuCombat`), sans ses effets ; un rival enfui, lui, reste parti.
 5. **Secourir** : à son tour, un héros ou un PNJ allié peut tenter de stabiliser un héros mourant au lieu d'attaquer (bouton « Secourir » de sa ligne ; livre p. 66 : « un autre héros ou un PNJ ») : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le MJ peut accorder un dé de bonus ou imposer un dé de malus (3d6, deux gardés). Un PNJ n'a pas de faveur divine. Le tour se termine ensuite.
 6. **Fin du combat** : dès qu'un camp n'a plus personne debout (hors de combat, retiré du combat ou enfui), une boîte « Victoire » ou « Défaite » s'ouvre (après une éventuelle boîte en cours, comme « Défier la mort »). Elle nomme les héros encore mourants ; « Continuer » laisse le temps de les secourir, « Terminer le combat » ouvre « Après combat ». Elle ne revient que si l'issue change, ou au rechargement de la page.
 7. **Terminer le combat** : la boîte « Après combat » (livre p. 65-66) montre, pour chaque blessé du camp des héros, ce qu'il récupère. « Repos » : à 0 ou plus, la moitié des points perdus pendant ce combat, et la totalité des dégâts reçus à mains nues (l'application les retient coup par coup). Le serveur note la vitalité de chacun au démarrage (`etat_combat.depart`) : une blessure d'avant le combat ne se récupère pas ici. « Soins » : si un héros ou un PNJ allié a une carrière de soins (médecin, guérisseur, rebouteux), son rang en vitalité, à chaque blessé coché (le livre ne limite pas le nombre de blessés : interprétation). La boîte rappelle le jet quotidien du livre (p. 66) : les jours suivants, un jet d'action Moyenne du soigneur double la guérison du blessé (2 points par jour au lieu de 1) ; l'application ne suit pas les jours. Le MJ décoche ce qui ne s'applique pas ; « Terminer le combat » enregistre tout et repasse en mode libre.
@@ -217,7 +217,9 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 - **Dé de foi de la cible** : il s'annonce avant le jet (livre p. 146) ; une fois le jet de l'attaquant fait, il est fermé, avec la raison (`deFoiCibleVerrou`).
 - **Réglages du sort** : la trace `sort-paye` garde aussi les réglages (cercle, difficulté, conditions, blesse, sur l'esprit), encodés dans son libellé ; un rechargement les restaure.
 - **Paralysé** : le tour sauté pour paralysie consomme aussi une action perdue.
-- **Rendre la main** : re-diffère les actions perdues armées de la carte ; le tour rendu se joue, le suivant est sauté.
+- **Rendre la main** : re-diffère l'action perdue posée pendant le tour de la carte (marquée `auTourDuPorteur`) ; le tour rendu se joue, le suivant est sauté. Une action perdue infligée par un adversaire après son tour reste armée : elle coûte le tour rendu.
+- **Effets qui expirent** : chacun est annoncé aux lecteurs d'écran (« Fin de l'effet posture défensive sur Axel. », `LiveAnnouncer`), sauf ceux que le MJ retire lui-même.
+- **Enregistrement en erreur** (`EtatSaver`) : l'état est relu ; s'il y est passé (la réponse seule s'est perdue, `etatEnregistre`), tout continue — l'écran qui a fait passer le round en joue le début ; sinon ses mises à jour sont rejouées une fois sur l'état relu (la trace « sort payé » n'est pas perdue), et l'erreur n'est dite qu'ensuite.
 - **Horde** : une piétaille qui a perdu son action ne peut pas rejoindre une horde.
 - **Mêlée de piétaille** : marquée faite pour le round dès la première perte enregistrée ; interrompue, elle ne se rejoue pas.
 - **Début de round** : il ne se joue que sur l'écran dont l'enregistrement a fait passer le round (`roundCommenceIci`) : un second écran ouvert sur la table ne le rejoue pas.
@@ -229,17 +231,13 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 Toutes les règles de combat du livre sont gérées. Les limites qui restent :
 
-- pas d'annonce vocale des effets expirés ;
-- pas d'annulation d'un « Retirer du combat » : la carte revient en jeu après le combat, ou par un nouveau jet de réaction ;
 - les jours qui suivent le combat ne sont pas suivis : le jet quotidien du soigneur n'est qu'un rappel ;
 - une créature compte comme sans arme en main : le désarmement est grisé contre elle, même contre un humanoïde armé (contre un démon, il reste ouvert et le MJ juge) ;
 - le dé de foi ne se donne que depuis la ligne de qui joue ou la carte de sa cible : un prêtre qui n'est ni l'un ni l'autre attend son tour (ou le MJ pose un dé de malus avec « + Effet » et corrige la foi à la main) ;
 - la condition d'incantation « blessures » n'est pas appliquée d'office (le MJ corrige la vitalité du sorcier), ni la perte définitive d'un point de pouvoir au 3e cercle (rappelée seulement) ;
 - un sort ne vise que les cartes d'en face : un sort sur un allié (« Peau écailleuse ») se pose en effet à la main ;
 - les points de pouvoir et de foi ne reviennent pas tout seuls (midi, minuit, temple) : le MJ corrige la fiche ;
-- « Rendre la main » re-diffère toutes les actions perdues armées de la carte, y compris une infligée par un adversaire pendant le tour rendu (le registre ne garde pas qui a posé l'effet) : elle coûte le tour suivant ;
-- le dé de foi d'un prêtre qui joue n'est pas fermé après son propre jet (il sert aussi à aider un allié) ;
-- si la réponse de l'enregistrement qui fait passer le round se perd alors que le serveur l'a bien gardé, aucun écran ne joue le début de round ; si l'enregistrement de la trace « sort payé » échoue, un rechargement ne la retrouve pas (la table signale l'erreur).
+- le dé de foi d'un prêtre qui joue n'est pas fermé après son propre jet (il sert aussi à aider un allié).
 
 Hors du périmètre du combat :
 

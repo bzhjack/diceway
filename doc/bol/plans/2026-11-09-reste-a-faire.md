@@ -17,7 +17,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | Effort |
 | --- | --- | --- |
 | 1 | Combat : sorcellerie, foi, pouvoir | M |
-| 2 | Combat : confort et robustesse | S à M |
+| 2 | Combat : confort et robustesse | à décider |
 | 3 | Images | hors code |
 
 ## 1. Combat : sorcellerie, foi, pouvoir
@@ -33,13 +33,6 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ## 2. Combat : confort et robustesse
 
-- **Accessibilité** : un effet qui expire disparaît sans être annoncé aux lecteurs d'écran (`combat-turn.util.ts:366`) ; l'annoncer par
-  `LiveAnnouncer` (S).
-- **« Retirer du combat »** ne s'annule pas en cours de combat (la réintégration n'existe qu'au démarrage, `start-combat-page.html:548`) (S).
-- **« Rendre la main »** rejoue aussi une action perdue infligée par un adversaire, l'effet ne gardant que son `origine`
-  (`combat-effect.model.ts:22`) ; garder qui l'a posé (S).
-- **Passage de round** : si la réponse du serveur se perd, aucun écran ne joue le début de round (`combat-turn.store.ts:164`) ; une trace
-  « sort payé » mal enregistrée est perdue au rechargement (M).
 - **Les jours après le combat** ne sont pas suivis : le jet quotidien du soigneur reste un rappel (M, à décider si utile).
 - **Échec critique** : il rapporte 1 PH, mais l'issue défavorable (« ce round et le suivant ») reste au MJ. Voulu (§ 8 de l'état des
   lieux) ; à revoir seulement si la table le demande.

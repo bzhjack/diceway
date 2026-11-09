@@ -126,9 +126,13 @@ describe('CombatTurnStore : le début de round n’est joué que par l’écran 
   let store: CombatTurnStore;
   let session: ReturnType<typeof signal<BolFightSessionModel | null>>;
   const updateCombatState = vi.fn();
+  const fightSession = vi.fn();
+  const notifyError = vi.fn();
 
   beforeEach(() => {
     TestBed.resetTestingModule();
+    fightSession.mockReset();
+    notifyError.mockReset();
     session = signal<BolFightSessionModel | null>({id: 's1', statut: 'combat', etat_combat: {round: 2, joues: [], effets: [], exclus: [], fuis: [], melee: null}} as unknown as BolFightSessionModel);
     updateCombatState.mockReset();
     updateCombatState.mockImplementation((_id: string, etat: Partial<EtatCombat>) => of({...session(), etat_combat: {depart: {}, ...etat}}));
@@ -137,15 +141,33 @@ describe('CombatTurnStore : le début de round n’est joué que par l’écran 
         CombatTurnStore,
         {
           provide: TableStore,
-          useValue: {session, cards: signal([card('hero', 1), card('pnj', 7)]), board: signal({tokens: []}), mode: signal('combat'), sessionId: signal('s1'), notifyError: vi.fn()},
+          useValue: {session, cards: signal([card('hero', 1), card('pnj', 7)]), board: signal({tokens: []}), mode: signal('combat'), sessionId: signal('s1'), notifyError},
         },
-        {provide: BolFightSessionService, useValue: {updateCombatState}},
+        {provide: BolFightSessionService, useValue: {updateCombatState, fightSession}},
         {provide: BolHerosService, useValue: {}},
         {provide: MatSnackBar, useValue: {open: vi.fn()}},
       ],
     });
     store = TestBed.inject(CombatTurnStore);
     TestBed.tick();
+  });
+
+  it('la réponse qui commence le round se perd, mais le serveur l’a enregistré : cet écran en joue quand même le début', () => {
+    store.onEndTurn();
+    TestBed.tick();
+    // Le serveur enregistre la fin du dernier tour du round… et la réponse se perd.
+    updateCombatState.mockImplementation((_id: string, etat: Partial<EtatCombat>) => {
+      fightSession.mockReturnValue(of({...session(), etat_combat: {depart: {}, ...etat}}));
+      return throwError(() => new Error('réseau'));
+    });
+
+    store.onEndTurn();
+    TestBed.tick();
+
+    expect(store.etat().round).toBe(3);
+    expect(store.roundCommenceIci()).toEqual({round: 3});
+    expect(notifyError).not.toHaveBeenCalled();
+    expect(updateCombatState).toHaveBeenCalledTimes(2);
   });
 
   it('annonce le round que son propre enregistrement fait commencer, une fois la session à jour', () => {
