@@ -1,12 +1,12 @@
 # Chapitre 5 — Fiche de session (aide de jeu condensée)
 
-Résumé pratique pour mener le chapitre 5, *Tolometh* (livre p. 125-141),
+Résumé pratique pour mener le chapitre 5, *Tolometh* (livre p. 124-141),
 sans rouvrir le texte complet
-[../11-chapitre5-tolometh.md](../11-chapitre5-tolometh.md). Ce texte brut
-n'est pas relu et ses blocs de stats ont perdu leurs valeurs. Cette fiche a
-été établie en le relisant avec le PDF (`pdftotext -layout`, PDF p. 126-143)
-le 2026-10-19. Dans le texte brut, « 'ulé » est une erreur d'extraction pour
-« Zalut ».
+[../11-chapitre5-tolometh.md](../11-chapitre5-tolometh.md). Cette fiche a
+été établie avec le PDF (`pdftotext -layout`, PDF p. 126-143) le 2026-10-19 ;
+le texte intégral a été relu sur le PDF, statistiques comprises, le
+2026-11-09. Le livre parle de Thulé, la contrée dont Zalut est la cité : la
+fiche dit Zalut.
 
 Version jouable dans l'app : `../app/ch5.json` (scénario « Perle du
 Beshaar — 5. Tolometh »).

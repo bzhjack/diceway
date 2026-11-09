@@ -43,8 +43,3 @@ fichier d'import `app/<aventure>.json` (format : `../format-import.md`).
 - **Une saga d'import par aventure** (`cl1-<aventure>`) : les aventures sont indépendantes, et une saga commune ferait se
   confondre deux « gardes ».
 - **Pas de région « Khanat »** au catalogue : le Khanat, le plateau de Lhend et la Vallée de la Lune n'ont que leur `lieu`.
-
-## Reste à faire
-
-- Jouer le seeder sur les autres environnements, pour le bestiaire du Khanat :
-  `php artisan db:seed --class='Database\Seeders\BolCreatureSeeder' --force`.

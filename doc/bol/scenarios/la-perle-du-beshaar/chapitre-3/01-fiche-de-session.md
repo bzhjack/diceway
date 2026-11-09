@@ -3,9 +3,9 @@
 Résumé pratique pour mener le chapitre 3, *Le tombeau d'Urzûlzalinaar*
 (livre p. 84-97), sans rouvrir le texte complet
 [../09-chapitre3-tombeau-urzulzalinaar.md](../09-chapitre3-tombeau-urzulzalinaar.md).
-Ce texte brut n'est pas relu et ses blocs de stats ont perdu leurs
-valeurs. Cette fiche a été établie en le relisant avec le PDF
-(`pdftotext -layout`, PDF p. 86-99) le 2026-10-19.
+Cette fiche a été établie avec le PDF (`pdftotext -layout`, PDF p. 86-99)
+le 2026-10-19 ; le texte intégral a été relu sur le PDF, statistiques
+comprises, le 2026-11-09.
 
 Version jouable dans l'app : `../app/ch3.json` (scénario « Perle du
 Beshaar — 3. Le tombeau d'Urzûlzalinaar »).

@@ -1,13 +1,13 @@
 # Chapitre 4 — Fiche de session (aide de jeu condensée)
 
 Résumé pratique pour mener le chapitre 4, *Le réveil de l'Ébranleur*
-(livre p. 98-124), et l'annexe *Les saltimbanques de Kutas* (p. 142-144),
+(livre p. 98-122), et l'annexe *Les saltimbanques de Kutas* (p. 142-144),
 sans rouvrir les textes complets
 [../10-chapitre4-reveil-ebranleur.md](../10-chapitre4-reveil-ebranleur.md)
 et [../12-annexe-saltimbanques-de-kutas.md](../12-annexe-saltimbanques-de-kutas.md).
-Ces textes bruts ne sont pas relus et leurs blocs de stats ont perdu
-leurs valeurs. Cette fiche a été établie en les relisant avec le PDF
-(`pdftotext -layout`, PDF p. 100-124 et 144-146) le 2026-10-19.
+Cette fiche a été établie avec le PDF (`pdftotext -layout`, PDF p. 100-124
+et 144-146) le 2026-10-19 ; les textes intégraux ont été relus sur le PDF,
+statistiques comprises, le 2026-11-09.
 
 Version jouable dans l'app : `../app/ch4.json` (scénario « Perle du
 Beshaar — 4. Le réveil de l'Ébranleur »).

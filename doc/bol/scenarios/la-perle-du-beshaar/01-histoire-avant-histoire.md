@@ -8,7 +8,7 @@
 
 Depuis plus d'un demi-siècle, Dazzandroth Zant siège à la tête du
 Conseil des Magiciens qui préside aux destinées de Zalut et de
-l'ensemble de la mystérieuse 'ulé. C'est un vieillard aux pouvoirs
+l'ensemble de la mystérieuse Thulé. C'est un vieillard aux pouvoirs
 sorciers terrifiants, grand maître des savoirs anciens et démoniste
 redouté qui commande, dit-on, à des hordes de démons. Du sommet de sa
 tour si haute que son faîte se perd dans les nuages, Dazzandroth
@@ -63,7 +63,7 @@ insatiable désir…
 
 Malgré toutes ses précautions et tous les moyens mis en œuvre, le
 Conseil a pourtant échoué : Dazzandroth a éventé le complot qui le
-visait et est parvenu à fuir 'ulé. Une purge sanglante a décimé sa
+visait et est parvenu à fuir Thulé. Une purge sanglante a décimé sa
 famille et ceux de ses disciples encore présents à Zalut. Depuis
 lors, les Magiciens de Zalut cherchent sans relâche Dazzandroth Zant,
 redoutant – à raison – sa vengeance.
@@ -145,7 +145,7 @@ Le Haut Mage caressait depuis longtemps déjà le projet de faire
 resurgir des flots le palais de Tolometh dans le but de s'emparer de
 ses pouvoirs. Cela aurait assuré à Zalut la maîtrise des mers ;
 désormais, c'est grâce à l'armée des noyés de Tolometh que
-Dazzandroth compte investir 'ulé et rétablir sa prééminence.
+Dazzandroth compte investir Thulé et rétablir sa prééminence.
 
 Son disciple Zutesh est depuis plusieurs années à la recherche des
 éléments indispensables à l'appel d'Upok-N'Mee l'Ébranleur. Zutesh

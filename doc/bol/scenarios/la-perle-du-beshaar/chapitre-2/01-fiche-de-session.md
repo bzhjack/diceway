@@ -11,8 +11,8 @@ désert) : [00-introduction.md](00-introduction.md). Texte intégral :
 
 > **Stats.** Les blocs de stats ci-dessous ont été repris du PDF
 > (`pdftotext -layout`, PDF p. 58-84) le 2026-10-19 : ils sont complets.
-> Le texte brut `../08-chapitre2-de-sable-et-deau.md` reste non relu à
-> la main et a perdu ces valeurs. Version jouable dans l'app :
+> Le texte intégral `../08-chapitre2-de-sable-et-deau.md`, relu sur le PDF
+> le 2026-11-09, les a aussi. Version jouable dans l'app :
 > `../app/ch2.json` (scénario « Perle du Beshaar — 2. De sable et d'eau »).
 
 ## Secrets à ne jamais lâcher ce soir

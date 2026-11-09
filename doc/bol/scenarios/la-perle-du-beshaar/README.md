@@ -7,29 +7,17 @@ lémuriennes 4*) via :
 pdftotext -f <première page PDF> -l <dernière page PDF> "La-Perle-du-Beshaar.pdf" -
 ```
 
-Pagination : **page PDF = page livre + 2** pour tout le contenu avant
-le chapitre 3 (avec deux pages blanches non numérotées entre les
-chapitres 2/3 et 4/5, repérées manuellement — voir le tableau
-ci-dessous pour les bornes PDF réelles de chaque fichier).
+Pagination : **page PDF = page livre + 2** dans tout le livre (vérifié sur les numéros imprimés le 2026-11-09). Les pages
+livre 83 et 123, entre les chapitres 2/3 et 4/5, sont des pleines pages sans numéro.
 
 ## Qualité de la transcription
 
-- **`00` à `04`** (présentation, histoire, résumé, introduction,
-  chapitre 1) ont été **relus et remis en ordre de lecture à la
-  main** : la mise en page originale du livre est en deux colonnes
-  avec des encarts (Note au MJ, statistiques, encarts d'ambiance), et
-  l'extraction brute du PDF les mélange parfois dans le désordre. Ces
-  fichiers sont fiables tels quels pour préparer et faire jouer une
-  séance.
-- **`05` à `12`** (cadre géographique, chapitres 2 à 5, annexe) sont
-  issus d'un **nettoyage automatisé** (ligatures « ff » et espaces
-  insécables corrigées, en-têtes de page et numéros de page retirés)
-  mais **pas relus à la main** : le texte est complet et lisible, mais
-  l'ordre de certains encarts par rapport au paragraphe qui les jouxte
-  peut être à corriger localement (repérable : une phrase qui semble
-  reprendre un fil interrompu, ou un titre d'encart qui apparaît après
-  son contenu). À vérifier/réordonner au besoin en préparant ces
-  séances.
+Tous les fichiers ont été **relus et remis en ordre de lecture à la main** sur le PDF : la mise en page originale du livre est
+en deux colonnes avec des encarts (Note au MJ, statistiques, encarts d'ambiance), que l'extraction brute mélangeait. `00` à
+`04` l'ont été d'abord ; `05` à `12` le 2026-11-09, au même format (titres, encadrés en citation, blocs de statistiques en
+tableau), avec les valeurs de statistiques que l'extraction avait perdues rétablies d'après le PDF. Chaque fichier a été comparé
+mot à mot à l'ancien texte : rien n'est reformulé, seuls l'ordre, la forme, les césures et les coquilles d'extraction (« 'ulé »
+pour Thulé, mots soudés) ont changé. Ces fichiers sont fiables tels quels pour préparer et faire jouer une séance.
 
 ## Fichiers
 
@@ -43,18 +31,17 @@ ci-dessous pour les bornes PDF réelles de chaque fichier).
 | `05-cadre-malakut.md` | Aide de jeu : la ville de Malakut | 6-13 | 8-15 |
 | `06-cadre-le-beshaar.md` | Aide de jeu : le désert du Beshaar | 14-23 | 16-25 |
 | `07-cadre-bestiaire-du-beshaar.md` | Bestiaire du Beshaar | 24-35 | 26-37 |
-| `08-chapitre2-de-sable-et-deau.md` | Chapitre 2 | 56-83 | 58-84 |
+| `08-chapitre2-de-sable-et-deau.md` | Chapitre 2 | 56-82 | 58-84 |
 | `09-chapitre3-tombeau-urzulzalinaar.md` | Chapitre 3 | 84-97 | 86-99 |
-| `10-chapitre4-reveil-ebranleur.md` | Chapitre 4 | 98-124 | 100-124 |
-| `11-chapitre5-tolometh.md` | Chapitre 5 | 125-141 | 126-143 |
+| `10-chapitre4-reveil-ebranleur.md` | Chapitre 4 | 98-122 | 100-124 |
+| `11-chapitre5-tolometh.md` | Chapitre 5 | 124-141 | 126-143 |
 | `12-annexe-saltimbanques-de-kutas.md` | Annexe : culte des Saltimbanques de Kutas | 142-144 | 144-146 |
 
 ## Fiches de session et version jouable dans l'app
 
 Chaque chapitre a une fiche de session condensée, établie en relisant le texte avec le PDF :
-`chapitre-1/` à `chapitre-5/` (l'annexe des saltimbanques est dans celle du chapitre 4). Les blocs de stats
-perdus dans les fichiers `05` à `12` y sont rétablis. Le PDF source est hors du dépôt, dans
-`~/Téléchargements/La-Perle-du-Beshaar.pdf` ; on l'extrait avec `pdftotext -layout`.
+`chapitre-1/` à `chapitre-5/` (l'annexe des saltimbanques est dans celle du chapitre 4). Le PDF source est
+hors de git, dans `doc/pdf/La-Perle-du-Beshaar.pdf` (dossier ignoré) ; on l'extrait avec `pdftotext -layout`.
 
 Le dossier `app/` contient un fichier JSON par chapitre, importable dans l'app avec
 `php artisan bol:import-scenario` (format : `../format-import.md`). Les chapitres se suivent : un personnage
@@ -69,4 +56,4 @@ le bestiaire du Beshaar (13 créatures), au catalogue à la demande de Lionel : 
 Lis dans l'ordre `00` → `01` → `02` → `03` → `04`, et pioche dans `05`
 (Malakut) pour le décor si tes joueurs traînent en ville avant de
 partir. Le chapitre 1 se termine sur le départ pour le Beshaar
-(chapitre 2), qui n'a pas encore été relu à la main.
+(chapitre 2).

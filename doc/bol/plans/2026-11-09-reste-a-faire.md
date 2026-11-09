@@ -20,8 +20,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | 2 | Combat : taille des démons, désarmement | S |
 | 3 | Combat : confort et robustesse | S à M |
 | 4 | Démons : création conforme au livre (facultatif) | M |
-| 5 | Scénarios | S à M |
-| 6 | Images | hors code |
+| 5 | Images | hors code |
 
 ## 1. Combat : sorcellerie, foi, pouvoir
 
@@ -65,14 +64,10 @@ Si l'on veut la règle stricte, dans l'ordre de la spec :
 - nombre de pouvoirs, en tenant compte de `Cuirassé` et `Vulnérabilité` (avertissement plutôt que refus) ;
 - vitalité et dégâts recalculés depuis la vigueur.
 
-## 5. Scénarios
+## 5. Images (hors code)
 
-- **La Perle du Beshaar** : les fichiers `05` à `12` ne sont pas relus à la main (ordre de certains encarts, voir le README de la saga) (M).
-- **Chroniques lémuriennes 1** : le README demande de jouer `BolCreatureSeeder` sur les autres postes pour le bestiaire du Khanat ;
-  le vérifier sur le second poste (S).
-
-## 6. Images (hors code)
-
+- `doc/bol/image-prompts/fonds-bibliotheques.md` : 6 fonds plein écran pour les bibliothèques (héros, PNJ, créatures, démons, armes,
+  armures), à la résolution du fond des scénarios ; puis, page par page, `image` et `[fondPleinePage]="true"` sur l'en-tête (S).
 - `doc/bol/image-prompts/creatures-demons-scenarios.md` : 3 planches, 18 portraits.
   - **CS4** (créatures) : tentacule, hippocampe, golem (Perle), gardienne bleue (Chroniques 1), parturiente maudite et son rejeton
     (Dieu voilé, ch5).
