@@ -80,17 +80,28 @@
             </div>
           </header>
 
-          @for (vue of scenario.chapitres; track vue.chapitre.id) {
-            <section class="sl-chapitre" [attr.aria-label]="vue.libelle">
+          <!-- Les chapitres repliés : on en déplie un pour lire son pitch et ranger ses scènes. Un one shot, seul chapitre sans titre, reste ouvert. -->
+          @for (vue of scenario.chapitres; track vue.id) {
+            @let ouvert = scenario.oneShot || ouverts().has(vue.id);
+            <section class="sl-chapitre" [class.sl-chapitre--ouvert]="ouvert && !scenario.oneShot" [attr.aria-label]="vue.libelle">
               <div class="sl-chapitre-tete">
-                <div class="sl-chapitre-texte">
-                  @if (!scenario.oneShot) {
-                    <h3 class="sl-chapitre-titre">{{ vue.libelle }}</h3>
-                  }
-                  @if (vue.chapitre.pitch; as pitch) {
-                    <p class="sl-pitch">{{ pitch }}</p>
-                  }
-                </div>
+                @if (!scenario.oneShot) {
+                  <h3 class="sl-chapitre-titre">
+                    <button
+                      type="button"
+                      class="sl-chapitre-bascule"
+                      [attr.aria-expanded]="ouvert"
+                      [attr.aria-controls]="ouvert ? 'sl-corps-' + vue.id : null"
+                      (click)="basculer(vue.id)"
+                    >
+                      <mat-icon class="sl-chevron" aria-hidden="true">chevron_right</mat-icon>
+                      <span class="sl-chapitre-nom">{{ vue.libelle }}</span>
+                      <span class="sl-chapitre-compte"> {{ vue.scenes.length }} {{ vue.scenes.length > 1 ? 'scènes' : 'scène' }}</span>
+                    </button>
+                  </h3>
+                } @else {
+                  <span class="sl-chapitre-compte sl-chapitre-compte--seul">{{ vue.scenes.length }} {{ vue.scenes.length > 1 ? 'scènes' : 'scène' }}</span>
+                }
                 <div class="sl-actions">
                   <button mat-stroked-button type="button" (click)="nouvelleScene(vue)">
                     <mat-icon>add</mat-icon> Scène
@@ -106,53 +117,60 @@
                 </div>
               </div>
 
-              @if (vue.scenes.length) {
-                <table class="dw-lr-table">
-                  <caption class="sr-only">Les scènes de {{ vue.libelle }}, dans leur ordre ; un clic sur une scène la prépare.</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col" class="dw-lr-num">N°</th>
-                      <th scope="col">Scène</th>
-                      <th scope="col">Lieu</th>
-                      <th scope="col">Ambiance</th>
-                      <th scope="col" class="dw-lr-num">Danger</th>
-                      <th scope="col" class="dw-lr-num">Figurants</th>
-                      <th scope="col"><span class="sr-only">Actions</span></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (ligne of vue.scenes; track ligne.scene.id; let i = $index, premier = $first, dernier = $last) {
-                      <tr>
-                        <td class="dw-lr-num">{{ i + 1 }}</td>
-                        <td>
-                          <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.scene.titre + ', la préparer'" (click)="preparer(vue, ligne.scene)">
-                            <span class="dw-lr-nom-texte sl-scene-titre">{{ ligne.scene.titre }}</span>
-                          </button>
-                        </td>
-                        <td><span class="dw-lr-texte-long">{{ ligne.scene.lieu || '—' }}</span></td>
-                        <td>{{ ligne.ambiance || '—' }}</td>
-                        <td class="dw-lr-num">{{ ligne.scene.danger ?? '—' }}</td>
-                        <td class="dw-lr-num">{{ ligne.figurants }}</td>
-                        <td class="dw-lr-actions">
-                          <button mat-icon-button type="button" [attr.aria-label]="'Monter ' + ligne.scene.titre" [disabled]="premier" (click)="deplacer(vue, i, -1)">
-                            <mat-icon>arrow_upward</mat-icon>
-                          </button>
-                          <button mat-icon-button type="button" [attr.aria-label]="'Descendre ' + ligne.scene.titre" [disabled]="dernier" (click)="deplacer(vue, i, 1)">
-                            <mat-icon>arrow_downward</mat-icon>
-                          </button>
-                          <button mat-icon-button type="button" [attr.aria-label]="'Préparer ' + ligne.scene.titre" (click)="preparer(vue, ligne.scene)">
-                            <mat-icon>edit_note</mat-icon>
-                          </button>
-                          <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.scene.titre" (click)="supprimerScene(ligne.scene)">
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </td>
-                      </tr>
-                    }
-                  </tbody>
-                </table>
-              } @else {
-                <p class="sl-vide">Aucune scène : ajoutes-en une, prépare-la ici, puis pose ses figurants à la table.</p>
+              @if (ouvert) {
+                <div class="sl-chapitre-corps" [id]="'sl-corps-' + vue.id">
+                  @if (vue.chapitre.pitch; as pitch) {
+                    <p class="sl-pitch">{{ pitch }}</p>
+                  }
+                  @if (vue.scenes.length) {
+                    <table class="dw-lr-table">
+                      <caption class="sr-only">Les scènes de {{ vue.libelle }}, dans leur ordre ; un clic sur une scène la prépare.</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col" class="dw-lr-num">N°</th>
+                          <th scope="col">Scène</th>
+                          <th scope="col">Lieu</th>
+                          <th scope="col">Ambiance</th>
+                          <th scope="col" class="dw-lr-num">Danger</th>
+                          <th scope="col" class="dw-lr-num">Figurants</th>
+                          <th scope="col"><span class="sr-only">Actions</span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (ligne of vue.scenes; track ligne.scene.id; let i = $index, premier = $first, dernier = $last) {
+                          <tr>
+                            <td class="dw-lr-num">{{ i + 1 }}</td>
+                            <td>
+                              <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.scene.titre + ', la préparer'" (click)="preparer(vue, ligne.scene)">
+                                <span class="dw-lr-nom-texte sl-scene-titre">{{ ligne.scene.titre }}</span>
+                              </button>
+                            </td>
+                            <td><span class="dw-lr-texte-long">{{ ligne.scene.lieu || '—' }}</span></td>
+                            <td>{{ ligne.ambiance || '—' }}</td>
+                            <td class="dw-lr-num">{{ ligne.scene.danger ?? '—' }}</td>
+                            <td class="dw-lr-num">{{ ligne.figurants }}</td>
+                            <td class="dw-lr-actions">
+                              <button mat-icon-button type="button" [attr.aria-label]="'Monter ' + ligne.scene.titre" [disabled]="premier" (click)="deplacer(vue, i, -1)">
+                                <mat-icon>arrow_upward</mat-icon>
+                              </button>
+                              <button mat-icon-button type="button" [attr.aria-label]="'Descendre ' + ligne.scene.titre" [disabled]="dernier" (click)="deplacer(vue, i, 1)">
+                                <mat-icon>arrow_downward</mat-icon>
+                              </button>
+                              <button mat-icon-button type="button" [attr.aria-label]="'Préparer ' + ligne.scene.titre" (click)="preparer(vue, ligne.scene)">
+                                <mat-icon>edit_note</mat-icon>
+                              </button>
+                              <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.scene.titre" (click)="supprimerScene(ligne.scene)">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  } @else {
+                    <p class="sl-vide">Aucune scène : ajoutes-en une, prépare-la ici, puis pose ses figurants à la table.</p>
+                  }
+                </div>
               }
             </section>
           }

@@ -105,49 +105,23 @@
   background: var(--saga);
 }
 
-.dw-lr-rangs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0 0.5rem;
+// Une liste de filtre dans la barre de recherche ; « Tous les … » (aucun choix) a la couleur d'une valeur, comme « Toutes les régions ».
+.dw-lr-select-barre {
+  --mat-select-placeholder-text-color: var(--dw-forge-bone);
+  width: 13rem;
 }
 
-.dw-lr-chip {
-  min-height: 2rem;
-  padding: 0 0.6rem;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: var(--dw-radius-toggle);
-  background: transparent;
-  color: var(--dw-forge-bone);
-  font: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--dw-forge-hot);
-  }
-
-  &[aria-pressed='true'] {
-    border-color: var(--dw-color-legendary);
-    background: rgba(217, 164, 65, 0.18);
-    color: var(--dw-forge-name);
-    font-weight: 700;
-  }
+// Le panneau d'une de ces listes (dans le calque des overlays) : aussi large que sa plus longue option, chacune sur une ligne.
+.dw-lr-select-panel .mat-mdc-option .mdc-list-item__primary-text {
+  white-space: nowrap;
 }
 
-.dw-lr-select {
-  width: 100%;
-  padding: 0 0.5rem;
-  box-sizing: border-box;
-}
-
+// Tout à droite de la barre de recherche, quand un filtre est posé.
 .dw-lr-effacer {
-  align-self: flex-start;
-  margin-left: 0.5rem;
+  margin-left: auto;
 }
 
 .dw-lr-option,
-.dw-lr-chip,
 .dw-lr-tri,
 .dw-lr-nom {
   &:focus-visible {
@@ -192,6 +166,13 @@
 
     &:first-child {
       padding-left: 1rem;
+    }
+
+    // La colonne des actions porte le nombre de fiches gardées, à droite et en or.
+    &.dw-lr-compte {
+      padding-right: 1rem;
+      color: var(--dw-forge-gold);
+      text-align: right;
     }
   }
 

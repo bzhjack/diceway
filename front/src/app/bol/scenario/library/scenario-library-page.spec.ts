@@ -86,18 +86,48 @@ describe('ScenarioLibraryPageComponent', () => {
     return {page, open, scenarioService, sceneService, snack, texte, bouton, cliquer, repondre};
   }
 
-  it('range les scénarios puis les one shots, et montre le premier : ses chapitres dans l’ordre, leurs scènes par rang', async () => {
+  it('range les scénarios puis les one shots, et montre le premier : ses chapitres dans l’ordre, repliés, avec leur nombre de scènes', async () => {
     const {page, texte} = await rendre();
 
     expect([...page.querySelectorAll('nav .dw-lr-option-label')].map((e) => texte(e))).toEqual(['Le Dieu voilé', 'premier scénario']);
     expect(texte(page.querySelector('.sl-titre'))).toBe('Le Dieu voilé');
-    expect([...page.querySelectorAll('.sl-chapitre-titre')].map((e) => texte(e))).toEqual([
+    expect([...page.querySelectorAll('.sl-chapitre-nom')].map((e) => texte(e))).toEqual([
       'Introduction : La colère de Nemmereth',
       '1. L’oracle de Nemmereth',
     ]);
+    expect([...page.querySelectorAll('.sl-chapitre-compte')].map((e) => texte(e))).toEqual(['1 scène', '2 scènes']);
+    expect([...page.querySelectorAll('.sl-chapitre-bascule')].map((b) => b.getAttribute('aria-expanded'))).toEqual(['false', 'false']);
+    expect(page.querySelector('.sl-chapitre table')).toBeNull();
+    expect(page.querySelector('.sl-pitch')).toBeNull();
+  });
+
+  it('déplie un chapitre pour montrer son pitch et ses scènes par rang, le replie', async () => {
+    const {page, texte, cliquer} = await rendre();
+    const bascule = page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1];
+
+    await cliquer(bascule);
+
+    expect(bascule.getAttribute('aria-expanded')).toBe('true');
+    expect(page.querySelector(`#${bascule.getAttribute('aria-controls')}`)).not.toBeNull();
+    expect(texte(page.querySelectorAll('.sl-chapitre')[1].querySelector('.sl-pitch'))).toBe('Cap au sud.');
     const lignes = [...page.querySelectorAll('.sl-chapitre')[1].querySelectorAll('tbody tr')];
     expect(lignes.map((tr) => texte(tr.querySelector('.sl-scene-titre')))).toEqual(['Scène s0', 'Scène s1']);
     expect([...lignes[0].querySelectorAll('td')].slice(2, 6).map((td) => texte(td))).toEqual(['Halakh', 'Jour · Ciel clair', '1', '3']);
+    expect(page.querySelectorAll('.sl-chapitre')[0].querySelector('table')).toBeNull();
+
+    await cliquer(bascule);
+
+    expect(bascule.getAttribute('aria-expanded')).toBe('false');
+    expect(page.querySelector('.sl-chapitre table')).toBeNull();
+  });
+
+  it('un one shot montre ses scènes sans rien à déplier', async () => {
+    const {page, bouton, cliquer} = await rendre();
+
+    await cliquer(bouton('premier scénario'));
+
+    expect(page.querySelector('.sl-chapitre-bascule')).toBeNull();
+    expect(page.querySelector('.sl-chapitre-corps')).not.toBeNull();
   });
 
   it('un nouveau scénario naît avec son premier chapitre, puis la bibliothèque se relit', async () => {
@@ -155,17 +185,19 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(snack.mock.calls[0][0]).toContain('Une partie joue un chapitre de ce scénario.');
   });
 
-  it('une nouvelle scène naît vide dans son chapitre, sans table', async () => {
+  it('une nouvelle scène naît vide dans son chapitre, sans table, et le déplie', async () => {
     const {page, bouton, cliquer, repondre, sceneService} = await rendre();
     repondre('Le texte de l’oracle');
 
     await cliquer(bouton('Scène', page.querySelectorAll('.sl-chapitre')[1]));
 
     expect(sceneService.create).toHaveBeenCalledWith('Le texte de l’oracle', 'dv1', null);
+    expect(page.querySelectorAll('.sl-chapitre-bascule')[1].getAttribute('aria-expanded')).toBe('true');
   });
 
   it('range une scène plus bas dans son chapitre', async () => {
-    const {bouton, cliquer, sceneService} = await rendre();
+    const {page, bouton, cliquer, sceneService} = await rendre();
+    await cliquer(page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1]);
 
     await cliquer(bouton('Descendre Scène s0'));
 

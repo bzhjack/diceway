@@ -57,6 +57,13 @@
   }
 }
 
+// Une bibliothèque illustrée : l'illustration de son en-tête (`.dw-lh-fond`) est le fond de la page, passé sous le contenu mais au-dessus
+// de la suie ; les cartes s'y posent avec une suie translucide qui garde les tableaux lisibles.
+.dw-page:has(.dw-lh-fond) {
+  isolation: isolate;
+  --mat-card-outlined-container-color: rgba(15, 10, 6, 0.8);
+}
+
 // Les menus d'ajout et les dialogues s'ouvrent dans le calque des overlays, hors de la page : ils suivent tant qu'une page de la forge est à
 // l'écran. Le statbloc garde sa propre fiche.
 body:has(.dw-page) .cdk-overlay-container {

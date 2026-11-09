@@ -56,13 +56,31 @@ describe('PnjLibraryPageComponent', () => {
     expect(ligne('Ajhaskar').querySelector('a[aria-label="Modifier Ajhaskar"]')?.getAttribute('href')).toBe('/create/pnj/Ajhaskar');
   });
 
-  it('filtre par rang et par scénario', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+  it('filtre par rang et par région, deux listes à droite de la recherche, puis par scénario', async () => {
+    const {page, fixture, texte, noms, bouton, cliquer} = await rendre();
+    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
+    const choisir = async (liste: string, libelle: string) => {
+      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      await fixture.whenStable();
+      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      await fixture.whenStable();
+    };
 
-    await cliquer(bouton('.dw-lr-chip', 'Rival'));
+    expect(page.querySelector('.dw-lr-filtres .dw-lr-effacer')).toBeNull();
+    expect(page.querySelector('.dw-lr-filtres mat-select')).toBeNull();
+
+    expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('3 PNJ · actions');
+
+    await choisir('Rang', 'Rival · 1');
     expect(noms()).toEqual(['Ajhaskar']);
+    expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('1 PNJ · actions');
+    expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
 
-    await cliquer(bouton('.dw-lr-chip', 'Rival'));
+    await choisir('Rang', 'Tous les rangs');
+    await choisir('Région', 'Satarla · 1');
+    expect(noms()).toEqual(['Acolyte']);
+
+    await choisir('Région', 'Toutes les régions');
     await cliquer(bouton('.dw-lr-option', 'Le Dieu voilé'));
     expect(noms()).toEqual(['Acolyte', 'Ajhaskar']);
   });

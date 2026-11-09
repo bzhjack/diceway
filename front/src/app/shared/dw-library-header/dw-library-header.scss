@@ -2,18 +2,17 @@
   display: block;
 }
 
-// Bannière illustrée optionnelle — même traitement que workspace-header.
-.dw-lh-card--image {
+// L'illustration, fond fixe de toute la page : sous le contenu de `dw-page`, qui s'isole pour la garder au-dessus de sa propre suie
+// (`_forge-page.scss`).
+.dw-lh-fond {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-color: var(--dw-library-header-bg);
   background-repeat: no-repeat;
+  background-position: center top;
   background-size: cover;
-  background-position: top;
-
-  // L'illustration, voilée à gauche sous le texte.
-  .mat-mdc-card-content {
-    border-radius: inherit;
-    background: linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.78) 48%, rgba(15, 10, 6, 0.15) 78%);
-  }
 }
 
 .dw-lh-eyebrow {

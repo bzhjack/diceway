@@ -84,7 +84,14 @@ describe('CreatureLibraryPageComponent', () => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, ligne, bouton, cliquer};
+    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
+    const choisir = async (liste: string, libelle: string) => {
+      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      await fixture.whenStable();
+      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      await fixture.whenStable();
+    };
+    return {page, fixture, open, texte, noms, ligne, bouton, cliquer, choisir};
   }
 
   it('liste toutes les créatures en lignes, par nom, avec leur taille, leur rang et leur source', async () => {
@@ -139,12 +146,16 @@ describe('CreatureLibraryPageComponent', () => {
     expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ', 'Momie royale', 'Andrak', 'Azhdarkho']);
   });
 
-  it('filtre par rang', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+  it('filtre par rang et par taille, deux listes de la barre de recherche', async () => {
+    const {page, noms, choisir} = await rendre();
+    expect(page.querySelector('.dw-lr-filtres mat-select')).toBeNull();
 
-    await cliquer(bouton('.dw-lr-chip', 'Piétaille'));
-
+    await choisir('Rang', 'Piétaille');
     expect(noms()).toEqual(['Cathgan']);
+
+    await choisir('Rang', 'Tous les rangs');
+    await choisir('Taille', 'Moyenne');
+    expect(noms()).toEqual(['Fille de Djidaâ', 'Momie royale']);
   });
 
   it('trie par colonne, et inverse le sens au second clic', async () => {
@@ -176,11 +187,12 @@ describe('CreatureLibraryPageComponent', () => {
   });
 
   it('« Effacer les filtres » paraît avec un filtre et les retire tous', async () => {
-    const {page, noms, bouton, cliquer} = await rendre();
+    const {page, noms, bouton, cliquer, choisir} = await rendre();
     expect(page.querySelector('.dw-lr-effacer')).toBeNull();
 
     await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
-    await cliquer(bouton('.dw-lr-chip', 'Coriace'));
+    await choisir('Rang', 'Coriace');
+    expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
     await cliquer(page.querySelector<HTMLButtonElement>('.dw-lr-effacer')!);
 
     expect(noms().length).toBe(5);
@@ -196,10 +208,10 @@ describe('CreatureLibraryPageComponent', () => {
   });
 
   it('sans résultat, le dit', async () => {
-    const {page, bouton, cliquer, texte} = await rendre();
+    const {page, bouton, cliquer, texte, choisir} = await rendre();
 
     await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
-    await cliquer(bouton('.dw-lr-chip', 'Piétaille'));
+    await choisir('Rang', 'Piétaille');
 
     expect(texte(page.querySelector('.dw-lr-vide'))).toBe('Aucune créature ne correspond à ces filtres.');
   });

@@ -33,6 +33,7 @@ interface SceneVue {
 }
 
 interface ChapitreVue {
+  readonly id: string;
   readonly chapitre: BolScenarioModel;
   readonly libelle: string;
   readonly scenes: readonly SceneVue[];
@@ -104,6 +105,7 @@ export class ScenarioLibraryPageComponent {
       }
     }
     const vue = (chapitre: BolScenarioModel): ChapitreVue => ({
+      id: chapitre.id ?? '',
       chapitre,
       libelle: libelleDeChapitre(chapitre.numero, chapitre.titre),
       scenes: [...(scenesParChapitre.get(chapitre.id ?? '') ?? [])].sort((a, b) => a.ordre - b.ordre).map(sceneVue),
@@ -136,6 +138,23 @@ export class ScenarioLibraryPageComponent {
 
   protected choisir(id: string): void {
     this.choisi.set(id);
+  }
+
+  /** Les chapitres dépliés, par id : tous repliés à l'arrivée, chacun s'ouvre et se ferme seul. */
+  protected readonly ouverts = signal<ReadonlySet<string>>(new Set());
+
+  protected basculer(id: string): void {
+    this.ouverts.update((ouverts) => {
+      const suivants = new Set(ouverts);
+      if (!suivants.delete(id)) {
+        suivants.add(id);
+      }
+      return suivants;
+    });
+  }
+
+  private deplier(id: string): void {
+    this.ouverts.update((ouverts) => (ouverts.has(id) ? ouverts : new Set([...ouverts, id])));
   }
 
   // ── Les scénarios ───────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -252,11 +271,11 @@ export class ScenarioLibraryPageComponent {
 
   // ── Les scènes ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-  /** Une scène vide, au dernier rang du chapitre : elle se prépare ensuite, ses figurants se posent à la table. */
+  /** Une scène vide, au dernier rang du chapitre, qui se déplie pour la montrer : elle se prépare ensuite, ses figurants se posent à la table. */
   protected nouvelleScene(vue: ChapitreVue): void {
     promptDialog(this.dialog, {title: 'Nouvelle scène', label: 'Titre de la scène', maxLength: 120, confirmLabel: 'Créer'}).subscribe((titre) => {
       if (titre && vue.chapitre.id) {
-        this.enregistrer(this.sceneService.create(titre, vue.chapitre.id, null), 'Impossible de créer la scène.');
+        this.enregistrer(this.sceneService.create(titre, vue.chapitre.id, null), 'Impossible de créer la scène.', () => this.deplier(vue.id));
       }
     });
   }

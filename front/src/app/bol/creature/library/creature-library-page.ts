@@ -20,6 +20,7 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
+import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
 import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
 import {LibraryColonne, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
@@ -63,6 +64,7 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
     DwTagComponent,
     LibraryEnteteComponent,
     LibraryFacettesComponent,
+    LibraryRangComponent,
   ],
   templateUrl: './creature-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

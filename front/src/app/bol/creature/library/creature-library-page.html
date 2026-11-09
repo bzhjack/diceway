@@ -37,37 +37,34 @@
     <div class="dw-lr-corps">
       <!-- Les filtres, toujours en vue : chacun dit combien de créatures il garde. -->
       <aside class="dw-lr-filtres" aria-label="Filtres du bestiaire">
-        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [rangs]="rangs()" [(source)]="source" [(scenarioId)]="scenarioId" [(rang)]="rang" />
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
+      </aside>
 
-        <section class="dw-lr-facette" aria-labelledby="cl-f-taille">
-          <h2 id="cl-f-taille" class="dw-lr-facette-titre">Taille</h2>
-          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
-            <mat-select [formField]="tailleField" aria-labelledby="cl-f-taille">
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <!-- Le rang et la taille, à droite de la recherche. -->
+          <bol-library-rang dwToolbarFilter [rangs]="rangs()" [(rang)]="rang" />
+          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+            <mat-select [formField]="tailleField" aria-label="Taille" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les tailles</mat-option>
               @for (taille of tailles() ?? []; track taille.id) {
                 <mat-option [value]="taille.id">{{ taille.taille }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
-        </section>
-
-        @if (filtresActifs()) {
-          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
-          </button>
-        }
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <dw-tag dwToolbarCount>{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</dw-tag>
+          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          @if (filtresActifs()) {
+            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+            </button>
+          }
         </dw-library-toolbar>
 
         <div class="dw-lr-cadre">
           <table class="dw-lr-table">
             <caption class="sr-only">Les créatures du bestiaire ; un clic sur un nom ouvre son statbloc.</caption>
             <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+              <tr bol-library-entete [colonnes]="colonnes()" [compte]="creatureCount() + (creatureCount() > 1 ? ' créatures' : ' créature')" (trier)="trier($event)"></tr>
             </thead>
             <tbody>
               @for (ligne of lignes(); track ligne.creature.id) {

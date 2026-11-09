@@ -19,6 +19,7 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
+import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
 import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
 import {LibraryColonne, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
@@ -41,8 +42,9 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
 ];
 
 /**
- * Les PNJ, en lignes : à gauche les filtres (source, scénario, rang, région) avec leur nombre de PNJ, à droite le tableau, triable par
- * colonne. Un clic sur un PNJ ouvre son statbloc ; les fiches du compte se modifient et se suppriment, celles du catalogue commun sont
+ * Les PNJ, en lignes : à gauche les filtres (source, scénario) avec leur nombre de PNJ, à droite le tableau, triable par colonne, sous la
+ * recherche suivie de deux listes (rang, région).
+ * Un clic sur un PNJ ouvre son statbloc ; les fiches du compte se modifient et se suppriment, celles du catalogue commun sont
  * en lecture seule.
  */
 @Component({
@@ -62,6 +64,7 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
     DwTagComponent,
     LibraryEnteteComponent,
     LibraryFacettesComponent,
+    LibraryRangComponent,
   ],
   templateUrl: './pnj-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

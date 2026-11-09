@@ -49,36 +49,32 @@
             </button>
           }
         </section>
+      </aside>
 
-        <section class="dw-lr-facette" aria-labelledby="hl-f-region">
-          <h2 id="hl-f-region" class="dw-lr-facette-titre">Région</h2>
-          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
-            <mat-select [formField]="regionField" aria-labelledby="hl-f-region">
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <!-- La région, à droite de la recherche. -->
+          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+            <mat-select [formField]="regionField" aria-label="Région" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les régions</mat-option>
               @for (region of regions(); track region.id) {
                 <mat-option [value]="region.id">{{ region.nom }} · {{ region.compte }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
-        </section>
-
-        @if (filtresActifs()) {
-          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
-          </button>
-        }
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <dw-tag dwToolbarCount>{{ heroCount() }} héros</dw-tag>
+          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          @if (filtresActifs()) {
+            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+            </button>
+          }
         </dw-library-toolbar>
 
         <div class="dw-lr-cadre">
           <table class="dw-lr-table">
             <caption class="sr-only">Les héros ; un clic sur un nom ouvre son statbloc.</caption>
             <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+              <tr bol-library-entete [colonnes]="colonnes()" [compte]="heroCount() + ' héros'" (trier)="trier($event)"></tr>
             </thead>
             <tbody>
               @for (ligne of lignes(); track ligne.hero.id) {

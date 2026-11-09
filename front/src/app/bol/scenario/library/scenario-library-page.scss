@@ -42,34 +42,93 @@
   --mat-button-outlined-label-text-color: var(--dw-forge-error-text);
 }
 
-// ── Un chapitre : son nom et son pitch, ses actions, puis ses scènes ───────────────────────────────────────────────────────────────
+// ── Un chapitre, replié : son nom et son nombre de scènes, ses actions ; déplié, son pitch puis ses scènes ───────────────────────────
 .sl-chapitre {
-  padding: 0.5rem 0 0.75rem;
   border-bottom: 1px solid rgba(169, 121, 58, 0.25);
+}
+
+.sl-chapitre--ouvert {
+  padding-bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .sl-chapitre-tete {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.6rem 1.25rem;
-}
-
-.sl-chapitre-texte {
-  min-width: 0;
+  padding: 0.35rem 1.25rem 0.35rem 0.75rem;
 }
 
 .sl-chapitre-titre {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
+}
+
+// Toute la ligne, sauf les actions, déplie le chapitre.
+.sl-chapitre-bascule {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem;
+  border: none;
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+}
+
+.sl-chevron {
+  flex-shrink: 0;
+  color: var(--dw-forge-bronze-text);
+  transition: transform 0.15s ease, color 0.15s ease;
+
+  .sl-chapitre-bascule[aria-expanded='true'] & {
+    transform: rotate(90deg);
+    color: var(--mat-sys-primary);
+  }
+}
+
+.sl-chapitre-nom {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--dw-forge-bone);
 }
 
+.sl-chapitre-compte {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dw-forge-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.sl-chapitre-compte--seul {
+  padding-left: 0.5rem;
+}
+
 .sl-pitch {
-  margin: 0.3rem 0 0;
-  max-width: 60rem;
+  margin: 0;
+  padding: 0 1.25rem 0.75rem 3.25rem;
+  max-width: 64rem;
   font-size: 0.85rem;
   line-height: 1.45;
   color: var(--dw-forge-caption);

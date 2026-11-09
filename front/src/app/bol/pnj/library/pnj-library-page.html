@@ -37,37 +37,34 @@
     <div class="dw-lr-corps">
       <!-- Les filtres, toujours en vue : chacun dit combien de PNJ il garde. -->
       <aside class="dw-lr-filtres" aria-label="Filtres des PNJ">
-        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [rangs]="rangs()" [(source)]="source" [(scenarioId)]="scenarioId" [(rang)]="rang" />
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
+      </aside>
 
-        <section class="dw-lr-facette" aria-labelledby="pl-f-region">
-          <h2 id="pl-f-region" class="dw-lr-facette-titre">Région</h2>
-          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
-            <mat-select [formField]="regionField" aria-labelledby="pl-f-region">
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher un PNJ, une carrière, une région" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <!-- Le rang et la région, à droite de la recherche : deux listes, chaque option avec son nombre de PNJ. -->
+          <bol-library-rang dwToolbarFilter [rangs]="rangs()" [(rang)]="rang" />
+          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+            <mat-select [formField]="regionField" aria-label="Région" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les régions</mat-option>
               @for (region of regions(); track region.id) {
                 <mat-option [value]="region.id">{{ region.nom }} · {{ region.compte }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
-        </section>
-
-        @if (filtresActifs()) {
-          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
-          </button>
-        }
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher un PNJ, une carrière, une région" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <dw-tag dwToolbarCount>{{ pnjCount() }} PNJ</dw-tag>
+          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          @if (filtresActifs()) {
+            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+            </button>
+          }
         </dw-library-toolbar>
 
         <div class="dw-lr-cadre">
           <table class="dw-lr-table">
             <caption class="sr-only">Les PNJ ; un clic sur un nom ouvre son statbloc.</caption>
             <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+              <tr bol-library-entete [colonnes]="colonnes()" [compte]="pnjCount() + ' PNJ'" (trier)="trier($event)"></tr>
             </thead>
             <tbody>
               @for (ligne of lignes(); track ligne.pnj.id) {

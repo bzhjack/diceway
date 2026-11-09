@@ -37,37 +37,34 @@
     <div class="dw-lr-corps">
       <!-- Les filtres, toujours en vue : chacun dit combien de démons il garde. -->
       <aside class="dw-lr-filtres" aria-label="Filtres des démons">
-        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [rangs]="rangs()" [(source)]="source" [(scenarioId)]="scenarioId" [(rang)]="rang" />
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
+      </aside>
 
-        <section class="dw-lr-facette" aria-labelledby="dl-f-categorie">
-          <h2 id="dl-f-categorie" class="dw-lr-facette-titre">Catégorie</h2>
-          <mat-form-field class="dw-lr-select" subscriptSizing="dynamic">
-            <mat-select [formField]="categorieField" aria-labelledby="dl-f-categorie">
+      <mat-card appearance="outlined" class="dw-lr-liste">
+        <dw-library-toolbar placeholder="Rechercher un démon, un pouvoir, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
+          <!-- Le rang et la catégorie, à droite de la recherche. -->
+          <bol-library-rang dwToolbarFilter [rangs]="rangs()" [(rang)]="rang" />
+          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+            <mat-select [formField]="categorieField" aria-label="Catégorie" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les catégories</mat-option>
               @for (categorie of categories() ?? []; track categorie.id) {
                 <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
-        </section>
-
-        @if (filtresActifs()) {
-          <button mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-            <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
-          </button>
-        }
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher un démon, un pouvoir, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <dw-tag dwToolbarCount>{{ demonCount() }} {{ demonCount() > 1 ? 'démons' : 'démon' }}</dw-tag>
+          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          @if (filtresActifs()) {
+            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+            </button>
+          }
         </dw-library-toolbar>
 
         <div class="dw-lr-cadre">
           <table class="dw-lr-table">
             <caption class="sr-only">Les démons ; un clic sur un nom ouvre son statbloc.</caption>
             <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" (trier)="trier($event)"></tr>
+              <tr bol-library-entete [colonnes]="colonnes()" [compte]="demonCount() + (demonCount() > 1 ? ' démons' : ' démon')" (trier)="trier($event)"></tr>
             </thead>
             <tbody>
               @for (ligne of lignes(); track ligne.demon.id) {

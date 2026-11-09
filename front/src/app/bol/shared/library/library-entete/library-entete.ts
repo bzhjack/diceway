@@ -4,8 +4,9 @@ import {LibraryColonneVue} from '../../models/library-rows.model';
 
 /**
  * La ligne d'en-têtes d'une bibliothèque en lignes, posée sur le `<tr>` du `<thead>` : chaque colonne triable est un bouton qui dit son
- * sens (`aria-sort` sur sa cellule), un en-tête abrégé donne le mot entier en bulle, la dernière cellule nomme les actions pour les
- * lecteurs d'écran. Les styles sont ceux de `styles/_library-rows.scss`.
+ * sens (`aria-sort` sur sa cellule), un en-tête abrégé donne le mot entier en bulle ; la dernière cellule, celle des actions, montre le
+ * nombre de fiches gardées par les filtres (`compte`) et nomme les actions pour les lecteurs d'écran. Les styles sont ceux de
+ * `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'tr[bol-library-entete]',
@@ -31,11 +32,19 @@ import {LibraryColonneVue} from '../../models/library-rows.model';
         }
       </th>
     }
-    <th scope="col"><span class="sr-only">Actions</span></th>
+    <th scope="col" class="dw-lr-compte">
+      @if (compte(); as compte) {
+        {{ compte }}<span class="sr-only"> · actions</span>
+      } @else {
+        <span class="sr-only">Actions</span>
+      }
+    </th>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LibraryEnteteComponent {
   readonly colonnes = input.required<readonly LibraryColonneVue<string>[]>();
+  /** Le nombre de fiches gardées, avec son nom (« 197 PNJ »), en tête de la colonne des actions. */
+  readonly compte = input<string | null>(null);
   readonly trier = output<string>();
 }
