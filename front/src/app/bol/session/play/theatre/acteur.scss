@@ -112,7 +112,12 @@
 }
 
 .act-rang {
+  // Sur la plus petite carte (la piétaille), l'étiquette cède la place : elle se coupe, l'icône du type garde son rond.
+  min-width: 0;
+  overflow: hidden;
   padding: 0.1rem 0.45rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   border-radius: 999px;
   background: rgba(10, 6, 4, 0.82);
   box-shadow: inset 0 0 0 1px var(--dw-forge-bronze-dim);
@@ -126,6 +131,7 @@
 }
 
 .act-type {
+  flex: none;
   width: 1.5rem;
   height: 1.5rem;
   padding: 0.2rem;
@@ -215,6 +221,30 @@
 .act--pietaille .act-nom,
 .act--allie .act-nom {
   font-size: calc(0.88rem * var(--thr-k, 1));
+}
+
+// Les petites cartes : l'étiquette du rang et le rond du type rapetissent aussi, pour que « Piétaille » tienne en entier.
+.act--pietaille,
+.act--allie {
+  .act-haut {
+    top: 0.3rem;
+    right: 0.3rem;
+    left: 0.3rem;
+    gap: 0.2rem;
+  }
+
+  .act-rang {
+    padding: 0.05rem 0.3rem;
+    font-size: 0.6rem;
+  }
+
+  .act-type {
+    width: 1.2rem;
+    height: 1.2rem;
+    padding: 0.15rem;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+  }
 }
 
 .act-vit {
