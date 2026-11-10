@@ -9,7 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {extractApiErrorMessage, extractApiErrorText} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/models/pending-changes-guard.model';
 import {readReturnUrl} from '../../../core/return-url.util';
-import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {confirmLeaveUnsaved} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {PictureComponent} from '../../../shared/picture/picture';
 import {EntityFormLabels} from '../models/entity-form-page.model';
 
@@ -156,12 +156,7 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {nom: st
       return true;
     }
 
-    return confirmDialog(this.dialog, {
-      title: 'Modifications non enregistrées',
-      message: this.labels.unsavedChanges,
-      confirmLabel: 'Quitter sans sauver',
-      cancelLabel: 'Annuler',
-    });
+    return confirmLeaveUnsaved(this.dialog, this.labels.unsavedChanges);
   }
 
   protected pickAvatar(): void {

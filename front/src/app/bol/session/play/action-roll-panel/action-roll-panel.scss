@@ -108,9 +108,9 @@ bol-action-roll-panel {
 .ard-medals {
   display: grid;
   // Les uns sous les autres, à une taille qui laisse tenir les quatre dans la hauteur de la carte.
-  grid-template-columns: 5.6rem;
+  grid-template-columns: 5.9rem;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.3rem;
 }
 
 .ard-medal {
@@ -129,18 +129,18 @@ bol-action-roll-panel {
   cursor: pointer;
 
   .mat-icon {
-    width: 1.05rem;
-    height: 1.05rem;
-    font-size: 1.05rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: 1.15rem;
   }
 
   b {
-    font: 400 1.75rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.95rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-forge-bone);
   }
 
   span {
-    font-size: 0.64rem;
+    font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;

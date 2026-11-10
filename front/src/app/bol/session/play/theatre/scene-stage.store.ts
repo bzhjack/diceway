@@ -1,5 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {preparerLaScene} from '../../../scenario/scene-form/scene-form.util';
 import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
@@ -8,8 +10,6 @@ import {titreDeChapitre} from '../../scenario.util';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
 import {SceneActionsService} from '../scene-list/scene-actions.service';
-import {scenesOf} from '../scene-list/scene.util';
-import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
 import {CARTON_RYTHME, cartonTenue, sceneActs} from './theatre.util';
 
 /** Pause, rideau fermé, avant qu'il ne se rouvre sur la nouvelle scène. */
@@ -39,6 +39,7 @@ export class SceneStageStore {
   private readonly scenarioService = inject(BolScenarioService);
   private readonly catalog = inject(BolCatalogService);
   private readonly sceneActions = inject(SceneActionsService);
+  private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
 
   private readonly sessionId = signal<string | null>(null);
@@ -146,33 +147,17 @@ export class SceneStageStore {
     });
   }
 
-  /** Les autres scènes du scénario d'une scène (« On improvise » compris) — celles vers lesquelles ses pistes
-   * peuvent mener —, quel que soit le scénario affiché dans la frise. */
-  siblingsOf(scene: BolSceneModel): BolSceneModel[] {
-    const known = this.knownScenarioIds();
-    const scenarioId = scene.scenario_id && known.has(scene.scenario_id) ? scene.scenario_id : null;
-    return scenesOf(this.scenes(), scenarioId, known).filter((s) => s.id !== scene.id);
-  }
-
   /** Nom de la région où se joue une scène — `null` sans région, ou tant que les régions ne sont pas chargées. */
   regionNom(scene: BolSceneModel | null): string | null {
     return scene?.region_id != null ? (this.regionNomsState().get(scene.region_id) ?? null) : null;
   }
 
-  /** « Préparer la scène » : ouvre le dialogue d'édition (ses pistes mènent aux scènes de son propre scénario) et
-   * garde la scène enregistrée. */
+  /** « Préparer la scène » : sa page, qui revient à la table une fois la scène enregistrée (la table se relit alors). */
   prepare(scene: BolSceneModel): void {
-    openSceneEditor(this.dialog, {scene, siblings: this.siblingsOf(scene)}).subscribe((updated) => {
-      if (updated) {
-        this.replaceScene(updated);
-      }
-    });
+    preparerLaScene(this.router, scene.id, this.router.url, this.dialog);
   }
 
-  /** Une scène a été modifiée (« Préparer la scène ») : elle remplace l'ancienne dans la liste. */
-  replaceScene(updated: BolSceneModel): void {
-    this.scenesState.update((list) => list.map((s) => (s.id === updated.id ? updated : s)));
-  }
+
 
   /** Charge une scène sur la table, rideau fermé : il se ferme (fondu au noir) sur le carton du chroniqueur, la scène se
    * charge, puis il se rouvre une fois la session chargée montrée par la page (son `sync` suivant, au plus

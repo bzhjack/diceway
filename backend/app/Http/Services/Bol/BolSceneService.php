@@ -4,10 +4,13 @@ namespace App\Http\Services\Bol;
 
 use App\Exceptions\Bol\SceneLoadNotAllowedException;
 use App\Models\Bol\BolCompagnie;
+use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionCreature;
 use App\Models\Bol\BolFightSessionDemon;
 use App\Models\Bol\BolFightSessionPnj;
+use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolScenario;
 use App\Models\Bol\BolScene;
 use Illuminate\Support\Facades\DB;
@@ -100,6 +103,9 @@ class BolSceneService
                 ->map(fn ($id) => (string) $id)
                 ->all();
             $changes['pistes'] = BolScenePreparation::pistes($data['pistes'], $siblingIds);
+        }
+        if (array_key_exists('distribution', $data)) {
+            $changes['distribution'] = BolSceneDistribution::fromSaisie($data['distribution'], $scene->distribution ?? [], $this->fichesAccessibles($userId, $data['distribution']));
         }
 
         $scene->update($changes);
@@ -368,6 +374,28 @@ class BolSceneService
             BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'camp', 'attitude'])->toArray(),
             $session->positions_jetons,
         );
+    }
+
+    /**
+     * Les fiches d'une distribution saisie que ce compte peut mettre en scène (les siennes et celles du catalogue), en clés
+     * `kind:source_id`.
+     *
+     * @param array<int, array<string, mixed>> $saisie
+     * @return array<int, string>
+     */
+    private function fichesAccessibles(string $userId, array $saisie): array
+    {
+        $cles = [];
+        foreach (['pnj' => BolHeros::class, 'creature' => BolCreature::class, 'demon' => BolDemon::class] as $kind => $model) {
+            $ids = array_column(array_filter($saisie, fn ($entree) => ($entree['kind'] ?? null) === $kind), 'source_id');
+            // Un PNJ au sens de BolHeros::isPnj() : ni un héros, ni une fiche sans type.
+            $pnjSeulement = $kind === 'pnj' ? fn ($query) => $query->whereIn('type', ['P', 'C', 'R']) : null;
+            foreach ($model::idsAccessibles($userId, $ids, $pnjSeulement) as $id) {
+                $cles[] = $kind . ':' . $id;
+            }
+        }
+
+        return $cles;
     }
 
     private function nextOrdre(string $userId, ?string $scenarioId): int

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bol;
 
 use App\Exceptions\Bol\SceneLoadNotAllowedException;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolSceneDistribution;
 use App\Http\Services\Bol\BolScenePreparation;
 use App\Http\Services\Bol\BolSceneService;
 use Illuminate\Http\Request;
@@ -54,13 +55,20 @@ class BolSceneController extends Controller
             'pistes.*.texte'    => 'nullable|string|max:' . BolScenePreparation::PISTE_TEXTE_MAX,
             'pistes.*.scene_id' => 'nullable|string',
             'image'       => ['sometimes', 'nullable', 'string', 'max:500', 'regex:#^(https://|/assets/)#'],
+            // Les personnages de la scène, saisis dans « Préparer la scène » : une fiche inaccessible est écartée par le service.
+            'distribution'             => 'sometimes|array|max:' . BolSceneDistribution::SAISIE_MAX,
+            'distribution.*.kind'      => 'required|in:pnj,creature,demon',
+            'distribution.*.source_id' => 'required|string',
+            'distribution.*.qty'       => 'required|integer|between:1,' . BolSceneDistribution::QTY_MAX,
+            'distribution.*.camp'      => 'nullable|in:heros,adversaires',
+            'distribution.*.attitude'  => ['nullable', Rule::in(BolSceneDistribution::ATTITUDES)],
         ]);
 
         $scene = $this->sceneService->update(
             Auth::id(),
             $data['id'],
             array_intersect_key($data, array_flip([
-                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'pistes', 'image',
+                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'pistes', 'image', 'distribution',
             ])),
         );
 

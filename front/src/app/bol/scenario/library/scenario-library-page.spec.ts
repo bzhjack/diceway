@@ -3,7 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {provideRouter} from '@angular/router';
+import {ActivatedRoute, convertToParamMap, provideRouter, Router} from '@angular/router';
 import {of, throwError} from 'rxjs';
 import {BolScenarioModel} from '../../models/bol-scenario.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
@@ -42,7 +42,7 @@ function scene(id: string, scenarioId: string, ordre: number, qtys: number[] = [
 const SCENES = [scene('s1', 'dv1', 1), scene('s0', 'dv1', 0, [2, 1]), scene('si', 'dvi', 0)];
 
 describe('ScenarioLibraryPageComponent', () => {
-  async function rendre() {
+  async function rendre(retour: Record<string, string> = {}) {
     const reponses: unknown[] = [];
     const open = vi.fn(() => ({afterClosed: () => of(reponses.shift())}));
     const scenarioService = {
@@ -61,6 +61,7 @@ describe('ScenarioLibraryPageComponent', () => {
       imports: [MatIconTestingModule],
       providers: [
         provideRouter([]),
+        {provide: ActivatedRoute, useValue: {snapshot: {queryParamMap: convertToParamMap(retour)}}},
         {provide: BolScenarioService, useValue: scenarioService},
         {provide: BolSceneService, useValue: sceneService},
         {provide: MatDialog, useValue: {open}},
@@ -201,14 +202,36 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(snack.mock.calls[0][0]).toContain('Une partie joue un chapitre de ce scénario.');
   });
 
-  it('une nouvelle scène s’ouvre directement dans l’éditeur, rangée dans son chapitre, qui se déplie', async () => {
-    const {page, bouton, cliquer, repondre, open} = await rendre();
-    repondre({id: 'nouvelle', titre: 'Le texte de l’oracle'});
+  it('« Scène » mène à « Préparer la scène » dans son chapitre, qui reviendra sur ce scénario, ce chapitre déplié', async () => {
+    const {page, bouton, cliquer, open} = await rendre();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
     await cliquer(bouton('Scène', page.querySelectorAll('.sl-chapitre')[1]));
 
-    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scene: null, chapitreId: 'dv1', siblings: [expect.objectContaining({id: 's0'}), expect.objectContaining({id: 's1'})]}});
-    expect(page.querySelectorAll('.sl-chapitre-bascule')[1].getAttribute('aria-expanded')).toBe('true');
+    expect(navigate).toHaveBeenCalledWith(['/create/scene'], {queryParams: {chapitre: 'dv1'}, state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1'}});
+    expect(open).not.toHaveBeenCalled();
+  });
+
+  it('une scène se prépare sur sa page, qui reviendra ici', async () => {
+    const {page, cliquer} = await rendre();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    await cliquer(page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1]);
+
+    await cliquer(page.querySelector<HTMLButtonElement>('[aria-label="Préparer Scène s0"]')!);
+
+    expect(navigate).toHaveBeenCalledWith(['/create/scene', 's0'], {state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1'}});
+  });
+
+  it('au retour, montre le scénario qu’on regardait', async () => {
+    const {page, texte} = await rendre({scenario: 'zv', chapitre: 'dv1'});
+
+    expect(texte(page.querySelector('.sl-titre'))).toBe('Zalut oubliée');
+  });
+
+  it('au retour, déplie le chapitre de la scène préparée', async () => {
+    const {page} = await rendre({scenario: 'dv', chapitre: 'dv1'});
+
+    expect([...page.querySelectorAll('.sl-chapitre-bascule')].map((b) => b.getAttribute('aria-expanded'))).toEqual(['false', 'true']);
   });
 
   it('range une scène plus bas dans son chapitre', async () => {

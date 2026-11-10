@@ -16,7 +16,8 @@ import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {titreDeChapitre} from '../../scenario.util';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from './scene-actions.service';
-import {openSceneEditor} from '../theatre/scene-editor-dialog/scene-editor-dialog';
+import {Router} from '@angular/router';
+import {preparerLaScene} from '../../../scenario/scene-form/scene-form.util';
 import {
   distributionSummary,
   moveScene,
@@ -50,6 +51,7 @@ export class SceneListComponent {
   private readonly sceneActions = inject(SceneActionsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
 
   readonly sessionId = input.required<string>();
   /** Scène courante de la session, marquée dans la liste. */
@@ -212,16 +214,9 @@ export class SceneListComponent {
     });
   }
 
-  /** « Préparer la scène » : décor, ambiance, texte à lire, secret et pistes, vers les autres scènes du même
-   * scénario. La table est rechargée ensuite, son plateau montrant la scène courante. */
+  /** « Préparer la scène » : sa page (décor, ambiance, texte, secret, pistes, personnages), qui revient à la table ensuite. */
   protected prepare(scene: BolSceneModel): void {
-    const siblings = this.visibleScenes().filter((s) => s.id !== scene.id);
-    openSceneEditor(this.dialog, {scene, siblings}).subscribe((updated) => {
-      if (updated) {
-        this.replaceScene(updated);
-        this.changed.emit();
-      }
-    });
+    preparerLaScene(this.router, scene.id, this.router.url, this.dialog);
   }
 
   protected updateFromTable(scene: BolSceneModel): void {

@@ -45,6 +45,20 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
+    path: 'create/scene',
+    loadComponent: () =>
+      import('./bol/scenario/scene-form/scene-form-page').then((module) => module.SceneFormPageComponent),
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
+  },
+  {
+    path: 'create/scene/:id',
+    loadComponent: () =>
+      import('./bol/scenario/scene-form/scene-form-page').then((module) => module.SceneFormPageComponent),
+    canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
+  },
+  {
     path: 'create/pnj',
     loadComponent: () =>
       import('./bol/pnj/form/pnj-form-page').then((module) => module.PnjFormPageComponent),

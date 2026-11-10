@@ -127,19 +127,20 @@ try {
   await titreSecret.click();
   await secret.waitFor({state: 'visible', timeout: 2000}).catch(() => fail('le secret ne se déplie pas'));
 
-  // 4 bis. « En jeu » montre les règles de la scène, lignes gardées ; l'éditeur les modifie.
+  // 4 bis. « En jeu » montre les règles de la scène, lignes gardées ; « Préparer la scène » (sa page) les modifie et revient à la table.
   const jeu = page.locator('bol-scene-lecture .lec-jeu');
   if ((await jeu.innerText()).trim() !== 'Gué : Agilité Ardu (-1).\nÉchec : emporté par le courant, d3 dégâts.') fail(`« En jeu » montre « ${await jeu.innerText()} »`);
   await page.getByRole('button', {name: 'Préparer la scène'}).first().click();
-  const champJeu = page.locator('#sed-jeu');
+  const champJeu = page.locator('#sfp-jeu');
   await champJeu.waitFor();
-  if (!(await champJeu.inputValue()).startsWith('Gué : Agilité')) fail('l’éditeur ne reprend pas « En jeu »');
+  if (!(await champJeu.inputValue()).startsWith('Gué : Agilité')) fail('la page de la scène ne reprend pas « En jeu »');
   await page.screenshot({path: `${shots}/theatre-1-editeur.png`});
   await champJeu.fill('Gué : Vigueur Ardu (-1).');
   await page.getByRole('button', {name: 'Enregistrer'}).click();
-  await page.locator('bol-scene-editor-dialog').waitFor({state: 'detached'});
+  await page.waitForURL(`**/session/${sessionId}/play`);
+  await jeu.waitFor();
   await page.waitForTimeout(400);
-  if ((await jeu.innerText()).trim() !== 'Gué : Vigueur Ardu (-1).') fail('« En jeu » n’est pas mis à jour après l’éditeur');
+  if ((await jeu.innerText()).trim() !== 'Gué : Vigueur Ardu (-1).') fail('« En jeu » n’est pas mis à jour au retour à la table');
   await page.screenshot({path: `${shots}/theatre-1-en-jeu.png`});
 
   // 5. Un PNJ glissé des coulisses sur la troupe entre en scène (zone de dépôt `adversaires`).

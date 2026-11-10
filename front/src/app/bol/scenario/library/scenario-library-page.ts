@@ -1,5 +1,5 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
@@ -19,10 +19,10 @@ import {BolScenarioModel} from '../../models/bol-scenario.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolScenarioService} from '../../services/bol-scenario.service';
 import {BolSceneService} from '../../services/bol-scene.service';
-import {openSceneEditor} from '../../session/play/theatre/scene-editor-dialog/scene-editor-dialog';
 import {METEOS, MOMENTS} from '../../session/play/theatre/theatre.util';
 import {libelleDeChapitre} from '../../session/scenario.util';
 import {ChapitreDialogData, ChapitreDialogResultat} from '../models/chapitre-dialog.model';
+import {creerUneScene, preparerLaScene} from '../scene-form/scene-form.util';
 import {openChapitreDialog} from './chapitre-dialog/chapitre-dialog';
 
 /** Une scène sur la ligne de son chapitre : son ambiance et son nombre de figurants, prêts à afficher. */
@@ -94,8 +94,19 @@ export class ScenarioLibraryPageComponent {
   protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
   private readonly choisi = signal<string | null>(null);
+  private readonly router = inject(Router);
 
   constructor() {
+    // De retour de « Préparer la scène » : le scénario qu'on regardait, et le chapitre de la scène, déplié.
+    const retour = inject(ActivatedRoute).snapshot.queryParamMap;
+    const scenario = retour.get('scenario');
+    const chapitre = retour.get('chapitre');
+    if (scenario) {
+      this.choisi.set(scenario);
+    }
+    if (chapitre) {
+      this.deplier(chapitre);
+    }
     // Le « + » de la tuile Scénarios de l'accueil arrive ici pour en créer un, une seule fois : recharger la page ne le redemande pas.
     const etat = typeof history === 'undefined' ? null : (history.state as Record<string, unknown> | null);
     if (etat?.['nouveau'] === true) {
@@ -258,27 +269,24 @@ export class ScenarioLibraryPageComponent {
 
   // ── Les scènes ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-  /** Une nouvelle scène, préparée d'emblée dans l'éditeur de la table, au dernier rang du chapitre, qui se déplie pour la montrer ; ses
-   * figurants se posent à la table. */
+  /** Une nouvelle scène, sur la page « Préparer la scène » : elle naît au dernier rang du chapitre, qui se déplie pour la montrer au
+   * retour. */
   protected nouvelleScene(vue: ChapitreVue): void {
     if (!vue.chapitre.id) {
       return;
     }
-    openSceneEditor(this.dialog, {scene: null, chapitreId: vue.chapitre.id, siblings: vue.scenes.map((s) => s.scene)}).subscribe((creee) => {
-      if (creee) {
-        this.deplier(vue.id);
-        this.scenes.refresh();
-      }
-    });
+    creerUneScene(this.router, vue.chapitre.id, this.retourIci(vue));
   }
 
-  /** « Préparer la scène », l'éditeur de la table : décor, ambiance, texte à lire, règles, secret et pistes vers les autres scènes. */
+  /** « Préparer la scène », sur sa page : décor, ambiance, texte à lire, règles, secret, pistes et personnages. */
   protected preparer(vue: ChapitreVue, scene: BolSceneModel): void {
-    openSceneEditor(this.dialog, {scene, siblings: vue.scenes.map((s) => s.scene)}).subscribe((enregistree) => {
-      if (enregistree) {
-        this.scenes.refresh();
-      }
-    });
+    preparerLaScene(this.router, scene.id, this.retourIci(vue));
+  }
+
+  /** Revenir ici depuis « Préparer la scène » : sur le scénario regardé, le chapitre de la scène déplié. */
+  private retourIci(vue: ChapitreVue): string {
+    const scenario = this.selection()?.id;
+    return this.router.serializeUrl(this.router.createUrlTree(['/library/scenarios'], {queryParams: {scenario, chapitre: vue.id}}));
   }
 
   /** Monte (-1) ou descend (+1) une scène dans son chapitre. */

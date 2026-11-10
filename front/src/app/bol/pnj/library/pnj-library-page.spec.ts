@@ -71,13 +71,13 @@ describe('PnjLibraryPageComponent', () => {
 
     expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('3 PNJ · actions');
 
-    await choisir('Rang', 'Rival · 1');
+    await choisir('Rang', 'Rival');
     expect(noms()).toEqual(['Ajhaskar']);
     expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('1 PNJ · actions');
     expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
 
     await choisir('Rang', 'Tous les rangs');
-    await choisir('Région', 'Satarla · 1');
+    await choisir('Région', 'Satarla');
     expect(noms()).toEqual(['Acolyte']);
 
     await choisir('Région', 'Toutes les régions');

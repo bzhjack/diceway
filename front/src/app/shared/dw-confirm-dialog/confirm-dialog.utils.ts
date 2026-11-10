@@ -17,3 +17,13 @@ export function confirmDialog(
       map((confirmed: boolean | undefined) => Boolean(confirmed)),
     );
 }
+
+/** « Modifications non enregistrées » : avant de quitter une page de saisie (`canLeave`), true pour quitter quand même. */
+export function confirmLeaveUnsaved(dialog: MatDialog, message: string): Observable<boolean> {
+  return confirmDialog(dialog, {
+    title: 'Modifications non enregistrées',
+    message,
+    confirmLabel: 'Quitter sans sauver',
+    cancelLabel: 'Annuler',
+  });
+}

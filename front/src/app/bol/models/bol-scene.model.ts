@@ -73,6 +73,16 @@ export interface BolSceneLoadResult {
   ignored: number;
 }
 
+/** Un personnage de la scène tel que « Préparer la scène » l'enregistre : sa fiche, le nombre d'exemplaires (un PNJ est seul), son
+ * camp et son attitude au chargement. Le serveur garde les positions sur la carte de ceux qui y étaient déjà. */
+export interface BolSceneDistributionSaisie {
+  kind: SceneEntryKind;
+  source_id: string;
+  qty: number;
+  camp: CombatCamp;
+  attitude: CombatantAttitude | null;
+}
+
 /** Modifications possibles d'une scène existante (titre, notes, scénario, préparation) ; un champ absent ne
  * change pas. */
 export interface BolSceneChanges {
@@ -88,4 +98,6 @@ export interface BolSceneChanges {
   jeu?: string | null;
   pistes?: BolScenePiste[] | null;
   image?: string | null;
+  /** Les personnages de la scène, remplacés en entier. */
+  distribution?: BolSceneDistributionSaisie[];
 }

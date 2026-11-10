@@ -1,4 +1,5 @@
 import {TestBed} from '@angular/core/testing';
+import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
@@ -50,7 +51,7 @@ describe('SceneStageStore', () => {
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'sc1', titre: 'Le Sceau d’Ambre'}])}},
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
         {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
-        {provide: MatDialog, useValue: {open}},
+        {provide: MatDialog, useValue: {open, closeAll: vi.fn()}},
       ],
     });
     store = TestBed.inject(SceneStageStore);
@@ -157,12 +158,6 @@ describe('SceneStageStore', () => {
     expect(store.displayedScene()?.id).toBe('libre');
   });
 
-  it('donne les scènes sœurs du scénario de la scène, même si la frise en montre un autre', () => {
-    store.sync('sess', 's2', [], null);
-    expect(store.siblingsOf(S2).map((s) => s.id)).toEqual(['s1', 's3']);
-    expect(store.siblingsOf(SCENES[3]).map((s) => s.id)).toEqual([]);
-  });
-
   it('donne le nom de la région d’une scène', () => {
     store.sync('sess', 's1', []);
     expect(store.regionNom({...S2, region_id: 5})).toBe('Jungle de Qo et jungle de Qush');
@@ -170,13 +165,12 @@ describe('SceneStageStore', () => {
     expect(store.regionNom(null)).toBeNull();
   });
 
-  it('prépare une scène avec les scènes sœurs de son scénario, puis garde la scène enregistrée', () => {
-    const preparee = {...S2, lieu: 'Gué du Tyr'};
-    open.mockReturnValue({afterClosed: () => of(preparee)});
+  it('prépare une scène sur sa page, qui reviendra à la table', () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     store.sync('sess', 's2', []);
     store.prepare(S2);
-    expect(open.mock.calls[0][1].data.siblings.map((s: BolSceneModel) => s.id)).toEqual(['s1', 's3']);
-    expect(store.currentScene()?.lieu).toBe('Gué du Tyr');
+    expect(navigate).toHaveBeenCalledWith(['/create/scene', 's2'], {state: {returnUrl: '/'}});
+    expect(open).not.toHaveBeenCalled();
   });
 
   it('rouvre le rideau après une erreur', () => {

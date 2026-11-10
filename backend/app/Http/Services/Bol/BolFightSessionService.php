@@ -84,7 +84,7 @@ class BolFightSessionService
      */
     private function accessibles(string $userId, string $model, array $list, string $cle): array
     {
-        $ids = $model::accessibleTo($userId)->whereIn('id', array_column($list, $cle))->pluck('id')->map(fn ($id) => (string) $id)->all();
+        $ids = $model::idsAccessibles($userId, array_column($list, $cle));
 
         return array_values(array_filter($list, fn ($item) => in_array((string) ($item[$cle] ?? ''), $ids, true)));
     }

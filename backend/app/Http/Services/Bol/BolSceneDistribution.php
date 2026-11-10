@@ -12,6 +12,61 @@ class BolSceneDistribution
     /** Attitudes possibles d'un personnage en scène envers les héros. */
     public const ATTITUDES = ['hostile', 'mefiant', 'neutre', 'amical'];
 
+    /** Au plus, les lignes d'une distribution saisie dans « Préparer la scène ». */
+    public const SAISIE_MAX = 60;
+
+    /** Au plus, les exemplaires d'une créature ou d'un démon sur une ligne. */
+    public const QTY_MAX = 30;
+
+    /**
+     * Distribution saisie dans « Préparer la scène » : les entrées dont la fiche est accessible au compte (`accessibles`, clés
+     * `kind:source_id`), un PNJ toujours seul et une seule fois, le camp et l'attitude normalisés. Une entrée qui était déjà dans la scène (même fiche,
+     * dans l'ordre) garde les positions de ses exemplaires sur la carte ; les exemplaires en plus n'en ont pas.
+     *
+     * @param array<int, array<string, mixed>> $saisie
+     * @param array<int, array<string, mixed>> $avant       la distribution enregistrée
+     * @param array<int, string>               $accessibles
+     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null, positions: array<int, array{x: float, y: float}|null>}>
+     */
+    public static function fromSaisie(array $saisie, array $avant, array $accessibles): array
+    {
+        $restantes = [];
+        foreach ($avant as $entree) {
+            $restantes[($entree['kind'] ?? '') . ':' . ($entree['source_id'] ?? '')][] = array_values(is_array($entree['positions'] ?? null) ? $entree['positions'] : []);
+        }
+
+        $entries = [];
+        $pnjsVus = [];
+        foreach ($saisie as $entree) {
+            $kind = (string) ($entree['kind'] ?? '');
+            $sourceId = self::sourceId($entree['source_id'] ?? null);
+            $cle = $kind . ':' . $sourceId;
+            // Un PNJ n'entre qu'une fois en scène : une deuxième ligne pour la même fiche est écartée.
+            if ($sourceId === null || !in_array($cle, $accessibles, true) || ($kind === 'pnj' && isset($pnjsVus[$sourceId]))) {
+                continue;
+            }
+            if ($kind === 'pnj') {
+                $pnjsVus[$sourceId] = true;
+            }
+            $qty = $kind === 'pnj' ? 1 : min(self::QTY_MAX, max(1, (int) ($entree['qty'] ?? 1)));
+            $anciennes = isset($restantes[$cle]) && $restantes[$cle] !== [] ? array_shift($restantes[$cle]) : [];
+            $positions = [];
+            for ($i = 0; $i < $qty; $i++) {
+                $positions[] = self::position($anciennes[$i] ?? null);
+            }
+            $entries[] = [
+                'kind'      => $kind,
+                'source_id' => $sourceId,
+                'qty'       => $qty,
+                'camp'      => self::entryCamp($entree),
+                'attitude'  => self::entryAttitude($entree),
+                'positions' => $positions,
+            ];
+        }
+
+        return $entries;
+    }
+
     /**
      * Distribution d'une session : une entrée par ligne PNJ, créature puis démon. Une ligne dont la
      * fiche source a été supprimée est ignorée. Les héros n'en font jamais partie.
