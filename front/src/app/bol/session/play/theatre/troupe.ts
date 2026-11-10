@@ -1,7 +1,5 @@
 import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {TapisCard} from '../../models/tapis.model';
 import {ReservePlacementService} from '../../reserve-placement.service';
@@ -17,7 +15,7 @@ import {CombatCamp} from '../../../models/bol-fight-session.model';
  * hormis l'état du glisser (`ReservePlacementService`). */
 @Component({
   selector: 'bol-troupe',
-  imports: [StageDragDirective, AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatButtonModule, MatIconModule, DwScrollerComponent, ActeurComponent],
+  imports: [StageDragDirective, AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, DwScrollerComponent, ActeurComponent],
   templateUrl: './troupe.html',
   styleUrl: './troupe.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +29,6 @@ export class TroupeComponent {
   readonly cardToggled = output<TapisCard>();
   readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
-  /** « Ouvrir les coulisses », quand personne n'est en scène. */
-  readonly coulissesRequested = output<void>();
 
   protected readonly acteurs = computed(() => troupe(this.cards()));
   /** La zone s'allume pendant un glisser qui peut y finir : pas une carte qui en part, ni un héros. */

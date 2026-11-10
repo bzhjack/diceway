@@ -44,6 +44,20 @@
   white-space: nowrap;
 }
 
+// Son scénario, puis son chapitre (ou « Scénario terminé »).
+.cl-row-scenario {
+  margin: 0.1rem 0 0;
+  overflow: hidden;
+  font-size: 0.85rem;
+  color: var(--dw-forge-bone);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cl-row-histoire {
+  font-weight: 700;
+}
+
 .cl-row-meta {
   display: flex;
   flex-wrap: wrap;

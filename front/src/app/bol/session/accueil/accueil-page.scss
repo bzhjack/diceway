@@ -228,11 +228,6 @@
   padding-top: 0.3rem;
 }
 
-.acc-partie-menu {
-  flex: none;
-  color: var(--dw-forge-bone);
-}
-
 .acc-erreur {
   display: flex;
   flex-wrap: wrap;
@@ -295,6 +290,12 @@
   }
 }
 
+// Celle du bandeau, en tête : un liseré de la teinte de son scénario.
+.acc-autre--derniere {
+  background: rgba(255, 170, 60, 0.06);
+  box-shadow: inset 3px 0 0 var(--saga);
+}
+
 .acc-autre-lien {
   display: flex;
   flex: 1;
@@ -346,13 +347,6 @@
   color: var(--dw-forge-bone);
 }
 
-.acc-autres-vide {
-  margin: 0;
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--dw-forge-bone);
-}
-
 .acc-autres-toutes {
   display: inline-flex;
   align-items: center;
@@ -390,20 +384,6 @@
 }
 
 // Le menu est dans un calque : hors de la carte, il reste à ce composant. Le chapitre en cours y est en gras.
-.acc-menu-courant {
-  font-weight: 800;
-}
-
-.acc-menu-etat {
-  font-size: 0.8rem;
-  color: var(--dw-forge-bone);
-}
-
-.acc-menu-vide {
-  margin: 0;
-  padding: 0.75rem 1rem;
-}
-
 // ── Les bibliothèques : une grande tuile illustrée par fiche, son nombre en grand, un « + » pour en créer une ───────────────────────
 .acc-bibliotheques {
   display: grid;

@@ -91,18 +91,16 @@ const DATA: BolAccueilModel = {
 describe('AccueilPageComponent', () => {
   const open = vi.fn();
   const changerChapitre = vi.fn();
-  const supprimer = vi.fn();
   const marquer = vi.fn();
   const snack = vi.fn();
   let accueil: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    for (const espion of [open, changerChapitre, supprimer, marquer, snack]) {
+    for (const espion of [open, changerChapitre, marquer, snack]) {
       espion.mockReset();
     }
     open.mockReturnValue({afterClosed: () => of(true)});
     changerChapitre.mockReturnValue(of({}));
-    supprimer.mockReturnValue(of(true));
     marquer.mockReturnValue(of({}));
   });
 
@@ -113,7 +111,7 @@ describe('AccueilPageComponent', () => {
         provideRouter([{path: '', component: AccueilPageComponent}]),
         provideHttpClient(),
         {provide: BolAccueilService, useValue: {accueil}},
-        {provide: BolFightSessionService, useValue: {changerChapitre, delete: supprimer, marquerScenarioTermine: marquer}},
+        {provide: BolFightSessionService, useValue: {changerChapitre, marquerScenarioTermine: marquer}},
         {provide: MatDialog, useValue: {open}},
         {provide: MatSnackBar, useValue: {open: snack}},
         ...providers,
@@ -138,7 +136,10 @@ describe('AccueilPageComponent', () => {
   const texte = (el: Element | null | undefined) => el?.textContent?.trim().replace(/\s+/g, ' ') ?? null;
   const items = () => [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')];
   const item = (libelle: string) => items().find((b) => texte(b)?.includes(libelle))!;
-  const autres = (page: HTMLElement) => [...page.querySelectorAll('.acc-autre')];
+  const lignes = (page: HTMLElement) => [...page.querySelectorAll('.acc-autre')];
+  /** L'accueil où la partie `id` est la dernière jouée (celle du bandeau), modifiée par `changer`. */
+  const avecDerniere = (id: string, changer = (partie: BolAccueilModel['parties'][number]) => partie) =>
+    of({...DATA, derniere: id, parties: DATA.parties.map((partie) => (partie.id === id ? changer(partie) : partie))});
 
   it('montre la dernière partie jouée en grand : son scénario, sa compagnie, où elle en est, qui y est assis, de quoi la reprendre', async () => {
     const page = await rendre();
@@ -173,11 +174,16 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-soir-texte')?.textContent).toContain('La nuit du coup fourré · combat engagé');
   });
 
-  it('à côté, les autres parties : une ligne chacune, qui mène à sa table, puis « Toutes les parties »', async () => {
+  it('à côté, les parties, celle du bandeau en tête : une ligne chacune, qui mène à sa table, puis « Toutes les parties »', async () => {
     const page = await rendre();
-    const [fils, sansNom] = autres(page);
+    const [lames, fils, sansNom] = lignes(page);
 
-    expect(autres(page).length).toBe(2);
+    expect(texte(page.querySelector('.acc-autres-titre'))).toBe('Parties');
+    expect(lignes(page).length).toBe(3);
+    expect(lames.classList).toContain('acc-autre--derniere');
+    expect(texte(lames.querySelector('.acc-autre-detail'))).toBe('Les Lames de Satarla · 1. Sacrilège à Satarla');
+    expect(lames.textContent).toContain(', la dernière jouée');
+    expect(fils.classList).not.toContain('acc-autre--derniere');
     expect(texte(fils.querySelector('.acc-autre-scenario'))).toBe('Perle du Beshaar');
     expect(texte(fils.querySelector('.acc-autre-detail'))).toBe("Les Fils du Serpent · 2. De sable et d'eau");
     expect(texte(sansNom.querySelector('.acc-autre-scenario'))).toBe('Partie improvisée');
@@ -188,11 +194,12 @@ describe('AccueilPageComponent', () => {
     expect(page.querySelector('.acc-autres-toutes')?.getAttribute('href')).toBe('/library/sessions');
   });
 
-  it('ne montre que les quatre autres parties les plus récentes', async () => {
+  it('ne montre que la partie du bandeau et les quatre autres les plus récentes', async () => {
     const parties = [0, 1, 2, 3, 4, 5].map((i) => ({...DATA.parties[1], id: `x${i}`, titre: `Compagnie ${i}`}));
     const page = await rendre(of({...DATA, parties: [DATA.parties[0], ...parties]}));
 
-    expect(autres(page).map((ligne) => texte(ligne.querySelector('.acc-autre-detail'))?.split(' · ')[0])).toEqual([
+    expect(lignes(page).map((ligne) => texte(ligne.querySelector('.acc-autre-detail'))?.split(' · ')[0])).toEqual([
+      'Les Lames de Satarla',
       'Compagnie 0',
       'Compagnie 1',
       'Compagnie 2',
@@ -200,11 +207,11 @@ describe('AccueilPageComponent', () => {
     ]);
   });
 
-  it('seule, la dernière partie le dit dans la colonne', async () => {
+  it('seule, la dernière partie est aussi la seule ligne de la colonne', async () => {
     const page = await rendre(of({...DATA, parties: [DATA.parties[0]]}));
 
-    expect(autres(page)).toEqual([]);
-    expect(texte(page.querySelector('.acc-autres-vide'))).toBe('Aucune autre partie.');
+    expect(lignes(page).length).toBe(1);
+    expect(lignes(page)[0].classList).toContain('acc-autre--derniere');
   });
 
   it('sans légende, chaque pastille donne le nom de son chapitre en bulle', async () => {
@@ -251,11 +258,10 @@ describe('AccueilPageComponent', () => {
 
   it('« Changer de chapitre » ne propose que les chapitres du scénario de la partie, puis relit l’accueil', async () => {
     const page = await rendre();
-    expect(page.querySelector('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')).toBeNull();
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
-    expect(document.querySelectorAll('.acc-menu-courant').length).toBe(1);
-    expect(document.querySelector('.acc-menu-courant')?.textContent).toBe('1. Sacrilège à Satarla');
+    expect(document.querySelectorAll('.pch-courant').length).toBe(1);
+    expect(document.querySelector('.pch-courant')?.textContent).toBe('1. Sacrilège à Satarla');
     expect(items().filter((b) => /^\d\./.test(texte(b) ?? '')).map((b) => texte(b))).toEqual([
       '1. Sacrilège à Satarla, en cours',
       "2. De sable et d'eau",
@@ -269,29 +275,32 @@ describe('AccueilPageComponent', () => {
 
   it('en plein combat, « Changer de chapitre » est grisé et dit pourquoi', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, statut: 'combat' as const} : p))}));
-    const bouton = page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!;
+    const bouton = page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!;
 
     expect(bouton.disabled).toBe(true);
     expect(texte(bouton)).toContain('combat en cours');
   });
 
   it('en plein combat, « Choisir un scénario » est grisé et dit pourquoi', async () => {
-    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't3' ? {...p, statut: 'combat' as const} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
-    await stable();
+    const page = await rendre(avecDerniere('t3', (p) => ({...p, statut: 'combat' as const})));
+    const bouton = page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!;
 
-    expect(item('Choisir un scénario').disabled).toBe(true);
-    expect(texte(item('Choisir un scénario'))).toContain('combat en cours');
+    expect(bouton.disabled).toBe(true);
+    expect(texte(bouton)).toBe('swap_horiz Choisir un scénario : combat en cours');
+  });
+
+  it('les lignes des parties n’ont pas de menu : leurs actions sont dans « Mes parties »', async () => {
+    const page = await rendre();
+
+    expect(lignes(page).every((ligne) => ligne.querySelectorAll('button').length === 0)).toBe(true);
   });
 
   it('dit si la première scène du nouveau chapitre a laissé des figurants de côté', async () => {
-    const page = await rendre();
+    const page = await rendre(avecDerniere('t2'));
     changerChapitre.mockReturnValue(of({figurants_ignores: 2}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
-    item('Changer de chapitre').click();
-    await stable();
-    items().find((b) => !b.querySelector('.acc-menu-courant') && /^\d\./.test(texte(b) ?? ''))!.click();
+    items().find((b) => !b.querySelector('.pch-courant') && /^\d\./.test(texte(b) ?? ''))!.click();
     await stable();
     document.querySelectorAll<HTMLButtonElement>('mat-dialog-actions button').forEach((b) => b.click());
     await stable();
@@ -300,11 +309,8 @@ describe('AccueilPageComponent', () => {
   });
 
   it('« Changer de chapitre » marque ceux que cette partie a joués', async () => {
-    const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
-    await stable();
-
-    item('Changer de chapitre').click();
+    const page = await rendre(avecDerniere('t2'));
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     expect(texte(item('1. Sacrilège à Satarla'))).toBe('1. Sacrilège à Satarla · joué');
@@ -313,7 +319,7 @@ describe('AccueilPageComponent', () => {
 
   it('changer de chapitre demande confirmation quand des figurants partiraient', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 2} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     open.mockReturnValue({afterClosed: () => of(false)});
@@ -326,7 +332,7 @@ describe('AccueilPageComponent', () => {
 
   it('confirmé, le changement de chapitre a lieu', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 1} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     item("2. De sable et d'eau").click();
@@ -339,7 +345,7 @@ describe('AccueilPageComponent', () => {
 
   it('sans figurant, le changement de chapitre ne demande rien', async () => {
     const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     item("2. De sable et d'eau").click();
@@ -350,11 +356,8 @@ describe('AccueilPageComponent', () => {
   });
 
   it('une partie improvisée choisit un scénario, puis un de ses chapitres', async () => {
-    const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
-    await stable();
-
-    item('Choisir un scénario').click();
+    const page = await rendre(avecDerniere('t3'));
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
     item('Le Dieu voilé').click();
     await stable();
@@ -365,11 +368,8 @@ describe('AccueilPageComponent', () => {
   });
 
   it('« Choisir un scénario » ne propose pas celui que sa compagnie joue déjà', async () => {
-    const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't3' ? {...p, compagnie_id: 'c1'} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
-    await stable();
-
-    item('Choisir un scénario').click();
+    const page = await rendre(avecDerniere('t3', (p) => ({...p, compagnie_id: 'c1'})));
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     expect(item('Le Dieu voilé')).toBeDefined();
@@ -378,7 +378,7 @@ describe('AccueilPageComponent', () => {
 
   it('le MJ marque le scénario terminé sous les chapitres du bandeau, puis l’accueil se relit', async () => {
     const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     item('Marquer le scénario terminé').click();
@@ -388,10 +388,15 @@ describe('AccueilPageComponent', () => {
     expect(accueil).toHaveBeenCalledTimes(2);
   });
 
-  it('une partie terminée le dit, et permet de se raviser', async () => {
+  it('une autre partie terminée le dit sur sa ligne', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't2' ? {...p, scenario_termine: true} : p))}));
-    expect(texte(autres(page)[0].querySelector('.acc-autre-detail'))).toBe('Les Fils du Serpent · Scénario terminé');
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
+
+    expect(texte(lignes(page)[1].querySelector('.acc-autre-detail'))).toBe('Les Fils du Serpent · Scénario terminé');
+  });
+
+  it('terminée, la partie du bandeau permet de se raviser', async () => {
+    const page = await rendre(avecDerniere('t2', (p) => ({...p, scenario_termine: true})));
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     expect(item('Marquer le scénario terminé')).toBeUndefined();
@@ -402,48 +407,24 @@ describe('AccueilPageComponent', () => {
   });
 
   it('une partie improvisée n’a pas de scénario à marquer', async () => {
-    const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Table sans nom"]')!.click();
+    const page = await rendre(avecDerniere('t3'));
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
+    expect(item('Le Dieu voilé')).toBeDefined();
     expect(item('Marquer le scénario terminé')).toBeUndefined();
   });
 
   it('si le marquage échoue, le dit', async () => {
     const page = await rendre();
     marquer.mockReturnValue(throwError(() => new Error('réseau')));
-    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir .pch-bouton')!.click();
     await stable();
 
     item('Marquer le scénario terminé').click();
     await stable();
 
     expect(TestBed.inject(MatSnackBar).open).toHaveBeenCalledTimes(1);
-  });
-
-  it('« Supprimer la partie » demande confirmation, supprime, puis relit l’accueil', async () => {
-    const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
-    await stable();
-
-    item('Supprimer la partie').click();
-    await stable();
-
-    expect(open).toHaveBeenCalledTimes(1);
-    expect(supprimer).toHaveBeenCalledWith('t2');
-    expect(accueil).toHaveBeenCalledTimes(2);
-  });
-
-  it('sans confirmation, ne supprime rien', async () => {
-    const page = await rendre();
-    open.mockReturnValue({afterClosed: () => of(false)});
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Fils du Serpent"]')!.click();
-    await stable();
-
-    item('Supprimer la partie').click();
-    await stable();
-
-    expect(supprimer).not.toHaveBeenCalled();
   });
 
   it('une lecture réussie après un échec efface l’erreur : les parties réapparaissent', async () => {
@@ -456,7 +437,7 @@ describe('AccueilPageComponent', () => {
 
     expect(page.querySelector('[role="alert"]')).toBeNull();
     expect(texte(page.querySelector('.acc-soir-titre'))).toBe('Perle du Beshaar');
-    expect(autres(page).length).toBe(2);
+    expect(lignes(page).length).toBe(3);
   });
 
   it('compte les fiches de chaque bibliothèque : le bestiaire réunit créatures et démons, l’intendance armes et armures', async () => {

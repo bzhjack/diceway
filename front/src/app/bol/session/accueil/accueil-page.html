@@ -74,24 +74,8 @@
               <a mat-flat-button [routerLink]="['/session', bandeau.id, 'play']">
                 <mat-icon>play_arrow</mat-icon> Reprendre
               </a>
-              @if (partie.enCombat) {
-                <button mat-stroked-button type="button" class="acc-soir-chapitre" disabled>
-                  <mat-icon>swap_horiz</mat-icon> {{ partie.scenarioId ? 'Changer de chapitre' : 'Choisir un scénario' }} : combat en cours
-                </button>
-              } @else if (partie.scenarioId) {
-                <button
-                  mat-stroked-button
-                  type="button"
-                  class="acc-soir-chapitre"
-                  [matMenuTriggerFor]="menuChapitres"
-                  [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie), fin: true}"
-                >
-                  <mat-icon>swap_horiz</mat-icon> Changer de chapitre
-                </button>
-              } @else {
-                <button mat-stroked-button type="button" class="acc-soir-chapitre" [matMenuTriggerFor]="menuScenarios" [matMenuTriggerData]="{partie}">
-                  <mat-icon>auto_stories</mat-icon> Choisir un scénario
-                </button>
+              @if (data(); as accueil) {
+                <bol-partie-chapitre [partie]="partie" [accueil]="accueil" (modifiee)="charger()" />
               }
             </div>
           }
@@ -125,132 +109,39 @@
         }
       </div>
 
-      <!-- Les autres parties récentes : une ligne chacune (son scénario, sa compagnie, son chapitre) qui mène à sa table, et son menu. -->
+      <!-- Les parties récentes, celle du bandeau en tête : une ligne chacune (son scénario, sa compagnie, son chapitre) qui mène à sa table ; leurs
+         actions sont dans « Mes parties ». -->
       @if (bandeau()) {
         <nav class="acc-autres" aria-labelledby="acc-autres-titre">
           <div class="acc-autres-tete">
-            <h2 id="acc-autres-titre" class="acc-autres-titre">Autres parties</h2>
+            <h2 id="acc-autres-titre" class="acc-autres-titre">Parties</h2>
             <button mat-stroked-button type="button" class="acc-partie-nouvelle" aria-label="Nouvelle partie" [disabled]="!aDesCompagnies()" (click)="nouvellePartie()">
               <mat-icon>add</mat-icon> Partie
             </button>
           </div>
-          @if (autres().length) {
-            <ul class="acc-autres-liste">
-              @for (partie of autres(); track partie.id) {
-                <li class="acc-autre" [class]="'dw-saga--' + partie.teinte">
-                  <a class="acc-autre-lien" [routerLink]="['/session', partie.id, 'play']">
-                    <span class="acc-autre-vignette" aria-hidden="true"></span>
-                    <span class="acc-autre-texte">
-                      <span class="sr-only">Reprendre : </span>
-                      <span class="acc-autre-scenario">{{ partie.scenario }}</span>
-                      <span class="acc-autre-detail"><span class="acc-autre-compagnie">{{ partie.nom }}</span>{{ partie.termine ? ' · Scénario terminé' : (partie.reprendre ? ' · ' + partie.reprendre : '') }}</span>
-                    </span>
-                  </a>
-                  <button
-                    mat-icon-button
-                    type="button"
-                    class="acc-partie-menu"
-                    [attr.aria-label]="'Actions de ' + partie.nom"
-                    [matMenuTriggerFor]="menuPartie"
-                    [matMenuTriggerData]="{partie}"
-                  >
-                    <mat-icon>more_vert</mat-icon>
-                  </button>
-                </li>
-              }
-            </ul>
-          } @else {
-            <p class="acc-autres-vide">Aucune autre partie.</p>
-          }
+          <ul class="acc-autres-liste">
+            @for (partie of recentes(); track partie.id) {
+              <li class="acc-autre" [class]="'dw-saga--' + partie.teinte" [class.acc-autre--derniere]="partie.derniere">
+                <a class="acc-autre-lien" [routerLink]="['/session', partie.id, 'play']">
+                  <span class="acc-autre-vignette" aria-hidden="true"></span>
+                  <span class="acc-autre-texte">
+                    <span class="sr-only">Reprendre : </span>
+                    <span class="acc-autre-scenario">{{ partie.scenario }}</span>
+                    <span class="acc-autre-detail"><span class="acc-autre-compagnie">{{ partie.nom }}</span>{{ partie.termine ? ' · Scénario terminé' : (partie.reprendre ? ' · ' + partie.reprendre : '') }}</span>
+                    @if (partie.derniere) {
+                      <span class="sr-only">, la dernière jouée</span>
+                    }
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
           <a class="acc-autres-toutes" routerLink="/library/sessions">
             Toutes les parties <mat-icon aria-hidden="true">arrow_forward</mat-icon>
           </a>
         </nav>
       }
     </section>
-
-    <!-- Le menu d'une partie : changer de chapitre dans son scénario (en choisir un pour une partie improvisée), la supprimer. -->
-    <mat-menu #menuPartie="matMenu">
-      <ng-template matMenuContent let-partie="partie">
-        @if (partie.scenarioId) {
-          @if (partie.enCombat) {
-            <button mat-menu-item type="button" disabled>
-              <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre : combat en cours</span>
-            </button>
-          } @else {
-            <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitres" [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie)}">
-              <mat-icon>swap_horiz</mat-icon><span>Changer de chapitre</span>
-            </button>
-          }
-          @if (partie.termine) {
-            <button mat-menu-item type="button" (click)="marquerTermine(partie, false)">
-              <mat-icon>undo</mat-icon><span>Scénario pas encore terminé</span>
-            </button>
-          } @else {
-            <button mat-menu-item type="button" (click)="marquerTermine(partie, true)">
-              <mat-icon>flag</mat-icon><span>Marquer le scénario terminé</span>
-            </button>
-          }
-        } @else if (partie.enCombat) {
-          <button mat-menu-item type="button" disabled>
-            <mat-icon>auto_stories</mat-icon><span>Choisir un scénario : combat en cours</span>
-          </button>
-        } @else {
-          <button mat-menu-item type="button" [matMenuTriggerFor]="menuScenarios" [matMenuTriggerData]="{partie}">
-            <mat-icon>auto_stories</mat-icon><span>Choisir un scénario</span>
-          </button>
-        }
-        <button mat-menu-item type="button" (click)="supprimer(partie)">
-          <mat-icon>delete</mat-icon><span>Supprimer la partie</span>
-        </button>
-      </ng-template>
-    </mat-menu>
-    <mat-menu #menuChapitres="matMenu">
-      <ng-template matMenuContent let-partie="partie" let-chapitres="chapitres" let-fin="fin">
-        @for (chapitre of chapitres; track chapitre.id) {
-          <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">
-            <span [class.acc-menu-courant]="chapitre.courant">{{ chapitre.libelle }}</span>
-            @if (chapitre.courant) {
-              <span class="sr-only">, en cours</span>
-            }
-            @if (chapitre.joue) {
-              <span class="acc-menu-etat">&nbsp;· joué</span>
-            }
-          </button>
-        }
-        <!-- Depuis le bandeau, qui n'a pas d'autre menu, la fin du scénario suit ses chapitres. -->
-        @if (fin) {
-          <mat-divider />
-          @if (partie.termine) {
-            <button mat-menu-item type="button" (click)="marquerTermine(partie, false)">
-              <mat-icon>undo</mat-icon><span>Scénario pas encore terminé</span>
-            </button>
-          } @else {
-            <button mat-menu-item type="button" (click)="marquerTermine(partie, true)">
-              <mat-icon>flag</mat-icon><span>Marquer le scénario terminé</span>
-            </button>
-          }
-        }
-      </ng-template>
-    </mat-menu>
-    <mat-menu #menuScenarios="matMenu">
-      <ng-template matMenuContent let-partie="partie">
-        @for (scenario of scenariosDe(partie); track scenario.id) {
-          <button mat-menu-item type="button" [matMenuTriggerFor]="menuChapitresDuScenario" [matMenuTriggerData]="{partie, scenario}">
-            {{ scenario.nom }}
-          </button>
-        } @empty {
-          <p class="acc-menu-vide">Aucun autre scénario à lui proposer.</p>
-        }
-      </ng-template>
-    </mat-menu>
-    <mat-menu #menuChapitresDuScenario="matMenu">
-      <ng-template matMenuContent let-partie="partie" let-scenario="scenario">
-        @for (chapitre of scenario.chapitres; track chapitre.id) {
-          <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">{{ chapitre.libelle }}</button>
-        }
-      </ng-template>
-    </mat-menu>
 
     <nav aria-labelledby="acc-bibliotheques-titre">
       <h2 id="acc-bibliotheques-titre" class="acc-section-titre acc-section-titre--espace">Bibliothèques</h2>

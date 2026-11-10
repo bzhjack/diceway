@@ -4,7 +4,7 @@
     <!-- Header card -->
     <dw-library-header
       title="Mes parties"
-      description="Toutes vos parties, chacune avec sa compagnie : reprenez-en une, ou supprimez celles qui sont finies."
+      description="Toutes vos parties, chacune avec sa compagnie : reprenez-en une, changez-la de chapitre, marquez son scénario terminé, ou supprimez-la."
     >
       <ng-container dwHeaderTags>
         <dw-tag>{{ totalCount() }} partie{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
@@ -35,6 +35,11 @@
           <div class="cl-row">
             <div class="cl-row-main">
               <p class="cl-row-title">{{ session.titre || 'Table sans nom' }}</p>
+              @if (carte(session.id); as partie) {
+                <p class="cl-row-scenario">
+                  <span class="cl-row-histoire">{{ partie.scenario }}</span>{{ partie.termine ? ' · Scénario terminé' : (partie.reprendre ? ' · ' + partie.reprendre : '') }}
+                </p>
+              }
               <p class="cl-row-meta">
                 {{ session.heros_count }} héros · {{ session.adversaires_count }} adversaires
                 @if (session.statut === 'combat') {
@@ -46,6 +51,11 @@
               <button mat-flat-button type="button" (click)="reprendre(session)">
                 <mat-icon>play_arrow</mat-icon> Reprendre
               </button>
+              @if (accueil(); as accueil) {
+                @if (carte(session.id); as partie) {
+                  <bol-partie-chapitre [partie]="partie" [accueil]="accueil" (modifiee)="relire()" />
+                }
+              }
               <button
                 mat-icon-button
                 (click)="askDelete(session)"
