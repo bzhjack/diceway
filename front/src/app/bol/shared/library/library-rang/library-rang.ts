@@ -4,8 +4,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {LibraryOption, LibraryRang} from '../../models/library-rows.model';
 
 /**
- * Le rang d'une bibliothèque en lignes, en liste dans sa barre de recherche (`dwToolbarFilter`) : « Tous les rangs », puis chaque rang avec
- * son nombre de fiches. Les styles sont ceux de `styles/_library-rows.scss`.
+ * Le rang d'une bibliothèque en lignes, en liste dans sa barre de recherche (`dwToolbarFilter`) : « Tous les rangs », puis chaque rang.
+ * Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-rang',
@@ -22,7 +22,7 @@ import {LibraryOption, LibraryRang} from '../../models/library-rows.model';
       >
         <mat-option [value]="null">Tous les rangs</mat-option>
         @for (r of rangs(); track r.cle) {
-          <mat-option [value]="r.cle">{{ r.label }} · {{ r.compte }}</mat-option>
+          <mat-option [value]="r.cle">{{ r.label }}</mat-option>
         }
       </mat-select>
     </mat-form-field>

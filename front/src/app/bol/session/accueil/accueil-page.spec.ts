@@ -251,10 +251,8 @@ describe('AccueilPageComponent', () => {
 
   it('« Changer de chapitre » ne propose que les chapitres du scénario de la partie, puis relit l’accueil', async () => {
     const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
-    await stable();
-
-    item('Changer de chapitre').click();
+    expect(page.querySelector('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')).toBeNull();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
     expect(document.querySelectorAll('.acc-menu-courant').length).toBe(1);
     expect(document.querySelector('.acc-menu-courant')?.textContent).toBe('1. Sacrilège à Satarla');
@@ -271,11 +269,10 @@ describe('AccueilPageComponent', () => {
 
   it('en plein combat, « Changer de chapitre » est grisé et dit pourquoi', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, statut: 'combat' as const} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
-    await stable();
+    const bouton = page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!;
 
-    expect(item('Changer de chapitre').disabled).toBe(true);
-    expect(texte(item('Changer de chapitre'))).toContain('combat en cours');
+    expect(bouton.disabled).toBe(true);
+    expect(texte(bouton)).toContain('combat en cours');
   });
 
   it('en plein combat, « Choisir un scénario » est grisé et dit pourquoi', async () => {
@@ -316,9 +313,7 @@ describe('AccueilPageComponent', () => {
 
   it('changer de chapitre demande confirmation quand des figurants partiraient', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 2} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
-    await stable();
-    item('Changer de chapitre').click();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
 
     open.mockReturnValue({afterClosed: () => of(false)});
@@ -331,9 +326,7 @@ describe('AccueilPageComponent', () => {
 
   it('confirmé, le changement de chapitre a lieu', async () => {
     const page = await rendre(of({...DATA, parties: DATA.parties.map((p) => (p.id === 't1' ? {...p, figurants: 1} : p))}));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
-    await stable();
-    item('Changer de chapitre').click();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
 
     item("2. De sable et d'eau").click();
@@ -346,9 +339,7 @@ describe('AccueilPageComponent', () => {
 
   it('sans figurant, le changement de chapitre ne demande rien', async () => {
     const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
-    await stable();
-    item('Changer de chapitre').click();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
 
     item("2. De sable et d'eau").click();
@@ -385,9 +376,9 @@ describe('AccueilPageComponent', () => {
     expect(item('Perle du Beshaar')).toBeUndefined();
   });
 
-  it('le MJ marque le scénario terminé depuis le menu de la carte, puis l’accueil se relit', async () => {
+  it('le MJ marque le scénario terminé sous les chapitres du bandeau, puis l’accueil se relit', async () => {
     const page = await rendre();
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
 
     item('Marquer le scénario terminé').click();
@@ -421,7 +412,7 @@ describe('AccueilPageComponent', () => {
   it('si le marquage échoue, le dit', async () => {
     const page = await rendre();
     marquer.mockReturnValue(throwError(() => new Error('réseau')));
-    page.querySelector<HTMLButtonElement>('.acc-partie-menu[aria-label="Actions de Les Lames de Satarla"]')!.click();
+    page.querySelector<HTMLButtonElement>('.acc-soir-chapitre')!.click();
     await stable();
 
     item('Marquer le scénario terminé').click();

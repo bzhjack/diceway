@@ -48,7 +48,7 @@
             <mat-select [formField]="regionField" aria-label="Région" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les régions</mat-option>
               @for (region of regions(); track region.id) {
-                <mat-option [value]="region.id">{{ region.nom }} · {{ region.compte }}</mat-option>
+                <mat-option [value]="region.id">{{ region.nom }}</mat-option>
               }
             </mat-select>
           </mat-form-field>

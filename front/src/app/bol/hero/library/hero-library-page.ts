@@ -41,7 +41,7 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
 ];
 
 /**
- * Les héros du compte, en lignes : à gauche les filtres (statut, région) avec leur nombre de héros, à droite le tableau, triable par
+ * Les héros du compte, en lignes : à gauche les filtres (statut) avec leur nombre de héros, à droite le tableau, triable par
  * colonne. Un clic sur un héros ouvre son statbloc ; chacun se modifie, se supprime, et ceux en cours de création s'éditent en création
  * avancée.
  */
@@ -92,13 +92,13 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
     ];
   });
 
-  /** Les régions des héros, par nom, chacune avec son nombre de héros. */
+  /** Les régions des héros, par nom. */
   protected readonly regions = computed(() => {
-    const parId = new Map<number, {id: number; nom: string; compte: number}>();
+    const parId = new Map<number, {id: number; nom: string}>();
     for (const hero of this.heroes.data()) {
       const region = hero.origines.region;
       if (region?.id != null) {
-        parId.set(region.id, {id: region.id, nom: region.region, compte: (parId.get(region.id)?.compte ?? 0) + 1});
+        parId.set(region.id, {id: region.id, nom: region.region});
       }
     }
     return [...parId.values()].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));

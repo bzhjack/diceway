@@ -5,6 +5,7 @@ import {NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -65,7 +66,7 @@ const AUTRES_PARTIES = 4;
  * bibliothèques avec leur nombre de fiches et de quoi en créer. Le tout tient sur l'écran de référence (1440 × 704). */
 @Component({
   selector: 'bol-accueil-page',
-  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, CompagnieEquipeComponent, DwCompactBarComponent],
+  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule, MatTooltip, AccountMenuComponent, CompagnieEquipeComponent, DwCompactBarComponent],
   templateUrl: './accueil-page.html',
   styleUrl: './accueil-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

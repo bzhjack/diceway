@@ -74,16 +74,25 @@
               <a mat-flat-button [routerLink]="['/session', bandeau.id, 'play']">
                 <mat-icon>play_arrow</mat-icon> Reprendre
               </a>
-              <button
-                mat-icon-button
-                type="button"
-                class="acc-partie-menu"
-                [attr.aria-label]="'Actions de ' + partie.nom"
-                [matMenuTriggerFor]="menuPartie"
-                [matMenuTriggerData]="{partie}"
-              >
-                <mat-icon>more_vert</mat-icon>
-              </button>
+              @if (partie.enCombat) {
+                <button mat-stroked-button type="button" class="acc-soir-chapitre" disabled>
+                  <mat-icon>swap_horiz</mat-icon> {{ partie.scenarioId ? 'Changer de chapitre' : 'Choisir un scénario' }} : combat en cours
+                </button>
+              } @else if (partie.scenarioId) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="acc-soir-chapitre"
+                  [matMenuTriggerFor]="menuChapitres"
+                  [matMenuTriggerData]="{partie, chapitres: chapitresDe(partie), fin: true}"
+                >
+                  <mat-icon>swap_horiz</mat-icon> Changer de chapitre
+                </button>
+              } @else {
+                <button mat-stroked-button type="button" class="acc-soir-chapitre" [matMenuTriggerFor]="menuScenarios" [matMenuTriggerData]="{partie}">
+                  <mat-icon>auto_stories</mat-icon> Choisir un scénario
+                </button>
+              }
             </div>
           }
         } @else if (error()) {
@@ -197,7 +206,7 @@
       </ng-template>
     </mat-menu>
     <mat-menu #menuChapitres="matMenu">
-      <ng-template matMenuContent let-partie="partie" let-chapitres="chapitres">
+      <ng-template matMenuContent let-partie="partie" let-chapitres="chapitres" let-fin="fin">
         @for (chapitre of chapitres; track chapitre.id) {
           <button mat-menu-item type="button" (click)="changerChapitre(partie, chapitre.id)">
             <span [class.acc-menu-courant]="chapitre.courant">{{ chapitre.libelle }}</span>
@@ -208,6 +217,19 @@
               <span class="acc-menu-etat">&nbsp;· joué</span>
             }
           </button>
+        }
+        <!-- Depuis le bandeau, qui n'a pas d'autre menu, la fin du scénario suit ses chapitres. -->
+        @if (fin) {
+          <mat-divider />
+          @if (partie.termine) {
+            <button mat-menu-item type="button" (click)="marquerTermine(partie, false)">
+              <mat-icon>undo</mat-icon><span>Scénario pas encore terminé</span>
+            </button>
+          } @else {
+            <button mat-menu-item type="button" (click)="marquerTermine(partie, true)">
+              <mat-icon>flag</mat-icon><span>Marquer le scénario terminé</span>
+            </button>
+          }
         }
       </ng-template>
     </mat-menu>

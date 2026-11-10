@@ -85,13 +85,13 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
   /** L'en-tête de la page, que la barre compacte remplace une fois sorti de l'écran. */
   protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
-  /** Les régions des PNJ, par nom, chacune avec son nombre de PNJ. */
+  /** Les régions des PNJ, par nom. */
   protected readonly regions = computed(() => {
-    const parId = new Map<number, {id: number; nom: string; compte: number}>();
+    const parId = new Map<number, {id: number; nom: string}>();
     for (const pnj of this.fiches()) {
       const region = pnj.origines.region;
       if (region?.id != null) {
-        parId.set(region.id, {id: region.id, nom: region.region, compte: (parId.get(region.id)?.compte ?? 0) + 1});
+        parId.set(region.id, {id: region.id, nom: region.region});
       }
     }
     return [...parId.values()].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
