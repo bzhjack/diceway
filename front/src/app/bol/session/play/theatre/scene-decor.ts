@@ -33,6 +33,11 @@ import {sceneDecor} from './theatre.util';
       object-position: 50% 35%;
       filter: saturate(1.12) contrast(1.05) brightness(0.72);
     }
+
+    // Le décor par défaut (les héros sous la lune rouge), cadré plus haut : l'épée levée et les têtes plutôt que le muret du bas.
+    :host(.dcr--defaut) .dcr-image {
+      object-position: 50% 8%;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

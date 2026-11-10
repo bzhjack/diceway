@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {applyEach, form, FormField, maxLength, required} from '@angular/forms/signals';
-import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCardModule} from '@angular/material/card';
@@ -28,10 +27,10 @@ import {BolCatalogService} from '../../services/bol-catalog.service';
 import {BolScenarioService} from '../../services/bol-scenario.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
-import {KIND_LABEL, normalizeSearch} from '../../session/play/reserve/reserve.util';
 import {SCENE_TITLE_MAX} from '../../session/play/scene-list/scene.util';
 import {METEOS, MOMENTS} from '../../session/play/theatre/theatre.util';
 import {titreDeChapitre} from '../../session/scenario.util';
+import {openPersonnagesDialog} from './personnages-dialog/personnages-dialog';
 import {memesPersonnages, personnagesDe, personnagesVus, sceneChanges, sceneFormValue} from './scene-form.util';
 
 const PISTES_MAX = 8;
@@ -41,8 +40,6 @@ const JEU_MAX = 10000;
 const QTY_MAX = 30;
 /** Au plus, les personnages d'une scène (`BolSceneDistribution::SAISIE_MAX`). */
 const PERSONNAGES_MAX = 60;
-/** Au plus, les fiches que la recherche propose. */
-const PROPOSITIONS_MAX = 40;
 /** Où revenir sans adresse de retour : la bibliothèque des scénarios. */
 const RETOUR_PAR_DEFAUT = '/library/scenarios';
 
@@ -60,7 +57,6 @@ const RETOUR_PAR_DEFAUT = '/library/scenarios';
     DwFormHeaderComponent,
     DwValueStepperComponent,
     FormField,
-    MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -109,6 +105,8 @@ export class SceneFormPageComponent implements HasPendingChanges {
   private readonly scene = signal<BolSceneModel | null>(null);
   protected readonly siblings = signal<readonly BolSceneModel[]>([]);
   private readonly chapitreTitre = signal<string | null>(null);
+  /** Le scénario (`BolSaga`) du chapitre de la scène : « Ajouter des personnages » propose d'abord ses fiches. */
+  private readonly sagaId = signal<string | null>(null);
   protected readonly loading = signal(!this.nouvelle);
 
   private readonly value = signal(sceneFormValue(null));
@@ -131,23 +129,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
   );
   protected readonly nombreDePersonnages = computed(() => this.personnages().length);
 
-  /** La recherche de « Ajouter un personnage » et ce qu'elle propose : PNJ, créatures et démons, par nom. */
-  protected readonly recherche = signal('');
-  protected readonly propositions = computed(() => {
-    const terme = normalizeSearch(this.recherche());
-    const fiches = this.selection
-      .catalog()
-      .filter((entree) => entree.kind !== 'hero' && (!terme || normalizeSearch(entree.nom).includes(terme)))
-      .sort((left, right) => left.nom.localeCompare(right.nom, 'fr'))
-      .slice(0, PROPOSITIONS_MAX);
-    return (['pnj', 'creature', 'demon'] as const)
-      .map((kind) => ({kind, label: KIND_LABEL[kind], fiches: fiches.filter((entree) => entree.kind === kind)}))
-      .filter((groupe) => groupe.fiches.length > 0);
-  });
-  /** Ce que dit la recherche quand elle ne propose rien : le catalogue se charge, n'a pas pu se charger, ou rien n'a ce nom. */
-  protected readonly rienAProposer = computed(() =>
-    this.selection.loadFailed() ? 'Impossible de charger les fiches.' : this.selection.loading() ? 'Chargement des fiches…' : 'Aucune fiche de ce nom.',
-  );
 
   protected readonly valid = computed(() => this.sceneForm().valid());
   protected readonly lectureLength = computed(() => this.value().lecture.length);
@@ -163,8 +144,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly surtitre = computed(() => this.chapitreTitre() ?? 'Préparer la scène');
   protected readonly retourLabel = this.returnUrl.startsWith('/session/') ? 'Retour à la table' : 'Retour aux scénarios';
 
-  /** Pour l'autocomplétion : le champ se vide une fois la fiche choisie. */
-  protected readonly vide = (): string => '';
 
   constructor() {
     this.selection.loadCatalog();
@@ -176,10 +155,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
       return true;
     }
     return confirmLeaveUnsaved(this.dialog, 'Cette scène a des changements non sauvegardés. Quitter sans enregistrer ?');
-  }
-
-  protected chercher(event: Event): void {
-    this.recherche.set((event.target as HTMLInputElement).value);
   }
 
   protected retour(): void {
@@ -202,11 +177,19 @@ export class SceneFormPageComponent implements HasPendingChanges {
     this.personnages.update((liste) => liste.filter((_, position) => position !== index));
   }
 
-  /** Une fiche choisie dans la recherche entre dans la scène, en adversaire, sans attitude ; une créature ou un démon déjà là gagne
-   * un exemplaire plutôt qu'une ligne de plus. */
-  protected ajouter(event: MatAutocompleteSelectedEvent): void {
-    const fiche = event.option.value as CombatCatalogEntry;
-    this.recherche.set('');
+  /** « Ajouter des personnages » : le dialogue des fiches, filtrées d'abord sur le scénario de la scène ; celles choisies entrent. */
+  protected choisirDesPersonnages(): void {
+    const pnjsEnScene = new Set(this.personnages().filter((p) => p.kind === 'pnj').map((p) => `pnj:${p.source_id}`));
+    openPersonnagesDialog(this.dialog, {scenarioId: this.sagaId(), pnjsEnScene}).subscribe((fiches) => {
+      for (const fiche of fiches ?? []) {
+        this.ajouter(fiche);
+      }
+    });
+  }
+
+  /** Une fiche entre dans la scène, en adversaire, sans attitude ; une créature ou un démon déjà là gagne un exemplaire plutôt qu'une
+   * ligne de plus, un PNJ déjà là n'entre pas deux fois. */
+  private ajouter(fiche: CombatCatalogEntry): void {
     if (fiche.kind === 'hero') {
       return;
     }
@@ -288,6 +271,7 @@ export class SceneFormPageComponent implements HasPendingChanges {
           this.scene.set(scene);
           this.siblings.set(siblings);
           this.chapitreTitre.set(chapitre ? titreDeChapitre(chapitre) : null);
+          this.sagaId.set(chapitre?.saga?.id ?? null);
           const value = sceneFormValue(scene);
           this.value.set(value);
           this.initial.set(sceneFormValue(scene));

@@ -47,9 +47,9 @@ export function sceneActs(
   }));
 }
 
-/** Le décor d'une scène sans illustration ni région connue, et du plateau sans scène : l'image retenue pour la
- * maquette du théâtre. */
-const DECOR_PAR_DEFAUT = '/assets/bol/dashboard-header.webp';
+/** Le décor d'une scène sans illustration ni région connue, et du plateau sans scène : les héros sous la lune rouge, comme le
+ * bandeau de l'accueil. */
+const DECOR_PAR_DEFAUT = '/assets/bol/fond-heros.webp';
 
 /** Le fond du plateau pour une scène : son illustration, sinon l'image par défaut. La région n'y change rien : la carte se
  * consulte à part, depuis le lieu du cartouche. */

@@ -44,7 +44,7 @@ describe('SceneFormPageComponent', () => {
       update: vi.fn((id: string) => of({...SCENE, id})),
       create: vi.fn(() => of({...SCENE, id: 'nouvelle', distribution: []})),
     };
-    const open = vi.fn(() => ({afterClosed: () => of(true)}));
+    const open = vi.fn((): {afterClosed: () => unknown} => ({afterClosed: () => of(true)}));
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [
@@ -101,19 +101,14 @@ describe('SceneFormPageComponent', () => {
     expect(navigate).toHaveBeenCalledWith('/library/scenarios');
   });
 
-  it('la recherche propose PNJ, créatures et démons, jamais un héros ; un PNJ choisi entre en adversaire, une créature déjà là gagne un exemplaire', async () => {
-    const {composant, page, texte, fixture} = await rendre();
-    const ajouter = (sourceId: string) =>
-      (composant as unknown as {ajouter(e: unknown): void}).ajouter({option: {value: CATALOGUE.find((c) => c.sourceId === sourceId)}});
+  it('« Ajouter des personnages » ouvre le dialogue sur le scénario de la scène ; un PNJ choisi entre en adversaire, une créature déjà là gagne un exemplaire', async () => {
+    const {page, texte, fixture, open} = await rendre();
+    open.mockReturnValueOnce({afterClosed: () => of([CATALOGUE[1], CATALOGUE[0]])});
 
-    expect((composant as unknown as {propositions(): {fiches: CombatCatalogEntry[]}[]}).propositions().flatMap((g) => g.fiches.map((f) => f.nom))).toEqual([
-      'Drajit',
-      'Loup géant',
-    ]);
-    ajouter('p1');
-    ajouter('c1');
+    [...page.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b)?.includes('Ajouter des personnages'))!.click();
     await fixture.whenStable();
 
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scenarioId: 'dv', pnjsEnScene: new Set()}});
     expect([...page.querySelectorAll('.sfp-perso-texte')].map((e) => texte(e))).toEqual(['Loup géant', 'Drajit']);
     expect(page.querySelector<HTMLInputElement>('.sfp-perso input')!.value).toBe('3');
   });

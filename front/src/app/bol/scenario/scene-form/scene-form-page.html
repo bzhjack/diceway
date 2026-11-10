@@ -135,36 +135,9 @@
                 }
               </h2>
 
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Ajouter un personnage</mat-label>
-                <mat-icon matPrefix aria-hidden="true">person_add</mat-icon>
-                <input
-                  id="sfp-recherche"
-                  matInput
-                  autocomplete="off"
-                  placeholder="Un PNJ, une créature, un démon…"
-                  [matAutocomplete]="propositionsAuto"
-                  [value]="recherche()"
-                  [disabled]="nombreDePersonnages() >= personnagesMax"
-                  (input)="chercher($event)"
-                />
-                <mat-autocomplete #propositionsAuto="matAutocomplete" [displayWith]="vide" (optionSelected)="ajouter($event)">
-                  @for (groupe of propositions(); track groupe.kind) {
-                    <mat-optgroup [label]="groupe.label">
-                      @for (fiche of groupe.fiches; track fiche.catalogId) {
-                        <mat-option [value]="fiche">
-                          <span class="sfp-proposition">
-                            <img dwAvatarFallback class="sfp-proposition-portrait" [src]="fiche.avatar" alt="" />
-                            {{ fiche.nom }}
-                          </span>
-                        </mat-option>
-                      }
-                    </mat-optgroup>
-                  } @empty {
-                    <mat-option disabled>{{ rienAProposer() }}</mat-option>
-                  }
-                </mat-autocomplete>
-              </mat-form-field>
+              <button mat-stroked-button type="button" class="sfp-ajouter" [disabled]="nombreDePersonnages() >= personnagesMax" (click)="choisirDesPersonnages()">
+                <mat-icon>person_add</mat-icon> Ajouter des personnages
+              </button>
 
               @if (personnagesAffiches().length) {
                 <ul class="sfp-personnages">
@@ -205,7 +178,7 @@
                   }
                 </ul>
               } @else {
-                <p class="sfp-vide">Personne en scène pour l'instant : cherchez un PNJ, une créature ou un démon pour l'y faire entrer.</p>
+                <p class="sfp-vide">Personne en scène pour l'instant : « Ajouter des personnages » montre les PNJ, créatures et démons à y faire entrer.</p>
               }
             </section>
           </div>

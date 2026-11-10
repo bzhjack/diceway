@@ -30,7 +30,7 @@
          reprendre ; à côté, les autres parties récentes. Sans partie, ce qu'il faut pour en lancer une (d'abord une compagnie). Tant que
          l'accueil n'a pas répondu (ou s'il a échoué), le bandeau n'affirme rien. -->
     <section class="acc-soir" aria-labelledby="acc-soir-titre" [class]="'dw-saga--' + (bandeau()?.teinte ?? 0)" [attr.aria-busy]="chargement()">
-      <img class="acc-soir-image" ngSrc="assets/bol/dashboard-header.webp" alt="" fill priority />
+      <img class="acc-soir-image" ngSrc="assets/bol/fond-heros.webp" alt="" fill priority />
       <div class="acc-soir-contenu">
         @if (bandeau(); as bandeau) {
           @if (derniere(); as partie) {

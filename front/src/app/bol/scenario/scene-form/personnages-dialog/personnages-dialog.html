@@ -1,0 +1,111 @@
+<h2 mat-dialog-title>Ajouter des personnages</h2>
+
+<mat-dialog-content class="pdg">
+  <!-- Les filtres, toujours visibles : chaque option avec ce qu'elle montrerait. -->
+  <nav class="dw-lr-filtres pdg-filtres" aria-label="Filtres">
+    <section class="dw-lr-facette" aria-labelledby="pdg-f-type">
+      <h3 id="pdg-f-type" class="dw-lr-facette-titre">Type</h3>
+      @for (option of options().types; track option.cle) {
+        <button type="button" class="dw-lr-option" [attr.aria-pressed]="type() === option.cle" (click)="type.set(option.cle)">
+          <span class="dw-lr-option-label">{{ option.label }}</span>
+          <span class="dw-lr-option-compte">{{ option.compte }}</span>
+        </button>
+      }
+    </section>
+
+    <section class="dw-lr-facette" aria-labelledby="pdg-f-source">
+      <h3 id="pdg-f-source" class="dw-lr-facette-titre">Source</h3>
+      @for (option of options().sources; track option.cle) {
+        <button type="button" class="dw-lr-option" [attr.aria-pressed]="source() === option.cle" (click)="source.set(option.cle)">
+          <span class="dw-lr-option-label">{{ option.label }}</span>
+          <span class="dw-lr-option-compte">{{ option.compte }}</span>
+        </button>
+      }
+    </section>
+
+    <section class="dw-lr-facette" aria-labelledby="pdg-f-rang">
+      <h3 id="pdg-f-rang" class="dw-lr-facette-titre">Rang</h3>
+      @for (option of options().rangs; track option.cle) {
+        <button type="button" class="dw-lr-option" [attr.aria-pressed]="rang() === option.cle" (click)="rang.set(option.cle)">
+          <span class="dw-lr-option-label">{{ option.label }}</span>
+          <span class="dw-lr-option-compte">{{ option.compte }}</span>
+        </button>
+      }
+    </section>
+
+    <section class="dw-lr-facette" aria-labelledby="pdg-f-scenario">
+      <h3 id="pdg-f-scenario" class="dw-lr-facette-titre">Scénario</h3>
+      @for (option of scenarios(); track option.cle) {
+        <button type="button" class="dw-lr-option" [attr.aria-pressed]="scenarioId() === option.cle" (click)="basculerScenario(option.cle)">
+          <span class="dw-lr-option-label">{{ option.label }}</span>
+          <span class="dw-lr-option-compte">{{ option.compte }}</span>
+        </button>
+      } @empty {
+        <p class="dw-lr-facette-vide">Aucun scénario ne cite ces fiches.</p>
+      }
+    </section>
+  </nav>
+
+  <div class="pdg-principal">
+    <div class="pdg-barre">
+      <mat-form-field subscriptSizing="dynamic" class="pdg-recherche">
+        <mat-label>Rechercher</mat-label>
+        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+        <input id="pdg-recherche" matInput autocomplete="off" placeholder="Un nom…" [value]="recherche()" (input)="chercher($event)" />
+      </mat-form-field>
+      <span class="pdg-compte" role="status">{{ visibles().length }} fiche{{ visibles().length > 1 ? 's' : '' }}</span>
+      @if (filtresActifs()) {
+        <button mat-button type="button" (click)="effacerLesFiltres()"><mat-icon>filter_alt_off</mat-icon> Effacer les filtres</button>
+      }
+    </div>
+
+    @switch (etat()) {
+      @case ('chargement') {
+        <p class="pdg-vide" role="status">Chargement des fiches…</p>
+      }
+      @case ('echec') {
+        <p class="pdg-vide" role="alert">Impossible de charger les fiches.</p>
+      }
+      @default {
+        <ul class="pdg-grille" aria-label="Les fiches">
+          @for (fiche of visibles(); track fiche.catalogId) {
+            <li>
+              <button
+                type="button"
+                class="pdg-carte"
+                [attr.aria-pressed]="choisie(fiche)"
+                [disabled]="dejaEnScene(fiche)"
+                (click)="basculer(fiche)"
+              >
+                <img dwAvatarFallback class="pdg-portrait" loading="lazy" [src]="fiche.avatar" alt="" />
+                <span class="pdg-carte-texte">
+                  <span class="pdg-nom">{{ fiche.nom }}</span>
+                  <span class="pdg-detail">
+                    <span class="dw-lr-rang" [class]="'dw-lr-rang--' + lettreDuRang(fiche)">{{ rangLabel(fiche) }}</span>
+                    {{ kindLabel[fiche.kind] }} · {{ fiche.vitalite }} PV
+                  </span>
+                  @if (dejaEnScene(fiche)) {
+                    <span class="pdg-deja">Déjà en scène</span>
+                  }
+                </span>
+                @if (choisie(fiche)) {
+                  <mat-icon class="pdg-coche" aria-hidden="true">check_circle</mat-icon>
+                }
+              </button>
+            </li>
+          } @empty {
+            <li class="pdg-vide">Aucune fiche ne correspond à ces filtres.</li>
+          }
+        </ul>
+      }
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <span class="pdg-choix" role="status">{{ nombreChoisi() }} choisi{{ nombreChoisi() > 1 ? 's' : '' }}</span>
+  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-flat-button type="button" [disabled]="nombreChoisi() === 0" (click)="ajouter()">
+    <mat-icon>person_add</mat-icon> Ajouter à la scène
+  </button>
+</mat-dialog-actions>

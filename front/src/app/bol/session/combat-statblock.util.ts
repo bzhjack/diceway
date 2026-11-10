@@ -46,12 +46,8 @@ const RANK_KEY_LABELS: Record<CombatantRankKey, string> = {
   rival: 'Rival',
 };
 
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
 /** Rang BoL brut (rival/coriace/pietaille) d'une entrée du catalogue de combat — null pour un héros. */
-function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
+export function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
   switch (entry.kind) {
     case 'hero':
       return null;
@@ -71,13 +67,6 @@ function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
 export function combatantRankLabel(entry: CombatCatalogEntry): string {
   if (entry.kind === 'hero') {
     return 'Héros';
-  }
-
-  if (entry.kind === 'creature') {
-    const creature = entry.raw as BolCreatureModel;
-    if (creature.rang) {
-      return capitalize(creature.rang);
-    }
   }
 
   return RANK_KEY_LABELS[combatantRankKey(entry)!];
