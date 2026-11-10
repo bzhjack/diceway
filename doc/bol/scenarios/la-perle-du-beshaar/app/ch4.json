@@ -22,7 +22,7 @@
       "commentaire": "Livre p. 101, rivale demi-démone. Ses 4 points d'héroïsme sont portés en vilénie. Carrière « courtisane » du livre = Tentatrice ici.\nMuse des héros (ChL 3 p. 173) : dépenser 1 point d'héroïsme pour en rendre 1 à un autre personnage.\nSuccube : d6+6 piétaille lui obéissent aveuglément, sans jet ; d6 coriaces, ou un héros, avec un jet d'Esprit à -4 (son aura).\nConnaissances innées : démons, sorcellerie, mystères anciens.\nVulnérabilité : le fer pur lui inflige des dégâts doublés.\nÉpouse de Surdral, fruit des expériences d'un démoniste. Voile léger, yeux verts pailletés d'or, voix hypnotique, parfum enivrant. Son secret doit être gardé."
     },
     "faux-garde": {
-      "kind": "pnj", "nom": "« Garde » d'Arjanek", "rang": "coriace", "region": "Malakut",
+      "kind": "pnj", "nom": "Garde d'Arjanek", "rang": "coriace", "region": "Malakut",
       "vigueur": 1, "agilite": 2, "esprit": 0, "aura": -1,
       "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
       "vitalite": 7,

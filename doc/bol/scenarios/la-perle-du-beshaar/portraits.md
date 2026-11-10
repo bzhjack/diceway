@@ -98,7 +98,7 @@ de `doc/bol/image-prompts/pnj.md`.
 
 ### P4 — chapitre 4 : Malakut, les marais de Kasht et la côte des pirates
 
-> 1. « Garde » d'Arjanek : faux serviteur, voleur et tueur à gages, homme d'une trentaine d'années à la mâchoire lourde, cheveux huilés plaqués, livrée propre de domestique malakuti, gourdin à la ceinture et dague à la main, sourire de traître, cour de banquet illuminée de flambeaux.
+> 1. Garde d'Arjanek : faux serviteur, voleur et tueur à gages, homme d'une trentaine d'années à la mâchoire lourde, cheveux huilés plaqués, livrée propre de domestique malakuti, gourdin à la ceinture et dague à la main, sourire de traître, cour de banquet illuminée de flambeaux.
 > 2. Mercenaire du temple de Shazzadion : soldat satarlan payé par le temple, vétéran au visage couturé de cicatrices, nez cassé, moustache tombante grise, armure légère de cuir, hache à la main et arc dans le dos, rue de Malakut à la nuit.
 > 3. Druidesse noire : fanatique émaciée au crâne ras, robe noire druidique, petit médaillon noir en forme de silhouette humaine constellé de grains de quartz, regard dément, poignard à la main, fourrés à l'orée des marais noyés de brume (dominante vert de marais / bleu nuit, exception à l'ocre).
 > 4. Krum, officier du Kalathorn améthyste : pirate d'âge mûr au visage carré et buriné, cheveux poivre et sel noués en queue, barbe courte, sabre d'abordage au côté, assurance de façade que trahit un regard inquiet, feu de camp dans la cour d'un temple en ruine envahi de lianes.

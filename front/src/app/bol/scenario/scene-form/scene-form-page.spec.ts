@@ -108,7 +108,7 @@ describe('SceneFormPageComponent', () => {
     [...page.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b)?.includes('Ajouter des personnages'))!.click();
     await fixture.whenStable();
 
-    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scenarioId: 'dv', pnjsEnScene: new Set()}});
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scenarioId: 'dv', pnjsEnScene: new Set(), placesLibres: 59}});
     expect([...page.querySelectorAll('.sfp-perso-texte')].map((e) => texte(e))).toEqual(['Loup géant', 'Drajit']);
     expect(page.querySelector<HTMLInputElement>('.sfp-perso input')!.value).toBe('3');
   });

@@ -1,28 +1,22 @@
-import {CombatantRankKey} from '../../session/models/combat-statblock.model';
+import {LibraryRang, LibrarySource} from '../../shared/models/library-rows.model';
 
 /** Ce que reçoit « Ajouter des personnages » : le scénario de la scène (ses fiches sont proposées d'abord) et les PNJ déjà en scène
  * (un PNJ n'y entre qu'une fois, clés `pnj:<id>`). */
 export interface PersonnagesDialogData {
   readonly scenarioId: string | null;
   readonly pnjsEnScene: ReadonlySet<string>;
+  /** Combien de fiches la scène peut encore recevoir (une scène compte 60 personnages au plus). */
+  readonly placesLibres: number;
 }
 
-export type PersonnageType = 'tous' | 'pnj' | 'creature' | 'demon';
-export type PersonnageSource = 'tout' | 'catalogue' | 'compte';
-export type PersonnageRang = 'tous' | CombatantRankKey;
+/** Le type d'une fiche à mettre en scène ; null : tous. */
+export type PersonnageType = 'pnj' | 'creature' | 'demon' | null;
 
-/** Les filtres du dialogue ; `scenarioId` null : tous les scénarios. */
+/** Les filtres du dialogue, ceux des bibliothèques en lignes en plus du type ; `rang` et `scenarioId` null : tous. */
 export interface PersonnagesFiltres {
   type: PersonnageType;
-  source: PersonnageSource;
-  rang: PersonnageRang;
+  source: LibrarySource;
+  rang: LibraryRang | null;
   scenarioId: string | null;
   recherche: string;
-}
-
-/** Une option d'un filtre, avec le nombre de fiches qu'elle montrerait (les autres filtres appliqués). */
-export interface PersonnagesOption<T> {
-  cle: T;
-  label: string;
-  compte: number;
 }

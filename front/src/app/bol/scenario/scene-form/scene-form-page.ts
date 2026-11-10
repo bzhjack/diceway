@@ -129,7 +129,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
   );
   protected readonly nombreDePersonnages = computed(() => this.personnages().length);
 
-
   protected readonly valid = computed(() => this.sceneForm().valid());
   protected readonly lectureLength = computed(() => this.value().lecture.length);
   protected readonly pisteCount = computed(() => this.value().pistes.length);
@@ -143,7 +142,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly titre = computed(() => (this.nouvelle ? 'Nouvelle scène' : this.scene()?.titre || 'Préparer la scène'));
   protected readonly surtitre = computed(() => this.chapitreTitre() ?? 'Préparer la scène');
   protected readonly retourLabel = this.returnUrl.startsWith('/session/') ? 'Retour à la table' : 'Retour aux scénarios';
-
 
   constructor() {
     this.selection.loadCatalog();
@@ -180,7 +178,8 @@ export class SceneFormPageComponent implements HasPendingChanges {
   /** « Ajouter des personnages » : le dialogue des fiches, filtrées d'abord sur le scénario de la scène ; celles choisies entrent. */
   protected choisirDesPersonnages(): void {
     const pnjsEnScene = new Set(this.personnages().filter((p) => p.kind === 'pnj').map((p) => `pnj:${p.source_id}`));
-    openPersonnagesDialog(this.dialog, {scenarioId: this.sagaId(), pnjsEnScene}).subscribe((fiches) => {
+    const placesLibres = PERSONNAGES_MAX - this.personnages().length;
+    openPersonnagesDialog(this.dialog, {scenarioId: this.sagaId(), pnjsEnScene, placesLibres}).subscribe((fiches) => {
       for (const fiche of fiches ?? []) {
         this.ajouter(fiche);
       }

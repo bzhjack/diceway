@@ -12,16 +12,8 @@
 
 .pdg-filtres {
   position: static;
-  gap: 0.7rem;
-  padding-block: 0.6rem;
   overflow-y: auto;
   scrollbar-width: thin;
-
-  // Plus serrées que dans une bibliothèque : les quatre filtres tiennent dans la hauteur du dialogue.
-  .dw-lr-option {
-    min-height: 1.7rem;
-    font-size: 0.85rem;
-  }
 }
 
 .pdg-principal {

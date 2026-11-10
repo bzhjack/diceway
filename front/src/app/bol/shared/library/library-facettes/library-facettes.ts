@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, input, model} from '@angular/core';
 import {LibraryOption, LibraryScenarioOption, LibrarySource} from '../../models/library-rows.model';
+import {LibraryFacetteComponent} from '../library-facette/library-facette';
 
 /**
  * Les filtres partagés d'une bibliothèque en lignes, à poser dans sa colonne de filtres : la source et le scénario (à la teinte de sa
@@ -8,16 +9,9 @@ import {LibraryOption, LibraryScenarioOption, LibrarySource} from '../../models/
  */
 @Component({
   selector: 'bol-library-facettes',
+  imports: [LibraryFacetteComponent],
   template: `
-    <section class="dw-lr-facette" aria-labelledby="dw-lr-f-source">
-      <h2 id="dw-lr-f-source" class="dw-lr-facette-titre">Source</h2>
-      @for (option of sources(); track option.cle) {
-        <button type="button" class="dw-lr-option" [attr.aria-pressed]="source() === option.cle" (click)="source.set(option.cle)">
-          <span class="dw-lr-option-label">{{ option.label }}</span>
-          <span class="dw-lr-option-compte">{{ option.compte }}</span>
-        </button>
-      }
-    </section>
+    <bol-library-facette titre="Source" [options]="sources()" [(valeur)]="source" />
 
     <section class="dw-lr-facette" aria-labelledby="dw-lr-f-scenario">
       <h2 id="dw-lr-f-scenario" class="dw-lr-facette-titre">Scénario</h2>

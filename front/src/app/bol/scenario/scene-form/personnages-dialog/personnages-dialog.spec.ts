@@ -15,12 +15,12 @@ const CATALOGUE = [
 ] as unknown as CombatCatalogEntry[];
 
 describe('PersonnagesDialogComponent', () => {
-  async function ouvrir(scenarioId: string | null = 'dv', pnjsEnScene = new Set<string>()) {
+  async function ouvrir(scenarioId: string | null = 'dv', pnjsEnScene = new Set<string>(), placesLibres = 60) {
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [{provide: CombatSelectionService, useValue: {catalog: signal(CATALOGUE), loadCatalog: vi.fn(), loading: signal(false), loadFailed: signal(false)}}],
     });
-    const ferme = firstValueFrom(openPersonnagesDialog(TestBed.inject(MatDialog), {scenarioId, pnjsEnScene}));
+    const ferme = firstValueFrom(openPersonnagesDialog(TestBed.inject(MatDialog), {scenarioId, pnjsEnScene, placesLibres}));
     TestBed.tick();
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     const noms = () => [...document.querySelectorAll('.pdg-nom')].map((e) => texte(e));
@@ -64,6 +64,26 @@ describe('PersonnagesDialogComponent', () => {
     stable();
 
     expect(((await ferme) ?? []).map((f) => f.nom)).toEqual(['Loup']);
+  });
+
+  it('ne laisse pas choisir plus de fiches que la scène n’a de places', async () => {
+    const {bouton, stable, texte} = await ouvrir(null, new Set(), 1);
+
+    bouton('Loup').click();
+    stable();
+
+    expect(bouton('Drajit').disabled).toBe(true);
+    expect(bouton('Loup').disabled).toBe(false);
+    expect(texte(document.querySelector('.pdg-choix'))).toContain('la scène est pleine');
+  });
+
+  it('le scénario choisi reste dans sa liste quand les autres filtres ne lui laissent aucune fiche', async () => {
+    const {bouton, stable} = await ouvrir();
+
+    bouton('Démons').click();
+    stable();
+
+    expect(bouton('Le Dieu voilé').getAttribute('aria-pressed')).toBe('true');
   });
 
   it('un PNJ déjà en scène ne se choisit pas une seconde fois', async () => {
