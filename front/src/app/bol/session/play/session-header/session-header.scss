@@ -119,14 +119,13 @@
 }
 
 // Les actions secondaires en icône ronde : des clous de bronze (deux classes : plus fort que le bouton icône de Material), qui rougeoient
-// au survol et une fois ouverts (les coulisses).
+// au survol.
 .cp-header-actions .cp-head-icon {
   border: 1px solid var(--dw-forge-bronze-dim);
   @include forge.stud-face;
   color: var(--dw-forge-stud-text);
 
-  &:hover,
-  &[aria-expanded='true'] {
+  &:hover {
     @include forge.stud-hot;
   }
 }

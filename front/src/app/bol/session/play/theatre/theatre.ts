@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, inject, Injector, input, output} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
@@ -17,7 +19,7 @@ import {TroupeComponent} from './troupe';
  * la page ; relaie à la page les gestes sur les cartes et les changements de la table. */
 @Component({
   selector: 'bol-theatre',
-  imports: [BraisesComponent, CompagnieComponent, SceneCartoucheComponent, SceneDecorComponent, SceneLectureComponent, TroupeComponent],
+  imports: [MatButtonModule, MatIconModule, BraisesComponent, CompagnieComponent, SceneCartoucheComponent, SceneDecorComponent, SceneLectureComponent, TroupeComponent],
   templateUrl: './theatre.html',
   styleUrl: './theatre.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +39,12 @@ export class TheatreComponent {
   readonly sceneChanged = output<BolSceneLoadResult>();
   /** Une vitalité ou un héroïsme a été enregistré. */
   readonly changed = output<TableChange>();
+  /** Les coulisses (la réserve) sont ouvertes. */
+  readonly coulissesOpen = input(false);
+  /** « Ajouter des personnages » : ouvre les coulisses, d'où ils entrent en scène. */
   readonly coulissesRequested = output<void>();
+  /** « Démarrer un combat ». */
+  readonly combatRequested = output<void>();
 
   protected readonly regionNom = computed(() => this.store.regionNom(this.store.displayedScene()));
 

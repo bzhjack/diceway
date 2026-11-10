@@ -4,13 +4,29 @@
   <bol-braises class="thr-braises" />
 
   <main class="thr-scene" [class.thr-scene--avec-lecture]="!!store.displayedScene()">
-    <bol-scene-cartouche
-      class="thr-cartouche"
-      [scene]="store.displayedScene()"
-      [regionNom]="regionNom()"
-      [acte]="store.currentActe()"
-      [total]="store.acts().length"
-    />
+    <!-- En tête de la scène : où elle se joue, son ambiance, puis ce qu'on y fait (hors du cartouche, qui annonce chaque scène aux
+         lecteurs d'écran). -->
+    <div class="thr-tete">
+      <bol-scene-cartouche
+        [scene]="store.displayedScene()"
+        [regionNom]="regionNom()"
+        [acte]="store.currentActe()"
+        [total]="store.acts().length"
+      />
+      <div class="thr-actions">
+        <button mat-flat-button type="button" (click)="combatRequested.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
+        <button
+          mat-stroked-button
+          type="button"
+          class="thr-ajouter"
+          aria-controls="spp-coulisses-panel"
+          [attr.aria-expanded]="coulissesOpen()"
+          (click)="coulissesRequested.emit()"
+        >
+          <mat-icon>person_add</mat-icon> Ajouter des personnages
+        </button>
+      </div>
+    </div>
 
     @if (store.displayedScene(); as scene) {
       <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" (grandToggled)="agrandirLecture()" />

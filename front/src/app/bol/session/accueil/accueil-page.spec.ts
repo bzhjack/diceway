@@ -471,7 +471,25 @@ describe('AccueilPageComponent', () => {
     expect(tuiles[3].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/intendance');
     expect(texte(tuiles[3].querySelector('.acc-biblio-detail'))).toBe('54 armes · 6 armures');
     expect(tuiles[4].querySelector('.acc-biblio-lien')?.getAttribute('href')).toBe('/library/scenarios');
-    expect(tuiles.every((t) => t.querySelectorAll('a, button').length === 1)).toBe(true);
+  });
+
+  it('chaque tuile a dans son coin de quoi créer, ou d’aller droit aux bibliothèques qu’elle regroupe', async () => {
+    const page = await rendre();
+    const raccourcis = [...page.querySelectorAll('.acc-biblio')].map((t) =>
+      [...t.querySelectorAll('.acc-biblio-raccourci')].map((b) => `${b.getAttribute('aria-label')} ${b.getAttribute('href') ?? '(bouton)'}`),
+    );
+
+    expect(raccourcis).toEqual([
+      ['Créer un héros /create/hero'],
+      ['Créer un PNJ /create/pnj'],
+      ['Créatures /library/creatures', 'Démons /library/demons'],
+      ['Armes /library/weapons', 'Armures /library/armors'],
+      ['Nouveau scénario /library/scenarios'],
+      ['Nouvelle compagnie (bouton)'],
+    ]);
+
+    page.querySelector<HTMLButtonElement>('.acc-biblio-raccourci[aria-label="Nouvelle compagnie"]')!.click();
+    expect(open).toHaveBeenLastCalledWith(CompagnieDialogComponent, expect.objectContaining({data: {compagnie: null}}));
   });
 
   it('sans compagnie, dit qu’il en faut une pour lancer une partie, sans proposer de partie', async () => {

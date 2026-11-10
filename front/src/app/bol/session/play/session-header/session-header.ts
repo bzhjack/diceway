@@ -8,7 +8,7 @@ import {TurnOrderInterrupter} from '../../models/turn-order.model';
 import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 
 /** Barre du haut de la table : titre de la session, contenu projeté par la page (la frise des actes en mode libre, l'ordre d'action
- * en combat), coulisses ou commandes du round, action de combat, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
+ * en combat), recherche, commandes du round et fin du combat, retour à l'accueil, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
 @Component({
   selector: 'bol-session-header',
   imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
@@ -19,19 +19,14 @@ import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 export class SessionHeaderComponent {
   readonly mode = input.required<'libre' | 'combat'>();
   readonly titre = input<string | null>(null);
-  /** Les coulisses (la réserve) sont ouvertes — mode libre seulement. */
-  readonly coulissesOpen = input(false);
   /** En combat : les héros qui ont retardé leur action ce round, chacun peut l'interrompre pour agir tout de suite. */
   readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
   /** En combat : la « Mêlée de piétaille », absente sans piétaille debout des deux côtés, grisée une fois faite ce round. */
   readonly melee = input<MeleeDisponibilite>('absente');
 
-  readonly startCombat = output<void>();
   readonly endCombat = output<void>();
   /** Ouvre la barre de commande (même effet que les raccourcis `/` et `Ctrl+K`). */
   readonly searchRequested = output<void>();
-  /** Ouvre ou ferme les coulisses. */
-  readonly coulissesToggled = output<void>();
   /** En combat : un héros qui a retardé son action interrompt (clé de sa carte). */
   readonly interruptRequested = output<string>();
   /** En combat : un nouveau jet de réaction des héros. */

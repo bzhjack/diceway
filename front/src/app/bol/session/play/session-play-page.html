@@ -11,11 +11,8 @@
     <bol-session-header
       [mode]="table.mode()"
       [titre]="table.headerTitle()"
-      (startCombat)="commands.openStartCombat()"
       (endCombat)="ending.askEndCombat()"
       (searchRequested)="commands.openPalette()"
-      [coulissesOpen]="table.reserveOpen()"
-      (coulissesToggled)="table.toggleReserve()"
       [interrupters]="combat.interrupters()"
       (interruptRequested)="combat.onInterrupt($event)"
       (rerollRequested)="commands.openStartCombat(true)"
@@ -85,7 +82,9 @@
                 (campToggleRequested)="commands.toggleCamp($event)"
                 (sceneChanged)="commands.onSceneLoaded($event)"
                 (changed)="table.onTableChanged($event)"
+                [coulissesOpen]="table.reserveOpen()"
                 (coulissesRequested)="table.setReserveOpen(true)"
+                (combatRequested)="commands.openStartCombat()"
               />
             </mat-sidenav-content>
           </mat-sidenav-container>

@@ -35,17 +35,46 @@ interface AccueilBibliotheque {
   readonly compte: (comptes: BolAccueilComptes) => number;
   /** Une ligne sous le nom, quand la tuile en regroupe plusieurs. */
   readonly detail?: (comptes: BolAccueilComptes) => string;
+  /** Les boutons ronds du coin de la tuile : créer une fiche, ou aller droit à l'une des bibliothèques qu'elle regroupe. */
+  readonly raccourcis: readonly AccueilRaccourci[];
 }
 
+interface AccueilRaccourci {
+  readonly label: string;
+  /** Une icône Material, ou `sword`, l'icône SVG de l'application. */
+  readonly icon: string;
+  readonly route: string;
+  /** L'état de la navigation : `nouveau` fait ouvrir « Nouveau scénario » à la bibliothèque des scénarios. */
+  readonly etat?: Record<string, unknown>;
+}
+
+const CREER = 'add';
+
 const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
-  {cle: 'heros', label: 'Héros', route: '/library/heroes', compte: (c) => c.heros},
-  {cle: 'pnjs', label: 'PNJ', route: '/library/pnjs', compte: (c) => c.pnjs},
+  {
+    cle: 'heros',
+    label: 'Héros',
+    route: '/library/heroes',
+    compte: (c) => c.heros,
+    raccourcis: [{label: 'Créer un héros', icon: CREER, route: '/create/hero'}],
+  },
+  {
+    cle: 'pnjs',
+    label: 'PNJ',
+    route: '/library/pnjs',
+    compte: (c) => c.pnjs,
+    raccourcis: [{label: 'Créer un PNJ', icon: CREER, route: '/create/pnj'}],
+  },
   {
     cle: 'bestiaire',
     label: 'Bestiaire',
     route: '/bestiaire',
     compte: (c) => c.creatures + c.demons,
     detail: (c) => `${pluriel(c.creatures, 'créature')} · ${pluriel(c.demons, 'démon')}`,
+    raccourcis: [
+      {label: 'Créatures', icon: 'pets', route: '/library/creatures'},
+      {label: 'Démons', icon: 'bolt', route: '/library/demons'},
+    ],
   },
   {
     cle: 'intendance',
@@ -53,9 +82,25 @@ const BIBLIOTHEQUES: readonly AccueilBibliotheque[] = [
     route: '/intendance',
     compte: (c) => c.armes + c.armures,
     detail: (c) => `${pluriel(c.armes, 'arme')} · ${pluriel(c.armures, 'armure')}`,
+    raccourcis: [
+      {label: 'Armes', icon: 'sword', route: '/library/weapons'},
+      {label: 'Armures', icon: 'shield', route: '/library/armors'},
+    ],
   },
-  {cle: 'scenarios', label: 'Scénarios', route: '/library/scenarios', compte: (c) => c.scenarios},
-  {cle: 'compagnies', label: 'Compagnies', route: '/library/companies', compte: (c) => c.compagnies},
+  {
+    cle: 'scenarios',
+    label: 'Scénarios',
+    route: '/library/scenarios',
+    compte: (c) => c.scenarios,
+    raccourcis: [{label: 'Nouveau scénario', icon: CREER, route: '/library/scenarios', etat: {nouveau: true}}],
+  },
+  {
+    cle: 'compagnies',
+    label: 'Compagnies',
+    route: '/library/companies',
+    compte: (c) => c.compagnies,
+    raccourcis: [],
+  },
 ];
 
 /** Les autres parties que la colonne du bandeau montre ; les suivantes sont dans « Toutes les parties ». */
@@ -134,6 +179,7 @@ export class AccueilPageComponent {
       route: bibliotheque.route,
       compte: comptes ? bibliotheque.compte(comptes) : null,
       detail: comptes && bibliotheque.detail ? bibliotheque.detail(comptes) : null,
+      raccourcis: bibliotheque.raccourcis,
     }));
   });
 

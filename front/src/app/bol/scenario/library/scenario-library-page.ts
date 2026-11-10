@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
@@ -94,6 +94,15 @@ export class ScenarioLibraryPageComponent {
   protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
   private readonly choisi = signal<string | null>(null);
+
+  constructor() {
+    // Le « + » de la tuile Scénarios de l'accueil arrive ici pour en créer un, une seule fois : recharger la page ne le redemande pas.
+    const etat = typeof history === 'undefined' ? null : (history.state as Record<string, unknown> | null);
+    if (etat?.['nouveau'] === true) {
+      history.replaceState({...etat, nouveau: false}, '');
+      afterNextRender(() => this.nouveauScenario());
+    }
+  }
 
   /** Les scénarios par nom, ceux sans chapitre compris ; chacun avec ses chapitres dans l'ordre et leurs scènes par rang. */
   protected readonly scenarios = computed((): ScenarioVue[] => {

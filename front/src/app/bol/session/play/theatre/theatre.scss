@@ -53,8 +53,21 @@
   z-index: -1;
 }
 
-.thr-cartouche {
+.thr-tete {
   grid-area: cartouche;
+  min-width: 0;
+}
+
+// Sous l'ambiance : l'action principale en or, puis les coulisses, sur un fond sombre qui se lit sur n'importe quel décor.
+.thr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.thr-ajouter {
+  background: rgba(10, 6, 4, 0.7);
 }
 
 .thr-lecture {

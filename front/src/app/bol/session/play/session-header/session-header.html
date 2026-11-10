@@ -57,24 +57,12 @@
       <mat-icon>search</mat-icon>
     </button>
     @if (mode() === 'libre') {
-      <button
-        mat-icon-button
-        type="button"
-        class="cp-head-icon"
-        aria-label="Coulisses"
-        aria-controls="spp-coulisses-panel"
-        [attr.aria-expanded]="coulissesOpen()"
-        [matTooltip]="coulissesOpen() ? 'Fermer les coulisses' : 'Coulisses : les personnages en réserve'"
-        (click)="coulissesToggled.emit()"
-      >
-        <mat-icon>theater_comedy</mat-icon>
-      </button>
-      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
+      <!-- « Démarrer un combat » et les coulisses sont sous l'ambiance de la scène, dans le théâtre. -->
       <a mat-icon-button class="cp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
         <mat-icon>home</mat-icon>
       </a>
     } @else {
-      <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
+      <!-- L'action principale de l'en-tête en combat, en or plein -->
       <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer</button>
     }
     <bol-account-menu />

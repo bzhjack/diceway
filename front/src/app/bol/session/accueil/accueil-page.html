@@ -269,6 +269,30 @@
                 <span class="acc-biblio-detail">{{ detail }}</span>
               }
             </a>
+            <!-- À côté du lien (un bouton ne se met pas dans un lien), posés dans son coin. -->
+            <div class="acc-biblio-raccourcis">
+              @for (raccourci of bibliotheque.raccourcis; track raccourci.route + raccourci.label) {
+                <a
+                  mat-icon-button
+                  class="acc-biblio-raccourci"
+                  [routerLink]="raccourci.route"
+                  [state]="raccourci.etat"
+                  [attr.aria-label]="raccourci.label"
+                  [matTooltip]="raccourci.label"
+                >
+                  @if (raccourci.icon === 'sword') {
+                    <mat-icon svgIcon="sword" />
+                  } @else {
+                    <mat-icon>{{ raccourci.icon }}</mat-icon>
+                  }
+                </a>
+              }
+              @if (bibliotheque.cle === 'compagnies') {
+                <button mat-icon-button type="button" class="acc-biblio-raccourci" aria-label="Nouvelle compagnie" matTooltip="Nouvelle compagnie" (click)="nouvelleCompagnie()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              }
+            </div>
           </li>
         }
       </ul>

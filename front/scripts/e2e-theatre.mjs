@@ -144,7 +144,7 @@ try {
 
   // 5. Un PNJ glissé des coulisses sur la troupe entre en scène (zone de dépôt `adversaires`).
   const avant = await troupeCount();
-  await page.getByRole('button', {name: 'Coulisses', exact: true}).click();
+  await page.getByRole('button', {name: 'Ajouter des personnages'}).click();
   await page.getByRole('radio', {name: 'PNJ'}).or(page.getByRole('button', {name: 'PNJ', exact: true})).first().click();
   await page.waitForTimeout(500);
   const ligne = await page.locator('.rsv-row:not(.rsv-row--on-table)').first().boundingBox();
@@ -162,7 +162,7 @@ try {
   // chacune dans leur zone (à 1440 × 900, le plateau tient sans défiler).
   await addCrowd();
   // Les coulisses, ouvertes à l'étape 5, sont refermées : le plateau est mesuré dans toute sa largeur.
-  await page.getByRole('button', {name: 'Coulisses', exact: true}).click();
+  await page.getByRole('button', {name: 'Fermer les coulisses'}).click();
   for (const [width, height] of [[1440, 900], [1024, 768]]) {
     await page.setViewportSize({width, height});
     await page.reload({waitUntil: 'networkidle'});
