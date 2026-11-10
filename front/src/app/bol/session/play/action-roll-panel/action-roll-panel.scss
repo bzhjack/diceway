@@ -101,8 +101,10 @@ bol-action-roll-panel {
 // ── Les médaillons d'attribut ────────────────────────────────────────────────────────────────────
 .ard-medals {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.5rem;
+  // Deux par ligne : des jetons assez grands pour lire leur valeur de loin.
+  grid-template-columns: repeat(2, minmax(0, 7.5rem));
+  justify-content: center;
+  gap: 0.6rem 1rem;
 }
 
 .ard-medal {
@@ -121,18 +123,18 @@ bol-action-roll-panel {
   cursor: pointer;
 
   .mat-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-    font-size: 0.95rem;
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 1.35rem;
   }
 
   b {
-    font: 400 1.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 2.3rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-forge-bone);
   }
 
   span {
-    font-size: 0.58rem;
+    font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -750,7 +752,23 @@ bol-action-roll-panel {
   // Sur toute la largeur, quatre médaillons côte à côte plutôt que deux énormes.
   .ard-medals {
     grid-template-columns: repeat(4, minmax(0, 6.2rem));
-    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .ard-medal {
+    .mat-icon {
+      width: 0.95rem;
+      height: 0.95rem;
+      font-size: 0.95rem;
+    }
+
+    b {
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 0.58rem;
+    }
   }
 }
 
