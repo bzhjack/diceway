@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, convertToParamMap, provideRouter, Router} from '@angular/router';
-import {of, throwError} from 'rxjs';
+import {of, Subject, throwError} from 'rxjs';
 import {BolScenarioModel} from '../../models/bol-scenario.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolScenarioService} from '../../services/bol-scenario.service';
@@ -55,7 +55,13 @@ describe('ScenarioLibraryPageComponent', () => {
       renommerScenario: vi.fn(() => of({})),
       supprimerScenario: vi.fn(() => of(true)),
     };
-    const sceneService = {scenes: vi.fn(() => of(SCENES)), create: vi.fn(() => of({})), reorder: vi.fn(() => of(true)), delete: vi.fn(() => of(true))};
+    const sceneService = {
+      scenes: vi.fn(() => of(SCENES)),
+      create: vi.fn(() => of({})),
+      update: vi.fn(() => of({})),
+      reorder: vi.fn(() => of(true)),
+      delete: vi.fn(() => of(true)),
+    };
     const snack = vi.fn();
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
@@ -87,51 +93,56 @@ describe('ScenarioLibraryPageComponent', () => {
     };
     /** Le prochain dialogue ouvert renverra cette valeur. */
     const repondre = (valeur: unknown) => reponses.push(valeur);
-    return {page, open, scenarioService, sceneService, snack, texte, bouton, cliquer, repondre};
+    /** Ouvre un menu « ⋯ » (par l'`aria-label` de son bouton) et y choisit une entrée ; les menus s'ouvrent dans le calque des overlays. */
+    const menu = async (declencheur: string, ...entrees: string[]) => {
+      await cliquer(bouton(declencheur));
+      for (const entree of entrees) {
+        await cliquer([...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')].find((b) => texte(b)?.endsWith(entree))!);
+      }
+    };
+    return {page, open, scenarioService, sceneService, snack, texte, bouton, cliquer, repondre, menu};
   }
 
-  it('range les scénarios par nom, ceux sans chapitre compris, et montre le premier : ses chapitres dans l’ordre, repliés', async () => {
+  it('range les scénarios par nom, ceux sans chapitre compris, et montre le premier : une colonne par chapitre, dans l’ordre', async () => {
     const {page, texte} = await rendre();
 
     expect([...page.querySelectorAll('nav .dw-lr-option-label')].map((e) => texte(e))).toEqual(['Le Dieu voilé', 'Zalut oubliée']);
     expect(texte(page.querySelector('.sl-titre'))).toBe('Le Dieu voilé');
-    expect([...page.querySelectorAll('.sl-chapitre-nom')].map((e) => texte(e))).toEqual([
+    expect(texte(page.querySelector('.sl-meta'))).toBe('2 chapitres · 3 scènes');
+    expect([...page.querySelectorAll('.sl-col-titre .sr-only')].map((e) => texte(e))).toEqual([
       'Introduction : La colère de Nemmereth',
       '1. L’oracle de Nemmereth',
     ]);
-    expect([...page.querySelectorAll('.sl-chapitre-compte')].map((e) => texte(e))).toEqual(['1 scène', '2 scènes']);
-    expect([...page.querySelectorAll('.sl-chapitre-bascule')].map((b) => b.getAttribute('aria-expanded'))).toEqual(['false', 'false']);
-    expect(page.querySelector('.sl-chapitre table')).toBeNull();
+    expect([...page.querySelectorAll('.sl-medaille')].slice(0, 2).map((e) => texte(e))).toEqual(['I', '1']);
+    expect([...page.querySelectorAll('.sl-col-compte')].map((e) => texte(e))).toEqual(['1 scène', '2 scènes']);
     expect(page.textContent).not.toContain('one shot');
   });
 
-  it('déplie un chapitre pour montrer son pitch et ses scènes par rang, le replie', async () => {
+  it('montre les scènes d’un chapitre en cartes, par rang, et son pitch en entier sur demande', async () => {
     const {page, texte, cliquer} = await rendre();
-    const bascule = page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1];
+    const colonne = page.querySelectorAll('.sl-col')[1];
 
-    await cliquer(bascule);
+    const cartes = [...colonne.querySelectorAll('.sl-carte')];
+    expect(cartes.map((c) => texte(c.querySelector('.sl-carte-titre')))).toEqual(['Scène s0', 'Scène s1']);
+    expect(texte(cartes[0].querySelector('.sl-carte-lieu'))).toBe('Halakh');
+    expect([...cartes[0].querySelectorAll('.sl-carte-pied .sr-only')].map((e) => texte(e))).toEqual(['Jour · Ciel clair,', 'danger 1 sur 4,']);
+    expect(texte(cartes[0].querySelector('.sl-carte-pied'))).toContain('3 figurants');
 
-    expect(bascule.getAttribute('aria-expanded')).toBe('true');
-    expect(page.querySelector(`#${bascule.getAttribute('aria-controls')}`)).not.toBeNull();
-    expect(texte(page.querySelectorAll('.sl-chapitre')[1].querySelector('.sl-pitch'))).toBe('Cap au sud.');
-    const lignes = [...page.querySelectorAll('.sl-chapitre')[1].querySelectorAll('tbody tr')];
-    expect(lignes.map((tr) => texte(tr.querySelector('.sl-scene-titre')))).toEqual(['Scène s0', 'Scène s1']);
-    expect([...lignes[0].querySelectorAll('td')].slice(2, 6).map((td) => texte(td))).toEqual(['Halakh', 'Jour · Ciel clair', '1', '3']);
-
-    await cliquer(bascule);
-
-    expect(bascule.getAttribute('aria-expanded')).toBe('false');
-    expect(page.querySelector('.sl-chapitre table')).toBeNull();
+    const lire = colonne.querySelector<HTMLButtonElement>('.sl-lire')!;
+    expect(texte(colonne.querySelector('.sl-pitch'))).toBe('Cap au sud.');
+    await cliquer(lire);
+    expect(lire.getAttribute('aria-expanded')).toBe('true');
+    expect(colonne.querySelector('.sl-pitch--ouvert')).not.toBeNull();
   });
 
   it('un scénario sans chapitre le dit, et se supprime sans parler de chapitres', async () => {
-    const {page, texte, bouton, cliquer, repondre, open, scenarioService} = await rendre();
+    const {page, texte, bouton, cliquer, repondre, open, scenarioService, menu} = await rendre();
     await cliquer(bouton('Zalut oubliée'));
 
-    expect(texte(page.querySelector('.sl-vide--scenario'))).toBe('Aucun chapitre : ajoutes-en un avec « Chapitre ».');
+    expect(texte(page.querySelector('.sl-col--nouveau'))).toBe('add Aucun chapitre : en créer un');
 
     repondre(true);
-    await cliquer(bouton('Supprimer'));
+    await menu('Plus d’actions sur Zalut oubliée', 'Supprimer le scénario');
     expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: expect.objectContaining({message: 'Supprimer « Zalut oubliée » ? Cette action est irréversible.'})});
     expect(scenarioService.supprimerScenario).toHaveBeenCalledWith('zv');
   });
@@ -170,19 +181,19 @@ describe('ScenarioLibraryPageComponent', () => {
   });
 
   it('renomme le scénario', async () => {
-    const {bouton, cliquer, repondre, scenarioService} = await rendre();
+    const {repondre, scenarioService, menu} = await rendre();
     repondre('Le Dieu dévoilé');
 
-    await cliquer(bouton('Renommer'));
+    await menu('Plus d’actions sur Le Dieu voilé', 'Renommer le scénario');
 
     expect(scenarioService.renommerScenario).toHaveBeenCalledWith('dv', 'Le Dieu dévoilé');
   });
 
   it('supprime un scénario d’un bloc, ses chapitres et leurs scènes', async () => {
-    const {bouton, cliquer, repondre, scenarioService, open} = await rendre();
+    const {repondre, scenarioService, open, menu} = await rendre();
     repondre(true);
 
-    await cliquer(bouton('Supprimer'));
+    await menu('Plus d’actions sur Le Dieu voilé', 'Supprimer le scénario');
 
     expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({
       data: expect.objectContaining({message: 'Supprimer « Le Dieu voilé », ses 2 chapitres et leurs 3 scènes ? Cette action est irréversible.'}),
@@ -191,33 +202,32 @@ describe('ScenarioLibraryPageComponent', () => {
   });
 
   it('dit pourquoi le serveur refuse (une partie joue ce scénario)', async () => {
-    const {bouton, cliquer, repondre, scenarioService, snack} = await rendre();
+    const {repondre, scenarioService, snack, menu} = await rendre();
     scenarioService.supprimerScenario.mockReturnValue(
       throwError(() => new HttpErrorResponse({status: 409, error: {message: 'Une partie joue un chapitre de ce scénario.'}})),
     );
     repondre(true);
 
-    await cliquer(bouton('Supprimer'));
+    await menu('Plus d’actions sur Le Dieu voilé', 'Supprimer le scénario');
 
     expect(snack.mock.calls[0][0]).toContain('Une partie joue un chapitre de ce scénario.');
   });
 
-  it('« Scène » mène à « Préparer la scène » dans son chapitre, qui reviendra sur ce scénario, ce chapitre déplié', async () => {
+  it('« + Scène » mène à « Préparer la scène » dans son chapitre, qui reviendra sur ce scénario, ce chapitre', async () => {
     const {page, bouton, cliquer, open} = await rendre();
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
-    await cliquer(bouton('Scène', page.querySelectorAll('.sl-chapitre')[1]));
+    await cliquer(bouton('Scène', page.querySelectorAll('.sl-col')[1]));
 
     expect(navigate).toHaveBeenCalledWith(['/create/scene'], {queryParams: {chapitre: 'dv1'}, state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1'}});
     expect(open).not.toHaveBeenCalled();
   });
 
-  it('une scène se prépare sur sa page, qui reviendra ici', async () => {
+  it('un clic sur une carte prépare la scène sur sa page, qui reviendra ici', async () => {
     const {page, cliquer} = await rendre();
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    await cliquer(page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1]);
 
-    await cliquer(page.querySelector<HTMLButtonElement>('[aria-label="Préparer Scène s0"]')!);
+    await cliquer(page.querySelectorAll('.sl-col')[1].querySelector<HTMLButtonElement>('.sl-carte-ouvrir')!);
 
     expect(navigate).toHaveBeenCalledWith(['/create/scene', 's0'], {state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1'}});
   });
@@ -228,18 +238,34 @@ describe('ScenarioLibraryPageComponent', () => {
     expect(texte(page.querySelector('.sl-titre'))).toBe('Zalut oubliée');
   });
 
-  it('au retour, déplie le chapitre de la scène préparée', async () => {
+  it('au retour, met en évidence le chapitre de la scène préparée', async () => {
     const {page} = await rendre({scenario: 'dv', chapitre: 'dv1'});
 
-    expect([...page.querySelectorAll('.sl-chapitre-bascule')].map((b) => b.getAttribute('aria-expanded'))).toEqual(['false', 'true']);
+    expect([...page.querySelectorAll('.sl-col--revue')].map((c) => c.id)).toEqual(['sl-col-dv1']);
   });
 
-  it('range une scène plus bas dans son chapitre', async () => {
-    const {page, bouton, cliquer, sceneService} = await rendre();
-    await cliquer(page.querySelectorAll<HTMLButtonElement>('.sl-chapitre-bascule')[1]);
+  it('au clavier, le menu de la carte la range plus bas dans son chapitre', async () => {
+    const {sceneService, menu} = await rendre();
 
-    await cliquer(bouton('Descendre Scène s0'));
+    await menu('Plus d’actions sur Scène s0', 'Plus bas');
 
     expect(sceneService.reorder).toHaveBeenCalledWith('dv1', ['s1', 's0']);
+  });
+
+  it('une scène passe à un autre chapitre : le serveur change son chapitre, puis range celui d’arrivée ; la carte y est aussitôt', async () => {
+    const {page, texte, sceneService, menu} = await rendre();
+    const enCours = new Subject<object>();
+    sceneService.update.mockReturnValue(enCours);
+    const titres = (colonne: number) => [...page.querySelectorAll('.sl-col')[colonne].querySelectorAll('.sl-carte-titre')].map((e) => texte(e));
+
+    await menu('Plus d’actions sur Scène s0', 'Vers le chapitre…', 'Introduction : La colère de Nemmereth');
+
+    expect(sceneService.update).toHaveBeenCalledWith('s0', {scenario_id: 'dvi'});
+    expect(titres(0)).toEqual(['Scène si', 'Scène s0']);
+    expect(titres(1)).toEqual(['Scène s1']);
+    expect(sceneService.reorder).not.toHaveBeenCalled();
+    enCours.next({});
+    enCours.complete();
+    expect(sceneService.reorder).toHaveBeenCalledWith('dvi', ['si', 's0']);
   });
 });

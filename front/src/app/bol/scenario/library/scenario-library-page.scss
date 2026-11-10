@@ -1,148 +1,551 @@
+@use 'styles/forge-mixins' as forge;
+
 :host {
   display: block;
 }
 
-// ── Le scénario choisi : son nom, et de quoi lui ajouter un chapitre, le renommer, le supprimer ────────────────────────────────────
-.sl-entete {
+// La page tient dans l'écran : l'en-tête, puis les scénarios à gauche et le tableau des chapitres jusqu'en bas.
+.sl {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem 1rem;
-  padding: 1rem 1.25rem;
+  flex-direction: column;
+  gap: 1rem;
+  // `dw-page` a 1,5 rem de marge en haut et en bas.
+  height: calc(100dvh - 3rem);
+  min-height: 34rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.sl-corps {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 1rem;
+}
+
+// La colonne des scénarios : celle des bibliothèques, qui ne colle plus (la page ne défile pas).
+.sl-rail {
+  position: static;
+  align-self: start;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+// ── Le tableau ───────────────────────────────────────────────────────────────────────────────────
+.sl-tableau {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 88%, transparent);
+  overflow: hidden;
+}
+
+.sl-entete {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
   border-bottom: 1px solid var(--dw-forge-bronze-edge);
 }
 
-.sl-surtitre {
-  margin: 0 0 0.3rem;
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: var(--dw-forge-caption);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
+.sl-entete-titres {
+  min-width: 0;
 }
 
 .sl-titre {
   margin: 0;
+  overflow: hidden;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 2rem;
+  font-size: 1.85rem;
   font-weight: 400;
   line-height: 1;
   color: var(--dw-forge-name);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sl-actions {
+.sl-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  color: var(--dw-forge-caption);
+}
+
+.sl-astuce {
+  margin: 0 0 0 auto;
+  font-size: 0.75rem;
+  color: var(--dw-forge-caption);
+  text-align: right;
+}
+
+.sl-plus {
+  --mat-icon-button-state-layer-size: 1.75rem;
+  --mat-icon-button-icon-size: 1.15rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--dw-forge-bone);
+}
+
+.sl-menu-danger {
+  --mat-menu-item-label-text-color: var(--dw-forge-error-text);
+  --mat-menu-item-icon-color: var(--dw-forge-error-text);
+}
+
+// Le tableau et ses chevrons ; un fondu dit qu'il reste des chapitres de ce côté.
+.sl-plateau {
+  position: relative;
+  flex: 1;
+  min-height: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 4.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--dw-forge-recess), transparent);
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--dw-forge-recess), transparent);
+  }
 }
 
-.sl-danger {
-  --mat-button-outlined-label-text-color: var(--dw-forge-error-text);
+.sl-plateau--gauche::before,
+.sl-plateau--droite::after {
+  opacity: 1;
 }
 
-// ── Un chapitre, replié : son nom et son nombre de scènes, ses actions ; déplié, son pitch puis ses scènes ───────────────────────────
-.sl-chapitre {
-  border-bottom: 1px solid rgba(169, 121, 58, 0.25);
-}
-
-.sl-chapitre--ouvert {
-  padding-bottom: 0.75rem;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.sl-chapitre-tete {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.35rem 1.25rem 0.35rem 0.75rem;
-}
-
-.sl-chapitre-titre {
-  flex: 1 1 auto;
+// Les colonnes, côte à côte. Le tableau défile en largeur sous les chevrons, sans barre (la molette et le glisser d'une carte le font
+// défiler aussi). Positionné, il garde dedans ce qui y est posé en absolu (les textes pour lecteurs d'écran des colonnes hors de vue) :
+// sans cela, la page entière s'élargirait.
+.sl-colonnes {
+  position: relative;
+  flex: 1;
   min-width: 0;
-  margin: 0;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-// Toute la ligne, sauf les actions, déplie le chapitre.
-.sl-chapitre-bascule {
+// Un chevron, de chaque côté, à mi-hauteur : un clou de bronze, absent quand le tableau est au bout.
+.sl-caret {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  --mat-icon-button-state-layer-size: 1.75rem;
+  --mat-icon-button-icon-size: 1.15rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-name);
+  transform: translateY(-50%);
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:disabled {
+    visibility: hidden;
+  }
+}
+
+.sl-caret--gauche {
+  left: 0.4rem;
+}
+
+.sl-caret--droite {
+  right: 0.4rem;
+}
+
+// ── Un chapitre ──────────────────────────────────────────────────────────────────────────────────
+.sl-col {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  width: 18.5rem;
+  min-height: 0;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 12px;
+  @include forge.plate;
+
+  // La colonne où une carte va tomber s'allume.
+  &:has(.cdk-drop-list-dragging) {
+    border-color: var(--dw-color-legendary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+}
+
+// Le chapitre de la scène qu'on vient de préparer.
+.sl-col--revue {
+  border-color: var(--dw-forge-bronze);
+}
+
+.sl-col-tete {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  width: 100%;
+  padding: 0.7rem 0.4rem 0.3rem 0.75rem;
+}
+
+.sl-medaille {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  @include forge.medallion;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1rem;
+
+  mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+}
+
+.sl-col-titre {
+  flex: 1;
   min-width: 0;
-  padding: 0.5rem;
-  border: none;
+  margin: 0;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--dw-forge-name);
+}
+
+.sl-pitch {
+  flex: none;
+  display: -webkit-box;
+  margin: 0;
+  padding: 0 0.85rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--dw-forge-caption);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.sl-pitch--ouvert {
+  display: block;
+  max-height: 12rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sl-lire {
+  flex: none;
+  align-self: flex-start;
+  margin: 0.15rem 0 0 0.6rem;
+  padding: 0.1rem 0.25rem;
+  border: 0;
   border-radius: var(--dw-radius-toggle);
   background: transparent;
+  color: var(--dw-forge-name);
   font: inherit;
-  text-align: left;
-  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
   cursor: pointer;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.04);
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
   }
+}
+
+.sl-col-compte {
+  flex: none;
+  margin: 0.3rem 0 0;
+  padding: 0 0.85rem 0.45rem;
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+  font-size: 0.72rem;
+  color: var(--dw-forge-caption);
+}
+
+// Les cartes du chapitre ; la colonne défile seule. Vide, elle garde de quoi recevoir une carte.
+.sl-cartes {
+  flex: 1;
+  min-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.55rem 0.5rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  list-style: none;
+
+  &:empty::before {
+    content: 'Aucune scène : glissez-en une ici, ou « + Scène ».';
+    padding: 0.75rem 0.5rem;
+    border: 1.5px dashed var(--dw-forge-bronze-edge);
+    border-radius: 9px;
+    font-size: 0.75rem;
+    color: var(--dw-forge-caption);
+    text-align: center;
+  }
+}
+
+// ── Une carte de scène ───────────────────────────────────────────────────────────────────────────
+.sl-carte {
+  position: relative;
+  flex: none;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 9px;
+  background: var(--dw-forge-recess);
+  box-shadow: 0 3px 8px color-mix(in srgb, black 35%, transparent);
+  cursor: grab;
+
+  &:hover {
+    border-color: var(--dw-forge-bronze);
+
+    .sl-carte-plus {
+      opacity: 1;
+    }
+  }
+}
+
+// Soulevée sous le curseur, puis la place qu'elle prendra.
+.sl-carte.cdk-drag-preview {
+  border-color: var(--dw-color-legendary);
+  background: var(--dw-forge-plate);
+  box-shadow: 0 18px 36px color-mix(in srgb, black 70%, transparent);
+  transform: rotate(-2deg);
+  cursor: grabbing;
+}
+
+.sl-carte-place {
+  height: 3.5rem;
+  border: 1.5px dashed var(--dw-color-legendary);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+}
+
+.sl-cartes.cdk-drop-list-dragging .sl-carte:not(.cdk-drag-placeholder) {
+  transition: transform 0.2s ease;
+}
+
+.sl-carte.cdk-drag-animating {
+  transition: transform 0.2s ease;
+}
+
+.sl-carte-ouvrir {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.55rem 2.2rem 0.5rem 0.65rem;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: inherit;
 
   &:focus-visible {
-    outline: 2px solid var(--mat-sys-primary);
+    outline: 2px solid var(--dw-color-legendary);
     outline-offset: -2px;
   }
 }
 
-.sl-chevron {
-  flex-shrink: 0;
-  color: var(--dw-forge-bronze-text);
-  transition: transform 0.15s ease, color 0.15s ease;
-
-  .sl-chapitre-bascule[aria-expanded='true'] & {
-    transform: rotate(90deg);
-    color: var(--mat-sys-primary);
-  }
+.sl-carte-tete {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
 }
 
-.sl-chapitre-nom {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 1.05rem;
+.sl-carte-num {
+  flex: none;
+  min-width: 1rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: var(--dw-forge-bone);
-}
-
-.sl-chapitre-compte {
-  flex-shrink: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
   color: var(--dw-forge-caption);
   font-variant-numeric: tabular-nums;
 }
 
-.sl-pitch {
-  margin: 0;
-  padding: 0 1.25rem 0.75rem 3.25rem;
-  max-width: 64rem;
+.sl-carte-titre {
   font-size: 0.85rem;
-  line-height: 1.45;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--dw-forge-bone);
+}
+
+.sl-carte-lieu,
+.sl-carte-pied {
+  margin-left: 1.45rem;
+}
+
+.sl-carte-lieu {
+  overflow: hidden;
+  font-size: 0.72rem;
   color: var(--dw-forge-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sl-scene-titre {
-  max-width: 22rem;
+.sl-carte-pied {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.15rem;
+  font-size: 0.7rem;
+  color: var(--dw-forge-caption);
+
+  mat-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
+  }
 }
 
-.sl-vide {
-  margin: 0;
-  padding: 0.25rem 1.25rem 0.5rem;
+.sl-moment--aube,
+.sl-moment--jour {
+  color: var(--dw-color-legendary);
+}
+
+.sl-moment--crepuscule {
+  color: var(--dw-color-rival);
+}
+
+.sl-moment--nuit {
+  color: var(--dw-color-nuit);
+}
+
+.sl-meteo {
+  color: var(--dw-color-foi);
+}
+
+.sl-danger {
+  display: inline-flex;
+  gap: 2px;
+
+  i {
+    display: block;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--dw-forge-bronze-edge);
+  }
+
+  .sl-danger-plein {
+    background: var(--dw-color-echec);
+  }
+}
+
+.sl-pistes {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+// Le menu de la carte, au survol (et toujours au clavier).
+.sl-carte-plus {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  --mat-icon-button-state-layer-size: 1.9rem;
+  --mat-icon-button-icon-size: 1.1rem;
+  padding: 0;
+  color: var(--dw-forge-bone);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  &:focus-visible,
+  &[aria-expanded='true'] {
+    opacity: 1;
+  }
+}
+
+.sl-ajout {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  height: 2.2rem;
+  margin: 0 0.5rem 0.55rem;
+  border: 1.5px dashed var(--dw-forge-bronze-edge);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dw-forge-name);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+// La dernière colonne : un nouveau chapitre.
+.sl-col--nouveau {
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 12rem;
+  border-style: dashed;
+  background: color-mix(in srgb, var(--dw-forge-recess) 50%, transparent);
+  box-shadow: none;
+  color: var(--dw-forge-name);
+  font: inherit;
   font-size: 0.85rem;
-  color: var(--dw-forge-caption);
-}
+  font-weight: 600;
+  cursor: pointer;
 
-.sl-vide--scenario {
-  padding: 1rem 1.25rem;
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
 }
 
 .sl-rien {
