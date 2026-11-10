@@ -2,7 +2,7 @@
   <app-dice-box-host class="ard-dice-layer" [scale]="12" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
 
   <div class="ard-fg">
-    <!-- Avec quoi : l'attribut en médaillon, puis le métier qui aide -->
+    <!-- Avec quoi : l'attribut en médaillon -->
     <section class="ard-pan" aria-labelledby="ard-attr-title">
       <h4 class="ard-h" id="ard-attr-title"><span aria-hidden="true">1</span> Avec quoi ?</h4>
       <div class="ard-medals" role="group" aria-labelledby="ard-attr-title">
@@ -14,22 +14,9 @@
           </button>
         }
       </div>
-
-      @if (carrieres().length) {
-        <h4 class="ard-h" id="ard-carriere-title">Un métier qui aide ?</h4>
-        <div class="ard-chips" role="group" aria-labelledby="ard-carriere-title">
-          <button type="button" class="ard-chip" [attr.aria-pressed]="carriere() === null" (click)="carriere.set(null)">Aucun</button>
-          @for (c of carrieres(); track c.label) {
-            <button type="button" class="ard-chip" [attr.aria-pressed]="carriere()?.label === c.label" (click)="carriere.set(c)">
-              {{ c.label }} <b>{{ signed(c.value) }}</b>
-            </button>
-          }
-        </div>
-      }
-
     </section>
 
-    <!-- La difficulté sur son échelle, puis les coups de pouce ; le plateau vient après, à droite -->
+    <!-- La difficulté sur son échelle, les coups de pouce, puis le métier qui aide ; le plateau vient après, à droite -->
     <section class="ard-pan" aria-labelledby="ard-diff-title">
       <h4 class="ard-h" id="ard-diff-title"><span aria-hidden="true">2</span> C’est dur comment ?</h4>
       <div class="ard-ladder" role="group" aria-labelledby="ard-diff-title">
@@ -89,6 +76,18 @@
           </button>
         }
       </div>
+
+      @if (carrieres().length) {
+        <h4 class="ard-h" id="ard-carriere-title">Un métier qui aide ?</h4>
+        <div class="ard-chips" role="group" aria-labelledby="ard-carriere-title">
+          <button type="button" class="ard-chip" [attr.aria-pressed]="carriere() === null" (click)="carriere.set(null)">Aucun</button>
+          @for (c of carrieres(); track c.label) {
+            <button type="button" class="ard-chip" [attr.aria-pressed]="carriere()?.label === c.label" (click)="carriere.set(c)">
+              {{ c.label }} <b>{{ signed(c.value) }}</b>
+            </button>
+          }
+        </div>
+      }
     </section>
 
     <!-- Le plateau : ce qu'il faut obtenir, les chances, les dés, le verdict -->

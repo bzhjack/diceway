@@ -49,7 +49,11 @@ bol-action-roll-panel {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 19rem 19rem minmax(0, 1fr);
+  // « Avec quoi ? » étroit (ses médaillons les uns sous les autres), la difficulté élargie de la place qu'il laisse, puis le plateau.
+  grid-template-columns: 10rem 28rem minmax(0, 1fr);
+  // Une rangée de la hauteur de la carte : un panneau trop rempli (beaucoup de métiers, de dés bonus et malus) défile seul, le plateau et
+  // « Lancer » restent en place.
+  grid-template-rows: minmax(0, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
@@ -67,6 +71,8 @@ bol-action-roll-panel {
     var(--dw-forge-rivets),
     var(--dw-forge-plate);
   box-shadow: var(--dw-forge-plate-shadow);
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 // Le crédit des icônes (licence CC BY), au pied du premier panneau.
@@ -101,10 +107,10 @@ bol-action-roll-panel {
 // ── Les médaillons d'attribut ────────────────────────────────────────────────────────────────────
 .ard-medals {
   display: grid;
-  // Deux par ligne : des jetons assez grands pour lire leur valeur de loin.
-  grid-template-columns: repeat(2, minmax(0, 7.5rem));
+  // Les uns sous les autres, à une taille qui laisse tenir les quatre dans la hauteur de la carte.
+  grid-template-columns: 5.6rem;
   justify-content: center;
-  gap: 0.6rem 1rem;
+  gap: 0.45rem;
 }
 
 .ard-medal {
@@ -123,18 +129,18 @@ bol-action-roll-panel {
   cursor: pointer;
 
   .mat-icon {
-    width: 1.35rem;
-    height: 1.35rem;
-    font-size: 1.35rem;
+    width: 1.05rem;
+    height: 1.05rem;
+    font-size: 1.05rem;
   }
 
   b {
-    font: 400 2.3rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.75rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-forge-bone);
   }
 
   span {
-    font-size: 0.78rem;
+    font-size: 0.64rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -163,15 +169,15 @@ bol-action-roll-panel {
   gap: 0.45rem;
 }
 
-// Des toggles : rectangulaires, creusés dans le fer.
+// Des toggles : rectangulaires, creusés dans le fer, petits (les métiers comme les coups de pouce).
 .ard-chip {
-  padding: 0.35rem 0.85rem;
+  padding: 0.15rem 0.6rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: var(--dw-radius-toggle);
   @include forge.recess;
   color: var(--dw-surface-700);
   font: inherit;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
 
@@ -196,13 +202,7 @@ bol-action-roll-panel {
   }
 }
 
-// Dés de bonus et de malus (ceux du MJ, ceux des traits du héros) : plus petits que les puces de métier, ils peuvent être nombreux.
-.ard-chip--bonus,
-.ard-chip--malus {
-  padding: 0.15rem 0.6rem;
-  font-size: 0.8rem;
-}
-
+// Dés de bonus et de malus (ceux du MJ, ceux des traits du héros) : vert ou rouge une fois choisis.
 .ard-chip--bonus[aria-pressed='true'] {
   border-color: var(--dw-color-reussite);
   background: var(--dw-color-reussite);
@@ -743,13 +743,14 @@ bol-action-roll-panel {
 @container (max-width: 64rem) {
   .ard-fg {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
   }
 
   .ard-tray {
     order: -1;
   }
 
-  // Sur toute la largeur, quatre médaillons côte à côte plutôt que deux énormes.
+  // Sur toute la largeur, les quatre médaillons côte à côte plutôt qu’en colonne.
   .ard-medals {
     grid-template-columns: repeat(4, minmax(0, 6.2rem));
     gap: 0.5rem;
