@@ -39,7 +39,7 @@ class BolSceneDistributionSaisieTest extends TestCase
         ]])->assertOk();
 
         $this->assertSame([
-            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 1, 'camp' => 'heros', 'attitude' => 'amical', 'positions' => [null]],
+            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 3, 'camp' => 'heros', 'attitude' => 'amical', 'positions' => [null, null, null]],
             ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'hostile', 'positions' => [null, null, null]],
             ['kind' => 'demon', 'source_id' => $demon->id, 'qty' => 1, 'camp' => 'adversaires', 'attitude' => null, 'positions' => [null]],
         ], $scene->fresh()->distribution);
@@ -62,17 +62,20 @@ class BolSceneDistributionSaisieTest extends TestCase
         $this->assertSame([$mienne->id], array_column($scene->fresh()->distribution, 'source_id'));
     }
 
-    public function test_a_pnj_enters_the_scene_only_once(): void
+    /** Trois gardes d'une même fiche, deux lignes du même PNJ (l'un adversaire, l'autre allié) : tout est gardé. */
+    public function test_the_same_pnj_may_enter_the_scene_several_times(): void
     {
-        $pnj = BolHeros::create(['nom' => 'Aubergiste', 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'C']);
+        $garde = BolHeros::create(['nom' => 'Garde', 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'P']);
         $scene = $this->scene([]);
 
         $this->postJson('/api/bol/scene/update', ['id' => $scene->id, 'distribution' => [
-            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 1],
-            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 1, 'camp' => 'heros'],
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 3],
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 1, 'camp' => 'heros'],
         ]])->assertOk();
 
-        $this->assertSame(['adversaires'], array_column($scene->fresh()->distribution, 'camp'));
+        $distribution = $scene->fresh()->distribution;
+        $this->assertSame([3, 1], array_column($distribution, 'qty'));
+        $this->assertSame(['adversaires', 'heros'], array_column($distribution, 'camp'));
     }
 
     public function test_a_sheet_without_a_pnj_type_is_not_a_pnj(): void

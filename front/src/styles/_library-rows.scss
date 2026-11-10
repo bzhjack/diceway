@@ -33,21 +33,6 @@
   }
 }
 
-// Une colonne de filtres resserrée, quand la hauteur est comptée (« Ajouter des personnages ») : tous les filtres tiennent sans défiler.
-.dw-lr-filtres--serre {
-  gap: 0.7rem;
-  padding-block: 0.6rem;
-
-  .dw-lr-facette-titre {
-    margin-bottom: 0.15rem;
-  }
-
-  .dw-lr-option {
-    min-height: 1.6rem;
-    font-size: 0.85rem;
-  }
-}
-
 .dw-lr-facette {
   display: flex;
   flex-direction: column;

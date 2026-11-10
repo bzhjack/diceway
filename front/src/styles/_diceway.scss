@@ -8,7 +8,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--dw-surface-200);
+  background-color: var(--dw-forge-bronze-dim);
   border-radius: 10px;
   border-width: 4px;
 }
@@ -17,7 +17,10 @@
   display: none;
 }
 
+// La barre de défilement du bronze de la forge, partout : `scrollbar-color` s'hérite, et un bloc en `scrollbar-width: thin` qui n'a
+// pas la sienne la prend (sans elle, Chrome revient à sa barre claire et ignore les règles `::-webkit-scrollbar` ci-dessus).
 html {
+  scrollbar-color: var(--dw-forge-bronze-dim) transparent;
   background-color: var(--dw-base-bg) !important;
   color: var(--dw-base-text);
 }

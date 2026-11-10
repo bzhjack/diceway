@@ -2,12 +2,11 @@ import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {applyEach, form, FormField, maxLength, required} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
-import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatCardModule} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -15,55 +14,64 @@ import {forkJoin, map, Observable, switchMap, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/models/pending-changes-guard.model';
 import {readReturnUrl} from '../../../core/return-url.util';
-import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
-import {AttitudeChoixComponent} from '../../shared/attitude/attitude-choix';
 import {confirmLeaveUnsaved} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {DwFormHeaderComponent} from '../../../shared/dw-form-header/dw-form-header';
-import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
-import {CombatantAttitude, CombatCamp} from '../../models/bol-fight-session.model';
-import {BolSceneDistributionSaisie, BolSceneModel} from '../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../models/combat-selection.model';
+import {BolSceneDistributionSaisie, SceneMeteo, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
 import {BolCatalogService} from '../../services/bol-catalog.service';
 import {BolScenarioService} from '../../services/bol-scenario.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {SCENE_TITLE_MAX} from '../../session/play/scene-list/scene.util';
-import {METEOS, MOMENTS} from '../../session/play/theatre/theatre.util';
+import {METEOS, MOMENTS, sceneDecor} from '../../session/play/theatre/theatre.util';
 import {titreDeChapitre} from '../../session/scenario.util';
 import {openPersonnagesDialog} from './personnages-dialog/personnages-dialog';
-import {memesPersonnages, personnagesDe, personnagesVus, sceneChanges, sceneFormValue} from './scene-form.util';
+import {SceneOnglet, SceneTexte} from '../models/scene-form.model';
+import {SceneCarteComponent} from './scene-carte/scene-carte';
+import {
+  ambianceEnPhrase,
+  avecLeReglage,
+  compteDesCamps,
+  dureeDeLecture,
+  memesPersonnages,
+  PERSONNAGES_MAX,
+  personnagesDe,
+  personnagesVus,
+  sceneChanges,
+  sceneFormValue,
+} from './scene-form.util';
 
 const PISTES_MAX = 8;
 const LECTURE_MAX = 5000;
 const JEU_MAX = 10000;
-/** Au plus, les exemplaires d'une créature ou d'un démon (`BolSceneDistribution::QTY_MAX`). */
-const QTY_MAX = 30;
-/** Au plus, les personnages d'une scène (`BolSceneDistribution::SAISIE_MAX`). */
-const PERSONNAGES_MAX = 60;
+const NOTES_MAX = 10000;
 /** Où revenir sans adresse de retour : la bibliothèque des scénarios. */
 const RETOUR_PAR_DEFAUT = '/library/scenarios';
 
+/** Les trois textes d'une scène, un onglet chacun ; leur aide se lit dans le champ vide. */
+const TEXTES: readonly {cle: SceneTexte; label: string; max: number; aide: string}[] = [
+  {cle: 'lecture', label: 'À lire aux joueurs', max: LECTURE_MAX, aide: 'Lu à voix haute quand la scène commence…'},
+  {cle: 'jeu', label: 'En jeu', max: JEU_MAX, aide: "Jets, difficultés, tables d'effets : visibles pendant toute la scène…"},
+  {cle: 'notes', label: 'Secret du MJ', max: NOTES_MAX, aide: 'Ce que les joueurs ne savent pas…'},
+];
+
 /**
- * « Préparer la scène », sur sa propre page (`/create/scene/:id`, ou `/create/scene?chapitre=…` pour une nouvelle) : son décor (région,
- * lieu, moment, météo, danger) et ses pistes, son texte (à lire aux joueurs, en jeu, secret du MJ), et ses personnages (PNJ, créatures,
- * démons du catalogue et du compte, avec leur nombre, leur camp et leur attitude au chargement). Enregistre, puis revient d'où l'on
- * venait (`returnUrl` : la table, la bibliothèque des scénarios). L'illustration d'une scène n'y est pas : elle reste telle qu'elle est.
+ * « Préparer la scène », sur sa propre page (`/create/scene/:id`, ou `/create/scene?chapitre=…` pour une nouvelle), comme une affiche :
+ * en haut, l'illustration de la scène en bandeau (celle de la table, sinon son décor par défaut ; elle ne s'édite pas ici), avec par-dessus
+ * son lieu et sa région, son titre, et son ambiance en pastilles (moment, météo, danger), chacun se changeant sur place ; dessous, son
+ * texte (à lire aux joueurs, en jeu, secret du MJ) et ses pistes, un onglet chacun, et « La distribution » : ses personnages (PNJ,
+ * créatures, démons du catalogue et du compte) en cartes portraits, leur nombre, leur camp et leur attitude au chargement se réglant d'un
+ * clic sur la carte. Enregistre, puis revient d'où l'on venait (`returnUrl` : la table, la bibliothèque des scénarios).
  */
 @Component({
   selector: 'bol-scene-form-page',
   imports: [
-    AttitudeChoixComponent,
-    AvatarFallbackDirective,
-    DwFormHeaderComponent,
-    DwValueStepperComponent,
     FormField,
     MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatSelectModule,
+    SceneCarteComponent,
   ],
   templateUrl: './scene-form-page.html',
   styleUrl: './scene-form-page.scss',
@@ -82,9 +90,8 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly moments = MOMENTS;
   protected readonly meteos = METEOS;
   protected readonly dangers = [1, 2, 3, 4];
-  protected readonly lectureMax = LECTURE_MAX;
+  protected readonly textes = TEXTES;
   protected readonly pistesMax = PISTES_MAX;
-  protected readonly qtyMax = QTY_MAX;
   protected readonly personnagesMax = PERSONNAGES_MAX;
 
   private readonly returnUrl = readReturnUrl() ?? RETOUR_PAR_DEFAUT;
@@ -117,7 +124,7 @@ export class SceneFormPageComponent implements HasPendingChanges {
     maxLength(path.lieu, 120);
     maxLength(path.lecture, LECTURE_MAX);
     maxLength(path.jeu, JEU_MAX);
-    maxLength(path.notes, 10000);
+    maxLength(path.notes, NOTES_MAX);
     applyEach(path.pistes, (piste) => maxLength(piste.texte, 200));
   });
 
@@ -128,10 +135,43 @@ export class SceneFormPageComponent implements HasPendingChanges {
     personnagesVus(this.personnages(), this.selection.catalog(), !this.selection.loading() && !this.selection.loadFailed()),
   );
   protected readonly nombreDePersonnages = computed(() => this.personnages().length);
+  protected readonly camps = computed(() => compteDesCamps(this.personnages()));
+
+  /** Le bandeau : l'illustration de la scène, sinon le décor par défaut de la table ; une image qui ne se charge pas y retombe aussi. */
+  private readonly imageEnEchec = signal(false);
+  protected readonly decor = computed(() => sceneDecor(this.imageEnEchec() ? null : this.scene()));
+  /** Où la scène se place dans son chapitre : « scène 7 sur 9 », ou « nouvelle scène ». */
+  protected readonly position = computed(() => {
+    const scene = this.scene();
+    if (!scene) {
+      return 'nouvelle scène';
+    }
+    const rang = this.siblings().filter((s) => s.ordre < scene.ordre).length + 1;
+    return `scène ${rang} sur ${this.siblings().length + 1}`;
+  });
+
+  /** L'ambiance en pastilles : le moment, la météo, le danger et la région choisis. */
+  protected readonly moment = computed(() => MOMENTS.find((m) => m.value === this.value().moment) ?? null);
+  protected readonly meteo = computed(() => METEOS.find((m) => m.value === this.value().meteo) ?? null);
+  protected readonly danger = computed(() => this.value().danger);
+  protected readonly region = computed(() => this.regions().find((r) => r.id === this.value().region_id)?.region ?? null);
 
   protected readonly valid = computed(() => this.sceneForm().valid());
-  protected readonly lectureLength = computed(() => this.value().lecture.length);
+  /** L'onglet ouvert (un texte, ou les pistes), et le texte qu'il montre : son libellé, sa longueur et son maximum, son aide. */
+  protected readonly onglet = signal<SceneOnglet>('lecture');
+  protected readonly texte = computed(() => {
+    const texte = TEXTES.find((t) => t.cle === this.onglet()) ?? TEXTES[0];
+    return {...texte, longueur: this.value()[texte.cle].length};
+  });
+  /** Le temps de lire à voix haute le texte « À lire aux joueurs ». */
+  protected readonly dureeLecture = computed(() => dureeDeLecture(this.value().lecture));
   protected readonly pisteCount = computed(() => this.value().pistes.length);
+  /** Les pistes écrites, sous le texte : chacune avec la scène où elle mène. */
+  protected readonly pistesEcrites = computed(() =>
+    this.value()
+      .pistes.filter((piste) => piste.texte.trim() !== '')
+      .map((piste) => ({texte: piste.texte.trim(), vers: this.siblings().find((s) => s.id === piste.scene_id)?.titre ?? null})),
+  );
   protected readonly busy = signal(false);
   private readonly enregistree = signal(false);
   protected readonly dirty = computed(
@@ -140,7 +180,7 @@ export class SceneFormPageComponent implements HasPendingChanges {
   );
 
   protected readonly titre = computed(() => (this.nouvelle ? 'Nouvelle scène' : this.scene()?.titre || 'Préparer la scène'));
-  protected readonly surtitre = computed(() => this.chapitreTitre() ?? 'Préparer la scène');
+  protected readonly surtitre = computed(() => this.chapitreTitre());
   protected readonly retourLabel = this.returnUrl.startsWith('/session/') ? 'Retour à la table' : 'Retour aux scénarios';
 
   constructor() {
@@ -159,50 +199,54 @@ export class SceneFormPageComponent implements HasPendingChanges {
     void this.router.navigateByUrl(this.returnUrl);
   }
 
-  protected setAttitude(index: number, attitude: CombatantAttitude | null): void {
-    this.modifier(index, {attitude});
+  /** Un texte de la scène a été écrit : son onglet le dit. */
+  protected rempli(cle: SceneTexte): boolean {
+    return this.value()[cle].trim() !== '';
   }
 
-  protected setCamp(index: number, change: MatButtonToggleChange): void {
-    this.modifier(index, {camp: change.value as CombatCamp});
+  protected imageNonChargee(): void {
+    this.imageEnEchec.set(true);
   }
 
-  protected setQty(index: number, qty: number): void {
-    this.modifier(index, {qty: Math.min(QTY_MAX, Math.max(1, qty))});
+  protected choisirLaRegion(regionId: number | null): void {
+    this.value.update((value) => ({...value, region_id: regionId}));
+  }
+
+  protected choisirLeMoment(moment: SceneMoment | null): void {
+    this.value.update((value) => ({...value, moment}));
+  }
+
+  protected choisirLaMeteo(meteo: SceneMeteo | null): void {
+    this.value.update((value) => ({...value, meteo}));
+  }
+
+  protected choisirLeDanger(danger: number): void {
+    this.value.update((value) => ({...value, danger}));
+  }
+
+  protected regler(index: number, reglage: Partial<Pick<BolSceneDistributionSaisie, 'qty' | 'camp' | 'attitude'>>): void {
+    this.personnages.update((liste) => avecLeReglage(liste, index, reglage));
   }
 
   protected retirer(index: number): void {
     this.personnages.update((liste) => liste.filter((_, position) => position !== index));
   }
 
-  /** « Ajouter des personnages » : le dialogue des fiches, filtrées d'abord sur le scénario de la scène ; celles choisies entrent. */
+  /** « Ajouter des personnages » : le dialogue des fiches, filtrées d'abord sur le scénario de la scène, avec la scène en panier ; ce
+   * qu'il valide remplace les personnages de la scène. */
   protected choisirDesPersonnages(): void {
-    const pnjsEnScene = new Set(this.personnages().filter((p) => p.kind === 'pnj').map((p) => `pnj:${p.source_id}`));
-    const placesLibres = PERSONNAGES_MAX - this.personnages().length;
-    openPersonnagesDialog(this.dialog, {scenarioId: this.sagaId(), pnjsEnScene, placesLibres}).subscribe((fiches) => {
-      for (const fiche of fiches ?? []) {
-        this.ajouter(fiche);
+    const data = {
+      scenarioId: this.sagaId(),
+      sceneTitre: this.value().titre.trim() || this.titre(),
+      sceneImage: this.decor(),
+      sceneAmbiance: ambianceEnPhrase(this.value()),
+      personnages: this.personnages(),
+    };
+    openPersonnagesDialog(this.dialog, data).subscribe((personnages) => {
+      if (personnages) {
+        this.personnages.set(personnages);
       }
     });
-  }
-
-  /** Une fiche entre dans la scène, en adversaire, sans attitude ; une créature ou un démon déjà là gagne un exemplaire plutôt qu'une
-   * ligne de plus, un PNJ déjà là n'entre pas deux fois. */
-  private ajouter(fiche: CombatCatalogEntry): void {
-    if (fiche.kind === 'hero') {
-      return;
-    }
-    const kind = fiche.kind;
-    const sourceId = String(fiche.sourceId);
-    const deja = this.personnages().findIndex((p) => p.kind === kind && p.source_id === sourceId);
-    if (deja >= 0 && kind !== 'pnj') {
-      this.setQty(deja, this.personnages()[deja].qty + 1);
-      return;
-    }
-    if (deja >= 0 || this.personnages().length >= PERSONNAGES_MAX) {
-      return;
-    }
-    this.personnages.update((liste) => [...liste, {kind, source_id: sourceId, qty: 1, camp: 'adversaires', attitude: null}]);
   }
 
   protected addPiste(): void {
@@ -240,10 +284,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
         this.snackBar.open(extractApiErrorMessage(error, "Impossible d'enregistrer la scène."), 'Fermer', {duration: 5000});
       },
     });
-  }
-
-  private modifier(index: number, changement: Partial<BolSceneDistributionSaisie>): void {
-    this.personnages.update((liste) => liste.map((p, position) => (position === index ? {...p, ...changement} : p)));
   }
 
   /** Lit la scène (ou rien pour une nouvelle), les autres scènes de son chapitre et le nom du chapitre. */

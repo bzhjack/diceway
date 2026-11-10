@@ -1,189 +1,227 @@
-<section class="dw-page">
+<section class="dw-page sfp-page">
   <form class="sfp" (submit)="submit($event)">
-    <mat-card appearance="outlined" class="sfp-carte">
-      <mat-card-content class="sfp-contenu">
-        <dw-form-header icon="theater_comedy" [eyebrow]="surtitre()" [title]="titre()">
-          <button mat-stroked-button type="button" [disabled]="busy()" (click)="retour()">
-            <mat-icon>arrow_back</mat-icon> {{ retourLabel }}
-          </button>
-          <button mat-flat-button type="submit" [disabled]="!valid() || busy() || loading()">
-            <mat-icon>check</mat-icon> Enregistrer
-            @if (dirty()) {
-              <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
+    <header class="sfp-entete">
+      <span class="sfp-medaille" aria-hidden="true"><mat-icon>theater_comedy</mat-icon></span>
+      <h1 class="sfp-kicker">{{ nouvelle ? 'Nouvelle scène' : 'Préparer la scène' }}</h1>
+      <p class="sfp-fil">
+        @if (surtitre(); as chapitre) {
+          {{ chapitre }} ·
+        }
+        {{ position() }}
+      </p>
+      <button mat-stroked-button type="button" class="sfp-retour" [disabled]="busy()" (click)="retour()">
+        <mat-icon>arrow_back</mat-icon> {{ retourLabel }}
+      </button>
+      <button mat-flat-button type="submit" [disabled]="!valid() || busy() || loading()">
+        <mat-icon>check</mat-icon> Enregistrer
+        @if (dirty()) {
+          <span class="dw-dirty-dot" aria-label="Modifications non enregistrées"></span>
+        }
+      </button>
+    </header>
+
+    @if (loading()) {
+      <p class="sfp-chargement" role="status">Chargement de la scène…</p>
+    } @else {
+      <!-- L'affiche : l'illustration de la scène, son lieu, son titre, son ambiance ; tout se change sur place. -->
+      <section class="sfp-affiche" aria-label="Le décor">
+        <img class="sfp-affiche-image" [src]="decor()" alt="" (error)="imageNonChargee()" />
+        <div class="sfp-affiche-contenu">
+          <div class="sfp-lieu">
+            <mat-icon class="sfp-lieu-icone" aria-hidden="true">place</mat-icon>
+            <input id="sfp-lieu" class="sfp-lieu-champ" aria-label="Lieu" placeholder="Un lieu : le gué du Tyr, la citadelle…" autocomplete="off" [formField]="sceneForm.lieu" />
+            <button type="button" class="sfp-region" [attr.aria-label]="'Région : ' + (region() ?? 'aucune')" [matMenuTriggerFor]="menuRegion">
+              {{ region() ?? 'Région' }}<mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menuRegion="matMenu" class="sfp-menu-regions">
+              <button mat-menu-item role="menuitemradio" [attr.aria-checked]="region() === null" (click)="choisirLaRegion(null)">Aucune</button>
+              @for (r of regions(); track r.id) {
+                <button mat-menu-item role="menuitemradio" [attr.aria-checked]="r.region === region()" (click)="choisirLaRegion(r.id)">{{ r.region }}</button>
+              }
+            </mat-menu>
+          </div>
+
+          <input
+            id="sfp-titre"
+            class="sfp-titre"
+            aria-label="Titre de la scène"
+            placeholder="Titre de la scène"
+            autocomplete="off"
+            [class.sfp-titre--invalide]="sceneForm.titre().touched() && sceneForm.titre().invalid()"
+            [formField]="sceneForm.titre"
+          />
+
+          <div class="sfp-ambiance">
+            <button type="button" [class]="'sfp-pastille sfp-pastille--' + (moment()?.value ?? 'aucun')" [matMenuTriggerFor]="menuMoment">
+              <span class="sfp-medaillon" aria-hidden="true"><mat-icon>{{ moment()?.icon ?? 'schedule' }}</mat-icon></span>
+              <span class="sfp-pastille-texte"><small>Moment</small><b>{{ moment()?.label ?? 'Aucun' }}</b></span>
+            </button>
+            <mat-menu #menuMoment="matMenu">
+              <button mat-menu-item role="menuitemradio" [attr.aria-checked]="moment() === null" (click)="choisirLeMoment(null)"><mat-icon>remove</mat-icon>Aucun</button>
+              @for (m of moments; track m.value) {
+                <button mat-menu-item role="menuitemradio" [attr.aria-checked]="moment()?.value === m.value" (click)="choisirLeMoment(m.value)">
+                  <mat-icon>{{ m.icon }}</mat-icon>{{ m.label }}
+                </button>
+              }
+            </mat-menu>
+
+            <button type="button" [class]="'sfp-pastille' + (meteo() ? ' sfp-pastille--meteo' : '')" [matMenuTriggerFor]="menuMeteo">
+              <span class="sfp-medaillon" aria-hidden="true"><mat-icon>{{ meteo()?.icon ?? 'cloud_off' }}</mat-icon></span>
+              <span class="sfp-pastille-texte"><small>Météo</small><b>{{ meteo()?.label ?? 'Aucune' }}</b></span>
+            </button>
+            <mat-menu #menuMeteo="matMenu">
+              <button mat-menu-item role="menuitemradio" [attr.aria-checked]="meteo() === null" (click)="choisirLaMeteo(null)"><mat-icon>remove</mat-icon>Aucune</button>
+              @for (m of meteos; track m.value) {
+                <button mat-menu-item role="menuitemradio" [attr.aria-checked]="meteo()?.value === m.value" (click)="choisirLaMeteo(m.value)">
+                  <mat-icon>{{ m.icon }}</mat-icon>{{ m.label }}
+                </button>
+              }
+            </mat-menu>
+
+            <button type="button" [class]="'sfp-pastille sfp-pastille--danger-' + danger()" [matMenuTriggerFor]="menuDanger">
+              <span class="sfp-medaillon" aria-hidden="true"><mat-icon svgIcon="skull" /></span>
+              <span class="sfp-pastille-texte">
+                <small>Danger</small>
+                @if (danger()) {
+                  <b class="sfp-jauge"><span aria-hidden="true">@for (n of dangers; track n) {<span [class.sfp-jauge-plein]="n <= danger()">●</span>}</span><span class="sr-only">{{ danger() }} sur 4</span></b>
+                } @else {
+                  <b>Aucun</b>
+                }
+              </span>
+            </button>
+            <mat-menu #menuDanger="matMenu">
+              <button mat-menu-item role="menuitemradio" [attr.aria-checked]="danger() === 0" (click)="choisirLeDanger(0)">Aucun</button>
+              @for (n of dangers; track n) {
+                <button mat-menu-item role="menuitemradio" [attr.aria-checked]="danger() === n" (click)="choisirLeDanger(n)">Danger {{ n }} sur 4</button>
+              }
+            </mat-menu>
+
+            <p class="sfp-astuce">Le titre, le lieu et chaque pastille se changent d'un clic.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="sfp-corps">
+        <!-- Le texte, comme une page du livre de scénario ; les pistes dans leur onglet. -->
+        <section class="sfp-texte-carte" aria-label="Le texte">
+          <div class="sfp-onglets" role="group" aria-label="Ce que montre la carte">
+            @for (t of textes; track t.cle) {
+              <button type="button" class="sfp-onglet" [attr.aria-pressed]="onglet() === t.cle" (click)="onglet.set(t.cle)">
+                @if (t.cle === 'notes') {
+                  <mat-icon aria-hidden="true">lock</mat-icon>
+                }
+                {{ t.label }}
+                @if (rempli(t.cle)) {
+                  <span class="sfp-rempli" aria-hidden="true"></span>
+                  <span class="sr-only">(écrit)</span>
+                }
+              </button>
             }
-          </button>
-        </dw-form-header>
+            <button type="button" class="sfp-onglet" [attr.aria-pressed]="onglet() === 'pistes'" (click)="onglet.set('pistes')">
+              Pistes
+              @if (pisteCount()) {
+                <span class="sfp-onglet-compte">{{ pisteCount() }}</span>
+              }
+            </button>
+          </div>
 
-        @if (loading()) {
-          <p class="sfp-chargement" role="status">Chargement de la scène…</p>
-        } @else {
-          <div class="sfp-colonnes">
-            <!-- Le décor : où et quand, et les pistes qui mènent aux autres scènes du chapitre. -->
-            <section class="sfp-col" aria-labelledby="sfp-decor-titre">
-              <h2 class="sfp-col-titre" id="sfp-decor-titre">Le décor</h2>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Titre</mat-label>
-                <input id="sfp-titre" matInput [formField]="sceneForm.titre" autocomplete="off" />
-              </mat-form-field>
-
-              <div class="sfp-paire">
-                <mat-form-field subscriptSizing="dynamic">
-                  <mat-label>Région</mat-label>
-                  <mat-select id="sfp-region" [formField]="sceneForm.region_id">
-                    <mat-option [value]="null">Aucune</mat-option>
-                    @for (region of regions(); track region.id) {
-                      <mat-option [value]="region.id">{{ region.region }}</mat-option>
+          @switch (onglet()) {
+            @case ('lecture') {
+              <textarea id="sfp-lecture" class="sfp-texte" aria-label="À lire aux joueurs" [placeholder]="texte().aide" [formField]="sceneForm.lecture"></textarea>
+            }
+            @case ('jeu') {
+              <textarea id="sfp-jeu" class="sfp-texte" aria-label="En jeu" [placeholder]="texte().aide" [formField]="sceneForm.jeu"></textarea>
+            }
+            @case ('notes') {
+              <textarea id="sfp-notes" class="sfp-texte sfp-texte--secret" aria-label="Secret du MJ" [placeholder]="texte().aide" [formField]="sceneForm.notes"></textarea>
+            }
+            @case ('pistes') {
+              <div class="sfp-pistes-volet">
+                <p class="sfp-pistes-aide">Une piste dit où peut mener la scène ; elle pointe, s'il le faut, vers une autre scène du chapitre.</p>
+                @if (pisteCount()) {
+                  <ul class="sfp-pistes">
+                    @for (piste of sceneForm.pistes; track piste; let index = $index) {
+                      <li class="sfp-piste">
+                        <mat-form-field subscriptSizing="dynamic">
+                          <mat-label>Piste {{ index + 1 }}</mat-label>
+                          <input matInput [formField]="piste.texte" autocomplete="off" />
+                        </mat-form-field>
+                        <mat-form-field subscriptSizing="dynamic">
+                          <mat-label>Mène à</mat-label>
+                          <mat-select [formField]="piste.scene_id">
+                            <mat-option [value]="null">Aucune scène</mat-option>
+                            @for (sibling of siblings(); track sibling.id) {
+                              <mat-option [value]="sibling.id">{{ sibling.titre }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                        <button mat-icon-button type="button" [attr.aria-label]="'Retirer la piste ' + (index + 1)" (click)="removePiste(index)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </li>
                     }
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field subscriptSizing="dynamic">
-                  <mat-label>Lieu</mat-label>
-                  <input id="sfp-lieu" matInput [formField]="sceneForm.lieu" autocomplete="off" placeholder="Gué du Tyr" />
-                </mat-form-field>
-              </div>
-
-              <div class="sfp-paire">
-                <mat-form-field subscriptSizing="dynamic">
-                  <mat-label>Moment</mat-label>
-                  <mat-select id="sfp-moment" [formField]="sceneForm.moment">
-                    <mat-option [value]="null">Aucun</mat-option>
-                    @for (moment of moments; track moment.value) {
-                      <mat-option [value]="moment.value"><mat-icon aria-hidden="true">{{ moment.icon }}</mat-icon>{{ moment.label }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field subscriptSizing="dynamic">
-                  <mat-label>Météo</mat-label>
-                  <mat-select id="sfp-meteo" [formField]="sceneForm.meteo">
-                    <mat-option [value]="null">Aucune</mat-option>
-                    @for (meteo of meteos; track meteo.value) {
-                      <mat-option [value]="meteo.value"><mat-icon aria-hidden="true">{{ meteo.icon }}</mat-icon>{{ meteo.label }}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-              </div>
-
-              <div class="sfp-champ">
-                <span class="sfp-label" id="sfp-danger-label">Danger</span>
-                <mat-button-toggle-group class="sfp-toggles" aria-labelledby="sfp-danger-label" [formField]="sceneForm.danger" [hideSingleSelectionIndicator]="true">
-                  <mat-button-toggle [value]="0">Aucun</mat-button-toggle>
-                  @for (niveau of dangers; track niveau) {
-                    <mat-button-toggle [value]="niveau" [aria-label]="'Danger ' + niveau + ' sur 4'">{{ niveau }}</mat-button-toggle>
-                  }
-                </mat-button-toggle-group>
-              </div>
-
-              <div class="sfp-champ">
-                <span class="sfp-label" id="sfp-pistes-label">Pistes</span>
-                <ul class="sfp-pistes" aria-labelledby="sfp-pistes-label">
-                  @for (piste of sceneForm.pistes; track piste; let index = $index) {
-                    <li class="sfp-piste">
-                      <mat-form-field subscriptSizing="dynamic">
-                        <mat-label>Piste {{ index + 1 }}</mat-label>
-                        <input matInput [formField]="piste.texte" autocomplete="off" />
-                      </mat-form-field>
-                      <mat-form-field subscriptSizing="dynamic">
-                        <mat-label>Mène à</mat-label>
-                        <mat-select [formField]="piste.scene_id">
-                          <mat-option [value]="null">Aucune scène</mat-option>
-                          @for (sibling of siblings(); track sibling.id) {
-                            <mat-option [value]="sibling.id">{{ sibling.titre }}</mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-                      <button mat-icon-button type="button" [attr.aria-label]="'Retirer la piste ' + (index + 1)" (click)="removePiste(index)">
-                        <mat-icon>close</mat-icon>
-                      </button>
-                    </li>
-                  }
-                </ul>
+                  </ul>
+                }
                 <button mat-stroked-button type="button" class="sfp-ajouter-piste" [disabled]="pisteCount() >= pistesMax" (click)="addPiste()">
-                  <mat-icon>add</mat-icon> Ajouter une piste
+                  <mat-icon>add</mat-icon> Piste
                 </button>
               </div>
-            </section>
+            }
+          }
 
-            <!-- Le texte : ce qui se lit aux joueurs, ce qui se joue, ce que le MJ garde pour lui. -->
-            <section class="sfp-col" aria-labelledby="sfp-texte-titre">
-              <h2 class="sfp-col-titre" id="sfp-texte-titre">Le texte</h2>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>À lire aux joueurs</mat-label>
-                <textarea id="sfp-lecture" matInput rows="7" [formField]="sceneForm.lecture"></textarea>
-                <mat-hint align="end">{{ lectureLength() }} / {{ lectureMax }}</mat-hint>
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>En jeu</mat-label>
-                <textarea id="sfp-jeu" matInput rows="4" [formField]="sceneForm.jeu"></textarea>
-                <mat-hint>Jets, difficultés, tables d'effets : visibles pendant toute la scène.</mat-hint>
-              </mat-form-field>
-
-              <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Secret du MJ</mat-label>
-                <textarea id="sfp-notes" matInput rows="4" [formField]="sceneForm.notes"></textarea>
-              </mat-form-field>
-            </section>
-
-            <!-- Les personnages : ceux qui entrent en scène quand on la charge à la table. -->
-            <section class="sfp-col" aria-labelledby="sfp-perso-titre">
-              <h2 class="sfp-col-titre" id="sfp-perso-titre">
-                Les personnages
-                @if (nombreDePersonnages()) {
-                  <span class="sfp-compte">{{ nombreDePersonnages() }}</span>
-                }
-              </h2>
-
-              <button mat-stroked-button type="button" class="sfp-ajouter" [disabled]="nombreDePersonnages() >= personnagesMax" (click)="choisirDesPersonnages()">
-                <mat-icon>person_add</mat-icon> Ajouter des personnages
-              </button>
-
-              @if (personnagesAffiches().length) {
-                <ul class="sfp-personnages">
-                  @for (perso of personnagesAffiches(); track $index; let index = $index) {
-                    <li class="sfp-perso" [class.sfp-perso--introuvable]="perso.introuvable">
-                      <img dwAvatarFallback class="sfp-perso-portrait" [src]="perso.avatar" alt="" />
-                      <span class="sfp-perso-nom">
-                        <span class="sfp-perso-texte">{{ perso.nom }}</span>
-                        <span class="sfp-perso-type">{{ perso.type }}</span>
-                      </span>
-                      <button mat-icon-button type="button" class="sfp-perso-retirer" [attr.aria-label]="'Retirer ' + perso.nom" (click)="retirer(index)">
-                        <mat-icon>close</mat-icon>
-                      </button>
-
-                      <div class="sfp-perso-reglages">
-                        @if (perso.kind !== 'pnj') {
-                          <dw-value-stepper
-                            [value]="perso.qty"
-                            [min]="1"
-                            [max]="qtyMax"
-                            [ariaLabel]="'Nombre de ' + perso.nom"
-                            (valueChange)="setQty(index, $event)"
-                          />
-                        }
-                        <mat-button-toggle-group
-                          class="sfp-mini-toggles"
-                          [attr.aria-label]="'Camp de ' + perso.nom"
-                          [hideSingleSelectionIndicator]="true"
-                          [value]="perso.camp"
-                          (change)="setCamp(index, $event)"
-                        >
-                          <mat-button-toggle value="adversaires">Adversaire</mat-button-toggle>
-                          <mat-button-toggle value="heros">Allié</mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <bol-attitude-choix [label]="'Attitude de ' + perso.nom" [attitude]="perso.attitude" (choisie)="setAttitude(index, $event)" />
-                      </div>
-                    </li>
+          @if (onglet() !== 'pistes') {
+            <div class="sfp-texte-pied">
+              @for (piste of pistesEcrites().slice(0, 1); track $index) {
+                <button type="button" class="sfp-chemin" (click)="onglet.set('pistes')">
+                  <mat-icon aria-hidden="true">east</mat-icon>
+                  <span class="sfp-chemin-texte">{{ piste.texte }}</span>
+                  @if (piste.vers; as vers) {
+                    <b class="sfp-chemin-vers">{{ vers }}</b>
                   }
-                </ul>
-              } @else {
-                <p class="sfp-vide">Personne en scène pour l'instant : « Ajouter des personnages » montre les PNJ, créatures et démons à y faire entrer.</p>
+                  @if (pistesEcrites().length > 1) {
+                    <span class="sfp-chemin-plus">+{{ pistesEcrites().length - 1 }}</span>
+                  }
+                </button>
               }
-            </section>
+              <span class="sfp-texte-compte" [class.sfp-texte-compte--trop]="texte().longueur > texte().max">
+                {{ texte().longueur }} / {{ texte().max }}
+                @if (onglet() === 'lecture' && dureeLecture(); as duree) {
+                  · {{ duree }} à voix haute
+                }
+              </span>
+            </div>
+          }
+        </section>
+
+        <!-- La distribution : qui entre en scène, en portraits, le camp en couleur. -->
+        <section class="sfp-distribution" aria-labelledby="sfp-distribution-titre">
+          <div class="sfp-distribution-entete">
+            <h2 class="sfp-distribution-titre" id="sfp-distribution-titre">La distribution</h2>
+            @if (nombreDePersonnages()) {
+              <span class="sfp-camp sfp-camp--adversaires">{{ camps().adversaires }} adversaire{{ camps().adversaires > 1 ? 's' : '' }}</span>
+              <span class="sfp-camp sfp-camp--allies">{{ camps().allies }} allié{{ camps().allies > 1 ? 's' : '' }}</span>
+            }
+            <button mat-stroked-button type="button" class="sfp-ajouter" (click)="choisirDesPersonnages()">
+              <mat-icon>person_add</mat-icon> Ajouter des personnages
+            </button>
           </div>
-        }
-      </mat-card-content>
-    </mat-card>
+
+          <ul class="sfp-cartes">
+            @for (perso of personnagesAffiches(); track $index; let index = $index) {
+              <li>
+                <bol-scene-carte [perso]="perso" (regle)="regler(index, $event)" (retire)="retirer(index)" />
+              </li>
+            }
+            <li>
+              <button type="button" class="sfp-carte-ajout" (click)="choisirDesPersonnages()">
+                <span class="sfp-medaillon" aria-hidden="true"><mat-icon>add</mat-icon></span>
+                {{ nombreDePersonnages() ? 'Ajouter des personnages' : 'Personne en scène : ajouter des personnages' }}
+              </button>
+            </li>
+          </ul>
+          <p class="sfp-note">Un clic sur une carte règle son nombre, son camp et son attitude ; ils entrent à la table quand la scène est chargée.</p>
+        </section>
+      </div>
+    }
   </form>
 </section>

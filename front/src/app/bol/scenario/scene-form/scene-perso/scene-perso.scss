@@ -1,0 +1,255 @@
+:host {
+  display: block;
+}
+
+// Le portrait à gauche ; à sa droite, le nom et de quoi le retirer, puis les réglages. Un liseré à gauche dit le camp.
+.spe {
+  --spe-camp: var(--dw-color-echec);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'portrait nom retirer'
+    'portrait reglages reglages';
+  column-gap: 0.65rem;
+  row-gap: 0.25rem;
+  align-items: center;
+  padding: 0.5rem 0.5rem 0.5rem 0.8rem;
+  overflow: hidden;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 9px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-forge-recess-shadow);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--spe-camp), color-mix(in srgb, var(--spe-camp) 45%, black));
+  }
+}
+
+.spe--allie {
+  --spe-camp: var(--dw-color-reussite);
+}
+
+.spe--nouveau {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--dw-color-reussite) 45%, transparent),
+    var(--dw-forge-recess-shadow);
+}
+
+.spe--introuvable {
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+.spe-portrait {
+  grid-area: portrait;
+  position: relative;
+  width: 2.9rem;
+  height: 2.9rem;
+
+  img,
+  .spe-initiale {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1.5px solid var(--dw-forge-bronze);
+    border-radius: 7px;
+    object-fit: cover;
+  }
+}
+
+.spe-initiale {
+  display: grid;
+  place-items: center;
+  background: var(--dw-forge-plate);
+  color: var(--dw-forge-name);
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.3rem;
+}
+
+.spe-nombre {
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.4rem;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.25rem;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--dw-forge-recess);
+  border-radius: var(--dw-radius-pill);
+  background: var(--dw-color-legendary);
+  color: var(--dw-forge-ink);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.spe-nom {
+  grid-area: nom;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.spe-texte {
+  overflow: hidden;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1rem;
+  color: var(--dw-forge-name);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spe-nouveau {
+  flex: none;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-color-reussite);
+}
+
+.spe-retirer {
+  grid-area: retirer;
+  --mat-icon-button-state-layer-size: 1.6rem;
+  --mat-icon-button-icon-size: 1rem;
+  padding: 0;
+}
+
+.spe-reglages {
+  grid-area: reglages;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.spe-rond {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dw-forge-name);
+  cursor: pointer;
+
+  mat-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.spe-camp {
+  display: inline-flex;
+}
+
+.spe-camp-option {
+  height: 1.55rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  background: transparent;
+  color: var(--dw-forge-caption);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:first-child {
+    border-radius: var(--dw-radius-toggle) 0 0 var(--dw-radius-toggle);
+  }
+
+  &:last-child {
+    margin-left: -1px;
+    border-radius: 0 var(--dw-radius-toggle) var(--dw-radius-toggle) 0;
+  }
+
+  &[aria-pressed='true'] {
+    position: relative;
+    border-color: color-mix(in srgb, var(--spe-option) 70%, transparent);
+    background: color-mix(in srgb, var(--spe-option) 26%, transparent);
+    color: var(--dw-color-text-bright);
+  }
+}
+
+.spe-camp-option--adversaires {
+  --spe-option: var(--dw-color-echec);
+}
+
+.spe-camp-option--heros {
+  --spe-option: var(--dw-color-reussite);
+}
+
+// L'attitude, en menu : sa pastille de couleur, son nom.
+.spe-attitude {
+  --spe-couleur: var(--dw-forge-bronze-dim);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 1.55rem;
+  margin-left: auto;
+  padding: 0 0.1rem 0 0.45rem;
+  border: 1px solid var(--spe-couleur);
+  border-radius: var(--dw-radius-toggle);
+  background: color-mix(in srgb, var(--spe-couleur) 18%, transparent);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--spe-couleur);
+  }
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+}
+
+.spe-attitude--hostile {
+  --spe-couleur: var(--dw-color-echec);
+}
+
+.spe-attitude--mefiant {
+  --spe-couleur: var(--dw-color-warn);
+}
+
+.spe-attitude--neutre {
+  --spe-couleur: var(--dw-surface-500);
+}
+
+.spe-attitude--amical {
+  --spe-couleur: var(--dw-color-reussite);
+}
+
+.spe-rond,
+.spe-camp-option,
+.spe-attitude {
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}

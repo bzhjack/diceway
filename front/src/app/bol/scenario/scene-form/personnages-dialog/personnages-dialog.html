@@ -1,23 +1,91 @@
-<h2 mat-dialog-title>Ajouter des personnages</h2>
+<!-- Le bandeau de la scène : on sait pour quel décor on choisit. -->
+<header class="pdg-bandeau">
+  <img class="pdg-bandeau-image" [src]="data.sceneImage" alt="" />
+  <div class="pdg-bandeau-contenu">
+    <div class="pdg-bandeau-titres">
+      <p class="pdg-kicker">Ajouter des personnages</p>
+      <h2 class="pdg-titre" id="pdg-titre">
+        {{ data.sceneTitre }}
+        @if (data.sceneAmbiance) {
+          <span class="pdg-ambiance">· {{ data.sceneAmbiance }}</span>
+        }
+      </h2>
+    </div>
+    <label class="pdg-recherche">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input id="pdg-recherche" type="search" autocomplete="off" aria-label="Rechercher" placeholder="Chercher un nom…" [value]="recherche()" (input)="chercher($event)" />
+    </label>
+  </div>
+</header>
 
 <mat-dialog-content class="pdg">
-  <!-- Les filtres, toujours visibles : chaque option avec ce qu'elle montrerait. -->
-  <nav class="dw-lr-filtres dw-lr-filtres--serre pdg-filtres" aria-label="Filtres">
-    <bol-library-facette titre="Type" [options]="options().types" [(valeur)]="type" />
-    <bol-library-facette titre="Rang" [options]="options().rangs" [(valeur)]="rang" />
-    <bol-library-facettes [sources]="options().sources" [scenarios]="options().scenarios" [(source)]="source" [(scenarioId)]="scenarioId" />
-  </nav>
+  <div class="pdg-gauche">
+    <!-- Les filtres : chaque option avec ce qu'elle montrerait. -->
+    <div class="pdg-filtres">
+      <div class="pdg-types" role="group" aria-label="Type">
+        @for (option of options().types; track option.cle) {
+          <button type="button" class="pdg-type" [attr.aria-pressed]="type() === option.cle" (click)="type.set(option.cle)">
+            <span class="pdg-type-icone" aria-hidden="true">
+              @switch (option.cle) {
+                @case ('pnj') {
+                  <mat-icon>person</mat-icon>
+                }
+                @case ('creature') {
+                  <mat-icon>pets</mat-icon>
+                }
+                @case ('demon') {
+                  <mat-icon>local_fire_department</mat-icon>
+                }
+                @default {
+                  <mat-icon>groups</mat-icon>
+                }
+              }
+            </span>
+            {{ option.label }} <span class="pdg-type-compte">{{ option.compte }}</span>
+          </button>
+        }
+      </div>
 
-  <div class="pdg-principal">
-    <div class="pdg-barre">
-      <mat-form-field subscriptSizing="dynamic" class="pdg-recherche">
-        <mat-label>Rechercher</mat-label>
-        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
-        <input id="pdg-recherche" matInput autocomplete="off" placeholder="Un nom…" [value]="recherche()" (input)="chercher($event)" />
-      </mat-form-field>
-      <span class="pdg-compte" role="status">{{ visibles().length }} fiche{{ visibles().length > 1 ? 's' : '' }}</span>
+      <span class="pdg-separateur" aria-hidden="true"></span>
+
+      <button type="button" class="pdg-chip pdg-chip--menu" [attr.aria-pressed]="scenarioId() !== null" [matMenuTriggerFor]="menuScenario">
+        @if (scenarioChoisi(); as titre) {
+          <span class="pdg-point" aria-hidden="true"></span>{{ titre }}
+        } @else {
+          Tous les scénarios
+        }
+        <mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menuScenario="matMenu">
+        <button mat-menu-item role="menuitemradio" [attr.aria-checked]="scenarioId() === null" (click)="scenarioId.set(null)">Tous les scénarios</button>
+        @for (s of options().scenarios; track s.id) {
+          <button mat-menu-item role="menuitemradio" [attr.aria-checked]="scenarioId() === s.id" (click)="scenarioId.set(s.id)">{{ s.titre }} · {{ s.compte }}</button>
+        }
+      </mat-menu>
+
+      <div class="pdg-rangs" role="group" aria-label="Rang">
+        @for (r of options().rangs; track r.cle) {
+          @if (r.cle !== null) {
+            <button type="button" [class]="'pdg-rang pdg-rang--' + r.cle" [attr.aria-pressed]="rang() === r.cle" (click)="basculerLeRang(r.cle)">
+              {{ r.label }} <span class="pdg-type-compte">{{ r.compte }}</span>
+            </button>
+          }
+        }
+      </div>
+
+      <div class="pdg-sources" role="group" aria-label="Source">
+        @for (o of options().sources; track o.cle) {
+          @if (o.cle !== 'tout') {
+            <button type="button" class="pdg-chip" [attr.aria-pressed]="source() === o.cle" (click)="basculerLaSource(o.cle)">
+              {{ o.label }} <span class="pdg-type-compte">{{ o.compte }}</span>
+            </button>
+          }
+        }
+      </div>
+
+      <span class="pdg-compte" role="status">{{ lignes().length }} fiche{{ lignes().length > 1 ? 's' : '' }}</span>
       @if (filtresActifs()) {
-        <button mat-button type="button" (click)="effacerLesFiltres()"><mat-icon>filter_alt_off</mat-icon> Effacer les filtres</button>
+        <button mat-button type="button" class="pdg-effacer" (click)="effacerLesFiltres()"><mat-icon>filter_alt_off</mat-icon> Effacer les filtres</button>
       }
     </div>
 
@@ -30,30 +98,49 @@
       }
       @default {
         <ul class="pdg-grille" aria-label="Les fiches">
-          @for (fiche of visibles(); track fiche.catalogId) {
+          @for (ligne of lignes(); track ligne.fiche.catalogId) {
             <li>
               <button
                 type="button"
-                class="pdg-carte"
-                [attr.aria-pressed]="choisie(fiche)"
-                [disabled]="dejaEnScene(fiche) || (complet() && !choisie(fiche))"
-                (click)="basculer(fiche)"
+                class="pdg-tuile"
+                [class.pdg-tuile--en-scene]="ligne.dansLaScene > 0"
+                [attr.aria-label]="ligne.ajout"
+                [disabled]="!ligne.ajoutable"
+                (click)="ajouter(ligne.fiche)"
               >
-                <img dwAvatarFallback class="pdg-portrait" loading="lazy" [src]="fiche.avatar" alt="" />
-                <span class="pdg-carte-texte">
-                  <span class="pdg-nom">{{ fiche.nom }}</span>
-                  <span class="pdg-detail">
-                    @let rang = rangDe(fiche);
-                    <span class="dw-lr-rang" [class]="'dw-lr-rang--' + rang">{{ rangLabels[rang] }}</span>
-                    {{ kindLabel[fiche.kind] }} · {{ fiche.vitalite }} PV
-                  </span>
-                  @if (dejaEnScene(fiche)) {
-                    <span class="pdg-deja">Déjà en scène</span>
+                <span class="pdg-portrait">
+                  @if (aUnPortrait(ligne.fiche.avatar)) {
+                    <img dwAvatarFallback loading="lazy" [src]="ligne.fiche.avatar" alt="" />
+                  } @else {
+                    <span class="pdg-initiale">{{ ligne.fiche.nom.charAt(0) }}</span>
                   }
                 </span>
-                @if (choisie(fiche)) {
-                  <mat-icon class="pdg-coche" aria-hidden="true">check_circle</mat-icon>
+                <span class="pdg-type-pastille">
+                  @switch (ligne.fiche.kind) {
+                    @case ('pnj') {
+                      <mat-icon>person</mat-icon>
+                    }
+                    @case ('demon') {
+                      <mat-icon>local_fire_department</mat-icon>
+                    }
+                    @default {
+                      <mat-icon>pets</mat-icon>
+                    }
+                  }
+                </span>
+                @if (ligne.dansLaScene > 0) {
+                  <span class="pdg-tuile-nombre">×{{ ligne.dansLaScene }}</span>
                 }
+                @if (ligne.ajoutable) {
+                  <span class="pdg-tuile-plus"><mat-icon>add</mat-icon></span>
+                }
+                <span class="pdg-tuile-corps">
+                  <span class="pdg-nom">{{ ligne.fiche.nom }}</span>
+                  <span class="pdg-detail">
+                    <span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ rangLabels[ligne.rang] }}</span>
+                    {{ ligne.fiche.vitalite }} PV
+                  </span>
+                </span>
               </button>
             </li>
           } @empty {
@@ -63,14 +150,39 @@
       }
     }
   </div>
+
+  <!-- La distribution : la scène telle qu'elle sera, le camp en couleur. -->
+  <aside class="pdg-distribution" aria-labelledby="pdg-distribution-titre">
+    <h3 class="pdg-distribution-titre" id="pdg-distribution-titre">La distribution</h3>
+    @if (total()) {
+      <div class="pdg-camps" aria-hidden="true">
+        <span class="pdg-camps-adversaires" [style.flex-grow]="camps().adversaires"></span>
+        <span class="pdg-camps-allies" [style.flex-grow]="camps().allies"></span>
+      </div>
+      <p class="pdg-camps-texte">
+        <span class="pdg-camps-texte--adversaires">{{ camps().adversaires }} adversaire{{ camps().adversaires > 1 ? 's' : '' }}</span>
+        <span class="pdg-camps-texte--allies">{{ camps().allies }} allié{{ camps().allies > 1 ? 's' : '' }}</span>
+      </p>
+      <ul class="pdg-distribution-liste">
+        @for (perso of panier(); track $index; let index = $index) {
+          <li>
+            <bol-scene-perso [perso]="perso" [nouveau]="nouveau(perso)" (regle)="regler(index, $event)" (retire)="retirer(index)" />
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="pdg-vide">Personne pour l'instant : un clic sur un portrait le fait entrer.</p>
+    }
+    <p class="pdg-astuce">Un clic sur un portrait l'ajoute ; un second, un exemplaire de plus.</p>
+  </aside>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <span class="pdg-choix" role="status">
-    {{ nombreChoisi() }} choisi{{ nombreChoisi() > 1 ? 's' : '' }}{{ complet() ? ' : la scène est pleine (60 personnages au plus)' : '' }}
+<mat-dialog-actions class="pdg-actions">
+  <span class="pdg-total" role="status">
+    <b>{{ total() }} personnage{{ total() > 1 ? 's' : '' }}</b> dans la scène{{ nouveaux() ? ' · ' + nouveaux() + ' nouveau' + (nouveaux() > 1 ? 'x' : '') : '' }}{{
+      pleine() ? ' : la scène est pleine (60 fiches au plus)' : ''
+    }}
   </span>
-  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
-  <button mat-flat-button type="button" [disabled]="nombreChoisi() === 0" (click)="ajouter()">
-    <mat-icon>person_add</mat-icon> Ajouter à la scène
-  </button>
+  <button mat-stroked-button type="button" [mat-dialog-close]="undefined">Annuler</button>
+  <button mat-flat-button type="button" [disabled]="!change()" (click)="valider()"><mat-icon>check</mat-icon> Valider la distribution</button>
 </mat-dialog-actions>

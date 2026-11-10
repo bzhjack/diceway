@@ -1,36 +1,38 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
 import {Observable} from 'rxjs';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
+import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
-import {KIND_LABEL} from '../../../session/play/reserve/reserve.util';
-import {LibraryFacetteComponent} from '../../../shared/library/library-facette/library-facette';
-import {LibraryFacettesComponent} from '../../../shared/library/library-facettes/library-facettes';
 import {RANG_LABELS} from '../../../shared/library/library-rows-page.base';
 import {LibraryRang, LibrarySource} from '../../../shared/models/library-rows.model';
 import {PersonnagesDialogData, PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
-import {fichesDeScene, filtrerFiches, optionsDesFiltres, rangDe, scenariosDe} from './personnages-dialog.util';
+import {ScenePersonnageVue} from '../../models/scene-form.model';
+import {aUnPortrait, avecLaFiche, avecLeReglage, cleDuPersonnage, compteDesCamps, memesPersonnages, PERSONNAGES_MAX, personnagesVus} from '../scene-form.util';
+import {ScenePersoComponent} from '../scene-perso/scene-perso';
+import {fichesDeScene, filtrerFiches, lignesDesFiches, optionsDesFiltres, scenariosDe} from './personnages-dialog.util';
 
 /**
- * « Ajouter des personnages » à une scène : toutes les fiches de PNJ, de créatures et de démons (catalogue et compte) en cartes, avec
- * à gauche les filtres toujours visibles (type, source, rang, scénario), chaque option avec son nombre ; un clic choisit une carte ou
- * la rend. Se ferme avec les fiches choisies (ou rien). Un PNJ déjà en scène ne se choisit pas une deuxième fois.
+ * « Ajouter des personnages » à une scène, comme un casting : en haut, un bandeau à l'illustration de la scène, son titre, son ambiance et
+ * la recherche ; puis les filtres (type, scénario, rang, source), chaque option avec son nombre ; à gauche, toutes les fiches de PNJ, de
+ * créatures et de démons (catalogue et compte) en portraits, un clic en faisant entrer une (un second clic, un exemplaire de plus) ; à
+ * droite, « La distribution » : les personnages de la scène, à régler (nombre, camp, attitude) ou à retirer. Se ferme avec les personnages
+ * de la scène tels que la distribution les montre (ou rien, pour ne rien changer).
  */
 @Component({
   selector: 'bol-personnages-dialog',
-  imports: [AvatarFallbackDirective, LibraryFacetteComponent, LibraryFacettesComponent, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, ScenePersoComponent],
   templateUrl: './personnages-dialog.html',
   styleUrl: './personnages-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PersonnagesDialogComponent {
-  private readonly data = inject<PersonnagesDialogData>(MAT_DIALOG_DATA);
-  private readonly ref = inject(MatDialogRef<PersonnagesDialogComponent, CombatCatalogEntry[]>);
+  protected readonly data = inject<PersonnagesDialogData>(MAT_DIALOG_DATA);
+  private readonly ref = inject(MatDialogRef<PersonnagesDialogComponent, BolSceneDistributionSaisie[]>);
   private readonly catalogue = inject(CombatSelectionService);
 
   private readonly fiches = computed(() => fichesDeScene(this.catalogue.catalog()));
@@ -49,21 +51,26 @@ class PersonnagesDialogComponent {
   private readonly filtres = computed(
     (): PersonnagesFiltres => ({type: this.type(), source: this.source(), rang: this.rang(), scenarioId: this.scenarioId(), recherche: this.recherche()}),
   );
-  protected readonly visibles = computed(() => filtrerFiches(this.fiches(), this.filtres()));
   protected readonly options = computed(() => optionsDesFiltres(this.fiches(), this.filtres()));
   protected readonly filtresActifs = computed(
     () => this.type() !== null || this.source() !== 'tout' || this.rang() !== null || this.scenarioId() !== null || this.recherche() !== '',
   );
 
-  /** Les fiches choisies, par `catalogId`, dans l'ordre du choix. */
-  private readonly choisies = signal<ReadonlyMap<string, CombatCatalogEntry>>(new Map());
-  protected readonly nombreChoisi = computed(() => this.choisies().size);
-  /** La scène n'a plus de place pour une fiche de plus : les cartes non choisies ne se choisissent plus. */
-  protected readonly complet = computed(() => this.choisies().size >= this.data.placesLibres);
+  /** Le panier : les personnages de la scène, ceux d'avant puis ceux ajoutés, dans l'ordre où ils entrent. */
+  private readonly personnages = signal<BolSceneDistributionSaisie[]>([...this.data.personnages]);
+  private readonly initiaux = new Set(this.data.personnages.map((p) => cleDuPersonnage(p.kind, p.source_id)));
+  protected readonly panier = computed(() => personnagesVus(this.personnages(), this.catalogue.catalog(), this.fiches().length > 0));
+  protected readonly lignes = computed(() => lignesDesFiches(filtrerFiches(this.fiches(), this.filtres()), this.personnages()));
+  protected readonly total = computed(() => this.personnages().reduce((somme, p) => somme + p.qty, 0));
+  protected readonly camps = computed(() => compteDesCamps(this.personnages()));
+  protected readonly nouveaux = computed(() => this.personnages().filter((p) => !this.initiaux.has(cleDuPersonnage(p.kind, p.source_id))).length);
+  /** Le titre du scénario choisi, pour sa pastille. */
+  protected readonly scenarioChoisi = computed(() => this.options().scenarios.find((s) => s.id === this.scenarioId())?.titre ?? null);
+  protected readonly pleine = computed(() => this.personnages().length >= PERSONNAGES_MAX);
+  protected readonly change = computed(() => !memesPersonnages(this.personnages(), this.data.personnages));
 
-  protected readonly kindLabel = KIND_LABEL;
   protected readonly rangLabels = RANG_LABELS;
-  protected readonly rangDe = rangDe;
+  protected readonly aUnPortrait = aUnPortrait;
 
   constructor() {
     // La page « Préparer la scène » l'a déjà lu : on ne le relit que s'il manque.
@@ -89,6 +96,15 @@ class PersonnagesDialogComponent {
     this.recherche.set((event.target as HTMLInputElement).value);
   }
 
+  /** Un rang ou une source se choisit d'un clic, et se rend d'un second. */
+  protected basculerLeRang(rang: LibraryRang | null): void {
+    this.rang.update((actuel) => (actuel === rang ? null : rang));
+  }
+
+  protected basculerLaSource(source: LibrarySource): void {
+    this.source.update((actuelle) => (actuelle === source ? 'tout' : source));
+  }
+
   protected effacerLesFiltres(): void {
     this.type.set(null);
     this.source.set('tout');
@@ -97,41 +113,37 @@ class PersonnagesDialogComponent {
     this.recherche.set('');
   }
 
-  protected choisie(fiche: CombatCatalogEntry): boolean {
-    return this.choisies().has(fiche.catalogId);
+  protected ajouter(fiche: CombatCatalogEntry): void {
+    this.personnages.update((liste) => avecLaFiche(liste, fiche));
   }
 
-  protected dejaEnScene(fiche: CombatCatalogEntry): boolean {
-    return fiche.kind === 'pnj' && this.data.pnjsEnScene.has(`pnj:${fiche.sourceId}`);
+  protected regler(index: number, reglage: Partial<Pick<BolSceneDistributionSaisie, 'qty' | 'camp' | 'attitude'>>): void {
+    this.personnages.update((liste) => avecLeReglage(liste, index, reglage));
   }
 
-  protected basculer(fiche: CombatCatalogEntry): void {
-    if (this.dejaEnScene(fiche) || (this.complet() && !this.choisie(fiche))) {
-      return;
-    }
-    this.choisies.update((choisies) => {
-      const suivantes = new Map(choisies);
-      if (!suivantes.delete(fiche.catalogId)) {
-        suivantes.set(fiche.catalogId, fiche);
-      }
-      return suivantes;
-    });
+  protected retirer(index: number): void {
+    this.personnages.update((liste) => liste.filter((_, position) => position !== index));
   }
 
-  protected ajouter(): void {
-    this.ref.close([...this.choisies().values()]);
+  protected nouveau(perso: ScenePersonnageVue): boolean {
+    return !this.initiaux.has(cleDuPersonnage(perso.kind, perso.source_id));
+  }
+
+  protected valider(): void {
+    this.ref.close(this.personnages());
   }
 }
 
-/** Ouvre « Ajouter des personnages » ; émet les fiches choisies, ou `undefined` sans choix. */
-export function openPersonnagesDialog(dialog: MatDialog, data: PersonnagesDialogData): Observable<CombatCatalogEntry[] | undefined> {
+/** Ouvre « Ajouter des personnages » ; émet les personnages de la scène une fois validés, ou `undefined` pour ne rien changer. */
+export function openPersonnagesDialog(dialog: MatDialog, data: PersonnagesDialogData): Observable<BolSceneDistributionSaisie[] | undefined> {
   return dialog
-    .open<PersonnagesDialogComponent, PersonnagesDialogData, CombatCatalogEntry[]>(PersonnagesDialogComponent, {
+    .open<PersonnagesDialogComponent, PersonnagesDialogData, BolSceneDistributionSaisie[]>(PersonnagesDialogComponent, {
       data,
-      width: 'min(1200px, 96vw)',
+      width: 'min(1320px, 96vw)',
       maxWidth: '96vw',
       height: 'min(660px, 94dvh)',
       autoFocus: '#pdg-recherche',
+      ariaLabelledBy: 'pdg-titre',
     })
     .afterClosed();
 }

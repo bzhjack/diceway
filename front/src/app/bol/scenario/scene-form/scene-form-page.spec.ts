@@ -81,12 +81,14 @@ describe('SceneFormPageComponent', () => {
   it('reprend la scène : son chapitre en surtitre, son texte, ses personnages avec leur nom, leur nombre et leur attitude', async () => {
     const {page, texte} = await rendre();
 
-    expect(texte(page.querySelector('.dw-fh-eyebrow'))).toBe('Le Dieu voilé — 1. L’oracle de Nemmereth');
+    expect(texte(page.querySelector('.sfp-fil'))).toBe('Le Dieu voilé — 1. L’oracle de Nemmereth · scène 1 sur 2');
+    expect(page.querySelector<HTMLInputElement>('#sfp-titre')!.value).toBe('Cap au sud');
+    expect(page.querySelector<HTMLImageElement>('.sfp-affiche-image')!.getAttribute('src')).toBe('/assets/bol/halakh.webp');
+    expect(texte(page.querySelector('.sfp-pastille--jour b'))).toBe('Jour');
     expect(page.querySelector<HTMLTextAreaElement>('#sfp-lecture')!.value).toBe('Quinze jours de galère.');
-    expect([...page.querySelectorAll('.sfp-perso-texte')].map((e) => texte(e))).toEqual(['Loup géant']);
-    expect(page.querySelector<HTMLInputElement>('.sfp-perso input')!.value).toBe('2');
-    expect([...page.querySelectorAll('.sfp-perso .mat-button-toggle-checked')].map((t) => texte(t))).toEqual(['Adversaire']);
-    expect([...page.querySelectorAll('.sfp-perso .atp-option[aria-pressed="true"]')].map((b) => texte(b))).toEqual(['Hostile']);
+    expect([...page.querySelectorAll('.sca-nom')].map((e) => texte(e))).toEqual(['Loup géant']);
+    expect(texte(page.querySelector('.sca-nombre'))).toBe('×2');
+    expect([...page.querySelectorAll('.sca-bande > span')].map((e) => texte(e))).toEqual(['Adversaire', 'Hostiletune']);
   });
 
   it('enregistre le texte et les personnages, sans toucher à l’illustration, puis revient', async () => {
@@ -101,22 +103,62 @@ describe('SceneFormPageComponent', () => {
     expect(navigate).toHaveBeenCalledWith('/library/scenarios');
   });
 
-  it('« Ajouter des personnages » ouvre le dialogue sur le scénario de la scène ; un PNJ choisi entre en adversaire, une créature déjà là gagne un exemplaire', async () => {
+  it('« Ajouter des personnages » ouvre le dialogue sur le scénario de la scène, avec ses personnages ; ce qu’il valide les remplace', async () => {
     const {page, texte, fixture, open} = await rendre();
-    open.mockReturnValueOnce({afterClosed: () => of([CATALOGUE[1], CATALOGUE[0]])});
+    const valides = [
+      {kind: 'creature', source_id: 'c1', qty: 3, camp: 'adversaires', attitude: 'hostile'},
+      {kind: 'pnj', source_id: 'p1', qty: 1, camp: 'heros', attitude: null},
+    ];
+    open.mockReturnValueOnce({afterClosed: () => of(valides)});
 
     [...page.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b)?.includes('Ajouter des personnages'))!.click();
     await fixture.whenStable();
 
-    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({data: {scenarioId: 'dv', pnjsEnScene: new Set(), placesLibres: 59}});
-    expect([...page.querySelectorAll('.sfp-perso-texte')].map((e) => texte(e))).toEqual(['Loup géant', 'Drajit']);
-    expect(page.querySelector<HTMLInputElement>('.sfp-perso input')!.value).toBe('3');
+    expect((open.mock.calls[0] as unknown[])[1]).toMatchObject({
+      data: {
+        scenarioId: 'dv',
+        sceneTitre: 'Cap au sud',
+        sceneImage: '/assets/bol/halakh.webp',
+        sceneAmbiance: 'Halakh, de jour, danger 2',
+        personnages: [{kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: 'hostile'}],
+      },
+    });
+    expect([...page.querySelectorAll('.sca-nom')].map((e) => texte(e))).toEqual(['Loup géant', 'Drajit']);
+    expect(texte(page.querySelector('.sca-nombre'))).toBe('×3');
+    expect(texte(page.querySelector('.sfp-camp--allies'))).toBe('1 allié');
+  });
+
+  it('l’ambiance se choisit dans les menus des pastilles, le texte par onglets ; tout s’enregistre', async () => {
+    const {page, texte, fixture, sceneService, enregistrer} = await rendre();
+    const choisir = async (pastille: string, option: string) => {
+      page.querySelector<HTMLButtonElement>(pastille)!.click();
+      await fixture.whenStable();
+      [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')].find((b) => texte(b)?.endsWith(option))!.click();
+      await fixture.whenStable();
+    };
+
+    await choisir('.sfp-pastille--jour', 'Nuit');
+    await choisir('.sfp-pastille--danger-2', 'Danger 4 sur 4');
+    expect(page.querySelector('.sfp-pastille--nuit')).not.toBeNull();
+    [...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b)?.startsWith('En jeu'))!.click();
+    await fixture.whenStable();
+    const jeu = page.querySelector<HTMLTextAreaElement>('#sfp-jeu')!;
+    jeu.value = 'Jet de Vigueur, difficulté -1.';
+    jeu.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+
+    expect(page.querySelector('#sfp-lecture')).toBeNull();
+    expect(texte(page.querySelector('.sfp-texte-compte'))).toBe('30 / 10000');
+    await enregistrer();
+    expect((sceneService.update.mock.calls[0] as unknown[])[1]).toMatchObject({moment: 'nuit', danger: 4, jeu: 'Jet de Vigueur, difficulté -1.'});
   });
 
   it('un clic sur l’attitude choisie l’efface', async () => {
     const {page, fixture, sceneService, enregistrer} = await rendre();
 
-    page.querySelector<HTMLButtonElement>('.sfp-perso .atp-option[aria-pressed="true"]')!.click();
+    page.querySelector<HTMLButtonElement>('.sca-regler')!.click();
+    await fixture.whenStable();
+    document.querySelector<HTMLButtonElement>('.sca-pop .atp-option[aria-pressed="true"]')!.click();
     await fixture.whenStable();
     await enregistrer();
 
@@ -144,7 +186,7 @@ describe('SceneFormPageComponent', () => {
     page.querySelector<HTMLButtonElement>('[aria-label="Retirer Loup géant"]')!.click();
     await fixture.whenStable();
 
-    expect(page.querySelectorAll('.sfp-perso').length).toBe(0);
+    expect(page.querySelectorAll('bol-scene-carte').length).toBe(0);
     expect(composant.canLeave()).not.toBe(true);
     expect(open).toHaveBeenCalled();
   });
@@ -152,7 +194,8 @@ describe('SceneFormPageComponent', () => {
   it('une nouvelle scène naît dans son chapitre, puis s’enregistre avec ses personnages', async () => {
     const {page, sceneService, enregistrer, fixture, texte} = await rendre({chapitre: 'dv1'});
 
-    expect(texte(page.querySelector('.dw-fh-title'))).toBe('Nouvelle scène');
+    expect(texte(page.querySelector('.sfp-kicker'))).toBe('Nouvelle scène');
+    expect(texte(page.querySelector('.sfp-fil'))).toBe('Le Dieu voilé — 1. L’oracle de Nemmereth · nouvelle scène');
     const titre = page.querySelector<HTMLInputElement>('#sfp-titre')!;
     titre.value = 'La citadelle';
     titre.dispatchEvent(new Event('input'));

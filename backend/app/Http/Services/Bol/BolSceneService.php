@@ -198,7 +198,7 @@ class BolSceneService
                 }
 
                 $rows = match ($kind) {
-                    'pnj'      => array_filter([$this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp)]),
+                    'pnj'      => $this->fightSessionService->createPnjRows($sessionId, $sourceId, $camp, $qty),
                     'creature' => $this->fightSessionService->createCreatureRows($sessionId, $sourceId, $camp, $qty),
                     'demon'    => $this->fightSessionService->createDemonRows($sessionId, $sourceId, $camp, $qty),
                     default    => [],

@@ -211,6 +211,22 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame([3], BolFightSessionPnj::where('fight_session_id', $session->id)->pluck('vitalite_courante')->all());
     }
 
+    /** Une scène qui cite trois gardes d'une même fiche en pose trois à la table, chacun sa ligne, avec l'attitude de la scène. */
+    public function test_a_scene_with_several_copies_of_a_pnj_seats_each_of_them(): void
+    {
+        $garde = $this->pnj('Garde');
+        $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => null, 'titre' => 'La porte', 'ordre' => 0, 'distribution' => [
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'mefiant', 'positions' => [null, null, null]],
+        ]]);
+        $session = $this->tableSession();
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/load-scene", ['scene_id' => $scene->id, 'mode' => 'add'])->assertOk();
+
+        $lignes = BolFightSessionPnj::where('fight_session_id', $session->id)->get();
+        $this->assertSame([$garde->id, $garde->id, $garde->id], $lignes->pluck('pnj_id')->all());
+        $this->assertSame(['mefiant', 'mefiant', 'mefiant'], $lignes->pluck('attitude')->all());
+    }
+
     /** Charger une scène en « Remplacer », à la table, retire toujours tout sauf les héros : c'est ce que dit son dialogue. */
     public function test_replacing_a_scene_at_the_table_still_removes_the_allies(): void
     {

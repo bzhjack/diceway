@@ -15,12 +15,12 @@ class BolSceneDistribution
     /** Au plus, les lignes d'une distribution saisie dans « Préparer la scène ». */
     public const SAISIE_MAX = 60;
 
-    /** Au plus, les exemplaires d'une créature ou d'un démon sur une ligne. */
+    /** Au plus, les exemplaires d'un personnage (PNJ, créature, démon) sur une ligne. */
     public const QTY_MAX = 30;
 
     /**
      * Distribution saisie dans « Préparer la scène » : les entrées dont la fiche est accessible au compte (`accessibles`, clés
-     * `kind:source_id`), un PNJ toujours seul et une seule fois, le camp et l'attitude normalisés. Une entrée qui était déjà dans la scène (même fiche,
+     * `kind:source_id`), avec leur nombre d'exemplaires (un PNJ aussi : trois gardes d'une même fiche), le camp et l'attitude normalisés. Une entrée qui était déjà dans la scène (même fiche,
      * dans l'ordre) garde les positions de ses exemplaires sur la carte ; les exemplaires en plus n'en ont pas.
      *
      * @param array<int, array<string, mixed>> $saisie
@@ -36,19 +36,14 @@ class BolSceneDistribution
         }
 
         $entries = [];
-        $pnjsVus = [];
         foreach ($saisie as $entree) {
             $kind = (string) ($entree['kind'] ?? '');
             $sourceId = self::sourceId($entree['source_id'] ?? null);
             $cle = $kind . ':' . $sourceId;
-            // Un PNJ n'entre qu'une fois en scène : une deuxième ligne pour la même fiche est écartée.
-            if ($sourceId === null || !in_array($cle, $accessibles, true) || ($kind === 'pnj' && isset($pnjsVus[$sourceId]))) {
+            if ($sourceId === null || !in_array($cle, $accessibles, true)) {
                 continue;
             }
-            if ($kind === 'pnj') {
-                $pnjsVus[$sourceId] = true;
-            }
-            $qty = $kind === 'pnj' ? 1 : min(self::QTY_MAX, max(1, (int) ($entree['qty'] ?? 1)));
+            $qty = min(self::QTY_MAX, max(1, (int) ($entree['qty'] ?? 1)));
             $anciennes = isset($restantes[$cle]) && $restantes[$cle] !== [] ? array_shift($restantes[$cle]) : [];
             $positions = [];
             for ($i = 0; $i < $qty; $i++) {

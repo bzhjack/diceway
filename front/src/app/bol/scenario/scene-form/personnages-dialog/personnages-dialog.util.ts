@@ -1,11 +1,12 @@
+import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {BolFicheScenario} from '../../../models/bol-fiche-scenario.model';
-import {normalizeSearch} from '../../../session/play/reserve/reserve.util';
-import {combatantRankKey} from '../../../session/combat-statblock.util';
+import {KIND_LABEL, normalizeSearch} from '../../../session/play/reserve/reserve.util';
 import {RANG_LABELS} from '../../../shared/library/library-rows-page.base';
 import {scenariosDesFiches} from '../../../shared/library/library-scenarios.util';
 import {LibraryOption, LibraryRang, LibraryScenarioOption, LibrarySource} from '../../../shared/models/library-rows.model';
-import {PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
+import {PersonnageLigne, PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
+import {cleDuPersonnage, PERSONNAGES_MAX, QTY_MAX, rangDe} from '../scene-form.util';
 
 const TYPES: readonly {cle: PersonnageType; label: string}[] = [
   {cle: null, label: 'Tous'},
@@ -18,17 +19,10 @@ const SOURCES: readonly {cle: LibrarySource; label: string}[] = [
   {cle: 'catalogue', label: 'Catalogue commun'},
   {cle: 'miennes', label: 'Mes fiches'},
 ];
-const RANG_DE_LA_CLE = {rival: 'R', coriace: 'C', pietaille: 'P'} as const;
 
 /** Les scénarios qui citent une fiche (ceux d'où elle a été importée). */
 export function scenariosDe(fiche: CombatCatalogEntry): readonly BolFicheScenario[] {
   return (fiche.raw as {scenarios?: BolFicheScenario[]}).scenarios ?? [];
-}
-
-/** Le rang d'une fiche, en lettre comme dans les bibliothèques (`dw-lr-rang--R`). */
-export function rangDe(fiche: CombatCatalogEntry): LibraryRang {
-  const cle = combatantRankKey(fiche);
-  return cle ? RANG_DE_LA_CLE[cle] : 'C';
 }
 
 function sourceDe(fiche: CombatCatalogEntry): Exclude<LibrarySource, 'tout'> {
@@ -76,4 +70,17 @@ export function optionsDesFiltres(
     ],
     scenarios: scenariosDesFiches(avecScenarios(fiches), avecScenarios(filtrerFiches(fiches, filtres, 'scenarioId')), filtres.scenarioId),
   };
+}
+
+/** Les portraits : chaque fiche avec ce que la scène en a déjà. Un clic ajoute un exemplaire d'une fiche déjà là (jusqu'à `QTY_MAX`),
+ * ou fait entrer une fiche absente tant que la scène a de la place. */
+export function lignesDesFiches(fiches: readonly CombatCatalogEntry[], personnages: readonly BolSceneDistributionSaisie[]): PersonnageLigne[] {
+  const enScene = new Map(personnages.map((p) => [cleDuPersonnage(p.kind, p.source_id), p.qty]));
+  const pleine = personnages.length >= PERSONNAGES_MAX;
+  return fiches.map((fiche) => {
+    const dansLaScene = enScene.get(cleDuPersonnage(fiche.kind, fiche.sourceId)) ?? 0;
+    const ajoutable = dansLaScene === 0 ? !pleine : dansLaScene < QTY_MAX;
+    const ajout = dansLaScene === 0 ? `Ajouter ${fiche.nom}` : `Un ${fiche.nom} de plus`;
+    return {fiche, rang: rangDe(fiche), type: KIND_LABEL[fiche.kind], dansLaScene, ajoutable, ajout};
+  });
 }

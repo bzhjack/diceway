@@ -1,5 +1,6 @@
 import {CombatCamp, CombatantAttitude} from '../../models/bol-fight-session.model';
 import {SceneEntryKind, SceneMeteo, SceneMoment} from '../../models/bol-scene.model';
+import {LibraryRang} from '../../shared/models/library-rows.model';
 
 /** Valeur du formulaire « Préparer la scène » : des textes vides plutôt que `null`, et un danger à 0 pour « aucun ». L'illustration
  * n'y est pas : celle d'une scène reste telle qu'elle est. */
@@ -26,6 +27,15 @@ export interface ScenePersonnageVue {
   nom: string;
   avatar: string;
   type: string;
+  /** Le rang et la vitalité de la fiche, tant qu'elle est connue. */
+  rang: LibraryRang | null;
+  vitalite: number | null;
   /** La fiche n'est plus dans la bibliothèque (ou pas encore chargée). */
   introuvable: boolean;
 }
+
+/** Un des trois textes d'une scène, chacun dans son onglet : à lire aux joueurs, en jeu, secret du MJ. */
+export type SceneTexte = 'lecture' | 'jeu' | 'notes';
+
+/** Un onglet de la carte du texte : un des trois textes, ou les pistes. */
+export type SceneOnglet = SceneTexte | 'pistes';

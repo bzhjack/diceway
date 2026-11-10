@@ -4,95 +4,541 @@
   display: block;
 }
 
-.sfp {
-  max-width: 85rem;
-  margin: 0 auto;
+// L'affiche va d'un bord à l'autre : la page n'a pas les marges de `dw-page`, le corps a les siennes.
+.sfp-page {
+  padding: 0;
 }
 
-.sfp-contenu {
+// La page tient dans l'écran : l'en-tête, l'affiche, puis le texte et la distribution jusqu'en bas.
+.sfp {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  height: 100dvh;
+  min-height: 38rem;
+}
+
+// ── L'en-tête ────────────────────────────────────────────────────────────────────────────────────
+.sfp-entete {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 3.25rem;
+  padding: 0.4rem 1.5rem;
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+  background: var(--dw-forge-recess);
+}
+
+.sfp-medaille {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  @include forge.medallion;
+
+  mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+}
+
+.sfp-kicker {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
+
+.sfp-fil {
+  overflow: hidden;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--dw-forge-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sfp-retour {
+  margin-left: auto;
 }
 
 .sfp-chargement {
   margin: 2rem 0;
   text-align: center;
-  color: var(--dw-surface-600);
+  color: var(--dw-forge-caption);
 }
 
-// Trois colonnes à l'écran de référence : le décor, le texte, puis les personnages, un peu plus larges pour leurs réglages.
-.sfp-colonnes {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: 1.5rem;
-  align-items: start;
+// ── L'affiche ────────────────────────────────────────────────────────────────────────────────────
+.sfp-affiche {
+  position: relative;
+  flex: none;
+  height: 14.75rem;
+  overflow: hidden;
+
+  // Un voile : sombre à gauche pour le texte, puis fondu dans la suie en bas.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--dw-forge-recess) 92%, transparent) 0%, color-mix(in srgb, var(--dw-forge-recess) 55%, transparent) 45%, color-mix(in srgb, var(--dw-forge-recess) 15%, transparent) 100%),
+      linear-gradient(0deg, var(--dw-forge-recess) 0%, transparent 45%);
+  }
 }
 
-.sfp-col {
+.sfp-affiche-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  // Les illustrations sont larges et le bandeau bas : on en garde le tiers du haut, où sont les visages.
+  object-position: 50% 15%;
+  filter: brightness(0.8) saturate(0.85);
+}
+
+.sfp-affiche-contenu {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
-  min-width: 0;
+  gap: 0.5rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1.25rem 2rem 1.1rem;
 }
 
-.sfp-col-titre {
+.sfp-lieu {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 0;
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--dw-color-legendary);
+  color: var(--dw-forge-name);
 }
 
-.sfp-compte {
-  padding: 0 0.45rem;
-  border: 1px solid var(--dw-forge-bronze-dim);
+.sfp-lieu-icone {
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.1rem;
+}
+
+// Les champs posés sur l'image : du texte, souligné en pointillés, qui s'allume au survol et au clavier.
+.sfp-lieu-champ,
+.sfp-titre {
+  padding: 0.1rem 0;
+  border: 0;
+  border-bottom: 1.5px dashed transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+
+  &::placeholder {
+    color: var(--dw-forge-caption);
+  }
+
+  &:hover,
+  &:placeholder-shown {
+    border-bottom-color: color-mix(in srgb, var(--dw-forge-name) 55%, transparent);
+  }
+
+  &:focus-visible {
+    border-bottom-color: var(--dw-color-legendary);
+    border-bottom-style: solid;
+  }
+}
+
+.sfp-lieu-champ {
+  // Le champ prend la largeur de son texte, la région le suit (sans `field-sizing`, la largeur par défaut d'un champ).
+  field-sizing: content;
+  min-width: 12rem;
+  max-width: 40vw;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.sfp-region {
+  display: inline-flex;
+  align-items: center;
+  height: 1.6rem;
+  padding: 0 0.2rem 0 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--dw-forge-name) 50%, transparent);
   border-radius: var(--dw-radius-pill);
-  font-family: 'Muse Sans', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--dw-forge-bone);
+  background: color-mix(in srgb, var(--dw-forge-recess) 65%, transparent);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+
+  mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
 }
 
-.sfp-paire {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0.75rem;
-  align-items: end;
+.sfp-titre {
+  // La colonne de l'affiche l'étirerait : il prend la largeur de son texte.
+  align-self: flex-start;
+  field-sizing: content;
+  min-width: 18rem;
+  max-width: 100%;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 3.4rem;
+  line-height: 1.1;
+  color: var(--dw-color-text-bright);
+  text-shadow: 0 3px 18px color-mix(in srgb, black 80%, transparent);
 }
 
-.sfp-champ {
+.sfp-titre--invalide {
+  border-bottom-color: var(--dw-color-echec);
+  border-bottom-style: solid;
+}
+
+.sfp-ambiance {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+// Une pastille d'ambiance : un médaillon de bronze, teinté par la valeur (la nuit bleue, le jour doré, le danger rouge), puis son nom.
+.sfp-pastille {
+  --sfp-teinte: var(--dw-forge-bronze);
+
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3.25rem;
+  padding: 0 1rem 0 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--dw-forge-name) 45%, transparent);
+  border-radius: var(--dw-radius-pill);
+  background: color-mix(in srgb, var(--dw-forge-recess) 72%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+
+  .sfp-medaillon {
+    border-color: var(--sfp-teinte);
+    background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--sfp-teinte) 45%, var(--dw-forge-recess)), var(--dw-forge-recess) 75%);
+    color: color-mix(in srgb, var(--sfp-teinte) 45%, white);
+  }
+}
+
+.sfp-pastille--nuit {
+  --sfp-teinte: var(--dw-color-nuit);
+}
+
+.sfp-pastille--aube,
+.sfp-pastille--jour {
+  --sfp-teinte: var(--dw-color-legendary);
+}
+
+.sfp-pastille--crepuscule {
+  --sfp-teinte: var(--dw-color-rival);
+}
+
+.sfp-pastille--meteo {
+  --sfp-teinte: var(--dw-color-foi);
+}
+
+.sfp-pastille--danger-1,
+.sfp-pastille--danger-2 {
+  --sfp-teinte: var(--dw-color-warn);
+}
+
+.sfp-pastille--danger-3,
+.sfp-pastille--danger-4 {
+  --sfp-teinte: var(--dw-color-echec);
+}
+
+.sfp-pastille-texte {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+
+  small {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dw-forge-caption);
+  }
+
+  b {
+    font-size: 0.95rem;
+    color: var(--dw-forge-name);
+  }
+}
+
+.sfp-jauge {
+  letter-spacing: 0.1em;
+
+  span {
+    color: var(--dw-forge-bronze-dim);
+  }
+
+  .sfp-jauge-plein {
+    color: var(--sfp-teinte);
+  }
+}
+
+.sfp-medaillon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 50%;
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-name);
+
+  mat-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+  }
+}
+
+.sfp-astuce {
+  align-self: flex-end;
+  margin: 0 0 0 auto;
+  font-size: 0.75rem;
+  color: var(--dw-forge-bone);
+  text-shadow: 0 1px 6px var(--dw-forge-recess);
+}
+
+// ── Le corps : le texte à gauche, la distribution à droite ───────────────────────────────────────
+.sfp-corps {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 35rem) minmax(0, 1fr);
+  gap: 1.4rem;
+  padding: 0.4rem 1.5rem 1.1rem;
+}
+
+// La carte du texte : une page du livre, en cuir sombre.
+.sfp-texte-carte {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 14px;
+  @include forge.plate;
+}
+
+.sfp-onglets {
+  flex: none;
+  display: flex;
+  padding: 0 0.6rem;
+  border-bottom: 1px solid var(--dw-forge-bronze-edge);
+}
+
+.sfp-onglet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.4rem;
+  padding: 0 0.85rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--dw-radius-toggle) var(--dw-radius-toggle) 0 0;
+  background: transparent;
+  color: var(--dw-forge-caption);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  mat-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    color: var(--dw-forge-bone);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: -2px;
+  }
+
+  &[aria-pressed='true'] {
+    border-bottom-color: var(--dw-color-legendary);
+    color: var(--dw-forge-name);
+  }
+}
+
+.sfp-rempli {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
+}
+
+.sfp-onglet-compte {
+  padding: 0 0.4rem;
+  border-radius: var(--dw-radius-pill);
+  background: var(--dw-forge-recess);
+  font-size: 0.7rem;
+}
+
+// Le texte ouvert prend toute la hauteur de la carte, lisible comme une page.
+.sfp-texte {
+  flex: 1;
+  min-height: 6rem;
+  margin: 0;
+  padding: 0.9rem 1.25rem 0.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  resize: none;
+  outline: none;
+
+  &::placeholder {
+    color: var(--dw-forge-caption);
+    font-style: italic;
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--dw-forge-hot);
+  }
+}
+
+.sfp-texte--secret {
+  background: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--dw-forge-ink) 25%, transparent) 14px 15px);
+}
+
+.sfp-texte-pied {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.9rem 0.75rem;
+}
+
+// La première piste sous le texte, comme un chemin qui part de la scène ; un clic ouvre l'onglet des pistes.
+.sfp-chemin {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px dashed color-mix(in srgb, var(--dw-forge-name) 40%, transparent);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+
+  mat-icon {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    color: var(--dw-color-legendary);
+  }
+
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
 }
 
-.sfp-label {
+.sfp-chemin-texte {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sfp-chemin-vers {
+  flex: none;
+  max-width: 10rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--dw-forge-name);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sfp-chemin-plus {
+  flex: none;
+  font-size: 0.72rem;
+  color: var(--dw-forge-caption);
+}
+
+.sfp-texte-compte {
+  flex: none;
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-forge-caption);
+}
+
+.sfp-texte-compte--trop {
+  color: var(--dw-forge-alert);
+  font-weight: 700;
+}
+
+.sfp-pistes-volet {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.9rem 1rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sfp-pistes-aide {
+  margin: 0;
   font-size: 0.8rem;
-  color: var(--dw-surface-600);
-}
-
-.sfp-toggles {
-  align-self: flex-start;
+  color: var(--dw-forge-caption);
 }
 
 .sfp-pistes {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.55rem;
   margin: 0;
-  padding: 0;
+  padding: 0.35rem 0 0;
   list-style: none;
 }
 
 .sfp-piste {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
-  gap: 0.5rem;
+  gap: 0.4rem;
   align-items: center;
 }
 
@@ -100,104 +546,112 @@
   align-self: flex-start;
 }
 
-// ── Les personnages ──────────────────────────────────────────────────────────────────────────────
-.sfp-ajouter {
-  align-self: flex-start;
-}
-
-// La liste défile seule quand la scène est bondée : la page garde sa hauteur.
-.sfp-personnages {
+// ── La distribution ──────────────────────────────────────────────────────────────────────────────
+.sfp-distribution {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  max-height: calc(100dvh - 19rem);
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.sfp-distribution-entete {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.sfp-distribution-titre {
   margin: 0;
-  padding: 0 0.2rem 0 0;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--dw-forge-name);
+}
+
+.sfp-camp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--sfp-camp) 45%, white);
+
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--sfp-camp);
+  }
+}
+
+.sfp-camp--adversaires {
+  --sfp-camp: var(--dw-color-echec);
+}
+
+.sfp-camp--allies {
+  --sfp-camp: var(--dw-color-reussite);
+}
+
+.sfp-ajouter {
+  margin-left: auto;
+}
+
+// Les cartes portraits, en grille ; une rangée a la hauteur de ses cartes, la carte d'ajout s'y aligne. La grille défile seule quand la
+// scène est bondée.
+.sfp-cartes {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  align-content: start;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0 0.3rem 0.3rem 0;
   overflow-y: auto;
   scrollbar-width: thin;
   list-style: none;
 }
 
-// Une ligne par personnage : son portrait, son nom et son type, de quoi le retirer ; dessous, son nombre, son camp et son attitude.
-.sfp-perso {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    'portrait nom retirer'
-    'portrait reglages reglages';
-  column-gap: 0.6rem;
-  row-gap: 0.3rem;
-  align-items: center;
-  padding: 0.45rem 0.5rem;
-  border: 1px solid var(--dw-forge-bronze-edge);
-  border-radius: 7px;
-  @include forge.recess;
-}
-
-.sfp-perso--introuvable {
-  border-style: dashed;
-  opacity: 0.75;
-}
-
-.sfp-perso-portrait {
-  grid-area: portrait;
-  align-self: start;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.sfp-perso-nom {
-  grid-area: nom;
+.sfp-carte-ajout {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  height: 100%;
+  min-height: 12.5rem;
+  padding: 0 1rem;
+  border: 1.5px dashed var(--dw-forge-bronze-dim);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 50%, transparent);
+  color: var(--dw-forge-name);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+
+  .sfp-medaillon {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
 }
 
-.sfp-perso-texte {
-  overflow: hidden;
-  font-weight: 700;
-  color: var(--dw-forge-bone);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sfp-perso-type {
+.sfp-note {
   flex: none;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--dw-surface-600);
-}
-
-.sfp-perso-retirer {
-  grid-area: retirer;
-  --mat-icon-button-state-layer-size: 1.9rem;
-  --mat-icon-button-icon-size: 1.1rem;
-  padding: 0;
-}
-
-.sfp-perso-reglages {
-  grid-area: reglages;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-// Le camp, en boutons bas ; l'attitude (`bol-attitude-choix`) a les siens.
-.sfp-mini-toggles {
-  --mat-button-toggle-height: 1.75rem;
-  --mat-button-toggle-label-text-size: 0.78rem;
-}
-
-.sfp-vide {
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: var(--dw-surface-600);
+  font-size: 0.75rem;
+  color: var(--dw-forge-caption);
 }
