@@ -13,11 +13,6 @@ bol-combat-board .cb-dice .dw-dice-box-host {
   background: transparent;
 }
 
-// `bol-compagnie` : rien à faire défiler, les chevrons de `dw-scroller` disparaissent au lieu de garder leur place.
-bol-compagnie .cmp-rang .dws-chevron--hidden {
-  display: none;
-}
-
 // `bol-reserve` : les onglets sont étroits (trois par ligne), leur libellé serré dans un toggle plus bas que celui de Material…
 bol-reserve .rsv-tabs .mat-button-toggle-label-content {
   padding: 0 0.3rem;

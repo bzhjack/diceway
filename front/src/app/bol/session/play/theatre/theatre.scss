@@ -6,43 +6,44 @@
   flex-direction: column;
 }
 
-// Le plateau : un cadre qui ne défile pas, avec le décor et les braises en fond. Devant, la scène (le cartouche en haut à
-// gauche, les notes de la scène à droite, la troupe en bas, sur la rampe) défile seule quand la place manque : le décor
-// reste en place derrière elle.
-.thr-plateau {
-  position: relative;
+// Le carnet du MJ à gauche, sur toute la hauteur ; à droite, le bandeau de la scène puis la feuille de situation. Rien ne déborde de
+// l'écran : le carnet et la feuille défilent chacun dans leur cadre.
+.thr {
   flex: 1;
-  min-height: 0;
-  display: flex;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.thr-scene {
-  flex: 1;
-  min-width: 0;
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  // `1fr` (et non `minmax(0, 1fr)`) : la rangée de la troupe ne descend jamais sous la hauteur de ses cartes ; s'il
-  // manque de la place, la scène défile plutôt que la troupe ne monte sur le cartouche.
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'cartouche'
-    'troupe';
-  gap: 1rem 1.5rem;
-  padding: 1.4rem 1.5rem 0.6rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
+  gap: 0.9rem;
+  padding: 0.75rem 1rem 0.75rem;
 }
 
-.thr-scene--avec-lecture {
-  grid-template-columns: minmax(0, 1fr) 24rem;
-  grid-template-areas:
-    'cartouche lecture'
-    'troupe lecture';
+.thr--avec-carnet {
+  grid-template-columns: 26rem minmax(0, 1fr);
+}
+
+.thr-carnet {
+  min-height: 0;
+}
+
+.thr-droite {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 7px;
+  background: var(--dw-forge-recess);
+}
+
+// Le bandeau : le décor de la scène, assombri à gauche pour que le cartouche se lise, et ses braises.
+.thr-bandeau {
+  position: relative;
+  flex: none;
+  min-height: 9rem;
+  overflow: hidden;
+  isolation: isolate;
+  border-bottom: 1px solid var(--dw-forge-bronze);
 }
 
 .thr-decor {
@@ -54,61 +55,35 @@
 }
 
 .thr-tete {
-  grid-area: cartouche;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  height: 100%;
+  min-height: 9rem;
+  box-sizing: border-box;
+  padding: 0.9rem 1.1rem 0.9rem;
+}
+
+.thr-cartouche {
+  flex: 1;
   min-width: 0;
 }
 
-// Sous l'ambiance : l'action principale en or, puis les coulisses, sur un fond sombre qui se lit sur n'importe quel décor.
+// Ce qu'on fait de la scène : ajouter des personnages, puis l'action principale en or.
 .thr-actions {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 0.5rem;
-  margin-top: 0.9rem;
 }
 
 .thr-ajouter {
   background: rgba(10, 6, 4, 0.7);
 }
 
-.thr-lecture {
-  grid-area: lecture;
-  align-self: start;
-  max-height: 100%;
-}
-
-.thr-troupe {
-  grid-area: troupe;
-  align-self: end;
-}
-
-// Fenêtre très basse : les cartes ont atteint leur plus petite taille lisible (`--thr-k`), les marges cèdent à leur tour.
-@media (max-height: 43.5rem) {
-  .thr-scene {
-    row-gap: 0.5rem;
-    padding-block: 0.8rem 0.6rem;
-  }
-}
-
-// Écrans moyens : une seule colonne, les notes passent sous la troupe et la scène défile.
-@media (max-width: 70rem) {
-  .thr-scene,
-  .thr-scene--avec-lecture {
-    grid-template-columns: minmax(0, 1fr);
-    // Chaque rangée prend la hauteur de son contenu ; la scène défile.
-    grid-template-rows: max-content max-content max-content;
-    grid-template-areas:
-      'cartouche'
-      'troupe'
-      'lecture';
-  }
-
-  .thr-troupe {
-    min-height: 14rem;
-  }
-
-  .thr-lecture {
-    --lec-sticky: static;
-    max-height: none;
-    overflow-y: visible;
-  }
+.thr-situation {
+  flex: 1;
+  min-height: 0;
+  padding: 0 0.5rem 0.25rem;
 }

@@ -37,8 +37,8 @@ export interface SceneCarton {
   readonly titre: string;
 }
 
-/** Taille d'une carte sur le plateau : selon le rang dans la troupe, plus petite pour un allié. */
-export type TroupeTaille = 'rival' | 'coriace' | 'pietaille' | 'allie';
+/** Taille d'une carte de personnage : selon son rang. */
+export type TroupeTaille = 'rival' | 'coriace' | 'pietaille';
 
 /** Le compte d'un camp dans l'aperçu d'une scène : « 5 alliés », « 12 adversaires ». */
 export interface CampCompte {

@@ -28,8 +28,8 @@ interface CombatBoardHandle {
 }
 
 /**
- * La table : page d'accueil d'une session. Mode libre : la frise des actes dans l'en-tête, la troupe en scène (`bol-troupe`), la
- * compagnie des héros (`bol-compagnie`) et la réserve. Mode combat : `bol-combat-board`. La page assemble l'écran, écoute le clavier et
+ * La table : page d'accueil d'une session. Mode libre : la frise des actes dans l'en-tête, le carnet du MJ et la feuille de situation
+ * (`bol-theatre`, `bol-situation`) et la réserve. Mode combat : `bol-combat-board`. La page assemble l'écran, écoute le clavier et
  * lance le chargement ; tout le reste vit dans `table/`, un service par domaine.
  */
 @Component({

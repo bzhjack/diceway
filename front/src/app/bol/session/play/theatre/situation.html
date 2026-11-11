@@ -1,0 +1,307 @@
+<table class="sit">
+  <caption class="sr-only">La situation : ceux d'en face, puis la compagnie ; un clic sur un nom ouvre sa carte.</caption>
+  <thead>
+    <tr>
+      <th scope="col">Personnage</th>
+      <th scope="col">Rang</th>
+      <th scope="col">Attitude</th>
+      <th scope="col">Vitalité</th>
+      <th scope="col" class="sit-num"><abbr title="Mêlée">Mêl</abbr></th>
+      <th scope="col" class="sit-num">Tir</th>
+      <th scope="col" class="sit-num"><abbr title="Défense">Déf</abbr></th>
+      <th scope="col" class="sit-num"><abbr title="Initiative">Init</abbr></th>
+      <th scope="col" class="sit-num"><abbr title="Dégâts">Dég</abbr></th>
+      <th scope="col"><span class="sr-only">Actions</span></th>
+    </tr>
+  </thead>
+
+  <!-- Ceux d'en face : la zone de dépôt des adversaires. -->
+  <tbody
+    class="sit-groupe"
+    data-drop-camp="adversaires"
+    cdkDropList
+    [cdkDropListSortingDisabled]="true"
+    [cdkDropListEnterPredicate]="rejectDrop"
+    [class.sit-groupe--droppable]="enFaceDroppable()"
+    [class.sit-groupe--hot]="enFaceHot()"
+  >
+    <tr class="sit-section sit-section--face">
+      <th scope="rowgroup" colspan="10">
+        En face · {{ enFace().length }}
+        @if (enFace().length) {
+          <span class="sit-section-pv">{{ vitaliteEnFace() }} PV</span>
+        }
+      </th>
+    </tr>
+    @for (l of enFace(); track l.card.key) {
+      <tr
+        class="sit-ligne"
+        [class.sit-ligne--selected]="selectedKeys().has(l.card.key)"
+        [class.sit-ligne--tombe]="l.tombe"
+        cdkDrag
+        [bolStageDrag]="{kind: l.card.kind, camp: l.card.camp}"
+        (stageDropped)="onStageDropped($event, l.card)"
+      >
+        <td>
+          <span class="sit-qui">
+            <span class="sit-portrait" [style.--sit-anneau]="l.attitude ? 'var(--sit-att-' + l.attitude.value + ')' : null">
+              @if (l.avatar) {
+                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
+              } @else {
+                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
+              }
+            </span>
+            <button
+              type="button"
+              class="sit-nom"
+              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
+              (click)="onNomClick(l.card, $event)"
+            >
+              {{ l.card.nom }}
+            </button>
+          </span>
+          <div *cdkDragPreview class="sit-fantome">
+            <img dwAvatarFallback [src]="l.card.avatar" alt="" draggable="false" />
+            <span>{{ l.card.nom }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="sit-rang">{{ l.card.rang }}</span>
+          @if (l.card.vilenie !== null) {
+            <span class="sit-vilenie">{{ l.card.vilenie }} vil.</span>
+          }
+        </td>
+        <td>
+          <button
+            type="button"
+            [class]="'sit-attitude sit-attitude--' + (l.attitude?.value ?? 'aucune')"
+            [attr.aria-label]="'Attitude de ' + l.card.nom + ' : ' + (l.attitude?.label ?? 'aucune')"
+            [matMenuTriggerFor]="menuAttitude"
+            [matMenuTriggerData]="{card: l.card}"
+          >
+            {{ l.attitude?.label ?? 'Aucune' }}<mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
+          </button>
+        </td>
+        <td>
+          <span class="sit-vie">
+            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
+            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
+            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
+            <button
+              type="button"
+              class="sit-pas"
+              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
+              [attr.aria-disabled]="l.atMax ? 'true' : null"
+              (click)="stepVitalite(l.card, 1)"
+            >
+              +
+            </button>
+          </span>
+        </td>
+        <td class="sit-num">{{ l.melee }}</td>
+        <td class="sit-num">{{ l.tir }}</td>
+        <td class="sit-num">{{ l.card.defense }}</td>
+        <td class="sit-num">{{ l.initiative }}</td>
+        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
+        <td class="sit-bout">
+          <button
+            mat-icon-button
+            type="button"
+            class="sit-plus"
+            [attr.aria-label]="'Plus d’actions sur ' + l.card.nom"
+            [matMenuTriggerFor]="menuLigne"
+            [matMenuTriggerData]="{card: l.card}"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="sit-vide" colspan="10">Personne en face : « Ajouter des personnages » les fait entrer, ou glissez-les ici depuis les coulisses.</td>
+      </tr>
+    }
+  </tbody>
+
+  <!-- La compagnie : ses héros, puis ses alliés ; la zone de dépôt du camp des héros. -->
+  <tbody
+    class="sit-groupe"
+    data-drop-camp="heros"
+    cdkDropList
+    [cdkDropListSortingDisabled]="true"
+    [cdkDropListEnterPredicate]="rejectDrop"
+    [class.sit-groupe--droppable]="compagnieDroppable()"
+    [class.sit-groupe--hot]="compagnieHot()"
+  >
+    <tr class="sit-section sit-section--compagnie">
+      <th scope="rowgroup" colspan="10">
+        La compagnie · {{ heros().length }} héros{{ allies().length ? ' et ' + allies().length + ' allié' + (allies().length > 1 ? 's' : '') : '' }}
+        <span class="sit-section-pv">{{ vitaliteCompagnie() }} PV</span>
+      </th>
+    </tr>
+    @for (l of heros(); track l.card.key) {
+      <tr class="sit-ligne" [class.sit-ligne--selected]="selectedKeys().has(l.card.key)" [class.sit-ligne--tombe]="l.tombe">
+        <td>
+          <span class="sit-qui">
+            <span class="sit-portrait sit-portrait--heros">
+              @if (l.avatar) {
+                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
+              } @else {
+                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
+              }
+            </span>
+            <button
+              type="button"
+              class="sit-nom"
+              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
+              (click)="onNomClick(l.card, $event)"
+            >
+              {{ l.card.nom }}
+              @if (l.card.joueur) {
+                <small>{{ l.card.joueur }}</small>
+              }
+            </button>
+          </span>
+        </td>
+        <td>
+          <span class="sit-heroisme">
+            <button
+              type="button"
+              class="sit-pas"
+              [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + l.card.nom"
+              [attr.aria-disabled]="l.heroisme <= 0 ? 'true' : null"
+              (click)="stepHeroisme(l.card, -1)"
+            >
+              −
+            </button>
+            <dw-gemmes role="img" [attr.aria-label]="l.heroisme + ' points d’héroïsme'" [gems]="l.gems" />
+            <button type="button" class="sit-pas" [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + l.card.nom" (click)="stepHeroisme(l.card, 1)">+</button>
+          </span>
+        </td>
+        <td><span class="sit-tiret">—</span></td>
+        <td>
+          <span class="sit-vie">
+            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
+            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
+            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
+            <button
+              type="button"
+              class="sit-pas"
+              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
+              [attr.aria-disabled]="l.atMax ? 'true' : null"
+              (click)="stepVitalite(l.card, 1)"
+            >
+              +
+            </button>
+          </span>
+        </td>
+        <td class="sit-num">{{ l.melee }}</td>
+        <td class="sit-num">{{ l.tir }}</td>
+        <td class="sit-num">{{ l.card.defense }}</td>
+        <td class="sit-num">{{ l.initiative }}</td>
+        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
+        <td class="sit-bout">
+          <!-- Le jet d'action est sur la carte du héros, comme le clic sur son nom. -->
+          <button mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + l.card.nom" (click)="cardToggled.emit(l.card)">
+            <mat-icon>casino</mat-icon>
+          </button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="sit-vide" colspan="10">Aucun héros à table.</td>
+      </tr>
+    }
+    @for (l of allies(); track l.card.key) {
+      <tr
+        class="sit-ligne sit-ligne--allie"
+        [class.sit-ligne--selected]="selectedKeys().has(l.card.key)"
+        [class.sit-ligne--tombe]="l.tombe"
+        cdkDrag
+        [bolStageDrag]="{kind: l.card.kind, camp: l.card.camp}"
+        (stageDropped)="onStageDropped($event, l.card)"
+      >
+        <td>
+          <span class="sit-qui">
+            <span class="sit-portrait sit-portrait--allie">
+              @if (l.avatar) {
+                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
+              } @else {
+                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
+              }
+            </span>
+            <button
+              type="button"
+              class="sit-nom"
+              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
+              (click)="onNomClick(l.card, $event)"
+            >
+              {{ l.card.nom }}
+            </button>
+          </span>
+          <div *cdkDragPreview class="sit-fantome">
+            <img dwAvatarFallback [src]="l.card.avatar" alt="" draggable="false" />
+            <span>{{ l.card.nom }}</span>
+          </div>
+        </td>
+        <td><span class="sit-rang">{{ l.card.rang }}</span></td>
+        <td><span class="sit-allie">Allié</span></td>
+        <td>
+          <span class="sit-vie">
+            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
+            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
+            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
+            <button
+              type="button"
+              class="sit-pas"
+              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
+              [attr.aria-disabled]="l.atMax ? 'true' : null"
+              (click)="stepVitalite(l.card, 1)"
+            >
+              +
+            </button>
+          </span>
+        </td>
+        <td class="sit-num">{{ l.melee }}</td>
+        <td class="sit-num">{{ l.tir }}</td>
+        <td class="sit-num">{{ l.card.defense }}</td>
+        <td class="sit-num">{{ l.initiative }}</td>
+        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
+        <td class="sit-bout">
+          <button
+            mat-icon-button
+            type="button"
+            class="sit-plus"
+            [attr.aria-label]="'Plus d’actions sur ' + l.card.nom"
+            [matMenuTriggerFor]="menuLigne"
+            [matMenuTriggerData]="{card: l.card}"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<mat-menu #menuAttitude="matMenu">
+  <ng-template matMenuContent let-card="card">
+    @for (option of attitudes; track option.value) {
+      <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.attitude === option.value" (click)="choisirAttitude(card, option.value)">
+        <mat-icon>{{ option.icon }}</mat-icon>{{ option.label }}
+      </button>
+    }
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.attitude === null" (click)="choisirAttitude(card, null)">
+      <mat-icon>remove</mat-icon>Sans attitude
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #menuLigne="matMenu" xPosition="before">
+  <ng-template matMenuContent let-card="card">
+    <button mat-menu-item (click)="cardToggled.emit(card)"><mat-icon>open_in_full</mat-icon>Ouvrir sa carte</button>
+    <button mat-menu-item (click)="campToggleRequested.emit(card)">
+      <mat-icon>swap_horiz</mat-icon>{{ card.camp === 'adversaires' ? 'Passer du côté des héros' : 'Repasser en face' }}
+    </button>
+  </ng-template>
+</mat-menu>

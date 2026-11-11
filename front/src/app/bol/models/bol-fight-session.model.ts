@@ -82,8 +82,9 @@ export interface BolFightSessionHerosModel {
     /** Agilité du héros ; `agilite_effective` tient compte de l'armure portée. L'agilité brute départage les héros de même résultat de réaction. */
     attributs?: {agilite: number; agilite_effective: number};
     ressources?: {vitalite: number; heroisme: number};
-    /** Défense du héros ; `defense_effective` tient compte de l'équipement porté. */
-    combat?: {defense: number; defense_effective: number};
+    /** Combat du héros ; les valeurs `*_effective` tiennent compte de l'équipement porté. Mêlée, tir et initiative servent à la
+     * feuille de situation de la table. */
+    combat?: {defense: number; defense_effective: number; melee?: number; tir?: number; initiative?: number; initiative_effective?: number};
     /** Armes du héros (chargées avec la session pour afficher ses dégâts sur sa carte). */
     armes?: {equipee?: boolean; arme?: {arme: string; degats: string | null} | null}[];
   };

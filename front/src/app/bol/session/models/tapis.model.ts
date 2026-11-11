@@ -22,6 +22,11 @@ export interface TapisCard {
   readonly rang: string | null;
   readonly degats: string;
   readonly defense: string;
+  /** Mêlée (l'attaque d'une créature), tir et initiative, pour la feuille de situation — null quand le personnage n'en a pas (le tir
+   * d'une créature, l'initiative d'une créature ou d'un démon) ; absents des cartes construites ailleurs que sur la table. */
+  readonly melee?: number | null;
+  readonly tir?: number | null;
+  readonly initiative?: number | null;
   readonly vitaliteCourante: number | null;
   readonly vitaliteMax: number | null;
   /** Joueur du héros — null pour les autres cartes. */

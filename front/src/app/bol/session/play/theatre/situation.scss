@@ -1,0 +1,408 @@
+@use 'styles/forge-mixins' as forge;
+
+// La feuille défile seule sous son en-tête, qui reste collé en haut.
+:host {
+  --sit-att-hostile: var(--dw-color-echec);
+  --sit-att-mefiant: var(--dw-color-warn);
+  --sit-att-neutre: var(--dw-surface-500);
+  --sit-att-amical: var(--dw-color-reussite);
+
+  display: block;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sit {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8rem;
+  color: var(--dw-forge-bone);
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 1.9rem;
+    padding: 0 0.5rem;
+    border-bottom: 1px solid var(--dw-forge-bronze-edge);
+    background: var(--dw-forge-recess);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-align: left;
+    text-transform: uppercase;
+    color: var(--dw-forge-caption);
+  }
+
+  abbr {
+    text-decoration: none;
+    cursor: inherit;
+  }
+
+  td {
+    height: 2.75rem;
+    padding: 0 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--dw-forge-bronze-edge) 45%, transparent);
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+  }
+}
+
+.sit .sit-num {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.sit-degats {
+  white-space: nowrap;
+}
+
+// Une section : son nom, son nombre, sa vitalité totale, sur une bande à la couleur du camp.
+.sit .sit-section th {
+  position: static;
+  height: 1.85rem;
+  padding: 0 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--sit-camp) 40%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sit-camp) 16%, var(--dw-forge-recess)), var(--dw-forge-recess) 60%);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-align: left;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sit-camp) 55%, white);
+}
+
+.sit-section--face {
+  --sit-camp: var(--dw-color-echec);
+}
+
+.sit-section--compagnie {
+  --sit-camp: var(--dw-color-reussite);
+}
+
+.sit-section-pv {
+  margin-left: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--dw-forge-caption);
+}
+
+// Une zone de dépôt qui peut recevoir le glisser en cours, puis celle survolée.
+.sit-groupe--droppable td {
+  background: color-mix(in srgb, var(--dw-color-legendary) 4%, transparent);
+}
+
+.sit-groupe--hot td {
+  background: color-mix(in srgb, var(--dw-color-legendary) 12%, transparent);
+}
+
+.sit-ligne {
+  &:hover td {
+    background: color-mix(in srgb, var(--dw-forge-bronze) 7%, transparent);
+  }
+}
+
+.sit-ligne[cdkDrag],
+.sit-ligne.cdk-drag {
+  cursor: grab;
+}
+
+.sit-ligne--selected td {
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+}
+
+.sit-ligne--selected td:first-child {
+  box-shadow: inset 3px 0 0 var(--dw-color-legendary);
+}
+
+// À 0 de vitalité ou moins : la ligne pâlit, le portrait passe en gris.
+.sit-ligne--tombe {
+  opacity: 0.55;
+
+  .sit-portrait img {
+    filter: grayscale(1);
+  }
+}
+
+.sit-ligne.cdk-drag-placeholder {
+  opacity: 0.35;
+}
+
+// ── Qui ──────────────────────────────────────────────────────────────────────────────────────────
+.sit-qui {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+// Le portrait, carré : bordé de la couleur de l'attitude pour ceux d'en face, du vert du camp des héros pour la compagnie.
+.sit-portrait {
+  --sit-anneau: var(--dw-forge-bronze-dim);
+
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  overflow: hidden;
+  border: 2px solid var(--sit-anneau);
+  border-radius: 6px;
+  background: var(--dw-forge-plate);
+  color: var(--dw-forge-name);
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.sit-portrait--heros {
+  --sit-anneau: var(--dw-color-reussite);
+}
+
+.sit-portrait--allie {
+  --sit-anneau: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  border-style: dashed;
+}
+
+.sit-nom {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.2rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+
+  small {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--dw-forge-caption);
+  }
+
+  &:hover {
+    color: var(--dw-forge-name);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+}
+
+// ── Rang, attitude ───────────────────────────────────────────────────────────────────────────────
+.sit-rang {
+  padding: 0.05rem 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 12%, transparent);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dw-forge-name);
+  white-space: nowrap;
+}
+
+.sit-vilenie {
+  margin-left: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--dw-forge-alert);
+  white-space: nowrap;
+}
+
+.sit-tiret {
+  color: var(--dw-forge-caption);
+}
+
+.sit-allie {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--dw-color-reussite) 55%, white);
+}
+
+// L'attitude, en menu : sa pastille de couleur, son nom.
+.sit-attitude {
+  --sit-couleur: var(--dw-forge-bronze-dim);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 1.55rem;
+  padding: 0 0.1rem 0 0.5rem;
+  border: 1px solid var(--sit-couleur);
+  border-radius: var(--dw-radius-toggle);
+  background: color-mix(in srgb, var(--sit-couleur) 18%, transparent);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--sit-couleur);
+  }
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.sit-attitude--hostile {
+  --sit-couleur: var(--sit-att-hostile);
+}
+
+.sit-attitude--mefiant {
+  --sit-couleur: var(--sit-att-mefiant);
+}
+
+.sit-attitude--neutre {
+  --sit-couleur: var(--sit-att-neutre);
+}
+
+.sit-attitude--amical {
+  --sit-couleur: var(--sit-att-amical);
+}
+
+.sit-attitude--aucune {
+  color: var(--dw-forge-caption);
+}
+
+// ── Vitalité, héroïsme ───────────────────────────────────────────────────────────────────────────
+.sit-vie,
+.sit-heroisme {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sit-vie {
+  min-width: 10.5rem;
+}
+
+.sit-barre {
+  flex: 1;
+  height: 0.35rem;
+  overflow: hidden;
+  border-radius: var(--dw-radius-pill);
+  background: var(--dw-forge-recess);
+
+  i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-health) 70%, black), var(--dw-color-health));
+  }
+
+  .sit-barre--bas {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--dw-color-echec) 70%, black), var(--dw-color-echec));
+  }
+}
+
+.sit-vie-valeur {
+  min-width: 2.6rem;
+  text-align: right;
+  color: var(--dw-color-text-bright);
+}
+
+// Un pas : un petit clou rond.
+.sit-pas {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dw-forge-name);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover:not([aria-disabled='true']) {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+// ── Au bout ──────────────────────────────────────────────────────────────────────────────────────
+.sit .sit-bout {
+  width: 2.3rem;
+  padding-right: 0.25rem;
+  text-align: right;
+}
+
+.sit-plus {
+  --mat-icon-button-state-layer-size: 1.9rem;
+  --mat-icon-button-icon-size: 1.1rem;
+  padding: 0;
+  color: var(--dw-forge-bone);
+}
+
+.sit-jet {
+  color: var(--dw-forge-name);
+}
+
+.sit .sit-vide {
+  height: 2.4rem;
+  font-size: 0.78rem;
+  color: var(--dw-forge-caption);
+}
+
+// L'aperçu d'une ligne qu'on glisse : son portrait carré et son nom.
+.sit-fantome {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+  border: 1px solid var(--dw-color-legendary);
+  border-radius: 8px;
+  @include forge.plate;
+  box-shadow: 0 14px 30px color-mix(in srgb, black 65%, transparent);
+  color: var(--dw-forge-bone);
+  font-weight: 700;
+
+  img {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+}

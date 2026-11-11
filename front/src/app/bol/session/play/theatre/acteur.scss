@@ -51,13 +51,6 @@
   --h: 10rem;
 }
 
-// Un allié, au pied du plateau : plus petit qu'un héros, sa hauteur suit celle du pied (`--cmp-h`, posé par la compagnie). Le pied ne suit pas
-// l'échelle du plateau (`--thr-k`) : on la neutralise ici.
-.act--allie {
-  --w: calc(7rem / var(--thr-k, 1));
-  --h: calc(var(--cmp-h, 12.6rem) * 0.72 / var(--thr-k, 1));
-}
-
 .act--creature {
   --act-kind: var(--dw-color-creature);
 }
@@ -218,14 +211,12 @@
   font-size: calc(1.15rem * var(--thr-k, 1));
 }
 
-.act--pietaille .act-nom,
-.act--allie .act-nom {
+.act--pietaille .act-nom {
   font-size: calc(0.88rem * var(--thr-k, 1));
 }
 
 // Les petites cartes : l'étiquette du rang et le rond du type rapetissent aussi, pour que « Piétaille » tienne en entier.
-.act--pietaille,
-.act--allie {
+.act--pietaille {
   .act-haut {
     top: 0.3rem;
     right: 0.3rem;

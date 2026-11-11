@@ -50,8 +50,8 @@ export class ActeurComponent {
     const vitalite = this.card().vitaliteCourante;
     return vitalite !== null && this.card().vitaliteMax !== null && vitalite <= 0;
   });
-  /** Étiquette du coin : « Allié » pour un allié, sinon le rang. */
-  protected readonly etiquette = computed(() => (this.taille() === 'allie' ? 'Allié' : this.card().rang));
+  /** Étiquette du coin : le rang. */
+  protected readonly etiquette = computed(() => this.card().rang);
 
   protected onAvatarError(): void {
     this.avatarFailed.set(true);
