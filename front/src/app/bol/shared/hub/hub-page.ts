@@ -48,7 +48,12 @@ import {HubEntry} from '../models/hub-page.model';
 
         <div class="grid gap-4 lg:grid-cols-2">
           @for (entry of entries(); track entry.route) {
-            <mat-card appearance="outlined" class="ip-entry-card">
+            <mat-card
+              appearance="outlined"
+              class="ip-entry-card"
+              [class.ip-entry-card--illustree]="!!entry.image"
+              [style.--ip-entry-image]="entry.image ? 'url(' + entry.image + ')' : null"
+            >
               <mat-card-content>
                 <article class="flex h-full flex-col gap-5">
                   <div class="space-y-3">

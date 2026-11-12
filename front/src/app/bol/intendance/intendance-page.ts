@@ -59,6 +59,7 @@ export class IntendancePageComponent {
       route: '/library/weapons',
       buttonLabel: 'Ouvrir l’arsenal',
       icon: 'sword',
+      image: '/assets/bol/fond-armes.webp',
       stats: [
         `${this.weapons().length} entrées`,
         `${this.meleeWeapons()} mêlée`,
@@ -73,6 +74,7 @@ export class IntendancePageComponent {
       route: '/library/armors',
       buttonLabel: 'Ouvrir les armures',
       icon: 'shield',
+      image: '/assets/bol/fond-armures.webp',
       stats: [
         `${this.armors().length} entrées`,
         `${this.shieldEntries()} boucliers`,

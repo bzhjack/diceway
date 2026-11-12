@@ -57,6 +57,7 @@ export class BestiairePageComponent {
       icon: 'pets',
       stats: compteurs(this.creatures(), 'créatures'),
       creer: {route: '/create/creature', label: 'Créer une créature'},
+      image: '/assets/bol/fond-creatures.webp',
     },
     {
       title: 'Démons',
@@ -67,6 +68,7 @@ export class BestiairePageComponent {
       icon: 'bolt',
       stats: compteurs(this.demons(), 'démons'),
       creer: {route: '/create/demon', label: 'Créer un démon'},
+      image: '/assets/bol/fond-demons.webp',
     },
   ]);
 }

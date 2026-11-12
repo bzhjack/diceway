@@ -70,6 +70,26 @@
   box-shadow: var(--dw-forge-plate-shadow);
 }
 
+// Une bibliothèque illustrée : l'image de sa page sous un voile de suie, plus dense à gauche et en bas, où se lisent le texte et les
+// boutons ; les rivets restent par-dessus.
+.ip-entry-card--illustree {
+  background:
+    var(--dw-forge-rivets),
+    linear-gradient(90deg, rgba(15, 10, 6, 0.9) 0%, rgba(15, 10, 6, 0.74) 55%, rgba(15, 10, 6, 0.4) 100%),
+    linear-gradient(to top, rgba(12, 10, 6, 0.8) 0%, rgba(12, 10, 6, 0) 45%),
+    var(--ip-entry-image) center 30% / cover no-repeat,
+    var(--dw-intendance-header-bg);
+
+  .ip-entry-description {
+    color: var(--dw-forge-bone);
+    text-shadow: 0 1px 3px var(--dw-forge-shade);
+  }
+
+  .mat-mdc-outlined-button {
+    background-color: rgba(0, 0, 0, 0.55);
+  }
+}
+
 .ip-entry-icon {
   display: flex;
   height: 3rem;
