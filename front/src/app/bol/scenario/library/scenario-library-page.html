@@ -83,7 +83,7 @@
 
                 <ol class="sl-cartes" cdkDropList [cdkDropListData]="vue" [attr.aria-label]="'Les scènes de ' + vue.libelle" (cdkDropListDropped)="deposer($event)">
                   @for (ligne of vue.scenes; track ligne.scene.id; let i = $index, premier = $first, dernier = $last) {
-                    <li class="sl-carte" cdkDrag [cdkDragData]="ligne.scene">
+                    <li class="sl-carte" [id]="'sl-carte-' + ligne.scene.id" [class.sl-carte--revue]="ligne.scene.id === sceneRevue()" cdkDrag [cdkDragData]="ligne.scene">
                       <div class="sl-carte-place" *cdkDragPlaceholder></div>
                       <button type="button" class="sl-carte-ouvrir" (click)="preparer(vue, ligne.scene)">
                         <span class="sl-carte-tete">

@@ -126,6 +126,8 @@ export class ScenarioLibraryPageComponent {
   private readonly choisi = signal<string | null>(null);
   /** De retour de « Préparer la scène » : le chapitre de la scène, montré et mis en évidence. */
   protected readonly chapitreRevu = signal<string | null>(null);
+  /** Et la scène elle-même : sa carte, amenée dans sa colonne, marquée et prise au focus. */
+  protected readonly sceneRevue = signal<string | null>(null);
   private readonly router = inject(Router);
 
   /** Le tableau qui défile en largeur, et de quel côté il reste des chapitres à voir : un chevron s'y montre. */
@@ -147,7 +149,9 @@ export class ScenarioLibraryPageComponent {
       this.choisi.set(scenario);
     }
     this.chapitreRevu.set(retour.get('chapitre'));
-    // Le chapitre revu est amené dans le tableau, une fois ses colonnes affichées.
+    this.sceneRevue.set(retour.get('scene'));
+    // Le chapitre revu est amené dans le tableau, une fois ses colonnes affichées ; la carte de la scène revue, dans sa colonne, prend le
+    // focus : le clavier reprend là où on l'avait laissé.
     let amene = false;
     afterRenderEffect(() => {
       const id = this.chapitreRevu();
@@ -155,10 +159,13 @@ export class ScenarioLibraryPageComponent {
         return;
       }
       const colonne = document.getElementById(`sl-col-${id}`);
-      if (colonne) {
-        amene = true;
-        colonne.scrollIntoView?.({block: 'nearest', inline: 'nearest'});
+      if (!colonne) {
+        return;
       }
+      amene = true;
+      const carte = this.sceneRevue() ? document.getElementById(`sl-carte-${this.sceneRevue()}`) : null;
+      (carte ?? colonne).scrollIntoView?.({block: 'nearest', inline: 'nearest'});
+      carte?.querySelector<HTMLButtonElement>('.sl-carte-ouvrir')?.focus({preventScroll: true});
     });
     // Les chevrons suivent le tableau : à chaque rendu (un autre scénario, un chapitre de plus), au défilement et quand la fenêtre change.
     afterRenderEffect(() => {
@@ -225,6 +232,7 @@ export class ScenarioLibraryPageComponent {
   protected choisir(id: string): void {
     this.choisi.set(id);
     this.chapitreRevu.set(null);
+    this.sceneRevue.set(null);
   }
 
   /** De quel côté le tableau a encore des chapitres hors de vue. */
@@ -364,13 +372,13 @@ export class ScenarioLibraryPageComponent {
 
   /** « Préparer la scène », sur sa page : décor, ambiance, texte à lire, règles, secret, pistes et personnages. */
   protected preparer(vue: ChapitreVue, scene: BolSceneModel): void {
-    preparerLaScene(this.router, scene.id, this.retourIci(vue));
+    preparerLaScene(this.router, scene.id, this.retourIci(vue, scene));
   }
 
-  /** Revenir ici depuis « Préparer la scène » : sur le scénario regardé, le chapitre de la scène montré. */
-  private retourIci(vue: ChapitreVue): string {
+  /** Revenir ici depuis « Préparer la scène » : sur le scénario regardé, le chapitre de la scène montré, et sa carte s'il y en a déjà une. */
+  private retourIci(vue: ChapitreVue, scene?: BolSceneModel): string {
     const scenario = this.selection()?.id;
-    return this.router.serializeUrl(this.router.createUrlTree(['/library/scenarios'], {queryParams: {scenario, chapitre: vue.id}}));
+    return this.router.serializeUrl(this.router.createUrlTree(['/library/scenarios'], {queryParams: {scenario, chapitre: vue.id, scene: scene?.id}}));
   }
 
   /** Une carte déposée : la scène se range dans son chapitre, ou passe à celui où on l'a lâchée. */

@@ -229,7 +229,7 @@ describe('ScenarioLibraryPageComponent', () => {
 
     await cliquer(page.querySelectorAll('.sl-col')[1].querySelector<HTMLButtonElement>('.sl-carte-ouvrir')!);
 
-    expect(navigate).toHaveBeenCalledWith(['/create/scene', 's0'], {state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1'}});
+    expect(navigate).toHaveBeenCalledWith(['/create/scene', 's0'], {state: {returnUrl: '/library/scenarios?scenario=dv&chapitre=dv1&scene=s0'}});
   });
 
   it('au retour, montre le scénario qu’on regardait', async () => {
@@ -242,6 +242,13 @@ describe('ScenarioLibraryPageComponent', () => {
     const {page} = await rendre({scenario: 'dv', chapitre: 'dv1'});
 
     expect([...page.querySelectorAll('.sl-col--revue')].map((c) => c.id)).toEqual(['sl-col-dv1']);
+  });
+
+  it('au retour, marque la carte de la scène préparée et lui rend le focus', async () => {
+    const {page} = await rendre({scenario: 'dv', chapitre: 'dv1', scene: 's0'});
+
+    expect([...page.querySelectorAll('.sl-carte--revue')].map((c) => c.id)).toEqual(['sl-carte-s0']);
+    expect(document.activeElement).toBe(page.querySelector('#sl-carte-s0 .sl-carte-ouvrir'));
   });
 
   it('au clavier, le menu de la carte la range plus bas dans son chapitre', async () => {

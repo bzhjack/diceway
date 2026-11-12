@@ -338,6 +338,14 @@
   }
 }
 
+// La scène qu'on vient de préparer : marquée tant qu'on reste sur ce scénario, même une fois le focus parti.
+.sl-carte--revue {
+  border-color: var(--dw-color-legendary);
+  box-shadow:
+    0 0 0 1px var(--dw-color-legendary),
+    0 0 14px color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+}
+
 // Soulevée sous le curseur, puis la place qu'elle prendra.
 .sl-carte.cdk-drag-preview {
   border-color: var(--dw-color-legendary);
