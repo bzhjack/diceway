@@ -35,8 +35,10 @@ import {lieuTexte} from './theatre.util';
           }
         </p>
       }
-      <h2 class="ctc-titre">{{ scene.titre }}</h2>
-      <bol-scene-ambiance [moment]="scene.moment" [meteo]="scene.meteo" [danger]="scene.danger" />
+      <div class="ctc-ligne">
+        <h2 class="ctc-titre">{{ scene.titre }}</h2>
+        <bol-scene-ambiance [moment]="scene.moment" [meteo]="scene.meteo" [danger]="scene.danger" />
+      </div>
     } @else {
       <h2 class="ctc-titre">Aucune scène chargée</h2>
       <p class="ctc-aide">Choisis une scène dans la frise, ou fais entrer des personnages depuis les coulisses.</p>
@@ -46,15 +48,16 @@ import {lieuTexte} from './theatre.util';
     :host {
       display: block;
       min-width: 0;
-      max-width: 46rem;
     }
 
+    // Le lieu et la place de la scène dans le chapitre, sur une ligne : un lieu trop long s'abrège.
     .ctc-lieu {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       gap: 0.35rem;
-      margin: 0 0 0.25rem;
+      min-width: 0;
+      margin: 0 0 0.3rem;
+      white-space: nowrap;
       color: var(--dw-forge-gold);
       font-size: 0.9rem;
       font-weight: 600;
@@ -101,16 +104,40 @@ import {lieuTexte} from './theatre.util';
       opacity: 0.75;
     }
 
+    .ctc-lieu-carte,
+    .ctc-lieu > span:not(.ctc-num) {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .ctc-lieu-texte {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .ctc-num {
+      flex: none;
       color: var(--dw-forge-bone);
       font-weight: 400;
+
+      &::before {
+        content: '· ';
+      }
+    }
+
+    // Le titre, puis l'ambiance à sa suite.
+    .ctc-ligne {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.9rem;
     }
 
     .ctc-titre {
-      margin: 0 0 0.7rem;
+      margin: 0;
       color: var(--dw-forge-bone);
       font-family: 'Muse Display Harmony', serif;
-      font-size: calc(clamp(2rem, 4vw, 3.4rem) * var(--thr-k, 1));
+      font-size: 2.2rem;
       font-weight: 400;
       line-height: 1.02;
       text-shadow:

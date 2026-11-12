@@ -1,10 +1,25 @@
 <header class="lec-tete">
+  <div class="lec-onglets" role="group" aria-label="Le texte de la scène">
+    @for (onglet of onglets(); track onglet.cle) {
+      <button
+        type="button"
+        class="lec-onglet"
+        [class.lec-onglet--secret]="onglet.cle === 'secret'"
+        [attr.aria-pressed]="actif() === onglet.cle"
+        (click)="ouvrir(onglet.cle)"
+      >
+        @if (onglet.cle === 'secret') {
+          <mat-icon aria-hidden="true">visibility_off</mat-icon>
+        }
+        {{ onglet.label }}
+      </button>
+    }
+  </div>
   @if (grand()) {
     <button mat-icon-button type="button" class="lec-fermer" aria-label="Fermer" matTooltip="Fermer" (click)="grandToggled.emit()">
       <mat-icon>close</mat-icon>
     </button>
   } @else {
-    <span class="lec-tete-titre">Notes de la scène</span>
     <button mat-icon-button type="button" class="lec-agrandir" aria-label="Agrandir la lecture" matTooltip="Agrandir pour mieux lire" (click)="grandToggled.emit()">
       <mat-icon>open_in_full</mat-icon>
     </button>
@@ -14,84 +29,59 @@
   }
 </header>
 
-<section class="lec-bloc" aria-labelledby="lec-lire-titre">
-  <h3 class="lec-titre" id="lec-lire-titre">
-      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('lire')" (click)="basculer('lire')">
-        <mat-icon aria-hidden="true">record_voice_over</mat-icon>À lire aux joueurs
-        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('lire')" aria-hidden="true">expand_more</mat-icon>
-      </button>
-    </h3>
-  @if (!fermee('lire')) {
-    @if (scene().lecture; as texte) {
-      <p class="lec-texte">{{ texte }}</p>
-    } @else {
-      <p class="lec-vide">Pas de texte à lire.</p>
-      <button mat-stroked-button type="button" class="lec-action" (click)="store.prepare(scene())">
-        <mat-icon>edit</mat-icon> Préparer la scène
-      </button>
+<!-- Le texte ouvert ; il défile seul. -->
+<div class="lec-corps" #corps>
+  @switch (actif()) {
+    @case ('jeu') {
+      <p class="lec-jeu">{{ scene().jeu }}</p>
+    }
+    @case ('secret') {
+      <p class="lec-secret">{{ scene().notes }}</p>
+    }
+    @default {
+      @if (scene().lecture; as texte) {
+        <p class="lec-texte">{{ texte }}</p>
+      } @else {
+        <p class="lec-vide">Pas de texte à lire.</p>
+        <button mat-stroked-button type="button" class="lec-action" (click)="store.prepare(scene())">
+          <mat-icon>edit</mat-icon> Préparer la scène
+        </button>
+      }
     }
   }
-</section>
+</div>
 
-@if (scene().jeu; as jeu) {
-  <section class="lec-bloc" aria-labelledby="lec-jeu-titre">
-    <h3 class="lec-titre" id="lec-jeu-titre">
-      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('jeu')" (click)="basculer('jeu')">
-        <mat-icon aria-hidden="true">casino</mat-icon>En jeu
-        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('jeu')" aria-hidden="true">expand_more</mat-icon>
-      </button>
-    </h3>
-    @if (!fermee('jeu')) {
-      <p class="lec-jeu">{{ jeu }}</p>
-    }
-  </section>
-}
-
-@if (scene().notes; as secret) {
-  <section class="lec-bloc" aria-labelledby="lec-secret-titre">
-    <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre">
-      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('secret')" (click)="basculer('secret')">
-        <mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ
-        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('secret')" aria-hidden="true">expand_more</mat-icon>
-      </button>
-    </h3>
-    @if (!fermee('secret')) {
-      <p class="lec-secret">{{ secret }}</p>
-    }
-  </section>
-}
-
+<!-- Ensuite : où peut mener la scène ; une piste ouvre l'aperçu de sa scène, d'où on la charge. -->
 @if (pistes().length) {
-  <section class="lec-bloc" aria-labelledby="lec-pistes-titre">
-    <h3 class="lec-titre" id="lec-pistes-titre">
-      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('pistes')" (click)="basculer('pistes')">
-        <mat-icon aria-hidden="true">alt_route</mat-icon>Pistes
-        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('pistes')" aria-hidden="true">expand_more</mat-icon>
-      </button>
-    </h3>
-    @if (!fermee('pistes')) {
-      <ul class="lec-pistes">
-        @for (piste of pistes(); track $index) {
-          <li class="lec-piste">
-            <span>{{ piste.texte }}</span>
-            @if (piste.acte; as acte) {
-              <button
-                mat-stroked-button
-                type="button"
-                [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
-                [attr.aria-disabled]="store.busy() ? 'true' : null"
-                [matMenuTriggerFor]="apercu.menu()"
-                [matMenuTriggerData]="{acte}"
-              >
-                Scène {{ acte.numero }}
-              </button>
-            }
-          </li>
-        }
-      </ul>
-    }
+  <section class="lec-ensuite" aria-labelledby="lec-ensuite-titre">
+    <h3 class="lec-ensuite-titre" id="lec-ensuite-titre">Ensuite</h3>
+    <ul class="lec-pistes">
+      @for (piste of pistes(); track $index) {
+        <li>
+          @if (piste.acte; as acte) {
+            <button
+              type="button"
+              class="lec-piste"
+              [attr.aria-label]="piste.texte + ' : aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
+              [attr.aria-disabled]="store.busy() ? 'true' : null"
+              [matMenuTriggerFor]="apercu.menu()"
+              [matMenuTriggerData]="{acte}"
+            >
+              <span class="lec-piste-texte">
+                <b>{{ acte.numero }} · {{ acte.scene.titre }}</b>
+                <span>{{ piste.texte }}</span>
+              </span>
+              <mat-icon class="lec-piste-aller" aria-hidden="true">east</mat-icon>
+            </button>
+          } @else {
+            <span class="lec-piste lec-piste--sans-scene">
+              <span class="lec-piste-texte"><span>{{ piste.texte }}</span></span>
+            </span>
+          }
+        </li>
+      }
+    </ul>
   </section>
 }
-
 
 <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />

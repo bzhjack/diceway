@@ -24,7 +24,7 @@ const RECUPERATIONS: readonly RecuperationMagique[] = [
   {ressource: 'foi', libelle: 'Dévotions, 4 h', gain: 4},
 ];
 
-/** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
+/** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur pour la vitalité,
  * une rangée de gemmes pour l'héroïsme ; pour un prêtre ou un sorcier, sa foi et son pouvoir sur leur réserve maximale, et de quoi les
  * récupérer. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
  * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
@@ -35,7 +35,6 @@ const RECUPERATIONS: readonly RecuperationMagique[] = [
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
       <dw-value-stepper [value]="vitalite()" (valueChange)="onVitaliteChange($event)" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" [heart]="true" />
-      <span class="hrs-bar" aria-hidden="true"><i [style.width.%]="vitalitePercent()"></i></span>
     </div>
     <div class="hrs-field">
       <span class="hrs-label">Héroïsme</span>
@@ -145,23 +144,6 @@ const RECUPERATIONS: readonly RecuperationMagique[] = [
     }
 
     // Jauge de vitalité sous le cœur : du rouge au vert, à la mesure de ce qu'il reste.
-    .hrs-bar {
-      align-self: stretch;
-      height: 5px;
-      margin-top: 0.15rem;
-      border-radius: 3px;
-      background: #000;
-      box-shadow: 0 1px 0 rgba(255, 214, 160, 0.12);
-      overflow: hidden;
-
-      i {
-        display: block;
-        height: 100%;
-        border-radius: 3px;
-        background: linear-gradient(90deg, var(--dw-color-echec-forte), var(--dw-color-reussite));
-      }
-    }
-
     // Héroïsme : une gemme par point, allumée s'il reste à dépenser.
     .hrs-heroisme {
       display: flex;
@@ -230,11 +212,6 @@ export class HeroResourcesComponent {
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly vitalite = linkedSignal(() => this.data().vitaliteCourante);
-  /** Part de vitalité restante, de 0 à 100, pour la jauge sous le cœur. */
-  protected readonly vitalitePercent = computed(() => {
-    const max = this.data().vitaliteMax;
-    return max > 0 ? Math.max(0, Math.min(100, (this.vitalite() / max) * 100)) : 0;
-  });
   protected readonly foi = linkedSignal(() => this.data().foi);
   protected readonly pouvoir = linkedSignal(() => this.data().pouvoir);
 

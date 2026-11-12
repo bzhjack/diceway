@@ -18,7 +18,7 @@
 }
 
 .thr--avec-carnet {
-  grid-template-columns: 26rem minmax(0, 1fr);
+  grid-template-columns: 27rem minmax(0, 1fr);
 }
 
 .thr-carnet {
@@ -40,7 +40,7 @@
 .thr-bandeau {
   position: relative;
   flex: none;
-  min-height: 9rem;
+  min-height: 5.6rem;
   overflow: hidden;
   isolation: isolate;
   border-bottom: 1px solid var(--dw-forge-bronze);
@@ -59,9 +59,9 @@
   align-items: flex-end;
   gap: 1rem;
   height: 100%;
-  min-height: 9rem;
+  min-height: 5.6rem;
   box-sizing: border-box;
-  padding: 0.9rem 1.1rem 0.9rem;
+  padding: 0.6rem 1rem;
 }
 
 .thr-cartouche {
@@ -69,7 +69,7 @@
   min-width: 0;
 }
 
-// Ce qu'on fait de la scène : ajouter des personnages, puis l'action principale en or.
+// L'action principale de la scène, en or.
 .thr-actions {
   display: flex;
   flex: none;
@@ -78,12 +78,7 @@
   gap: 0.5rem;
 }
 
-.thr-ajouter {
-  background: rgba(10, 6, 4, 0.7);
-}
-
 .thr-situation {
   flex: 1;
   min-height: 0;
-  padding: 0 0.5rem 0.25rem;
 }

@@ -5,8 +5,8 @@
   }
 
   <div class="thr-droite">
-    <!-- Le bandeau de la scène : son décor et ses braises derrière ; devant, où elle se joue, son ambiance, puis ce qu'on y fait (hors du
-         cartouche, qui annonce chaque scène aux lecteurs d'écran). -->
+    <!-- Le bandeau de la scène, sur deux lignes : son décor et ses braises derrière ; devant, où elle se joue, son titre et son ambiance,
+         puis l'action principale (hors du cartouche, qui annonce chaque scène aux lecteurs d'écran). -->
     <section class="thr-bandeau" aria-label="La scène">
       <bol-scene-decor class="thr-decor" [scene]="store.displayedScene()" />
       <bol-braises class="thr-braises" />
@@ -19,22 +19,12 @@
           [total]="store.acts().length"
         />
         <div class="thr-actions">
-          <button
-            mat-stroked-button
-            type="button"
-            class="thr-ajouter"
-            aria-controls="spp-coulisses-panel"
-            [attr.aria-expanded]="coulissesOpen()"
-            (click)="coulissesRequested.emit()"
-          >
-            <mat-icon>person_add</mat-icon> Ajouter des personnages
-          </button>
           <button mat-flat-button type="button" (click)="combatRequested.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
         </div>
       </div>
     </section>
 
-    <!-- La situation : chacun sur sa ligne, ceux d'en face puis la compagnie. -->
+    <!-- La situation : les deux camps côte à côte, en cartes ; « Ajouter » est dans l'en-tête de ceux d'en face. -->
     <bol-situation
       class="thr-situation"
       [cards]="cards()"
@@ -44,6 +34,8 @@
       (selectToggled)="selectToggled.emit($event)"
       (campToggleRequested)="campToggleRequested.emit($event)"
       (changed)="changed.emit($event)"
+      [coulissesOpen]="coulissesOpen()"
+      (ajouterDemande)="coulissesRequested.emit()"
     />
   </div>
 </div>

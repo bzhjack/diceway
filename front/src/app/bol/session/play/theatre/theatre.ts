@@ -13,8 +13,8 @@ import {SceneLectureDialogComponent} from './scene-lecture-dialog';
 import {SceneStageStore} from './scene-stage.store';
 import {SituationComponent} from './situation';
 
-/** Le mode libre de la table, côté MJ : à gauche le carnet (les notes de la scène, ses pistes) ; à droite le bandeau de la scène (décor,
- * braises, cartouche, actions) puis la feuille de situation, chaque personnage sur sa ligne (`bol-situation`). Lit la scène courante dans
+/** Le mode libre de la table, côté MJ : à gauche le carnet (les notes de la scène en onglets, ses pistes) ; à droite le bandeau de la scène
+ * (décor, braises, cartouche, actions) puis la situation, les deux camps en cartes du même format (`bol-situation`). Lit la scène courante dans
  * le store de la page ; relaie à la page les gestes sur les personnages et les changements de la table. */
 @Component({
   selector: 'bol-theatre',

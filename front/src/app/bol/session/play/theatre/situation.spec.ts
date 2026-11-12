@@ -1,8 +1,8 @@
 import {TestBed} from '@angular/core/testing';
+import {MatTooltip} from '@angular/material/tooltip';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
-import {of, Subject} from 'rxjs';
+import {of} from 'rxjs';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {BolHerosService} from '../../../services/bol-heros.service';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {SituationComponent} from './situation';
@@ -23,44 +23,37 @@ function carte(partiel: Partial<TapisCard> & Pick<TapisCard, 'key' | 'kind' | 'n
     heroisme: null,
     attitude: null,
     vilenie: null,
-    melee: 1,
-    tir: 0,
-    initiative: 0,
     ...partiel,
   };
 }
 
 const GRIMAR = carte({key: 'hero-1', kind: 'hero', nom: 'Grimar', camp: 'heros', rang: null, vitaliteCourante: 8, vitaliteMax: 11, joueur: 'Clara', heroisme: 2});
-const CHEMDI = carte({key: 'pnj-3', kind: 'pnj', nom: 'Chemdi', pivotId: 3, attitude: 'hostile', melee: 2, tir: -1, vitaliteCourante: 8, vitaliteMax: 8});
-const SOLDAT = carte({key: 'pnj-4', kind: 'pnj', nom: 'Soldat du guet #2', pivotId: 4, attitude: 'mefiant', vitaliteCourante: 4, vitaliteMax: 6});
-const LOUP = carte({key: 'creature-5', kind: 'creature', nom: 'Loup', pivotId: 5, camp: 'heros', rang: 'Piétaille', tir: null, initiative: null});
+const CHEMDI = carte({key: 'pnj-3', kind: 'pnj', nom: 'Chemdi', pivotId: 3, sourceId: 's3', attitude: 'hostile', vitaliteCourante: 8, vitaliteMax: 8});
+const SOLDAT = carte({key: 'pnj-4', kind: 'pnj', nom: 'Soldat du guet #2', pivotId: 4, sourceId: 's4', attitude: 'mefiant', vitaliteCourante: 4, vitaliteMax: 6});
+const LOUP = carte({key: 'creature-5', kind: 'creature', nom: 'Loup', pivotId: 5, sourceId: 's5', camp: 'heros', rang: 'Piétaille'});
 
 describe('SituationComponent', () => {
-  const enCours = new Subject<unknown>();
-  const applyDamage = vi.fn(() => enCours);
   const setAttitude = vi.fn(() => of({id: 'sess'}));
-  const adjustHeroisme = vi.fn(() => enCours);
 
   async function rendre(cards: TapisCard[]) {
-    applyDamage.mockClear();
     setAttitude.mockClear();
-    adjustHeroisme.mockClear();
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [
-        {provide: BolFightSessionService, useValue: {applyDamage, setAttitude}},
-        {provide: BolHerosService, useValue: {adjustHeroisme}},
+        {provide: BolFightSessionService, useValue: {setAttitude}},
       ],
     });
     const fixture = TestBed.createComponent(SituationComponent);
     fixture.componentRef.setInput('cards', cards);
     fixture.componentRef.setInput('sessionId', 'sess');
     const ouvertes: TapisCard[] = [];
-    const camps: TapisCard[] = [];
+    const selectionnees: TapisCard[] = [];
     const changements: TableChange[] = [];
     fixture.componentInstance.cardToggled.subscribe((c) => ouvertes.push(c));
-    fixture.componentInstance.campToggleRequested.subscribe((c) => camps.push(c));
+    fixture.componentInstance.selectToggled.subscribe((c) => selectionnees.push(c));
     fixture.componentInstance.changed.subscribe((c) => changements.push(c));
+    const ajouts: unknown[] = [];
+    fixture.componentInstance.ajouterDemande.subscribe(() => ajouts.push(true));
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
@@ -68,40 +61,90 @@ describe('SituationComponent', () => {
     const stable = async () => {
       await fixture.whenStable();
     };
-    return {element, texte, bouton, stable, ouvertes, camps, changements};
+    /** Le texte de l'infobulle d'un élément. */
+    const bulle = (el: Element): string => fixture.debugElement.query((d) => d.nativeElement === el).injector.get(MatTooltip).message;
+    return {element, texte, bouton, bulle, stable, ouvertes, selectionnees, changements, ajouts};
   }
 
-  it('range ceux d’en face puis la compagnie, chaque section avec son nombre et sa vitalité totale', async () => {
+  it('range ceux d’en face puis la compagnie en cartes, chaque camp avec son nombre, sa vitalité totale et ses attitudes', async () => {
     const {element, texte} = await rendre([GRIMAR, SOLDAT, CHEMDI, LOUP]);
 
-    expect([...element.querySelectorAll('.sit-section')].map((s) => texte(s))).toEqual([
-      'En face · 2 12/14 PV',
-      'La compagnie · 1 héros et 1 allié 14/17 PV',
+    expect([...element.querySelectorAll('.sit-camp-detail')].map((s) => texte(s))).toEqual([
+      '2 · 12/14 PV · 1 hostile, 1 méfiant',
+      '1 héros · 14/17 PV · 1 allié',
     ]);
-    const groupes = [...element.querySelectorAll('tbody.sit-groupe')];
-    expect(groupes.map((g) => g.getAttribute('data-drop-camp'))).toEqual(['adversaires', 'heros']);
-    expect([...groupes[0].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
-    expect([...groupes[1].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Grimar Clara', 'Loup']);
+    const camps = [...element.querySelectorAll('section.sit-camp')];
+    expect(camps.map((g) => g.getAttribute('data-drop-camp'))).toEqual(['adversaires', 'heros']);
+    expect([...camps[0].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
+    expect([...camps[1].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Grimar', 'Loup']);
   });
 
-  it('montre sur chaque ligne de quoi juger la menace : attitude, vitalité, mêlée, tir, défense, initiative, dégâts', async () => {
-    const {element, texte} = await rendre([CHEMDI, LOUP]);
+  it('« Ajouter », dans l’en-tête de ceux d’en face, demande les coulisses ; sans allié, la compagnie dit qu’on peut en glisser un', async () => {
+    const {element, texte, ajouts} = await rendre([GRIMAR, CHEMDI]);
 
-    const chemdi = element.querySelectorAll('tbody.sit-groupe')[0].querySelector('.sit-ligne')!;
-    expect(texte(chemdi.querySelector('.sit-attitude'))).toBe('Hostilearrow_drop_down');
-    expect(texte(chemdi.querySelector('.sit-vie-valeur'))).toBe('8/8');
-    expect([...chemdi.querySelectorAll('.sit-num')].map((td) => texte(td))).toEqual(['2', '−1', '1', '0', 'd6']);
-    const loup = element.querySelectorAll('tbody.sit-groupe')[1].querySelector('.sit-ligne')!;
-    expect(texte(loup.querySelector('.sit-allie'))).toBe('Allié');
-    expect([...loup.querySelectorAll('.sit-num')].slice(1, 4).map((td) => texte(td))).toEqual(['—', '1', '—']);
+    element.querySelector<HTMLButtonElement>('.sit-camp--face .sit-ajouter')!.click();
+
+    expect(ajouts).toHaveLength(1);
+    expect(texte(element.querySelector('.sit-astuce'))).toBe("Glissez une tuile d'en face ici : elle devient alliée.");
   });
 
-  it('règle la vitalité d’un PNJ pas à pas, par son type et sa ligne', async () => {
-    const {bouton} = await rendre([CHEMDI]);
+  it('les exemplaires d’une même fiche n’ont qu’une tuile et un cœur vide, qui ouvre le détail de chacun ; l’attitude vaut pour tous', async () => {
+    const garde1 = carte({key: 'pnj-7', kind: 'pnj', nom: 'Garde #1', pivotId: 7, sourceId: 'g', attitude: 'mefiant'});
+    const garde2 = carte({key: 'pnj-8', kind: 'pnj', nom: 'Garde #2', pivotId: 8, sourceId: 'g', attitude: 'mefiant', vitaliteCourante: 4});
+    const {element, texte, bouton, bulle, stable, ouvertes} = await rendre([garde1, garde2]);
 
-    bouton('Retirer 1 point de vitalité à Chemdi').click();
+    const cartes = [...element.querySelectorAll('.sit-camp--face .sit-carte')];
+    expect(cartes).toHaveLength(1);
+    expect(texte(cartes[0].querySelector('.sit-nom'))).toBe('Garde , 2 exemplaires');
+    expect(texte(cartes[0].querySelector('.sit-nombre'))).toBe('×2');
+    expect(cartes[0].querySelectorAll('.sit-vies .sit-coeur')).toHaveLength(1);
+    expect(cartes[0].querySelector('.sit-vies b')).toBeNull();
+    bouton('Vitalité des 2 exemplaires de Garde').click();
+    await stable();
+    const lignes = [...document.querySelectorAll<HTMLButtonElement>('.sit-pop-ligne')];
+    expect(lignes.map((l) => l.textContent?.replace(/\s+/g, ''))).toEqual(['#16/6', '#24/6']);
+    expect(texte(document.querySelector('.sit-pop-total'))).toBe('10/12 PV');
+    expect(texte(cartes[0].querySelector('.sit-attitude'))).toBe('');
+    expect(bulle(cartes[0].querySelector('.sit-attitude')!)).toBe('Méfiants');
 
-    expect(applyDamage).toHaveBeenCalledWith('sess', 'pnj', 3, -1);
+    lignes[1].click();
+    await stable();
+    expect(ouvertes).toEqual([garde2]);
+    expect(document.querySelector('.sit-pop')).toBeNull();
+
+    bouton('Attitude de Garde : Méfiant').click();
+    await stable();
+    [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')].find((b) => b.textContent?.includes('Hostile'))!.click();
+    await stable();
+    expect(setAttitude.mock.calls).toEqual([
+      ['sess', 'pnj', 7, 'hostile'],
+      ['sess', 'pnj', 8, 'hostile'],
+    ]);
+  });
+
+  it('garde les tuiles légères : le rang, la sorte et l’attitude d’en face, la vitalité ; un héros a son jet, son héroïsme et son cœur au pied', async () => {
+    const {element, texte, bulle} = await rendre([CHEMDI, GRIMAR, LOUP]);
+
+    const chemdi = element.querySelector('.sit-camp--face .sit-carte')!;
+    expect(texte(chemdi.querySelector('.sit-rang'))).toBe('Coriace');
+    expect(chemdi.querySelector('.sit-type')!.getAttribute('aria-label')).toBe('PNJ');
+    expect(bulle(chemdi.querySelector('.sit-type')!)).toBe('PNJ');
+    expect(bulle(chemdi.querySelector('.sit-attitude')!)).toBe('Hostile');
+    expect(chemdi.querySelector('.sit-bande')).toBeNull();
+    expect(texte(chemdi.querySelector('.sit-coeur b'))).toBe('8');
+    expect(chemdi.querySelector('.sit-coeur')!.getAttribute('aria-label')).toBe('Vitalité de Chemdi : 8/8');
+    expect(chemdi.querySelector('.sit-ecusson')).toBeNull();
+    expect(chemdi.querySelector('.sit-coeur--groupe')).toBeNull();
+    expect(element.querySelector('[aria-label^="Plus d’actions"]')).toBeNull();
+    const [grimar, loup] = [...element.querySelectorAll('.sit-camp--compagnie .sit-carte')];
+    expect(grimar.querySelector('.sit-sous')).toBeNull();
+    expect(texte(grimar)).not.toContain('Clara');
+    expect(grimar.querySelector('.sit-vies')).toBeNull();
+    expect([...grimar.querySelectorAll('.sit-bande b')].map((b) => texte(b))).toEqual(['2', '8']);
+    expect(grimar.querySelector('.sit-bande [aria-label="Jet d’action de Grimar"]')).not.toBeNull();
+    expect(loup.querySelector('.sit-bande')).toBeNull();
+    expect(loup.querySelector('.sit-attitude')).toBeNull();
+    expect(loup.querySelector('.sit-type')!.getAttribute('aria-label')).toBe('Créature');
   });
 
   it('change l’attitude d’un menu, et la rend à la page', async () => {
@@ -116,54 +159,17 @@ describe('SituationComponent', () => {
     expect(changements).toEqual([{session: {id: 'sess'}}]);
   });
 
-  it('le menu « ⋯ » ouvre la carte, ou fait changer de camp', async () => {
-    const {bouton, stable, ouvertes, camps} = await rendre([CHEMDI]);
-    const choisir = async (entree: string) => {
-      bouton('Plus d’actions sur Chemdi').click();
-      await stable();
-      [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')].find((b) => b.textContent?.includes(entree))!.click();
-      await stable();
-    };
+  it('ne règle rien sur la carte : son portrait, qui la couvre, ouvre le détail du personnage ; Ctrl + clic sélectionne ses exemplaires', async () => {
+    const garde1 = carte({key: 'pnj-7', kind: 'pnj', nom: 'Garde #1', pivotId: 7, sourceId: 'g'});
+    const garde2 = carte({key: 'pnj-8', kind: 'pnj', nom: 'Garde #2', pivotId: 8, sourceId: 'g'});
+    const {element, bouton, ouvertes, selectionnees} = await rendre([GRIMAR, garde1, garde2]);
 
-    await choisir('Ouvrir sa carte');
-    await choisir('Passer du côté des héros');
+    expect(element.querySelector('[aria-label^="Retirer 1 point"], [aria-label^="Rendre 1 point"], [aria-label^="Ajouter 1 point"]')).toBeNull();
+    bouton('Ouvrir la carte de Grimar').click();
+    bouton('Ouvrir la carte de Garde #1').dispatchEvent(new MouseEvent('click', {ctrlKey: true, bubbles: true}));
 
-    expect(ouvertes).toEqual([CHEMDI]);
-    expect(camps).toEqual([CHEMDI]);
-  });
-
-  it('pendant un enregistrement, ignore un second pas sans faire pâlir le bouton', async () => {
-    const {bouton} = await rendre([GRIMAR]);
-    const moins = bouton('Retirer 1 point de vitalité à Grimar');
-
-    moins.click();
-    TestBed.tick();
-    expect(applyDamage).toHaveBeenCalledTimes(1);
-    expect(moins.getAttribute('aria-disabled')).toBeNull();
-    moins.click();
-
-    expect(applyDamage).toHaveBeenCalledTimes(1);
-  });
-
-  it('un pas d’héroïsme en cours laisse la vitalité libre', async () => {
-    const {bouton} = await rendre([GRIMAR]);
-
-    bouton('Ajouter 1 point d’héroïsme à Grimar').click();
-    TestBed.tick();
-    bouton('Retirer 1 point de vitalité à Grimar').click();
-
-    expect(adjustHeroisme).toHaveBeenCalledWith('s1', 1);
-    expect(applyDamage).toHaveBeenCalledTimes(1);
-  });
-
-  it('ignore un pas au-delà du maximum de vitalité, sans désactiver le bouton', async () => {
-    const {bouton} = await rendre([carte({...GRIMAR, vitaliteCourante: 11})]);
-    const plus = bouton('Rendre 1 point de vitalité à Grimar');
-
-    expect(plus.getAttribute('aria-disabled')).toBe('true');
-    plus.click();
-
-    expect(applyDamage).not.toHaveBeenCalled();
+    expect(ouvertes).toEqual([GRIMAR]);
+    expect(selectionnees).toEqual([garde1, garde2]);
   });
 
   it('le dé d’un héros ouvre sa carte, où se trouve son jet d’action', async () => {

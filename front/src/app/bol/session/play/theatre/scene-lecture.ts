@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, linkedSignal, output, untracked} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, linkedSignal, output, untracked, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
@@ -8,17 +8,17 @@ import {SceneActe} from '../../models/theatre.model';
 import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 
-/** Les sections que le MJ peut replier. */
-type SectionLecture = 'lire' | 'jeu' | 'secret' | 'pistes';
+/** Les textes de la scène, un onglet chacun. */
+type TexteLecture = 'lire' | 'jeu' | 'secret';
 
 /** Une piste et l'acte de la frise vers lequel elle mène, s'il y est. */
 interface PisteAffichee extends BolScenePiste {
   readonly acte: SceneActe | null;
 }
 
-/** Les notes de la scène courante, dans la colonne de droite du plateau (ou en grand dans une fenêtre) : le texte à lire aux joueurs, les
- * règles de la scène (« En jeu »), le secret du MJ et les
- * pistes, qui ouvrent l'aperçu de la scène où elles mènent. */
+/** Les notes de la scène courante, dans le carnet du MJ à gauche de la table (ou en grand dans une fenêtre) : le texte à lire aux joueurs,
+ * les règles de la scène (« En jeu ») et le secret du MJ, un onglet chacun (les deux derniers seulement s'ils sont écrits) ; en bas,
+ * toujours en vue, « Ensuite » : les pistes, chacune ouvrant l'aperçu de la scène où elle mène, d'où on la charge. */
 @Component({
   selector: 'bol-scene-lecture',
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, SceneApercuMenuComponent],
@@ -29,7 +29,7 @@ interface PisteAffichee extends BolScenePiste {
 })
 export class SceneLectureComponent {
   protected readonly store = inject(SceneStageStore);
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly corps = viewChild<ElementRef<HTMLElement>>('corps');
 
   readonly scene = input.required<BolSceneModel>();
   readonly acts = input.required<readonly SceneActe[]>();
@@ -43,11 +43,22 @@ export class SceneLectureComponent {
   /** L'id seul : une nouvelle copie de la même scène (rechargement, préparation) ne compte pas comme un changement. */
   private readonly sceneId = computed(() => this.scene().id);
 
-  /** Les sections repliées d'un clic sur leur titre ; elles se rouvrent toutes à chaque nouvelle scène, qu'on lise son texte depuis le début. */
-  private readonly repliees = linkedSignal<ReadonlySet<SectionLecture>>(() => {
-    this.sceneId();
-    return new Set();
+  /** Les onglets de la scène : le texte à lire toujours, les règles et le secret quand ils sont écrits. */
+  protected readonly onglets = computed((): readonly {cle: TexteLecture; label: string}[] => {
+    const scene = this.scene();
+    return [
+      {cle: 'lire', label: 'À lire aux joueurs'},
+      ...(scene.jeu ? [{cle: 'jeu' as const, label: 'En jeu'}] : []),
+      ...(scene.notes ? [{cle: 'secret' as const, label: 'Secret du MJ'}] : []),
+    ];
   });
+
+  /** L'onglet ouvert ; chaque nouvelle scène rouvre son texte à lire, depuis le début. */
+  protected readonly actif = linkedSignal<TexteLecture>(() => {
+    this.sceneId();
+    return 'lire';
+  });
+
   protected readonly pistes = computed<readonly PisteAffichee[]>(() =>
     (this.scene().pistes ?? []).map((piste) => ({
       ...piste,
@@ -56,24 +67,18 @@ export class SceneLectureComponent {
   );
 
   constructor() {
-    // Une nouvelle scène : la lecture repart du haut, le MJ lit son texte depuis le début.
+    // Une nouvelle scène, ou un autre onglet : le texte repart du haut.
     effect(() => {
       this.sceneId();
-      untracked(() => (this.host.nativeElement.scrollTop = 0));
-    });
-  }
-
-  protected fermee(section: SectionLecture): boolean {
-    return this.repliees().has(section);
-  }
-
-  protected basculer(section: SectionLecture): void {
-    this.repliees.update((ensemble) => {
-      const suivant = new Set(ensemble);
-      if (!suivant.delete(section)) {
-        suivant.add(section);
+      this.actif();
+      const corps = untracked(() => this.corps())?.nativeElement;
+      if (corps) {
+        corps.scrollTop = 0;
       }
-      return suivant;
     });
+  }
+
+  protected ouvrir(onglet: TexteLecture): void {
+    this.actif.set(onglet);
   }
 }

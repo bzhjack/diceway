@@ -1,42 +1,42 @@
-// Le carnet du MJ, à gauche de la table : un pupitre de fer qui défile seul. Pas de marge en haut : les titres de section y restent
-// collés en défilant, et un texte qui passerait dans cette marge se verrait au-dessus d'eux.
+// Le carnet du MJ, à gauche de la table : une carte de fer, ses onglets en haut, le texte ouvert qui défile seul, puis « Ensuite ».
 :host {
-  --lec-tete-h: 3rem;
-  --lec-titre-h: calc(2.6rem * var(--lec-k, 1));
-  // Le fond du pupitre, et de ses titres collés, opaques pour que le texte passe dessous sans se voir.
+  // Le fond du carnet.
   --lec-fond: var(--dw-forge-iron) 0 0 / 420px, var(--dw-table-panel);
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: 0 1.1rem 0.6rem;
-  overflow-y: auto;
+  overflow: hidden;
   border: 1px solid var(--dw-forge-bronze-edge);
-  border-radius: 7px;
+  border-radius: 10px;
   background: var(--lec-fond);
   box-shadow:
     inset 0 1px 0 rgba(255, 214, 160, 0.17),
     0 18px 40px rgba(0, 0, 0, 0.55);
-  scrollbar-width: thin;
-  scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
 }
 
-// L'en-tête du pupitre : ses actions, collées en haut avec la pile des titres qui s'empile juste dessous.
+// En grand : une fenêtre de lecture, le texte une fois et demie plus gros.
+:host(.lec--grand) {
+  --lec-k: 1.5;
+  width: min(80rem, 96vw);
+  max-height: 88dvh;
+  border-color: var(--dw-forge-bronze);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
+}
+
+// Les onglets, puis les actions du carnet.
 .lec-tete {
-  position: var(--lec-sticky, sticky);
-  top: 0;
-  z-index: 4;
-  box-sizing: border-box;
-  display: flex;
   flex: none;
+  display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.2rem;
-  height: var(--lec-tete-h);
+  gap: 0.15rem;
+  padding: 0 0.4rem 0 0.5rem;
   border-bottom: 1px solid var(--dw-forge-bronze-edge);
-  background: var(--lec-fond);
 
   .mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 2.2rem;
+    --mat-icon-button-icon-size: 1.15rem;
+    padding: 0;
     color: var(--dw-forge-stud-text);
 
     &:hover {
@@ -45,121 +45,74 @@
   }
 }
 
-.lec-tete-titre {
-  margin-right: auto;
-  color: var(--dw-forge-gold);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-// En grand : une fenêtre de lecture, le texte une fois et demie plus gros, qui défile seule si la scène est longue.
-:host(.lec--grand) {
-  --lec-k: 1.5;
-  width: min(80rem, 96vw);
-  max-height: 88dvh;
-  padding: 0 1.8rem 0.8rem;
-  border-color: var(--dw-forge-bronze);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
-}
-
-// Les sections n'ont pas de boîte : leurs titres sont des enfants directs du pupitre, donc collés à lui. Chaque titre se range sous ceux
-// des sections précédentes (rang `n` : `n - 1` hauteurs de titre), et ils s'empilent en haut à mesure qu'on défile.
-.lec-bloc {
-  display: contents;
-
-  // L'écart avec la section suivante.
-  > :last-child {
-    margin-bottom: 1.1rem;
-  }
-
-  &:nth-of-type(2) .lec-titre {
-    top: calc(var(--lec-tete-h) + var(--lec-titre-h));
-  }
-
-  &:nth-of-type(3) .lec-titre {
-    top: calc(var(--lec-tete-h) + 2 * var(--lec-titre-h));
-  }
-
-  &:nth-of-type(4) .lec-titre {
-    top: calc(var(--lec-tete-h) + 3 * var(--lec-titre-h));
-  }
-}
-
-.lec-titre {
-  // Sur un écran étroit la page défile, pas le pupitre : les titres restent en place (`--lec-sticky` posée par le plateau).
-  position: var(--lec-sticky, sticky);
-  top: var(--lec-tete-h);
-  // Au-dessus du contenu qui défile dessous : le libellé des boutons Material (« Scène 3 ») porte son propre z-index 1, et
-  // passerait sinon par-dessus les titres collés.
-  z-index: 3;
-  box-sizing: border-box;
-  // Le pupitre est une colonne flex : sans `flex: none`, les titres se comprimeraient et les décalages d'empilement ne tomberaient plus juste.
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  height: var(--lec-titre-h);
-  margin: 0 0 0.5rem;
-  border-bottom: 1px solid var(--dw-forge-bronze-edge);
-  background: var(--lec-fond);
-  color: var(--dw-forge-gold);
-  font-size: calc(0.85rem * var(--lec-k, 1));
-  font-weight: 700;
-
-  .mat-icon {
-    width: 1.1em;
-    height: 1.1em;
-    font-size: 1.1em;
-  }
-}
-
-// Le titre est un bouton pleine largeur : un clic replie ou déplie la section.
-.lec-deplier {
+.lec-onglets {
   display: flex;
   flex: 1;
+  min-width: 0;
+  margin-right: auto;
+}
+
+// Un onglet : un choix dans un groupe, souligné d'or quand il est ouvert.
+.lec-onglet {
+  display: inline-flex;
   align-items: center;
-  align-self: stretch;
-  gap: 0.45rem;
-  padding: 0;
+  gap: 0.35rem;
+  height: calc(2.6rem * var(--lec-k, 1));
+  padding: 0 0.7rem;
   border: 0;
-  border-radius: var(--dw-radius-toggle);
+  border-bottom: 2px solid transparent;
+  border-radius: var(--dw-radius-toggle) var(--dw-radius-toggle) 0 0;
   background: transparent;
-  color: inherit;
+  color: var(--dw-forge-caption);
   font: inherit;
-  text-align: left;
+  font-size: calc(0.82rem * var(--lec-k, 1));
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
 
+  mat-icon {
+    width: 1em;
+    height: 1em;
+    font-size: 1em;
+  }
+
   &:hover {
-    background: rgba(217, 164, 65, 0.08);
+    color: var(--dw-forge-bone);
   }
 
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
     outline-offset: -2px;
   }
+
+  &[aria-pressed='true'] {
+    border-bottom-color: var(--dw-forge-gold);
+    color: var(--dw-forge-name);
+  }
 }
 
-.lec-chevron {
-  margin-left: auto;
-  transition: transform 0.2s ease-out;
-}
-
-.lec-chevron--ferme {
-  transform: rotate(-90deg);
-}
-
-.lec-titre--secret {
+.lec-onglet--secret[aria-pressed='true'] {
+  border-bottom-color: var(--dw-forge-verdict-echec);
   color: var(--dw-forge-verdict-echec);
+}
+
+.lec-corps {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem 1.15rem 1rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 // Le texte à lire, avec sa lettrine.
 .lec-texte {
   margin: 0;
   color: var(--dw-color-text-bright);
-  font-size: calc(1.12rem * var(--lec-k, 1));
-  line-height: 1.58;
+  font-size: calc(1.05rem * var(--lec-k, 1));
+  line-height: 1.6;
   white-space: pre-line;
 
   &::first-letter {
@@ -182,62 +135,103 @@
   align-self: flex-start;
 }
 
-// Les règles de la scène : jets, difficultés, tables d'effets, toujours lisibles.
-.lec-jeu {
-  margin: 0;
-  color: var(--dw-surface-800);
-  font-size: calc(0.92rem * var(--lec-k, 1));
-  line-height: 1.5;
-  white-space: pre-line;
-}
-
+// Les règles de la scène, et le secret du MJ.
+.lec-jeu,
 .lec-secret {
   margin: 0;
   color: var(--dw-surface-800);
-  font-size: calc(0.92rem * var(--lec-k, 1));
-  line-height: 1.5;
+  font-size: calc(0.95rem * var(--lec-k, 1));
+  line-height: 1.55;
   white-space: pre-line;
+}
+
+// Ensuite : les pistes, toujours en vue au pied du carnet.
+.lec-ensuite {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 40%;
+  padding: 0.55rem 0.7rem 0.7rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  border-top: 1px solid var(--dw-forge-bronze-edge);
+}
+
+.lec-ensuite-titre {
+  margin: 0 0 0.1rem 0.15rem;
+  font-size: calc(0.65rem * var(--lec-k, 1));
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dw-forge-caption);
 }
 
 .lec-pistes {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+// Une piste : la scène où elle mène, puis ce qui y conduit ; un clic ouvre l'aperçu de la scène, d'où on la charge.
 .lec-piste {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.6rem;
-  color: var(--dw-surface-800);
-  font-size: calc(0.92rem * var(--lec-k, 1));
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.45rem 0.6rem;
+  border: 1px dashed color-mix(in srgb, var(--dw-forge-name) 45%, transparent);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: calc(0.8rem * var(--lec-k, 1));
+  text-align: left;
+  cursor: pointer;
 
-  &::before {
-    content: '';
-    flex: none;
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 50%;
-    background: var(--dw-forge-gold);
+  &:hover:not([aria-disabled='true']) {
+    border-color: var(--dw-forge-name);
   }
 
-  span {
-    flex: 1;
-    min-width: 0;
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
   }
 
-  button {
-    flex: none;
+  &[aria-disabled='true'] {
+    cursor: progress;
   }
 }
 
-// Le crédit des icônes (licence CC BY), tout au bout des notes.
-@media (prefers-reduced-motion: reduce) {
-  .lec-chevron {
-    transition: none;
+.lec-piste--sans-scene {
+  border-color: var(--dw-forge-bronze-edge);
+  cursor: default;
+}
+
+.lec-piste-texte {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+
+  b {
+    color: var(--dw-color-text-bright);
+    font-weight: 700;
   }
+
+  span {
+    color: var(--dw-forge-caption);
+  }
+}
+
+.lec-piste-aller {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.1rem;
+  color: var(--dw-forge-gold);
 }

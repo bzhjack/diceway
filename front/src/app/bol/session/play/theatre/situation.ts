@@ -1,54 +1,95 @@
+import {CdkTrapFocus} from '@angular/cdk/a11y';
 import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
+import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, Observable} from 'rxjs';
+import {concat, last, map, Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
-import {DwGemmesComponent} from '../../../../shared/gemmes/gemmes';
+import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {AmbianceOption} from '../../models/theatre.model';
 import {CombatantAttitude, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {BolHerosService} from '../../../services/bol-heros.service';
-import {heroismeGems} from '../../heroisme-spend.util';
+import {combatantKindIcon} from '../../combat-statblock.util';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {ReservePlacementService} from '../../reserve-placement.service';
 import {StageDragDirective} from '../reserve/stage-drag.directive';
-import {isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
+import {isLowVitalite, vitaliteText} from '../tapis/tapis.util';
 import {ATTITUDES, compagnie, troupe} from './theatre.util';
 
-/** Une ligne de la feuille, avec ses valeurs déjà calculées. */
-interface Ligne {
+/** Un exemplaire sur sa carte : son numéro (« #2 », null s'il est seul) et sa vitalité. */
+interface Exemplaire {
   readonly card: TapisCard;
-  readonly avatar: string | null;
-  readonly percent: number;
+  readonly numero: string | null;
   readonly low: boolean;
   readonly tombe: boolean;
   readonly vitalite: string;
-  readonly atMax: boolean;
+}
+
+/** Une carte de la situation : une fiche et ses exemplaires à la table (deux gardes d'une même fiche, dans le même camp, n'en font
+ * qu'une), avec ses valeurs déjà calculées. Ses caractéristiques et son portrait sont ceux du premier exemplaire. */
+interface Carte {
+  readonly key: string;
+  readonly card: TapisCard;
+  readonly cards: readonly TapisCard[];
+  readonly nom: string;
+  readonly avatar: string | null;
+  readonly exemplaires: readonly Exemplaire[];
+  /** L'attitude commune aux exemplaires, null sans attitude ou s'ils diffèrent. */
   readonly attitude: AmbianceOption<CombatantAttitude> | null;
+  /** L'infobulle du point de l'attitude : « Méfiant », « Méfiants », « Attitudes diverses », « Sans attitude ». */
+  readonly attitudeTitre: string;
+  /** Les exemplaires n'ont pas tous la même attitude. */
+  readonly attitudesDiverses: boolean;
+  readonly tombe: boolean;
+  /** Un exemplaire au moins est bas ou à terre (sans qu'ils le soient tous) : le cœur d'un groupe s'assombrit. */
+  readonly basse: boolean;
+  /** La vitalité de tous ses exemplaires : « 10/12 ». */
+  readonly vitaliteTotale: string;
   readonly heroisme: number;
-  readonly gems: readonly boolean[];
-  readonly melee: string;
-  readonly tir: string;
-  readonly initiative: string;
+  /** Sa sorte, en infobulle de son icône : « PNJ », « Créature », « Démon » (vide pour un héros). */
+  readonly type: string;
+  readonly icone: string;
 }
 
-const AUCUNE = '—';
+const TYPES: Record<TapisCard['kind'], string> = {hero: '', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
 
-/** Une caractéristique de combat telle qu'elle s'écrit sur la feuille : « 2 », « −1 », ou un tiret quand le personnage n'en a pas. */
-function stat(valeur: number | null | undefined): string {
-  if (valeur === null || valeur === undefined) {
-    return AUCUNE;
+/** Le pluriel d'une attitude : « méfiants », « amicaux ». */
+const PLURIELS: Record<CombatantAttitude, string> = {hostile: 'hostiles', mefiant: 'méfiants', neutre: 'neutres', amical: 'amicaux'};
+
+/** Les attitudes d'un camp, comptées dans leur ordre (de la plus hostile à la plus amicale) : « 1 hostile, 3 méfiants » ; ceux sans
+ * attitude en dernier. */
+function compteDesAttitudes(cards: readonly TapisCard[]): string {
+  const parties = ATTITUDES.map((a) => {
+    const n = cards.filter((c) => c.attitude === a.value).length;
+    return n ? `${n} ${n > 1 ? PLURIELS[a.value] : a.label.toLowerCase()}` : null;
+  }).filter((p): p is string => p !== null);
+  const sans = cards.filter((c) => c.attitude === null).length;
+  return [...parties, ...(sans ? [`${sans} sans attitude`] : [])].join(', ');
+}
+
+/** Le nom d'un exemplaire sans son numéro de table : « Soldat du guet #2 » → « Soldat du guet ». */
+const NUMERO = /\s#(\d+)$/;
+
+/** Les cartes de la table regroupées par fiche, dans leur ordre : les exemplaires d'une même fiche dans le même camp se suivent sur une
+ * carte ; un héros reste seul. */
+function regrouper(cards: readonly TapisCard[]): TapisCard[][] {
+  const groupes = new Map<string, TapisCard[]>();
+  for (const card of cards) {
+    const cle = card.kind === 'hero' || !card.sourceId ? card.key : `${card.kind}|${card.sourceId}|${card.camp}`;
+    groupes.set(cle, [...(groupes.get(cle) ?? []), card]);
   }
-  return valeur < 0 ? `−${Math.abs(valeur)}` : String(valeur);
+  return [...groupes.values()];
 }
 
-/** La vitalité totale d'un groupe de lignes : « 29/31 ». */
+/** La vitalité totale d'un groupe de cartes : « 29/31 ». */
 function totalVitalite(cards: readonly TapisCard[]): string {
   const courante = cards.reduce((n, c) => n + Math.max(0, c.vitaliteCourante ?? 0), 0);
   const max = cards.reduce((n, c) => n + (c.vitaliteMax ?? 0), 0);
@@ -56,25 +97,33 @@ function totalVitalite(cards: readonly TapisCard[]): string {
 }
 
 /**
- * La feuille de situation de la table, hors combat : chaque personnage sur sa ligne, de quoi juger d'un coup d'œil. En haut, ceux d'en
- * face (rangés comme sur la rampe, par rang), puis la compagnie : ses héros, puis ses alliés. Sur chaque ligne : un portrait carré, le
- * nom (un clic ouvre la carte, Ctrl + clic la sélectionne), le rang (l'héroïsme d'un héros), l'attitude (à changer d'un menu), la
- * vitalité réglable pas à pas, la mêlée, le tir, la défense, l'initiative et les dégâts ; au bout, le jet d'un héros, ou le menu « ⋯ »
- * des autres (ouvrir la carte, changer de camp). Chaque pas est enregistré aussitôt et rendu à la page (`changed`). Les deux sections
- * sont les zones de dépôt `adversaires` et `heros` : un personnage glissé depuis les coulisses y entre, une ligne glissée de l'une à
- * l'autre change de camp. Un pas impossible ou en cours marque son bouton `aria-disabled` sans le désactiver.
+ * La situation de la table, hors combat : les deux camps côte à côte, en tuiles comme la distribution de « Préparer la scène », tout en
+ * vue sans défiler. À gauche ceux d'en face (rangés par rang, avec le compte de leurs attitudes et « Ajouter »), à droite la compagnie :
+ * ses héros, puis ses alliés. Les exemplaires d'une même fiche n'ont qu'une tuile, empilée en paquet, un cœur chacun. Chaque tuile est
+ * réduite à l'essentiel, pour une vue d'ensemble : le portrait, et posés dessus le nombre d'exemplaires et un cœur (la vitalité
+ * dedans pour un personnage seul ; vide pour un groupe, il ouvre le détail de chaque exemplaire) ; le nom suivi du point de l'attitude
+ * de ceux d'en face (son nom en infobulle, son menu d'un clic), le rang et l'icône de la sorte. Un héros a un pied : ses points
+ * d'héroïsme dans un écusson et son jet. Un clic n'importe où sur la tuile ouvre la carte du personnage, où se règlent sa vitalité et son
+ * héroïsme ; Ctrl + clic la sélectionne. L'attitude est
+ * enregistrée aussitôt et rendue à la page (`changed`). Les deux camps sont les zones de dépôt `adversaires` et `heros` : un
+ * personnage glissé depuis les coulisses y entre, une tuile glissée de l'un à l'autre change de camp.
  */
 @Component({
   selector: 'bol-situation',
   imports: [
     AvatarFallbackDirective,
+    CdkConnectedOverlay,
     CdkDrag,
     CdkDragPreview,
     CdkDropList,
-    DwGemmesComponent,
+    CdkOverlayOrigin,
+    CdkTrapFocus,
+    DwPopoverDirective,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatTooltipModule,
+    NgTemplateOutlet,
     StageDragDirective,
   ],
   templateUrl: './situation.html',
@@ -84,7 +133,6 @@ function totalVitalite(cards: readonly TapisCard[]): string {
 export class SituationComponent {
   private readonly placement = inject(ReservePlacementService);
   private readonly fightSessionService = inject(BolFightSessionService);
-  private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
 
   readonly cards = input.required<readonly TapisCard[]>();
@@ -94,24 +142,33 @@ export class SituationComponent {
   readonly cardToggled = output<TapisCard>();
   readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
-  /** Une vitalité, un héroïsme ou une attitude a été enregistré : la page met la session à jour. */
+  /** Une attitude a été enregistrée : la page met la session à jour. */
   readonly changed = output<TableChange>();
+  /** « Ajouter », dans l'en-tête de ceux d'en face : la page ouvre les coulisses. */
+  readonly ajouterDemande = output<void>();
+  /** Les coulisses sont ouvertes (pour l'état du bouton « Ajouter »). */
+  readonly coulissesOpen = input(false);
 
   protected readonly attitudes = ATTITUDES;
+  /** La tuile (sa clé) dont le détail de la vie est ouvert. */
+  protected readonly vieOuverte = signal<string | null>(null);
 
   /** Portraits qui n'ont pas pu se charger : repli sur l'initiale. */
   private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
-  /** Pas en cours d'enregistrement, par personnage et par ressource (« pnj-3:vitalite ») : un autre pas sur la même ressource est
-   * ignoré tant que celui-ci n'est pas revenu. Le verrou ne se voit pas : seules les vraies limites grisent un bouton. */
+  /** Attitudes en cours d'enregistrement, par carte : un autre choix sur la même carte est ignoré tant que celui-ci n'est pas revenu. */
   private readonly pending = signal<ReadonlySet<string>>(new Set());
 
   private readonly enFaceCards = computed(() => troupe(this.cards()).map((t) => t.card));
   private readonly groupes = computed(() => compagnie(this.cards()));
-  protected readonly enFace = computed(() => this.enFaceCards().map((card) => this.ligne(card)));
-  protected readonly heros = computed(() => this.groupes().heros.map((card) => this.ligne(card)));
-  protected readonly allies = computed(() => this.groupes().allies.map((card) => this.ligne(card)));
+  protected readonly enFace = computed(() => regrouper(this.enFaceCards()).map((cards) => this.carte(cards)));
+  protected readonly heros = computed(() => this.groupes().heros.map((card) => this.carte([card])));
+  protected readonly allies = computed(() => regrouper(this.groupes().allies).map((cards) => this.carte(cards)));
+  protected readonly nombreEnFace = computed(() => this.enFaceCards().length);
+  protected readonly nombreAllies = computed(() => this.groupes().allies.length);
   protected readonly vitaliteEnFace = computed(() => totalVitalite(this.enFaceCards()));
   protected readonly vitaliteCompagnie = computed(() => totalVitalite([...this.groupes().heros, ...this.groupes().allies]));
+  /** Les attitudes de ceux d'en face, comptées : « 1 hostile, 3 méfiants, 1 neutre ». */
+  protected readonly attitudesEnFace = computed(() => compteDesAttitudes(this.enFaceCards()));
 
   /** Une zone s'allume pendant un glisser qui peut y finir : pas une ligne qui en part, ni un héros vers les adversaires. */
   protected readonly enFaceDroppable = computed(
@@ -124,80 +181,109 @@ export class SituationComponent {
   /** Aucune liste ne reçoit de ligne : CDK n'est là que pour l'aperçu du glisser. */
   protected readonly rejectDrop = (): boolean => false;
 
-  private ligne(card: TapisCard): Ligne {
+  private carte(cards: readonly TapisCard[]): Carte {
+    const card = cards[0];
+    const plusieurs = cards.length > 1;
+    const attitudes = new Set(cards.map((c) => c.attitude));
+    const commune = attitudes.size === 1 ? (ATTITUDES.find((a) => a.value === card.attitude) ?? null) : null;
+    const attitude = card.camp === 'adversaires' ? commune : null;
     const heroisme = card.heroisme ?? 0;
+    const exemplaires = cards.map((c, index): Exemplaire => ({
+      card: c,
+      numero: plusieurs ? `#${NUMERO.exec(c.nom)?.[1] ?? index + 1}` : null,
+      low: isLowVitalite(c.vitaliteCourante, c.vitaliteMax),
+      tombe: c.vitaliteCourante !== null && c.vitaliteMax !== null && c.vitaliteCourante <= 0,
+      vitalite: vitaliteText(c),
+    }));
     return {
+      key: card.key,
       card,
+      cards,
+      nom: plusieurs ? card.nom.replace(NUMERO, '') : card.nom,
       avatar: this.brokenAvatars().has(card.key) ? null : usableAvatar(card.avatar),
-      percent: vitalitePercent(card.vitaliteCourante, card.vitaliteMax),
-      low: isLowVitalite(card.vitaliteCourante, card.vitaliteMax),
-      tombe: card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante <= 0,
-      vitalite: vitaliteText(card),
-      atMax: card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax,
-      attitude: card.camp === 'adversaires' ? (ATTITUDES.find((a) => a.value === card.attitude) ?? null) : null,
+      exemplaires,
+      attitude,
+      attitudeTitre: attitude
+        ? plusieurs
+          ? PLURIELS[attitude.value].replace(/^./, (l) => l.toUpperCase())
+          : attitude.label
+        : attitudes.size > 1
+          ? 'Attitudes diverses'
+          : 'Sans attitude',
+      attitudesDiverses: card.camp === 'adversaires' && attitudes.size > 1,
+      tombe: exemplaires.every((e) => e.tombe),
+      basse: exemplaires.some((e) => e.low || e.tombe) && !exemplaires.every((e) => e.tombe),
+      vitaliteTotale: totalVitalite(cards),
       heroisme,
-      gems: heroismeGems(heroisme),
-      melee: stat(card.melee),
-      tir: stat(card.tir),
-      initiative: stat(card.initiative),
+      type: TYPES[card.kind],
+      icone: combatantKindIcon(card.kind),
     };
+  }
+
+  /** Un exemplaire au moins est sélectionné (Ctrl + clic). */
+  protected selectionnee(carte: Carte): boolean {
+    return carte.cards.some((c) => this.selectedKeys().has(c.key));
   }
 
   protected onAvatarError(card: TapisCard): void {
     this.brokenAvatars.update((set) => new Set(set).add(card.key));
   }
 
-  protected onNomClick(card: TapisCard, event: MouseEvent): void {
+  /** Un clic sur la tuile (le portrait la couvre, hors de ses autres boutons) ouvre le détail du personnage (du premier exemplaire), où se
+   * règlent sa vitalité et son héroïsme ; Ctrl + clic sélectionne tous les exemplaires. */
+  protected onPortraitClick(carte: Carte, event: MouseEvent): void {
     if (event.ctrlKey || event.metaKey) {
-      this.selectToggled.emit(card);
+      carte.cards.forEach((c) => this.selectToggled.emit(c));
     } else {
-      this.cardToggled.emit(card);
+      this.cardToggled.emit(carte.card);
     }
   }
 
-  protected stepVitalite(card: TapisCard, delta: number): void {
-    if (delta > 0 && card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax) {
-      return;
-    }
-    this.save(
-      `${card.key}:vitalite`,
-      () => this.fightSessionService.applyDamage(this.sessionId(), card.kind, card.pivotId, delta).pipe(map((session) => ({session}))),
-      'Impossible de mettre à jour la vitalité.',
-    );
+  /** Une ligne du détail de la vie d'un groupe ouvre la carte de son exemplaire. */
+  protected ouvrirExemplaire(card: TapisCard): void {
+    this.vieOuverte.set(null);
+    this.cardToggled.emit(card);
   }
 
-  protected stepHeroisme(card: TapisCard, delta: number): void {
-    if (!card.sourceId || (delta < 0 && (card.heroisme ?? 0) <= 0)) {
-      return;
+  protected touche(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.vieOuverte.set(null);
     }
-    const herosId = card.sourceId;
-    this.save(
-      `${card.key}:heroisme`,
-      () => this.herosService.adjustHeroisme(herosId, delta).pipe(map((hero) => ({herosId, heroisme: hero.ressources.heroisme}))),
-      "Impossible de mettre à jour l'héroïsme.",
-    );
   }
 
-  protected choisirAttitude(card: TapisCard, attitude: CombatantAttitude | null): void {
-    if (card.kind === 'hero' || card.attitude === attitude) {
+  /** L'attitude choisie vaut pour tous les exemplaires de la carte : chacun est enregistré à son tour, la page reçoit la table à la fin. */
+  protected choisirAttitude(cards: readonly TapisCard[], attitude: CombatantAttitude | null): void {
+    const aChanger = cards.filter((c) => c.kind !== 'hero' && c.attitude !== attitude);
+    if (!aChanger.length) {
       return;
     }
-    const kind = card.kind;
     this.save(
-      `${card.key}:attitude`,
-      () => this.fightSessionService.setAttitude(this.sessionId(), kind, card.pivotId, attitude).pipe(map((session) => ({session}))),
+      `${cards[0].key}:attitude`,
+      () =>
+        concat(
+          ...aChanger.map((c) => this.fightSessionService.setAttitude(this.sessionId(), c.kind as 'pnj' | 'creature' | 'demon', c.pivotId, attitude)),
+        ).pipe(
+          last(),
+          map((session) => ({session})),
+        ),
       "Impossible de changer l'attitude.",
     );
   }
 
-  /** Une ligne déposée sur l'autre section change de camp. */
-  protected onStageDropped(camp: CombatCamp | null, card: TapisCard): void {
-    if (camp !== null && camp !== card.camp) {
-      this.campToggleRequested.emit(card);
+  /** Tous les exemplaires de la tuile changent de camp. */
+  protected changerDeCamp(carte: Carte): void {
+    carte.cards.forEach((c) => this.campToggleRequested.emit(c));
+  }
+
+  /** Une tuile déposée sur l'autre camp en change (c'est la seule façon d'en changer). */
+  protected onStageDropped(camp: CombatCamp | null, carte: Carte): void {
+    if (camp !== null && camp !== carte.card.camp) {
+      this.changerDeCamp(carte);
     }
   }
 
-  /** Enregistre un pas ; un autre pas sur la même ressource est ignoré tant que celui-ci n'est pas revenu. */
+  /** Enregistre un changement ; un autre sur la même carte est ignoré tant que celui-ci n'est pas revenu. */
   private save(key: string, request: () => Observable<TableChange>, errorMessage: string): void {
     if (this.pending().has(key)) {
       return;

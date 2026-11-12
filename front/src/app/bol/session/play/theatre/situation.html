@@ -1,307 +1,251 @@
-<table class="sit">
-  <caption class="sr-only">La situation : ceux d'en face, puis la compagnie ; un clic sur un nom ouvre sa carte.</caption>
-  <thead>
-    <tr>
-      <th scope="col">Personnage</th>
-      <th scope="col">Rang</th>
-      <th scope="col">Attitude</th>
-      <th scope="col">Vitalité</th>
-      <th scope="col" class="sit-num"><abbr title="Mêlée">Mêl</abbr></th>
-      <th scope="col" class="sit-num">Tir</th>
-      <th scope="col" class="sit-num"><abbr title="Défense">Déf</abbr></th>
-      <th scope="col" class="sit-num"><abbr title="Initiative">Init</abbr></th>
-      <th scope="col" class="sit-num"><abbr title="Dégâts">Dég</abbr></th>
-      <th scope="col"><span class="sr-only">Actions</span></th>
-    </tr>
-  </thead>
+<!-- Ceux d'en face, à gauche, en tuiles (les exemplaires d'une fiche partagent la leur) : la zone de dépôt des adversaires. -->
+<section
+  class="sit-camp sit-camp--face"
+  data-drop-camp="adversaires"
+  aria-labelledby="sit-face-titre"
+  [class.sit-camp--droppable]="enFaceDroppable()"
+  [class.sit-camp--hot]="enFaceHot()"
+>
+  <div class="sit-camp-tete">
+    <h2 class="sit-camp-titre" id="sit-face-titre">En face</h2>
+    <span class="sit-camp-detail">
+      {{ nombreEnFace() }}
+      @if (nombreEnFace()) {
+        · {{ vitaliteEnFace() }} PV · {{ attitudesEnFace() }}
+      }
+    </span>
+    <button
+      mat-stroked-button
+      type="button"
+      class="sit-ajouter"
+      aria-controls="spp-coulisses-panel"
+      [attr.aria-expanded]="coulissesOpen()"
+      (click)="ajouterDemande.emit()"
+    >
+      <mat-icon>person_add</mat-icon> Ajouter
+    </button>
+  </div>
+  <ul class="sit-grille sit-grille--face" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
+    @for (c of enFace(); track c.key) {
+      <li cdkDrag [bolStageDrag]="{kind: c.card.kind, camp: c.card.camp}" (stageDropped)="onStageDropped($event, c)">
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+        <div *cdkDragPreview class="sit-fantome">
+          <img dwAvatarFallback [src]="c.card.avatar" alt="" draggable="false" />
+          <span>{{ c.nom }}{{ c.cards.length > 1 ? ' ×' + c.cards.length : '' }}</span>
+        </div>
+      </li>
+    } @empty {
+      <li class="sit-indice">Personne en face : « Ajouter » les fait entrer, ou glissez-les ici depuis les coulisses.</li>
+    }
+  </ul>
+</section>
 
-  <!-- Ceux d'en face : la zone de dépôt des adversaires. -->
-  <tbody
-    class="sit-groupe"
-    data-drop-camp="adversaires"
-    cdkDropList
-    [cdkDropListSortingDisabled]="true"
-    [cdkDropListEnterPredicate]="rejectDrop"
-    [class.sit-groupe--droppable]="enFaceDroppable()"
-    [class.sit-groupe--hot]="enFaceHot()"
+<!-- La compagnie, à droite : ses héros, puis ses alliés ; la zone de dépôt du camp des héros. -->
+<section
+  class="sit-camp sit-camp--compagnie"
+  data-drop-camp="heros"
+  aria-labelledby="sit-compagnie-titre"
+  [class.sit-camp--droppable]="compagnieDroppable()"
+  [class.sit-camp--hot]="compagnieHot()"
+>
+  <div class="sit-camp-tete">
+    <h2 class="sit-camp-titre" id="sit-compagnie-titre">La compagnie</h2>
+    <span class="sit-camp-detail">
+      {{ heros().length }} héros · {{ vitaliteCompagnie() }} PV ·
+      {{ nombreAllies() ? nombreAllies() + ' allié' + (nombreAllies() > 1 ? 's' : '') : 'aucun allié' }}
+    </span>
+  </div>
+  <ul class="sit-grille sit-grille--compagnie" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
+    @for (c of heros(); track c.key) {
+      <li>
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+      </li>
+    }
+    @for (c of allies(); track c.key) {
+      <li cdkDrag [bolStageDrag]="{kind: c.card.kind, camp: c.card.camp}" (stageDropped)="onStageDropped($event, c)">
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+        <div *cdkDragPreview class="sit-fantome">
+          <img dwAvatarFallback [src]="c.card.avatar" alt="" draggable="false" />
+          <span>{{ c.nom }}{{ c.cards.length > 1 ? ' ×' + c.cards.length : '' }}</span>
+        </div>
+      </li>
+    }
+    @if (!nombreAllies()) {
+      <li class="sit-astuce">Glissez une tuile d'en face ici : elle devient alliée.</li>
+    }
+  </ul>
+</section>
+
+<!-- Une tuile, comme la distribution de « Préparer la scène », réduite à l'essentiel : le portrait, et posés dessus le nombre
+     d'exemplaires et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un pied : ses
+     points d'héroïsme et son jet. Les exemplaires d'une fiche s'empilent en paquet ; le cœur de chacun ouvre sa carte. Un clic n'importe où, hors de ses boutons, ouvre le détail du
+     personnage, où se règlent sa vitalité et son héroïsme. -->
+<ng-template #tuile let-c>
+  <article
+    [class]="'sit-carte sit-carte--' + (c.card.kind === 'hero' ? 'heros' : c.card.camp === 'heros' ? 'allie' : 'face')"
+    [class.sit-carte--groupe]="c.cards.length > 1"
+    [class.sit-carte--selected]="selectionnee(c)"
+    [class.sit-carte--tombe]="c.tombe"
+    [style.--sit-c]="c.attitude ? 'var(--sit-att-' + c.attitude.value + ')' : null"
   >
-    <tr class="sit-section sit-section--face">
-      <th scope="rowgroup" colspan="10">
-        En face · {{ enFace().length }}
-        @if (enFace().length) {
-          <span class="sit-section-pv">{{ vitaliteEnFace() }} PV</span>
+    <div class="sit-image">
+      <!-- Le portrait est le bouton de la tuile : sa zone de clic la couvre tout entière, sous ses autres boutons. -->
+      <button
+        type="button"
+        class="sit-portrait"
+        [attr.aria-label]="'Ouvrir la carte de ' + c.card.nom"
+        [attr.aria-pressed]="selectionnee(c) ? 'true' : null"
+        (click)="onPortraitClick(c, $event)"
+      >
+        @if (c.avatar) {
+          <img [src]="c.avatar" alt="" draggable="false" (error)="onAvatarError(c.card)" />
+        } @else {
+          <span class="sit-initiale" aria-hidden="true">{{ c.nom.charAt(0) }}</span>
         }
-      </th>
-    </tr>
-    @for (l of enFace(); track l.card.key) {
-      <tr
-        class="sit-ligne"
-        [class.sit-ligne--selected]="selectedKeys().has(l.card.key)"
-        [class.sit-ligne--tombe]="l.tombe"
-        cdkDrag
-        [bolStageDrag]="{kind: l.card.kind, camp: l.card.camp}"
-        (stageDropped)="onStageDropped($event, l.card)"
-      >
-        <td>
-          <span class="sit-qui">
-            <span class="sit-portrait" [style.--sit-anneau]="l.attitude ? 'var(--sit-att-' + l.attitude.value + ')' : null">
-              @if (l.avatar) {
-                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
-              } @else {
-                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
-              }
-            </span>
-            <button
-              type="button"
-              class="sit-nom"
-              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
-              (click)="onNomClick(l.card, $event)"
-            >
-              {{ l.card.nom }}
-            </button>
-          </span>
-          <div *cdkDragPreview class="sit-fantome">
-            <img dwAvatarFallback [src]="l.card.avatar" alt="" draggable="false" />
-            <span>{{ l.card.nom }}</span>
-          </div>
-        </td>
-        <td>
-          <span class="sit-rang">{{ l.card.rang }}</span>
-          @if (l.card.vilenie !== null) {
-            <span class="sit-vilenie">{{ l.card.vilenie }} vil.</span>
-          }
-        </td>
-        <td>
-          <button
-            type="button"
-            [class]="'sit-attitude sit-attitude--' + (l.attitude?.value ?? 'aucune')"
-            [attr.aria-label]="'Attitude de ' + l.card.nom + ' : ' + (l.attitude?.label ?? 'aucune')"
-            [matMenuTriggerFor]="menuAttitude"
-            [matMenuTriggerData]="{card: l.card}"
-          >
-            {{ l.attitude?.label ?? 'Aucune' }}<mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
-          </button>
-        </td>
-        <td>
-          <span class="sit-vie">
-            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
-            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
-            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
-            <button
-              type="button"
-              class="sit-pas"
-              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
-              [attr.aria-disabled]="l.atMax ? 'true' : null"
-              (click)="stepVitalite(l.card, 1)"
-            >
-              +
-            </button>
-          </span>
-        </td>
-        <td class="sit-num">{{ l.melee }}</td>
-        <td class="sit-num">{{ l.tir }}</td>
-        <td class="sit-num">{{ l.card.defense }}</td>
-        <td class="sit-num">{{ l.initiative }}</td>
-        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
-        <td class="sit-bout">
-          <button
-            mat-icon-button
-            type="button"
-            class="sit-plus"
-            [attr.aria-label]="'Plus d’actions sur ' + l.card.nom"
-            [matMenuTriggerFor]="menuLigne"
-            [matMenuTriggerData]="{card: l.card}"
-          >
-            <mat-icon>more_horiz</mat-icon>
-          </button>
-        </td>
-      </tr>
-    } @empty {
-      <tr>
-        <td class="sit-vide" colspan="10">Personne en face : « Ajouter des personnages » les fait entrer, ou glissez-les ici depuis les coulisses.</td>
-      </tr>
-    }
-  </tbody>
+      </button>
+      @if (c.cards.length > 1) {
+        <span class="sit-nombre" aria-hidden="true">×{{ c.cards.length }}</span>
+      }
 
-  <!-- La compagnie : ses héros, puis ses alliés ; la zone de dépôt du camp des héros. -->
-  <tbody
-    class="sit-groupe"
-    data-drop-camp="heros"
-    cdkDropList
-    [cdkDropListSortingDisabled]="true"
-    [cdkDropListEnterPredicate]="rejectDrop"
-    [class.sit-groupe--droppable]="compagnieDroppable()"
-    [class.sit-groupe--hot]="compagnieHot()"
-  >
-    <tr class="sit-section sit-section--compagnie">
-      <th scope="rowgroup" colspan="10">
-        La compagnie · {{ heros().length }} héros{{ allies().length ? ' et ' + allies().length + ' allié' + (allies().length > 1 ? 's' : '') : '' }}
-        <span class="sit-section-pv">{{ vitaliteCompagnie() }} PV</span>
-      </th>
-    </tr>
-    @for (l of heros(); track l.card.key) {
-      <tr class="sit-ligne" [class.sit-ligne--selected]="selectedKeys().has(l.card.key)" [class.sit-ligne--tombe]="l.tombe">
-        <td>
-          <span class="sit-qui">
-            <span class="sit-portrait sit-portrait--heros">
-              @if (l.avatar) {
-                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
-              } @else {
-                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
-              }
-            </span>
+      <!-- La vie, toujours en bas à droite : un cœur, ici sur le portrait (dans le pied pour un héros). Seul, sa vitalité dedans (le clic
+           le traverse jusqu'au portrait) ; pour un groupe, un cœur vide qui ouvre le détail de chaque exemplaire, d'où l'on ouvre sa carte. -->
+      @if (c.card.kind !== 'hero') {
+        <div class="sit-vies">
+          @if (c.cards.length === 1) {
+            <ng-container [ngTemplateOutlet]="coeurSeul" [ngTemplateOutletContext]="{$implicit: c.exemplaires[0]}" />
+          } @else {
             <button
               type="button"
-              class="sit-nom"
-              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
-              (click)="onNomClick(l.card, $event)"
+              class="sit-coeur sit-coeur--groupe"
+              cdkOverlayOrigin
+              #origineVie="cdkOverlayOrigin"
+              [class.sit-coeur--bas]="c.basse"
+              [class.sit-coeur--tombe]="c.tombe"
+              aria-haspopup="dialog"
+              [attr.aria-expanded]="vieOuverte() === c.key"
+              [attr.aria-label]="'Vitalité des ' + c.cards.length + ' exemplaires de ' + c.nom"
+              (click)="vieOuverte.set(c.key)"
             >
-              {{ l.card.nom }}
-              @if (l.card.joueur) {
-                <small>{{ l.card.joueur }}</small>
-              }
             </button>
-          </span>
-        </td>
-        <td>
-          <span class="sit-heroisme">
-            <button
-              type="button"
-              class="sit-pas"
-              [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + l.card.nom"
-              [attr.aria-disabled]="l.heroisme <= 0 ? 'true' : null"
-              (click)="stepHeroisme(l.card, -1)"
+            <ng-template
+              cdkConnectedOverlay
+              dwPopover="end"
+              [cdkConnectedOverlayOrigin]="origineVie"
+              [cdkConnectedOverlayOpen]="vieOuverte() === c.key"
+              (backdropClick)="vieOuverte.set(null)"
+              (overlayKeydown)="touche($event)"
+              (detach)="vieOuverte.set(null)"
             >
-              −
-            </button>
-            <dw-gemmes role="img" [attr.aria-label]="l.heroisme + ' points d’héroïsme'" [gems]="l.gems" />
-            <button type="button" class="sit-pas" [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + l.card.nom" (click)="stepHeroisme(l.card, 1)">+</button>
-          </span>
-        </td>
-        <td><span class="sit-tiret">—</span></td>
-        <td>
-          <span class="sit-vie">
-            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
-            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
-            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
-            <button
-              type="button"
-              class="sit-pas"
-              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
-              [attr.aria-disabled]="l.atMax ? 'true' : null"
-              (click)="stepVitalite(l.card, 1)"
-            >
-              +
-            </button>
-          </span>
-        </td>
-        <td class="sit-num">{{ l.melee }}</td>
-        <td class="sit-num">{{ l.tir }}</td>
-        <td class="sit-num">{{ l.card.defense }}</td>
-        <td class="sit-num">{{ l.initiative }}</td>
-        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
-        <td class="sit-bout">
-          <!-- Le jet d'action est sur la carte du héros, comme le clic sur son nom. -->
-          <button mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + l.card.nom" (click)="cardToggled.emit(l.card)">
-            <mat-icon>casino</mat-icon>
-          </button>
-        </td>
-      </tr>
-    } @empty {
-      <tr>
-        <td class="sit-vide" colspan="10">Aucun héros à table.</td>
-      </tr>
-    }
-    @for (l of allies(); track l.card.key) {
-      <tr
-        class="sit-ligne sit-ligne--allie"
-        [class.sit-ligne--selected]="selectedKeys().has(l.card.key)"
-        [class.sit-ligne--tombe]="l.tombe"
-        cdkDrag
-        [bolStageDrag]="{kind: l.card.kind, camp: l.card.camp}"
-        (stageDropped)="onStageDropped($event, l.card)"
-      >
-        <td>
-          <span class="sit-qui">
-            <span class="sit-portrait sit-portrait--allie">
-              @if (l.avatar) {
-                <img [src]="l.avatar" alt="" draggable="false" (error)="onAvatarError(l.card)" />
-              } @else {
-                <span aria-hidden="true">{{ l.card.nom.charAt(0) }}</span>
-              }
-            </span>
-            <button
-              type="button"
-              class="sit-nom"
-              [attr.aria-pressed]="selectedKeys().has(l.card.key) ? 'true' : null"
-              (click)="onNomClick(l.card, $event)"
-            >
-              {{ l.card.nom }}
-            </button>
-          </span>
-          <div *cdkDragPreview class="sit-fantome">
-            <img dwAvatarFallback [src]="l.card.avatar" alt="" draggable="false" />
-            <span>{{ l.card.nom }}</span>
-          </div>
-        </td>
-        <td><span class="sit-rang">{{ l.card.rang }}</span></td>
-        <td><span class="sit-allie">Allié</span></td>
-        <td>
-          <span class="sit-vie">
-            <button type="button" class="sit-pas" [attr.aria-label]="'Retirer 1 point de vitalité à ' + l.card.nom" (click)="stepVitalite(l.card, -1)">−</button>
-            <span class="sit-barre" aria-hidden="true"><i [class.sit-barre--bas]="l.low" [style.width.%]="l.percent"></i></span>
-            <b class="sit-vie-valeur">{{ l.vitalite }}</b>
-            <button
-              type="button"
-              class="sit-pas"
-              [attr.aria-label]="'Rendre 1 point de vitalité à ' + l.card.nom"
-              [attr.aria-disabled]="l.atMax ? 'true' : null"
-              (click)="stepVitalite(l.card, 1)"
-            >
-              +
-            </button>
-          </span>
-        </td>
-        <td class="sit-num">{{ l.melee }}</td>
-        <td class="sit-num">{{ l.tir }}</td>
-        <td class="sit-num">{{ l.card.defense }}</td>
-        <td class="sit-num">{{ l.initiative }}</td>
-        <td class="sit-num sit-degats">{{ l.card.degats }}</td>
-        <td class="sit-bout">
+              <div class="sit-pop" role="dialog" [attr.aria-label]="'Vitalité des exemplaires de ' + c.nom" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+                <p class="sit-pop-titre">{{ c.nom }}<span class="sit-pop-total">{{ c.vitaliteTotale }} PV</span></p>
+                <ul class="sit-pop-liste">
+                  @for (e of c.exemplaires; track e.card.key) {
+                    <li>
+                      <button
+                        type="button"
+                        class="sit-pop-ligne"
+                        [class.sit-pop-ligne--tombe]="e.tombe"
+                        [attr.aria-label]="'Ouvrir la carte de ' + e.card.nom + ' (vitalité ' + e.vitalite + ')'"
+                        (click)="ouvrirExemplaire(e.card)"
+                      >
+                        <span class="sit-pop-numero">{{ e.numero }}</span>
+                        <span class="sit-coeur" [class.sit-coeur--bas]="e.low" [class.sit-coeur--tombe]="e.tombe">
+                          <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
+                        </span>
+                        <span class="sit-pop-max">/ {{ e.card.vitaliteMax ?? '—' }}</span>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </ng-template>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="sit-texte">
+      <!-- Le nom, et à sa droite le point de l'attitude de ceux d'en face : son nom en infobulle, un clic ouvre son menu. -->
+      <div class="sit-tete">
+        <p class="sit-nom">
+          {{ c.nom }}
+          @if (c.cards.length > 1) {
+            <span class="sr-only">, {{ c.cards.length }} exemplaires</span>
+          }
+        </p>
+        @if (c.card.camp === 'adversaires') {
           <button
-            mat-icon-button
             type="button"
-            class="sit-plus"
-            [attr.aria-label]="'Plus d’actions sur ' + l.card.nom"
-            [matMenuTriggerFor]="menuLigne"
-            [matMenuTriggerData]="{card: l.card}"
-          >
-            <mat-icon>more_horiz</mat-icon>
-          </button>
-        </td>
-      </tr>
+            class="sit-attitude"
+            [class.sit-attitude--sans]="!c.attitude && !c.attitudesDiverses"
+            [class.sit-attitude--diverses]="c.attitudesDiverses"
+            [attr.aria-label]="'Attitude de ' + c.nom + ' : ' + (c.attitude?.label ?? (c.attitudesDiverses ? 'diverses' : 'aucune'))"
+            [matTooltip]="c.attitudeTitre"
+            matTooltipPosition="above"
+            [matMenuTriggerFor]="menuAttitude"
+            [matMenuTriggerData]="{cards: c.cards, attitude: c.attitude?.value ?? null}"
+          ></button>
+        }
+      </div>
+      @if (c.card.kind !== 'hero') {
+        <p class="sit-sous">
+          @if (c.card.rang) {
+            <span class="sit-rang">{{ c.card.rang }}</span>
+          }
+          <span class="sit-type" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>
+          @if (c.card.vilenie !== null) {
+            <span class="sit-vilenie">· {{ c.card.vilenie }} vil.</span>
+          }
+        </p>
+      }
+    </div>
+
+    @if (c.card.kind === 'hero') {
+      <!-- Le pied d'un héros : son jet (sur sa carte, comme le clic sur son portrait), puis à droite ses points d'héroïsme et son cœur,
+           en bas à droite comme celui des autres. -->
+      <div class="sit-bande sit-bande--heros">
+        <button mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + c.card.nom" (click)="cardToggled.emit(c.card)">
+          <mat-icon>casino</mat-icon>
+        </button>
+        <span class="sit-ecusson" role="img" [attr.aria-label]="'Héroïsme de ' + c.card.nom + ' : ' + c.heroisme">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" />
+          </svg>
+          <b aria-hidden="true">{{ c.heroisme }}</b>
+        </span>
+        <ng-container [ngTemplateOutlet]="coeurSeul" [ngTemplateOutletContext]="{$implicit: c.exemplaires[0]}" />
+      </div>
     }
-  </tbody>
-</table>
+  </article>
+</ng-template>
+
+<!-- Le cœur d'un personnage seul : une image, que le clic traverse jusqu'au portrait. -->
+<ng-template #coeurSeul let-e>
+  <span
+    class="sit-coeur"
+    [class.sit-coeur--bas]="e.low"
+    [class.sit-coeur--tombe]="e.tombe"
+    role="img"
+    [attr.aria-label]="'Vitalité de ' + e.card.nom + ' : ' + e.vitalite"
+  >
+    <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
+  </span>
+</ng-template>
+
+<!-- La vitalité d'un exemplaire, posée sur son cœur (dessiné en CSS). -->
+<ng-template #coeur let-e>
+  <b aria-hidden="true">{{ e.card.vitaliteCourante ?? '—' }}</b>
+</ng-template>
 
 <mat-menu #menuAttitude="matMenu">
-  <ng-template matMenuContent let-card="card">
+  <ng-template matMenuContent let-cards="cards" let-attitude="attitude">
     @for (option of attitudes; track option.value) {
-      <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.attitude === option.value" (click)="choisirAttitude(card, option.value)">
+      <button mat-menu-item role="menuitemradio" [attr.aria-checked]="attitude === option.value" (click)="choisirAttitude(cards, option.value)">
         <mat-icon>{{ option.icon }}</mat-icon>{{ option.label }}
       </button>
     }
-    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.attitude === null" (click)="choisirAttitude(card, null)">
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="attitude === null" (click)="choisirAttitude(cards, null)">
       <mat-icon>remove</mat-icon>Sans attitude
-    </button>
-  </ng-template>
-</mat-menu>
-
-<mat-menu #menuLigne="matMenu" xPosition="before">
-  <ng-template matMenuContent let-card="card">
-    <button mat-menu-item (click)="cardToggled.emit(card)"><mat-icon>open_in_full</mat-icon>Ouvrir sa carte</button>
-    <button mat-menu-item (click)="campToggleRequested.emit(card)">
-      <mat-icon>swap_horiz</mat-icon>{{ card.camp === 'adversaires' ? 'Passer du côté des héros' : 'Repasser en face' }}
     </button>
   </ng-template>
 </mat-menu>
