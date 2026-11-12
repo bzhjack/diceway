@@ -133,10 +133,13 @@
                 <button type="button" class="sl-ajout" (click)="nouvelleScene(vue)"><mat-icon aria-hidden="true">add</mat-icon> Scène</button>
               </section>
             }
-            <button type="button" class="sl-col sl-col--nouveau" (click)="nouveauChapitre(scenario)">
-              <span class="sl-medaille" aria-hidden="true"><mat-icon>add</mat-icon></span>
-              {{ scenario.chapitres.length ? 'Nouveau chapitre' : 'Aucun chapitre : en créer un' }}
-            </button>
+            <!-- Un chapitre s'ajoute par « + Chapitre » de l'en-tête ; sans aucun chapitre, le plateau le propose à la place du vide. -->
+            @if (!scenario.chapitres.length) {
+              <button type="button" class="sl-col sl-col--nouveau" (click)="nouveauChapitre(scenario)">
+                <span class="sl-medaille" aria-hidden="true"><mat-icon>add</mat-icon></span>
+                Aucun chapitre : en créer un
+              </button>
+            }
           </div>
           <button mat-icon-button type="button" class="sl-caret sl-caret--droite" aria-label="Chapitres suivants" [disabled]="!peutDroite()" (click)="defiler(1)">
             <mat-icon>chevron_right</mat-icon>
