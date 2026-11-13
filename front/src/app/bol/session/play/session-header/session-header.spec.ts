@@ -19,13 +19,14 @@ describe('SessionHeaderComponent', () => {
     return fixture.nativeElement as HTMLElement;
   }
 
-  const retour = (page: HTMLElement) => page.querySelector('a[aria-label="Retour à l\'accueil"]');
+  const retour = (page: HTMLElement) => [...page.querySelectorAll('a')].find((a) => a.textContent?.includes("Retour à l'accueil")) ?? null;
 
-  it('hors combat, le retour à l’accueil porte la maison', async () => {
+  it('hors combat, le retour à l’accueil est un bouton or, avec son libellé', async () => {
     const lien = retour(await rendre('libre'))!;
 
     expect(lien.getAttribute('href')).toBe('/');
-    expect(lien.querySelector('mat-icon')?.textContent?.trim()).toBe('home');
+    expect(lien.hasAttribute('mat-flat-button')).toBe(true);
+    expect(lien.querySelector('mat-icon')?.textContent?.trim()).toBe('arrow_back');
   });
 
   it('en combat, pas de retour à l’accueil : « Terminer » ramène à la table', async () => {

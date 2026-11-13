@@ -4,7 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
+import {isEditable, isEndTurnShortcut} from './shortcut.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
 import {CombatBoardComponent} from './combat-board/combat-board';
@@ -101,8 +101,7 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** `/` ou `Ctrl+K` ouvre la barre de commande ; `F` termine le tour en combat. Rien de tout cela
-   * quand un dialogue est ouvert. */
+  /** Suppr retire la sélection hors combat ; `F` termine le tour en combat. Rien de tout cela quand un dialogue est ouvert. */
   private onKeydown(event: KeyboardEvent): void {
     if (this.dialog.openDialogs.length > 0) {
       return;
@@ -114,10 +113,7 @@ export class SessionPlayPageComponent {
       this.commands.askRemoveSelection();
       return;
     }
-    if (isPaletteShortcut(event, target)) {
-      event.preventDefault();
-      this.commands.openPalette();
-    } else if (this.table.mode() === 'combat' && isEndTurnShortcut(event, target)) {
+    if (this.table.mode() === 'combat' && isEndTurnShortcut(event, target)) {
       event.preventDefault();
       const board = this.combatBoard();
       if (board) {

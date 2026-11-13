@@ -181,7 +181,7 @@ export class SceneStripComponent {
       }
     });
 
-    // La scène courante peut avoir été créée ailleurs (barre de commande, dialogue de gestion) :
+    // La scène courante peut avoir été créée ailleurs (dialogue de gestion) :
     // si elle n'est pas dans la liste, celle-ci est rechargée.
     effect(() => {
       const currentId = this.currentSceneId();

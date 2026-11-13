@@ -113,7 +113,7 @@ export class SceneListComponent {
       }
     });
 
-    // La scène courante de la session peut avoir été créée hors de cette liste (barre de commande) :
+    // La scène courante de la session peut avoir été créée hors de cette liste (le bandeau des scènes) :
     // si elle n'y figure pas, la liste est rechargée.
     effect(() => {
       const currentId = this.currentSceneId();

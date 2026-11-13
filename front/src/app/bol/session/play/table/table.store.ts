@@ -81,10 +81,6 @@ export class TableStore {
     });
   }
 
-  toggleReserve(): void {
-    this.setReserveOpen(!this.reserveOpen());
-  }
-
   /** Les coulisses se sont ouvertes ou fermées d'elles-mêmes (Échap) : l'état retenu suit. */
   onCoulissesChange(open: boolean): void {
     if (open !== this.reserveOpen()) {

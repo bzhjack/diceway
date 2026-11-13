@@ -25,8 +25,6 @@ export class SessionHeaderComponent {
   readonly melee = input<MeleeDisponibilite>('absente');
 
   readonly endCombat = output<void>();
-  /** Ouvre la barre de commande (même effet que les raccourcis `/` et `Ctrl+K`). */
-  readonly searchRequested = output<void>();
   /** En combat : un héros qui a retardé son action interrompt (clé de sa carte). */
   readonly interruptRequested = output<string>();
   /** En combat : un nouveau jet de réaction des héros. */

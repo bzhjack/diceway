@@ -26,7 +26,8 @@
   overflow: hidden;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 10px;
-  background: var(--dw-forge-recess);
+  // Un peu transparent : le décor de la scène, derrière toute la table, se devine sous les tuiles, net.
+  background: color-mix(in srgb, var(--dw-forge-recess) 75%, transparent);
   transition: background 0.15s ease;
 }
 

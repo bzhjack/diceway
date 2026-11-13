@@ -100,7 +100,7 @@ export class SceneStageStore {
 
   /** Session chargée par la page : sa scène courante, ses scènes jouées et son scénario (seule source de la frise, choisi
    * à l'accueil). Les scènes sont rechargées au premier appel, ou si la scène courante n'est pas connue
-   * (créée depuis la réserve ou la barre de commande). */
+   * (créée depuis la réserve). */
   sync(
     sessionId: string,
     currentSceneId: string | null,

@@ -46,21 +46,10 @@
         <mat-icon>replay</mat-icon>
       </button>
     }
-    <button
-      mat-icon-button
-      type="button"
-      class="cp-head-icon"
-      aria-label="Rechercher ou lancer une action ( / )"
-      matTooltip="Rechercher ou lancer une action ( / )"
-      (click)="searchRequested.emit()"
-    >
-      <mat-icon>search</mat-icon>
-    </button>
     @if (mode() === 'libre') {
-      <!-- « Démarrer un combat » et « Ajouter un personnage » sont au second étage, sur le bandeau de la scène (dans le théâtre). -->
-      <a mat-icon-button class="cp-head-icon" routerLink="/" aria-label="Retour à l'accueil" matTooltip="Retour à l'accueil">
-        <mat-icon>home</mat-icon>
-      </a>
+      <!-- « Démarrer un combat » et « Ajouter un personnage » sont au second étage, sur le bandeau de la scène (dans le théâtre) ; ici, le
+           retour à l'accueil, en or comme celui des bibliothèques. -->
+      <a mat-flat-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à l'accueil</a>
     } @else {
       <!-- L'action principale de l'en-tête en combat, en or plein -->
       <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer</button>
