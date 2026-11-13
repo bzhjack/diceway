@@ -52,8 +52,6 @@ describe('SituationComponent', () => {
     fixture.componentInstance.cardToggled.subscribe((c) => ouvertes.push(c));
     fixture.componentInstance.selectToggled.subscribe((c) => selectionnees.push(c));
     fixture.componentInstance.changed.subscribe((c) => changements.push(c));
-    const ajouts: unknown[] = [];
-    fixture.componentInstance.ajouterDemande.subscribe(() => ajouts.push(true));
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
@@ -63,29 +61,38 @@ describe('SituationComponent', () => {
     };
     /** Le texte de l'infobulle d'un élément. */
     const bulle = (el: Element): string => fixture.debugElement.query((d) => d.nativeElement === el).injector.get(MatTooltip).message;
-    return {element, texte, bouton, bulle, stable, ouvertes, selectionnees, changements, ajouts};
+    return {element, texte, bouton, bulle, stable, ouvertes, selectionnees, changements};
   }
 
-  it('range ceux d’en face puis la compagnie en cartes, chaque camp avec son nombre, sa vitalité totale et ses attitudes', async () => {
+  it('range la compagnie puis ceux d’en face, chaque camp avec son nombre et sa vitalité totale ; les alliés sous leur titre', async () => {
     const {element, texte} = await rendre([GRIMAR, SOLDAT, CHEMDI, LOUP]);
 
     expect([...element.querySelectorAll('.sit-camp-detail')].map((s) => texte(s))).toEqual([
+      '1 héros · 14/17 PV',
       '2 · 12/14 PV · 1 hostile, 1 méfiant',
-      '1 héros · 14/17 PV · 1 allié',
     ]);
     const camps = [...element.querySelectorAll('section.sit-camp')];
-    expect(camps.map((g) => g.getAttribute('data-drop-camp'))).toEqual(['adversaires', 'heros']);
-    expect([...camps[0].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
-    expect([...camps[1].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Grimar', 'Loup']);
+    expect(camps.map((g) => g.getAttribute('data-drop-camp'))).toEqual(['heros', 'adversaires']);
+    expect([...camps[0].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Grimar', 'Loup']);
+    expect(texte(camps[0].querySelector('.sit-sous-titre'))).toBe('Alliés · 1');
+    expect([...camps[1].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
   });
 
-  it('« Ajouter », dans l’en-tête de ceux d’en face, demande les coulisses ; sans allié, la compagnie dit qu’on peut en glisser un', async () => {
-    const {element, texte, ajouts} = await rendre([GRIMAR, CHEMDI]);
+  it('la vilenie d’un rival est dans un écusson, sur son portrait ; aucun bouton d’action dans les camps', async () => {
+    const rival = carte({key: 'pnj-9', kind: 'pnj', nom: 'Marsus', pivotId: 9, sourceId: 's9', rang: 'Rival', vilenie: 3});
+    const {element, texte} = await rendre([rival]);
 
-    element.querySelector<HTMLButtonElement>('.sit-camp--face .sit-ajouter')!.click();
+    const ecusson = element.querySelector('.sit-ecusson--vilenie')!;
+    expect(ecusson.getAttribute('aria-label')).toBe('Vilenie de Marsus : 3');
+    expect(texte(ecusson)).toBe('3');
+    expect(element.querySelector('.mat-mdc-button-base:not(.sit-plus)')).toBeNull();
+  });
 
-    expect(ajouts).toHaveLength(1);
-    expect(texte(element.querySelector('.sit-astuce'))).toBe("Glissez une tuile d'en face ici : elle devient alliée.");
+  it('la compagnie dit qu’on peut y glisser quelqu’un d’en face ; sans personne en face, où les faire entrer', async () => {
+    const {element, texte} = await rendre([GRIMAR]);
+
+    expect(texte(element.querySelector('.sit-astuce'))).toBe("Glissez ici une tuile d'en face : elle devient alliée.");
+    expect(texte(element.querySelector('.sit-indice'))).toContain('« Ajouter un personnage »');
   });
 
   it('les exemplaires d’une même fiche n’ont qu’une tuile et un cœur vide, qui ouvre le détail de chacun ; l’attitude vaut pour tous', async () => {

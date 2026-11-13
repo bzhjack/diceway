@@ -82,6 +82,20 @@
 
 // Sous l'en-tête, en mode libre : le théâtre, et les coulisses (la réserve) qui s'ouvrent à droite en le
 // poussant — la scène reste entière visible pour y glisser un personnage.
+// En mode libre, le décor de la scène s'étend derrière les deux étages du haut, l'en-tête et le bandeau de la scène (tous deux sans
+// fond), sur toute la largeur ; il se fond dans la table vers le bas. Plus clair que sur un plateau : seule la gauche, sous les titres,
+// est voilée.
+.spp-decor {
+  --dcr-filtre: saturate(1.1) contrast(1.03) brightness(0.9);
+  --dcr-voile: linear-gradient(90deg, rgba(10, 6, 4, 0.8), rgba(10, 6, 4, 0.4) 42%, rgba(10, 6, 4, 0.12) 68%, rgba(10, 6, 4, 0.4)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 45%);
+
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 10.5rem;
+  mask-image: linear-gradient(var(--bar-mask, black) 70%, transparent);
+}
+
 .spp-coulisses {
   --mat-sidenav-scrim-color: rgba(8, 5, 3, 0.45);
 

@@ -8,6 +8,10 @@
 } @else if (table.board(); as b) {
   <div class="cp-page cp-page--barbare">
     <div class="cp-table">
+    @if (table.mode() === 'libre') {
+      <!-- En mode libre, l'illustration de la scène derrière les deux étages du haut : l'en-tête et le bandeau de la scène. -->
+      <bol-scene-decor class="spp-decor" [scene]="stage.displayedScene()" />
+    }
     <bol-session-header
       [mode]="table.mode()"
       [titre]="table.headerTitle()"

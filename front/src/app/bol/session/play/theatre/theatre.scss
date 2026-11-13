@@ -6,62 +6,33 @@
   flex-direction: column;
 }
 
-// Le carnet du MJ à gauche, sur toute la hauteur ; à droite, le bandeau de la scène puis la feuille de situation. Rien ne déborde de
-// l'écran : le carnet et la feuille défilent chacun dans leur cadre.
+// En haut, le bandeau de la scène sur toute la largeur ; dessous, trois colonnes dans l'ordre de lecture : la compagnie, le carnet (le
+// texte, en grand), ceux d'en face. Rien ne déborde de l'écran : le carnet et les deux camps défilent chacun dans leur cadre. Les deux
+// camps sont ceux de `bol-situation`, qui les place dans cette grille (colonnes 1 et 3 ; sans scène, ceux d'en face prennent 2 et 3).
 .thr {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.9rem;
-  padding: 0.75rem 1rem 0.75rem;
+  grid-template-columns: 17rem minmax(0, 1fr) 28rem;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.75rem 0.9rem;
+  padding: 0.55rem 1rem 0.75rem;
 }
 
-.thr--avec-carnet {
-  grid-template-columns: 27rem minmax(0, 1fr);
-}
-
-.thr-carnet {
-  min-height: 0;
-}
-
-.thr-droite {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  border: 1px solid var(--dw-forge-bronze-edge);
-  border-radius: 7px;
-  background: var(--dw-forge-recess);
-}
-
-// Le bandeau : le décor de la scène, assombri à gauche pour que le cartouche se lise, et ses braises.
+// Le bandeau : sans fond ni cadre, posé sur le décor de la scène ; ses braises derrière lui.
 .thr-bandeau {
   position: relative;
-  flex: none;
-  min-height: 5.6rem;
-  overflow: hidden;
   isolation: isolate;
-  border-bottom: 1px solid var(--dw-forge-bronze);
-}
-
-.thr-decor {
-  z-index: -2;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  min-height: 4.4rem;
+  padding: 0 0.15rem;
 }
 
 .thr-braises {
   z-index: -1;
-}
-
-.thr-tete {
-  display: flex;
-  align-items: flex-end;
-  gap: 1rem;
-  height: 100%;
-  min-height: 5.6rem;
-  box-sizing: border-box;
-  padding: 0.6rem 1rem;
 }
 
 .thr-cartouche {
@@ -69,16 +40,21 @@
   min-width: 0;
 }
 
-// L'action principale de la scène, en or.
+// Les deux actions de la table, à droite : « Ajouter un personnage » en contour (sur un fond sombre, pour se lire sur l'image), puis
+// l'action principale en or.
 .thr-actions {
   display: flex;
   flex: none;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.thr-situation {
-  flex: 1;
+.thr-ajouter {
+  background: color-mix(in srgb, var(--dw-forge-recess) 78%, transparent);
+}
+
+.thr-carnet {
+  grid-column: 2;
+  grid-row: 2;
   min-height: 0;
 }

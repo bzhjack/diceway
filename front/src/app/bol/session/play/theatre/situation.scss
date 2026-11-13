@@ -1,40 +1,50 @@
 @use 'styles/forge-mixins' as forge;
 
-// Les deux camps côte à côte : ceux d'en face à gauche, la compagnie à droite. Chacun défile seul en dernier recours (une table bondée) ;
-// le regroupement des exemplaires d'une fiche les garde d'ordinaire tout en vue.
+// Les deux camps, de part et d'autre du carnet : l'hôte s'efface (`display: contents`) et chaque camp se place dans la grille de la
+// table (`bol-theatre`), la compagnie dans la première colonne, ceux d'en face dans la troisième. Chacun est un cadre ; sa liste défile
+// seule en dernier recours (une table bondée), le regroupement des exemplaires d'une fiche les gardant d'ordinaire tout en vue.
 :host {
   --sit-att-hostile: var(--dw-color-echec);
   --sit-att-mefiant: var(--dw-color-warn);
   --sit-att-neutre: var(--dw-surface-500);
   --sit-att-amical: var(--dw-color-reussite);
 
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  min-height: 0;
+  display: contents;
 }
 
 // ── Un camp ──────────────────────────────────────────────────────────────────────────────────────
 .sit-camp {
   --sit-camp: var(--dw-color-echec);
 
+  grid-row: 2;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   min-width: 0;
   min-height: 0;
-  padding: 0.6rem 0.75rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
+  padding: 0.6rem 0.75rem 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 10px;
+  background: var(--dw-forge-recess);
   transition: background 0.15s ease;
-}
-
-.sit-camp--face {
-  border-right: 1px solid var(--dw-forge-bronze-edge);
 }
 
 .sit-camp--compagnie {
   --sit-camp: var(--dw-color-reussite);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--dw-color-reussite) 6%, transparent), transparent 60%);
+
+  grid-column: 1;
+  padding-right: 0.5rem;
+  padding-left: 0.6rem;
+}
+
+.sit-camp--face {
+  grid-column: 3;
+}
+
+// Sans scène, pas de carnet : ceux d'en face prennent sa place en plus de la leur.
+:host-context(.thr--sans-scene) .sit-camp--face {
+  grid-column: 2 / 4;
 }
 
 // Une zone qui peut recevoir le glisser en cours, puis celle survolée.
@@ -73,35 +83,33 @@
   white-space: nowrap;
 }
 
-.sit-ajouter {
-  flex: none;
-  margin-left: auto;
-  --mat-button-outlined-container-height: 1.85rem;
-  --mat-button-outlined-label-text-size: 0.78rem;
-  --mat-button-outlined-horizontal-padding: 0.75rem;
-}
-
-// Les tuiles en grille, quatre par rangée en face, trois dans la compagnie ; chacune garde sa hauteur. Un peu de marge en haut et à
-// droite pour le paquet d'un groupe.
+// La liste d'un camp : elle prend la hauteur qui reste et défile seule. Un peu de marge en haut et à droite pour le paquet d'un groupe.
 .sit-grille {
+  flex: 1 1 auto;
   display: grid;
+  align-content: start;
   align-items: start;
   gap: 1rem 0.75rem;
+  min-height: 0;
   margin: 0;
   padding: 0.5rem 0.5rem 0 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
   list-style: none;
 }
 
+// En face, des tuiles : trois par rangée dans sa colonne, davantage quand elle s'élargit (sans scène).
 .sit-grille--face {
   --sit-image: 6.75rem;
 
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
 }
 
+// La compagnie, une ligne par personnage.
 .sit-grille--compagnie {
-  --sit-image: 6.25rem;
-
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding-top: 0.25rem;
 }
 
 .sit-grille > li {
@@ -127,14 +135,23 @@
   text-align: center;
 }
 
-// Sans allié : une case en pointillés, à côté des héros, dit qu'on peut en glisser un.
+// « Alliés · n », entre les héros et les alliés.
+.sit-grille > .sit-sous-titre {
+  margin-top: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dw-forge-caption);
+}
+
+// Au bout de la compagnie : une case en pointillés dit qu'on peut y glisser quelqu'un d'en face.
 .sit-grille > .sit-astuce {
-  grid-column: span 2;
   align-self: stretch;
   display: grid;
   place-items: center;
-  min-height: 4rem;
-  padding: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0.6rem;
   border: 1.5px dashed var(--dw-border);
   border-radius: 10px;
   font-size: 0.72rem;
@@ -309,7 +326,7 @@
   color: var(--dw-color-text-bright);
 }
 
-// La vie, toujours en bas à droite : un cœur dans le coin de la tuile, à côté du nom et du rang (dans le pied pour un héros), la
+// La vie, toujours à droite : un cœur dans le coin de la tuile, à côté du rang (au bout du pied pour un héros), la
 // vitalité dedans pour un personnage seul, vide pour un groupe (un bouton : il ouvre le détail de chaque exemplaire).
 .sit-vies {
   position: absolute;
@@ -336,24 +353,75 @@
   padding: 0.45rem 0.6rem 0.5rem;
 }
 
-// Un héros : le nom descend contre son pied (la tuile garde sa hauteur), le voile sombre commence plus bas.
-.sit-carte--heros {
-  --sit-voile-debut: -2rem;
-  --sit-voile-plein: 1rem;
-}
-
-.sit-carte--heros .sit-texte {
-  padding-top: 0.9rem;
-  padding-bottom: 0;
-}
-
-// Dans la compagnie, un allié a la hauteur d'un héros : son texte descend en bas de la tuile.
+// ── Une ligne de la compagnie ────────────────────────────────────────────────────────────────────
+// La tuile mise à plat : le portrait carré à gauche ; à droite le nom, puis le pied d'un héros (son jet, son écusson, son cœur) ou le
+// rang d'un allié, son cœur au bout de la ligne.
 .sit-grille--compagnie .sit-carte {
-  min-height: calc(var(--sit-image) + 4.1rem);
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.6rem;
+  align-items: center;
+  min-height: 4rem;
+  box-sizing: border-box;
+  padding: 0.25rem 0.55rem 0.25rem 0.25rem;
+  --sit-ombre: 0 4px 10px color-mix(in srgb, black 40%, transparent);
 }
 
-.sit-carte--allie .sit-texte {
-  margin-top: auto;
+.sit-grille--compagnie .sit-image {
+  grid-row: 1 / 3;
+}
+
+// Le portrait n'occupe que son carré ; pas de voile sur la ligne.
+.sit-grille--compagnie .sit-portrait {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 7px;
+
+  &::before {
+    display: none;
+  }
+
+  img {
+    inset: 0.25rem auto auto 0.25rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 7px;
+  }
+}
+
+.sit-grille--compagnie .sit-initiale {
+  font-size: 1.7rem;
+}
+
+.sit-grille--compagnie .sit-texte {
+  align-self: end;
+  padding: 0;
+}
+
+.sit-grille--compagnie .sit-carte--allie .sit-texte {
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.sit-grille--compagnie .sit-bande {
+  align-self: start;
+  height: auto;
+  margin-top: 0.3rem;
+  padding: 0;
+  background: none;
+}
+
+.sit-grille--compagnie .sit-vies {
+  right: 0.55rem;
+  bottom: 50%;
+  transform: translateY(50%);
+}
+
+.sit-grille--compagnie .sit-ecusson--vilenie {
+  top: 50%;
+  right: 2.9rem;
+  transform: translateY(-50%);
 }
 
 // Le nom et l'attitude prennent toute la ligne ; seule la ligne du rang laisse la place du cœur, en bas à droite.
@@ -385,7 +453,7 @@
 .sit-sous {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -395,14 +463,14 @@
 }
 
 .sit-rang {
-  padding: 0.05rem 0.3rem;
+  padding: 0.05rem 0.25rem;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
   border-radius: 4px;
   background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
   color: var(--dw-forge-name);
   font-size: 0.56rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -415,10 +483,6 @@
     height: 0.95rem;
     font-size: 0.95rem;
   }
-}
-
-.sit-vilenie {
-  color: var(--dw-forge-alert);
 }
 
 // Le pied d'un héros : son jet, ses points d'héroïsme et sa vitalité, sur un dégradé sombre qui part de la tuile (ni aplat, ni trait,
@@ -582,6 +646,25 @@
     font-variant-numeric: tabular-nums;
     line-height: 1;
     color: var(--dw-forge-ink);
+  }
+}
+
+// La vilenie d'un rival : un écusson sombre en haut à droite du portrait ; son nom en infobulle.
+.sit-ecusson--vilenie {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  z-index: 1;
+  pointer-events: auto;
+
+  svg {
+    fill: color-mix(in srgb, var(--dw-color-echec) 55%, black);
+    stroke: var(--dw-forge-alert);
+    stroke-width: 1;
+  }
+
+  b {
+    color: var(--dw-color-text-bright);
   }
 }
 

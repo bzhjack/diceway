@@ -97,16 +97,16 @@ function totalVitalite(cards: readonly TapisCard[]): string {
 }
 
 /**
- * La situation de la table, hors combat : les deux camps côte à côte, en tuiles comme la distribution de « Préparer la scène », tout en
- * vue sans défiler. À gauche ceux d'en face (rangés par rang, avec le compte de leurs attitudes et « Ajouter »), à droite la compagnie :
- * ses héros, puis ses alliés. Les exemplaires d'une même fiche n'ont qu'une tuile, empilée en paquet, un cœur chacun. Chaque tuile est
- * réduite à l'essentiel, pour une vue d'ensemble : le portrait, et posés dessus le nombre d'exemplaires et un cœur (la vitalité
- * dedans pour un personnage seul ; vide pour un groupe, il ouvre le détail de chaque exemplaire) ; le nom suivi du point de l'attitude
- * de ceux d'en face (son nom en infobulle, son menu d'un clic), le rang et l'icône de la sorte. Un héros a un pied : ses points
- * d'héroïsme dans un écusson et son jet. Un clic n'importe où sur la tuile ouvre la carte du personnage, où se règlent sa vitalité et son
- * héroïsme ; Ctrl + clic la sélectionne. L'attitude est
- * enregistrée aussitôt et rendue à la page (`changed`). Les deux camps sont les zones de dépôt `adversaires` et `heros` : un
- * personnage glissé depuis les coulisses y entre, une tuile glissée de l'un à l'autre change de camp.
+ * La situation de la table, hors combat : ses deux camps, que la table (`bol-theatre`) pose de part et d'autre du carnet. À gauche
+ * la compagnie, une ligne par personnage : ses héros (portrait, nom, jet, points d'héroïsme dans un écusson, vitalité dans un cœur),
+ * puis ses alliés. À droite ceux d'en face, en tuiles comme la distribution de « Préparer la scène » (rangés par rang, avec le compte
+ * de leurs attitudes). Les exemplaires d'une même fiche n'ont qu'une tuile, empilée
+ * en paquet. Chaque tuile est réduite à l'essentiel, pour une vue d'ensemble : le portrait, le nombre d'exemplaires, la vilenie d'un
+ * rival dans un écusson sombre, un cœur en bas à droite (la vitalité dedans pour un personnage seul ; vide pour un groupe, il ouvre le
+ * détail de chaque exemplaire) ; le nom suivi du point de l'attitude de ceux d'en face (son nom en infobulle, son menu d'un clic), le
+ * rang et l'icône de la sorte. Un clic n'importe où ouvre la carte du personnage, où se règlent sa vitalité et son héroïsme ;
+ * Ctrl + clic la sélectionne. L'attitude est enregistrée aussitôt et rendue à la page (`changed`). Les deux camps sont les zones de
+ * dépôt `adversaires` et `heros` : un personnage glissé depuis les coulisses y entre, une tuile glissée de l'un à l'autre change de camp.
  */
 @Component({
   selector: 'bol-situation',
@@ -144,10 +144,6 @@ export class SituationComponent {
   readonly campToggleRequested = output<TapisCard>();
   /** Une attitude a été enregistrée : la page met la session à jour. */
   readonly changed = output<TableChange>();
-  /** « Ajouter », dans l'en-tête de ceux d'en face : la page ouvre les coulisses. */
-  readonly ajouterDemande = output<void>();
-  /** Les coulisses sont ouvertes (pour l'état du bouton « Ajouter »). */
-  readonly coulissesOpen = input(false);
 
   protected readonly attitudes = ATTITUDES;
   /** La tuile (sa clé) dont le détail de la vie est ouvert. */

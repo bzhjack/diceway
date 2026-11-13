@@ -1,4 +1,38 @@
-<!-- Ceux d'en face, à gauche, en tuiles (les exemplaires d'une fiche partagent la leur) : la zone de dépôt des adversaires. -->
+<!-- La compagnie, à gauche du carnet, une ligne par personnage : ses héros, puis ses alliés ; la zone de dépôt du camp des héros. -->
+<section
+  class="sit-camp sit-camp--compagnie"
+  data-drop-camp="heros"
+  aria-labelledby="sit-compagnie-titre"
+  [class.sit-camp--droppable]="compagnieDroppable()"
+  [class.sit-camp--hot]="compagnieHot()"
+>
+  <div class="sit-camp-tete">
+    <h2 class="sit-camp-titre" id="sit-compagnie-titre">La compagnie</h2>
+    <span class="sit-camp-detail">{{ heros().length }} héros · {{ vitaliteCompagnie() }} PV</span>
+  </div>
+  <ul class="sit-grille sit-grille--compagnie" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
+    @for (c of heros(); track c.key) {
+      <li>
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+      </li>
+    }
+    @if (nombreAllies()) {
+      <li class="sit-sous-titre">Alliés · {{ nombreAllies() }}</li>
+    }
+    @for (c of allies(); track c.key) {
+      <li cdkDrag [bolStageDrag]="{kind: c.card.kind, camp: c.card.camp}" (stageDropped)="onStageDropped($event, c)">
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+        <div *cdkDragPreview class="sit-fantome">
+          <img dwAvatarFallback [src]="c.card.avatar" alt="" draggable="false" />
+          <span>{{ c.nom }}{{ c.cards.length > 1 ? ' ×' + c.cards.length : '' }}</span>
+        </div>
+      </li>
+    }
+    <li class="sit-astuce">Glissez ici une tuile d'en face : elle devient alliée.</li>
+  </ul>
+</section>
+
+<!-- Ceux d'en face, à droite du carnet, en tuiles (les exemplaires d'une fiche partagent la leur) : la zone de dépôt des adversaires. -->
 <section
   class="sit-camp sit-camp--face"
   data-drop-camp="adversaires"
@@ -14,16 +48,6 @@
         · {{ vitaliteEnFace() }} PV · {{ attitudesEnFace() }}
       }
     </span>
-    <button
-      mat-stroked-button
-      type="button"
-      class="sit-ajouter"
-      aria-controls="spp-coulisses-panel"
-      [attr.aria-expanded]="coulissesOpen()"
-      (click)="ajouterDemande.emit()"
-    >
-      <mat-icon>person_add</mat-icon> Ajouter
-    </button>
   </div>
   <ul class="sit-grille sit-grille--face" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
     @for (c of enFace(); track c.key) {
@@ -35,51 +59,15 @@
         </div>
       </li>
     } @empty {
-      <li class="sit-indice">Personne en face : « Ajouter » les fait entrer, ou glissez-les ici depuis les coulisses.</li>
+      <li class="sit-indice">Personne en face : « Ajouter un personnage », en haut, les fait entrer ; ou glissez-les ici depuis les coulisses.</li>
     }
   </ul>
 </section>
 
-<!-- La compagnie, à droite : ses héros, puis ses alliés ; la zone de dépôt du camp des héros. -->
-<section
-  class="sit-camp sit-camp--compagnie"
-  data-drop-camp="heros"
-  aria-labelledby="sit-compagnie-titre"
-  [class.sit-camp--droppable]="compagnieDroppable()"
-  [class.sit-camp--hot]="compagnieHot()"
->
-  <div class="sit-camp-tete">
-    <h2 class="sit-camp-titre" id="sit-compagnie-titre">La compagnie</h2>
-    <span class="sit-camp-detail">
-      {{ heros().length }} héros · {{ vitaliteCompagnie() }} PV ·
-      {{ nombreAllies() ? nombreAllies() + ' allié' + (nombreAllies() > 1 ? 's' : '') : 'aucun allié' }}
-    </span>
-  </div>
-  <ul class="sit-grille sit-grille--compagnie" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
-    @for (c of heros(); track c.key) {
-      <li>
-        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
-      </li>
-    }
-    @for (c of allies(); track c.key) {
-      <li cdkDrag [bolStageDrag]="{kind: c.card.kind, camp: c.card.camp}" (stageDropped)="onStageDropped($event, c)">
-        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
-        <div *cdkDragPreview class="sit-fantome">
-          <img dwAvatarFallback [src]="c.card.avatar" alt="" draggable="false" />
-          <span>{{ c.nom }}{{ c.cards.length > 1 ? ' ×' + c.cards.length : '' }}</span>
-        </div>
-      </li>
-    }
-    @if (!nombreAllies()) {
-      <li class="sit-astuce">Glissez une tuile d'en face ici : elle devient alliée.</li>
-    }
-  </ul>
-</section>
-
-<!-- Une tuile, comme la distribution de « Préparer la scène », réduite à l'essentiel : le portrait, et posés dessus le nombre
-     d'exemplaires et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un pied : ses
-     points d'héroïsme et son jet. Les exemplaires d'une fiche s'empilent en paquet ; le cœur de chacun ouvre sa carte. Un clic n'importe où, hors de ses boutons, ouvre le détail du
-     personnage, où se règlent sa vitalité et son héroïsme. -->
+<!-- Une tuile (une ligne dans la compagnie), réduite à l'essentiel : le portrait, et posés dessus le nombre d'exemplaires, la vilenie
+     d'un rival et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un pied : son
+     jet, ses points d'héroïsme et son cœur. Les exemplaires d'une fiche s'empilent en paquet. Un clic n'importe où, hors de ses
+     boutons, ouvre le détail du personnage, où se règlent sa vitalité et son héroïsme. -->
 <ng-template #tuile let-c>
   <article
     [class]="'sit-carte sit-carte--' + (c.card.kind === 'hero' ? 'heros' : c.card.camp === 'heros' ? 'allie' : 'face')"
@@ -105,6 +93,15 @@
       </button>
       @if (c.cards.length > 1) {
         <span class="sit-nombre" aria-hidden="true">×{{ c.cards.length }}</span>
+      }
+      <!-- La vilenie d'un rival : comme l'héroïsme d'un héros, dans un écusson, sombre, en haut à droite du portrait. -->
+      @if (c.card.vilenie !== null) {
+        <span class="sit-ecusson sit-ecusson--vilenie" role="img" [attr.aria-label]="'Vilenie de ' + c.nom + ' : ' + c.card.vilenie" matTooltip="Vilenie">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" />
+          </svg>
+          <b aria-hidden="true">{{ c.card.vilenie }}</b>
+        </span>
       }
 
       <!-- La vie, toujours en bas à droite : un cœur, ici dans le coin de la tuile (dans le pied pour un héros). Seul, sa vitalité dedans (le clic
@@ -193,9 +190,6 @@
             <span class="sit-rang">{{ c.card.rang }}</span>
           }
           <span class="sit-type" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>
-          @if (c.card.vilenie !== null) {
-            <span class="sit-vilenie">· {{ c.card.vilenie }} vil.</span>
-          }
         </p>
       }
     </div>

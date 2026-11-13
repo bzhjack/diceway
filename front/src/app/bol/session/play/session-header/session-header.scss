@@ -64,18 +64,15 @@
   }
 }
 
-// Mode libre : une barre de fer bordée d'un filet de bronze, sans illustration, qui fait de l'ombre sur le plateau.
-// Le titre du scénario et la frise des actes (projetés par la page) prennent la place libre.
+// Mode libre : une barre translucide, bordée d'un filet de bronze, posée sur le décor de la scène (la page l'étend derrière elle et
+// derrière le bandeau de la scène). Le titre du scénario et la frise des actes (projetés par la page) prennent la place libre.
 .cp-header--theatre {
   position: relative;
   z-index: 2;
   gap: 1.25rem;
   padding: 0.55rem 1.1rem;
-  border-bottom: 1px solid var(--dw-forge-bronze);
-  background: var(--dw-forge-plate);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 214, 160, 0.17),
-    0 3px 10px rgba(0, 0, 0, 0.55);
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-forge-bronze) 55%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--dw-forge-recess) 78%, transparent), color-mix(in srgb, var(--dw-forge-recess) 50%, transparent));
 }
 
 .cp-header-center {

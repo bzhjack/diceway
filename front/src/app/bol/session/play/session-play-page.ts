@@ -18,6 +18,7 @@ import {TableStore} from './table/table.store';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {RideauComponent} from './theatre/rideau';
 import {SceneActsComponent} from './theatre/scene-acts';
+import {SceneDecorComponent} from './theatre/scene-decor';
 import {SceneStageStore} from './theatre/scene-stage.store';
 import {TheatreComponent} from './theatre/theatre';
 import {ReservePlacementService} from '../reserve-placement.service';
@@ -34,7 +35,7 @@ interface CombatBoardHandle {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, TurnOrderComponent, SceneActsComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
+  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, TurnOrderComponent, SceneActsComponent, SceneDecorComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
   // Une instance par table : la frise de l'en-tête et le plateau partagent les scènes et le rideau.
   providers: [SceneStageStore, TableStore, CombatTurnStore, CombatStatsStore, CombatWoundsService, CombatEndService, ExpandedCardStore, TableCommandsService],
   templateUrl: './session-play-page.html',

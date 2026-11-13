@@ -3,7 +3,8 @@ import {BolSceneModel} from '../../../models/bol-scene.model';
 import {sceneDecor} from './theatre.util';
 
 /** Le fond du plateau : l'illustration de la scène, sinon l'image par défaut. Une illustration qui ne se charge pas
- * retombe sur l'image par défaut. Un voile sombre garde le texte lisible. Purement décoratif. */
+ * retombe sur l'image par défaut. Un voile sombre garde le texte lisible ; qui le pose peut régler ce voile (`--dcr-voile`) et le
+ * filtre de l'image (`--dcr-filtre`). Purement décoratif. */
 @Component({
   selector: 'bol-scene-decor',
   template: `<img class="dcr-image" [src]="image()" alt="" (error)="imageFailed.set(true)" />`,
@@ -20,10 +21,12 @@ import {sceneDecor} from './theatre.util';
       content: '';
       position: absolute;
       inset: 0;
-      background:
+      background: var(
+        --dcr-voile,
         linear-gradient(90deg, rgba(10, 6, 4, 0.5), transparent 42%),
         linear-gradient(180deg, rgba(0, 0, 0, 0.35), transparent 30%, transparent 55%, rgba(0, 0, 0, 0.75)),
-        radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.75));
+        radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.75))
+      );
     }
 
     .dcr-image {
@@ -31,7 +34,7 @@ import {sceneDecor} from './theatre.util';
       height: 100%;
       object-fit: cover;
       object-position: 50% 35%;
-      filter: saturate(1.12) contrast(1.05) brightness(0.72);
+      filter: var(--dcr-filtre, saturate(1.12) contrast(1.05) brightness(0.72));
     }
 
     // Le décor par défaut (les héros sous la lune rouge), cadré plus haut : l'épée levée et les têtes plutôt que le muret du bas.

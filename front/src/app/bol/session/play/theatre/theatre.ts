@@ -7,18 +7,18 @@ import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
 import {BraisesComponent} from './braises';
 import {SceneCartoucheComponent} from './scene-cartouche';
-import {SceneDecorComponent} from './scene-decor';
 import {SceneLectureComponent} from './scene-lecture';
 import {SceneLectureDialogComponent} from './scene-lecture-dialog';
 import {SceneStageStore} from './scene-stage.store';
 import {SituationComponent} from './situation';
 
-/** Le mode libre de la table, côté MJ : à gauche le carnet (les notes de la scène en onglets, ses pistes) ; à droite le bandeau de la scène
- * (décor, braises, cartouche, actions) puis la situation, les deux camps en cartes du même format (`bol-situation`). Lit la scène courante dans
- * le store de la page ; relaie à la page les gestes sur les personnages et les changements de la table. */
+/** Le mode libre de la table, côté MJ : en haut le bandeau de la scène, second étage de l'en-tête (cartouche et braises sur le décor
+ * que la page étend derrière lui ; à droite « Ajouter un personnage » et « Démarrer un combat ») ; dessous trois colonnes : la
+ * compagnie, le carnet (les notes de la scène en onglets, ses pistes), ceux d'en face. Les deux camps sont ceux de `bol-situation`.
+ * Lit la scène courante dans le store de la page ; relaie à la page les gestes sur les personnages et les changements de la table. */
 @Component({
   selector: 'bol-theatre',
-  imports: [MatButtonModule, MatIconModule, BraisesComponent, SceneCartoucheComponent, SceneDecorComponent, SceneLectureComponent, SituationComponent],
+  imports: [MatButtonModule, MatIconModule, BraisesComponent, SceneCartoucheComponent, SceneLectureComponent, SituationComponent],
   templateUrl: './theatre.html',
   styleUrl: './theatre.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
