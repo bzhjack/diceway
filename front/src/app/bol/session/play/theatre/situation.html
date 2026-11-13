@@ -88,7 +88,7 @@
     (ouvrir)="onPortraitClick(c, $event)"
   >
     @if (c.cards.length > 1) {
-      <span bolTuileCoin class="dw-tuile-marque" aria-hidden="true">×{{ c.cards.length }}</span>
+      <span bolTuileCoin class="dw-tuile-marque dw-tuile-marque--nombre" aria-hidden="true">×{{ c.cards.length }}</span>
     }
     @if (c.cards.length > 1) {
       <span bolTuileTete class="sr-only">, {{ c.cards.length }} exemplaires</span>
@@ -130,11 +130,11 @@
       <span bolTuileVie class="sit-vie-groupe">
         <button
           type="button"
-          class="sit-coeur sit-coeur--groupe"
+          class="dw-tuile__coeur sit-coeur--groupe"
           cdkOverlayOrigin
           #origineVie="cdkOverlayOrigin"
-          [class.sit-coeur--bas]="c.basse"
-          [class.sit-coeur--tombe]="c.tombe"
+          [class.dw-tuile__coeur--bas]="c.basse"
+          [class.dw-tuile__coeur--tombe]="c.tombe"
           aria-haspopup="dialog"
           [attr.aria-expanded]="vieOuverte() === c.key"
           [attr.aria-label]="'Vitalité des ' + c.cards.length + ' exemplaires de ' + c.nom"
@@ -162,7 +162,7 @@
                     (click)="ouvrirExemplaire(e.card)"
                   >
                     <span class="sit-pop-numero">{{ e.numero }}</span>
-                    <span class="sit-coeur" [class.sit-coeur--bas]="e.low" [class.sit-coeur--tombe]="e.tombe">
+                    <span class="dw-tuile__coeur" [class.dw-tuile__coeur--bas]="e.low" [class.dw-tuile__coeur--tombe]="e.tombe">
                       <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
                     </span>
                     <span class="sit-pop-max">/ {{ e.card.vitaliteMax ?? '—' }}</span>

@@ -16,7 +16,7 @@ export interface PersonnagesDialogData {
 /** Le type d'une fiche à mettre en scène ; null : tous. */
 export type PersonnageType = 'pnj' | 'creature' | 'demon' | null;
 
-/** Les filtres du dialogue, ceux des bibliothèques en lignes en plus du type ; `rang` et `scenarioId` null : tous. */
+/** Les filtres du dialogue, ceux des bibliothèques en tuiles en plus du type ; `rang` et `scenarioId` null : tous. */
 export interface PersonnagesFiltres {
   type: PersonnageType;
   source: LibrarySource;

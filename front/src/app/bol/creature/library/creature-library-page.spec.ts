@@ -219,6 +219,6 @@ describe('CreatureLibraryPageComponent', () => {
     await choisir('Rang', 'Piétaille');
 
     expect(texte(page.querySelector('.dw-lr-vide'))).toBe('Aucune créature ne correspond à ces filtres.');
-    expect(page.querySelector('.dw-lr-grille > li')).toBeNull();
+    expect(page.querySelector('.dw-lr-grille')).toBeNull();
   });
 });

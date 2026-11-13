@@ -103,7 +103,7 @@ describe('SituationComponent', () => {
     const cartes = [...element.querySelectorAll('.sit-camp--face bol-tuile')];
     expect(cartes).toHaveLength(1);
     expect(texte(cartes[0].querySelector('.dw-tuile__tete'))).toBe('Garde, 2 exemplaires');
-    expect(texte(cartes[0].querySelector('.dw-tuile-marque'))).toBe('×2');
+    expect(texte(cartes[0].querySelector('.dw-tuile-marque.dw-tuile-marque--nombre'))).toBe('×2');
     expect(cartes[0].querySelectorAll('.dw-tuile__vies .sit-coeur--groupe')).toHaveLength(1);
     expect(cartes[0].querySelector('.dw-tuile__vies b')).toBeNull();
     bouton('Vitalité des 2 exemplaires de Garde').click();

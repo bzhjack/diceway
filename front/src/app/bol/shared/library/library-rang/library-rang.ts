@@ -4,7 +4,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {LibraryOption, LibraryRang} from '../../models/library-rows.model';
 
 /**
- * Le rang d'une bibliothèque en lignes, en liste dans sa barre de recherche (`dwToolbarFilter`) : « Tous les rangs », puis chaque rang.
+ * Le rang d'une bibliothèque en tuiles, en liste dans sa barre de recherche (`dwToolbarFilter`) : « Tous les rangs », puis chaque rang.
  * Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({

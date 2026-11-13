@@ -32,8 +32,8 @@ export abstract class BolLibraryRowsPageBase<TItem extends {id?: string | number
   protected abstract readonly optionsDeTri: readonly LibraryTriOption<TTri>[];
 
   /** Trie sur cette clé (une de `optionsDeTri`), dans l'ordre croissant ; la clé déjà choisie ne change rien. */
-  protected trierPar(cle: string): void {
-    this.tri.update((tri) => (tri.cle === cle ? tri : {cle: cle as TTri, croissant: true}));
+  protected trierPar(cle: TTri): void {
+    this.tri.update((tri) => (tri.cle === cle ? tri : {cle, croissant: true}));
   }
 
   /** Inverse le sens du tri. */

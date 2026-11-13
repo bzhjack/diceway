@@ -3,7 +3,7 @@ import {LibraryOption, LibraryScenarioOption, LibrarySource} from '../../models/
 import {LibraryFacetteComponent} from '../library-facette/library-facette';
 
 /**
- * Les filtres partagés d'une bibliothèque en lignes, à poser dans sa colonne de filtres : la source et le scénario (à la teinte de sa
+ * Les filtres partagés d'une bibliothèque en tuiles, à poser dans sa colonne de filtres : la source et le scénario (à la teinte de sa
  * saga), chacun avec son nombre de fiches. Un second clic sur un scénario le retire. Le rang est une liste de la barre de recherche
  * (`bol-library-rang`). Les styles sont ceux de `styles/_library-rows.scss`.
  */
