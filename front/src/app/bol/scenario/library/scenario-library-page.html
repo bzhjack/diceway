@@ -5,10 +5,10 @@
         <dw-tag>{{ scenarios().length }} {{ scenarios().length > 1 ? 'scénarios' : 'scénario' }}</dw-tag>
       </ng-container>
       <ng-container dwHeaderActions>
-        <button mat-flat-button type="button" (click)="nouveauScenario()">
+        <button mat-stroked-button type="button" (click)="nouveauScenario()">
           <mat-icon>add</mat-icon> Nouveau scénario
         </button>
-        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
       </ng-container>

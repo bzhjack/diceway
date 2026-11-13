@@ -8,7 +8,7 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button routerLink="/create/pnj" [state]="{ returnUrl: '/library/pnjs' }">
+          <button mat-stroked-button routerLink="/create/pnj" [state]="{ returnUrl: '/library/pnjs' }">
             <mat-icon>add</mat-icon> Créer un PNJ
           </button>
           <button mat-stroked-button routerLink="/library/creatures">
@@ -18,7 +18,7 @@
             <mat-icon>bolt</mat-icon> Voir les démons
           </button>
         </div>
-        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
       </ng-container>
@@ -26,10 +26,10 @@
 
     <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer un PNJ et revenir. -->
     <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Galerie des PNJ · ' + pnjCount() + ' PNJ'">
-      <button mat-flat-button routerLink="/create/pnj" [state]="{ returnUrl: '/library/pnjs' }">
+      <button mat-stroked-button routerLink="/create/pnj" [state]="{ returnUrl: '/library/pnjs' }">
         <mat-icon>add</mat-icon> Créer un PNJ
       </button>
-      <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+      <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
         <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
       </button>
     </dw-compact-bar>

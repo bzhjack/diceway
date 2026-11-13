@@ -23,10 +23,10 @@ import {HubEntry} from '../shared/models/hub-page.model';
       [tags]="[totalEntries() + ' entrées actives', customEntries() + ' créations de table']"
       [entries]="libraryEntries()"
     >
-      <button mat-flat-button routerLink="/library/heroes">
+      <button mat-stroked-button routerLink="/library/heroes">
         <mat-icon>group</mat-icon> Ouvrir la bibliothèque des héros
       </button>
-      <button mat-stroked-button routerLink="/">
+      <button mat-flat-button routerLink="/">
         <mat-icon>arrow_back</mat-icon> Retour à l'accueil
       </button>
     </bol-hub-page>

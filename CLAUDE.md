@@ -144,7 +144,7 @@ Every library page (list of entities) follows this structure:
 
 1. **Header** — `<dw-library-header [title]="…" [description]="…" [image]="…">`:
    - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
-   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button`; right side — `<button mat-stroked-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à l'accueil</button>` (`/` affiche l'accueil ; avec un `returnUrl`, « Retour à la table »).
+   - `dwHeaderActions` slot: left side — navigation links and actions (create…) as `mat-stroked-button`; right side — the way back as the one gold button, `<button mat-flat-button routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à l'accueil</button>` (same on the hub pages and in the `dw-compact-bar`) (`/` affiche l'accueil ; avec un `returnUrl`, « Retour à la table »).
 
 2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 

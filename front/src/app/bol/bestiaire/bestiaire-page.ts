@@ -30,10 +30,10 @@ function compteurs(fiches: readonly {user_id: string | null}[], nom: string): st
       [tags]="[total() + ' fiches', miennes() + ' de mes fiches']"
       [entries]="entries()"
     >
-      <button mat-flat-button routerLink="/library/pnjs">
+      <button mat-stroked-button routerLink="/library/pnjs">
         <mat-icon>manage_accounts</mat-icon> Ouvrir la galerie des PNJ
       </button>
-      <button mat-stroked-button routerLink="/">
+      <button mat-flat-button routerLink="/">
         <mat-icon>arrow_back</mat-icon> Retour à l'accueil
       </button>
     </bol-hub-page>

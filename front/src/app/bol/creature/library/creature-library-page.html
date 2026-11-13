@@ -8,7 +8,7 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
+          <button mat-stroked-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
             <mat-icon>add</mat-icon> Créer une créature
           </button>
           <button mat-stroked-button routerLink="/library/demons">
@@ -18,7 +18,7 @@
             <mat-icon>manage_accounts</mat-icon> Voir les PNJ
           </button>
         </div>
-        <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+        <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
       </ng-container>
@@ -26,10 +26,10 @@
 
     <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer une créature et revenir. -->
     <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Bestiaire des créatures · ' + creatureCount() + (creatureCount() > 1 ? ' créatures' : ' créature')">
-      <button mat-flat-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
+      <button mat-stroked-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
         <mat-icon>add</mat-icon> Créer une créature
       </button>
-      <button mat-stroked-button [routerLink]="returnUrl() ?? '/'">
+      <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
         <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
       </button>
     </dw-compact-bar>
