@@ -23,6 +23,7 @@
 @use 'styles/tag';
 @use 'styles/sagas';
 @use 'styles/library-rows';
+@use 'styles/tuile';
 
 // ── La table de jeu, hors de ses composants (sous-composants Material ou partagés, overlays) ─
 @use 'app/bol/session/play/table-globale';

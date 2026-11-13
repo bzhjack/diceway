@@ -93,13 +93,11 @@
 }
 
 .sit-grille--face {
-  --sit-image: 6.75rem;
-
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .sit-grille--compagnie {
-  --sit-image: 6.25rem;
+  --dw-tuile-image: 6.25rem;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -143,165 +141,18 @@
 }
 
 // ── Une tuile ────────────────────────────────────────────────────────────────────────────────────
-// Comme la distribution de « Préparer la scène », réduite : le portrait en haut, le nombre et la vie posés dessus, le nom suivi du
-// point de l'attitude, le rang et l'icône de la sorte ; le liseré à la couleur de l'attitude (sombre, sans couleur, pour la compagnie). Les
-// exemplaires d'une fiche s'empilent en paquet.
-.sit-carte {
-  --sit-c: var(--dw-forge-bronze);
-  --sit-paquet: 0 0 transparent;
-  --sit-ombre: 0 8px 18px color-mix(in srgb, black 45%, transparent);
+// La tuile partagée (`bol-tuile`, `styles/_tuile.scss`) ; la table y pose le liseré de l'attitude (`--dw-tuile-c`), le point de
+// l'attitude, le cœur d'un groupe et le dé d'un héros.
 
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--sit-c) 60%, transparent);
-  border-radius: 10px;
-  background: var(--dw-forge-recess);
-  box-shadow: var(--sit-paquet), var(--sit-ombre);
-
-  &:has(.sit-portrait:hover) {
-    border-color: color-mix(in srgb, var(--sit-c) 90%, transparent);
-  }
+// Dans la compagnie, un allié a la hauteur d'un héros.
+.sit-grille--compagnie bol-tuile {
+  min-height: calc(var(--dw-tuile-image, 6.75rem) + 4.1rem);
 }
 
-// La compagnie : un bord sombre, sans couleur (ni vert, ni or) ; en pointillés pour un allié.
-.sit-carte--heros,
-.sit-carte--allie {
-  --sit-c: var(--dw-border);
-
-  border-color: var(--dw-border);
-
-  &:has(.sit-portrait:hover) {
-    border-color: var(--dw-forge-bronze-edge);
-  }
-}
-
-.sit-carte--allie {
-  border-style: dashed;
-}
-
-// Le paquet : deux tuiles en retrait derrière, en haut à droite.
-.sit-carte--groupe {
-  --sit-paquet: 4px -4px 0 -1px color-mix(in srgb, var(--sit-c) 10%, var(--dw-forge-recess)),
-    4px -4px 0 0 color-mix(in srgb, var(--sit-c) 40%, transparent),
-    8px -8px 0 -2px color-mix(in srgb, var(--sit-c) 6%, var(--dw-forge-recess)),
-    8px -8px 0 -1px color-mix(in srgb, var(--sit-c) 22%, transparent);
-}
-
-.sit-carte--selected {
-  --sit-ombre: 0 0 0 2px color-mix(in srgb, var(--dw-color-legendary) 40%, transparent), 0 8px 18px color-mix(in srgb, black 45%, transparent);
-
-  border-color: var(--dw-color-legendary);
-}
-
-// À 0 de vitalité ou moins pour tous ses exemplaires : la tuile pâlit, le portrait passe en gris.
-.sit-carte--tombe {
-  opacity: 0.55;
-
-  .sit-portrait img {
-    filter: grayscale(1);
-  }
-}
-
-// Le portrait : le bouton qui ouvre le détail du personnage. Sa zone de clic (::after) couvre toute la tuile ; les autres boutons de
-// la tuile passent au-dessus. Les pastilles posées sur lui se placent par rapport à la tuile (le haut de la tuile est le sien).
-// L'image couvre toute la tuile, sous le texte (z-index négatif dans la tuile isolée) ; un dégradé sombre (::before) la voile vers le
-// bas pour que le nom, le rang et le pied restent lisibles.
-.sit-portrait {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: var(--sit-image);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-
-  // Sans image, l'initiale sur un fond de bronze.
-  &:not(:has(img)) {
-    background: linear-gradient(160deg, color-mix(in srgb, var(--dw-forge-bronze) 22%, var(--dw-forge-recess)), var(--dw-forge-recess));
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent calc(var(--sit-image) + var(--sit-voile-debut, -3.5rem)),
-      color-mix(in srgb, var(--dw-forge-recess) 82%, transparent) calc(var(--sit-image) + var(--sit-voile-plein, 0.25rem)),
-      color-mix(in srgb, var(--dw-forge-recess) 96%, transparent) 100%
-    );
-    pointer-events: none;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 9px;
-  }
-
-  img {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 20%;
-  }
-
-  &:focus-visible {
-    outline: none;
-  }
-
-  &:focus-visible::after {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: -2px;
-  }
-}
-
-.sit-initiale {
-  color: color-mix(in srgb, var(--dw-forge-bronze) 70%, var(--dw-forge-name));
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 2.8rem;
-  line-height: 1;
-}
-
-// Le dé d'un héros, au-dessus de la zone de clic du portrait.
+// Le dé d'un héros, au début de son pied, au-dessus de la zone de clic du portrait.
 .sit-plus {
   position: relative;
   z-index: 1;
-}
-
-// Le nombre d'exemplaires, en médaille dorée en haut à gauche du portrait.
-.sit-nombre {
-  position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
-  min-width: 1.6rem;
-  height: 1.35rem;
-  padding: 0 0.35rem;
-  box-sizing: border-box;
-  display: grid;
-  place-items: center;
-  border-radius: var(--dw-radius-pill);
-  background: var(--dw-color-legendary);
-  box-shadow: 0 2px 6px color-mix(in srgb, black 50%, transparent);
-  color: var(--dw-forge-ink);
-  font-size: 0.7rem;
-  font-weight: 800;
-  pointer-events: none;
-}
-
-.sit-plus {
   flex: none;
   --mat-icon-button-state-layer-size: 1.5rem;
   --mat-icon-button-icon-size: 1rem;
@@ -309,165 +160,14 @@
   color: var(--dw-color-text-bright);
 }
 
-// La vie, toujours en bas à droite : un cœur dans le coin de la tuile, à côté du nom et du rang (dans le pied pour un héros), la
-// vitalité dedans pour un personnage seul, vide pour un groupe (un bouton : il ouvre le détail de chaque exemplaire).
-.sit-vies {
-  position: absolute;
-  right: 0.45rem;
-  bottom: 0.4rem;
-  pointer-events: none;
-
-  .sit-coeur {
-    width: 1.8rem;
-    height: 1.6rem;
-
-    b {
-      font-size: 0.8rem;
-    }
-  }
-}
-
-// Sous le portrait : le nom, puis le rang et l'icône de la sorte (son nom en infobulle).
-.sit-texte {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  min-width: 0;
-  padding: 0.45rem 0.6rem 0.5rem;
-}
-
-// Un héros : le nom descend contre son pied (la tuile garde sa hauteur), le voile sombre commence plus bas.
-.sit-carte--heros {
-  --sit-voile-debut: -2rem;
-  --sit-voile-plein: 1rem;
-}
-
-.sit-carte--heros .sit-texte {
-  padding-top: 0.9rem;
-  padding-bottom: 0;
-}
-
-// Dans la compagnie, un allié a la hauteur d'un héros : son texte descend en bas de la tuile.
-.sit-grille--compagnie .sit-carte {
-  min-height: calc(var(--sit-image) + 4.1rem);
-}
-
-.sit-carte--allie .sit-texte {
-  margin-top: auto;
-}
-
-// Le nom et l'attitude prennent toute la ligne ; seule la ligne du rang laisse la place du cœur, en bas à droite.
-.sit-carte:has(.sit-vies) .sit-sous {
-  padding-right: 2rem;
-}
-
-.sit-tete {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-.sit-nom {
-  flex: 0 1 auto;
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 0.92rem;
-  line-height: 1.1;
-  color: var(--dw-forge-name);
-  text-shadow: 0 1px 3px color-mix(in srgb, black 85%, transparent);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sit-sous {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  font-size: 0.66rem;
-  color: var(--dw-forge-caption);
-  white-space: nowrap;
-}
-
-.sit-rang {
-  padding: 0.05rem 0.3rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
-  color: var(--dw-forge-name);
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.sit-type {
-  display: inline-flex;
-  color: var(--dw-forge-caption);
-
-  mat-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-    font-size: 0.95rem;
-  }
+// Le cœur d'un groupe, à la taille de celui d'un personnage seul.
+.sit-vie-groupe .sit-coeur {
+  width: 1.8rem;
+  height: 1.6rem;
 }
 
 .sit-vilenie {
   color: var(--dw-forge-alert);
-}
-
-// Le pied d'un héros : son jet, ses points d'héroïsme et sa vitalité, sur un dégradé sombre qui part de la tuile (ni aplat, ni trait,
-// ni couleur).
-.sit-bande {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  width: 100%;
-  height: 1.65rem;
-  box-sizing: border-box;
-  margin-top: auto;
-  padding: 0 0.3rem 0 0.6rem;
-  border: 0;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, black 60%, transparent));
-  color: var(--dw-color-text-bright);
-  font: inherit;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-align: left;
-}
-
-// Le pied d'un héros, un peu plus haut : son dé à gauche ; à droite son écusson, puis son cœur, en bas à droite comme les autres.
-.sit-bande--heros {
-  gap: 0.35rem;
-  height: 2rem;
-  padding: 0 0.45rem 0 0.25rem;
-
-  .sit-coeur {
-    width: 1.95rem;
-    height: 1.75rem;
-
-    b {
-      font-size: 0.88rem;
-    }
-  }
-
-  .sit-ecusson {
-    width: 1.75rem;
-    height: 1.75rem;
-
-    b {
-      font-size: 0.74rem;
-    }
-  }
-
-  .sit-jet {
-    margin-right: auto;
-  }
 }
 
 // L'attitude de ceux d'en face : un point à sa couleur à droite du nom, au-dessus de la zone de clic du portrait ; son nom en infobulle,
@@ -492,8 +192,8 @@
     height: 0.7rem;
     box-sizing: border-box;
     border-radius: 50%;
-    background: var(--sit-c);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--sit-c) 70%, transparent);
+    background: var(--dw-tuile-c);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--dw-tuile-c) 70%, transparent);
     transition: transform 0.12s ease;
   }
 
@@ -554,35 +254,6 @@
 
 .sit-coeur--tombe {
   --coeur-fond: linear-gradient(160deg, var(--dw-surface-500), color-mix(in srgb, var(--dw-surface-500) 35%, black));
-}
-
-// L'écusson de l'héroïsme : doré, le nombre dedans ; le clic le traverse aussi.
-.sit-ecusson {
-  position: relative;
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  pointer-events: none;
-
-  svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: var(--dw-color-legendary);
-    filter: drop-shadow(0 1px 2px color-mix(in srgb, black 70%, transparent));
-  }
-
-  b {
-    position: relative;
-    font-size: 0.66rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    color: var(--dw-forge-ink);
-  }
 }
 
 // Le cœur d'un groupe : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.

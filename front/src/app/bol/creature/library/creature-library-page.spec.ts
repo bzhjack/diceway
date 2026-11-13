@@ -76,8 +76,8 @@ describe('CreatureLibraryPageComponent', () => {
     await fixture.whenStable();
     const page = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
-    const noms = () => [...page.querySelectorAll('.dw-lr-nom-texte')].map((n) => n.textContent?.trim());
-    const ligne = (nom: string) => [...page.querySelectorAll('tbody tr')].find((tr) => tr.querySelector('.dw-lr-nom-texte')?.textContent?.trim() === nom)!;
+    const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
+    const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => li.querySelector('.dw-tuile__nom')?.textContent?.trim() === nom)!;
     const bouton = (selecteur: string, libelle: string) =>
       [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
@@ -91,26 +91,33 @@ describe('CreatureLibraryPageComponent', () => {
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, ligne, bouton, cliquer, choisir};
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
   }
 
-  it('liste toutes les créatures en lignes, par nom, avec leur taille, leur rang et leur source', async () => {
-    const {noms, ligne, texte} = await rendre();
+  it('montre toutes les créatures en tuiles, par nom, avec leur rang, leur sorte et leur vitalité', async () => {
+    const {page, noms, tuile, texte} = await rendre();
 
+    expect(page.querySelector('table')).toBeNull();
     expect(noms()).toEqual(['Andrak', 'Azhdarkho', 'Cathgan', 'Fille de Djidaâ', 'Momie royale']);
-    expect(texte(ligne('Cathgan').querySelector('.cl-taille-cellule'))).toBe('Très petite');
-    expect(texte(ligne('Cathgan').querySelector('.cl-type-cellule'))).toBe('Piétaille');
-    const source = (nom: string) => [...ligne(nom).querySelector('.dw-lr-source')!.children].map((e) => texte(e));
-    expect(source('Azhdarkho')).toEqual(['Catalogue', 'Le Dieu voilé']);
-    expect(source('Momie royale')).toEqual(['Mes fiches', 'Le Dieu voilé']);
+    expect(texte(tuile('Cathgan').querySelector('.dw-tuile-rang'))).toBe('Piétaille');
+    expect(tuile('Cathgan').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('Créature');
+    expect(texte(tuile('Cathgan').querySelector('.dw-tuile__coeur b'))).toBe('2');
+    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('5 créatures');
   });
 
-  it('seules les fiches du compte se modifient et se suppriment ; le catalogue commun est en lecture seule', async () => {
-    const {ligne} = await rendre();
+  it('les fiches du compte ont la pastille et le menu, celles du catalogue n’ont ni l’un ni l’autre', async () => {
+    const {fixture, tuile, texte} = await rendre();
 
-    expect(ligne('Momie royale').querySelector('a[aria-label="Modifier Momie royale"]')?.getAttribute('href')).toBe('/create/creature/Momie%20royale');
-    expect(ligne('Momie royale').querySelector('button[aria-label="Supprimer Momie royale"]')).not.toBeNull();
-    expect(ligne('Andrak').querySelector('.dw-lr-actions')?.children.length).toBe(0);
+    expect(texte(tuile('Momie royale').querySelector('.dw-tuile-marque'))).toBe('Mes fiches');
+    const menu = tuile('Momie royale').querySelector<HTMLButtonElement>('button[aria-label="Actions de Momie royale"]')!;
+    menu.click();
+    await fixture.whenStable();
+    const items = [...document.querySelectorAll<HTMLElement>('.mat-mdc-menu-item')];
+    expect(items.map((i) => texte(i.querySelector('.mat-mdc-menu-item-text')))).toEqual(['Modifier', 'Supprimer']);
+    expect(items[0].getAttribute('href')).toBe('/create/creature/Momie%20royale');
+
+    expect(tuile('Andrak').querySelector('.dw-tuile-marque')).toBeNull();
+    expect(tuile('Andrak').querySelector('.dw-tuile__menu button')).toBeNull();
   });
 
   it('filtre par source, chaque option avec son nombre de créatures', async () => {
@@ -138,10 +145,10 @@ describe('CreatureLibraryPageComponent', () => {
     expect(noms().length).toBe(5);
   });
 
-  it('trie par type, de la piétaille au rival', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+  it('trie par rang, de la piétaille au rival', async () => {
+    const {noms, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-tri', 'Type'));
+    await choisir('Trier par', 'Rang');
 
     expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ', 'Momie royale', 'Andrak', 'Azhdarkho']);
   });
@@ -158,17 +165,15 @@ describe('CreatureLibraryPageComponent', () => {
     expect(noms()).toEqual(['Fille de Djidaâ', 'Momie royale']);
   });
 
-  it('trie par colonne, et inverse le sens au second clic', async () => {
-    const {page, noms, bouton, cliquer} = await rendre();
+  it('trie par vitalité, et le bouton du sens l’inverse', async () => {
+    const {page, noms, cliquer, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-tri', 'Vit.'));
+    await choisir('Trier par', 'Vitalité');
     expect(noms()).toEqual(['Cathgan', 'Momie royale', 'Fille de Djidaâ', 'Andrak', 'Azhdarkho']);
-    expect(bouton('.dw-lr-tri', 'Vit.').closest('th')?.getAttribute('aria-sort')).toBe('ascending');
 
-    await cliquer(bouton('.dw-lr-tri', 'Vit.'));
+    await cliquer(page.querySelector<HTMLButtonElement>('button.dw-lr-sens')!);
     expect(noms()[0]).toBe('Azhdarkho');
-    expect(bouton('.dw-lr-tri', 'Vit.').closest('th')?.getAttribute('aria-sort')).toBe('descending');
-    expect(page.querySelector('th[aria-sort="ascending"]')).toBeNull();
+    expect(page.querySelector('button.dw-lr-sens')?.getAttribute('aria-label')).toBe('Ordre décroissant, inverser');
   });
 
   it('la recherche trouve aussi une capacité ou un scénario', async () => {
@@ -199,10 +204,10 @@ describe('CreatureLibraryPageComponent', () => {
     expect(page.querySelector('.dw-lr-effacer')).toBeNull();
   });
 
-  it('un clic sur le nom ouvre le statbloc', async () => {
-    const {ligne, open} = await rendre();
+  it('un clic sur la tuile ouvre le statbloc', async () => {
+    const {tuile, open} = await rendre();
 
-    ligne('Andrak').querySelector<HTMLButtonElement>('.dw-lr-nom')!.click();
+    tuile('Andrak').querySelector<HTMLButtonElement>('button.dw-tuile__portrait[aria-label="Andrak, voir son statbloc"]')!.click();
 
     expect(open).toHaveBeenCalledTimes(1);
   });
@@ -214,5 +219,6 @@ describe('CreatureLibraryPageComponent', () => {
     await choisir('Rang', 'Piétaille');
 
     expect(texte(page.querySelector('.dw-lr-vide'))).toBe('Aucune créature ne correspond à ces filtres.');
+    expect(page.querySelector('.dw-lr-grille > li')).toBeNull();
   });
 });

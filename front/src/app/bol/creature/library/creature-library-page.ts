@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {Observable} from 'rxjs';
 import {BolCreatureModel} from '../../models/bol-creature.model';
@@ -13,39 +14,34 @@ import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
 import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
+import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {TuileComponent} from '../../shared/tuile/tuile';
 import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
-import {LibraryColonne, LibraryRang} from '../../shared/models/library-rows.model';
+import {LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {creatureStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {creatureImage} from '../creature.util';
 
-type Tri = 'nom' | 'taille' | 'type' | 'vitalite' | 'attaque' | 'defense';
+type Tri = 'nom' | 'type' | 'vitalite' | 'taille';
 
-const COLONNES: readonly LibraryColonne<Tri>[] = [
-  {cle: 'nom', label: 'Créature'},
+const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
+  {cle: 'nom', label: 'Nom'},
+  {cle: 'type', label: 'Rang'},
+  {cle: 'vitalite', label: 'Vitalité'},
   {cle: 'taille', label: 'Taille'},
-  {cle: 'type', label: 'Type'},
-  {cle: 'vitalite', label: 'Vit.', titre: 'Vitalité', num: true},
-  {cle: 'attaque', label: 'Att.', titre: 'Attaque', num: true},
-  {cle: 'defense', label: 'Déf.', titre: 'Défense', num: true},
-  {cle: null, label: 'Dégâts'},
-  {cle: null, label: 'Prot.', titre: 'Protection'},
-  {cle: null, label: 'Source'},
 ];
 
 /**
- * Le bestiaire, en lignes : à gauche les filtres (source, scénario, rang, taille) avec leur nombre de créatures, à droite le tableau,
- * triable par colonne. Un clic sur une créature ouvre son statbloc ; les fiches du compte se modifient et se suppriment, celles du
- * catalogue commun sont en lecture seule.
+ * Le bestiaire, en tuiles : à gauche les filtres (source, scénario) avec leur nombre de créatures, à droite une tuile par créature
+ * (portrait, nom, rang, vitalité), triées par la liste « Trier par ». Un clic sur une tuile ouvre son statbloc ; les fiches du compte
+ * portent « Mes fiches » et un menu pour les modifier ou les supprimer, celles du catalogue commun sont en lecture seule.
  */
 @Component({
   selector: 'bol-creature-library-page',
@@ -56,15 +52,16 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
     MatCard,
     MatFormFieldModule,
     MatIconModule,
+    MatMenuModule,
     MatSelectModule,
-    AvatarFallbackDirective,
     DwCompactBarComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
     DwTagComponent,
-    LibraryEnteteComponent,
     LibraryFacettesComponent,
     LibraryRangComponent,
+    LibraryTriComponent,
+    TuileComponent,
   ],
   templateUrl: './creature-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,7 +72,7 @@ export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureM
   private readonly creatures = refreshableResource(() => this.creaturesService.creatures());
   protected readonly fiches = this.creatures.data;
   protected readonly libelleTout = 'Tout le bestiaire';
-  protected readonly colonnesDefinies = COLONNES;
+  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolCreatureModel> = {
     title: 'Supprimer la créature',
     name: (item) => item.nom,
@@ -104,19 +101,14 @@ export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureM
   });
   protected readonly creatureCount = computed(() => this.filteredCreatures().length);
 
-  /** Les lignes du tableau : la créature, son portrait, son rang, ses scénarios avec leur teinte, si elle est au compte. */
+  /** Les tuiles : la créature, son portrait, le nom de son rang, si elle est au compte. */
   protected readonly lignes = computed(() =>
-    this.filteredCreatures().map((creature) => {
-      const rang = this.rangDe(creature);
-      return {
-        creature,
-        image: creatureImage(creature),
-        rang,
-        rangLabel: RANG_LABELS[rang],
-        mienne: Boolean(creature.user_id),
-        scenarios: this.scenariosDe(creature),
-      };
-    }),
+    this.filteredCreatures().map((creature) => ({
+      creature,
+      image: creatureImage(creature),
+      rangLabel: RANG_LABELS[this.rangDe(creature)],
+      mienne: Boolean(creature.user_id),
+    })),
   );
 
   protected rangDe(creature: BolCreatureModel): LibraryRang {

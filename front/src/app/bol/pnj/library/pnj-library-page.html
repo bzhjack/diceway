@@ -52,7 +52,9 @@
               }
             </mat-select>
           </mat-form-field>
-          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          <bol-library-tri dwToolbarFilter [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
+          <!-- Tout à droite : le nombre de fiches gardées, puis, quand un filtre est posé, de quoi les retirer tous. -->
+          <dw-tag dwToolbarCount>{{ pnjCount() }} PNJ</dw-tag>
           @if (filtresActifs()) {
             <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
               <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
@@ -60,60 +62,36 @@
           }
         </dw-library-toolbar>
 
-        <div class="dw-lr-cadre">
-          <table class="dw-lr-table">
-            <caption class="sr-only">Les PNJ ; un clic sur un nom ouvre son statbloc.</caption>
-            <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" [compte]="pnjCount() + ' PNJ'" (trier)="trier($event)"></tr>
-            </thead>
-            <tbody>
-              @for (ligne of lignes(); track ligne.pnj.id) {
-                <tr>
-                  <td>
-                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.nom + ', voir son statbloc'" (click)="openStatblock(ligne.pnj)">
-                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
-                      <span class="dw-lr-nom-texte">{{ ligne.nom }}</span>
-                    </button>
-                  </td>
-                  <td class="pl-region">{{ ligne.pnj.origines.region?.region ?? '—' }}</td>
-                  <td class="pl-type"><span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
-                  <td class="dw-lr-num">{{ ligne.pnj.ressources.vitalite }}</td>
-                  <td class="dw-lr-num">{{ ligne.pnj.combat.melee }}</td>
-                  <td class="dw-lr-num">{{ ligne.pnj.combat.defense }}</td>
-                  <td><span class="dw-lr-texte-long pl-carrieres" [title]="ligne.carrieres">{{ ligne.carrieres || '—' }}</span></td>
-                  <td>
-                    <span class="dw-lr-source">
-                      <span class="dw-lr-provenance" [class.dw-lr-provenance--mienne]="ligne.mien">{{ ligne.mien ? 'Mes fiches' : 'Catalogue' }}</span>
-                      @for (scenario of ligne.scenarios; track scenario.id) {
-                        <span class="dw-lr-scenario" [class]="'dw-saga--' + scenario.teinte"><span class="dw-lr-point" aria-hidden="true"></span>{{ scenario.titre }}</span>
-                      }
-                    </span>
-                  </td>
-                  <td class="dw-lr-actions">
-                    @if (ligne.mien) {
-                      <a
-                        mat-icon-button
-                        [routerLink]="['/create/pnj', ligne.pnj.id]"
-                        [state]="{ returnUrl: '/library/pnjs' }"
-                        [attr.aria-label]="'Modifier ' + ligne.nom"
-                      >
-                        <mat-icon>edit</mat-icon>
-                      </a>
-                      <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.nom" (click)="askDelete(ligne.pnj)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    }
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="9" class="dw-lr-vide">Aucun PNJ ne correspond à ces filtres.</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <!-- Une tuile par fiche : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
+        <ul class="dw-lr-grille" aria-label="Les PNJ">
+          @for (ligne of lignes(); track ligne.pnj.id) {
+            <li>
+              <bol-tuile [nom]="ligne.nom" [image]="ligne.image" [label]="ligne.nom + ', voir son statbloc'" [vitalite]="ligne.pnj.ressources.vitalite" (ouvrir)="openStatblock(ligne.pnj)">
+                @if (ligne.mien) {
+                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                }
+                @if (ligne.mien) {
+                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.pnj}">
+                    <mat-icon>more_horiz</mat-icon>
+                  </button>
+                }
+                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="PNJ"><mat-icon aria-hidden="true">person</mat-icon></span>
+              </bol-tuile>
+            </li>
+          }
+        </ul>
+        @if (!lignes().length) {
+          <p class="dw-lr-vide">Aucun PNJ ne correspond à ces filtres.</p>
+        }
       </mat-card>
     </div>
   </div>
+
+  <mat-menu #actions="matMenu">
+    <ng-template matMenuContent let-fiche="fiche">
+      <a mat-menu-item [routerLink]="['/create/pnj', fiche.id]" [state]="{ returnUrl: '/library/pnjs' }"><mat-icon>edit</mat-icon>Modifier</a>
+      <button mat-menu-item type="button" (click)="askDelete(fiche)"><mat-icon>delete</mat-icon>Supprimer</button>
+    </ng-template>
+  </mat-menu>
 </section>

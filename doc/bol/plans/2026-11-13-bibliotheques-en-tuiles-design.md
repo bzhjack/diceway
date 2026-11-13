@@ -1,6 +1,6 @@
 # Bibliothèques en tuiles — conception
 
-Date : 2026-11-13. Statut : à valider.
+Date : 2026-11-13. Statut : réalisé le 2026-11-13 (plan : `2026-11-13-bibliotheques-en-tuiles-plan.md`).
 
 ## Pourquoi
 

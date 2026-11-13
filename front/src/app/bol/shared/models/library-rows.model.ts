@@ -4,19 +4,10 @@ export type LibraryRang = 'R' | 'C' | 'P';
 /** D'où vient une fiche : le catalogue commun (partagé, en lecture seule) ou les fiches du compte. */
 export type LibrarySource = 'tout' | 'catalogue' | 'miennes';
 
-/** Une colonne d'une bibliothèque en lignes : sa clé de tri (null : elle ne trie pas), son en-tête, le mot entier d'un en-tête abrégé
- * (`titre`, en bulle), centrée si elle porte un nombre. */
-export interface LibraryColonne<TTri extends string> {
-  readonly cle: TTri | null;
+/** Une option de la liste « Trier par » d'une bibliothèque : sa clé de tri, son libellé. */
+export interface LibraryTriOption<TTri extends string> {
+  readonly cle: TTri;
   readonly label: string;
-  readonly titre?: string;
-  readonly num?: boolean;
-}
-
-/** Une colonne prête à afficher : ce que dit son `aria-sort`, la flèche de la colonne triée. */
-export interface LibraryColonneVue<TTri extends string> extends LibraryColonne<TTri> {
-  readonly ariaSort: 'ascending' | 'descending' | 'none' | null;
-  readonly icone: string | null;
 }
 
 export interface LibraryTri<TTri extends string> {
@@ -37,11 +28,4 @@ export interface LibraryScenarioOption {
   readonly titre: string;
   readonly teinte: number;
   readonly compte: number;
-}
-
-/** Un scénario sur la ligne d'une fiche : son titre et sa teinte. */
-export interface LibraryScenarioTag {
-  readonly id: string;
-  readonly titre: string;
-  readonly teinte: number;
 }

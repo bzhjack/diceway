@@ -30,32 +30,60 @@ describe('HeroLibraryPageComponent', () => {
     await fixture.whenStable();
     const page = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
-    const noms = () => [...page.querySelectorAll('.dw-lr-nom-texte')].map((n) => n.textContent?.trim());
-    const ligne = (nom: string) => [...page.querySelectorAll('tbody tr')].find((tr) => texte(tr.querySelector('.dw-lr-nom-texte')) === nom)!;
+    const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
+    const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
+    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
+    const choisir = async (liste: string, libelle: string) => {
+      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      await fixture.whenStable();
+      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      await fixture.whenStable();
+    };
+    /** Ouvre le menu `⋯` de ce héros et rend le libellé et le lien de chacune de ses actions. */
+    const actions = async (nom: string) => {
+      tuile(nom).querySelector<HTMLButtonElement>(`button[aria-label="Actions de ${nom}"]`)!.click();
+      await fixture.whenStable();
+      return [...document.querySelectorAll<HTMLElement>('.mat-mdc-menu-item')].map((i) => [texte(i.querySelector('.mat-mdc-menu-item-text')), i.getAttribute('href')]);
+    };
     const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, texte, noms, ligne, bouton, cliquer};
+    return {page, texte, noms, tuile, bouton, cliquer, choisir, actions};
   }
 
-  it('liste les héros par nom : joueur, région, statut, carrières', async () => {
-    const {noms, ligne, texte} = await rendre();
+  it('montre les héros en tuiles, par nom : joueur, héroïsme et vitalité dans le pied, « En cours » pour un héros pas encore actif', async () => {
+    const {page, noms, tuile, texte} = await rendre();
 
+    expect(page.querySelector('table')).toBeNull();
     expect(noms()).toEqual(['Axel', 'Balaram', 'jadawin']);
-    expect(texte(ligne('Axel').querySelector('.hl-joueur'))).toBe('Lionel');
-    expect(texte(ligne('Axel').querySelector('.hl-statut'))).toBe('Actif');
-    expect(texte(ligne('Balaram').querySelector('.hl-statut'))).toBe('En cours');
-    expect(texte(ligne('Axel').querySelector('.hl-carrieres'))).toBe('Voleur 2');
+    expect(texte(tuile('Axel').querySelector('.dw-tuile__sous'))).toBe('Lionel');
+    expect(texte(tuile('Axel').querySelector('.dw-tuile__pied .dw-tuile__ecusson b'))).toBe('5');
+    expect(texte(tuile('Axel').querySelector('.dw-tuile__pied .dw-tuile__coeur b'))).toBe('12');
+    expect(tuile('Axel').querySelector('.dw-tuile-marque')).toBeNull();
+    expect(texte(tuile('Balaram').querySelector('.dw-tuile-marque'))).toBe('En cours');
+    expect(tuile('Balaram').querySelector('.dw-tuile__pied .dw-tuile__ecusson')).not.toBeNull();
+    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('3 héros');
   });
 
-  it('seul un héros en cours de création a l’édition avancée', async () => {
-    const {ligne} = await rendre();
+  it('seul un héros en cours de création a l’édition avancée dans son menu', async () => {
+    const {actions} = await rendre();
 
-    expect(ligne('Balaram').querySelector('a[aria-label="Édition avancée de Balaram"]')?.getAttribute('href')).toBe('/create/hero-advanced/Balaram');
-    expect(ligne('Axel').querySelector('a[aria-label^="Édition avancée"]')).toBeNull();
-    expect(ligne('Axel').querySelector('button[aria-label="Supprimer Axel"]')).not.toBeNull();
+    expect(await actions('Balaram')).toEqual([
+      ['Modifier', '/create/hero/Balaram'],
+      ['Édition avancée', '/create/hero-advanced/Balaram'],
+      ['Supprimer', null],
+    ]);
+  });
+
+  it('un héros actif se modifie et se supprime', async () => {
+    const {actions} = await rendre();
+
+    expect(await actions('Axel')).toEqual([
+      ['Modifier', '/create/hero/Axel'],
+      ['Supprimer', null],
+    ]);
   });
 
   it('filtre par statut, chaque option avec son nombre de héros', async () => {
@@ -68,12 +96,12 @@ describe('HeroLibraryPageComponent', () => {
   });
 
   it('trie par joueur, puis par héroïsme', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+    const {noms, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-tri', 'Joueur'));
+    await choisir('Trier par', 'Joueur');
     expect(noms()).toEqual(['Axel', 'jadawin', 'Balaram']);
 
-    await cliquer(bouton('.dw-lr-tri', 'Hér.'));
+    await choisir('Trier par', 'Héroïsme');
     expect(noms()).toEqual(['Balaram', 'Axel', 'jadawin']);
   });
 });

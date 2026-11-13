@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
@@ -12,40 +13,35 @@ import {BolPnjService} from '../../services/bol-pnj.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
 import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
+import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {TuileComponent} from '../../shared/tuile/tuile';
 import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
-import {LibraryColonne, LibraryRang} from '../../shared/models/library-rows.model';
+import {LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {pnjStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {pnjImage} from '../pnj.util';
 
-type Tri = 'nom' | 'region' | 'type' | 'vitalite' | 'melee' | 'defense';
+type Tri = 'nom' | 'type' | 'vitalite' | 'region';
 
-const COLONNES: readonly LibraryColonne<Tri>[] = [
-  {cle: 'nom', label: 'PNJ'},
+const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
+  {cle: 'nom', label: 'Nom'},
+  {cle: 'type', label: 'Rang'},
+  {cle: 'vitalite', label: 'Vitalité'},
   {cle: 'region', label: 'Région'},
-  {cle: 'type', label: 'Type'},
-  {cle: 'vitalite', label: 'Vit.', titre: 'Vitalité', num: true},
-  {cle: 'melee', label: 'Mêlée', num: true},
-  {cle: 'defense', label: 'Déf.', titre: 'Défense', num: true},
-  {cle: null, label: 'Carrières'},
-  {cle: null, label: 'Source'},
 ];
 
 /**
- * Les PNJ, en lignes : à gauche les filtres (source, scénario) avec leur nombre de PNJ, à droite le tableau, triable par colonne, sous la
- * recherche suivie de deux listes (rang, région).
- * Un clic sur un PNJ ouvre son statbloc ; les fiches du compte se modifient et se suppriment, celles du catalogue commun sont
- * en lecture seule.
+ * Les PNJ, en tuiles : à gauche les filtres (source, scénario) avec leur nombre de PNJ, à droite une tuile par PNJ (portrait, nom, rang,
+ * vitalité), sous la recherche suivie de deux listes (rang, région) et du tri. Un clic sur une tuile ouvre son statbloc ; les fiches du
+ * compte portent « Mes fiches » et un menu pour les modifier ou les supprimer, celles du catalogue commun sont en lecture seule.
  */
 @Component({
   selector: 'bol-pnj-library-page',
@@ -56,15 +52,16 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
     MatCard,
     MatFormFieldModule,
     MatIconModule,
+    MatMenuModule,
     MatSelectModule,
-    AvatarFallbackDirective,
     DwCompactBarComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
     DwTagComponent,
-    LibraryEnteteComponent,
     LibraryFacettesComponent,
     LibraryRangComponent,
+    LibraryTriComponent,
+    TuileComponent,
   ],
   templateUrl: './pnj-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +71,7 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
   private readonly pnjs = refreshableResource(() => this.pnjService.pnjs());
   protected readonly fiches = this.pnjs.data;
   protected readonly libelleTout = 'Tous les PNJ';
-  protected readonly colonnesDefinies = COLONNES;
+  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le PNJ',
     name: (item) => item.origines.nom ?? 'ce PNJ',
@@ -129,11 +126,8 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
         pnj,
         nom: this.nomDe(pnj),
         image: pnjImage(pnj),
-        rang,
         rangLabel: RANG_LABELS[rang],
-        carrieres: carrieresDe(pnj),
         mien: Boolean(pnj.user_id),
-        scenarios: this.scenariosDe(pnj),
       };
     }),
   );
@@ -152,8 +146,6 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
         return ORDRE_DES_RANGS[this.rangDe(pnj)];
       case 'vitalite':
         return pnj.ressources.vitalite;
-      default:
-        return pnj.combat[cle];
     }
   }
 

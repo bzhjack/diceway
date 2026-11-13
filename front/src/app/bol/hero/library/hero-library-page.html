@@ -62,7 +62,9 @@
               }
             </mat-select>
           </mat-form-field>
-          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          <bol-library-tri dwToolbarFilter [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
+          <!-- Tout à droite : le nombre de héros gardés, puis, quand un filtre est posé, de quoi les retirer tous. -->
+          <dw-tag dwToolbarCount>{{ heroCount() }} héros</dw-tag>
           @if (filtresActifs()) {
             <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
               <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
@@ -70,62 +72,45 @@
           }
         </dw-library-toolbar>
 
-        <div class="dw-lr-cadre">
-          <table class="dw-lr-table">
-            <caption class="sr-only">Les héros ; un clic sur un nom ouvre son statbloc.</caption>
-            <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" [compte]="heroCount() + ' héros'" (trier)="trier($event)"></tr>
-            </thead>
-            <tbody>
-              @for (ligne of lignes(); track ligne.hero.id) {
-                <tr>
-                  <td>
-                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.nom + ', voir son statbloc'" (click)="openStatblock(ligne.hero)">
-                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
-                      <span class="dw-lr-nom-texte">{{ ligne.nom }}</span>
-                    </button>
-                  </td>
-                  <td class="hl-joueur">{{ ligne.hero.origines.joueur || '—' }}</td>
-                  <td class="hl-region">{{ ligne.hero.origines.region?.region ?? '—' }}</td>
-                  <td class="hl-statut">
-                    <span class="dw-lr-statut" [class.dw-lr-statut--en-cours]="!ligne.hero.active">{{ ligne.hero.active ? 'Actif' : 'En cours' }}</span>
-                  </td>
-                  <td class="dw-lr-num">{{ ligne.hero.ressources.vitalite }}</td>
-                  <td class="dw-lr-num">{{ ligne.hero.ressources.heroisme }}</td>
-                  <td><span class="dw-lr-texte-long hl-carrieres" [title]="ligne.carrieres">{{ ligne.carrieres || '—' }}</span></td>
-                  <td class="dw-lr-actions">
-                    <a
-                      mat-icon-button
-                      [routerLink]="['/create/hero', ligne.hero.id]"
-                      [state]="{ returnUrl: '/library/heroes' }"
-                      [attr.aria-label]="'Modifier ' + ligne.nom"
-                    >
-                      <mat-icon>edit</mat-icon>
-                    </a>
-                    @if (!ligne.hero.active) {
-                      <a
-                        mat-icon-button
-                        [routerLink]="['/create/hero-advanced', ligne.hero.id]"
-                        [state]="{ returnUrl: '/library/heroes' }"
-                        [attr.aria-label]="'Édition avancée de ' + ligne.nom"
-                      >
-                        <mat-icon>tune</mat-icon>
-                      </a>
-                    }
-                    <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.nom" (click)="askDelete(ligne.hero)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="8" class="dw-lr-vide">Aucun héros ne correspond à ces filtres.</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <!-- Une tuile par héros : un clic ouvre son statbloc ; son menu le modifie, le supprime, ou l'édite en création avancée s'il est en cours. -->
+        <ul class="dw-lr-grille" aria-label="Les héros">
+          @for (ligne of lignes(); track ligne.hero.id) {
+            <li>
+              <bol-tuile
+                [nom]="ligne.nom"
+                [image]="ligne.image"
+                [label]="ligne.nom + ', voir son statbloc'"
+                [vitalite]="ligne.hero.ressources.vitalite"
+                [heroisme]="ligne.hero.ressources.heroisme"
+                (ouvrir)="openStatblock(ligne.hero)"
+              >
+                @if (!ligne.hero.active) {
+                  <span bolTuileCoin class="dw-tuile-marque">En cours</span>
+                }
+                <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{hero: ligne.hero}">
+                  <mat-icon>more_horiz</mat-icon>
+                </button>
+                @if (ligne.hero.origines.joueur) {
+                  <span bolTuileSous>{{ ligne.hero.origines.joueur }}</span>
+                }
+              </bol-tuile>
+            </li>
+          }
+        </ul>
+        @if (!lignes().length) {
+          <p class="dw-lr-vide">Aucun héros ne correspond à ces filtres.</p>
+        }
       </mat-card>
     </div>
   </div>
+
+  <mat-menu #actions="matMenu">
+    <ng-template matMenuContent let-hero="hero">
+      <a mat-menu-item [routerLink]="['/create/hero', hero.id]" [state]="{ returnUrl: '/library/heroes' }"><mat-icon>edit</mat-icon>Modifier</a>
+      @if (!hero.active) {
+        <a mat-menu-item [routerLink]="['/create/hero-advanced', hero.id]" [state]="{ returnUrl: '/library/heroes' }"><mat-icon>tune</mat-icon>Édition avancée</a>
+      }
+      <button mat-menu-item type="button" (click)="askDelete(hero)"><mat-icon>delete</mat-icon>Supprimer</button>
+    </ng-template>
+  </mat-menu>
 </section>

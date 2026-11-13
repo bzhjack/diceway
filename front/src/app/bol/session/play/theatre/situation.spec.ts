@@ -75,8 +75,8 @@ describe('SituationComponent', () => {
     ]);
     const camps = [...element.querySelectorAll('section.sit-camp')];
     expect(camps.map((g) => g.getAttribute('data-drop-camp'))).toEqual(['adversaires', 'heros']);
-    expect([...camps[0].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
-    expect([...camps[1].querySelectorAll('.sit-nom')].map((n) => texte(n))).toEqual(['Grimar', 'Loup']);
+    expect([...camps[0].querySelectorAll('.dw-tuile__nom')].map((n) => texte(n))).toEqual(['Chemdi', 'Soldat du guet #2']);
+    expect([...camps[1].querySelectorAll('.dw-tuile__nom')].map((n) => texte(n))).toEqual(['Grimar', 'Loup']);
   });
 
   it('« Ajouter », dans l’en-tête de ceux d’en face, demande les coulisses ; sans allié, la compagnie dit qu’on peut en glisser un', async () => {
@@ -93,12 +93,12 @@ describe('SituationComponent', () => {
     const garde2 = carte({key: 'pnj-8', kind: 'pnj', nom: 'Garde #2', pivotId: 8, sourceId: 'g', attitude: 'mefiant', vitaliteCourante: 4});
     const {element, texte, bouton, bulle, stable, ouvertes} = await rendre([garde1, garde2]);
 
-    const cartes = [...element.querySelectorAll('.sit-camp--face .sit-carte')];
+    const cartes = [...element.querySelectorAll('.sit-camp--face bol-tuile')];
     expect(cartes).toHaveLength(1);
-    expect(texte(cartes[0].querySelector('.sit-nom'))).toBe('Garde , 2 exemplaires');
-    expect(texte(cartes[0].querySelector('.sit-nombre'))).toBe('×2');
-    expect(cartes[0].querySelectorAll('.sit-vies .sit-coeur')).toHaveLength(1);
-    expect(cartes[0].querySelector('.sit-vies b')).toBeNull();
+    expect(texte(cartes[0].querySelector('.dw-tuile__tete'))).toBe('Garde, 2 exemplaires');
+    expect(texte(cartes[0].querySelector('.dw-tuile-marque'))).toBe('×2');
+    expect(cartes[0].querySelectorAll('.dw-tuile__vies .sit-coeur--groupe')).toHaveLength(1);
+    expect(cartes[0].querySelector('.dw-tuile__vies b')).toBeNull();
     bouton('Vitalité des 2 exemplaires de Garde').click();
     await stable();
     const lignes = [...document.querySelectorAll<HTMLButtonElement>('.sit-pop-ligne')];
@@ -125,26 +125,26 @@ describe('SituationComponent', () => {
   it('garde les tuiles légères : le rang, la sorte et l’attitude d’en face, la vitalité ; un héros a son jet, son héroïsme et son cœur au pied', async () => {
     const {element, texte, bulle} = await rendre([CHEMDI, GRIMAR, LOUP]);
 
-    const chemdi = element.querySelector('.sit-camp--face .sit-carte')!;
-    expect(texte(chemdi.querySelector('.sit-rang'))).toBe('Coriace');
-    expect(chemdi.querySelector('.sit-type')!.getAttribute('aria-label')).toBe('PNJ');
-    expect(bulle(chemdi.querySelector('.sit-type')!)).toBe('PNJ');
+    const chemdi = element.querySelector('.sit-camp--face bol-tuile')!;
+    expect(texte(chemdi.querySelector('.dw-tuile-rang'))).toBe('Coriace');
+    expect(chemdi.querySelector('.dw-tuile-sorte')!.getAttribute('aria-label')).toBe('PNJ');
+    expect(bulle(chemdi.querySelector('.dw-tuile-sorte')!)).toBe('PNJ');
     expect(bulle(chemdi.querySelector('.sit-attitude')!)).toBe('Hostile');
-    expect(chemdi.querySelector('.sit-bande')).toBeNull();
-    expect(texte(chemdi.querySelector('.sit-coeur b'))).toBe('8');
-    expect(chemdi.querySelector('.sit-coeur')!.getAttribute('aria-label')).toBe('Vitalité de Chemdi : 8/8');
-    expect(chemdi.querySelector('.sit-ecusson')).toBeNull();
+    expect(chemdi.querySelector('.dw-tuile__pied')).toBeNull();
+    expect(texte(chemdi.querySelector('.dw-tuile__coeur b'))).toBe('8');
+    expect(chemdi.querySelector('.dw-tuile__coeur')!.getAttribute('aria-label')).toBe('Vitalité de Chemdi : 8/8');
+    expect(chemdi.querySelector('.dw-tuile__ecusson')).toBeNull();
     expect(chemdi.querySelector('.sit-coeur--groupe')).toBeNull();
     expect(element.querySelector('[aria-label^="Plus d’actions"]')).toBeNull();
-    const [grimar, loup] = [...element.querySelectorAll('.sit-camp--compagnie .sit-carte')];
-    expect(grimar.querySelector('.sit-sous')).toBeNull();
+    const [grimar, loup] = [...element.querySelectorAll('.sit-camp--compagnie bol-tuile')];
+    expect(texte(grimar.querySelector('.dw-tuile__sous'))).toBe('');
     expect(texte(grimar)).not.toContain('Clara');
-    expect(grimar.querySelector('.sit-vies')).toBeNull();
-    expect([...grimar.querySelectorAll('.sit-bande b')].map((b) => texte(b))).toEqual(['2', '8']);
-    expect(grimar.querySelector('.sit-bande [aria-label="Jet d’action de Grimar"]')).not.toBeNull();
-    expect(loup.querySelector('.sit-bande')).toBeNull();
+    expect(grimar.querySelector('.dw-tuile__vies')).toBeNull();
+    expect([...grimar.querySelectorAll('.dw-tuile__pied b')].map((b) => texte(b))).toEqual(['2', '8']);
+    expect(grimar.querySelector('.dw-tuile__pied [aria-label="Jet d’action de Grimar"]')).not.toBeNull();
+    expect(loup.querySelector('.dw-tuile__pied')).toBeNull();
     expect(loup.querySelector('.sit-attitude')).toBeNull();
-    expect(loup.querySelector('.sit-type')!.getAttribute('aria-label')).toBe('Créature');
+    expect(loup.querySelector('.dw-tuile-sorte')!.getAttribute('aria-label')).toBe('Créature');
   });
 
   it('change l’attitude d’un menu, et la rend à la page', async () => {

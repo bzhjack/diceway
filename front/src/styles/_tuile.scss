@@ -1,0 +1,379 @@
+@use 'forge-mixins' as forge;
+
+// Une tuile de personnage (`bol-tuile`), celle de la table et des bibliothèques : le portrait couvre la tuile, un voile sombre vers le bas
+// porte le nom et la ligne du dessous, la vitalité dans un cœur en bas à droite (dans le pied pour un héros). Les styles sont globaux :
+// le contenu projeté (rang, sorte, pastilles, menu) les partage.
+
+// Réglages, posés par la page sur la tuile ou sur sa grille :
+// - `--dw-tuile-image` : la hauteur du portrait, le haut de la tuile (6,75 rem sans réglage) ;
+// - `--dw-tuile-c` : la couleur du liseré ;
+// - `--dw-tuile-paquet`, `--dw-tuile-ombre` : les ombres (le paquet d'une fiche à plusieurs exemplaires, la sélection) ;
+// - `--dw-tuile-voile-debut`, `--dw-tuile-voile-plein` : où le voile commence et où il devient sombre, par rapport au bas du portrait.
+.dw-tuile {
+  --dw-tuile-c: var(--dw-forge-bronze);
+  --dw-tuile-paquet: 0 0 transparent;
+  --dw-tuile-ombre: 0 8px 18px color-mix(in srgb, black 45%, transparent);
+
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--dw-tuile-c) 60%, transparent);
+  border-radius: 10px;
+  background: var(--dw-forge-recess);
+  box-shadow: var(--dw-tuile-paquet), var(--dw-tuile-ombre);
+
+  &:has(.dw-tuile__portrait:hover) {
+    border-color: color-mix(in srgb, var(--dw-tuile-c) 90%, transparent);
+  }
+}
+
+// Les variantes, posées par la page : un liseré sombre, sans couleur (la compagnie) ; en pointillés, le texte en bas (un allié) ; le paquet
+// d'une fiche à plusieurs exemplaires, deux tuiles en retrait derrière ; la tuile sélectionnée ; à terre, pâlie, le portrait en gris.
+.dw-tuile--sombre,
+.dw-tuile--allie {
+  --dw-tuile-c: var(--dw-border);
+
+  border-color: var(--dw-border);
+
+  &:has(.dw-tuile__portrait:hover) {
+    border-color: var(--dw-forge-bronze-edge);
+  }
+}
+
+.dw-tuile--allie {
+  border-style: dashed;
+
+  .dw-tuile__texte {
+    margin-top: auto;
+  }
+}
+
+.dw-tuile--paquet {
+  --dw-tuile-paquet: 4px -4px 0 -1px color-mix(in srgb, var(--dw-tuile-c) 10%, var(--dw-forge-recess)),
+    4px -4px 0 0 color-mix(in srgb, var(--dw-tuile-c) 40%, transparent),
+    8px -8px 0 -2px color-mix(in srgb, var(--dw-tuile-c) 6%, var(--dw-forge-recess)),
+    8px -8px 0 -1px color-mix(in srgb, var(--dw-tuile-c) 22%, transparent);
+}
+
+.dw-tuile--choisie {
+  --dw-tuile-ombre: 0 0 0 2px color-mix(in srgb, var(--dw-color-legendary) 40%, transparent), 0 8px 18px color-mix(in srgb, black 45%, transparent);
+
+  border-color: var(--dw-color-legendary);
+}
+
+.dw-tuile--tombee {
+  opacity: 0.55;
+
+  .dw-tuile__portrait img {
+    filter: grayscale(1);
+  }
+}
+
+// Le portrait : le bouton de la tuile. Sa zone de clic (::after) couvre toute la tuile ; les autres boutons passent au-dessus. L'image
+// couvre la tuile sous le texte (z-index négatif dans la tuile isolée) ; le voile (::before) l'assombrit vers le bas.
+.dw-tuile__portrait {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 100%;
+  height: var(--dw-tuile-image, 6.75rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  // Sans image, l'initiale sur un fond de bronze.
+  &:not(:has(img)) {
+    background: linear-gradient(160deg, color-mix(in srgb, var(--dw-forge-bronze) 22%, var(--dw-forge-recess)), var(--dw-forge-recess));
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--dw-tuile-image, 6.75rem) + var(--dw-tuile-voile-debut, -3.5rem)),
+      color-mix(in srgb, var(--dw-forge-recess) 82%, transparent) calc(var(--dw-tuile-image, 6.75rem) + var(--dw-tuile-voile-plein, 0.25rem)),
+      color-mix(in srgb, var(--dw-forge-recess) 96%, transparent) 100%
+    );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9px;
+  }
+
+  img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: -2px;
+  }
+}
+
+.dw-tuile__initiale {
+  color: color-mix(in srgb, var(--dw-forge-bronze) 70%, var(--dw-forge-name));
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+// Les coins du haut : à gauche une pastille (« Mes fiches », `×n`), à droite le menu ; au-dessus de la zone de clic.
+.dw-tuile__coin,
+.dw-tuile__menu {
+  position: absolute;
+  top: 0.4rem;
+  z-index: 1;
+  display: flex;
+  gap: 0.25rem;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.dw-tuile__coin {
+  left: 0.4rem;
+}
+
+.dw-tuile__menu {
+  top: 0.2rem;
+  right: 0.2rem;
+
+  .mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 2rem;
+    --mat-icon-button-icon-size: 1.25rem;
+
+    padding: 0;
+    background: color-mix(in srgb, black 45%, transparent);
+    color: var(--dw-color-text-bright);
+  }
+}
+
+// Le texte : le nom (suivi de `[bolTuileTete]`), puis la ligne du dessous, qui laisse la place du cœur.
+.dw-tuile__texte {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.45rem 0.6rem 0.5rem;
+}
+
+.dw-tuile__tete {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.dw-tuile__nom {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 0.92rem;
+  line-height: 1.1;
+  color: var(--dw-forge-name);
+  text-shadow: 0 1px 3px color-mix(in srgb, black 85%, transparent);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dw-tuile__sous {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  padding-right: 2rem;
+  overflow: hidden;
+  font-size: 0.66rem;
+  color: var(--dw-forge-caption);
+  white-space: nowrap;
+
+  &:empty {
+    display: none;
+  }
+}
+
+// Le rang, en pastille ; la sorte, en icône (son nom en `aria-label`) ; une pastille dorée sur le portrait (« Mes fiches », « En cours »).
+.dw-tuile-rang {
+  padding: 0.05rem 0.3rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+  color: var(--dw-forge-name);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dw-tuile-sorte {
+  display: inline-flex;
+  color: var(--dw-forge-caption);
+
+  mat-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
+  }
+}
+
+.dw-tuile-marque {
+  display: grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.35rem;
+  padding: 0 0.4rem;
+  box-sizing: border-box;
+  border-radius: var(--dw-radius-pill);
+  background: var(--dw-color-legendary);
+  box-shadow: 0 2px 6px color-mix(in srgb, black 50%, transparent);
+  color: var(--dw-forge-ink);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+// La vie d'un personnage qui n'est pas un héros : en bas à droite de la tuile, à côté du nom et du rang.
+.dw-tuile__vies {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.4rem;
+  pointer-events: none;
+
+  .dw-tuile__coeur {
+    width: 1.8rem;
+    height: 1.6rem;
+
+    b {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// Le cœur de la vitalité, celui de la fiche ; plus sombre quand la vitalité est basse, gris à terre. Le clic le traverse jusqu'au portrait.
+.dw-tuile__coeur {
+  @include forge.coeur;
+
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.5rem;
+  box-sizing: border-box;
+  padding-bottom: 0.1rem;
+  filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
+  pointer-events: none;
+
+  b {
+    @include forge.coeur-chiffre;
+
+    font: 400 0.78rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.dw-tuile__coeur--bas {
+  --coeur-fond: linear-gradient(160deg, var(--bar-v-2), var(--bar-v-3));
+}
+
+.dw-tuile__coeur--tombe {
+  --coeur-fond: linear-gradient(160deg, var(--dw-surface-500), color-mix(in srgb, var(--dw-surface-500) 35%, black));
+}
+
+// Un héros : le nom descend contre son pied, le voile commence plus bas ; le pied porte son dé (projeté), son écusson et son cœur.
+.dw-tuile--heros {
+  --dw-tuile-voile-debut: -2rem;
+  --dw-tuile-voile-plein: 1rem;
+
+  .dw-tuile__texte {
+    padding-top: 0.9rem;
+    padding-bottom: 0;
+  }
+}
+
+.dw-tuile__pied {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  width: 100%;
+  height: 2rem;
+  box-sizing: border-box;
+  margin-top: auto;
+  padding: 0 0.45rem 0 0.25rem;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, black 60%, transparent));
+  color: var(--dw-color-text-bright);
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  // Le premier élément projeté (le dé) part à gauche ; l'écusson et le cœur restent à droite.
+  > :first-child:not(.dw-tuile__ecusson) {
+    margin-right: auto;
+  }
+
+  .dw-tuile__coeur {
+    width: 1.95rem;
+    height: 1.75rem;
+
+    b {
+      font-size: 0.88rem;
+    }
+  }
+}
+
+// L'écusson de l'héroïsme : doré, le nombre dedans ; le clic le traverse aussi.
+.dw-tuile__ecusson {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  pointer-events: none;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: var(--dw-color-legendary);
+    filter: drop-shadow(0 1px 2px color-mix(in srgb, black 70%, transparent));
+  }
+
+  b {
+    position: relative;
+    font-size: 0.74rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--dw-forge-ink);
+  }
+}

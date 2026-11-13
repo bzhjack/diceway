@@ -65,24 +65,39 @@ describe('DemonLibraryPageComponent', () => {
     await fixture.whenStable();
     const page = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
-    const noms = () => [...page.querySelectorAll('.dw-lr-nom-texte')].map((n) => n.textContent?.trim());
-    const ligne = (nom: string) => [...page.querySelectorAll('tbody tr')].find((tr) => texte(tr.querySelector('.dw-lr-nom-texte')) === nom)!;
+    const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
+    const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
+    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
+    const choisir = async (liste: string, libelle: string) => {
+      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      await fixture.whenStable();
+      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      await fixture.whenStable();
+    };
     const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, ligne, bouton, cliquer};
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
   }
 
-  it('liste les démons par nom, avec leur catégorie, leur type et leur source', async () => {
-    const {noms, ligne, texte} = await rendre();
+  it('montre les démons en tuiles, par nom, avec leur rang et leur vitalité ; les fiches du compte ont la pastille et le menu', async () => {
+    const {fixture, noms, tuile, texte} = await rendre();
 
     expect(noms()).toEqual(['Diablotin', 'Ilirk', 'Limier']);
-    expect(texte(ligne('Ilirk').querySelector('.dl-categorie'))).toBe('Majeur');
-    expect(texte(ligne('Ilirk').querySelector('.dl-type'))).toBe('Rival');
-    expect([...ligne('Ilirk').querySelector('.dw-lr-source')!.children].map((e) => texte(e))).toEqual(['Mes fiches', 'Perle du Beshaar']);
-    expect(ligne('Diablotin').querySelector('.dw-lr-actions')?.children.length).toBe(0);
+    expect(texte(tuile('Ilirk').querySelector('.dw-tuile-rang'))).toBe('Rival');
+    expect(tuile('Ilirk').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('Démon');
+    expect(texte(tuile('Ilirk').querySelector('.dw-tuile__coeur b'))).toBe('30');
+    expect(texte(tuile('Ilirk').querySelector('.dw-tuile-marque'))).toBe('Mes fiches');
+    expect(tuile('Diablotin').querySelector('.dw-tuile-marque')).toBeNull();
+    expect(tuile('Diablotin').querySelector('.dw-tuile__menu button')).toBeNull();
+
+    tuile('Ilirk').querySelector<HTMLButtonElement>('button[aria-label="Actions de Ilirk"]')!.click();
+    await fixture.whenStable();
+    const items = [...document.querySelectorAll<HTMLElement>('.mat-mdc-menu-item')];
+    expect(items.map((i) => texte(i.querySelector('.mat-mdc-menu-item-text')))).toEqual(['Modifier', 'Supprimer']);
+    expect(items[0].getAttribute('href')).toBe('/create/demon/Ilirk');
   });
 
   it('filtre par source et par scénario', async () => {
@@ -96,12 +111,12 @@ describe('DemonLibraryPageComponent', () => {
     expect(noms()).toEqual(['Ilirk', 'Limier']);
   });
 
-  it('trie par mêlée, puis dans l’autre sens', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+  it('trie par vitalité, puis dans l’autre sens', async () => {
+    const {page, noms, cliquer, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-tri', 'Mêlée'));
+    await choisir('Trier par', 'Vitalité');
     expect(noms()).toEqual(['Diablotin', 'Limier', 'Ilirk']);
-    await cliquer(bouton('.dw-lr-tri', 'Mêlée'));
+    await cliquer(page.querySelector<HTMLButtonElement>('button.dw-lr-sens')!);
     expect(noms()).toEqual(['Ilirk', 'Limier', 'Diablotin']);
   });
 
@@ -116,10 +131,10 @@ describe('DemonLibraryPageComponent', () => {
     expect(noms()).toEqual(['Diablotin']);
   });
 
-  it('un clic sur le nom ouvre le statbloc', async () => {
-    const {ligne, open} = await rendre();
+  it('un clic sur la tuile ouvre le statbloc', async () => {
+    const {tuile, open} = await rendre();
 
-    ligne('Limier').querySelector<HTMLButtonElement>('.dw-lr-nom')!.click();
+    tuile('Limier').querySelector<HTMLButtonElement>('button.dw-tuile__portrait')!.click();
 
     expect(open).toHaveBeenCalledTimes(1);
   });
