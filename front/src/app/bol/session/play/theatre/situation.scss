@@ -182,12 +182,6 @@
   color: var(--dw-color-text-bright);
 }
 
-// Le cœur d'un groupe, à la taille de celui d'un personnage seul.
-.sit-vie-groupe .sit-coeur {
-  width: 1.8rem;
-  height: 1.6rem;
-}
-
 // La vilenie d'un rival : l'écusson de la tuile, sombre, en haut à droite du portrait ; son nom en infobulle.
 .sit-vilenie {
   margin: 0.2rem;
@@ -257,40 +251,7 @@
   box-shadow: none;
 }
 
-// Le cœur de la vitalité, celui de la fiche : un dégradé de sang dans la forme d'un cœur, le chiffre blanc cerné de noir ; plus
-// sombre quand la vitalité est basse, gris à terre. Le clic le traverse jusqu'au portrait (il ouvre le détail, où il se règle), sauf
-// le cœur d'un groupe.
-.sit-coeur {
-  @include forge.coeur;
-
-  position: relative;
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.65rem;
-  height: 1.5rem;
-  box-sizing: border-box;
-  padding-bottom: 0.1rem;
-  filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
-  pointer-events: none;
-
-  b {
-    @include forge.coeur-chiffre;
-
-    font: 400 0.78rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-.sit-coeur--bas {
-  --coeur-fond: linear-gradient(160deg, var(--bar-v-2), var(--bar-v-3));
-}
-
-.sit-coeur--tombe {
-  --coeur-fond: linear-gradient(160deg, var(--dw-surface-500), color-mix(in srgb, var(--dw-surface-500) 35%, black));
-}
-
-// Le cœur d'un groupe : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.
+// Le cœur d'un groupe (`dw-tuile__coeur`, celui de la tuile) : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.
 .sit-coeur--groupe {
   padding: 0;
   border: 0;

@@ -155,6 +155,19 @@
   color: var(--dw-forge-caption);
 }
 
+// La barre de recherche (recherche, listes, tri, nombre) colle sous la barre compacte pendant qu'on fait défiler les tuiles, au-dessus
+// d'elles ; sur un écran étroit, comme les filtres, elle défile avec la page.
+.dw-lr-liste > dw-library-toolbar {
+  position: sticky;
+  top: var(--dw-lr-sous-la-barre);
+  z-index: 2;
+  display: block;
+
+  @media (max-width: 64rem) {
+    position: static;
+  }
+}
+
 // ── Les tuiles : une par fiche (`bol-tuile`), autant par rangée que la carte en tient ─────────────────────────────────────────────────
 .dw-lr-grille {
   display: grid;

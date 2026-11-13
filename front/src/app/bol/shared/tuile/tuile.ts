@@ -1,5 +1,7 @@
 import {NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, input, linkedSignal, output, signal, viewChild} from '@angular/core';
+import {MatTooltip} from '@angular/material/tooltip';
+import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 
 /**
  * Une tuile de personnage, celle de la table et des bibliothèques : le portrait couvre la tuile, un voile sombre vers le bas porte le nom
@@ -19,7 +21,17 @@ import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, outpu
     '[class.dw-tuile--heros]': 'heroisme() !== null',
   },
   template: `
-    <button type="button" class="dw-tuile__portrait" [attr.aria-label]="label()" [attr.aria-pressed]="pressed()" (click)="ouvrir.emit($event)">
+    <button
+      type="button"
+      class="dw-tuile__portrait"
+      [attr.aria-label]="label()"
+      [attr.aria-pressed]="pressed()"
+      [matTooltip]="nom()"
+      [matTooltipDisabled]="!nomCoupe()"
+      matTooltipPosition="above"
+      (mouseenter)="mesurerLeNom()"
+      (click)="ouvrir.emit($event)"
+    >
       @if (portrait(); as src) {
         <img [src]="src" alt="" draggable="false" (error)="casse.set(true)" />
       } @else {
@@ -31,7 +43,7 @@ import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, outpu
 
     <div class="dw-tuile__texte">
       <div class="dw-tuile__tete">
-        <p class="dw-tuile__nom">{{ nom() }}</p>
+        <p #nomEl class="dw-tuile__nom">{{ nom() }}</p>
         <ng-content select="[bolTuileTete]" />
       </div>
       <div class="dw-tuile__sous"><ng-content select="[bolTuileSous]" /></div>
@@ -54,20 +66,20 @@ import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, outpu
     }
 
     <ng-template #coeur>
-      @if (vitalite() !== null) {
+      @if (vitalite() !== null || vitaliteMax() !== null) {
         <span
           class="dw-tuile__coeur"
           [class.dw-tuile__coeur--bas]="etatVie() === 'basse'"
           [class.dw-tuile__coeur--tombe]="etatVie() === 'tombe'"
           role="img"
-          [attr.aria-label]="'Vitalité de ' + nom() + ' : ' + vitalite() + (vitaliteMax() !== null ? '/' + vitaliteMax() : '')"
+          [attr.aria-label]="'Vitalité de ' + nom() + ' : ' + (vitalite() ?? 'inconnue') + (vitaliteMax() !== null ? '/' + vitaliteMax() : '')"
         >
-          <b aria-hidden="true">{{ vitalite() }}</b>
+          <b aria-hidden="true">{{ vitalite() ?? '—' }}</b>
         </span>
       }
     </ng-template>
   `,
-  imports: [NgTemplateOutlet],
+  imports: [MatTooltip, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuileComponent {
@@ -76,7 +88,7 @@ export class TuileComponent {
   readonly image = input<string | null>(null);
   /** Le nom accessible du portrait, le bouton de la tuile (« Loup géant, voir son statbloc »). */
   readonly label = input.required<string>();
-  /** La vitalité dans le cœur ; null : pas de cœur (celui d'un groupe vient par `[bolTuileVie]`). */
+  /** La vitalité dans le cœur ; null : « — » si `vitaliteMax` est connu, sinon pas de cœur (celui d'un groupe vient par `[bolTuileVie]`). */
   readonly vitalite = input<number | null>(null);
   /** Le maximum de vitalité, dit avec elle au lecteur d'écran (« 8/8 ») ; null : la vitalité seule. */
   readonly vitaliteMax = input<number | null>(null);
@@ -91,6 +103,17 @@ export class TuileComponent {
 
   /** Le portrait est introuvable : l'initiale prend sa place, jusqu'à ce qu'un autre portrait arrive. */
   protected readonly casse = linkedSignal({source: this.image, computation: () => false});
-  protected readonly portrait = computed(() => (this.casse() ? null : this.image()));
+  /** Le portrait à montrer : ni introuvable, ni le portrait par défaut (l'initiale vaut mieux). */
+  protected readonly portrait = computed(() => (this.casse() ? null : usableAvatar(this.image())));
   protected readonly initiale = computed(() => this.nom().charAt(0).toUpperCase());
+
+  private readonly nomEl = viewChild.required<ElementRef<HTMLElement>>('nomEl');
+  /** Le nom ne tient pas sur sa ligne (coupé par « … ») : l'infobulle du portrait le donne en entier. */
+  protected readonly nomCoupe = signal(false);
+
+  /** Au survol, mesure si le nom est coupé (sa largeur dépend de la tuile, donc de la page). */
+  protected mesurerLeNom(): void {
+    const el = this.nomEl().nativeElement;
+    this.nomCoupe.set(el.scrollWidth > el.clientWidth);
+  }
 }

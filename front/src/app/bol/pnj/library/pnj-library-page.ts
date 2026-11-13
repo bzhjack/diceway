@@ -118,7 +118,7 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
   });
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
 
-  /** Les lignes du tableau : le PNJ, son portrait, son rang, ses carrières, ses scénarios avec leur teinte, s'il est au compte. */
+  /** Les tuiles : le PNJ, son nom, son portrait, le nom de son rang, s'il est au compte. */
   protected readonly lignes = computed(() =>
     this.filteredPnjs().map((pnj) => {
       const rang = this.rangDe(pnj);

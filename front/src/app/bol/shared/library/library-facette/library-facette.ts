@@ -3,7 +3,7 @@ import {LibraryOption} from '../../models/library-rows.model';
 
 let suivant = 0;
 
-/** Un filtre à choix unique d'une colonne de filtres (bibliothèques en lignes, « Ajouter des personnages ») : son titre, puis une
+/** Un filtre à choix unique d'une colonne de filtres (bibliothèques en tuiles, « Ajouter des personnages ») : son titre, puis une
  * option par valeur, en boutons bascule, chacune avec son nombre de fiches. Les styles sont ceux de `styles/_library-rows.scss`. */
 @Component({
   selector: 'bol-library-facette',

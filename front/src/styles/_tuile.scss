@@ -157,6 +157,8 @@
 
 .dw-tuile__coin {
   left: 0.4rem;
+  // Une pastille ne se clique pas : le clic traverse jusqu'au portrait.
+  pointer-events: none;
 }
 
 .dw-tuile__menu {
@@ -260,6 +262,13 @@
   pointer-events: none;
 }
 
+// Le nombre d'exemplaires d'une fiche (« ×3 ») : un chiffre, un peu plus grand.
+.dw-tuile-marque--nombre {
+  padding: 0 0.35rem;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
 // La vie d'un personnage qui n'est pas un héros : en bas à droite de la tuile, à côté du nom et du rang.
 .dw-tuile__vies {
   position: absolute;
@@ -316,6 +325,11 @@
   .dw-tuile__texte {
     padding-top: 0.9rem;
     padding-bottom: 0;
+  }
+
+  // Son cœur est dans le pied : la ligne du dessous (le joueur) prend toute la largeur.
+  .dw-tuile__sous {
+    padding-right: 0;
   }
 }
 

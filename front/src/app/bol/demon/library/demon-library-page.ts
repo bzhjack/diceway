@@ -99,7 +99,7 @@ export class DemonLibraryPageComponent extends BolFichesPageBase<BolDemonModel, 
   });
   protected readonly demonCount = computed(() => this.filteredDemons().length);
 
-  /** Les lignes du tableau : le démon, son portrait, son rang, ses scénarios avec leur teinte, s'il est au compte. */
+  /** Les tuiles : le démon, son portrait, le nom de son rang, s'il est au compte. */
   protected readonly lignes = computed(() =>
     this.filteredDemons().map((demon) => {
       const rang = this.rangDe(demon);

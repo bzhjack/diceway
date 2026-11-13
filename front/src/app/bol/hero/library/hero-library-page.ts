@@ -124,7 +124,7 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
   });
   protected readonly heroCount = computed(() => this.filteredHeroes().length);
 
-  /** Les lignes du tableau : le héros, son portrait, ses carrières. */
+  /** Les tuiles : le héros, son nom, son portrait. */
   protected readonly lignes = computed(() =>
     this.filteredHeroes().map((hero) => ({hero, nom: this.nomDe(hero), image: heroImage(hero)})),
   );
