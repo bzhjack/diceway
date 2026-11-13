@@ -1,14 +1,12 @@
 import {Signal, computed, signal} from '@angular/core';
 import {BolFicheScenario} from '../../models/bol-fiche-scenario.model';
 import {
-  LibraryColonne,
-  LibraryColonneVue,
   LibraryOption,
   LibraryRang,
   LibraryScenarioOption,
-  LibraryScenarioTag,
   LibrarySource,
   LibraryTri,
+  LibraryTriOption,
 } from '../models/library-rows.model';
 import {BolLibraryPageBase} from './library-page.base';
 import {scenariosDesFiches} from './library-scenarios.util';
@@ -19,34 +17,28 @@ export const RANG_LABELS: Record<LibraryRang, string> = {R: 'Rival', C: 'Coriace
 export const ORDRE_DES_RANGS: Record<LibraryRang, number> = {P: 0, C: 1, R: 2};
 
 /**
- * Socle d'une bibliothèque en lignes (créatures, démons, PNJ, héros) : un tableau trié par colonne, un second clic sur un en-tête
- * inversant le sens. La sous-classe donne ses colonnes, la valeur de tri de chacune et le nom d'une fiche (pour départager).
+ * Socle d'une bibliothèque en tuiles (créatures, démons, PNJ, héros) : le tri, choisi dans la liste « Trier par » (`bol-library-tri`),
+ * dont un bouton inverse le sens. La sous-classe donne ses options de tri, la valeur de tri de chacune et le nom d'une fiche (pour
+ * départager).
  */
 export abstract class BolLibraryRowsPageBase<TItem extends {id?: string | number | null}, TTri extends string> extends BolLibraryPageBase<TItem> {
-  protected abstract readonly colonnesDefinies: readonly LibraryColonne<TTri>[];
   protected abstract valeurDeTri(item: TItem, cle: TTri): number | string;
   protected abstract nomDe(item: TItem): string;
 
-  /** Par nom d'abord : chaque bibliothèque a une colonne `nom`. */
+  /** Par nom d'abord : chaque bibliothèque trie par `nom`. */
   protected readonly tri = signal<LibraryTri<TTri>>({cle: 'nom' as TTri, croissant: true});
 
-  /** Les en-têtes : ceux qui trient disent dans quel sens (`aria-sort`) et montrent la flèche de la colonne triée. */
-  protected readonly colonnes = computed((): LibraryColonneVue<TTri>[] => {
-    const {cle, croissant} = this.tri();
-    return this.colonnesDefinies.map((colonne) => {
-      const triee = colonne.cle !== null && colonne.cle === cle;
-      return {
-        ...colonne,
-        ariaSort: colonne.cle === null ? null : triee ? (croissant ? 'ascending' : 'descending') : 'none',
-        icone: triee ? (croissant ? 'arrow_upward' : 'arrow_downward') : null,
-      };
-    });
-  });
+  /** Les choix de la liste « Trier par » (`bol-library-tri`). */
+  protected abstract readonly optionsDeTri: readonly LibraryTriOption<TTri>[];
 
-  /** Trie sur cette colonne (la clé d'une de `colonnesDefinies`, que renvoie `bol-library-entete`) ; un second clic inverse le sens. */
-  protected trier(colonne: string): void {
-    const cle = colonne as TTri;
-    this.tri.update((tri) => (tri.cle === cle ? {cle, croissant: !tri.croissant} : {cle, croissant: true}));
+  /** Trie sur cette clé (une de `optionsDeTri`), dans l'ordre croissant ; la clé déjà choisie ne change rien. */
+  protected trierPar(cle: string): void {
+    this.tri.update((tri) => (tri.cle === cle ? tri : {cle: cle as TTri, croissant: true}));
+  }
+
+  /** Inverse le sens du tri. */
+  protected inverserLeSens(): void {
+    this.tri.update((tri) => ({...tri, croissant: !tri.croissant}));
   }
 
   /** Les fiches dans l'ordre du tri, puis par nom. */
@@ -95,8 +87,6 @@ export abstract class BolFichesPageBase<
   /** Les scénarios qui ont créé ou citent au moins une fiche, par titre : leur teinte et leur nombre de fiches. */
   protected readonly scenarios = computed((): LibraryScenarioOption[] => scenariosDesFiches(this.fiches()));
 
-  private readonly teinteDuScenario = computed(() => new Map(this.scenarios().map((s) => [s.id, s.teinte])));
-
   protected readonly rangs = computed((): LibraryOption<LibraryRang>[] => {
     const fiches = this.fiches();
     return (['R', 'C', 'P'] as const).map((cle) => ({cle, label: RANG_LABELS[cle], compte: fiches.filter((f) => this.rangDe(f) === cle).length}));
@@ -120,12 +110,6 @@ export abstract class BolFichesPageBase<
     this.source.set('tout');
     this.scenarioId.set(null);
     this.rang.set(null);
-  }
-
-  /** Les scénarios d'une fiche, avec leur teinte, pour sa ligne. */
-  protected scenariosDe(fiche: TItem): LibraryScenarioTag[] {
-    const teintes = this.teinteDuScenario();
-    return (fiche.scenarios ?? []).map((s) => ({id: s.id, titre: s.titre, teinte: teintes.get(s.id) ?? 0}));
   }
 
   /** Les termes de recherche qu'une fiche doit aux scénarios qui la citent. */

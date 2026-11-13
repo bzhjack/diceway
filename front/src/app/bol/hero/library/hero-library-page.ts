@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
@@ -12,14 +13,14 @@ import {BolHerosService} from '../../services/bol-heros.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {LibraryEnteteComponent} from '../../shared/library/library-entete/library-entete';
+import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {TuileComponent} from '../../shared/tuile/tuile';
 import {BolLibraryRowsPageBase} from '../../shared/library/library-rows-page.base';
-import {LibraryColonne, LibraryOption} from '../../shared/models/library-rows.model';
+import {LibraryOption, LibraryTriOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
@@ -30,20 +31,19 @@ type Tri = 'nom' | 'joueur' | 'region' | 'statut' | 'vitalite' | 'heroisme';
 /** Un héros actif joue ; un héros en cours de création attend d'être activé. */
 type Statut = 'tous' | 'actifs' | 'en-cours';
 
-const COLONNES: readonly LibraryColonne<Tri>[] = [
-  {cle: 'nom', label: 'Héros'},
+const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
+  {cle: 'nom', label: 'Nom'},
   {cle: 'joueur', label: 'Joueur'},
   {cle: 'region', label: 'Région'},
   {cle: 'statut', label: 'Statut'},
-  {cle: 'vitalite', label: 'Vit.', titre: 'Vitalité', num: true},
-  {cle: 'heroisme', label: 'Hér.', titre: 'Héroïsme', num: true},
-  {cle: null, label: 'Carrières'},
+  {cle: 'vitalite', label: 'Vitalité'},
+  {cle: 'heroisme', label: 'Héroïsme'},
 ];
 
 /**
- * Les héros du compte, en lignes : à gauche les filtres (statut) avec leur nombre de héros, à droite le tableau, triable par
- * colonne. Un clic sur un héros ouvre son statbloc ; chacun se modifie, se supprime, et ceux en cours de création s'éditent en création
- * avancée.
+ * Les héros du compte, en tuiles : à gauche les filtres (statut) avec leur nombre de héros, à droite une tuile par héros (portrait,
+ * nom, joueur ; héroïsme et vitalité dans son pied), triées par la liste « Trier par ». Un clic sur une tuile ouvre son statbloc ; son
+ * menu le modifie, le supprime, et l'édite en création avancée tant qu'il est en cours de création (« En cours » sur la tuile).
  */
 @Component({
   selector: 'bol-hero-library-page',
@@ -55,12 +55,13 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
-    AvatarFallbackDirective,
     DwCompactBarComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
     DwTagComponent,
-    LibraryEnteteComponent,
+    LibraryTriComponent,
+    MatMenuModule,
+    TuileComponent,
   ],
   templateUrl: './hero-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,7 +69,7 @@ const COLONNES: readonly LibraryColonne<Tri>[] = [
 export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosModel, Tri> {
   private readonly herosService = inject(BolHerosService);
   private readonly heroes = refreshableResource(() => this.herosService.heroes());
-  protected readonly colonnesDefinies = COLONNES;
+  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le héros',
     name: (item) => item.origines.nom ?? 'ce héros',
@@ -125,7 +126,7 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
 
   /** Les lignes du tableau : le héros, son portrait, ses carrières. */
   protected readonly lignes = computed(() =>
-    this.filteredHeroes().map((hero) => ({hero, nom: this.nomDe(hero), image: heroImage(hero), carrieres: carrieresDe(hero)})),
+    this.filteredHeroes().map((hero) => ({hero, nom: this.nomDe(hero), image: heroImage(hero)})),
   );
 
   protected valeurDeTri(hero: BolHerosModel, cle: Tri): number | string {

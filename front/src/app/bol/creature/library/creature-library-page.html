@@ -52,7 +52,9 @@
               }
             </mat-select>
           </mat-form-field>
-          <!-- Tout à droite, quand un filtre est posé : de quoi les retirer tous. Le nombre de fiches gardées est en tête de la colonne des actions. -->
+          <bol-library-tri dwToolbarFilter [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
+          <!-- Tout à droite : le nombre de créatures gardées, puis, quand un filtre est posé, de quoi les retirer tous. -->
+          <dw-tag dwToolbarCount>{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</dw-tag>
           @if (filtresActifs()) {
             <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
               <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
@@ -60,61 +62,36 @@
           }
         </dw-library-toolbar>
 
-        <div class="dw-lr-cadre">
-          <table class="dw-lr-table">
-            <caption class="sr-only">Les créatures du bestiaire ; un clic sur un nom ouvre son statbloc.</caption>
-            <thead>
-              <tr bol-library-entete [colonnes]="colonnes()" [compte]="creatureCount() + (creatureCount() > 1 ? ' créatures' : ' créature')" (trier)="trier($event)"></tr>
-            </thead>
-            <tbody>
-              @for (ligne of lignes(); track ligne.creature.id) {
-                <tr>
-                  <td>
-                    <button type="button" class="dw-lr-nom" [attr.aria-label]="ligne.creature.nom + ', voir son statbloc'" (click)="openStatblock(ligne.creature)">
-                      <img dwAvatarFallback class="dw-lr-portrait" [src]="ligne.image" alt="" loading="lazy" />
-                      <span class="dw-lr-nom-texte">{{ ligne.creature.nom }}</span>
-                    </button>
-                  </td>
-                  <td class="cl-taille-cellule">{{ ligne.creature.taille.taille }}</td>
-                  <td class="cl-type-cellule"><span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ ligne.rangLabel }}</span></td>
-                  <td class="dw-lr-num">{{ ligne.creature.vitalite }}</td>
-                  <td class="dw-lr-num">{{ ligne.creature.attaque }}</td>
-                  <td class="dw-lr-num">{{ ligne.creature.defense }}</td>
-                  <td>{{ ligne.creature.degats }}</td>
-                  <td>{{ ligne.creature.protection }}</td>
-                  <td>
-                    <span class="dw-lr-source">
-                      <span class="dw-lr-provenance" [class.dw-lr-provenance--mienne]="ligne.mienne">{{ ligne.mienne ? 'Mes fiches' : 'Catalogue' }}</span>
-                      @for (scenario of ligne.scenarios; track scenario.id) {
-                        <span class="dw-lr-scenario" [class]="'dw-saga--' + scenario.teinte"><span class="dw-lr-point" aria-hidden="true"></span>{{ scenario.titre }}</span>
-                      }
-                    </span>
-                  </td>
-                  <td class="dw-lr-actions">
-                    @if (ligne.mienne) {
-                      <a
-                        mat-icon-button
-                        [routerLink]="['/create/creature', ligne.creature.id]"
-                        [state]="{ returnUrl: '/library/creatures' }"
-                        [attr.aria-label]="'Modifier ' + ligne.creature.nom"
-                      >
-                        <mat-icon>edit</mat-icon>
-                      </a>
-                      <button mat-icon-button type="button" [attr.aria-label]="'Supprimer ' + ligne.creature.nom" (click)="askDelete(ligne.creature)">
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    }
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="10" class="dw-lr-vide">Aucune créature ne correspond à ces filtres.</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <!-- Une tuile par créature : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
+        <ul class="dw-lr-grille" aria-label="Les créatures du bestiaire">
+          @for (ligne of lignes(); track ligne.creature.id) {
+            <li>
+              <bol-tuile [nom]="ligne.creature.nom" [image]="ligne.image" [label]="ligne.creature.nom + ', voir son statbloc'" [vitalite]="ligne.creature.vitalite" (ouvrir)="openStatblock(ligne.creature)">
+                @if (ligne.mienne) {
+                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                }
+                @if (ligne.mienne) {
+                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.creature.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{creature: ligne.creature}">
+                    <mat-icon>more_horiz</mat-icon>
+                  </button>
+                }
+                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Créature"><mat-icon aria-hidden="true">pets</mat-icon></span>
+              </bol-tuile>
+            </li>
+          }
+        </ul>
+        @if (!lignes().length) {
+          <p class="dw-lr-vide">Aucune créature ne correspond à ces filtres.</p>
+        }
       </mat-card>
     </div>
   </div>
+
+  <mat-menu #actions="matMenu">
+    <ng-template matMenuContent let-creature="creature">
+      <a mat-menu-item [routerLink]="['/create/creature', creature.id]" [state]="{ returnUrl: '/library/creatures' }"><mat-icon>edit</mat-icon>Modifier</a>
+      <button mat-menu-item type="button" (click)="askDelete(creature)"><mat-icon>delete</mat-icon>Supprimer</button>
+    </ng-template>
+  </mat-menu>
 </section>

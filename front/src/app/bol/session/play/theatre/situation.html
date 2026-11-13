@@ -13,7 +13,7 @@
   <ul class="sit-grille sit-grille--compagnie" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
     @for (c of heros(); track c.key) {
       <li>
-        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c, ligne: true}" />
       </li>
     }
     @if (nombreAllies()) {
@@ -21,7 +21,7 @@
     }
     @for (c of allies(); track c.key) {
       <li cdkDrag [bolStageDrag]="{kind: c.card.kind, camp: c.card.camp}" (stageDropped)="onStageDropped($event, c)">
-        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c}" />
+        <ng-container [ngTemplateOutlet]="tuile" [ngTemplateOutletContext]="{$implicit: c, ligne: true}" />
         <div *cdkDragPreview class="sit-fantome">
           <img dwAvatarFallback [src]="c.card.avatar" alt="" draggable="false" />
           <span>{{ c.nom }}{{ c.cards.length > 1 ? ' ×' + c.cards.length : '' }}</span>
@@ -64,166 +64,124 @@
   </ul>
 </section>
 
-<!-- Une tuile (une ligne dans la compagnie), réduite à l'essentiel : le portrait, et posés dessus le nombre d'exemplaires, la vilenie
-     d'un rival et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un pied : son
-     jet, ses points d'héroïsme et son cœur. Les exemplaires d'une fiche s'empilent en paquet. Un clic n'importe où, hors de ses
-     boutons, ouvre le détail du personnage, où se règlent sa vitalité et son héroïsme. -->
-<ng-template #tuile let-c>
-  <article
-    [class]="'sit-carte sit-carte--' + (c.card.kind === 'hero' ? 'heros' : c.card.camp === 'heros' ? 'allie' : 'face')"
-    [class.sit-carte--groupe]="c.cards.length > 1"
-    [class.sit-carte--selected]="selectionnee(c)"
-    [class.sit-carte--tombe]="c.tombe"
-    [style.--sit-c]="c.attitude ? 'var(--sit-att-' + c.attitude.value + ')' : null"
+<!-- Une tuile (`bol-tuile`, en ligne dans la compagnie), réduite à l'essentiel : le portrait, et posés dessus le nombre d'exemplaires,
+     la vilenie d'un rival et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un
+     pied : son jet, ses points d'héroïsme et son cœur. Les exemplaires d'une fiche s'empilent en paquet. Un clic n'importe où, hors de
+     ses boutons, ouvre le détail du personnage, où se règlent sa vitalité et son héroïsme. -->
+<ng-template #tuile let-c let-ligne="ligne">
+  <bol-tuile
+    [class.dw-tuile--ligne]="ligne"
+    [class.dw-tuile--sombre]="c.card.kind === 'hero'"
+    [class.dw-tuile--allie]="c.card.kind !== 'hero' && c.card.camp === 'heros'"
+    [class.dw-tuile--paquet]="c.cards.length > 1"
+    [class.dw-tuile--choisie]="selectionnee(c)"
+    [class.dw-tuile--tombee]="c.tombe"
+    [style.--dw-tuile-c]="c.attitude ? 'var(--sit-att-' + c.attitude.value + ')' : null"
+    [nom]="c.nom"
+    [image]="c.avatar"
+    [label]="'Ouvrir la carte de ' + c.card.nom"
+    [pressed]="selectionnee(c) ? true : null"
+    [vitalite]="c.cards.length === 1 ? c.exemplaires[0].card.vitaliteCourante : null"
+    [vitaliteMax]="c.cards.length === 1 ? c.exemplaires[0].card.vitaliteMax : null"
+    [etatVie]="c.exemplaires[0].tombe ? 'tombe' : c.exemplaires[0].low ? 'basse' : null"
+    [heroisme]="c.card.kind === 'hero' ? c.heroisme : null"
+    (ouvrir)="onPortraitClick(c, $event)"
   >
-    <div class="sit-image">
-      <!-- Le portrait est le bouton de la tuile : sa zone de clic la couvre tout entière, sous ses autres boutons. -->
-      <button
-        type="button"
-        class="sit-portrait"
-        [attr.aria-label]="'Ouvrir la carte de ' + c.card.nom"
-        [attr.aria-pressed]="selectionnee(c) ? 'true' : null"
-        (click)="onPortraitClick(c, $event)"
-      >
-        @if (c.avatar) {
-          <img [src]="c.avatar" alt="" draggable="false" (error)="onAvatarError(c.card)" />
-        } @else {
-          <span class="sit-initiale" aria-hidden="true">{{ c.nom.charAt(0) }}</span>
-        }
-      </button>
-      @if (c.cards.length > 1) {
-        <span class="sit-nombre" aria-hidden="true">×{{ c.cards.length }}</span>
-      }
-      <!-- La vilenie d'un rival : comme l'héroïsme d'un héros, dans un écusson, sombre, en haut à droite du portrait. -->
-      @if (c.card.vilenie !== null) {
-        <span class="sit-ecusson sit-ecusson--vilenie" role="img" [attr.aria-label]="'Vilenie de ' + c.nom + ' : ' + c.card.vilenie" matTooltip="Vilenie">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" />
-          </svg>
-          <b aria-hidden="true">{{ c.card.vilenie }}</b>
-        </span>
-      }
-
-      <!-- La vie, toujours en bas à droite : un cœur, ici dans le coin de la tuile (dans le pied pour un héros). Seul, sa vitalité dedans (le clic
-           le traverse jusqu'au portrait) ; pour un groupe, un cœur vide qui ouvre le détail de chaque exemplaire, d'où l'on ouvre sa carte. -->
-      @if (c.card.kind !== 'hero') {
-        <div class="sit-vies">
-          @if (c.cards.length === 1) {
-            <ng-container [ngTemplateOutlet]="coeurSeul" [ngTemplateOutletContext]="{$implicit: c.exemplaires[0]}" />
-          } @else {
-            <button
-              type="button"
-              class="sit-coeur sit-coeur--groupe"
-              cdkOverlayOrigin
-              #origineVie="cdkOverlayOrigin"
-              [class.sit-coeur--bas]="c.basse"
-              [class.sit-coeur--tombe]="c.tombe"
-              aria-haspopup="dialog"
-              [attr.aria-expanded]="vieOuverte() === c.key"
-              [attr.aria-label]="'Vitalité des ' + c.cards.length + ' exemplaires de ' + c.nom"
-              (click)="vieOuverte.set(c.key)"
-            >
-            </button>
-            <ng-template
-              cdkConnectedOverlay
-              dwPopover="end"
-              [cdkConnectedOverlayOrigin]="origineVie"
-              [cdkConnectedOverlayOpen]="vieOuverte() === c.key"
-              (backdropClick)="vieOuverte.set(null)"
-              (overlayKeydown)="touche($event)"
-              (detach)="vieOuverte.set(null)"
-            >
-              <div class="sit-pop" role="dialog" [attr.aria-label]="'Vitalité des exemplaires de ' + c.nom" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
-                <p class="sit-pop-titre">{{ c.nom }}<span class="sit-pop-total">{{ c.vitaliteTotale }} PV</span></p>
-                <ul class="sit-pop-liste">
-                  @for (e of c.exemplaires; track e.card.key) {
-                    <li>
-                      <button
-                        type="button"
-                        class="sit-pop-ligne"
-                        [class.sit-pop-ligne--tombe]="e.tombe"
-                        [attr.aria-label]="'Ouvrir la carte de ' + e.card.nom + ' (vitalité ' + e.vitalite + ')'"
-                        (click)="ouvrirExemplaire(e.card)"
-                      >
-                        <span class="sit-pop-numero">{{ e.numero }}</span>
-                        <span class="sit-coeur" [class.sit-coeur--bas]="e.low" [class.sit-coeur--tombe]="e.tombe">
-                          <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
-                        </span>
-                        <span class="sit-pop-max">/ {{ e.card.vitaliteMax ?? '—' }}</span>
-                      </button>
-                    </li>
-                  }
-                </ul>
-              </div>
-            </ng-template>
-          }
-        </div>
-      }
-    </div>
-
-    <div class="sit-texte">
-      <!-- Le nom, et à sa droite le point de l'attitude de ceux d'en face : son nom en infobulle, un clic ouvre son menu. -->
-      <div class="sit-tete">
-        <p class="sit-nom">
-          {{ c.nom }}
-          @if (c.cards.length > 1) {
-            <span class="sr-only">, {{ c.cards.length }} exemplaires</span>
-          }
-        </p>
-        @if (c.card.camp === 'adversaires') {
-          <button
-            type="button"
-            class="sit-attitude"
-            [class.sit-attitude--sans]="!c.attitude && !c.attitudesDiverses"
-            [class.sit-attitude--diverses]="c.attitudesDiverses"
-            [attr.aria-label]="'Attitude de ' + c.nom + ' : ' + (c.attitude?.label ?? (c.attitudesDiverses ? 'diverses' : 'aucune'))"
-            [matTooltip]="c.attitudeTitre"
-            matTooltipPosition="above"
-            [matMenuTriggerFor]="menuAttitude"
-            [matMenuTriggerData]="{cards: c.cards, attitude: c.attitude?.value ?? null}"
-          ></button>
-        }
-      </div>
-      @if (c.card.kind !== 'hero') {
-        <p class="sit-sous">
-          @if (c.card.rang) {
-            <span class="sit-rang">{{ c.card.rang }}</span>
-          }
-          <span class="sit-type" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>
-        </p>
-      }
-    </div>
-
-    @if (c.card.kind === 'hero') {
-      <!-- Le pied d'un héros : son jet (sur sa carte, comme le clic sur son portrait), puis à droite ses points d'héroïsme et son cœur,
-           en bas à droite comme celui des autres. -->
-      <div class="sit-bande sit-bande--heros">
-        <button mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + c.card.nom" (click)="cardToggled.emit(c.card)">
-          <mat-icon>casino</mat-icon>
-        </button>
-        <span class="sit-ecusson" role="img" [attr.aria-label]="'Héroïsme de ' + c.card.nom + ' : ' + c.heroisme">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" />
-          </svg>
-          <b aria-hidden="true">{{ c.heroisme }}</b>
-        </span>
-        <ng-container [ngTemplateOutlet]="coeurSeul" [ngTemplateOutletContext]="{$implicit: c.exemplaires[0]}" />
-      </div>
+    @if (c.cards.length > 1) {
+      <span bolTuileCoin class="dw-tuile-marque" aria-hidden="true">×{{ c.cards.length }}</span>
     }
-  </article>
-</ng-template>
+    @if (c.cards.length > 1) {
+      <span bolTuileTete class="sr-only">, {{ c.cards.length }} exemplaires</span>
+    }
 
-<!-- Le cœur d'un personnage seul : une image, que le clic traverse jusqu'au portrait. -->
-<ng-template #coeurSeul let-e>
-  <span
-    class="sit-coeur"
-    [class.sit-coeur--bas]="e.low"
-    [class.sit-coeur--tombe]="e.tombe"
-    role="img"
-    [attr.aria-label]="'Vitalité de ' + e.card.nom + ' : ' + e.vitalite"
-  >
-    <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
-  </span>
+    <!-- L'attitude de ceux d'en face, à droite du nom : son nom en infobulle, un clic ouvre son menu. -->
+    @if (c.card.camp === 'adversaires') {
+      <button
+        bolTuileTete
+        type="button"
+        class="sit-attitude"
+        [class.sit-attitude--sans]="!c.attitude && !c.attitudesDiverses"
+        [class.sit-attitude--diverses]="c.attitudesDiverses"
+        [attr.aria-label]="'Attitude de ' + c.nom + ' : ' + (c.attitude?.label ?? (c.attitudesDiverses ? 'diverses' : 'aucune'))"
+        [matTooltip]="c.attitudeTitre"
+        matTooltipPosition="above"
+        [matMenuTriggerFor]="menuAttitude"
+        [matMenuTriggerData]="{cards: c.cards, attitude: c.attitude?.value ?? null}"
+      ></button>
+    }
+
+    @if (c.card.kind !== 'hero' && c.card.rang) {
+      <span bolTuileSous class="dw-tuile-rang">{{ c.card.rang }}</span>
+    }
+    @if (c.card.kind !== 'hero') {
+      <span bolTuileSous class="dw-tuile-sorte" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>
+    }
+
+    <!-- La vilenie d'un rival : comme l'héroïsme d'un héros, dans un écusson, sombre, en haut à droite du portrait. -->
+    @if (c.card.kind !== 'hero' && c.card.vilenie !== null) {
+      <span bolTuileMenu class="dw-tuile__ecusson sit-vilenie" role="img" [attr.aria-label]="'Vilenie de ' + c.nom + ' : ' + c.card.vilenie" matTooltip="Vilenie">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" /></svg>
+        <b aria-hidden="true">{{ c.card.vilenie }}</b>
+      </span>
+    }
+
+    <!-- La vie d'un groupe : un cœur vide qui ouvre le détail de chaque exemplaire, d'où l'on ouvre sa carte. -->
+    @if (c.card.kind !== 'hero' && c.cards.length > 1) {
+      <span bolTuileVie class="sit-vie-groupe">
+        <button
+          type="button"
+          class="sit-coeur sit-coeur--groupe"
+          cdkOverlayOrigin
+          #origineVie="cdkOverlayOrigin"
+          [class.sit-coeur--bas]="c.basse"
+          [class.sit-coeur--tombe]="c.tombe"
+          aria-haspopup="dialog"
+          [attr.aria-expanded]="vieOuverte() === c.key"
+          [attr.aria-label]="'Vitalité des ' + c.cards.length + ' exemplaires de ' + c.nom"
+          (click)="vieOuverte.set(c.key)"
+        ></button>
+        <ng-template
+          cdkConnectedOverlay
+          dwPopover="end"
+          [cdkConnectedOverlayOrigin]="origineVie"
+          [cdkConnectedOverlayOpen]="vieOuverte() === c.key"
+          (backdropClick)="vieOuverte.set(null)"
+          (overlayKeydown)="touche($event)"
+          (detach)="vieOuverte.set(null)"
+        >
+          <div class="sit-pop" role="dialog" [attr.aria-label]="'Vitalité des exemplaires de ' + c.nom" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+            <p class="sit-pop-titre">{{ c.nom }}<span class="sit-pop-total">{{ c.vitaliteTotale }} PV</span></p>
+            <ul class="sit-pop-liste">
+              @for (e of c.exemplaires; track e.card.key) {
+                <li>
+                  <button
+                    type="button"
+                    class="sit-pop-ligne"
+                    [class.sit-pop-ligne--tombe]="e.tombe"
+                    [attr.aria-label]="'Ouvrir la carte de ' + e.card.nom + ' (vitalité ' + e.vitalite + ')'"
+                    (click)="ouvrirExemplaire(e.card)"
+                  >
+                    <span class="sit-pop-numero">{{ e.numero }}</span>
+                    <span class="sit-coeur" [class.sit-coeur--bas]="e.low" [class.sit-coeur--tombe]="e.tombe">
+                      <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
+                    </span>
+                    <span class="sit-pop-max">/ {{ e.card.vitaliteMax ?? '—' }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        </ng-template>
+      </span>
+    }
+
+    <!-- Le pied d'un héros commence par son jet (sur sa carte, comme le clic sur son portrait). -->
+    @if (c.card.kind === 'hero') {
+      <button bolTuilePied mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + c.card.nom" (click)="cardToggled.emit(c.card)">
+        <mat-icon>casino</mat-icon>
+      </button>
+    }
+  </bol-tuile>
 </ng-template>
 
 <!-- La vitalité d'un exemplaire, posée sur son cœur (dessiné en CSS). -->

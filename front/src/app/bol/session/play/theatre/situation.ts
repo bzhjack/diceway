@@ -12,6 +12,7 @@ import {concat, last, map, Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
+import {TuileComponent} from '../../../shared/tuile/tuile';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {AmbianceOption} from '../../models/theatre.model';
 import {CombatantAttitude, CombatCamp} from '../../../models/bol-fight-session.model';
@@ -125,6 +126,7 @@ function totalVitalite(cards: readonly TapisCard[]): string {
     MatTooltipModule,
     NgTemplateOutlet,
     StageDragDirective,
+    TuileComponent,
   ],
   templateUrl: './situation.html',
   styleUrl: './situation.scss',
@@ -149,8 +151,6 @@ export class SituationComponent {
   /** La tuile (sa clé) dont le détail de la vie est ouvert. */
   protected readonly vieOuverte = signal<string | null>(null);
 
-  /** Portraits qui n'ont pas pu se charger : repli sur l'initiale. */
-  private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
   /** Attitudes en cours d'enregistrement, par carte : un autre choix sur la même carte est ignoré tant que celui-ci n'est pas revenu. */
   private readonly pending = signal<ReadonlySet<string>>(new Set());
 
@@ -196,7 +196,7 @@ export class SituationComponent {
       card,
       cards,
       nom: plusieurs ? card.nom.replace(NUMERO, '') : card.nom,
-      avatar: this.brokenAvatars().has(card.key) ? null : usableAvatar(card.avatar),
+      avatar: usableAvatar(card.avatar),
       exemplaires,
       attitude,
       attitudeTitre: attitude
@@ -219,10 +219,6 @@ export class SituationComponent {
   /** Un exemplaire au moins est sélectionné (Ctrl + clic). */
   protected selectionnee(carte: Carte): boolean {
     return carte.cards.some((c) => this.selectedKeys().has(c.key));
-  }
-
-  protected onAvatarError(card: TapisCard): void {
-    this.brokenAvatars.update((set) => new Set(set).add(card.key));
   }
 
   /** Un clic sur la tuile (le portrait la couvre, hors de ses autres boutons) ouvre le détail du personnage (du premier exemplaire), où se

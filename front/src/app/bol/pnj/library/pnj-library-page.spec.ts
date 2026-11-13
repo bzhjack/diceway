@@ -34,30 +34,8 @@ describe('PnjLibraryPageComponent', () => {
     await fixture.whenStable();
     const page = fixture.nativeElement as HTMLElement;
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
-    const noms = () => [...page.querySelectorAll('.dw-lr-nom-texte')].map((n) => n.textContent?.trim());
-    const ligne = (nom: string) => [...page.querySelectorAll('tbody tr')].find((tr) => texte(tr.querySelector('.dw-lr-nom-texte')) === nom)!;
-    const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
-    const cliquer = async (b: HTMLElement) => {
-      b.click();
-      await fixture.whenStable();
-    };
-    return {page, fixture, open, texte, noms, ligne, bouton, cliquer};
-  }
-
-  it('liste les PNJ par nom : région, type, carrières et source', async () => {
-    const {noms, ligne, texte} = await rendre();
-
-    expect(noms()).toEqual(['Acolyte', 'Ajhaskar', 'Archer de Tyrus']);
-    expect(texte(ligne('Ajhaskar').querySelector('.pl-region'))).toBe('Lysor');
-    expect(texte(ligne('Ajhaskar').querySelector('.pl-type'))).toBe('Rival');
-    expect(texte(ligne('Ajhaskar').querySelector('.pl-carrieres'))).toBe('Sorcier 2, Marchand 1');
-    expect(texte(ligne('Archer de Tyrus').querySelector('.pl-region'))).toBe('—');
-    expect(ligne('Archer de Tyrus').querySelector('.dw-lr-actions')?.children.length).toBe(0);
-    expect(ligne('Ajhaskar').querySelector('a[aria-label="Modifier Ajhaskar"]')?.getAttribute('href')).toBe('/create/pnj/Ajhaskar');
-  });
-
-  it('filtre par rang et par région, deux listes à droite de la recherche, puis par scénario', async () => {
-    const {page, fixture, texte, noms, bouton, cliquer} = await rendre();
+    const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
+    const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
     /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
     const choisir = async (liste: string, libelle: string) => {
       page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
@@ -65,15 +43,41 @@ describe('PnjLibraryPageComponent', () => {
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
     };
+    const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
+    const cliquer = async (b: HTMLElement) => {
+      b.click();
+      await fixture.whenStable();
+    };
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
+  }
+
+  it('montre les PNJ en tuiles, par nom, avec leur rang et leur vitalité ; les fiches du compte ont la pastille et le menu', async () => {
+    const {fixture, noms, tuile, texte} = await rendre();
+
+    expect(noms()).toEqual(['Acolyte', 'Ajhaskar', 'Archer de Tyrus']);
+    expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile-rang'))).toBe('Rival');
+    expect(tuile('Ajhaskar').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('PNJ');
+    expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile__coeur b'))).toBe('11');
+    expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile-marque'))).toBe('Mes fiches');
+    expect(tuile('Archer de Tyrus').querySelector('.dw-tuile-marque')).toBeNull();
+    expect(tuile('Archer de Tyrus').querySelector('.dw-tuile__menu button')).toBeNull();
+
+    tuile('Ajhaskar').querySelector<HTMLButtonElement>('button[aria-label="Actions de Ajhaskar"]')!.click();
+    await fixture.whenStable();
+    expect(document.querySelector('.mat-mdc-menu-item')?.getAttribute('href')).toBe('/create/pnj/Ajhaskar');
+  });
+
+  it('filtre par rang et par région, deux listes à droite de la recherche, puis par scénario', async () => {
+    const {page, texte, noms, bouton, cliquer, choisir} = await rendre();
 
     expect(page.querySelector('.dw-lr-filtres .dw-lr-effacer')).toBeNull();
     expect(page.querySelector('.dw-lr-filtres mat-select')).toBeNull();
 
-    expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('3 PNJ · actions');
+    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('3 PNJ');
 
     await choisir('Rang', 'Rival');
     expect(noms()).toEqual(['Ajhaskar']);
-    expect(texte(page.querySelector('th.dw-lr-compte'))).toBe('1 PNJ · actions');
+    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('1 PNJ');
     expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
 
     await choisir('Rang', 'Tous les rangs');
@@ -86,9 +90,9 @@ describe('PnjLibraryPageComponent', () => {
   });
 
   it('trie par vitalité', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+    const {noms, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-tri', 'Vit.'));
+    await choisir('Trier par', 'Vitalité');
 
     expect(noms()).toEqual(['Acolyte', 'Archer de Tyrus', 'Ajhaskar']);
   });
