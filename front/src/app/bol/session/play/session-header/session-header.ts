@@ -3,7 +3,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
-import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 import {TurnOrderInterrupter} from '../../models/turn-order.model';
 import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
 
@@ -11,7 +10,7 @@ import {MeleeDisponibilite} from '../../models/melee-pietaille.model';
  * en combat), recherche, commandes du round et fin du combat, retour à l'accueil, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
 @Component({
   selector: 'bol-session-header',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './session-header.html',
   styleUrl: './session-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
