@@ -13,7 +13,6 @@ export interface BolSceneEntry {
   camp?: CombatCamp;
   /** Attitude envers les héros au chargement. Absente sur les scènes anciennes. */
   attitude?: CombatantAttitude | null;
-  positions: ({x: number; y: number} | null)[];
 }
 
 /** Résumé du scénario auquel une scène appartient. */
@@ -74,7 +73,7 @@ export interface BolSceneLoadResult {
 }
 
 /** Un personnage de la scène tel que « Préparer la scène » l'enregistre : sa fiche, le nombre d'exemplaires (un PNJ est seul), son
- * camp et son attitude au chargement. Le serveur garde les positions sur la carte de ceux qui y étaient déjà. */
+ * camp et son attitude au chargement. */
 export interface BolSceneDistributionSaisie {
   kind: SceneEntryKind;
   source_id: string;

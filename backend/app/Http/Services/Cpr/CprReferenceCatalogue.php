@@ -111,37 +111,6 @@ class CprReferenceCatalogue
         return $lignes;
     }
 
-    /** Le contenu d'un fichier de données, écrit depuis la table (les lignes du livre seulement) : une ligne par enregistrement. */
-    public function exporter(string $table): string
-    {
-        $json = $this->colonnesDeType($table, ['array', 'json']);
-        $booleens = $this->colonnesDeType($table, ['boolean', 'bool']);
-        $requete = DB::table($table)->orderBy('id');
-        if (Schema::hasColumn($table, 'user_id')) {
-            $requete->whereNull('user_id');
-        }
-        $sortie = "<?php\n\n// Données de référence de Cyberpunk RED : table {$table}. Seule source de ces lignes (voir CprReferenceCatalogue) ;\n"
-            . "// l'id est fixe et ne se réutilise jamais. Après une modification : php artisan cpr:reference.\n\nreturn [\n";
-        foreach ($requete->get() as $ligne) {
-            $valeurs = [];
-            foreach ((array) $ligne as $colonne => $valeur) {
-                if (in_array($colonne, ['created_at', 'updated_at', 'user_id'], true)) {
-                    continue;
-                }
-                if (in_array($colonne, $json, true) && $valeur !== null) {
-                    $valeur = json_decode($valeur, true);
-                } elseif (in_array($colonne, $booleens, true)) {
-                    $valeur = (bool) $valeur;
-                } elseif (is_string($valeur) && preg_match('/^-?\d+$/', $valeur) && !in_array($colonne, ['code', 'nom', 'precision'], true)) {
-                    $valeur = (int) $valeur;
-                }
-                $valeurs[] = var_export($colonne, true) . ' => ' . $this->php($valeur);
-            }
-            $sortie .= '    [' . implode(', ', $valeurs) . "],\n";
-        }
-        return $sortie . "];\n";
-    }
-
     private function synchroniserLaTable(string $table): array
     {
         $bilan = ['ajoutees' => 0, 'modifiees' => 0, 'inchangees' => 0, 'absentes_du_fichier' => []];
@@ -240,19 +209,5 @@ class CprReferenceCatalogue
         /** @var Model $modele */
         $modele = new (self::TABLES[$table])();
         return array_keys(array_filter($modele->getCasts(), fn ($type) => in_array($type, $types, true)));
-    }
-
-    /** Une valeur PHP sur une ligne : tableaux courts, chaînes entre apostrophes. */
-    private function php(mixed $valeur): string
-    {
-        if (is_array($valeur)) {
-            $liste = array_is_list($valeur);
-            $elements = [];
-            foreach ($valeur as $cle => $element) {
-                $elements[] = ($liste ? '' : var_export($cle, true) . ' => ') . $this->php($element);
-            }
-            return '[' . implode(', ', $elements) . ']';
-        }
-        return $valeur === null ? 'null' : var_export($valeur, true);
     }
 }

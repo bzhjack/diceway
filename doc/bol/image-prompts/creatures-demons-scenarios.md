@@ -42,9 +42,9 @@ ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Décou
 | ✅ CS1 | plein jour | `cl1-mariage-amer--jeune-elasmotherium`, `dieu-voile--ch5-macaque-hurleur`, `dieu-voile--ch5-blob-attrapeur`, `cl1-les-trois-coffres--gardien-rouge`, `dieu-voile--intro-bubalus-zombie`, `perle-du-beshaar--crabe` |
 | ✅ CS2 | pénombre | `perle-du-beshaar--fille-djidaa`, `perle-du-beshaar--djidaa`, `dieu-voile--ch2-momie-royale`, `dieu-voile--ch2-momie-enfant`, `perle-du-beshaar--slorth-automate`, `perle-du-beshaar--ver-des-sables` |
 | ✅ CS3 | pénombre | `cl1-un-ennui-mortel--arctodus-empaille`, `cl1-un-ennui-mortel--nuee-vermine`, `cl1-la-tour-d-ajhaskar--andrak-obsidienne`, `cl1-la-tour-d-ajhaskar--xolth-juvenile`, `cl1-mariage-amer--serpent-sacre`, `dieu-voile--ch5-ver-a-soie` |
-| CS4 | pénombre | `perle-du-beshaar--tentacule`, `perle-du-beshaar--hippocampe`, `perle-du-beshaar--golem`, `cl1-les-trois-coffres--gardienne-bleue`, `dieu-voile--ch5-parturiente-maudite`, `dieu-voile--ch5-rejeton-parturiente` |
-| DS1 | démons | `cl1-la-tour-d-ajhaskar--krulak`, `cl1-la-tour-d-ajhaskar--avatar-krulak`, `cl1-la-tour-d-ajhaskar--labashaah`, `cl1-la-tour-d-ajhaskar--aine`, `cl1-la-tour-d-ajhaskar--rejeton`, `perle-du-beshaar--idole` |
-| DS2 | démons | `perle-du-beshaar--ilirk`, `perle-du-beshaar--ghashtalarann`, `perle-du-beshaar--limier`, `perle-du-beshaar--piqueur`, `dieu-voile--ch3-demon-fuligineux`, `dieu-voile--ch3-forgeur-de-zaggath` |
+| ✅ CS4 | pénombre | `perle-du-beshaar--tentacule`, `perle-du-beshaar--hippocampe`, `perle-du-beshaar--golem`, `cl1-les-trois-coffres--gardienne-bleue`, `dieu-voile--ch5-parturiente-maudite`, `dieu-voile--ch5-rejeton-parturiente` |
+| ✅ DS1 | démons | `cl1-la-tour-d-ajhaskar--krulak`, `cl1-la-tour-d-ajhaskar--avatar-krulak`, `cl1-la-tour-d-ajhaskar--labashaah`, `cl1-la-tour-d-ajhaskar--aine`, `cl1-la-tour-d-ajhaskar--rejeton`, `perle-du-beshaar--idole` |
+| ✅ DS2 | démons | `perle-du-beshaar--ilirk`, `perle-du-beshaar--ghashtalarann`, `perle-du-beshaar--limier`, `perle-du-beshaar--piqueur`, `dieu-voile--ch3-demon-fuligineux`, `dieu-voile--ch3-forgeur-de-zaggath` |
 
 ## Consignes de planche — créatures, plein jour
 
@@ -91,14 +91,14 @@ ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Décou
 > 5. ✅ Serpent sacré : serpent femelle géant aux écailles noires comme l'onyx, tête massive dressée hors d'une fosse, langue fourchue, petits serpents grouillant sur ses anneaux, offrandes pourrissantes et fumées d'encens dans une petite pyramide de pierre noire ; pénombre enfumée, lueur de braises, dominante violet sombre.
 > 6. ✅ Ver à soie corrompu : immonde chenille blême de six mètres à demi dressée, segments boursouflés marqués chacun d'un point jaune, courtes pattes membraneuses, tête grisâtre à six ocelles au-dessus de mandibules tranchantes, gros fils de soie jaunâtres pendant du plafond ; grotte dans une pénombre diffuse où scintillent les fils, palette froide blême et jaune.
 
-### CS4 — lueurs froides
+### ✅ CS4 — lueurs froides
 
-> 1. Tentacule de la mosaïque : long tentacule de pieuvre aux ventouses luisantes, chair aux nuances de bleu et de vert piquée de tesselles d'or, jaillissant d'un sol de mosaïque sous-marine (algues, poissons, coquillages) couvert d'eau jusqu'à la cheville et fouettant l'air ; vieux sanctuaire de bois aux murs nus, pénombre bleu-vert, seule lumière la lueur orangée de deux bougies.
-> 2. Hippocampe géant : hippocampe d'un mètre de long dressé hors de l'eau sur sa queue arrondie, corps luisant et souple aux nuances de bleu et de vert, petite bouche tubulaire, œil fixe ; même sol de mosaïque marine couvert d'eau, pied d'un autel de pierre brute couvert d'algues et de concrétions, pénombre bleu-vert, seule lumière la lueur orangée de deux bougies.
-> 3. Golem de Tolometh : squelette humain entièrement recouvert de berniques, de coques et de coraux, à la forme vaguement humaine, orbites vides, s'avançant à grands pas dandinants ; salle caverneuse de nacre humide et ruisselante, éclairée de quelques torches, palette froide nacre et bleu.
-> 4. Gardienne du Puits : statue animée de près de trois mètres en pierre légèrement bleutée, visage de femme d'une grande finesse à la détermination sereine, croissant de lune au front retenant sa longue chevelure, large collier de pierre sculpté sur la poitrine, pagne, deux cimeterres levés dans un élégant pas de danse ; fond d'un puits de pierre en pleine nuit, porte de bronze derrière elle, clair de lune, palette froide bleu nuit.
-> 5. Parturiente maudite : statue d'Afyra enceinte couchée sur son piédestal, devenue chair : visage de tentacules autour d'un œil unique, corps de pierre marbré de veines jaunâtres, sang jaune fluorescent ; fond de temple en ruine plongé dans la pénombre, seule lueur le jaune fluorescent.
-> 6. Rejeton de la parturiente : petit être vaguement humanoïde de moins d'un mètre, corps suintant et grumeleux, visage mou et lisse sans yeux ni bouche, mucus jaunâtre ; sol du même temple en ruine, même pénombre, seule lueur le jaune fluorescent du mucus.
+> 1. ✅ Tentacule de la mosaïque : long tentacule de pieuvre aux ventouses luisantes, chair aux nuances de bleu et de vert piquée de tesselles d'or, jaillissant d'un sol de mosaïque sous-marine (algues, poissons, coquillages) couvert d'eau jusqu'à la cheville et fouettant l'air ; vieux sanctuaire de bois aux murs nus, pénombre bleu-vert, seule lumière la lueur orangée de deux bougies.
+> 2. ✅ Hippocampe géant : hippocampe d'un mètre de long dressé hors de l'eau sur sa queue arrondie, corps luisant et souple aux nuances de bleu et de vert, petite bouche tubulaire, œil fixe ; même sol de mosaïque marine couvert d'eau, pied d'un autel de pierre brute couvert d'algues et de concrétions, pénombre bleu-vert, seule lumière la lueur orangée de deux bougies.
+> 3. ✅ Golem de Tolometh : squelette humain entièrement recouvert de berniques, de coques et de coraux, à la forme vaguement humaine, orbites vides, s'avançant à grands pas dandinants ; salle caverneuse de nacre humide et ruisselante, éclairée de quelques torches, palette froide nacre et bleu.
+> 4. ✅ Gardienne du Puits : statue animée de près de trois mètres en pierre légèrement bleutée, visage de femme d'une grande finesse à la détermination sereine, croissant de lune au front retenant sa longue chevelure, large collier de pierre sculpté sur la poitrine, pagne, deux cimeterres levés dans un élégant pas de danse ; fond d'un puits de pierre en pleine nuit, porte de bronze derrière elle, clair de lune, palette froide bleu nuit.
+> 5. ✅ Parturiente maudite : statue d'Afyra enceinte couchée sur son piédestal, devenue chair : visage de tentacules autour d'un œil unique, corps de pierre marbré de veines jaunâtres, sang jaune fluorescent ; fond de temple en ruine plongé dans la pénombre, seule lueur le jaune fluorescent.
+> 6. ✅ Rejeton de la parturiente : petit être vaguement humanoïde de moins d'un mètre, corps suintant et grumeleux, visage mou et lisse sans yeux ni bouche, mucus jaunâtre ; sol du même temple en ruine, même pénombre, seule lueur le jaune fluorescent du mucus.
 
 ## Consignes de planche — démons
 
@@ -110,23 +110,23 @@ ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Décou
 
 ## Planches de démons
 
-### DS1 — la tour d'Ajhaskar, l'idole d'Upok-N'Mee
+### ✅ DS1 — la tour d'Ajhaskar, l'idole d'Upok-N'Mee
 
-> 1. Krulak : démon simiesque trapu au pelage ras d'un gris malsain, bras démesurés levés au-dessus de la tête, jambes courtaudes, pattes à trois doigts griffus, quatre yeux rouges sans paupières, quatre petites cornes, gueule grande ouverte sur un hurlement ; intérieur d'une tour de sorcier.
-> 2. Avatar de Krulak : double du même démon simiesque gris, quatre yeux rouges et quatre petites cornes, déjà à demi dissous dans une fumée épaisse et bitumineuse, contours effilochés, griffes tendues hors de la fumée.
-> 3. Labashaah : démon majeur à la longue chevelure agitée, visage hideux de vieille femme aux traits de chauve-souris, grandes ailes membraneuses déployées, peau laiteuse, épaules et poitrine couvertes d'une fourrure noire et rase de chauve-souris, mains griffues tendues, aura d'autorité troublante, en plein vol ; antre rocheux ouvert sur une nuit de lune.
-> 4. Aîné de Labashaah : être primitif, mi-humain, mi-chauve-souris, corps trapu et velu, visage simiesque aux crocs découverts, oreilles pointues, grandes ailes membraneuses repliées autour des épaules ; jungle nocturne.
-> 5. Rejeton de Labashaah : chauve-souris géante aux quelques traits vaguement humains, grandes oreilles, yeux blancs, gueule ouverte sur un cri aigu, ailes déployées ; ciel nocturne au-dessus de la jungle, sous une grande lune.
-> 6. Idole brisée d'Upok-N'Mee : petit être de glaise molle, étrangement organique, tête de batracien aux gros yeux globuleux et à la crête épineuse, longs flagelles cinglants qui ondulent autour de lui, éclats d'une idole brisée à ses pieds ; autel en ruine.
+> 1. ✅ Krulak : démon simiesque trapu au pelage ras d'un gris malsain, bras démesurés levés au-dessus de la tête, jambes courtaudes, pattes à trois doigts griffus, quatre yeux rouges sans paupières, quatre petites cornes, gueule grande ouverte sur un hurlement ; intérieur d'une tour de sorcier.
+> 2. ✅ Avatar de Krulak : double du même démon simiesque gris, quatre yeux rouges et quatre petites cornes, déjà à demi dissous dans une fumée épaisse et bitumineuse, contours effilochés, griffes tendues hors de la fumée.
+> 3. ✅ Labashaah : démon majeur à la longue chevelure agitée, visage hideux de vieille femme aux traits de chauve-souris, grandes ailes membraneuses déployées, peau laiteuse, épaules et poitrine couvertes d'une fourrure noire et rase de chauve-souris, mains griffues tendues, aura d'autorité troublante, en plein vol ; antre rocheux ouvert sur une nuit de lune.
+> 4. ✅ Aîné de Labashaah : être primitif, mi-humain, mi-chauve-souris, corps trapu et velu, visage simiesque aux crocs découverts, oreilles pointues, grandes ailes membraneuses repliées autour des épaules ; jungle nocturne.
+> 5. ✅ Rejeton de Labashaah : chauve-souris géante aux quelques traits vaguement humains, grandes oreilles, yeux blancs, gueule ouverte sur un cri aigu, ailes déployées ; ciel nocturne au-dessus de la jungle, sous une grande lune.
+> 6. ✅ Idole brisée d'Upok-N'Mee : petit être de glaise molle, étrangement organique, tête de batracien aux gros yeux globuleux et à la crête épineuse, longs flagelles cinglants qui ondulent autour de lui, éclats d'une idole brisée à ses pieds ; autel en ruine.
 
-### DS2 — le palais de Tolometh, Malakut et les marais, Urceb
+### ✅ DS2 — le palais de Tolometh, Malakut et les marais, Urceb
 
-> 1. Ilirk : gnome démoniaque pansu à tête de mouche, gros yeux à facettes, ailes translucides, duvet de plumes bleutées, poignard cranté comme une patte d'insecte, à demi fondu dans l'air comme s'il allait disparaître ; salle de nacre (dominante bleutée et pourpre).
-> 2. Ghashtalarann : démon de l'illusion, humanoïde courtaud au corps flasque et gélatineux, visage de masque de cire fondu aux traits indéfinissables, quatre petits yeux placés de travers au-dessus d'une bouche aux lèvres molles, poings durs comme le roc ; cave voûtée qui se démultiplie en dédale illusoire de portes et d'escaliers.
-> 3. Limier de Bazaal Dûl : lévrier démoniaque efflanqué et écorché, chair rougeâtre et suintante, bouquets de petites cornes sur le crâne, yeux brasillant d'une lueur mauvaise, gueule hérissée de deux rangées de crocs, surgissant d'un miroitement de l'air à l'orée des marais.
-> 4. Piqueur de Bazaal Dûl : démon chasseur au corps humanoïde trapu et musculeux, cuir squameux aux teintes automnales parsemé de touffes de fourrure épaisse, visage aux traits canins, crâne protubérant couronné de deux cornes torsadées rouge sombre, mains griffues serrant un lourd épieu de chasse de bois noir et huileux, nuage de fumée nauséabonde.
-> 5. Démon fuligineux : nuage bouillonnant de suie opaque, à peine une forme, d'où percent des volutes en forme de bras et une gueule devinée, qui jaillit d'une faille au fond d'une cave et étouffe toute lumière ; seule la flamme d'une bougie enchantée résiste dans un coin.
-> 6. Forgeur de Zaggath : démon majeur au corps râblé de minerai en fusion, trois fois la taille d'un homme, visage odieusement humain à la bouche immense hérissée de crocs diamantins, petits yeux d'obsidienne, crinière de flammes, chaleur qui déforme l'air ; dominante rouge et orange de forge plutôt que le pourpre.
+> 1. ✅ Ilirk : gnome démoniaque pansu à tête de mouche, gros yeux à facettes, ailes translucides, duvet de plumes bleutées, poignard cranté comme une patte d'insecte, à demi fondu dans l'air comme s'il allait disparaître ; salle de nacre (dominante bleutée et pourpre).
+> 2. ✅ Ghashtalarann : démon de l'illusion, humanoïde courtaud au corps flasque et gélatineux, visage de masque de cire fondu aux traits indéfinissables, quatre petits yeux placés de travers au-dessus d'une bouche aux lèvres molles, poings durs comme le roc ; cave voûtée qui se démultiplie en dédale illusoire de portes et d'escaliers.
+> 3. ✅ Limier de Bazaal Dûl : lévrier démoniaque efflanqué et écorché, chair rougeâtre et suintante, bouquets de petites cornes sur le crâne, yeux brasillant d'une lueur mauvaise, gueule hérissée de deux rangées de crocs, surgissant d'un miroitement de l'air à l'orée des marais.
+> 4. ✅ Piqueur de Bazaal Dûl : démon chasseur au corps humanoïde trapu et musculeux, cuir squameux aux teintes automnales parsemé de touffes de fourrure épaisse, visage aux traits canins, crâne protubérant couronné de deux cornes torsadées rouge sombre, mains griffues serrant un lourd épieu de chasse de bois noir et huileux, nuage de fumée nauséabonde.
+> 5. ✅ Démon fuligineux : nuage bouillonnant de suie opaque, à peine une forme, d'où percent des volutes en forme de bras et une gueule devinée, qui jaillit d'une faille au fond d'une cave et étouffe toute lumière ; seule la flamme d'une bougie enchantée résiste dans un coin.
+> 6. ✅ Forgeur de Zaggath : démon majeur au corps râblé de minerai en fusion, trois fois la taille d'un homme, visage odieusement humain à la bouche immense hérissée de crocs diamantins, petits yeux d'obsidienne, crinière de flammes, chaleur qui déforme l'air ; dominante rouge et orange de forge plutôt que le pourpre.
 
 ## Si ChatGPT refuse ou décale
 
@@ -141,5 +141,6 @@ livres : les phrases les couvrent d'un collier de pierre et de fourrure pour pas
 | ✅ CS1 | fait le 2026-11-06 : grille exacte, 3 px rognés par bord, découpe régulière, posée sur les fiches avec `--force` |
 | ✅ CS2 | fait le 2026-11-08 : colonnes coupées à 511 et 1024, ligne à 512 ; découpe sur les coupures mesurées, 3 px rognés par bord, aucun recadrage ; posée sur les fiches avec `--force` |
 | ✅ CS3 | fait le 2026-11-08 : grille exacte (512, 1024 ; ligne à 512), 3 px rognés par bord, aucun recadrage ; posée sur les fiches avec `--force` |
-| CS4 | à faire |
-| DS1, DS2 | à faire |
+| ✅ CS4 | fait le 2026-11-13 : colonnes coupées à 511 et 1024, ligne à 512 ; découpe sur les coupures mesurées, 3 px rognés par bord, aucun recadrage ; posée sur les fiches avec `--force` |
+| ✅ DS1 | fait le 2026-11-13 : colonnes coupées à 511 et 1024, ligne à 512 ; découpe sur les coupures mesurées, 3 px rognés par bord, aucun recadrage ; posée sur les fiches avec `--force` |
+| ✅ DS2 | fait le 2026-11-13 : colonnes coupées à 511 et 1024, ligne à 512 ; découpe sur les coupures mesurées, 3 px rognés par bord, aucun recadrage ; posée sur les fiches avec `--force` |

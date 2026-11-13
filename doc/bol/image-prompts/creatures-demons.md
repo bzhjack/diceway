@@ -3,8 +3,7 @@
 Prompts pour regénérer (via ChatGPT) les portraits des **75 créatures** du
 bestiaire (`BolCreatureSeeder.php`) et des **3 démons** (`BolDemonSeeder.php`),
 dans le même style que les bannières des bibliothèques
-(`doc/bol/image-prompts/headers.md`, en particulier `header-creatures.webp` et
-`header-demons.webp`) : illustration peinte et encrée façon BD fantasy des
+(`front/src/assets/bol/header-creatures.webp` et `header-demons.webp`) : illustration peinte et encrée façon BD fantasy des
 années 80, fort contraste, ombres profondes. Même démarche que
 `doc/bol/image-prompts/pnj.md` (planches de 6 portraits, découpées ensuite).
 

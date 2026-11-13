@@ -68,8 +68,8 @@ describe('les personnages de la scène', () => {
   const scene: BolSceneModel = {
     ...SCENE,
     distribution: [
-      {kind: 'pnj', source_id: 'p1', qty: 1, positions: [null]},
-      {kind: 'creature', source_id: 'c1', qty: 3, camp: 'heros', attitude: 'amical', positions: [null, null, null]},
+      {kind: 'pnj', source_id: 'p1', qty: 1},
+      {kind: 'creature', source_id: 'c1', qty: 3, camp: 'heros', attitude: 'amical'},
     ],
   };
 

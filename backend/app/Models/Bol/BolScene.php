@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** Scène préparée : une distribution de PNJ / créatures / démons (références à la bibliothèque, avec
- * quantité et positions) rechargeable sur la table, rangée ou non dans un scénario, avec son décor
+ * nombre d'exemplaires, camp et attitude) rechargeable sur la table, rangée ou non dans un scénario, avec son décor
  * (région, lieu, ambiance, illustration), son texte à lire, ses règles pour le MJ (`jeu`), le secret du MJ (`notes`) et ses pistes. */
 class BolScene extends Model
 {

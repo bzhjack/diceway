@@ -32,7 +32,6 @@ import {
   compteDesCamps,
   dureeDeLecture,
   memesPersonnages,
-  PERSONNAGES_MAX,
   personnagesDe,
   personnagesVus,
   sceneChanges,
@@ -92,7 +91,6 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly dangers = [1, 2, 3, 4];
   protected readonly textes = TEXTES;
   protected readonly pistesMax = PISTES_MAX;
-  protected readonly personnagesMax = PERSONNAGES_MAX;
 
   private readonly returnUrl = readReturnUrl() ?? RETOUR_PAR_DEFAUT;
   /** La scène à préparer ; pour une nouvelle, celle créée au premier enregistrement (un second essai, après un échec, la reprend). */

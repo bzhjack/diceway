@@ -262,8 +262,8 @@ class BolScenarioImportPlanTest extends TestCase
         $result = BolScenarioImporter::distribution($entries, ['pretre' => ['pnj', 'p1'], 'hippocampe' => ['creature', 'c1']]);
 
         $this->assertCount(3, $result);
-        $this->assertSame(['kind' => 'pnj', 'source_id' => 'p1', 'qty' => 1, 'camp' => 'adversaires', 'attitude' => 'neutre', 'positions' => [null]], $result[0]);
+        $this->assertSame(['kind' => 'pnj', 'source_id' => 'p1', 'qty' => 1, 'camp' => 'adversaires', 'attitude' => 'neutre'], $result[0]);
         $this->assertSame($result[0], $result[1]);
-        $this->assertSame(['kind' => 'creature', 'source_id' => 'c1', 'qty' => 3, 'camp' => 'adversaires', 'attitude' => null, 'positions' => [null, null, null]], $result[2]);
+        $this->assertSame(['kind' => 'creature', 'source_id' => 'c1', 'qty' => 3, 'camp' => 'adversaires', 'attitude' => null], $result[2]);
     }
 }

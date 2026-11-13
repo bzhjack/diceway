@@ -26,7 +26,7 @@ function scene(id: string, scenarioId: string, ordre: number, qtys: number[] = [
     titre: `Scène ${id}`,
     ordre,
     notes: null,
-    distribution: qtys.map((qty) => ({kind: 'pnj', source_id: 'x', qty, positions: []})),
+    distribution: qtys.map((qty) => ({kind: 'pnj', source_id: 'x', qty})),
     region_id: null,
     lieu: id === 's0' ? 'Halakh' : null,
     moment: id === 's0' ? 'jour' : null,

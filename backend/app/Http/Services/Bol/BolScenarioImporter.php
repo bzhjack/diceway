@@ -299,8 +299,7 @@ final class BolScenarioImporter
     }
 
     /**
-     * La distribution d'une scène, positions vides (placement par défaut au chargement). Un PNJ n'a qu'un
-     * exemplaire par entrée : « deux prêtres » donnent deux entrées.
+     * La distribution d'une scène. Un PNJ n'a qu'un exemplaire par entrée : « deux prêtres » donnent deux entrées.
      *
      * @param list<array{perso: string, qty: int, camp: string, attitude: string|null}> $entries
      * @param array<string, array{0: string, 1: string}> $ids
@@ -320,7 +319,6 @@ final class BolScenarioImporter
                     'qty'       => $qty,
                     'camp'      => $entry['camp'],
                     'attitude'  => $entry['attitude'],
-                    'positions' => array_fill(0, $qty, null),
                 ];
             }
         }

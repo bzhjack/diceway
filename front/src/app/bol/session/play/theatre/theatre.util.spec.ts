@@ -141,7 +141,7 @@ describe('ATTITUDES', () => {
 });
 
 describe('campsComptes', () => {
-  const entry = (qty: number, camp?: 'heros' | 'adversaires') => ({kind: 'pnj' as const, source_id: 'x', qty, camp, positions: []});
+  const entry = (qty: number, camp?: 'heros' | 'adversaires') => ({kind: 'pnj' as const, source_id: 'x', qty, camp});
   const textes = (comptes: ReturnType<typeof campsComptes>) => comptes.map((c) => `${c.allie ? 'A' : 'E'} ${c.texte}`);
 
   it('compte alliés puis adversaires, quantités comprises (sans camp = adversaire)', () => {

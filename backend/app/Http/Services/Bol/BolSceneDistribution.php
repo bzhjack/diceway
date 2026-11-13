@@ -4,8 +4,7 @@ namespace App\Http\Services\Bol;
 
 /**
  * Fonctions pures (sans base) autour de la distribution d'une scène : la liste des personnages
- * non-héros d'une table, avec quantité et position par exemplaire. Les clés de jeton sont celles du
- * front (`combat-play.util.ts`) : `pnj-{id}`, `creature-{id}-{i}`, `demon-{id}-{i}`, `hero-{id}`.
+ * non-héros d'une table, avec leur nombre d'exemplaires, leur camp et leur attitude.
  */
 class BolSceneDistribution
 {
@@ -20,21 +19,14 @@ class BolSceneDistribution
 
     /**
      * Distribution saisie dans « Préparer la scène » : les entrées dont la fiche est accessible au compte (`accessibles`, clés
-     * `kind:source_id`), avec leur nombre d'exemplaires (un PNJ aussi : trois gardes d'une même fiche), le camp et l'attitude normalisés. Une entrée qui était déjà dans la scène (même fiche,
-     * dans l'ordre) garde les positions de ses exemplaires sur la carte ; les exemplaires en plus n'en ont pas.
+     * `kind:source_id`), avec leur nombre d'exemplaires (un PNJ aussi : trois gardes d'une même fiche), le camp et l'attitude normalisés.
      *
      * @param array<int, array<string, mixed>> $saisie
-     * @param array<int, array<string, mixed>> $avant       la distribution enregistrée
      * @param array<int, string>               $accessibles
-     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null, positions: array<int, array{x: float, y: float}|null>}>
+     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null}>
      */
-    public static function fromSaisie(array $saisie, array $avant, array $accessibles): array
+    public static function fromSaisie(array $saisie, array $accessibles): array
     {
-        $restantes = [];
-        foreach ($avant as $entree) {
-            $restantes[($entree['kind'] ?? '') . ':' . ($entree['source_id'] ?? '')][] = array_values(is_array($entree['positions'] ?? null) ? $entree['positions'] : []);
-        }
-
         $entries = [];
         foreach ($saisie as $entree) {
             $kind = (string) ($entree['kind'] ?? '');
@@ -43,19 +35,12 @@ class BolSceneDistribution
             if ($sourceId === null || !in_array($cle, $accessibles, true)) {
                 continue;
             }
-            $qty = min(self::QTY_MAX, max(1, (int) ($entree['qty'] ?? 1)));
-            $anciennes = isset($restantes[$cle]) && $restantes[$cle] !== [] ? array_shift($restantes[$cle]) : [];
-            $positions = [];
-            for ($i = 0; $i < $qty; $i++) {
-                $positions[] = self::position($anciennes[$i] ?? null);
-            }
             $entries[] = [
                 'kind'      => $kind,
                 'source_id' => $sourceId,
-                'qty'       => $qty,
+                'qty'       => min(self::QTY_MAX, max(1, (int) ($entree['qty'] ?? 1))),
                 'camp'      => self::entryCamp($entree),
                 'attitude'  => self::entryAttitude($entree),
-                'positions' => $positions,
             ];
         }
 
@@ -69,12 +54,10 @@ class BolSceneDistribution
      * @param array<int, array<string, mixed>> $pnjs      lignes avec `id`, `pnj_id`
      * @param array<int, array<string, mixed>> $creatures lignes avec `id`, `creature_id`, `qty`
      * @param array<int, array<string, mixed>> $demons    lignes avec `id`, `demon_id`, `qty`
-     * @param array<string, mixed>|null        $positions `positions_jetons` de la session
-     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null, positions: array<int, array{x: float, y: float}|null>}>
+     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null}>
      */
-    public static function fromSession(array $pnjs, array $creatures, array $demons, ?array $positions): array
+    public static function fromSession(array $pnjs, array $creatures, array $demons): array
     {
-        $positions ??= [];
         $entries = [];
 
         foreach ($pnjs as $row) {
@@ -88,7 +71,6 @@ class BolSceneDistribution
                 'qty'       => 1,
                 'camp'      => self::entryCamp($row),
                 'attitude'  => self::entryAttitude($row),
-                'positions' => [self::position($positions['pnj-' . $row['id']] ?? null)],
             ];
         }
 
@@ -98,64 +80,17 @@ class BolSceneDistribution
                 if ($sourceId === null) {
                     continue;
                 }
-                $qty = max(1, (int) ($row['qty'] ?? 1));
-                $instancePositions = [];
-                for ($i = 0; $i < $qty; $i++) {
-                    $instancePositions[] = self::position($positions[$kind . '-' . $row['id'] . '-' . $i] ?? null);
-                }
                 $entries[] = [
                     'kind'      => $kind,
                     'source_id' => $sourceId,
-                    'qty'       => $qty,
+                    'qty'       => max(1, (int) ($row['qty'] ?? 1)),
                     'camp'      => self::entryCamp($row),
                     'attitude'  => self::entryAttitude($row),
-                    'positions' => $instancePositions,
                 ];
             }
         }
 
         return $entries;
-    }
-
-    /**
-     * Positions à écrire dans `positions_jetons` pour la ligne de session créée à partir d'une
-     * entrée : seulement les exemplaires dont la position enregistrée n'est pas nulle.
-     *
-     * @param array<string, mixed> $entry
-     * @return array<string, array{x: float, y: float}>
-     */
-    public static function tokenPositions(string $kind, int $pivotId, array $entry): array
-    {
-        $qty = $kind === 'pnj' ? 1 : max(1, (int) ($entry['qty'] ?? 1));
-        $stored = array_values(is_array($entry['positions'] ?? null) ? $entry['positions'] : []);
-        $result = [];
-
-        for ($i = 0; $i < $qty; $i++) {
-            $position = self::position($stored[$i] ?? null);
-            if ($position === null) {
-                continue;
-            }
-            $key = $kind === 'pnj' ? 'pnj-' . $pivotId : $kind . '-' . $pivotId . '-' . $i;
-            $result[$key] = $position;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Positions des seuls héros : ce qui reste de `positions_jetons` quand tous les autres
-     * personnages sont retirés de la table.
-     *
-     * @param array<string, mixed>|null $positions
-     * @return array<string, mixed>
-     */
-    public static function heroPositionsOnly(?array $positions): array
-    {
-        return array_filter(
-            $positions ?? [],
-            fn ($key) => str_starts_with((string) $key, 'hero-'),
-            ARRAY_FILTER_USE_KEY,
-        );
     }
 
     /**
@@ -186,15 +121,5 @@ class BolSceneDistribution
     private static function sourceId(mixed $raw): ?string
     {
         return $raw === null || $raw === '' ? null : (string) $raw;
-    }
-
-    /** @return array{x: float, y: float}|null */
-    private static function position(mixed $raw): ?array
-    {
-        if (!is_array($raw) || !is_numeric($raw['x'] ?? null) || !is_numeric($raw['y'] ?? null)) {
-            return null;
-        }
-
-        return ['x' => (float) $raw['x'], 'y' => (float) $raw['y']];
     }
 }

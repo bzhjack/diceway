@@ -39,9 +39,9 @@ class BolSceneDistributionSaisieTest extends TestCase
         ]])->assertOk();
 
         $this->assertSame([
-            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 3, 'camp' => 'heros', 'attitude' => 'amical', 'positions' => [null, null, null]],
-            ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'hostile', 'positions' => [null, null, null]],
-            ['kind' => 'demon', 'source_id' => $demon->id, 'qty' => 1, 'camp' => 'adversaires', 'attitude' => null, 'positions' => [null]],
+            ['kind' => 'pnj', 'source_id' => $pnj->id, 'qty' => 3, 'camp' => 'heros', 'attitude' => 'amical'],
+            ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'hostile'],
+            ['kind' => 'demon', 'source_id' => $demon->id, 'qty' => 1, 'camp' => 'adversaires', 'attitude' => null],
         ], $scene->fresh()->distribution);
     }
 
@@ -88,20 +88,6 @@ class BolSceneDistributionSaisieTest extends TestCase
         $this->assertSame([], $scene->fresh()->distribution);
     }
 
-    public function test_a_character_already_in_the_scene_keeps_its_positions_on_the_map(): void
-    {
-        $loup = BolCreature::create(['nom' => 'Loup', 'user_id' => $this->user->id]);
-        $scene = $this->scene([
-            ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 2, 'camp' => 'adversaires', 'attitude' => null, 'positions' => [['x' => 10, 'y' => 20], ['x' => 30, 'y' => 40]]],
-        ]);
-
-        $this->postJson('/api/bol/scene/update', ['id' => $scene->id, 'distribution' => [
-            ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 3, 'camp' => 'adversaires'],
-        ]])->assertOk();
-
-        $this->assertEquals([['x' => 10, 'y' => 20], ['x' => 30, 'y' => 40], null], $scene->fresh()->distribution[0]['positions']);
-    }
-
     public function test_a_wrong_kind_or_count_is_refused(): void
     {
         $scene = $this->scene([]);
@@ -113,7 +99,7 @@ class BolSceneDistributionSaisieTest extends TestCase
     public function test_an_update_without_distribution_keeps_the_characters(): void
     {
         $loup = BolCreature::create(['nom' => 'Loup', 'user_id' => $this->user->id]);
-        $entree = ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 1, 'camp' => 'adversaires', 'attitude' => null, 'positions' => [null]];
+        $entree = ['kind' => 'creature', 'source_id' => $loup->id, 'qty' => 1, 'camp' => 'adversaires', 'attitude' => null];
         $scene = $this->scene([$entree]);
 
         $this->postJson('/api/bol/scene/update', ['id' => $scene->id, 'titre' => 'La cave'])->assertOk();

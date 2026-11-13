@@ -20,13 +20,6 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ## 1. Images (hors code)
 
-- `doc/bol/image-prompts/fonds-bibliotheques.md` : 6 fonds plein écran pour les bibliothèques (héros, PNJ, créatures, démons, armes,
-  armures), à la résolution du fond des scénarios ; puis, page par page, `image` et `[fondPleinePage]="true"` sur l'en-tête (S).
-- `doc/bol/image-prompts/creatures-demons-scenarios.md` : 3 planches, 18 portraits.
-  - **CS4** (créatures) : tentacule, hippocampe, golem (Perle), gardienne bleue (Chroniques 1), parturiente maudite et son rejeton
-    (Dieu voilé, ch5).
-  - **DS1** (démons) : Krulak et son avatar, Labashaah, l'Aîné, le Rejeton (tour d'Ajhaskar), l'idole de la Perle.
-  - **DS2** (démons) : Ilirk, Ghashtalarann, Limier, Piqueur (Perle), démon fuligineux et forgeur de Zaggath (Dieu voilé).
 - Portraits des PNJ de scénario : aucune planche faite.
   - `doc/bol/scenarios/chroniques-lemuriennes-1/portraits.md` : P1 à P9, environ 51 portraits.
   - `doc/bol/scenarios/la-perle-du-beshaar/portraits.md` : P1 à P7, environ 41 portraits.

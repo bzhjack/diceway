@@ -18,7 +18,7 @@ function scene(id: string, scenarioId: string | null, ordre: number, titre = id)
 }
 
 function entry(kind: BolSceneEntry['kind'], qty: number): BolSceneEntry {
-  return {kind, source_id: 'x', qty, positions: []};
+  return {kind, source_id: 'x', qty};
 }
 
 describe('scenarioFilterFor', () => {

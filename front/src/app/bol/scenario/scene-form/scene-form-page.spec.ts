@@ -19,7 +19,7 @@ const SCENE: BolSceneModel = {
   titre: 'Cap au sud',
   ordre: 0,
   notes: null,
-  distribution: [{kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: 'hostile', positions: [null, null]}],
+  distribution: [{kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: 'hostile'}],
   region_id: null,
   lieu: 'Halakh',
   moment: 'jour',

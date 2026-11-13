@@ -216,7 +216,7 @@ class BolSessionScenarioTest extends TestCase
     {
         $garde = $this->pnj('Garde');
         $scene = BolScene::create(['user_id' => $this->user->id, 'scenario_id' => null, 'titre' => 'La porte', 'ordre' => 0, 'distribution' => [
-            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'mefiant', 'positions' => [null, null, null]],
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'mefiant'],
         ]]);
         $session = $this->tableSession();
 
