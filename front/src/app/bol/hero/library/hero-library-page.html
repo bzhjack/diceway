@@ -73,31 +73,32 @@
         </dw-library-toolbar>
 
         <!-- Une tuile par héros : un clic ouvre son statbloc ; son menu le modifie, le supprime, ou l'édite en création avancée s'il est en cours. -->
-        <ul class="dw-lr-grille" aria-label="Les héros">
-          @for (ligne of lignes(); track ligne.hero.id) {
-            <li>
-              <bol-tuile
-                [nom]="ligne.nom"
-                [image]="ligne.image"
-                [label]="ligne.nom + ', voir son statbloc'"
-                [vitalite]="ligne.hero.ressources.vitalite"
-                [heroisme]="ligne.hero.ressources.heroisme"
-                (ouvrir)="openStatblock(ligne.hero)"
-              >
-                @if (!ligne.hero.active) {
-                  <span bolTuileCoin class="dw-tuile-marque">En cours</span>
-                }
-                <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{hero: ligne.hero}">
-                  <mat-icon>more_horiz</mat-icon>
-                </button>
-                @if (ligne.hero.origines.joueur) {
-                  <span bolTuileSous>{{ ligne.hero.origines.joueur }}</span>
-                }
-              </bol-tuile>
-            </li>
-          }
-        </ul>
-        @if (!lignes().length) {
+        @if (lignes().length) {
+          <ul class="dw-lr-grille" aria-label="Les héros">
+            @for (ligne of lignes(); track ligne.hero.id) {
+              <li>
+                <bol-tuile
+                  [nom]="ligne.nom"
+                  [image]="ligne.image"
+                  [label]="ligne.nom + ', voir son statbloc'"
+                  [vitalite]="ligne.hero.ressources.vitalite"
+                  [heroisme]="ligne.hero.ressources.heroisme"
+                  (ouvrir)="openStatblock(ligne.hero)"
+                >
+                  @if (!ligne.hero.active) {
+                    <span bolTuileCoin class="dw-tuile-marque">En cours</span>
+                  }
+                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{hero: ligne.hero}">
+                    <mat-icon>more_horiz</mat-icon>
+                  </button>
+                  @if (ligne.hero.origines.joueur) {
+                    <span bolTuileSous>{{ ligne.hero.origines.joueur }}</span>
+                  }
+                </bol-tuile>
+              </li>
+            }
+          </ul>
+        } @else {
           <p class="dw-lr-vide">Aucun héros ne correspond à ces filtres.</p>
         }
       </mat-card>

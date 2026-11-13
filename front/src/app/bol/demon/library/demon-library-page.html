@@ -63,25 +63,26 @@
         </dw-library-toolbar>
 
         <!-- Une tuile par fiche : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
-        <ul class="dw-lr-grille" aria-label="Les démons du bestiaire">
-          @for (ligne of lignes(); track ligne.demon.id) {
-            <li>
-              <bol-tuile [nom]="ligne.demon.nom" [image]="ligne.image" [label]="ligne.demon.nom + ', voir son statbloc'" [vitalite]="ligne.demon.vitalite" (ouvrir)="openStatblock(ligne.demon)">
-                @if (ligne.mien) {
-                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
-                }
-                @if (ligne.mien) {
-                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.demon.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.demon}">
-                    <mat-icon>more_horiz</mat-icon>
-                  </button>
-                }
-                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
-                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Démon"><mat-icon aria-hidden="true">bolt</mat-icon></span>
-              </bol-tuile>
-            </li>
-          }
-        </ul>
-        @if (!lignes().length) {
+        @if (lignes().length) {
+          <ul class="dw-lr-grille" aria-label="Les démons du bestiaire">
+            @for (ligne of lignes(); track ligne.demon.id) {
+              <li>
+                <bol-tuile [nom]="ligne.demon.nom" [image]="ligne.image" [label]="ligne.demon.nom + ', voir son statbloc'" [vitalite]="ligne.demon.vitalite" (ouvrir)="openStatblock(ligne.demon)">
+                  @if (ligne.mien) {
+                    <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                  }
+                  @if (ligne.mien) {
+                    <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.demon.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.demon}">
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+                  }
+                  <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                  <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Démon"><mat-icon aria-hidden="true">bolt</mat-icon></span>
+                </bol-tuile>
+              </li>
+            }
+          </ul>
+        } @else {
           <p class="dw-lr-vide">Aucun démon ne correspond à ces filtres.</p>
         }
       </mat-card>

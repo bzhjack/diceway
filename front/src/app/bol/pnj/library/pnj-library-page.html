@@ -63,25 +63,26 @@
         </dw-library-toolbar>
 
         <!-- Une tuile par fiche : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
-        <ul class="dw-lr-grille" aria-label="Les PNJ">
-          @for (ligne of lignes(); track ligne.pnj.id) {
-            <li>
-              <bol-tuile [nom]="ligne.nom" [image]="ligne.image" [label]="ligne.nom + ', voir son statbloc'" [vitalite]="ligne.pnj.ressources.vitalite" (ouvrir)="openStatblock(ligne.pnj)">
-                @if (ligne.mien) {
-                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
-                }
-                @if (ligne.mien) {
-                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.pnj}">
-                    <mat-icon>more_horiz</mat-icon>
-                  </button>
-                }
-                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
-                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="PNJ"><mat-icon aria-hidden="true">person</mat-icon></span>
-              </bol-tuile>
-            </li>
-          }
-        </ul>
-        @if (!lignes().length) {
+        @if (lignes().length) {
+          <ul class="dw-lr-grille" aria-label="Les PNJ">
+            @for (ligne of lignes(); track ligne.pnj.id) {
+              <li>
+                <bol-tuile [nom]="ligne.nom" [image]="ligne.image" [label]="ligne.nom + ', voir son statbloc'" [vitalite]="ligne.pnj.ressources.vitalite" (ouvrir)="openStatblock(ligne.pnj)">
+                  @if (ligne.mien) {
+                    <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                  }
+                  @if (ligne.mien) {
+                    <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.pnj}">
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+                  }
+                  <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                  <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="PNJ"><mat-icon aria-hidden="true">person</mat-icon></span>
+                </bol-tuile>
+              </li>
+            }
+          </ul>
+        } @else {
           <p class="dw-lr-vide">Aucun PNJ ne correspond à ces filtres.</p>
         }
       </mat-card>

@@ -38,10 +38,11 @@ import {LibraryTri, LibraryTriOption} from '../../models/library-rows.model';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LibraryTriComponent {
-  readonly options = input.required<readonly LibraryTriOption<string>[]>();
-  readonly tri = input.required<LibraryTri<string>>();
-  readonly cle = output<string>();
+export class LibraryTriComponent<TTri extends string = string> {
+  readonly options = input.required<readonly LibraryTriOption<TTri>[]>();
+  readonly tri = input.required<LibraryTri<TTri>>();
+  /** La clé choisie dans la liste : une de celles d'`options`. */
+  readonly cle = output<TTri>();
   readonly inverser = output<void>();
 
   protected readonly libelle = computed(() => this.options().find((o) => o.cle === this.tri().cle)?.label ?? '');

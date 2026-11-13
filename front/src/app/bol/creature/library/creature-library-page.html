@@ -63,25 +63,26 @@
         </dw-library-toolbar>
 
         <!-- Une tuile par créature : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
-        <ul class="dw-lr-grille" aria-label="Les créatures du bestiaire">
-          @for (ligne of lignes(); track ligne.creature.id) {
-            <li>
-              <bol-tuile [nom]="ligne.creature.nom" [image]="ligne.image" [label]="ligne.creature.nom + ', voir son statbloc'" [vitalite]="ligne.creature.vitalite" (ouvrir)="openStatblock(ligne.creature)">
-                @if (ligne.mienne) {
-                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
-                }
-                @if (ligne.mienne) {
-                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.creature.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{creature: ligne.creature}">
-                    <mat-icon>more_horiz</mat-icon>
-                  </button>
-                }
-                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
-                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Créature"><mat-icon aria-hidden="true">pets</mat-icon></span>
-              </bol-tuile>
-            </li>
-          }
-        </ul>
-        @if (!lignes().length) {
+        @if (lignes().length) {
+          <ul class="dw-lr-grille" aria-label="Les créatures du bestiaire">
+            @for (ligne of lignes(); track ligne.creature.id) {
+              <li>
+                <bol-tuile [nom]="ligne.creature.nom" [image]="ligne.image" [label]="ligne.creature.nom + ', voir son statbloc'" [vitalite]="ligne.creature.vitalite" (ouvrir)="openStatblock(ligne.creature)">
+                  @if (ligne.mienne) {
+                    <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                  }
+                  @if (ligne.mienne) {
+                    <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.creature.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{creature: ligne.creature}">
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+                  }
+                  <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                  <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Créature"><mat-icon aria-hidden="true">pets</mat-icon></span>
+                </bol-tuile>
+              </li>
+            }
+          </ul>
+        } @else {
           <p class="dw-lr-vide">Aucune créature ne correspond à ces filtres.</p>
         }
       </mat-card>
