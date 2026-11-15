@@ -20,8 +20,7 @@ export function reserveTab(kind: CombatantKind): ReserveTab {
   return RESERVE_TABS.find((tab) => tab.kind === kind) ?? RESERVE_TABS[0];
 }
 
-/** Minuscules sans diacritiques : « Prêtre » et « pretre » se valent pour la recherche. Partagé avec
- * la barre de commande. */
+/** Minuscules sans diacritiques : « Prêtre » et « pretre » se valent pour la recherche. */
 export function normalizeSearch(value: string): string {
   return value
     .normalize('NFD')

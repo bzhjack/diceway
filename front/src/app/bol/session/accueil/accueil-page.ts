@@ -172,7 +172,7 @@ export class AccueilPageComponent {
 
   constructor() {
     this.charger();
-    // `/session/new` (le menu du compte, la palette de la table, le retour de « Créer un héros ») mène ici avec `?table=nouvelle` ou `compagnie` : le
+    // `/session/new` (le menu du compte, le retour de « Créer un héros ») mène ici avec `?table=nouvelle` ou `compagnie` : le
     // dialogue s'ouvre, et l'adresse redevient celle de l'accueil.
     this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const table = params.get('table');

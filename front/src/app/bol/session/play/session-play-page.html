@@ -16,7 +16,6 @@
       [mode]="table.mode()"
       [titre]="table.headerTitle()"
       (endCombat)="ending.askEndCombat()"
-      (searchRequested)="commands.openPalette()"
       [interrupters]="combat.interrupters()"
       (interruptRequested)="combat.onInterrupt($event)"
       (rerollRequested)="commands.openStartCombat(true)"
