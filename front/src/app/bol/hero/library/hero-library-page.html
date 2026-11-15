@@ -31,17 +31,9 @@
     </header>
 
     <div class="dw-lr-corps">
-      <!-- La colonne, toujours en vue : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
+      <!-- La colonne, toujours en vue : la recherche, les listes (rang, et taille, catégorie ou région), puis les filtres à bascule, chacun
+           avec le nombre de fiches qu'il garde. -->
       <bol-library-colonne placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm">
-        <section class="dw-lr-facette" aria-labelledby="hl-f-statut">
-          <h2 id="hl-f-statut" class="dw-lr-facette-titre">Statut</h2>
-          @for (option of statuts(); track option.cle) {
-            <button type="button" class="dw-lr-option" [attr.aria-pressed]="statut() === option.cle" (click)="statut.set(option.cle)">
-              <span class="dw-lr-option-label">{{ option.label }}</span>
-              <span class="dw-lr-option-compte">{{ option.compte }}</span>
-            </button>
-          }
-        </section>
         <div class="dw-lr-listes">
           <mat-form-field class="dw-lr-select-barre" subscriptSizing="dynamic">
             <mat-select [formField]="regionField" aria-label="Région" panelClass="dw-lr-select-panel" [panelWidth]="null">
@@ -52,6 +44,15 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <section class="dw-lr-facette" aria-labelledby="hl-f-statut">
+          <h2 id="hl-f-statut" class="dw-lr-facette-titre">Statut</h2>
+          @for (option of statuts(); track option.cle) {
+            <button type="button" class="dw-lr-option" [attr.aria-pressed]="statut() === option.cle" (click)="statut.set(option.cle)">
+              <span class="dw-lr-option-label">{{ option.label }}</span>
+              <span class="dw-lr-option-compte">{{ option.compte }}</span>
+            </button>
+          }
+        </section>
       </bol-library-colonne>
 
       <div class="dw-lr-liste">

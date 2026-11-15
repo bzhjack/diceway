@@ -1,6 +1,5 @@
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, parFiche, campsComptes, pistesAffichees, sceneActs, sceneDecor, troupe} from './theatre.util';
 
@@ -154,27 +153,6 @@ describe('campsComptes', () => {
     expect(textes(campsComptes([entry(2)]))).toEqual(['E 2 adversaires']);
     expect(textes(campsComptes([entry(1, 'heros')]))).toEqual(['A 1 allié']);
     expect(campsComptes([])).toEqual([]);
-  });
-  it('avec le catalogue, nomme les fiches de chaque camp et leur nombre ; tait une fiche absente du catalogue', () => {
-    const catalogue = [
-      {kind: 'creature', sourceId: 't', nom: 'Tentacule de la mosaïque'},
-      {kind: 'creature', sourceId: 'h', nom: 'Hippocampe géant'},
-      {kind: 'pnj', sourceId: 'g', nom: 'Garde du temple'},
-    ] as unknown as CombatCatalogEntry[];
-    const comptes = campsComptes(
-      [
-        {kind: 'creature', source_id: 't', qty: 3, camp: 'adversaires'},
-        {kind: 'creature', source_id: 'h', qty: 2},
-        {kind: 'pnj', source_id: 'g', qty: 1, camp: 'heros'},
-        {kind: 'demon', source_id: 'perdu', qty: 1},
-      ],
-      catalogue,
-    );
-
-    expect(comptes.map((c) => [c.texte, c.fiches])).toEqual([
-      ['1 allié', [{nom: 'Garde du temple', qty: 1}]],
-      ['6 adversaires', [{nom: 'Tentacule de la mosaïque', qty: 3}, {nom: 'Hippocampe géant', qty: 2}]],
-    ]);
   });
 });
 

@@ -263,8 +263,7 @@ export class SceneActsComponent {
   private readonly acteEnCours = computed(() => this.store.acts().find((acte) => acte.statut === 'en-cours')?.scene.id ?? null);
 
   constructor() {
-    // Les noms de la distribution, dans l'aperçu d'une scène, viennent du catalogue des fiches, chargé ici même si les coulisses restent
-    // fermées.
+    // Les portraits de l'aperçu viennent du catalogue, chargé ici même si les coulisses restent fermées.
     inject(CombatSelectionService).loadCatalog();
 
     // Une frise trop longue défile : l'acte en cours, seul à montrer son titre, revient au centre de la vue.

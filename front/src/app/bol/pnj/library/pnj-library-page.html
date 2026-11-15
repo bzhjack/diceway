@@ -28,9 +28,9 @@
     </header>
 
     <div class="dw-lr-corps">
-      <!-- La colonne, toujours en vue : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
+      <!-- La colonne, toujours en vue : la recherche, les listes (rang, et taille, catégorie ou région), puis les filtres à bascule, chacun
+           avec le nombre de fiches qu'il garde. -->
       <bol-library-colonne placeholder="Rechercher un PNJ, une carrière, une région" [(searchTerm)]="searchTerm">
-        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
         <div class="dw-lr-listes">
           <bol-library-rang [rangs]="rangs()" [(rang)]="rang" />
           <mat-form-field class="dw-lr-select-barre" subscriptSizing="dynamic">
@@ -42,6 +42,7 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
       </bol-library-colonne>
 
       <div class="dw-lr-liste">

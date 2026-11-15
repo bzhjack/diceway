@@ -1,7 +1,6 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {ActeStatut, PisteAffichee} from '../../models/theatre.model';
 import {campsComptes, lieuTexte, METEOS, MOMENTS} from './theatre.util';
 
@@ -13,8 +12,7 @@ const STATUTS: Record<ActeStatut, string> = {jouee: 'Déjà jouée', 'en-cours':
 /**
  * Aperçu d'une scène, en tête du menu d'un acte de la frise ou d'une piste, comme une fiche : en tête son numéro (dans un rond à la
  * couleur de son statut), son titre, son statut et sa place dans le chapitre ; puis une ligne par information, son icône et son libellé
- * alignés : le lieu, l'ambiance, le danger, ceux d'en face et les alliés (nommés par le catalogue des fiches, que charge la frise),
- * les scènes où mènent ses pistes. Une ligne sans valeur est tue. Les actions (« Charger la scène »…) sont des `mat-menu-item` du menu
+ * alignés : le lieu, l'ambiance, le danger, le nombre d'adversaires et d'alliés, les scènes où mènent ses pistes. Une ligne sans valeur est tue. Les actions (« Charger la scène »…) sont des `mat-menu-item` du menu
  * lui-même, pour rester atteignables au clavier.
  */
 @Component({
@@ -69,9 +67,6 @@ const STATUTS: Record<ActeStatut, string> = {jouee: 'Déjà jouée', 'en-cours':
           <span class="spv-libelle">{{ camp.allie ? 'Alliés' : 'En face' }}</span>
           <span class="spv-valeur">
             <b [class]="camp.allie ? 'spv-compte spv-compte--allie' : 'spv-compte spv-compte--adversaire'">{{ camp.texte }}</b>
-            @for (fiche of camp.fiches; track $index) {
-              <span class="spv-fiche">{{ fiche.nom }}{{ fiche.qty > 1 ? ' ×' + fiche.qty : '' }}</span>
-            }
           </span>
         </div>
       } @empty {
@@ -253,23 +248,16 @@ const STATUTS: Record<ActeStatut, string> = {jouee: 'Déjà jouée', 'en-cours':
       color: color-mix(in srgb, var(--dw-color-reussite) 55%, white);
     }
 
-    .spv-fiche {
-      font-size: 0.78rem;
-      color: var(--dw-forge-caption);
-    }
-
     .spv-vide {
       color: var(--dw-forge-caption);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Dans un `mat-menu`, seul un élément de menu est permis : l'aperçu en est un, désactivé (il n'agit pas), dont le texte
-  // (titre, statut, lieu, ambiance, danger, distribution, suites) reste lu par les lecteurs d'écran.
+  // (titre, statut, lieu, ambiance, danger, camps, suites) reste lu par les lecteurs d'écran.
   host: {role: 'menuitem', 'aria-disabled': 'true', tabindex: '-1'},
 })
 export class ScenePreviewComponent {
-  private readonly catalogue = inject(CombatSelectionService).catalog;
-
   readonly scene = input.required<BolSceneModel>();
   readonly statut = input<ActeStatut | null>(null);
   readonly regionNom = input<string | null>(null);
@@ -291,5 +279,5 @@ export class ScenePreviewComponent {
     return options.length ? {icone: options[0].icon, texte: options.map((option) => option.label).join(' · ')} : null;
   });
   /** Ceux d'en face d'abord, puis les alliés. */
-  protected readonly camps = computed(() => [...campsComptes(this.scene().distribution, this.catalogue())].reverse());
+  protected readonly camps = computed(() => [...campsComptes(this.scene().distribution)].reverse());
 }

@@ -1,7 +1,6 @@
 import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneMeteo, SceneMoment} from '../../../models/bol-scene.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {ActeStatut, AmbianceOption, CampCompte, PisteAffichee, RideauRythme, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
 import {scenesOf} from '../scene-list/scene.util';
 
@@ -59,18 +58,14 @@ export function sceneDecor(scene: Pick<BolSceneModel, 'image'> | null): string {
 }
 
 /** Combien d'alliés et d'adversaires une scène fait entrer (quantités comprises ; sans camp, un adversaire), alliés d'abord ; un camp
- * vide est tu. Avec le catalogue des fiches, chaque camp nomme aussi ses fiches et leur nombre d'exemplaires. */
-export function campsComptes(distribution: readonly BolSceneEntry[], catalogue: readonly CombatCatalogEntry[] = []): CampCompte[] {
-  const noms = new Map(catalogue.map((entree) => [`${entree.kind}:${entree.sourceId}`, entree.nom]));
+ * vide est tu. */
+export function campsComptes(distribution: readonly BolSceneEntry[]): CampCompte[] {
+  const compte = (allie: boolean): number =>
+    distribution.filter((entry) => (entry.camp === 'heros') === allie).reduce((sum, entry) => sum + Math.max(1, entry.qty), 0);
   return [true, false].flatMap((allie) => {
-    const entrees = distribution.filter((entry) => (entry.camp === 'heros') === allie);
-    const n = entrees.reduce((sum, entry) => sum + Math.max(1, entry.qty), 0);
+    const n = compte(allie);
     const mot = allie ? 'allié' : 'adversaire';
-    const fiches = entrees.flatMap((entry) => {
-      const nom = noms.get(`${entry.kind}:${entry.source_id}`);
-      return nom ? [{nom, qty: Math.max(1, entry.qty)}] : [];
-    });
-    return n > 0 ? [{allie, texte: `${n} ${mot}${n > 1 ? 's' : ''}`, fiches}] : [];
+    return n > 0 ? [{allie, texte: `${n} ${mot}${n > 1 ? 's' : ''}`}] : [];
   });
 }
 

@@ -1,9 +1,6 @@
-import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MatIconTestingModule} from '@angular/material/icon/testing';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../../models/combat-selection.model';
-import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {ActeStatut, PisteAffichee} from '../../models/theatre.model';
 import {ScenePreviewComponent} from './scene-preview';
 
@@ -22,17 +19,9 @@ const GARDIENS = {
   pistes: [],
 } as unknown as BolSceneModel;
 
-const CATALOGUE = [
-  {kind: 'creature', sourceId: 't', nom: 'Tentacule de la mosaïque'},
-  {kind: 'creature', sourceId: 'h', nom: 'Hippocampe géant'},
-] as unknown as CombatCatalogEntry[];
-
 describe('ScenePreviewComponent', () => {
   async function rendre(scene: BolSceneModel, statut: ActeStatut, suites: PisteAffichee[] = []) {
-    TestBed.configureTestingModule({
-      imports: [MatIconTestingModule],
-      providers: [{provide: CombatSelectionService, useValue: {catalog: signal(CATALOGUE)}}],
-    });
+    TestBed.configureTestingModule({imports: [MatIconTestingModule]});
     const fixture = TestBed.createComponent(ScenePreviewComponent);
     fixture.componentRef.setInput('scene', scene);
     fixture.componentRef.setInput('statut', statut);
@@ -59,7 +48,7 @@ describe('ScenePreviewComponent', () => {
     expect(texte(element.querySelector('.spv-statut'))).toBe('check Déjà jouée · scène 5 sur 10');
   });
 
-  it('une ligne par information : le lieu, l’ambiance, le danger, ceux d’en face nommés, la suite', async () => {
+  it('une ligne par information : le lieu, l’ambiance, le danger, le nombre d’adversaires (sans leurs noms), la suite', async () => {
     const suite = {scene: {id: 's6', titre: 'Fuite et embarquement'} as BolSceneModel, numero: 6, statut: 'a-venir' as const};
     const {element, lignes} = await rendre(GARDIENS, 'jouee', [
       {texte: 'Fuir vers le quai du Pendu', scene_id: 's6', acte: suite},
@@ -70,7 +59,7 @@ describe('ScenePreviewComponent', () => {
       ['Lieu', 'Sanctuaire de Shazzadion, Satarla'],
       ['Ambiance', 'Nuit'],
       ['Danger', expect.any(String)],
-      ['En face', '5 adversaires | Tentacule de la mosaïque ×3 | Hippocampe géant ×2'],
+      ['En face', '5 adversaires'],
       ['Ensuite', '6 · Fuite et embarquement | Interroger le prêtre'],
     ]);
     expect(element.querySelector('.spv-cranes')!.getAttribute('aria-label')).toBe('3 sur 4');
