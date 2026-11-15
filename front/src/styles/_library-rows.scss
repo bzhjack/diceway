@@ -1,11 +1,11 @@
 // Une bibliothèque en tuiles (créatures, démons, PNJ, héros) : en haut un en-tête sur toute la largeur (le titre, les actions) ; dessous,
-// à gauche une colonne (`bol-library-colonne` : la recherche, les filtres) ; à droite le rappel des filtres (le compte, les filtres
-// posés, le tri), puis les tuiles. La page tient dans l'écran et ne défile pas : l'en-tête, la colonne et le rappel des filtres restent
-// en place, seule la grille des tuiles défile, dans son cadre (rien ne passe derrière eux). Le bestiaire (`creature-library-page`) en
-// est la référence ; les filtres partagés sont dans `bol-library-facettes`, la tuile est `bol-tuile`.
+// une barre sur une ligne (`bol-library-barre` : la recherche, les filtres, le compte), puis les tuiles. La page tient dans l'écran et ne
+// défile pas : l'en-tête et la barre restent en place, seule la grille des tuiles défile, dans son cadre (rien ne passe derrière eux).
+// Le bestiaire (`creature-library-page`) en est la référence ; les filtres partagés sont dans `bol-library-facettes`, la tuile est
+// `bol-tuile`.
 
 // La page, à la hauteur de l'écran, avec des marges plus fines ; elle s'isole pour garder l'illustration au-dessus de sa suie.
-// `--dw-lr-voile` : le fond sombre, à peine translucide, de l'en-tête, de la colonne et du rappel des filtres, posés sur l'illustration.
+// `--dw-lr-voile` : le fond sombre, à peine translucide, de l'en-tête et de la barre, posés sur l'illustration.
 .dw-lr-page {
   --dw-lr-voile: rgba(12, 8, 5, 0.9);
 
@@ -39,7 +39,7 @@
   isolation: isolate;
 }
 
-// L'illustration de la page : un fond fixe, qui couvre l'écran, derrière la colonne et les tuiles.
+// L'illustration de la page : un fond fixe, qui couvre l'écran, derrière l'en-tête, la barre et les tuiles.
 .dw-lr-fond {
   position: fixed;
   inset: 0;
@@ -107,88 +107,215 @@
   margin-left: auto;
 }
 
-// ── Dessous : la colonne à gauche, les tuiles à droite, à la hauteur qui reste ; sur un écran étroit, la colonne passe au-dessus ──────
+// ── Dessous : la barre des filtres, puis les tuiles sur toute la largeur, à la hauteur qui reste ─────────────────────────────────
 .dw-lr-corps {
-  display: grid;
+  display: flex;
   flex: 1;
-  grid-template-columns: 17.5rem minmax(0, 1fr);
-  gap: 1rem;
-  min-height: 0;
-
-  @media (max-width: 64rem) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-// La colonne, jusqu'au bas de l'écran : la recherche, puis les filtres.
-.dw-lr-colonne {
-  display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  min-height: 0;
-  box-sizing: border-box;
-  padding: 0.7rem 0.7rem 0.8rem;
-  border: 1px solid var(--dw-forge-bronze-edge);
-  border-radius: 14px;
-  background: var(--dw-lr-voile);
-
-}
-
-.dw-lr-recherche {
-  flex: none;
-  width: 100%;
-}
-
-// Les filtres : ils prennent la hauteur qui reste et défilent seuls s'ils dépassent (beaucoup de scénarios, un écran bas).
-.dw-lr-filtres {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-
-  @media (max-width: 64rem) {
-    overflow: visible;
-  }
-}
-
-// Les listes de filtre (rang, taille, région…), sous les options : une par ligne, à la largeur de la colonne.
-.dw-lr-listes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.1rem;
-}
-
-.dw-lr-colonne .dw-lr-select-barre {
-  width: 100%;
-}
-
-// ── À droite : le rappel des filtres, puis les tuiles, qui défilent seules ──────────────────────────────────────────────────────────────────────────────
-.dw-lr-liste {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  min-width: 0;
+  gap: 0.75rem;
   min-height: 0;
 }
 
-// Le rappel des filtres : le compte des fiches gardées, les filtres posés (une pastille chacun, qui le retire), le bouton qui les retire
-// tous ; à droite, le tri.
+// La barre (`bol-library-barre`), sur une ligne : la recherche, qui prend la place qui reste ; les filtres (la source côte à côte, les
+// autres en listes) ; le compte des fiches gardées ; le bouton qui retire tous les filtres. Sur un écran trop étroit, elle passe à la ligne.
 .dw-lr-barre {
   display: flex;
   flex: none;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.5rem 0.6rem;
   min-height: 3.1rem;
   box-sizing: border-box;
-  padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.6rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 12px;
   background: var(--dw-lr-voile);
+}
+
+.dw-lr-recherche {
+  flex: 1 1 14rem;
+  min-width: 12rem;
+}
+
+// La source (le statut des héros) : ses options côte à côte, en boutons bascule dans un cadre, chacune avec son nombre.
+.dw-lr-seg {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 70%, transparent);
+}
+
+.dw-lr-seg-option {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  height: 2rem;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 2rem;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 170, 60, 0.08);
+  }
+
+  &[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--dw-color-legendary) 20%, transparent);
+    box-shadow: inset 0 0 0 1px var(--dw-color-legendary);
+    color: var(--dw-color-text-bright);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 1px;
+  }
+}
+
+.dw-lr-seg-compte {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--dw-forge-caption);
+}
+
+// Un filtre en liste (`bol-library-facette`) : un bouton qui dit son titre ; sa valeur, bordé d'or, dès qu'elle est choisie.
+.dw-lr-choix {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 8rem;
+  max-width: 14rem;
+  height: 2.5rem;
+  padding: 0 0.45rem 0 0.75rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: var(--dw-radius-toggle);
+  background: color-mix(in srgb, var(--dw-forge-recess) 70%, transparent);
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+
+  mat-icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: auto;
+    font-size: 1.25rem;
+    color: var(--dw-forge-caption);
+  }
+
+  &:hover {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+.dw-lr-choix--pose {
+  border-color: var(--dw-color-legendary);
+  background: color-mix(in srgb, var(--dw-color-legendary) 12%, transparent);
+  color: var(--dw-color-text-bright);
+  font-weight: 600;
+
+  mat-icon {
+    color: var(--dw-color-legendary);
+  }
+}
+
+.dw-lr-choix-valeur {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// La liste d'un filtre (dans le calque des overlays), sous son bouton : sa recherche au-delà de huit options, « Tous… », puis les
+// options, qui défilent.
+.dw-lr-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 15rem;
+  max-width: 22rem;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  border: 1px solid var(--dw-forge-bronze);
+  border-radius: 12px;
+  background: var(--dw-forge-recess);
+  box-shadow: 0 18px 40px color-mix(in srgb, black 65%, transparent);
+
+  .dw-lr-option-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.dw-lr-menu-recherche {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.2rem;
+  margin-bottom: 0.3rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: var(--dw-radius-toggle);
+  background: color-mix(in srgb, black 35%, transparent);
+  color: var(--dw-forge-caption);
+
+  &:focus-within {
+    border-color: var(--dw-forge-hot);
+  }
+
+  mat-icon {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--dw-color-text-bright);
+    font: inherit;
+    font-size: 0.88rem;
+  }
+}
+
+.dw-lr-menu-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  max-height: 16rem;
+  margin-top: 0.2rem;
+  padding-top: 0.3rem;
+  overflow-y: auto;
+  border-top: 1px solid var(--dw-forge-bronze-edge);
+  scrollbar-width: thin;
+}
+
+.dw-lr-separateur {
+  flex: none;
+  width: 1px;
+  height: 1.6rem;
+  background: var(--dw-forge-bronze-edge);
 }
 
 .dw-lr-nombre {
@@ -198,39 +325,7 @@
   white-space: nowrap;
 }
 
-.dw-lr-pastille {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  height: 1.8rem;
-  padding: 0 0.4rem 0 0.7rem;
-  border: 1px solid var(--dw-color-legendary);
-  border-radius: var(--dw-radius-pill);
-  background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
-  color: var(--dw-color-text-bright);
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-
-  mat-icon {
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
-  }
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-color-legendary) 28%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-forge-hot);
-    outline-offset: 2px;
-  }
-}
-
-// « Effacer les filtres » : un bouton rond, son nom en infobulle.
+// « Effacer les filtres » : un bouton rond, son nom en infobulle, au bout de la barre.
 .dw-lr-effacer {
   --mat-icon-button-state-layer-size: 2rem;
   --mat-icon-button-icon-size: 1.2rem;
@@ -240,17 +335,11 @@
   color: var(--dw-forge-bone);
 }
 
-.dw-lr-barre-fin {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: auto;
-}
-
 .dw-lr-facette {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  min-width: 10rem;
 }
 
 .dw-lr-facette-titre {
@@ -319,17 +408,6 @@
   background: var(--saga);
 }
 
-// Une liste de filtre (dans la colonne, ou le tri au-dessus des tuiles) ; « Tous les … » (aucun choix) a la couleur d'une valeur, comme « Toutes les régions ».
-.dw-lr-select-barre {
-  --mat-select-placeholder-text-color: var(--dw-forge-bone);
-  width: 13rem;
-}
-
-// Le panneau d'une de ces listes (dans le calque des overlays) : aussi large que sa plus longue option, chacune sur une ligne.
-.dw-lr-select-panel .mat-mdc-option .mdc-list-item__primary-text {
-  white-space: nowrap;
-}
-
 .dw-lr-option {
   &:focus-visible {
     outline: 2px solid var(--dw-forge-hot);
@@ -388,15 +466,6 @@
     display: flex;
     min-width: 0;
   }
-}
-
-// Le bouton qui inverse le sens du tri, à côté de la liste « Trier par ».
-.dw-lr-sens {
-  --mat-icon-button-state-layer-size: 2.25rem;
-
-  flex: none;
-  padding: 0.4rem;
-  color: var(--dw-forge-caption);
 }
 
 .dw-lr-vide {

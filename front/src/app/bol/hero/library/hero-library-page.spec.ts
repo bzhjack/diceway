@@ -32,11 +32,14 @@ describe('HeroLibraryPageComponent', () => {
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
-    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
-    const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+    /** Le bouton du filtre en liste de ce titre (« Rang »), dans la barre. */
+    const liste = (titre: string) =>
+      [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-choix')].find((b) => b.getAttribute('aria-label')?.startsWith(`${titre} : `))!;
+    /** Ouvre la liste de ce titre et y choisit l'option qui commence par ce libellé ; la liste se referme. */
+    const choisir = async (titre: string, libelle: string) => {
+      liste(titre).click();
       await fixture.whenStable();
-      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      [...document.querySelectorAll<HTMLButtonElement>('.dw-lr-menu .dw-lr-option')].find((b) => texte(b)?.startsWith(libelle))!.click();
       await fixture.whenStable();
     };
     /** Ouvre le menu `⋯` de ce héros et rend le libellé et le lien de chacune de ses actions. */
@@ -45,12 +48,12 @@ describe('HeroLibraryPageComponent', () => {
       await fixture.whenStable();
       return [...document.querySelectorAll<HTMLElement>('.mat-mdc-menu-item')].map((i) => [texte(i.querySelector('.mat-mdc-menu-item-text')), i.getAttribute('href')]);
     };
-    const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
+    const bouton = (selecteur: string, libelle: string) => [...document.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, texte, noms, tuile, bouton, cliquer, choisir, actions};
+    return {page, fixture, texte, noms, tuile, bouton, cliquer, liste, choisir, actions};
   }
 
   it('montre les héros en tuiles, par nom : joueur, héroïsme et vitalité dans le pied, « En cours » pour un héros pas encore actif', async () => {
@@ -89,19 +92,20 @@ describe('HeroLibraryPageComponent', () => {
   it('filtre par statut, chaque option avec son nombre de héros', async () => {
     const {noms, bouton, cliquer, texte} = await rendre();
 
-    expect(texte(bouton('.dw-lr-option', 'En cours de création').querySelector('.dw-lr-option-compte'))).toBe('1');
-    await cliquer(bouton('.dw-lr-option', 'En cours de création'));
+    expect(texte(bouton('.dw-lr-seg-option', 'En cours de création').querySelector('.dw-lr-seg-compte'))).toBe('1');
+    await cliquer(bouton('.dw-lr-seg-option', 'En cours de création'));
 
     expect(noms()).toEqual(['Balaram']);
   });
 
-  it('trie par joueur, puis par héroïsme', async () => {
-    const {noms, choisir} = await rendre();
+  it('filtre par région, dans sa liste', async () => {
+    const {page, noms, liste, choisir, texte} = await rendre();
 
-    await choisir('Trier par', 'Joueur');
-    expect(noms()).toEqual(['Axel', 'jadawin', 'Balaram']);
+    await choisir('Région', 'Lysor');
 
-    await choisir('Trier par', 'Héroïsme');
-    expect(noms()).toEqual(['Balaram', 'Axel', 'jadawin']);
+    expect(noms()).toEqual(['Axel', 'Balaram']);
+    expect(texte(liste('Région').querySelector('.dw-lr-choix-valeur'))).toBe('Lysor');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('2 sur 3 héros');
   });
+
 });

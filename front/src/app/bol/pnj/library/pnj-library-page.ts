@@ -1,12 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolPnjService} from '../../services/bol-pnj.service';
@@ -14,67 +10,50 @@ import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statbl
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
-import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
-import {LibraryColonneComponent} from '../../shared/library/library-colonne/library-colonne';
 import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
-import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
+import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, compteDit, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
-import {LibraryPastille, LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
+import {BolFichesPageBase, compteDit, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {LibraryOption, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {pnjStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {pnjImage} from '../pnj.util';
 
-type Tri = 'nom' | 'type' | 'vitalite' | 'region';
-
-const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
-  {cle: 'nom', label: 'Nom'},
-  {cle: 'type', label: 'Rang'},
-  {cle: 'vitalite', label: 'Vitalité'},
-  {cle: 'region', label: 'Région'},
-];
-
 /**
- * Les PNJ, en tuiles : à gauche les filtres (source, scénario) avec leur nombre de PNJ, à droite une tuile par PNJ (portrait, nom, rang,
- * vitalité), sous la recherche suivie de deux listes (rang, région) et du tri. Un clic sur une tuile ouvre son statbloc ; les fiches du
- * compte portent « Mes fiches » et un menu pour les modifier ou les supprimer, celles du catalogue commun sont en lecture seule.
+ * Les PNJ, en tuiles : sous l'en-tête, la barre sur une ligne (la recherche, la source, puis le scénario, le rang et la région en
+ * listes, chaque option avec son nombre de PNJ), puis une tuile par PNJ (portrait, nom, rang, vitalité), par nom. Un clic sur une
+ * tuile ouvre son statbloc ; les fiches du compte portent « Mes fiches » et un menu pour les modifier ou les supprimer, celles du
+ * catalogue commun sont en lecture seule.
  */
 @Component({
   selector: 'bol-pnj-library-page',
   imports: [
-    FormField,
     RouterLink,
     MatButtonModule,
-    MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
-    MatSelectModule,
-    MatTooltipModule,
     LibraryFacettesComponent,
-    LibraryRangComponent,
-    LibraryColonneComponent,
+    LibraryBarreComponent,
+    LibraryFacetteComponent,
     LibraryFondComponent,
-    LibraryTriComponent,
     TuileComponent,
   ],
   templateUrl: './pnj-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tri> {
+export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel> {
   private readonly pnjService = inject(BolPnjService);
   private readonly pnjs = refreshableResource(() => this.pnjService.pnjs());
   protected readonly fiches = this.pnjs.data;
-  protected readonly libelleTout = 'Tous les PNJ';
-  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le PNJ',
     name: (item) => item.origines.nom ?? 'ce PNJ',
     consequence: 'Cette fiche quitte aussi les scènes qui la citent ; les tables où elle est posée gardent leur copie.',
     error: 'La suppression du PNJ a échoué.',
   };
-
 
   /** Les régions des PNJ, par nom. */
   protected readonly regions = computed(() => {
@@ -88,21 +67,19 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
     return [...parId.values()].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
   });
   protected readonly searchRegion = signal<number | ''>('');
-  protected readonly regionField = form(this.searchRegion);
 
   protected readonly filtresActifs = computed(() => this.facettesActives() || this.searchRegion() !== '' || this.searchTerm() !== '');
 
-  /** Ce que dit la colonne : toutes les fiches, ou celles que les filtres gardent sur le total. */
+  /** Ce que dit la barre : toutes les fiches, ou celles que les filtres gardent sur le total. */
   protected readonly compte = computed(() => compteDit(this.pnjCount(), this.totalCount(), 'PNJ', 'PNJ'));
 
-  /** Les filtres posés, en pastilles au-dessus des tuiles : un clic sur l'une le retire. */
-  protected readonly pastilles = computed((): LibraryPastille[] => [
-      ...this.pastillesDesFacettes(),
-      ...(this.searchRegion() === ''
-        ? []
-        : [{label: this.regions().find((r) => r.id === this.searchRegion())?.nom ?? 'Région', retirer: () => this.searchRegion.set('')}]),
-      ...this.pastilleDeRecherche(),
-  ]);
+  /** Ce que dit l'en-tête : toutes les fiches. */
+  protected readonly total = computed(() => compteDit(this.totalCount(), this.totalCount(), 'PNJ', 'PNJ'));
+
+  /** Les régions, en options de leur liste : chacune avec son nombre de PNJ. */
+  protected readonly regionOptions = computed((): LibraryOption<number | ''>[] =>
+    this.regions().map((r) => ({cle: r.id, label: r.nom, compte: this.fiches().filter((p) => p.origines.region_id === r.id).length})),
+  );
 
   protected readonly filteredPnjs = computed(() => {
     const region = this.searchRegion();
@@ -140,19 +117,6 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel, Tr
 
   protected rangDe(pnj: BolHerosModel): LibraryRang {
     return pnj.type === 'R' || pnj.type === 'P' ? pnj.type : 'C';
-  }
-
-  protected valeurDeTri(pnj: BolHerosModel, cle: Tri): number | string {
-    switch (cle) {
-      case 'nom':
-        return this.nomDe(pnj);
-      case 'region':
-        return pnj.origines.region?.region ?? '';
-      case 'type':
-        return ORDRE_DES_RANGS[this.rangDe(pnj)];
-      case 'vitalite':
-        return pnj.ressources.vitalite;
-    }
   }
 
   protected nomDe(pnj: BolHerosModel): string {

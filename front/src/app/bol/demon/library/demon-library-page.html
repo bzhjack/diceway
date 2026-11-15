@@ -3,14 +3,14 @@
 
     <bol-library-fond image="/assets/bol/fond-demons.webp" />
 
-    <!-- L'en-tête, sur toute la largeur, qui ne bouge pas : le titre et le compte à gauche ; à droite les actions, à la place
+    <!-- L'en-tête, sur toute la largeur, qui ne bouge pas : le titre et le total à gauche ; à droite les actions, à la place
          qu'elles ont sur les autres écrans : créer, les bibliothèques voisines, et le retour en or. -->
     <header class="dw-lr-entete">
       <div class="dw-lr-tete">
         <p class="dw-lr-eyebrow">Bibliothèque BoL</p>
         <h1 class="dw-lr-titre">Bestiaire des démons</h1>
       </div>
-      <p class="dw-lr-compte" aria-live="polite">{{ compte() }}</p>
+      <p class="dw-lr-compte">{{ total() }}</p>
       <div class="dw-lr-actions">
         <button mat-stroked-button routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
           <mat-icon>add</mat-icon> Créer un démon
@@ -28,67 +28,45 @@
     </header>
 
     <div class="dw-lr-corps">
-      <!-- La colonne, toujours en vue : la recherche, les listes (rang, et taille, catégorie ou région), puis les filtres à bascule, chacun
-           avec le nombre de fiches qu'il garde. -->
-      <bol-library-colonne placeholder="Rechercher un démon, un pouvoir, un scénario" [(searchTerm)]="searchTerm">
-        <div class="dw-lr-listes">
-          <bol-library-rang [rangs]="rangs()" [(rang)]="rang" />
-          <mat-form-field class="dw-lr-select-barre" subscriptSizing="dynamic">
-            <mat-select [formField]="categorieField" aria-label="Catégorie" panelClass="dw-lr-select-panel" [panelWidth]="null">
-              <mat-option value="">Toutes les catégories</mat-option>
-              @for (categorie of categories() ?? []; track categorie.id) {
-                <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
-      </bol-library-colonne>
+      <!-- La barre, sous l'en-tête, sur une ligne : la recherche ; les filtres, chacun dans sa liste, qui dit sa valeur dès qu'elle est
+           choisie ; le compte ; un bouton rond qui les retire tous. Les fiches sont rangées par nom.
+           Les tuiles prennent toute la largeur, et défilent seules. -->
+      <bol-library-barre
+        placeholder="Rechercher un démon, un pouvoir, un scénario"
+        [(searchTerm)]="searchTerm"
+        [nombre]="compte()"
+        [actifs]="filtresActifs()"
+        (effacer)="clearFilters()"
+      >
+        <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId">
+          <bol-library-facette titre="Rang" tous="Tous les rangs" [total]="totalCount()" [options]="rangs()" [(valeur)]="rang" [vide]="null" />
+          <bol-library-facette titre="Catégorie" tous="Toutes les catégories" [total]="totalCount()" [options]="categorieOptions()" [(valeur)]="searchCategorie" vide="" />
+        </bol-library-facettes>
+      </bol-library-barre>
 
-      <div class="dw-lr-liste">
-        <!-- Le rappel des filtres, au-dessus des tuiles (elles seules défilent) : le compte, chaque filtre posé en pastille (un clic le
-             retire), un bouton rond qui les retire tous ; à droite, le tri. -->
-        <div class="dw-lr-barre">
-          <span class="dw-lr-nombre">{{ demonCount() }} {{ demonCount() > 1 ? 'démons' : 'démon' }}</span>
-          @for (pastille of pastilles(); track pastille.label) {
-            <button type="button" class="dw-lr-pastille" [attr.aria-label]="'Retirer le filtre ' + pastille.label" (click)="pastille.retirer()">
-              {{ pastille.label }}<mat-icon aria-hidden="true">close</mat-icon>
-            </button>
+      <!-- Une tuile par fiche : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
+      @if (lignes().length) {
+        <ul class="dw-lr-grille" aria-label="Les démons du bestiaire">
+          @for (ligne of lignes(); track ligne.demon.id) {
+            <li>
+              <bol-tuile [nom]="ligne.demon.nom" [image]="ligne.image" [label]="ligne.demon.nom + ', voir son statbloc'" [vitalite]="ligne.demon.vitalite" (ouvrir)="openStatblock(ligne.demon)">
+                @if (ligne.mien) {
+                  <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
+                }
+                @if (ligne.mien) {
+                  <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.demon.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.demon}">
+                    <mat-icon>more_horiz</mat-icon>
+                  </button>
+                }
+                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Démon"><mat-icon aria-hidden="true">bolt</mat-icon></span>
+              </bol-tuile>
+            </li>
           }
-          @if (filtresActifs()) {
-            <button mat-icon-button type="button" class="dw-lr-effacer" aria-label="Effacer les filtres" matTooltip="Effacer les filtres" (click)="clearFilters()">
-              <mat-icon>filter_alt_off</mat-icon>
-            </button>
-          }
-          <div class="dw-lr-barre-fin">
-            <bol-library-tri [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
-          </div>
-        </div>
-
-        <!-- Une tuile par fiche : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
-        @if (lignes().length) {
-          <ul class="dw-lr-grille" aria-label="Les démons du bestiaire">
-            @for (ligne of lignes(); track ligne.demon.id) {
-              <li>
-                <bol-tuile [nom]="ligne.demon.nom" [image]="ligne.image" [label]="ligne.demon.nom + ', voir son statbloc'" [vitalite]="ligne.demon.vitalite" (ouvrir)="openStatblock(ligne.demon)">
-                  @if (ligne.mien) {
-                    <span bolTuileCoin class="dw-tuile-marque">Mes fiches</span>
-                  }
-                  @if (ligne.mien) {
-                    <button bolTuileMenu mat-icon-button type="button" [attr.aria-label]="'Actions de ' + ligne.demon.nom" [matMenuTriggerFor]="actions" [matMenuTriggerData]="{fiche: ligne.demon}">
-                      <mat-icon>more_horiz</mat-icon>
-                    </button>
-                  }
-                  <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
-                  <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="Démon"><mat-icon aria-hidden="true">bolt</mat-icon></span>
-                </bol-tuile>
-              </li>
-            }
-          </ul>
-        } @else {
-          <p class="dw-lr-vide">Aucun démon ne correspond à ces filtres.</p>
-        }
-      </div>
+        </ul>
+      } @else {
+        <p class="dw-lr-vide">Aucun démon ne correspond à ces filtres.</p>
+      }
     </div>
   </div>
 

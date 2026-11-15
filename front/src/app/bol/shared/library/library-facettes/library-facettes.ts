@@ -1,36 +1,29 @@
-import {ChangeDetectionStrategy, Component, input, model} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, model} from '@angular/core';
 import {LibraryOption, LibraryScenarioOption, LibrarySource} from '../../models/library-rows.model';
 import {LibraryFacetteComponent} from '../library-facette/library-facette';
+import {LibrarySegmentsComponent} from '../library-segments/library-segments';
 
 /**
- * Les filtres partagés d'une bibliothèque en tuiles, à poser dans sa colonne de filtres : la source et le scénario (à la teinte de sa
- * saga), chacun avec son nombre de fiches. Un second clic sur un scénario le retire. Le rang est une liste de la barre de recherche
- * (`bol-library-rang`). Les styles sont ceux de `styles/_library-rows.scss`.
+ * Les filtres partagés d'une bibliothèque de fiches, dans sa barre : la source (côte à côte), le scénario (une liste, chacun à la teinte
+ * de sa saga ; absent tant qu'aucun scénario importé ne cite de fiche), puis ceux que la page projette (rang, taille, catégorie, région),
+ * chaque option avec son nombre de fiches. Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-facettes',
-  imports: [LibraryFacetteComponent],
+  imports: [LibraryFacetteComponent, LibrarySegmentsComponent],
   template: `
-    <bol-library-facette titre="Source" [options]="sources()" [(valeur)]="source" />
-
-    <section class="dw-lr-facette" aria-labelledby="dw-lr-f-scenario">
-      <h2 id="dw-lr-f-scenario" class="dw-lr-facette-titre">Scénario</h2>
-      @for (scenario of scenarios(); track scenario.id) {
-        <button
-          type="button"
-          class="dw-lr-option"
-          [class]="'dw-saga--' + scenario.teinte"
-          [attr.aria-pressed]="scenarioId() === scenario.id"
-          (click)="basculerScenario(scenario.id)"
-        >
-          <span class="dw-lr-point" aria-hidden="true"></span>
-          <span class="dw-lr-option-label">{{ scenario.titre }}</span>
-          <span class="dw-lr-option-compte">{{ scenario.compte }}</span>
-        </button>
-      } @empty {
-        <p class="dw-lr-facette-vide">Aucun scénario importé n’en cite encore.</p>
-      }
-    </section>
+    <bol-library-segments titre="Source" [options]="sources()" [(valeur)]="source" />
+    @if (scenarioOptions().length) {
+      <bol-library-facette
+        titre="Scénario"
+        tous="Tous les scénarios"
+        [total]="total()"
+        [options]="scenarioOptions()"
+        [(valeur)]="scenarioId"
+        [vide]="null"
+      />
+    }
+    <ng-content />
   `,
   styles: `
     :host {
@@ -45,7 +38,9 @@ export class LibraryFacettesComponent {
   readonly source = model.required<LibrarySource>();
   readonly scenarioId = model.required<string | null>();
 
-  protected basculerScenario(id: string): void {
-    this.scenarioId.update((courant) => (courant === id ? null : id));
-  }
+  /** Toutes les fiches de la bibliothèque : le nombre de « Tous les scénarios ». */
+  protected readonly total = computed(() => this.sources().find((s) => s.cle === 'tout')?.compte);
+  protected readonly scenarioOptions = computed((): LibraryOption<string | null>[] =>
+    this.scenarios().map((s) => ({cle: s.id, label: s.titre, teinte: s.teinte, compte: s.compte})),
+  );
 }

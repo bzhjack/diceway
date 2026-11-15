@@ -1,78 +1,60 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {LibraryColonneComponent} from '../../shared/library/library-colonne/library-colonne';
 import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
-import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
+import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
+import {LibrarySegmentsComponent} from '../../shared/library/library-segments/library-segments';
 import {TuileComponent} from '../../shared/tuile/tuile';
 import {BolLibraryRowsPageBase, compteDit} from '../../shared/library/library-rows-page.base';
-import {LibraryOption, LibraryPastille, LibraryTriOption} from '../../shared/models/library-rows.model';
+import {LibraryOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {heroStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {heroImage} from '../hero.util';
 
-type Tri = 'nom' | 'joueur' | 'region' | 'statut' | 'vitalite' | 'heroisme';
 /** Un héros actif joue ; un héros en cours de création attend d'être activé. */
 type Statut = 'tous' | 'actifs' | 'en-cours';
 
-const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
-  {cle: 'nom', label: 'Nom'},
-  {cle: 'joueur', label: 'Joueur'},
-  {cle: 'region', label: 'Région'},
-  {cle: 'statut', label: 'Statut'},
-  {cle: 'vitalite', label: 'Vitalité'},
-  {cle: 'heroisme', label: 'Héroïsme'},
-];
-
 /**
- * Les héros du compte, en tuiles : à gauche les filtres (statut) avec leur nombre de héros, à droite une tuile par héros (portrait,
- * nom, joueur ; héroïsme et vitalité dans son pied), triées par la liste « Trier par ». Un clic sur une tuile ouvre son statbloc ; son
- * menu le modifie, le supprime, et l'édite en création avancée tant qu'il est en cours de création (« En cours » sur la tuile).
+ * Les héros du compte, en tuiles : sous l'en-tête, la barre sur une ligne (la recherche, le statut, la région en liste, chaque option
+ * avec son nombre de héros), puis une tuile par héros (portrait, nom, joueur ; héroïsme et vitalité dans son pied), par nom. Un clic sur une tuile ouvre son statbloc ; son menu le modifie, le supprime, et l'édite en création avancée tant qu'il
+ * est en cours de création (« En cours » sur la tuile).
  */
 @Component({
   selector: 'bol-hero-library-page',
   imports: [
-    FormField,
     RouterLink,
     MatButtonModule,
-    MatFormFieldModule,
     MatIconModule,
-    MatSelectModule,
-    MatTooltipModule,
-    LibraryColonneComponent,
+    LibraryBarreComponent,
+    LibraryFacetteComponent,
     LibraryFondComponent,
-    LibraryTriComponent,
+    LibrarySegmentsComponent,
     MatMenuModule,
     TuileComponent,
   ],
   templateUrl: './hero-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosModel, Tri> {
+export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosModel> {
   private readonly herosService = inject(BolHerosService);
   private readonly heroes = refreshableResource(() => this.herosService.heroes());
-  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolHerosModel> = {
     title: 'Supprimer le héros',
     name: (item) => item.origines.nom ?? 'ce héros',
     consequence: 'Il quitte aussi ses compagnies et les tables où il est assis.',
     error: 'La suppression du héros a échoué.',
   };
-
 
   protected readonly totalHeroCount = computed(() => this.heroes.data().length);
 
@@ -81,7 +63,7 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
     const heros = this.heroes.data();
     const actifs = heros.filter((h) => h.active).length;
     return [
-      {cle: 'tous', label: 'Tous les héros', compte: heros.length},
+      {cle: 'tous', label: 'Tous', compte: heros.length},
       {cle: 'actifs', label: 'Actifs', compte: actifs},
       {cle: 'en-cours', label: 'En cours de création', compte: heros.length - actifs},
     ];
@@ -99,23 +81,19 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
     return [...parId.values()].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
   });
   protected readonly searchRegion = signal<number | ''>('');
-  protected readonly regionField = form(this.searchRegion);
 
   protected readonly filtresActifs = computed(() => this.statut() !== 'tous' || this.searchRegion() !== '' || this.searchTerm() !== '');
 
-  /** Ce que dit la colonne : toutes les fiches, ou celles que les filtres gardent sur le total. */
+  /** Ce que dit la barre : toutes les fiches, ou celles que les filtres gardent sur le total. */
   protected readonly compte = computed(() => compteDit(this.heroCount(), this.totalHeroCount(), 'héros', 'héros'));
 
-  /** Les filtres posés, en pastilles au-dessus des tuiles : un clic sur l'une le retire. */
-  protected readonly pastilles = computed((): LibraryPastille[] => [
-      ...(this.statut() === 'tous'
-        ? []
-        : [{label: this.statuts().find((s) => s.cle === this.statut())?.label ?? 'Statut', retirer: () => this.statut.set('tous')}]),
-      ...(this.searchRegion() === ''
-        ? []
-        : [{label: this.regions().find((r) => r.id === this.searchRegion())?.nom ?? 'Région', retirer: () => this.searchRegion.set('')}]),
-      ...this.pastilleDeRecherche(),
-  ]);
+  /** Ce que dit l'en-tête : toutes les fiches. */
+  protected readonly total = computed(() => compteDit(this.totalHeroCount(), this.totalHeroCount(), 'héros', 'héros'));
+
+  /** Les régions, en options de leur liste : chacune avec son nombre de héros. */
+  protected readonly regionOptions = computed((): LibraryOption<number | ''>[] =>
+    this.regions().map((r) => ({cle: r.id, label: r.nom, compte: this.heroes.data().filter((h) => h.origines.region_id === r.id).length})),
+  );
 
   protected readonly filteredHeroes = computed(() => {
     const statut = this.statut();
@@ -136,21 +114,6 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
   protected readonly lignes = computed(() =>
     this.filteredHeroes().map((hero) => ({hero, nom: this.nomDe(hero), image: heroImage(hero)})),
   );
-
-  protected valeurDeTri(hero: BolHerosModel, cle: Tri): number | string {
-    switch (cle) {
-      case 'nom':
-        return this.nomDe(hero);
-      case 'joueur':
-        return hero.origines.joueur ?? '';
-      case 'region':
-        return hero.origines.region?.region ?? '';
-      case 'statut':
-        return hero.active ? 1 : 0;
-      default:
-        return hero.ressources[cle];
-    }
-  }
 
   protected nomDe(hero: BolHerosModel): string {
     return hero.origines.nom ?? '';

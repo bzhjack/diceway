@@ -1,84 +1,37 @@
 import {Signal, computed, signal} from '@angular/core';
 import {BolFicheScenario} from '../../models/bol-fiche-scenario.model';
-import {
-  LibraryOption,
-  LibraryPastille,
-  LibraryRang,
-  LibraryScenarioOption,
-  LibrarySource,
-  LibraryTri,
-  LibraryTriOption,
-} from '../models/library-rows.model';
+import {LibraryOption, LibraryRang, LibraryScenarioOption, LibrarySource} from '../models/library-rows.model';
 import {BolLibraryPageBase} from './library-page.base';
 import {scenariosDesFiches} from './library-scenarios.util';
 
 export const RANG_LABELS: Record<LibraryRang, string> = {R: 'Rival', C: 'Coriace', P: 'Piétaille'};
 
-/** Le compte que dit la colonne d'une bibliothèque : « 103 créatures », ou « 75 sur 103 créatures » quand un filtre en écarte. */
+/** Le compte que disent l'en-tête et la barre d'une bibliothèque : « 103 créatures », ou « 75 sur 103 créatures » quand un filtre en écarte. */
 export function compteDit(gardees: number, total: number, singulier: string, pluriel: string): string {
   const nom = total > 1 ? pluriel : singulier;
   return gardees === total ? `${total} ${nom}` : `${gardees} sur ${total} ${nom}`;
 }
 
-/** Le tri par type va de la piétaille au rival. */
-export const ORDRE_DES_RANGS: Record<LibraryRang, number> = {P: 0, C: 1, R: 2};
-
-/**
- * Socle d'une bibliothèque en tuiles (créatures, démons, PNJ, héros) : le tri, choisi dans la liste « Trier par » (`bol-library-tri`),
- * dont un bouton inverse le sens. La sous-classe donne ses options de tri, la valeur de tri de chacune et le nom d'une fiche (pour
- * départager).
- */
-export abstract class BolLibraryRowsPageBase<TItem extends {id?: string | number | null}, TTri extends string> extends BolLibraryPageBase<TItem> {
-  protected abstract valeurDeTri(item: TItem, cle: TTri): number | string;
+/** Socle d'une bibliothèque en tuiles (créatures, démons, PNJ, héros) : les fiches rangées par nom. La sous-classe donne le nom d'une fiche. */
+export abstract class BolLibraryRowsPageBase<TItem extends {id?: string | number | null}> extends BolLibraryPageBase<TItem> {
   protected abstract nomDe(item: TItem): string;
 
-  /** Par nom d'abord : chaque bibliothèque trie par `nom`. */
-  protected readonly tri = signal<LibraryTri<TTri>>({cle: 'nom' as TTri, croissant: true});
 
-  /** Les choix de la liste « Trier par » (`bol-library-tri`). */
-  protected abstract readonly optionsDeTri: readonly LibraryTriOption<TTri>[];
-
-  /** Trie sur cette clé (une de `optionsDeTri`), dans l'ordre croissant ; la clé déjà choisie ne change rien. */
-  protected trierPar(cle: TTri): void {
-    this.tri.update((tri) => (tri.cle === cle ? tri : {cle, croissant: true}));
-  }
-
-  /** Inverse le sens du tri. */
-  protected inverserLeSens(): void {
-    this.tri.update((tri) => ({...tri, croissant: !tri.croissant}));
-  }
-
-  /** La recherche en cours, en pastille : « "loup" ». */
-  protected pastilleDeRecherche(): LibraryPastille[] {
-    const terme = this.searchTerm().trim();
-    return terme ? [{label: `« ${terme} »`, retirer: () => this.searchTerm.set('')}] : [];
-  }
-
-  /** Les fiches dans l'ordre du tri, puis par nom. */
+  /** Les fiches par nom. */
   protected trierLes(items: readonly TItem[]): TItem[] {
-    const {cle, croissant} = this.tri();
-    const sens = croissant ? 1 : -1;
-    return [...items].sort((a, b) => {
-      const va = this.valeurDeTri(a, cle);
-      const vb = this.valeurDeTri(b, cle);
-      const ecart = typeof va === 'string' ? va.localeCompare(String(vb), 'fr') : va - Number(vb);
-      return sens * ecart || this.nomDe(a).localeCompare(this.nomDe(b), 'fr');
-    });
+    return [...items].sort((a, b) => this.nomDe(a).localeCompare(this.nomDe(b), 'fr'));
   }
 }
 
 /**
- * Une bibliothèque de fiches du catalogue et du compte (créatures, démons, PNJ) : en plus du tri, les filtres partagés, chacun avec son
- * nombre de fiches. La source (tout, catalogue commun, mes fiches), le scénario (ceux qui ont créé ou citent une fiche) et le rang ; la
+ * Une bibliothèque de fiches du catalogue et du compte (créatures, démons, PNJ) : les filtres partagés, chacun avec son nombre de
+ * fiches. La source (tout, catalogue commun, mes fiches), le scénario (ceux qui ont créé ou citent une fiche) et le rang ; la
  * sous-classe ajoute le sien (taille, catégorie, région).
  */
 export abstract class BolFichesPageBase<
   TItem extends {id?: string | number | null; user_id: string | null; scenarios?: BolFicheScenario[]},
-  TTri extends string,
-> extends BolLibraryRowsPageBase<TItem, TTri> {
+> extends BolLibraryRowsPageBase<TItem> {
   protected abstract readonly fiches: Signal<readonly TItem[]>;
-  /** « Tout le bestiaire », « Tous les PNJ »… */
-  protected abstract readonly libelleTout: string;
   protected abstract rangDe(item: TItem): LibraryRang;
 
   protected readonly source = signal<LibrarySource>('tout');
@@ -91,8 +44,8 @@ export abstract class BolFichesPageBase<
     const fiches = this.fiches();
     const miennes = fiches.filter((f) => Boolean(f.user_id)).length;
     return [
-      {cle: 'tout', label: this.libelleTout, compte: fiches.length},
-      {cle: 'catalogue', label: 'Catalogue commun', compte: fiches.length - miennes},
+      {cle: 'tout', label: 'Tous', compte: fiches.length},
+      {cle: 'catalogue', label: 'Catalogue', compte: fiches.length - miennes},
       {cle: 'miennes', label: 'Mes fiches', compte: miennes},
     ];
   });
@@ -100,7 +53,7 @@ export abstract class BolFichesPageBase<
   /** Les scénarios qui ont créé ou citent au moins une fiche, par titre : leur teinte et leur nombre de fiches. */
   protected readonly scenarios = computed((): LibraryScenarioOption[] => scenariosDesFiches(this.fiches()));
 
-  protected readonly rangs = computed((): LibraryOption<LibraryRang>[] => {
+  protected readonly rangs = computed((): LibraryOption<LibraryRang | null>[] => {
     const fiches = this.fiches();
     return (['R', 'C', 'P'] as const).map((cle) => ({cle, label: RANG_LABELS[cle], compte: fiches.filter((f) => this.rangDe(f) === cle).length}));
   });
@@ -108,23 +61,6 @@ export abstract class BolFichesPageBase<
   /** Un filtre partagé est posé (la sous-classe ajoute les siens à `filtresActifs`). */
   protected readonly facettesActives = computed(() => this.source() !== 'tout' || this.scenarioId() !== null || this.rang() !== null);
 
-  /** Les filtres partagés posés, en pastilles : la source, le scénario, le rang. */
-  protected readonly pastillesDesFacettes = computed((): LibraryPastille[] => {
-    const pastilles: LibraryPastille[] = [];
-    const source = this.sources().find((s) => s.cle === this.source());
-    if (source && source.cle !== 'tout') {
-      pastilles.push({label: source.label, retirer: () => this.source.set('tout')});
-    }
-    const scenario = this.scenarios().find((s) => s.id === this.scenarioId());
-    if (scenario) {
-      pastilles.push({label: scenario.titre, retirer: () => this.scenarioId.set(null)});
-    }
-    const rang = this.rang();
-    if (rang !== null) {
-      pastilles.push({label: RANG_LABELS[rang], retirer: () => this.rang.set(null)});
-    }
-    return pastilles;
-  });
 
   /** Les fiches que gardent la source, le scénario et le rang choisis. */
   protected filtrerParFacettes(fiches: readonly TItem[]): TItem[] {

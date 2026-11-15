@@ -1,12 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
@@ -15,60 +11,44 @@ import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statbl
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
-import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
-import {LibraryColonneComponent} from '../../shared/library/library-colonne/library-colonne';
 import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
-import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
+import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
+import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, compteDit, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
-import {LibraryPastille, LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
+import {BolFichesPageBase, compteDit, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {LibraryOption, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {creatureStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {creatureImage} from '../creature.util';
 
-type Tri = 'nom' | 'type' | 'vitalite' | 'taille';
-
-const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
-  {cle: 'nom', label: 'Nom'},
-  {cle: 'type', label: 'Rang'},
-  {cle: 'vitalite', label: 'Vitalité'},
-  {cle: 'taille', label: 'Taille'},
-];
-
 /**
- * Le bestiaire, en tuiles : à gauche les filtres (source, scénario) avec leur nombre de créatures, à droite une tuile par créature
- * (portrait, nom, rang, vitalité), triées par la liste « Trier par ». Un clic sur une tuile ouvre son statbloc ; les fiches du compte
- * portent « Mes fiches » et un menu pour les modifier ou les supprimer, celles du catalogue commun sont en lecture seule.
+ * Le bestiaire, en tuiles : sous l'en-tête, la barre sur une ligne (la recherche, la source, puis le scénario, le rang et la taille en
+ * listes, chaque option avec son nombre de créatures), puis une tuile par créature (portrait, nom, rang, vitalité), par nom.
+ * Un clic sur une tuile ouvre son statbloc ; les fiches du compte portent « Mes fiches » et un menu pour les modifier ou les supprimer,
+ * celles du catalogue commun sont en lecture seule.
  */
 @Component({
   selector: 'bol-creature-library-page',
   imports: [
-    FormField,
     RouterLink,
     MatButtonModule,
-    MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
-    MatSelectModule,
-    MatTooltipModule,
     LibraryFacettesComponent,
-    LibraryRangComponent,
-    LibraryColonneComponent,
+    LibraryBarreComponent,
+    LibraryFacetteComponent,
     LibraryFondComponent,
-    LibraryTriComponent,
     TuileComponent,
   ],
   templateUrl: './creature-library-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureModel, Tri> {
+export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureModel> {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly creatures = refreshableResource(() => this.creaturesService.creatures());
   protected readonly fiches = this.creatures.data;
-  protected readonly libelleTout = 'Tout le bestiaire';
-  protected readonly optionsDeTri = OPTIONS_DE_TRI;
   protected readonly deleteTexts: LibraryDeleteTexts<BolCreatureModel> = {
     title: 'Supprimer la créature',
     name: (item) => item.nom,
@@ -76,24 +56,23 @@ export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureM
     error: 'La suppression de la créature a échoué.',
   };
 
-
   protected readonly tailles = this.creatureStateService.tailleList;
   protected readonly searchTaille = signal<number | ''>('');
-  protected readonly tailleField = form(this.searchTaille);
 
   protected readonly filtresActifs = computed(() => this.facettesActives() || this.searchTaille() !== '' || this.searchTerm() !== '');
 
-  /** Ce que dit la colonne : toutes les fiches, ou celles que les filtres gardent sur le total. */
+  /** Ce que dit la barre : toutes les fiches, ou celles que les filtres gardent sur le total. */
   protected readonly compte = computed(() => compteDit(this.creatureCount(), this.totalCount(), 'créature', 'créatures'));
 
-  /** Les filtres posés, en pastilles au-dessus des tuiles : un clic sur l'une le retire. */
-  protected readonly pastilles = computed((): LibraryPastille[] => [
-      ...this.pastillesDesFacettes(),
-      ...(this.searchTaille() === ''
-        ? []
-        : [{label: this.tailles()?.find((t) => t.id === this.searchTaille())?.taille ?? 'Taille', retirer: () => this.searchTaille.set('')}]),
-      ...this.pastilleDeRecherche(),
-  ]);
+  /** Ce que dit l'en-tête : toutes les fiches. */
+  protected readonly total = computed(() => compteDit(this.totalCount(), this.totalCount(), 'créature', 'créatures'));
+
+  /** Les tailles, en options de leur liste : chacune avec son nombre de créatures (une taille sans créature est tue, sauf choisie). */
+  protected readonly tailleOptions = computed((): LibraryOption<number | ''>[] =>
+    (this.tailles() ?? [])
+      .map((t) => ({cle: t.id, label: t.taille, compte: this.fiches().filter((c) => c.id_taille === t.id).length}))
+      .filter((o) => o.compte > 0 || o.cle === this.searchTaille()),
+  );
 
   protected readonly filteredCreatures = computed(() => {
     const taille = this.searchTaille();
@@ -119,19 +98,6 @@ export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureM
 
   protected rangDe(creature: BolCreatureModel): LibraryRang {
     return creature.taille?.type ?? 'C';
-  }
-
-  protected valeurDeTri(creature: BolCreatureModel, cle: Tri): number | string {
-    switch (cle) {
-      case 'nom':
-        return creature.nom;
-      case 'taille':
-        return creature.id_taille;
-      case 'type':
-        return ORDRE_DES_RANGS[this.rangDe(creature)];
-      default:
-        return creature[cle];
-    }
   }
 
   protected nomDe(creature: BolCreatureModel): string {

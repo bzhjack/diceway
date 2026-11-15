@@ -67,19 +67,22 @@ describe('DemonLibraryPageComponent', () => {
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
-    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
-    const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+    /** Le bouton du filtre en liste de ce titre (« Rang »), dans la barre. */
+    const liste = (titre: string) =>
+      [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-choix')].find((b) => b.getAttribute('aria-label')?.startsWith(`${titre} : `))!;
+    /** Ouvre la liste de ce titre et y choisit l'option qui commence par ce libellé ; la liste se referme. */
+    const choisir = async (titre: string, libelle: string) => {
+      liste(titre).click();
       await fixture.whenStable();
-      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      [...document.querySelectorAll<HTMLButtonElement>('.dw-lr-menu .dw-lr-option')].find((b) => texte(b)?.startsWith(libelle))!.click();
       await fixture.whenStable();
     };
-    const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
+    const bouton = (selecteur: string, libelle: string) => [...document.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, liste, choisir};
   }
 
   it('montre les démons en tuiles, par nom, avec leur rang et leur vitalité ; les fiches du compte ont la pastille et le menu', async () => {
@@ -101,28 +104,30 @@ describe('DemonLibraryPageComponent', () => {
   });
 
   it('filtre par source et par scénario', async () => {
-    const {noms, bouton, cliquer} = await rendre();
+    const {noms, bouton, cliquer, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-option', 'Catalogue commun'));
+    await cliquer(bouton('.dw-lr-seg-option', 'Catalogue'));
     expect(noms()).toEqual(['Diablotin']);
 
-    await cliquer(bouton('.dw-lr-option', 'Tous les démons'));
-    await cliquer(bouton('.dw-lr-option', 'Perle du Beshaar'));
+    await cliquer(bouton('.dw-lr-seg-option', 'Tous'));
+    await choisir('Scénario', 'Perle du Beshaar');
     expect(noms()).toEqual(['Ilirk', 'Limier']);
   });
 
-  it('trie par vitalité, puis dans l’autre sens', async () => {
-    const {page, noms, cliquer, choisir} = await rendre();
+  it('filtre par catégorie ; une catégorie sans démon n’est pas proposée', async () => {
+    const {noms, liste, cliquer, texte, choisir} = await rendre();
 
-    await choisir('Trier par', 'Vitalité');
-    expect(noms()).toEqual(['Diablotin', 'Limier', 'Ilirk']);
-    await cliquer(page.querySelector<HTMLButtonElement>('button.dw-lr-sens')!);
-    expect(noms()).toEqual(['Ilirk', 'Limier', 'Diablotin']);
+    await cliquer(liste('Catégorie'));
+    expect([...document.querySelectorAll('.dw-lr-menu .dw-lr-option-label')].map((l) => texte(l))).toEqual(['Toutes les catégories', 'Mineur', 'Inférieur', 'Majeur']);
+    await cliquer(liste('Catégorie'));
+
+    await choisir('Catégorie', 'Inférieur');
+    expect(noms()).toEqual(['Limier']);
   });
 
   it('la recherche trouve un pouvoir', async () => {
     const {page, fixture, noms} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-barre input')!;
 
     champ.value = 'invisib';
     champ.dispatchEvent(new Event('input'));

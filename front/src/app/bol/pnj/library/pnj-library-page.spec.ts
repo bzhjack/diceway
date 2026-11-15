@@ -36,19 +36,22 @@ describe('PnjLibraryPageComponent', () => {
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
-    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
-    const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+    /** Le bouton du filtre en liste de ce titre (« Rang »), dans la barre. */
+    const liste = (titre: string) =>
+      [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-choix')].find((b) => b.getAttribute('aria-label')?.startsWith(`${titre} : `))!;
+    /** Ouvre la liste de ce titre et y choisit l'option qui commence par ce libellé ; la liste se referme. */
+    const choisir = async (titre: string, libelle: string) => {
+      liste(titre).click();
       await fixture.whenStable();
-      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      [...document.querySelectorAll<HTMLButtonElement>('.dw-lr-menu .dw-lr-option')].find((b) => texte(b)?.startsWith(libelle))!.click();
       await fixture.whenStable();
     };
-    const bouton = (selecteur: string, libelle: string) => [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
+    const bouton = (selecteur: string, libelle: string) => [...document.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, liste, choisir};
   }
 
   it('montre les PNJ en tuiles, par nom, avec leur rang et leur vitalité ; les fiches du compte ont la pastille et le menu', async () => {
@@ -67,39 +70,32 @@ describe('PnjLibraryPageComponent', () => {
     expect(document.querySelector('.mat-mdc-menu-item')?.getAttribute('href')).toBe('/create/pnj/Ajhaskar');
   });
 
-  it('filtre par rang et par région, deux listes de la colonne, puis par scénario', async () => {
-    const {page, texte, noms, bouton, cliquer, choisir} = await rendre();
+  it('filtre par rang et par région, chacun dans sa liste, puis par scénario', async () => {
+    const {page, texte, noms, choisir} = await rendre();
 
-    expect(page.querySelector('.dw-lr-filtres .dw-lr-effacer')).toBeNull();
-    expect(page.querySelectorAll('.dw-lr-filtres mat-select')).toHaveLength(2);
+    expect(page.querySelector('.dw-lr-effacer')).toBeNull();
+    expect(page.querySelector('mat-select')).toBeNull();
 
     expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('3 PNJ');
 
     await choisir('Rang', 'Rival');
     expect(noms()).toEqual(['Ajhaskar']);
-    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('1 PNJ');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('1 sur 3 PNJ');
     expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
 
-    await choisir('Rang', 'Tous les rangs');
+    // Un second clic sur une option choisie la retire.
+    await choisir('Rang', 'Rival');
     await choisir('Région', 'Satarla');
     expect(noms()).toEqual(['Acolyte']);
 
-    await choisir('Région', 'Toutes les régions');
-    await cliquer(bouton('.dw-lr-option', 'Le Dieu voilé'));
+    await choisir('Région', 'Satarla');
+    await choisir('Scénario', 'Le Dieu voilé');
     expect(noms()).toEqual(['Acolyte', 'Ajhaskar']);
-  });
-
-  it('trie par vitalité', async () => {
-    const {noms, choisir} = await rendre();
-
-    await choisir('Trier par', 'Vitalité');
-
-    expect(noms()).toEqual(['Acolyte', 'Archer de Tyrus', 'Ajhaskar']);
   });
 
   it('la recherche trouve une carrière', async () => {
     const {page, fixture, noms} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-barre input')!;
 
     champ.value = 'sorcier';
     champ.dispatchEvent(new Event('input'));

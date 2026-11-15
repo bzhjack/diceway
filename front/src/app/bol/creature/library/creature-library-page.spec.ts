@@ -79,19 +79,22 @@ describe('CreatureLibraryPageComponent', () => {
     const noms = () => [...page.querySelectorAll('.dw-lr-grille .dw-tuile__nom')].map((n) => n.textContent?.trim());
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => li.querySelector('.dw-tuile__nom')?.textContent?.trim() === nom)!;
     const bouton = (selecteur: string, libelle: string) =>
-      [...page.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
+      [...document.querySelectorAll<HTMLButtonElement>(selecteur)].find((b) => texte(b)?.startsWith(libelle))!;
     const cliquer = async (b: HTMLElement) => {
       b.click();
       await fixture.whenStable();
     };
-    /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
-    const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+    /** Le bouton du filtre en liste de ce titre (« Rang »), dans la barre. */
+    const liste = (titre: string) =>
+      [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-choix')].find((b) => b.getAttribute('aria-label')?.startsWith(`${titre} : `))!;
+    /** Ouvre la liste de ce titre et y choisit l'option qui commence par ce libellé ; la liste se referme. */
+    const choisir = async (titre: string, libelle: string) => {
+      liste(titre).click();
       await fixture.whenStable();
-      [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
+      [...document.querySelectorAll<HTMLButtonElement>('.dw-lr-menu .dw-lr-option')].find((b) => texte(b)?.startsWith(libelle))!.click();
       await fixture.whenStable();
     };
-    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, choisir};
+    return {page, fixture, open, texte, noms, tuile, bouton, cliquer, liste, choisir};
   }
 
   it('montre toutes les créatures en tuiles, par nom, avec leur rang, leur sorte et leur vitalité', async () => {
@@ -123,62 +126,51 @@ describe('CreatureLibraryPageComponent', () => {
   it('filtre par source, chaque option avec son nombre de créatures', async () => {
     const {noms, bouton, cliquer, texte} = await rendre();
 
-    expect(texte(bouton('.dw-lr-option', 'Catalogue commun').querySelector('.dw-lr-option-compte'))).toBe('3');
-    expect(texte(bouton('.dw-lr-option', 'Mes fiches').querySelector('.dw-lr-option-compte'))).toBe('2');
-    await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
+    expect(texte(bouton('.dw-lr-seg-option', 'Catalogue').querySelector('.dw-lr-seg-compte'))).toBe('3');
+    expect(texte(bouton('.dw-lr-seg-option', 'Mes fiches').querySelector('.dw-lr-seg-compte'))).toBe('2');
+    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
 
     expect(noms()).toEqual(['Fille de Djidaâ', 'Momie royale']);
-    expect(bouton('.dw-lr-option', 'Mes fiches').getAttribute('aria-pressed')).toBe('true');
+    expect(bouton('.dw-lr-seg-option', 'Mes fiches').getAttribute('aria-pressed')).toBe('true');
+    expect(bouton('.dw-lr-seg-option', 'Tous').getAttribute('aria-pressed')).toBe('false');
   });
 
   it('filtre par scénario, catalogue compris, à la teinte de chaque saga ; un second clic le retire', async () => {
-    const {noms, bouton, cliquer, texte} = await rendre();
-    const dieuVoile = bouton('.dw-lr-option', 'Le Dieu voilé');
+    const {noms, bouton, cliquer, texte, liste, choisir} = await rendre();
+    await cliquer(liste('Scénario'));
+    const dieuVoile = bouton('.dw-lr-menu .dw-lr-option', 'Le Dieu voilé');
 
+    expect(texte(bouton('.dw-lr-menu .dw-lr-option', 'Tous les scénarios').querySelector('.dw-lr-option-compte'))).toBe('5');
     expect(texte(dieuVoile.querySelector('.dw-lr-option-compte'))).toBe('2');
     expect(dieuVoile.classList).toContain('dw-saga--1');
-    expect(bouton('.dw-lr-option', 'Perle du Beshaar').classList).toContain('dw-saga--2');
+    expect(bouton('.dw-lr-menu .dw-lr-option', 'Perle du Beshaar').classList).toContain('dw-saga--2');
     await cliquer(dieuVoile);
     expect(noms()).toEqual(['Azhdarkho', 'Momie royale']);
+    expect(document.querySelector('.dw-lr-menu')).toBeNull();
+    expect(texte(liste('Scénario').querySelector('.dw-lr-choix-valeur'))).toBe('Le Dieu voilé');
 
-    await cliquer(dieuVoile);
+    await choisir('Scénario', 'Le Dieu voilé');
     expect(noms().length).toBe(5);
+    expect(texte(liste('Scénario').querySelector('.dw-lr-choix-valeur'))).toBe('Scénario');
   });
 
-  it('trie par rang, de la piétaille au rival', async () => {
-    const {noms, choisir} = await rendre();
-
-    await choisir('Trier par', 'Rang');
-
-    expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ', 'Momie royale', 'Andrak', 'Azhdarkho']);
-  });
-
-  it('filtre par rang et par taille, deux listes de la colonne', async () => {
-    const {page, noms, choisir} = await rendre();
-    expect(page.querySelectorAll('.dw-lr-filtres mat-select')).toHaveLength(2);
+  it('filtre par rang et par taille, chacun dans sa liste ; « Tous les rangs » retire le rang', async () => {
+    const {page, noms, liste, choisir} = await rendre();
+    expect(page.querySelector('mat-select')).toBeNull();
 
     await choisir('Rang', 'Piétaille');
     expect(noms()).toEqual(['Cathgan']);
 
     await choisir('Rang', 'Tous les rangs');
+    expect(noms()).toHaveLength(5);
+    expect(liste('Rang').classList).not.toContain('dw-lr-choix--pose');
     await choisir('Taille', 'Moyenne');
     expect(noms()).toEqual(['Fille de Djidaâ', 'Momie royale']);
   });
 
-  it('trie par vitalité, et le bouton du sens l’inverse', async () => {
-    const {page, noms, cliquer, choisir} = await rendre();
-
-    await choisir('Trier par', 'Vitalité');
-    expect(noms()).toEqual(['Cathgan', 'Momie royale', 'Fille de Djidaâ', 'Andrak', 'Azhdarkho']);
-
-    await cliquer(page.querySelector<HTMLButtonElement>('button.dw-lr-sens')!);
-    expect(noms()[0]).toBe('Azhdarkho');
-    expect(page.querySelector('button.dw-lr-sens')?.getAttribute('aria-label')).toBe('Ordre décroissant, inverser');
-  });
-
   it('la recherche trouve aussi une capacité ou un scénario', async () => {
     const {page, noms, fixture} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-barre input')!;
 
     champ.value = 'rugiss';
     champ.dispatchEvent(new Event('input'));
@@ -195,7 +187,7 @@ describe('CreatureLibraryPageComponent', () => {
     const {page, noms, bouton, cliquer, choisir} = await rendre();
     expect(page.querySelector('.dw-lr-effacer')).toBeNull();
 
-    await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
+    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
     await choisir('Rang', 'Coriace');
     expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
     await cliquer(page.querySelector<HTMLButtonElement>('.dw-lr-effacer')!);
@@ -212,28 +204,30 @@ describe('CreatureLibraryPageComponent', () => {
     expect(open).toHaveBeenCalledTimes(1);
   });
 
-  it('l’en-tête dit le compte ; chaque filtre posé a sa pastille au-dessus des tuiles, qui le retire', async () => {
-    const {page, bouton, cliquer, texte, noms} = await rendre();
-    const pastilles = () => [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-pastille')];
+  it('l’en-tête dit le total, la barre le compte ; un filtre posé se voit sur son bouton, bordé d’or, et nulle part ailleurs', async () => {
+    const {page, bouton, cliquer, texte, liste, choisir} = await rendre();
 
     expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('5 créatures');
-    expect(pastilles()).toHaveLength(0);
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('5 créatures');
+    expect(texte(liste('Rang').querySelector('.dw-lr-choix-valeur'))).toBe('Rang');
+    expect(liste('Rang').getAttribute('aria-label')).toBe('Rang : Tous les rangs');
 
-    await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
+    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
+    await choisir('Rang', 'Coriace');
 
-    expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('2 sur 5 créatures');
-    expect(pastilles().map((p) => p.getAttribute('aria-label'))).toEqual(['Retirer le filtre Mes fiches']);
-    await cliquer(pastilles()[0]);
-
-    expect(pastilles()).toHaveLength(0);
-    expect(noms()).toHaveLength(5);
-    expect(bouton('.dw-lr-option', 'Tout le bestiaire').getAttribute('aria-pressed')).toBe('true');
+    expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('5 créatures');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('2 sur 5 créatures');
+    expect(texte(liste('Rang').querySelector('.dw-lr-choix-valeur'))).toBe('Coriace');
+    expect(liste('Rang').getAttribute('aria-label')).toBe('Rang : Coriace');
+    expect(liste('Rang').classList).toContain('dw-lr-choix--pose');
+    expect(liste('Taille').classList).not.toContain('dw-lr-choix--pose');
+    expect(page.querySelector('.dw-lr-pastille, .dw-lr-filtrer')).toBeNull();
   });
 
   it('sans résultat, le dit', async () => {
     const {page, bouton, cliquer, texte, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
+    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
     await choisir('Rang', 'Piétaille');
 
     expect(texte(page.querySelector('.dw-lr-vide'))).toBe('Aucune créature ne correspond à ces filtres.');
