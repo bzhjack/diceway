@@ -3,18 +3,14 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {BolSceneLoadResult, BolSceneModel, BolScenePiste} from '../../../models/bol-scene.model';
-import {SceneActe} from '../../models/theatre.model';
+import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
+import {PisteAffichee, SceneActe} from '../../models/theatre.model';
 import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
+import {pistesAffichees} from './theatre.util';
 
 /** Les textes de la scène, un onglet chacun. */
 type TexteLecture = 'lire' | 'jeu' | 'secret';
-
-/** Une piste et l'acte de la frise vers lequel elle mène, s'il y est. */
-interface PisteAffichee extends BolScenePiste {
-  readonly acte: SceneActe | null;
-}
 
 /** Les notes de la scène courante, dans le carnet du MJ à gauche de la table (ou en grand dans une fenêtre) : le texte à lire aux joueurs,
  * les règles de la scène (« En jeu ») et le secret du MJ, un onglet chacun (les deux derniers seulement s'ils sont écrits) ; en bas,
@@ -59,12 +55,7 @@ export class SceneLectureComponent {
     return 'lire';
   });
 
-  protected readonly pistes = computed<readonly PisteAffichee[]>(() =>
-    (this.scene().pistes ?? []).map((piste) => ({
-      ...piste,
-      acte: piste.scene_id ? (this.acts().find((acte) => acte.scene.id === piste.scene_id) ?? null) : null,
-    })),
-  );
+  protected readonly pistes = computed<readonly PisteAffichee[]>(() => pistesAffichees(this.scene(), this.acts()));
 
   constructor() {
     // Une nouvelle scène, ou un autre onglet : le texte repart du haut.

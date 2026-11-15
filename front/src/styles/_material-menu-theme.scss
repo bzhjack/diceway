@@ -16,11 +16,16 @@ html {
 // Aperçu d'une scène (frise des actes, pistes) : la vignette touche les bords, le panneau est plus large
 // que les 280px d'un menu ordinaire.
 .mat-mdc-menu-panel.thr-apercu-menu {
-  width: 20rem;
+  width: 21.5rem;
   max-width: calc(100vw - 2rem);
 
   .mat-mdc-menu-content {
     padding-top: 0;
+  }
+
+  // « Charger la scène », sous la fiche de la scène, séparé d'elle par un filet.
+  .mat-mdc-menu-item:not([aria-disabled='true']) {
+    border-top: 1px solid var(--dw-forge-bronze-edge);
   }
 }
 

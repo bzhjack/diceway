@@ -5,7 +5,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
 import {ScenePreviewComponent} from './scene-preview';
+import {PisteAffichee} from '../../models/theatre.model';
 import {SceneStageStore} from './scene-stage.store';
+import {pistesAffichees} from './theatre.util';
 
 /** Le menu d'aperçu d'une scène, partagé par la frise des actes et les pistes de la lecture : l'aperçu, puis « Charger
  * la scène », un élément du menu, donc atteignable au clavier. La scène se prépare depuis les notes de la scène. Le déclencheur passe l'acte en données : `[matMenuTriggerFor]="apercu.menu()"`,
@@ -17,7 +19,14 @@ import {SceneStageStore} from './scene-stage.store';
   template: `
     <mat-menu class="thr-apercu-menu">
       <ng-template matMenuContent let-acte="acte">
-        <bol-scene-preview [scene]="acte.scene" [statut]="acte.statut" [regionNom]="store.regionNom(acte.scene)" />
+        <bol-scene-preview
+          [scene]="acte.scene"
+          [statut]="acte.statut"
+          [regionNom]="store.regionNom(acte.scene)"
+          [numero]="acte.numero"
+          [total]="store.acts().length"
+          [suites]="suites(acte.scene)"
+        />
         <button mat-menu-item type="button" (click)="load(acte.scene)">
           <mat-icon>theater_comedy</mat-icon> Charger la scène
         </button>
@@ -34,6 +43,11 @@ export class SceneApercuMenuComponent {
   readonly menu = viewChild.required(MatMenu);
   /** Une scène vient d'être chargée sur la table, avec la session à jour : la page la pose. */
   readonly sceneChanged = output<BolSceneLoadResult>();
+
+  /** Les pistes d'une scène, chacune avec l'acte de la frise où elle mène. */
+  protected suites(scene: BolSceneModel): PisteAffichee[] {
+    return pistesAffichees(scene, this.store.acts());
+  }
 
   protected load(scene: BolSceneModel): void {
     this.store.load(scene).subscribe({

@@ -1,7 +1,8 @@
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
+import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, parFiche, campsComptes, sceneActs, sceneDecor, troupe} from './theatre.util';
+import {acteLabel, ATTITUDES, cartonTenue, compagnie, lieuTexte, parFiche, campsComptes, pistesAffichees, sceneActs, sceneDecor, troupe} from './theatre.util';
 
 function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): BolSceneModel {
   return {
@@ -153,6 +154,48 @@ describe('campsComptes', () => {
     expect(textes(campsComptes([entry(2)]))).toEqual(['E 2 adversaires']);
     expect(textes(campsComptes([entry(1, 'heros')]))).toEqual(['A 1 allié']);
     expect(campsComptes([])).toEqual([]);
+  });
+  it('avec le catalogue, nomme les fiches de chaque camp et leur nombre ; tait une fiche absente du catalogue', () => {
+    const catalogue = [
+      {kind: 'creature', sourceId: 't', nom: 'Tentacule de la mosaïque'},
+      {kind: 'creature', sourceId: 'h', nom: 'Hippocampe géant'},
+      {kind: 'pnj', sourceId: 'g', nom: 'Garde du temple'},
+    ] as unknown as CombatCatalogEntry[];
+    const comptes = campsComptes(
+      [
+        {kind: 'creature', source_id: 't', qty: 3, camp: 'adversaires'},
+        {kind: 'creature', source_id: 'h', qty: 2},
+        {kind: 'pnj', source_id: 'g', qty: 1, camp: 'heros'},
+        {kind: 'demon', source_id: 'perdu', qty: 1},
+      ],
+      catalogue,
+    );
+
+    expect(comptes.map((c) => [c.texte, c.fiches])).toEqual([
+      ['1 allié', [{nom: 'Garde du temple', qty: 1}]],
+      ['6 adversaires', [{nom: 'Tentacule de la mosaïque', qty: 3}, {nom: 'Hippocampe géant', qty: 2}]],
+    ]);
+  });
+});
+
+describe('pistesAffichees', () => {
+  it('relie chaque piste à l’acte de la frise où elle mène, s’il y est', () => {
+    const suite = {id: 's6', titre: 'Fuite et embarquement'} as BolSceneModel;
+    const acts = [{scene: suite, numero: 6, statut: 'a-venir' as const}];
+    const scene = {
+      pistes: [
+        {texte: 'Fuir vers le quai du Pendu', scene_id: 's6'},
+        {texte: 'Interroger le prêtre', scene_id: null},
+        {texte: 'Une scène d’un autre chapitre', scene_id: 'ailleurs'},
+      ],
+    } as BolSceneModel;
+
+    expect(pistesAffichees(scene, acts).map((p) => [p.texte, p.acte?.numero ?? null])).toEqual([
+      ['Fuir vers le quai du Pendu', 6],
+      ['Interroger le prêtre', null],
+      ['Une scène d’un autre chapitre', null],
+    ]);
+    expect(pistesAffichees({pistes: null} as BolSceneModel, acts)).toEqual([]);
   });
 });
 

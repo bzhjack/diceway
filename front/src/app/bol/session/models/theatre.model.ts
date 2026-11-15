@@ -1,4 +1,4 @@
-import {BolSceneModel} from '../../models/bol-scene.model';
+import {BolSceneModel, BolScenePiste} from '../../models/bol-scene.model';
 import {TapisCard} from './tapis.model';
 
 /** Où en est une scène de la frise : déjà jouée sur cette table, en cours, ou à venir. */
@@ -44,6 +44,19 @@ export type TroupeTaille = 'rival' | 'coriace' | 'pietaille';
 export interface CampCompte {
   readonly allie: boolean;
   readonly texte: string;
+  /** Les fiches de ce camp, nommées par le catalogue, avec leur nombre d'exemplaires (une fiche absente du catalogue est tue). */
+  readonly fiches: readonly CampFiche[];
+}
+
+/** Une fiche de la distribution d'une scène : son nom et son nombre d'exemplaires. */
+export interface CampFiche {
+  readonly nom: string;
+  readonly qty: number;
+}
+
+/** Une piste d'une scène, avec l'acte de la frise où elle mène (null : une piste sans scène, ou vers une scène hors du scénario). */
+export interface PisteAffichee extends BolScenePiste {
+  readonly acte: SceneActe | null;
 }
 
 /** Une carte de la troupe et sa taille. */

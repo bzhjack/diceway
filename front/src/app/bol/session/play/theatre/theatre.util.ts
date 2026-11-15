@@ -1,7 +1,8 @@
 import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneMeteo, SceneMoment} from '../../../models/bol-scene.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {ActeStatut, AmbianceOption, CampCompte, RideauRythme, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
+import {CombatCatalogEntry} from '../../../models/combat-selection.model';
+import {ActeStatut, AmbianceOption, CampCompte, PisteAffichee, RideauRythme, SceneActe, TroupeCard, TroupeTaille} from '../../models/theatre.model';
 import {scenesOf} from '../scene-list/scene.util';
 
 /** Les moments de la journée, dans l'ordre, avec leur libellé et leur icône. */
@@ -57,16 +58,28 @@ export function sceneDecor(scene: Pick<BolSceneModel, 'image'> | null): string {
   return scene?.image?.trim() || DECOR_PAR_DEFAUT;
 }
 
-/** Combien d'alliés et d'adversaires une scène fait entrer, en clair : « 5 alliés », puis « 12 adversaires » ; un camp vide est
- * tu (liste vide sans distribution). Une entrée ×3 compte trois ; une entrée sans camp (scènes anciennes) est un adversaire. */
-export function campsComptes(distribution: readonly BolSceneEntry[]): CampCompte[] {
-  const compte = (allie: boolean): number =>
-    distribution.filter((entry) => (entry.camp === 'heros') === allie).reduce((sum, entry) => sum + Math.max(1, entry.qty), 0);
+/** Combien d'alliés et d'adversaires une scène fait entrer (quantités comprises ; sans camp, un adversaire), alliés d'abord ; un camp
+ * vide est tu. Avec le catalogue des fiches, chaque camp nomme aussi ses fiches et leur nombre d'exemplaires. */
+export function campsComptes(distribution: readonly BolSceneEntry[], catalogue: readonly CombatCatalogEntry[] = []): CampCompte[] {
+  const noms = new Map(catalogue.map((entree) => [`${entree.kind}:${entree.sourceId}`, entree.nom]));
   return [true, false].flatMap((allie) => {
-    const n = compte(allie);
+    const entrees = distribution.filter((entry) => (entry.camp === 'heros') === allie);
+    const n = entrees.reduce((sum, entry) => sum + Math.max(1, entry.qty), 0);
     const mot = allie ? 'allié' : 'adversaire';
-    return n > 0 ? [{allie, texte: `${n} ${mot}${n > 1 ? 's' : ''}`}] : [];
+    const fiches = entrees.flatMap((entry) => {
+      const nom = noms.get(`${entry.kind}:${entry.source_id}`);
+      return nom ? [{nom, qty: Math.max(1, entry.qty)}] : [];
+    });
+    return n > 0 ? [{allie, texte: `${n} ${mot}${n > 1 ? 's' : ''}`, fiches}] : [];
   });
+}
+
+/** Les pistes d'une scène, chacune avec l'acte de la frise où elle mène. */
+export function pistesAffichees(scene: BolSceneModel, acts: readonly SceneActe[]): PisteAffichee[] {
+  return (scene.pistes ?? []).map((piste) => ({
+    ...piste,
+    acte: piste.scene_id ? (acts.find((acte) => acte.scene.id === piste.scene_id) ?? null) : null,
+  }));
 }
 
 /** Où se joue une scène, en clair : la précision du lieu puis la région (« Gué du Tyr, Jungle de Qush »), ou
