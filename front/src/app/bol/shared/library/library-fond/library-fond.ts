@@ -1,9 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 
 /**
- * L'illustration d'une bibliothèque en tuiles : un fond fixe qui couvre l'écran, derrière la colonne et les tuiles. À poser dans la page,
- * hors de la colonne (collante, elle a son propre empilement : le fond passerait devant elle). Purement décoratif ; son style est dans
- * `styles/_library-rows.scss`.
+ * L'illustration d'une bibliothèque en tuiles : un fond fixe qui couvre l'écran, derrière l'en-tête, la colonne et les tuiles. À poser au
+ * niveau de la page, hors de la colonne. Purement décoratif ; son style est dans `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-fond',

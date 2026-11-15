@@ -5,8 +5,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 
 /**
- * La colonne d'une bibliothèque en tuiles, à gauche, toujours en vue sous l'en-tête de la page : la recherche, puis les filtres,
- * projetés, qui défilent seuls s'ils dépassent. Les styles sont ceux de `styles/_library-rows.scss`.
+ * La colonne d'une bibliothèque en tuiles, à gauche, toujours en vue sous l'en-tête de la page (seules les tuiles défilent) : la
+ * recherche, puis les filtres, projetés, qui défilent seuls s'ils dépassent. Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-colonne',

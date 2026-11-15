@@ -1,9 +1,9 @@
 <section class="dw-page dw-lr-page xl:px-8">
-  <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
+  <div class="dw-lr-cadre">
 
     <bol-library-fond image="/assets/bol/fond-creatures.webp" />
 
-    <!-- L'en-tête, sur toute la largeur, collé en haut de l'écran : le titre et le compte à gauche ; à droite les actions, à la place
+    <!-- L'en-tête, sur toute la largeur, qui ne bouge pas : le titre et le compte à gauche ; à droite les actions, à la place
          qu'elles ont sur les autres écrans : créer, les bibliothèques voisines, et le retour en or. -->
     <header class="dw-lr-entete">
       <div class="dw-lr-tete">
@@ -28,7 +28,7 @@
     </header>
 
     <div class="dw-lr-corps">
-      <!-- La colonne, toujours en vue sous l'en-tête : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
+      <!-- La colonne, toujours en vue : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
       <bol-library-colonne placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm">
         <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
         <div class="dw-lr-listes">
@@ -45,8 +45,8 @@
       </bol-library-colonne>
 
       <div class="dw-lr-liste">
-        <!-- Le rappel des filtres, collé sous l'en-tête : le compte, chaque filtre posé en pastille (un clic le retire), un bouton rond
-             qui les retire tous ; à droite, le tri. -->
+        <!-- Le rappel des filtres, au-dessus des tuiles (elles seules défilent) : le compte, chaque filtre posé en pastille (un clic le
+             retire), un bouton rond qui les retire tous ; à droite, le tri. -->
         <div class="dw-lr-barre">
           <span class="dw-lr-nombre">{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</span>
           @for (pastille of pastilles(); track pastille.label) {
