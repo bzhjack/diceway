@@ -96,7 +96,14 @@ describe('SceneLectureComponent', () => {
     expect(onglet(host, 'À lire').getAttribute('aria-pressed')).toBe('true');
   });
 
-  it('montre les pistes sous « Ensuite », chacune avec la scène où elle mène', async () => {
+  it('sans piste, pas d’onglet « Pistes »', () => {
+    const host = fixture.nativeElement as HTMLElement;
+
+    expect(onglet(host, 'Pistes')).toBeUndefined();
+    expect(host.querySelector('.lec-piste')).toBeNull();
+  });
+
+  it('montre les pistes dans leur onglet, avec leur nombre, chacune avec la scène où elle mène', async () => {
     const host = fixture.nativeElement as HTMLElement;
     const avecPistes = {
       ...scene('s1', 'Le sceau est dans la sacoche.'),
@@ -110,6 +117,14 @@ describe('SceneLectureComponent', () => {
     await fixture.whenStable();
 
     const texte = (el: Element) => el.textContent?.replace(/\s+/g, ' ').trim();
+    expect(host.querySelector('.lec-piste')).toBeNull();
+    expect(texte(onglet(host, 'Pistes').querySelector('.lec-onglet-compte')!)).toBe('2');
+
+    onglet(host, 'Pistes').click();
+    await fixture.whenStable();
+
+    expect(onglet(host, 'Pistes').getAttribute('aria-pressed')).toBe('true');
+    expect(host.querySelector('.lec-texte')).toBeNull();
     const pistes = [...host.querySelectorAll('.lec-piste')];
     expect(pistes.map((p) => texte(p.querySelector('.lec-piste-texte b') ?? p))).toEqual(['14 · La taverne du Puits sec', 'Fuir par les toits']);
     expect(texte(pistes[0].querySelector('.lec-piste-texte span')!)).toBe('Gagner le combat');

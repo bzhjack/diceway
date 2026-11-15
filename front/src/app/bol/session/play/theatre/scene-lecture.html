@@ -12,6 +12,9 @@
           <mat-icon aria-hidden="true">visibility_off</mat-icon>
         }
         {{ onglet.label }}
+        @if (onglet.cle === 'pistes') {
+          <span class="lec-onglet-compte">{{ pistes().length }}</span>
+        }
       </button>
     }
   </div>
@@ -29,9 +32,38 @@
   }
 </header>
 
-<!-- Le texte ouvert ; il défile seul. -->
+<!-- L'onglet ouvert ; il défile seul. -->
 <div class="lec-corps" #corps>
   @switch (actif()) {
+    @case ('pistes') {
+      <!-- Où peut mener la scène ; une piste ouvre l'aperçu de sa scène, d'où on la charge. -->
+      <ul class="lec-pistes" aria-label="Les pistes de la scène">
+        @for (piste of pistes(); track $index) {
+          <li>
+            @if (piste.acte; as acte) {
+              <button
+                type="button"
+                class="lec-piste"
+                [attr.aria-label]="piste.texte + ' : aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
+                [attr.aria-disabled]="store.busy() ? 'true' : null"
+                [matMenuTriggerFor]="apercu.menu()"
+                [matMenuTriggerData]="{acte}"
+              >
+                <span class="lec-piste-texte">
+                  <b>{{ acte.numero }} · {{ acte.scene.titre }}</b>
+                  <span>{{ piste.texte }}</span>
+                </span>
+                <mat-icon class="lec-piste-aller" aria-hidden="true">east</mat-icon>
+              </button>
+            } @else {
+              <span class="lec-piste lec-piste--sans-scene">
+                <span class="lec-piste-texte"><span>{{ piste.texte }}</span></span>
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    }
     @case ('jeu') {
       <p class="lec-jeu">{{ scene().jeu }}</p>
     }
@@ -50,38 +82,5 @@
     }
   }
 </div>
-
-<!-- Ensuite : où peut mener la scène ; une piste ouvre l'aperçu de sa scène, d'où on la charge. -->
-@if (pistes().length) {
-  <section class="lec-ensuite" aria-labelledby="lec-ensuite-titre">
-    <h3 class="lec-ensuite-titre" id="lec-ensuite-titre">Ensuite</h3>
-    <ul class="lec-pistes">
-      @for (piste of pistes(); track $index) {
-        <li>
-          @if (piste.acte; as acte) {
-            <button
-              type="button"
-              class="lec-piste"
-              [attr.aria-label]="piste.texte + ' : aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
-              [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu.menu()"
-              [matMenuTriggerData]="{acte}"
-            >
-              <span class="lec-piste-texte">
-                <b>{{ acte.numero }} · {{ acte.scene.titre }}</b>
-                <span>{{ piste.texte }}</span>
-              </span>
-              <mat-icon class="lec-piste-aller" aria-hidden="true">east</mat-icon>
-            </button>
-          } @else {
-            <span class="lec-piste lec-piste--sans-scene">
-              <span class="lec-piste-texte"><span>{{ piste.texte }}</span></span>
-            </span>
-          }
-        </li>
-      }
-    </ul>
-  </section>
-}
 
 <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />

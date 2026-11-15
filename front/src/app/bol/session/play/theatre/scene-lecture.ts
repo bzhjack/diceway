@@ -9,12 +9,12 @@ import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 import {pistesAffichees} from './theatre.util';
 
-/** Les textes de la scène, un onglet chacun. */
-type TexteLecture = 'lire' | 'jeu' | 'secret';
+/** Les onglets du carnet : les textes de la scène, puis ses pistes. */
+type OngletLecture = 'lire' | 'jeu' | 'secret' | 'pistes';
 
-/** Les notes de la scène courante, dans le carnet du MJ à gauche de la table (ou en grand dans une fenêtre) : le texte à lire aux joueurs,
- * les règles de la scène (« En jeu ») et le secret du MJ, un onglet chacun (les deux derniers seulement s'ils sont écrits) ; en bas,
- * toujours en vue, « Ensuite » : les pistes, chacune ouvrant l'aperçu de la scène où elle mène, d'où on la charge. */
+/** Les notes de la scène courante, dans le carnet du MJ au milieu de la table (ou en grand dans une fenêtre), un onglet chacune : le
+ * texte à lire aux joueurs, les règles de la scène (« En jeu »), le secret du MJ et les pistes, ces trois-là seulement quand la scène en
+ * a. Une piste ouvre l'aperçu de la scène où elle mène, d'où on la charge. */
 @Component({
   selector: 'bol-scene-lecture',
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, SceneApercuMenuComponent],
@@ -39,23 +39,24 @@ export class SceneLectureComponent {
   /** L'id seul : une nouvelle copie de la même scène (rechargement, préparation) ne compte pas comme un changement. */
   private readonly sceneId = computed(() => this.scene().id);
 
-  /** Les onglets de la scène : le texte à lire toujours, les règles et le secret quand ils sont écrits. */
-  protected readonly onglets = computed((): readonly {cle: TexteLecture; label: string}[] => {
+  protected readonly pistes = computed<readonly PisteAffichee[]>(() => pistesAffichees(this.scene(), this.acts()));
+
+  /** Les onglets de la scène : le texte à lire toujours ; les règles et le secret quand ils sont écrits, les pistes quand il y en a. */
+  protected readonly onglets = computed((): readonly {cle: OngletLecture; label: string}[] => {
     const scene = this.scene();
     return [
       {cle: 'lire', label: 'À lire aux joueurs'},
       ...(scene.jeu ? [{cle: 'jeu' as const, label: 'En jeu'}] : []),
       ...(scene.notes ? [{cle: 'secret' as const, label: 'Secret du MJ'}] : []),
+      ...(this.pistes().length ? [{cle: 'pistes' as const, label: 'Pistes'}] : []),
     ];
   });
 
   /** L'onglet ouvert ; chaque nouvelle scène rouvre son texte à lire, depuis le début. */
-  protected readonly actif = linkedSignal<TexteLecture>(() => {
+  protected readonly actif = linkedSignal<OngletLecture>(() => {
     this.sceneId();
     return 'lire';
   });
-
-  protected readonly pistes = computed<readonly PisteAffichee[]>(() => pistesAffichees(this.scene(), this.acts()));
 
   constructor() {
     // Une nouvelle scène, ou un autre onglet : le texte repart du haut.
@@ -69,7 +70,7 @@ export class SceneLectureComponent {
     });
   }
 
-  protected ouvrir(onglet: TexteLecture): void {
+  protected ouvrir(onglet: OngletLecture): void {
     this.actif.set(onglet);
   }
 }

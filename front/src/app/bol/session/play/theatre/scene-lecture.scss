@@ -1,4 +1,5 @@
-// Le carnet du MJ, à gauche de la table : une carte de fer, ses onglets en haut, le texte ouvert qui défile seul, puis « Ensuite ».
+// Le carnet du MJ, au milieu de la table : une carte de fer, ses onglets en haut (les textes, puis les pistes), l'onglet ouvert qui
+// défile seul.
 :host {
   // Le fond du carnet.
   --lec-fond: var(--dw-forge-iron) 0 0 / 420px, var(--dw-table-panel);
@@ -91,6 +92,19 @@
   }
 }
 
+// Le nombre de pistes, dans leur onglet.
+.lec-onglet-compte {
+  min-width: 1.1em;
+  padding: 0 0.35em;
+  border-radius: var(--dw-radius-pill);
+  background: color-mix(in srgb, var(--dw-forge-name) 18%, transparent);
+  color: var(--dw-forge-name);
+  font-size: 0.85em;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .lec-onglet--secret[aria-pressed='true'] {
   border-bottom-color: var(--dw-forge-verdict-echec);
   color: var(--dw-forge-verdict-echec);
@@ -143,28 +157,6 @@
   font-size: calc(0.95rem * var(--lec-k, 1));
   line-height: 1.55;
   white-space: pre-line;
-}
-
-// Ensuite : les pistes, toujours en vue au pied du carnet.
-.lec-ensuite {
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  max-height: 40%;
-  padding: 0.55rem 0.7rem 0.7rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  border-top: 1px solid var(--dw-forge-bronze-edge);
-}
-
-.lec-ensuite-titre {
-  margin: 0 0 0.1rem 0.15rem;
-  font-size: calc(0.65rem * var(--lec-k, 1));
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dw-forge-caption);
 }
 
 .lec-pistes {
