@@ -69,7 +69,7 @@ describe('DemonLibraryPageComponent', () => {
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
     /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
     const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
       await fixture.whenStable();
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
@@ -122,7 +122,7 @@ describe('DemonLibraryPageComponent', () => {
 
   it('la recherche trouve un pouvoir', async () => {
     const {page, fixture, noms} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('dw-library-toolbar input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
 
     champ.value = 'invisib';
     champ.dispatchEvent(new Event('input'));

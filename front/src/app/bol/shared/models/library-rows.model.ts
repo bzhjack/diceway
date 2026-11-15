@@ -29,3 +29,9 @@ export interface LibraryScenarioOption {
   readonly teinte: number;
   readonly compte: number;
 }
+
+/** Un filtre posé, en pastille au-dessus des tuiles : son nom, et de quoi le retirer. */
+export interface LibraryPastille {
+  readonly label: string;
+  readonly retirer: () => void;
+}

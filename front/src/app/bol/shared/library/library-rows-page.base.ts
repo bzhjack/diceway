@@ -2,6 +2,7 @@ import {Signal, computed, signal} from '@angular/core';
 import {BolFicheScenario} from '../../models/bol-fiche-scenario.model';
 import {
   LibraryOption,
+  LibraryPastille,
   LibraryRang,
   LibraryScenarioOption,
   LibrarySource,
@@ -12,6 +13,12 @@ import {BolLibraryPageBase} from './library-page.base';
 import {scenariosDesFiches} from './library-scenarios.util';
 
 export const RANG_LABELS: Record<LibraryRang, string> = {R: 'Rival', C: 'Coriace', P: 'Piétaille'};
+
+/** Le compte que dit la colonne d'une bibliothèque : « 103 créatures », ou « 75 sur 103 créatures » quand un filtre en écarte. */
+export function compteDit(gardees: number, total: number, singulier: string, pluriel: string): string {
+  const nom = total > 1 ? pluriel : singulier;
+  return gardees === total ? `${total} ${nom}` : `${gardees} sur ${total} ${nom}`;
+}
 
 /** Le tri par type va de la piétaille au rival. */
 export const ORDRE_DES_RANGS: Record<LibraryRang, number> = {P: 0, C: 1, R: 2};
@@ -39,6 +46,12 @@ export abstract class BolLibraryRowsPageBase<TItem extends {id?: string | number
   /** Inverse le sens du tri. */
   protected inverserLeSens(): void {
     this.tri.update((tri) => ({...tri, croissant: !tri.croissant}));
+  }
+
+  /** La recherche en cours, en pastille : « "loup" ». */
+  protected pastilleDeRecherche(): LibraryPastille[] {
+    const terme = this.searchTerm().trim();
+    return terme ? [{label: `« ${terme} »`, retirer: () => this.searchTerm.set('')}] : [];
   }
 
   /** Les fiches dans l'ordre du tri, puis par nom. */
@@ -94,6 +107,24 @@ export abstract class BolFichesPageBase<
 
   /** Un filtre partagé est posé (la sous-classe ajoute les siens à `filtresActifs`). */
   protected readonly facettesActives = computed(() => this.source() !== 'tout' || this.scenarioId() !== null || this.rang() !== null);
+
+  /** Les filtres partagés posés, en pastilles : la source, le scénario, le rang. */
+  protected readonly pastillesDesFacettes = computed((): LibraryPastille[] => {
+    const pastilles: LibraryPastille[] = [];
+    const source = this.sources().find((s) => s.cle === this.source());
+    if (source && source.cle !== 'tout') {
+      pastilles.push({label: source.label, retirer: () => this.source.set('tout')});
+    }
+    const scenario = this.scenarios().find((s) => s.id === this.scenarioId());
+    if (scenario) {
+      pastilles.push({label: scenario.titre, retirer: () => this.scenarioId.set(null)});
+    }
+    const rang = this.rang();
+    if (rang !== null) {
+      pastilles.push({label: RANG_LABELS[rang], retirer: () => this.rang.set(null)});
+    }
+    return pastilles;
+  });
 
   /** Les fiches que gardent la source, le scénario et le rang choisis. */
   protected filtrerParFacettes(fiches: readonly TItem[]): TItem[] {

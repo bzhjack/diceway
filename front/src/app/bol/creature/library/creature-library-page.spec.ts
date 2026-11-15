@@ -86,7 +86,7 @@ describe('CreatureLibraryPageComponent', () => {
     };
     /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
     const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
       await fixture.whenStable();
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
@@ -102,7 +102,7 @@ describe('CreatureLibraryPageComponent', () => {
     expect(texte(tuile('Cathgan').querySelector('.dw-tuile-rang'))).toBe('Piétaille');
     expect(tuile('Cathgan').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('Créature');
     expect(texte(tuile('Cathgan').querySelector('.dw-tuile__coeur b'))).toBe('2');
-    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('5 créatures');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('5 créatures');
   });
 
   it('les fiches du compte ont la pastille et le menu, celles du catalogue n’ont ni l’un ni l’autre', async () => {
@@ -153,9 +153,9 @@ describe('CreatureLibraryPageComponent', () => {
     expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ', 'Momie royale', 'Andrak', 'Azhdarkho']);
   });
 
-  it('filtre par rang et par taille, deux listes de la barre de recherche', async () => {
+  it('filtre par rang et par taille, deux listes de la colonne', async () => {
     const {page, noms, choisir} = await rendre();
-    expect(page.querySelector('.dw-lr-filtres mat-select')).toBeNull();
+    expect(page.querySelectorAll('.dw-lr-filtres mat-select')).toHaveLength(2);
 
     await choisir('Rang', 'Piétaille');
     expect(noms()).toEqual(['Cathgan']);
@@ -178,7 +178,7 @@ describe('CreatureLibraryPageComponent', () => {
 
   it('la recherche trouve aussi une capacité ou un scénario', async () => {
     const {page, noms, fixture} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('dw-library-toolbar input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
 
     champ.value = 'rugiss';
     champ.dispatchEvent(new Event('input'));
@@ -197,7 +197,7 @@ describe('CreatureLibraryPageComponent', () => {
 
     await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
     await choisir('Rang', 'Coriace');
-    expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
+    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
     await cliquer(page.querySelector<HTMLButtonElement>('.dw-lr-effacer')!);
 
     expect(noms().length).toBe(5);
@@ -210,6 +210,24 @@ describe('CreatureLibraryPageComponent', () => {
     tuile('Andrak').querySelector<HTMLButtonElement>('button.dw-tuile__portrait[aria-label="Andrak, voir son statbloc"]')!.click();
 
     expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('l’en-tête dit le compte ; chaque filtre posé a sa pastille au-dessus des tuiles, qui le retire', async () => {
+    const {page, bouton, cliquer, texte, noms} = await rendre();
+    const pastilles = () => [...page.querySelectorAll<HTMLButtonElement>('.dw-lr-barre .dw-lr-pastille')];
+
+    expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('5 créatures');
+    expect(pastilles()).toHaveLength(0);
+
+    await cliquer(bouton('.dw-lr-option', 'Mes fiches'));
+
+    expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('2 sur 5 créatures');
+    expect(pastilles().map((p) => p.getAttribute('aria-label'))).toEqual(['Retirer le filtre Mes fiches']);
+    await cliquer(pastilles()[0]);
+
+    expect(pastilles()).toHaveLength(0);
+    expect(noms()).toHaveLength(5);
+    expect(bouton('.dw-lr-option', 'Tout le bestiaire').getAttribute('aria-pressed')).toBe('true');
   });
 
   it('sans résultat, le dit', async () => {

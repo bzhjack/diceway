@@ -1,45 +1,38 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-lr-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
-    <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
-    <dw-library-header title="Galerie des héros" image="/assets/bol/fond-heros.webp" [fondPleinePage]="true" [compact]="true">
-      <ng-container dwHeaderTags>
-        <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
-      </ng-container>
-      <ng-container dwHeaderActions>
-        <div class="flex flex-wrap gap-1.5">
-          <button mat-stroked-button routerLink="/create/hero" [state]="{ returnUrl: '/library/heroes' }">
-            <mat-icon>add</mat-icon> Créer un héros
-          </button>
-          <button mat-stroked-button routerLink="/create/hero-advanced" [state]="{ returnUrl: '/library/heroes' }">
-            <mat-icon>star</mat-icon> Création avancée
-          </button>
-          <button mat-stroked-button routerLink="/library/pnjs">
-            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
-          </button>
-          <button mat-stroked-button routerLink="/library/creatures">
-            <mat-icon>pets</mat-icon> Voir le bestiaire
-          </button>
-        </div>
+    <bol-library-fond image="/assets/bol/fond-heros.webp" />
+
+    <!-- L'en-tête, sur toute la largeur, collé en haut de l'écran : le titre et le compte à gauche ; à droite les actions, à la place
+         qu'elles ont sur les autres écrans : créer, les bibliothèques voisines, et le retour en or. -->
+    <header class="dw-lr-entete">
+      <div class="dw-lr-tete">
+        <p class="dw-lr-eyebrow">Bibliothèque BoL</p>
+        <h1 class="dw-lr-titre">Galerie des héros</h1>
+      </div>
+      <p class="dw-lr-compte" aria-live="polite">{{ compte() }}</p>
+      <div class="dw-lr-actions">
+        <button mat-stroked-button routerLink="/create/hero" [state]="{ returnUrl: '/library/heroes' }">
+          <mat-icon>add</mat-icon> Créer un héros
+        </button>
+        <button mat-stroked-button routerLink="/create/hero-advanced" [state]="{ returnUrl: '/library/heroes' }">
+          <mat-icon>star</mat-icon> Création avancée
+        </button>
+        <button mat-stroked-button routerLink="/library/pnjs">
+          <mat-icon>manage_accounts</mat-icon> Voir les PNJ
+        </button>
+        <button mat-stroked-button routerLink="/library/creatures">
+          <mat-icon>pets</mat-icon> Voir le bestiaire
+        </button>
         <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
-      </ng-container>
-    </dw-library-header>
-
-    <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer un héros et revenir. -->
-    <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Galerie des héros · ' + heroCount() + ' héros'">
-      <button mat-stroked-button routerLink="/create/hero" [state]="{ returnUrl: '/library/heroes' }">
-        <mat-icon>add</mat-icon> Créer un héros
-      </button>
-      <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
-        <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
-      </button>
-    </dw-compact-bar>
+      </div>
+    </header>
 
     <div class="dw-lr-corps">
-      <!-- Les filtres, toujours en vue : chacun dit combien de héros il garde. -->
-      <aside class="dw-lr-filtres" aria-label="Filtres des héros">
+      <!-- La colonne, toujours en vue sous l'en-tête : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
+      <bol-library-colonne placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm">
         <section class="dw-lr-facette" aria-labelledby="hl-f-statut">
           <h2 id="hl-f-statut" class="dw-lr-facette-titre">Statut</h2>
           @for (option of statuts(); track option.cle) {
@@ -49,12 +42,8 @@
             </button>
           }
         </section>
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher un héros, un joueur, une carrière" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <!-- La région, à droite de la recherche. -->
-          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+        <div class="dw-lr-listes">
+          <mat-form-field class="dw-lr-select-barre" subscriptSizing="dynamic">
             <mat-select [formField]="regionField" aria-label="Région" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les régions</mat-option>
               @for (region of regions(); track region.id) {
@@ -62,15 +51,28 @@
               }
             </mat-select>
           </mat-form-field>
-          <bol-library-tri dwToolbarFilter [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
-          <!-- Tout à droite : le nombre de héros gardés, puis, quand un filtre est posé, de quoi les retirer tous. -->
-          <dw-tag dwToolbarCount>{{ heroCount() }} héros</dw-tag>
-          @if (filtresActifs()) {
-            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+        </div>
+      </bol-library-colonne>
+
+      <div class="dw-lr-liste">
+        <!-- Le rappel des filtres, collé sous l'en-tête : le compte, chaque filtre posé en pastille (un clic le retire), un bouton rond
+             qui les retire tous ; à droite, le tri. -->
+        <div class="dw-lr-barre">
+          <span class="dw-lr-nombre">{{ heroCount() }} héros</span>
+          @for (pastille of pastilles(); track pastille.label) {
+            <button type="button" class="dw-lr-pastille" [attr.aria-label]="'Retirer le filtre ' + pastille.label" (click)="pastille.retirer()">
+              {{ pastille.label }}<mat-icon aria-hidden="true">close</mat-icon>
             </button>
           }
-        </dw-library-toolbar>
+          @if (filtresActifs()) {
+            <button mat-icon-button type="button" class="dw-lr-effacer" aria-label="Effacer les filtres" matTooltip="Effacer les filtres" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon>
+            </button>
+          }
+          <div class="dw-lr-barre-fin">
+            <bol-library-tri [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
+          </div>
+        </div>
 
         <!-- Une tuile par héros : un clic ouvre son statbloc ; son menu le modifie, le supprime, ou l'édite en création avancée s'il est en cours. -->
         @if (lignes().length) {
@@ -101,7 +103,7 @@
         } @else {
           <p class="dw-lr-vide">Aucun héros ne correspond à ces filtres.</p>
         }
-      </mat-card>
+      </div>
     </div>
   </div>
 

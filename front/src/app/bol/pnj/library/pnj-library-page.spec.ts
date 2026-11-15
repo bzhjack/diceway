@@ -38,7 +38,7 @@ describe('PnjLibraryPageComponent', () => {
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
     /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
     const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
       await fixture.whenStable();
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
@@ -67,18 +67,18 @@ describe('PnjLibraryPageComponent', () => {
     expect(document.querySelector('.mat-mdc-menu-item')?.getAttribute('href')).toBe('/create/pnj/Ajhaskar');
   });
 
-  it('filtre par rang et par région, deux listes à droite de la recherche, puis par scénario', async () => {
+  it('filtre par rang et par région, deux listes de la colonne, puis par scénario', async () => {
     const {page, texte, noms, bouton, cliquer, choisir} = await rendre();
 
     expect(page.querySelector('.dw-lr-filtres .dw-lr-effacer')).toBeNull();
-    expect(page.querySelector('.dw-lr-filtres mat-select')).toBeNull();
+    expect(page.querySelectorAll('.dw-lr-filtres mat-select')).toHaveLength(2);
 
-    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('3 PNJ');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('3 PNJ');
 
     await choisir('Rang', 'Rival');
     expect(noms()).toEqual(['Ajhaskar']);
-    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('1 PNJ');
-    expect(page.querySelector('dw-library-toolbar .dw-lr-effacer')).not.toBeNull();
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('1 PNJ');
+    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
 
     await choisir('Rang', 'Tous les rangs');
     await choisir('Région', 'Satarla');
@@ -99,7 +99,7 @@ describe('PnjLibraryPageComponent', () => {
 
   it('la recherche trouve une carrière', async () => {
     const {page, fixture, noms} = await rendre();
-    const champ = page.querySelector<HTMLInputElement>('dw-library-toolbar input')!;
+    const champ = page.querySelector<HTMLInputElement>('bol-library-colonne input')!;
 
     champ.value = 'sorcier';
     champ.dispatchEvent(new Event('input'));

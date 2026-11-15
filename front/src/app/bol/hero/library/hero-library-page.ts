@@ -1,26 +1,24 @@
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCard} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
-import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
-import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
+import {LibraryColonneComponent} from '../../shared/library/library-colonne/library-colonne';
+import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
 import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolLibraryRowsPageBase} from '../../shared/library/library-rows-page.base';
-import {LibraryOption, LibraryTriOption} from '../../shared/models/library-rows.model';
+import {BolLibraryRowsPageBase, compteDit} from '../../shared/library/library-rows-page.base';
+import {LibraryOption, LibraryPastille, LibraryTriOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
@@ -51,14 +49,12 @@ const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
     FormField,
     RouterLink,
     MatButtonModule,
-    MatCard,
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
-    DwCompactBarComponent,
-    DwLibraryHeaderComponent,
-    DwLibraryToolbarComponent,
-    DwTagComponent,
+    MatTooltipModule,
+    LibraryColonneComponent,
+    LibraryFondComponent,
     LibraryTriComponent,
     MatMenuModule,
     TuileComponent,
@@ -77,8 +73,6 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
     error: 'La suppression du héros a échoué.',
   };
 
-  /** L'en-tête de la page, que la barre compacte remplace une fois sorti de l'écran. */
-  protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
   protected readonly totalHeroCount = computed(() => this.heroes.data().length);
 
@@ -108,6 +102,20 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
   protected readonly regionField = form(this.searchRegion);
 
   protected readonly filtresActifs = computed(() => this.statut() !== 'tous' || this.searchRegion() !== '' || this.searchTerm() !== '');
+
+  /** Ce que dit la colonne : toutes les fiches, ou celles que les filtres gardent sur le total. */
+  protected readonly compte = computed(() => compteDit(this.heroCount(), this.totalHeroCount(), 'héros', 'héros'));
+
+  /** Les filtres posés, en pastilles au-dessus des tuiles : un clic sur l'une le retire. */
+  protected readonly pastilles = computed((): LibraryPastille[] => [
+      ...(this.statut() === 'tous'
+        ? []
+        : [{label: this.statuts().find((s) => s.cle === this.statut())?.label ?? 'Statut', retirer: () => this.statut.set('tous')}]),
+      ...(this.searchRegion() === ''
+        ? []
+        : [{label: this.regions().find((r) => r.id === this.searchRegion())?.nom ?? 'Région', retirer: () => this.searchRegion.set('')}]),
+      ...this.pastilleDeRecherche(),
+  ]);
 
   protected readonly filteredHeroes = computed(() => {
     const statut = this.statut();

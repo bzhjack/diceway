@@ -1,12 +1,12 @@
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCard} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
@@ -14,16 +14,14 @@ import {BolDemonsService} from '../../services/bol-demons.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
 import {refreshableResource} from '../../../shared/refreshable-resource';
-import {DwCompactBarComponent} from '../../../shared/dw-compact-bar/dw-compact-bar';
-import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
-import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {LibraryFacettesComponent} from '../../shared/library/library-facettes/library-facettes';
 import {LibraryRangComponent} from '../../shared/library/library-rang/library-rang';
+import {LibraryColonneComponent} from '../../shared/library/library-colonne/library-colonne';
+import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
 import {LibraryTriComponent} from '../../shared/library/library-tri/library-tri';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
-import {LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
+import {BolFichesPageBase, compteDit, ORDRE_DES_RANGS, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {LibraryPastille, LibraryRang, LibraryTriOption} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {demonStatblockData} from '../../shared/statblock/bol-statblock.builders';
@@ -49,17 +47,15 @@ const OPTIONS_DE_TRI: readonly LibraryTriOption<Tri>[] = [
     FormField,
     RouterLink,
     MatButtonModule,
-    MatCard,
     MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
     MatSelectModule,
-    DwCompactBarComponent,
-    DwLibraryHeaderComponent,
-    DwLibraryToolbarComponent,
-    DwTagComponent,
+    MatTooltipModule,
     LibraryFacettesComponent,
     LibraryRangComponent,
+    LibraryColonneComponent,
+    LibraryFondComponent,
     LibraryTriComponent,
     TuileComponent,
   ],
@@ -80,14 +76,24 @@ export class DemonLibraryPageComponent extends BolFichesPageBase<BolDemonModel, 
     error: 'La suppression du démon a échoué.',
   };
 
-  /** L'en-tête de la page, que la barre compacte remplace une fois sorti de l'écran. */
-  protected readonly entete = viewChild<DwLibraryHeaderComponent, ElementRef<HTMLElement>>(DwLibraryHeaderComponent, {read: ElementRef});
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly searchCategorie = signal<number | ''>('');
   protected readonly categorieField = form(this.searchCategorie);
 
   protected readonly filtresActifs = computed(() => this.facettesActives() || this.searchCategorie() !== '' || this.searchTerm() !== '');
+
+  /** Ce que dit la colonne : toutes les fiches, ou celles que les filtres gardent sur le total. */
+  protected readonly compte = computed(() => compteDit(this.demonCount(), this.totalCount(), 'démon', 'démons'));
+
+  /** Les filtres posés, en pastilles au-dessus des tuiles : un clic sur l'une le retire. */
+  protected readonly pastilles = computed((): LibraryPastille[] => [
+      ...this.pastillesDesFacettes(),
+      ...(this.searchCategorie() === ''
+        ? []
+        : [{label: this.categories()?.find((c) => c.id === this.searchCategorie())?.categorie ?? 'Catégorie', retirer: () => this.searchCategorie.set('')}]),
+      ...this.pastilleDeRecherche(),
+  ]);
 
   protected readonly filteredDemons = computed(() => {
     const categorie = this.searchCategorie();

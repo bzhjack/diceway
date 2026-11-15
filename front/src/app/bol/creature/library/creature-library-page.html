@@ -1,50 +1,39 @@
-<section class="dw-page xl:px-8">
+<section class="dw-page dw-lr-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
-    <!-- En-tête fin : la page garde sa hauteur pour le tableau. -->
-    <dw-library-header title="Bestiaire des créatures" image="/assets/bol/fond-creatures.webp" [fondPleinePage]="true" [compact]="true">
-      <ng-container dwHeaderTags>
-        <dw-tag>{{ totalCount() }} créatures</dw-tag>
-      </ng-container>
-      <ng-container dwHeaderActions>
-        <div class="flex flex-wrap gap-1.5">
-          <button mat-stroked-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
-            <mat-icon>add</mat-icon> Créer une créature
-          </button>
-          <button mat-stroked-button routerLink="/library/demons">
-            <mat-icon>bolt</mat-icon> Voir les démons
-          </button>
-          <button mat-stroked-button routerLink="/library/pnjs">
-            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
-          </button>
-        </div>
+    <bol-library-fond image="/assets/bol/fond-creatures.webp" />
+
+    <!-- L'en-tête, sur toute la largeur, collé en haut de l'écran : le titre et le compte à gauche ; à droite les actions, à la place
+         qu'elles ont sur les autres écrans : créer, les bibliothèques voisines, et le retour en or. -->
+    <header class="dw-lr-entete">
+      <div class="dw-lr-tete">
+        <p class="dw-lr-eyebrow">Bibliothèque BoL</p>
+        <h1 class="dw-lr-titre">Bestiaire des créatures</h1>
+      </div>
+      <p class="dw-lr-compte" aria-live="polite">{{ compte() }}</p>
+      <div class="dw-lr-actions">
+        <button mat-stroked-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
+          <mat-icon>add</mat-icon> Créer une créature
+        </button>
+        <button mat-stroked-button routerLink="/library/demons">
+          <mat-icon>bolt</mat-icon> Voir les démons
+        </button>
+        <button mat-stroked-button routerLink="/library/pnjs">
+          <mat-icon>manage_accounts</mat-icon> Voir les PNJ
+        </button>
         <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
           <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
         </button>
-      </ng-container>
-    </dw-library-header>
-
-    <!-- L'en-tête sorti de l'écran, une barre fine reste en haut : de quoi créer une créature et revenir. -->
-    <dw-compact-bar [watch]="entete()?.nativeElement ?? null" [titre]="'Bestiaire des créatures · ' + creatureCount() + (creatureCount() > 1 ? ' créatures' : ' créature')">
-      <button mat-stroked-button routerLink="/create/creature" [state]="{ returnUrl: '/library/creatures' }">
-        <mat-icon>add</mat-icon> Créer une créature
-      </button>
-      <button mat-flat-button [routerLink]="returnUrl() ?? '/'">
-        <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la table' : "Retour à l'accueil" }}
-      </button>
-    </dw-compact-bar>
+      </div>
+    </header>
 
     <div class="dw-lr-corps">
-      <!-- Les filtres, toujours en vue : chacun dit combien de créatures il garde. -->
-      <aside class="dw-lr-filtres" aria-label="Filtres du bestiaire">
+      <!-- La colonne, toujours en vue sous l'en-tête : la recherche, puis les filtres (chacun dit combien de fiches il garde). -->
+      <bol-library-colonne placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm">
         <bol-library-facettes [sources]="sources()" [scenarios]="scenarios()" [(source)]="source" [(scenarioId)]="scenarioId" />
-      </aside>
-
-      <mat-card appearance="outlined" class="dw-lr-liste">
-        <dw-library-toolbar placeholder="Rechercher une créature, une capacité, un scénario" [(searchTerm)]="searchTerm" [withFilters]="false">
-          <!-- Le rang et la taille, à droite de la recherche. -->
-          <bol-library-rang dwToolbarFilter [rangs]="rangs()" [(rang)]="rang" />
-          <mat-form-field dwToolbarFilter class="dw-lr-select-barre" subscriptSizing="dynamic">
+        <div class="dw-lr-listes">
+          <bol-library-rang [rangs]="rangs()" [(rang)]="rang" />
+          <mat-form-field class="dw-lr-select-barre" subscriptSizing="dynamic">
             <mat-select [formField]="tailleField" aria-label="Taille" panelClass="dw-lr-select-panel" [panelWidth]="null">
               <mat-option value="">Toutes les tailles</mat-option>
               @for (taille of tailles() ?? []; track taille.id) {
@@ -52,15 +41,28 @@
               }
             </mat-select>
           </mat-form-field>
-          <bol-library-tri dwToolbarFilter [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
-          <!-- Tout à droite : le nombre de créatures gardées, puis, quand un filtre est posé, de quoi les retirer tous. -->
-          <dw-tag dwToolbarCount>{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</dw-tag>
-          @if (filtresActifs()) {
-            <button dwToolbarCount mat-stroked-button type="button" class="dw-lr-effacer" (click)="clearFilters()">
-              <mat-icon>filter_alt_off</mat-icon> Effacer les filtres
+        </div>
+      </bol-library-colonne>
+
+      <div class="dw-lr-liste">
+        <!-- Le rappel des filtres, collé sous l'en-tête : le compte, chaque filtre posé en pastille (un clic le retire), un bouton rond
+             qui les retire tous ; à droite, le tri. -->
+        <div class="dw-lr-barre">
+          <span class="dw-lr-nombre">{{ creatureCount() }} {{ creatureCount() > 1 ? 'créatures' : 'créature' }}</span>
+          @for (pastille of pastilles(); track pastille.label) {
+            <button type="button" class="dw-lr-pastille" [attr.aria-label]="'Retirer le filtre ' + pastille.label" (click)="pastille.retirer()">
+              {{ pastille.label }}<mat-icon aria-hidden="true">close</mat-icon>
             </button>
           }
-        </dw-library-toolbar>
+          @if (filtresActifs()) {
+            <button mat-icon-button type="button" class="dw-lr-effacer" aria-label="Effacer les filtres" matTooltip="Effacer les filtres" (click)="clearFilters()">
+              <mat-icon>filter_alt_off</mat-icon>
+            </button>
+          }
+          <div class="dw-lr-barre-fin">
+            <bol-library-tri [options]="optionsDeTri" [tri]="tri()" (cle)="trierPar($event)" (inverser)="inverserLeSens()" />
+          </div>
+        </div>
 
         <!-- Une tuile par créature : un clic ouvre son statbloc ; les fiches du compte ont leur pastille et leur menu. -->
         @if (lignes().length) {
@@ -85,7 +87,7 @@
         } @else {
           <p class="dw-lr-vide">Aucune créature ne correspond à ces filtres.</p>
         }
-      </mat-card>
+      </div>
     </div>
   </div>
 

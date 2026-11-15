@@ -1,13 +1,98 @@
-// Une bibliothèque en tuiles (créatures, démons, PNJ, héros) : les filtres à gauche, toujours en vue, les tuiles à droite. Le
-// bestiaire (`creature-library-page`) en est la référence ; les filtres partagés sont dans `bol-library-facettes`, la tuile est `bol-tuile`.
+// Une bibliothèque en tuiles (créatures, démons, PNJ, héros) : en haut un en-tête sur toute la largeur (le titre, les actions), collé à
+// l'écran ; dessous, à gauche une colonne toujours en vue (`bol-library-colonne` : la recherche, les filtres) ; à droite le rappel des
+// filtres (le compte, les filtres posés, le tri), puis les tuiles. Le bestiaire (`creature-library-page`) en est la référence ; les filtres partagés sont dans `bol-library-facettes`, la tuile
+// est `bol-tuile`.
 
-// ── Les filtres à gauche, les tuiles à droite ; sur un écran étroit, les filtres passent au-dessus ───────────────────────────────
+// La page : des marges plus fines, pour que la colonne tienne dans l'écran ; elle s'isole pour garder l'illustration au-dessus de sa suie.
+// `--dw-lr-voile` : le fond sombre, à peine translucide, de la colonne et de la ligne du haut, pour se lire sur l'illustration.
+.dw-lr-page {
+  --dw-lr-voile: rgba(12, 8, 5, 0.9);
+  // La hauteur de l'en-tête, et où commence ce qui colle dessous (la colonne, le rappel des filtres).
+  --dw-lr-entete: 3.9rem;
+  --dw-lr-dessous: calc(1rem + var(--dw-lr-entete) + 1rem);
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.dw-page:has(.dw-lr-fond) {
+  isolation: isolate;
+}
+
+// L'illustration de la page : un fond fixe, qui couvre l'écran, derrière la colonne et les tuiles.
+.dw-lr-fond {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--dw-library-header-bg);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+}
+
+// ── L'en-tête, sur toute la largeur, collé en haut de l'écran : le titre et le compte à gauche ; à droite les actions, à la place
+// qu'elles ont sur les autres écrans (créer et les bibliothèques voisines en contour, le retour en or, le dernier).
+.dw-lr-entete {
+  --mat-button-outlined-container-height: 2.25rem;
+  --mat-button-filled-container-height: 2.25rem;
+
+  position: sticky;
+  top: 1rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: var(--dw-lr-entete);
+  box-sizing: border-box;
+  padding: 0 0.7rem 0 1.1rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 14px;
+  background: var(--dw-lr-voile);
+}
+
+.dw-lr-tete {
+  flex: none;
+}
+
+.dw-lr-eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--dw-color-legendary);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.dw-lr-titre {
+  margin: 0.2rem 0 0;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dw-color-text-bright);
+  white-space: nowrap;
+}
+
+.dw-lr-compte {
+  align-self: flex-end;
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  color: var(--dw-forge-caption);
+  white-space: nowrap;
+}
+
+.dw-lr-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+// ── Dessous : la colonne à gauche, les tuiles à droite ; sur un écran étroit, la colonne passe au-dessus ──────────────────────────────────
 .dw-lr-corps {
-  // Sous la barre compacte, fixe en haut de l'écran une fois l'en-tête sorti : les filtres collent dessous.
-  --dw-lr-sous-la-barre: calc(var(--dw-compact-bar-height) - 1px);
-
   display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
+  grid-template-columns: 17.5rem minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
 
@@ -16,20 +101,138 @@
   }
 }
 
-.dw-lr-filtres {
+// La colonne : collée sous l'en-tête, jusqu'au bas de l'écran ; la recherche, puis les filtres.
+.dw-lr-colonne {
   position: sticky;
-  top: calc(var(--dw-lr-sous-la-barre) + 0.5rem);
+  top: var(--dw-lr-dessous);
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  padding: 0.9rem 0.6rem;
+  gap: 0.7rem;
+  height: calc(100dvh - var(--dw-lr-dessous) - 1rem);
+  box-sizing: border-box;
+  padding: 0.7rem 0.7rem 0.8rem;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 14px;
-  background: var(--dw-forge-recess);
+  background: var(--dw-lr-voile);
 
   @media (max-width: 64rem) {
     position: static;
+    height: auto;
   }
+}
+
+.dw-lr-recherche {
+  flex: none;
+  width: 100%;
+}
+
+// Les filtres : ils prennent la hauteur qui reste et défilent seuls s'ils dépassent (beaucoup de scénarios, un écran bas).
+.dw-lr-filtres {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  @media (max-width: 64rem) {
+    overflow: visible;
+  }
+}
+
+// Les listes de filtre (rang, taille, région…), sous les options : une par ligne, à la largeur de la colonne.
+.dw-lr-listes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.1rem;
+}
+
+.dw-lr-colonne .dw-lr-select-barre {
+  width: 100%;
+}
+
+// ── À droite : le rappel des filtres, au-dessus des tuiles ──────────────────────────────────────────────────────────────────────────────
+.dw-lr-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+// Le rappel des filtres : le compte des fiches gardées, les filtres posés (une pastille chacun, qui le retire), le bouton qui les retire
+// tous ; à droite, le tri. Il reste collé sous l'en-tête quand les tuiles défilent dessous.
+.dw-lr-barre {
+  position: sticky;
+  top: var(--dw-lr-dessous);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.1rem;
+  box-sizing: border-box;
+  padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 12px;
+  background: var(--dw-lr-voile);
+}
+
+.dw-lr-nombre {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dw-color-text-bright);
+  white-space: nowrap;
+}
+
+.dw-lr-pastille {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 1.8rem;
+  padding: 0 0.4rem 0 0.7rem;
+  border: 1px solid var(--dw-color-legendary);
+  border-radius: var(--dw-radius-pill);
+  background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-legendary) 28%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-forge-hot);
+    outline-offset: 2px;
+  }
+}
+
+// « Effacer les filtres » : un bouton rond, son nom en infobulle.
+.dw-lr-effacer {
+  --mat-icon-button-state-layer-size: 2rem;
+  --mat-icon-button-icon-size: 1.2rem;
+
+  flex: none;
+  padding: 0.4rem;
+  color: var(--dw-forge-bone);
+}
+
+.dw-lr-barre-fin {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
 }
 
 .dw-lr-facette {
@@ -61,7 +264,7 @@
   align-items: center;
   gap: 0.6rem;
   width: 100%;
-  min-height: 2.1rem;
+  min-height: 1.95rem;
   padding: 0 0.6rem;
   border: 0;
   border-radius: var(--dw-radius-toggle);
@@ -104,7 +307,7 @@
   background: var(--saga);
 }
 
-// Une liste de filtre dans la barre de recherche ; « Tous les … » (aucun choix) a la couleur d'une valeur, comme « Toutes les régions ».
+// Une liste de filtre (dans la colonne, ou le tri au-dessus des tuiles) ; « Tous les … » (aucun choix) a la couleur d'une valeur, comme « Toutes les régions ».
 .dw-lr-select-barre {
   --mat-select-placeholder-text-color: var(--dw-forge-bone);
   width: 13rem;
@@ -113,11 +316,6 @@
 // Le panneau d'une de ces listes (dans le calque des overlays) : aussi large que sa plus longue option, chacune sur une ligne.
 .dw-lr-select-panel .mat-mdc-option .mdc-list-item__primary-text {
   white-space: nowrap;
-}
-
-// Tout à droite de la barre de recherche, quand un filtre est posé.
-.dw-lr-effacer {
-  margin-left: auto;
 }
 
 .dw-lr-option {
@@ -168,13 +366,13 @@
   }
 }
 
-// ── Les tuiles : une par fiche (`bol-tuile`), autant par rangée que la carte en tient ─────────────────────────────────────────────────
+// ── Les tuiles : une par fiche (`bol-tuile`), autant par rangée que la page en tient ─────────────────────────────────────────────────
 .dw-lr-grille {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
   gap: 0.9rem 0.75rem;
   margin: 0;
-  padding: 0.9rem 1rem 1rem;
+  padding: 0;
   list-style: none;
 
   > li {

@@ -34,7 +34,7 @@ describe('HeroLibraryPageComponent', () => {
     const tuile = (nom: string) => [...page.querySelectorAll('.dw-lr-grille > li')].find((li) => texte(li.querySelector('.dw-tuile__nom')) === nom)!;
     /** Ouvre la liste de ce nom, dans la barre de recherche, et y choisit l'option qui commence par ce libellé. */
     const choisir = async (liste: string, libelle: string) => {
-      page.querySelector<HTMLElement>(`dw-library-toolbar mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
+      page.querySelector<HTMLElement>(`mat-select[aria-label="${liste}"] .mat-mdc-select-trigger`)!.click();
       await fixture.whenStable();
       [...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => o.textContent?.trim().startsWith(libelle))!.click();
       await fixture.whenStable();
@@ -64,7 +64,7 @@ describe('HeroLibraryPageComponent', () => {
     expect(tuile('Axel').querySelector('.dw-tuile-marque')).toBeNull();
     expect(texte(tuile('Balaram').querySelector('.dw-tuile-marque'))).toBe('En cours');
     expect(tuile('Balaram').querySelector('.dw-tuile__pied .dw-tuile__ecusson')).not.toBeNull();
-    expect(texte(page.querySelector('dw-library-toolbar dw-tag'))).toBe('3 héros');
+    expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('3 héros');
   });
 
   it('seul un héros en cours de création a l’édition avancée dans son menu', async () => {
