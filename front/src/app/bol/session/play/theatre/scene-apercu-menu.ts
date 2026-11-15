@@ -27,7 +27,7 @@ import {pistesAffichees} from './theatre.util';
           [total]="store.acts().length"
           [suites]="suites(acte.scene)"
         />
-        <button mat-menu-item type="button" (click)="load(acte.scene)">
+        <button mat-menu-item type="button" class="thr-apercu-charger" (click)="load(acte.scene)">
           <mat-icon>theater_comedy</mat-icon> Charger la scène
         </button>
       </ng-template>

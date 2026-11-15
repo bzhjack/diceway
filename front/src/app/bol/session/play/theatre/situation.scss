@@ -274,7 +274,8 @@
 }
 
 // ── Le détail de la vie d'un groupe ──────────────────────────────────────────────────────────────
-// Un popover sous son cœur : chaque exemplaire, son numéro, sa vitalité sur son maximum ; une ligne ouvre sa carte.
+// Un popover sous son cœur : chaque exemplaire, son numéro au-dessus d'une case qui porte sa vitalité dans un cœur ; la case ouvre sa
+// carte.
 .sit-pop {
   display: flex;
   flex-direction: column;
@@ -307,8 +308,8 @@
 
 .sit-pop-liste {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.3rem;
+  grid-template-columns: repeat(auto-fill, minmax(2.9rem, 1fr));
+  gap: 0.45rem 0.35rem;
   max-height: 14rem;
   margin: 0;
   padding: 0;
@@ -316,12 +317,24 @@
   list-style: none;
 }
 
+// Un exemplaire : son numéro, puis sa case.
+.sit-pop-case {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.sit-pop-case--tombe {
+  opacity: 0.6;
+}
+
 .sit-pop-ligne {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.25rem;
   width: 100%;
-  padding: 0.2rem 0.3rem;
+  padding: 0.3rem 0;
   border: 1px solid var(--dw-border);
   border-radius: 7px;
   background: color-mix(in srgb, var(--dw-forge-recess) 60%, transparent);
@@ -340,18 +353,9 @@
   }
 }
 
-.sit-pop-ligne--tombe {
-  opacity: 0.6;
-}
-
 .sit-pop-numero {
-  min-width: 1.2rem;
+  font-size: 0.7rem;
   font-weight: 800;
-  color: var(--dw-forge-caption);
-}
-
-.sit-pop-max {
-  font-size: 0.66rem;
   color: var(--dw-forge-caption);
 }
 

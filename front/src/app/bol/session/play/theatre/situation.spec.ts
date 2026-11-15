@@ -108,8 +108,12 @@ describe('SituationComponent', () => {
     expect(cartes[0].querySelector('.dw-tuile__vies b')).toBeNull();
     bouton('Vitalité des 2 exemplaires de Garde').click();
     await stable();
+    const cases = [...document.querySelectorAll('.sit-pop-case')];
+    expect(cases.map((c) => [texte(c.querySelector('.sit-pop-numero')), texte(c.querySelector('.sit-pop-ligne'))])).toEqual([
+      ['#1', '6'],
+      ['#2', '4'],
+    ]);
     const lignes = [...document.querySelectorAll<HTMLButtonElement>('.sit-pop-ligne')];
-    expect(lignes.map((l) => l.textContent?.replace(/\s+/g, ''))).toEqual(['#16/6', '#24/6']);
     expect(texte(document.querySelector('.sit-pop-total'))).toBe('10/12 PV');
     expect(texte(cartes[0].querySelector('.sit-attitude'))).toBe('');
     expect(bulle(cartes[0].querySelector('.sit-attitude')!)).toBe('Méfiants');

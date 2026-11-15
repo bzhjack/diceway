@@ -153,19 +153,17 @@
             <p class="sit-pop-titre">{{ c.nom }}<span class="sit-pop-total">{{ c.vitaliteTotale }} PV</span></p>
             <ul class="sit-pop-liste">
               @for (e of c.exemplaires; track e.card.key) {
-                <li>
+                <li class="sit-pop-case" [class.sit-pop-case--tombe]="e.tombe">
+                  <span class="sit-pop-numero" aria-hidden="true">{{ e.numero }}</span>
                   <button
                     type="button"
                     class="sit-pop-ligne"
-                    [class.sit-pop-ligne--tombe]="e.tombe"
                     [attr.aria-label]="'Ouvrir la carte de ' + e.card.nom + ' (vitalité ' + e.vitalite + ')'"
                     (click)="ouvrirExemplaire(e.card)"
                   >
-                    <span class="sit-pop-numero">{{ e.numero }}</span>
                     <span class="dw-tuile__coeur" [class.dw-tuile__coeur--bas]="e.low" [class.dw-tuile__coeur--tombe]="e.tombe">
                       <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
                     </span>
-                    <span class="sit-pop-max">/ {{ e.card.vitaliteMax ?? '—' }}</span>
                   </button>
                 </li>
               }
