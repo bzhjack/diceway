@@ -459,12 +459,54 @@ final class BolScenarioImportPlan
                 'danger'    => $this->int($scene, 'danger', $path, 1, 4, 0) ?: null,
                 'lecture'   => $this->text($scene, 'lecture', "$path.lecture", 5000),
                 'jeu'       => $this->text($scene, 'jeu', "$path.jeu", 10000),
+                'jets'      => $this->jets($scene, $path),
                 'notes'     => $this->text($scene, 'notes', "$path.notes", 10000),
                 'image'     => $image,
             ],
             'pistes'       => $pistes,
             'distribution' => $distribution,
         ];
+    }
+
+    /**
+     * Les jets d'une scène, vérifiés comme dans « Préparer la scène » (attributs et difficultés de `BolSceneJets`, mêmes limites), puis
+     * nettoyés ; null sans jet.
+     *
+     * @param array<string, mixed> $scene
+     * @return array<int, array<string, mixed>>|null
+     */
+    private function jets(array $scene, string $path): ?array
+    {
+        $jets = $this->list($scene, 'jets', $path);
+        if (count($jets) > BolSceneJets::JETS_MAX) {
+            $this->error("$path.jets", BolSceneJets::JETS_MAX . ' jets au plus');
+        }
+        foreach ($jets as $i => $jet) {
+            $at = "$path.jets[$i]";
+            if (!is_array($jet)) {
+                $this->error($at, 'doit être un objet { titre, attributs, difficulte, enjeu, echec… }');
+                continue;
+            }
+            $this->text($jet, 'titre', "$at.titre", BolSceneJets::TITRE_MAX, true);
+            $attributs = $this->list($jet, 'attributs', $at);
+            if (count($attributs) > BolSceneJets::ATTRIBUTS_MAX) {
+                $this->error("$at.attributs", 'deux attributs au plus');
+            }
+            foreach ($attributs as $k => $attribut) {
+                if (!is_string($attribut) || !in_array($attribut, BolSceneJets::ATTRIBUTS, true)) {
+                    $this->error("$at.attributs[$k]", 'attribut inconnu : ' . (is_scalar($attribut) ? $attribut : gettype($attribut)) . ' ; vigueur, agilite, esprit ou aura');
+                }
+            }
+            $difficulte = $jet['difficulte'] ?? null;
+            if ($difficulte !== null && (!is_string($difficulte) || !array_key_exists($difficulte, BolSceneJets::DIFFICULTES))) {
+                $this->error("$at.difficulte", 'difficulté inconnue : ' . (is_scalar($difficulte) ? $difficulte : gettype($difficulte)) . ' ; ' . implode(', ', array_keys(BolSceneJets::DIFFICULTES)));
+            }
+            foreach (BolSceneJets::TEXTES as $cle) {
+                $this->text($jet, $cle, "$at.$cle", BolSceneJets::TEXTE_MAX);
+            }
+        }
+
+        return BolSceneJets::nettoyer($jets);
     }
 
     private function resolve(string $list, string $name, string $path): int|string|null

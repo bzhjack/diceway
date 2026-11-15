@@ -73,7 +73,7 @@ class BolSceneService
     }
 
     /**
-     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, règles du MJ,
+     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, mise en scène, jets,
      * pistes, illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
      * scène au dernier rang du scénario d'arrivée. Une piste ne garde son lien que vers une autre scène
      * de ce scénario.
@@ -103,6 +103,9 @@ class BolSceneService
                 ->map(fn ($id) => (string) $id)
                 ->all();
             $changes['pistes'] = BolScenePreparation::pistes($data['pistes'], $siblingIds);
+        }
+        if (array_key_exists('jets', $data)) {
+            $changes['jets'] = BolSceneJets::nettoyer($data['jets']);
         }
         if (array_key_exists('distribution', $data)) {
             $changes['distribution'] = BolSceneDistribution::fromSaisie($data['distribution'], $this->fichesAccessibles($userId, $data['distribution']));

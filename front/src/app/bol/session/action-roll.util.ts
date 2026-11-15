@@ -35,6 +35,11 @@ export const ACTION_DIFFICULTIES: readonly ActionDifficulty[] = [
 
 export const DEFAULT_ACTION_DIFFICULTY: ActionDifficulty = ACTION_DIFFICULTIES[2];
 
+/** Parmi ces attributs, celui où le héros vaut le plus (le premier à égalité) ; `null` sans attribut. */
+export function meilleurAttribut(attributs: readonly ActionAttribute[], valeurs: Readonly<Record<ActionAttribute, number>>): ActionAttribute | null {
+  return attributs.reduce<ActionAttribute | null>((meilleur, attribut) => (meilleur === null || valeurs[attribut] > valeurs[meilleur] ? attribut : meilleur), null);
+}
+
 /** Résultat suggéré d'un jet d'action : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). Le double 6 est un
  * succès héroïque, sauf si l'action ne pouvait réussir qu'avec lui : elle réussit alors normalement (livre p. 56). */
 export function suggestedActionResult(

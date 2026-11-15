@@ -18,6 +18,7 @@ function scene(region_id: number | null, lieu: string | null): BolSceneModel {
     danger: null,
     lecture: null,
     jeu: null,
+    jets: null,
     pistes: null,
     image: null,
   };

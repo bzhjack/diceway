@@ -139,7 +139,16 @@ Les scènes sont dans l'ordre de la frise :
   "meteo": "clair",                                // clair | couvert | pluie | brume | vent | orage | cendres
   "danger": 2,                                     // 1 à 4
   "lecture": "…",                                  // à lire aux joueurs, 5 000 au plus
-  "jeu": "…",                                      // En jeu : jets, difficultés, tables, 10 000 au plus
+  "jeu": "…",                                      // Mise en scène : consignes au MJ, lieux, tables ; 10 000 au plus
+  "jets": [                                        // facultatif : les jets de la scène, hors combat
+    {
+      "titre": "Coquillage",                       // obligatoire, 120 au plus
+      "attributs": ["vigueur"],                    // 0 à 2 parmi vigueur | agilite | esprit | aura ; [] pour un effet sans jet
+      "difficulte": "ardue",                       // tres-facile | facile | moyenne | ardue | difficile | tres-difficile | impossible | heroique
+      "enjeu": "dégager sa jambe",                 // facultatifs, 300 au plus chacun : enjeu, echec, reussite, carriere, quand
+      "echec": "le pied reste pris"
+    }
+  ],
   "notes": "…",                                    // secret du MJ, 10 000 au plus
   "image": "/assets/…",                            // https://… ou /assets/…
   "pistes": [{ "texte": "Entrer dans le sanctuaire", "vers": "sanctuaire" }],
@@ -150,6 +159,17 @@ Les scènes sont dans l'ordre de la frise :
 }
 ```
 
+- **Jets** (« Jets » au carnet de la table, d'où le MJ les lance pour un héros, le panneau de jet réglé sur l'attribut et la difficulté) :
+  - 20 au plus par scène ; `titre` obligatoire ; `enjeu` (ce qu'on tente), `echec`, `reussite`, `carriere` (celle qui aide, en texte
+    libre), `quand` (le moment ou la condition) facultatifs, 300 caractères chacun ;
+  - `attributs` : Vigueur, Agilité, Esprit ou Aura, deux au plus (« au choix » : le panneau prend le meilleur du héros), aucun pour un
+    effet automatique (« Sans jet »). Jamais Mêlée, Tir ni Défense : les combats se mènent par l'écran de combat, et les chiffres d'un
+    adversaire sont dans sa fiche. Un jet de « réaction » hors combat est un jet d'Esprit ;
+  - `difficulte` : l'échelle du livre, au féminin (`ardue`, pas « ardu ») ; absente, `moyenne` ;
+  - deux jets enchaînés (repérer, puis remonter) s'écrivent en deux jets ;
+  - un attribut ou une difficulté inconnus refusent l'import, avec le chemin (`scenes[0].jets[1].difficulte`) ; un réimport remplace
+    les jets de la scène, une scène sans `jets` n'en a plus ;
+  - ce qui reste dans `jeu` : les consignes, les lieux, les tables aléatoires (« piocher deux ou trois effets »).
 - **Pistes :**
   - 8 au plus, 200 caractères chacune ;
   - `vers` est facultatif ; s'il est présent, c'est la clé d'une scène **du même fichier** ;

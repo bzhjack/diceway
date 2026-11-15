@@ -1,12 +1,12 @@
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {BolSceneChanges, BolSceneDistributionSaisie, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
+import {BolSceneChanges, BolSceneDistributionSaisie, BolSceneJet, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../models/combat-selection.model';
 import {combatantRankKey} from '../../session/combat-statblock.util';
 import {KIND_LABEL} from '../../session/play/reserve/reserve.util';
 import {LibraryRang} from '../../shared/models/library-rows.model';
 import {EMPTY_AVATAR} from '../../../shared/avatar-fallback/avatar.util';
-import {SceneFormValue, ScenePersonnageVue} from '../models/scene-form.model';
+import {JetSaisie, SceneFormValue, ScenePersonnageVue} from '../models/scene-form.model';
 
 /** Au plus, les exemplaires d'une créature ou d'un démon (`BolSceneDistribution::QTY_MAX`). */
 export const QTY_MAX = 30;
@@ -22,7 +22,7 @@ function texte(raw: string): string | null {
 /** La valeur du formulaire pour une scène : les champs absents deviennent des textes vides, un danger absent devient 0. */
 export function sceneFormValue(scene: BolSceneModel | null): SceneFormValue {
   if (!scene) {
-    return {titre: '', region_id: null, lieu: '', moment: null, meteo: null, danger: 0, lecture: '', jeu: '', notes: '', pistes: []};
+    return {titre: '', region_id: null, lieu: '', moment: null, meteo: null, danger: 0, lecture: '', jeu: '', notes: '', jets: [], pistes: []};
   }
   return {
     titre: scene.titre,
@@ -34,12 +34,44 @@ export function sceneFormValue(scene: BolSceneModel | null): SceneFormValue {
     lecture: scene.lecture ?? '',
     jeu: scene.jeu ?? '',
     notes: scene.notes ?? '',
+    jets: (scene.jets ?? []).map(jetSaisi),
     pistes: (scene.pistes ?? []).map((piste) => ({...piste})),
   };
 }
 
-/** Les changements à enregistrer pour une valeur du formulaire : textes rognés, vides à `null`, danger 0 à `null`, pistes sans texte
- * retirées (aucune piste : `null`). L'illustration n'y est pas : elle ne change pas. */
+/** Un jet enregistré, à saisir : ses textes absents deviennent vides. */
+function jetSaisi(jet: BolSceneJet): JetSaisie {
+  return {
+    titre: jet.titre,
+    attributs: [...jet.attributs],
+    difficulte: jet.difficulte,
+    enjeu: jet.enjeu ?? '',
+    echec: jet.echec ?? '',
+    reussite: jet.reussite ?? '',
+    carriere: jet.carriere ?? '',
+    quand: jet.quand ?? '',
+  };
+}
+
+/** Les jets à enregistrer : textes rognés, vides à `null`, jets sans titre retirés ; aucun jet : `null`. */
+function jetsAEnregistrer(jets: readonly JetSaisie[]): BolSceneJet[] | null {
+  const gardes = jets
+    .map((jet) => ({
+      titre: jet.titre.trim(),
+      attributs: [...jet.attributs],
+      difficulte: jet.difficulte,
+      enjeu: texte(jet.enjeu),
+      echec: texte(jet.echec),
+      reussite: texte(jet.reussite),
+      carriere: texte(jet.carriere),
+      quand: texte(jet.quand),
+    }))
+    .filter((jet) => jet.titre !== '');
+  return gardes.length ? gardes : null;
+}
+
+/** Les changements à enregistrer pour une valeur du formulaire : textes rognés, vides à `null`, danger 0 à `null`, jets sans titre et
+ * pistes sans texte retirés (aucun : `null`). L'illustration n'y est pas : elle ne change pas. */
 export function sceneChanges(value: SceneFormValue): BolSceneChanges {
   const pistes = value.pistes
     .map((piste) => ({texte: piste.texte.trim(), scene_id: piste.scene_id}))
@@ -54,6 +86,7 @@ export function sceneChanges(value: SceneFormValue): BolSceneChanges {
     lecture: texte(value.lecture),
     jeu: texte(value.jeu),
     notes: texte(value.notes),
+    jets: jetsAEnregistrer(value.jets),
     pistes: pistes.length ? pistes : null,
   };
 }

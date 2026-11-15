@@ -546,6 +546,124 @@
   align-self: flex-start;
 }
 
+// ── Les jets : un cadre par jet, dans l'ordre où le MJ les rencontre ─────────────────────────────
+.sfp-jets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.35rem 0 0;
+  list-style: none;
+}
+
+.sfp-jet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.6rem 0.55rem 0.5rem 0.7rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 55%, transparent);
+}
+
+// Le titre, la difficulté, puis monter, descendre, retirer.
+.sfp-jet-tete {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10.5rem repeat(3, auto);
+  gap: 0.35rem;
+  align-items: center;
+
+  .mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 2rem;
+    --mat-icon-button-icon-size: 1.1rem;
+    padding: 0;
+  }
+}
+
+// Les attributs : des bascules, deux au plus ; aucun, c'est un effet sans jet.
+.sfp-jet-attributs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sfp-jet-attribut {
+  height: 1.75rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: var(--dw-radius-toggle);
+  background: transparent;
+  color: var(--dw-forge-bone);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-forge-hot);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+    color: var(--dw-color-text-bright);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
+}
+
+.sfp-jet-sans {
+  margin-left: 0.3rem;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--dw-forge-caption);
+}
+
+// L'enjeu et l'échec côte à côte ; dans « Plus », la réussite et la carrière, puis le moment sur toute la largeur.
+.sfp-jet-textes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.sfp-jet-quand {
+  grid-column: 1 / -1;
+}
+
+.sfp-jet-plus {
+  > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dw-forge-caption);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--dw-forge-bone);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--dw-color-legendary);
+      outline-offset: 2px;
+    }
+  }
+
+  &[open] > summary {
+    margin-bottom: 0.45rem;
+  }
+}
+
 // ── La distribution ──────────────────────────────────────────────────────────────────────────────
 .sfp-distribution {
   display: flex;

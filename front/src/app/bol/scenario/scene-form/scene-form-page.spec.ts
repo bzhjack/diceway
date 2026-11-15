@@ -27,6 +27,7 @@ const SCENE: BolSceneModel = {
   danger: 2,
   lecture: 'Quinze jours de galère.',
   jeu: null,
+  jets: null,
   pistes: null,
   image: '/assets/bol/halakh.webp',
 };
@@ -140,7 +141,7 @@ describe('SceneFormPageComponent', () => {
     await choisir('.sfp-pastille--jour', 'Nuit');
     await choisir('.sfp-pastille--danger-2', 'Danger 4 sur 4');
     expect(page.querySelector('.sfp-pastille--nuit')).not.toBeNull();
-    [...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b)?.startsWith('En jeu'))!.click();
+    [...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b)?.startsWith('Mise en scène'))!.click();
     await fixture.whenStable();
     const jeu = page.querySelector<HTMLTextAreaElement>('#sfp-jeu')!;
     jeu.value = 'Jet de Vigueur, difficulté -1.';
@@ -151,6 +152,82 @@ describe('SceneFormPageComponent', () => {
     expect(texte(page.querySelector('.sfp-texte-compte'))).toBe('30 / 10000');
     await enregistrer();
     expect((sceneService.update.mock.calls[0] as unknown[])[1]).toMatchObject({moment: 'nuit', danger: 4, jeu: 'Jet de Vigueur, difficulté -1.'});
+  });
+
+  it('les onglets suivent le carnet de la table ; « En jeu » devient « Mise en scène »', async () => {
+    const {page, texte} = await rendre();
+
+    expect([...page.querySelectorAll('.sfp-onglet')].map((b) => texte(b))).toEqual(['À lire aux joueurs (écrit)', 'Jets', 'Mise en scène', 'lock Secret du MJ', 'Pistes']);
+  });
+
+  it('« Jet » ajoute une ligne : un titre, deux attributs au plus, une difficulté, l’enjeu et l’échec ; tout s’enregistre', async () => {
+    const {page, texte, fixture, sceneService, enregistrer} = await rendre();
+    const cliquer = async (el: HTMLElement) => {
+      el.click();
+      await fixture.whenStable();
+    };
+    const saisir = async (champ: HTMLInputElement, valeur: string) => {
+      champ.value = valeur;
+      champ.dispatchEvent(new Event('input'));
+      await fixture.whenStable();
+    };
+    const attribut = (label: string) => [...page.querySelectorAll<HTMLButtonElement>('.sfp-jet-attribut')].find((b) => texte(b) === label)!;
+    const champ = (label: string) =>
+      [...page.querySelectorAll<HTMLElement>('.sfp-jet mat-form-field')].find((f) => texte(f.querySelector('mat-label'))?.startsWith(label))!.querySelector<HTMLInputElement>('input')!;
+
+    await cliquer([...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b) === 'Jets')!);
+    expect(page.querySelector('.sfp-jet')).toBeNull();
+    await cliquer([...page.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b) === 'add Jet')!);
+
+    expect(page.querySelectorAll('.sfp-jet')).toHaveLength(1);
+    expect(texte(page.querySelector('.sfp-jet-sans'))).toBe('Sans jet : un effet automatique');
+    expect(texte([...page.querySelectorAll('.sfp-onglet')].find((b) => texte(b)?.startsWith('Jets'))!)).toBe('Jets 1');
+    await saisir(champ('Jet 1'), ' Coquillage ');
+    await cliquer(attribut('Esprit'));
+    await cliquer(attribut('Vigueur'));
+    expect(attribut('Esprit').getAttribute('aria-pressed')).toBe('true');
+    expect(attribut('Agilité').disabled).toBe(true);
+    await cliquer(attribut('Esprit'));
+    expect(attribut('Agilité').disabled).toBe(false);
+    await saisir(champ('Enjeu'), 'dégager sa jambe');
+    await saisir(champ('Échec'), 'le pied reste pris');
+    await cliquer(page.querySelector<HTMLElement>('.sfp-jet mat-select')!);
+    await cliquer([...document.querySelectorAll<HTMLElement>('mat-option')].find((o) => texte(o) === 'Ardue −1')!);
+    await enregistrer();
+
+    expect((sceneService.update.mock.calls[0] as unknown[])[1]).toMatchObject({
+      jets: [{titre: 'Coquillage', attributs: ['vigueur'], difficulte: 'ardue', enjeu: 'dégager sa jambe', echec: 'le pied reste pris', reussite: null, carriere: null, quand: null}],
+    });
+  });
+
+  it('un jet sans titre empêche d’enregistrer ; on le monte, on le descend, on le retire', async () => {
+    const {page, texte, fixture} = await rendre();
+    const cliquer = async (el: HTMLElement) => {
+      el.click();
+      await fixture.whenStable();
+    };
+    const bouton = (label: string) => page.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!;
+    const titres = () => [...page.querySelectorAll<HTMLInputElement>('.sfp-jet-titre input')].map((i) => i.value);
+    const enregistrer = () => [...page.querySelectorAll<HTMLButtonElement>('button[type="submit"]')][0];
+
+    await cliquer([...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b) === 'Jets')!);
+    const ajouter = [...page.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b) === 'add Jet')!;
+    await cliquer(ajouter);
+    expect(enregistrer().disabled).toBe(true);
+    await cliquer(ajouter);
+    const [premier, second] = [...page.querySelectorAll<HTMLInputElement>('.sfp-jet-titre input')];
+    for (const [champ, valeur] of [[premier, 'Tentacules'], [second, 'Algues']] as const) {
+      champ.value = valeur;
+      champ.dispatchEvent(new Event('input'));
+    }
+    await fixture.whenStable();
+    expect(enregistrer().disabled).toBe(false);
+
+    expect(bouton('Monter le jet 1').disabled).toBe(true);
+    await cliquer(bouton('Descendre le jet 1'));
+    expect(titres()).toEqual(['Algues', 'Tentacules']);
+    await cliquer(bouton('Retirer le jet 1'));
+    expect(titres()).toEqual(['Tentacules']);
   });
 
   it('un clic sur l’attitude choisie l’efface', async () => {

@@ -34,6 +34,7 @@ function scene(id: string, scenarioId: string, ordre: number, qtys: number[] = [
     danger: id === 's0' ? 1 : null,
     lecture: null,
     jeu: null,
+    jets: null,
     pistes: null,
     image: null,
   } as BolSceneModel;

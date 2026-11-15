@@ -102,27 +102,23 @@
       </section>
 
       <div class="sfp-corps">
-        <!-- Le texte, comme une page du livre de scénario ; les pistes dans leur onglet. -->
+        <!-- Le texte, comme une page du livre de scénario ; les jets et les pistes dans leur onglet, dans l'ordre du carnet de la table. -->
         <section class="sfp-texte-carte" aria-label="Le texte">
           <div class="sfp-onglets" role="group" aria-label="Ce que montre la carte">
-            @for (t of textes; track t.cle) {
-              <button type="button" class="sfp-onglet" [attr.aria-pressed]="onglet() === t.cle" (click)="onglet.set(t.cle)">
-                @if (t.cle === 'notes') {
+            @for (o of onglets; track o.cle) {
+              <button type="button" class="sfp-onglet" [attr.aria-pressed]="onglet() === o.cle" (click)="onglet.set(o.cle)">
+                @if (o.cle === 'notes') {
                   <mat-icon aria-hidden="true">lock</mat-icon>
                 }
-                {{ t.label }}
-                @if (rempli(t.cle)) {
+                {{ o.label }}
+                @if (compte(o.cle); as n) {
+                  <span class="sfp-onglet-compte">{{ n }}</span>
+                } @else if (rempli(o.cle)) {
                   <span class="sfp-rempli" aria-hidden="true"></span>
                   <span class="sr-only">(écrit)</span>
                 }
               </button>
             }
-            <button type="button" class="sfp-onglet" [attr.aria-pressed]="onglet() === 'pistes'" (click)="onglet.set('pistes')">
-              Pistes
-              @if (pisteCount()) {
-                <span class="sfp-onglet-compte">{{ pisteCount() }}</span>
-              }
-            </button>
           </div>
 
           @switch (onglet()) {
@@ -130,7 +126,98 @@
               <textarea id="sfp-lecture" class="sfp-texte" aria-label="À lire aux joueurs" [placeholder]="texte().aide" [formField]="sceneForm.lecture"></textarea>
             }
             @case ('jeu') {
-              <textarea id="sfp-jeu" class="sfp-texte" aria-label="En jeu" [placeholder]="texte().aide" [formField]="sceneForm.jeu"></textarea>
+              <textarea id="sfp-jeu" class="sfp-texte" aria-label="Mise en scène" [placeholder]="texte().aide" [formField]="sceneForm.jeu"></textarea>
+            }
+            @case ('jets') {
+              <div class="sfp-pistes-volet">
+                <p class="sfp-pistes-aide">
+                  Un jet : l'obstacle, l'attribut et la difficulté, ce qu'on tente et ce qui arrive si ça rate. Sans attribut, c'est un effet sans
+                  jet. À la table, « Lancer pour » ouvre le jet d'un héros déjà réglé.
+                </p>
+                @if (jetCount()) {
+                  <ol class="sfp-jets">
+                    @for (jet of sceneForm.jets; track jet; let index = $index; let premier = $first; let dernier = $last) {
+                      <li class="sfp-jet">
+                        <div class="sfp-jet-tete">
+                          <mat-form-field subscriptSizing="dynamic" class="sfp-jet-titre">
+                            <mat-label>Jet {{ index + 1 }}</mat-label>
+                            <input matInput [formField]="jet.titre" autocomplete="off" placeholder="Coquillage, porte piégée…" />
+                          </mat-form-field>
+                          <mat-form-field subscriptSizing="dynamic" class="sfp-jet-difficulte">
+                            <mat-label>Difficulté<span class="sr-only"> du jet {{ index + 1 }}</span></mat-label>
+                            <mat-select [formField]="jet.difficulte">
+                              @for (d of jetDifficultes; track d.cle) {
+                                <mat-option [value]="d.cle">{{ d.label }}</mat-option>
+                              }
+                            </mat-select>
+                          </mat-form-field>
+                          <button mat-icon-button type="button" [attr.aria-label]="'Monter le jet ' + (index + 1)" [disabled]="premier" (click)="deplacerJet(index, -1)">
+                            <mat-icon>arrow_upward</mat-icon>
+                          </button>
+                          <button mat-icon-button type="button" [attr.aria-label]="'Descendre le jet ' + (index + 1)" [disabled]="dernier" (click)="deplacerJet(index, 1)">
+                            <mat-icon>arrow_downward</mat-icon>
+                          </button>
+                          <button mat-icon-button type="button" [attr.aria-label]="'Retirer le jet ' + (index + 1)" (click)="removeJet(index)">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </div>
+                        <div class="sfp-jet-attributs" role="group" [attr.aria-label]="'Attributs du jet ' + (index + 1) + ', deux au plus'">
+                          @for (a of jetAttributs; track a.cle) {
+                            <button
+                              type="button"
+                              class="sfp-jet-attribut"
+                              [attr.aria-pressed]="demande(jet().value(), a.cle)"
+                              [disabled]="!demande(jet().value(), a.cle) && jet().value().attributs.length >= jetAttributsMax"
+                              (click)="basculerAttribut(index, a.cle)"
+                            >
+                              {{ a.label }}
+                            </button>
+                          }
+                          @if (!jet().value().attributs.length) {
+                            <span class="sfp-jet-sans">Sans jet : un effet automatique</span>
+                          }
+                        </div>
+                        <div class="sfp-jet-textes">
+                          <mat-form-field subscriptSizing="dynamic">
+                            <mat-label>Enjeu</mat-label>
+                            <input matInput [formField]="jet.enjeu" autocomplete="off" placeholder="Ce qu'on tente" />
+                          </mat-form-field>
+                          <mat-form-field subscriptSizing="dynamic">
+                            <mat-label>Échec</mat-label>
+                            <input matInput [formField]="jet.echec" autocomplete="off" placeholder="Ce qui arrive si ça rate" />
+                          </mat-form-field>
+                        </div>
+                        <details class="sfp-jet-plus">
+                          <summary>
+                            Réussite, carrière, moment
+                            @if (jet().value().reussite || jet().value().carriere || jet().value().quand) {
+                              <span class="sfp-rempli" aria-hidden="true"></span>
+                              <span class="sr-only">(écrit)</span>
+                            }
+                          </summary>
+                          <div class="sfp-jet-textes">
+                            <mat-form-field subscriptSizing="dynamic">
+                              <mat-label>Réussite</mat-label>
+                              <input matInput [formField]="jet.reussite" autocomplete="off" placeholder="Quand ce n'est pas évident" />
+                            </mat-form-field>
+                            <mat-form-field subscriptSizing="dynamic">
+                              <mat-label>Carrière</mat-label>
+                              <input matInput [formField]="jet.carriere" autocomplete="off" placeholder="Celle qui aide : Marin…" />
+                            </mat-form-field>
+                            <mat-form-field subscriptSizing="dynamic" class="sfp-jet-quand">
+                              <mat-label>Quand</mat-label>
+                              <input matInput [formField]="jet.quand" autocomplete="off" placeholder="Le moment ou la condition" />
+                            </mat-form-field>
+                          </div>
+                        </details>
+                      </li>
+                    }
+                  </ol>
+                }
+                <button mat-stroked-button type="button" class="sfp-ajouter-piste" [disabled]="jetCount() >= jetsMax" (click)="addJet()">
+                  <mat-icon>add</mat-icon> Jet
+                </button>
+              </div>
             }
             @case ('notes') {
               <textarea id="sfp-notes" class="sfp-texte sfp-texte--secret" aria-label="Secret du MJ" [placeholder]="texte().aide" [formField]="sceneForm.notes"></textarea>
@@ -169,7 +256,7 @@
             }
           }
 
-          @if (onglet() !== 'pistes') {
+          @if (surUnTexte()) {
             <div class="sfp-texte-pied">
               @for (piste of pistesEcrites().slice(0, 1); track $index) {
                 <button type="button" class="sfp-chemin" (click)="onglet.set('pistes')">

@@ -182,6 +182,73 @@ class BolScenarioImportPlanTest extends TestCase
         $this->assertContains('personnages.hippocampe.degats : obligatoire', $errors);
     }
 
+    public function test_une_scene_importe_ses_jets(): void
+    {
+        $data = $this->data();
+        $data['scenes'][0]['jets'] = [
+            ['titre' => ' Coquillage ', 'attributs' => ['vigueur'], 'difficulte' => 'ardue', 'enjeu' => 'dégager sa jambe', 'echec' => 'le pied reste pris'],
+            ['titre' => 'Tentacules', 'attributs' => ['vigueur', 'agilite'], 'echec' => 'emprisonné'],
+            ['titre' => 'Poissons volants', 'attributs' => [], 'echec' => 'd3 dégâts'],
+        ];
+
+        $jets = BolScenarioImportPlan::fromArray($data, $this->catalog())->scenes[0]['fields']['jets'];
+
+        $this->assertSame(
+            ['titre' => 'Coquillage', 'attributs' => ['vigueur'], 'difficulte' => 'ardue', 'enjeu' => 'dégager sa jambe', 'echec' => 'le pied reste pris', 'reussite' => null, 'carriere' => null, 'quand' => null],
+            $jets[0],
+        );
+        $this->assertSame(['vigueur', 'agilite'], $jets[1]['attributs']);
+        $this->assertSame('moyenne', $jets[1]['difficulte']);
+        $this->assertSame([], $jets[2]['attributs']);
+    }
+
+    public function test_une_scene_sans_jets_a_jets_null(): void
+    {
+        $plan = BolScenarioImportPlan::fromArray($this->data(), $this->catalog());
+
+        $this->assertArrayHasKey('jets', $plan->scenes[1]['fields']);
+        $this->assertNull($plan->scenes[1]['fields']['jets']);
+    }
+
+    public function test_une_difficulte_au_masculin_est_refusee(): void
+    {
+        $data = $this->data();
+        $data['scenes'][0]['jets'] = [['titre' => 'Coquillage', 'attributs' => ['vigueur'], 'difficulte' => 'ardu']];
+
+        $this->assertSame(
+            ['scenes[0].jets[0].difficulte : difficulté inconnue : ardu ; tres-facile, facile, moyenne, ardue, difficile, tres-difficile, impossible, heroique'],
+            $this->errors($data),
+        );
+    }
+
+    public function test_un_attribut_de_combat_est_refuse(): void
+    {
+        $data = $this->data();
+        $data['scenes'][0]['jets'] = [['titre' => 'Duel', 'attributs' => ['melee']]];
+
+        $this->assertSame(['scenes[0].jets[0].attributs[0] : attribut inconnu : melee ; vigueur, agilite, esprit ou aura'], $this->errors($data));
+    }
+
+    public function test_un_jet_sans_titre_trois_attributs_ou_des_textes_trop_longs_sont_refuses(): void
+    {
+        $data = $this->data();
+        $data['scenes'][0]['jets'] = [
+            ['attributs' => ['vigueur']],
+            ['titre' => 'Tout', 'attributs' => ['vigueur', 'agilite', 'esprit']],
+            ['titre' => 'Long', 'echec' => str_repeat('é', 301)],
+            'pas un jet',
+        ];
+        $data['scenes'][1]['jets'] = array_fill(0, 21, ['titre' => 'Encore']);
+
+        $errors = $this->errors($data);
+
+        $this->assertContains('scenes[0].jets[0].titre : obligatoire', $errors);
+        $this->assertContains('scenes[0].jets[1].attributs : deux attributs au plus', $errors);
+        $this->assertContains('scenes[0].jets[2].echec : 300 caractères au plus (301)', $errors);
+        $this->assertContains('scenes[0].jets[3] : doit être un objet { titre, attributs, difficulte, enjeu, echec… }', $errors);
+        $this->assertContains('scenes[1].jets : 20 jets au plus', $errors);
+    }
+
     public function test_a_custom_weapon_carries_its_combat_notes(): void
     {
         $data = $this->data();

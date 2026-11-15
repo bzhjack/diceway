@@ -3,12 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   ElementRef,
   inject,
   Injector,
   input,
   model,
   signal,
+  untracked,
   ViewEncapsulation,
   viewChild,
   WritableSignal,
@@ -20,8 +22,8 @@ import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {DwDieFaceComponent} from '../../../../shared/die-face/die-face';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
-import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollSumTerm} from '../../models/action-roll.model';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, meilleurAttribut, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, ActionRollPreset, RollSumTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {DwRollSumComponent} from '../../../../shared/roll-sum/roll-sum';
 
@@ -51,6 +53,9 @@ export class ActionRollPanelComponent {
   /** Héroïsme courant du héros, partagé avec `bol-hero-resources` : une dépense ici met à jour le
    * stepper d'à côté, et inversement. */
   readonly heroisme = model.required<number>();
+  /** Un jet de la scène lancé pour ce héros : chaque nouveau réglage pose l'attribut (son meilleur, s'il y en a deux) et la difficulté,
+   * que le MJ peut changer ensuite. */
+  readonly preset = input<ActionRollPreset | null>(null);
 
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
@@ -129,6 +134,22 @@ export class ActionRollPanelComponent {
   protected readonly equipmentModifier = computed(() =>
     this.attribute() === 'agilite' ? this.data().equipementAgilite : 0,
   );
+
+  constructor() {
+    effect(() => {
+      const preset = this.preset();
+      if (!preset) {
+        return;
+      }
+      untracked(() => {
+        const attribut = meilleurAttribut(preset.attributs, this.data());
+        if (attribut) {
+          this.attribute.set(attribut);
+        }
+        this.difficulty.set(preset.difficulty);
+      });
+    });
+  }
 
   private readonly parts = computed<ActionRollParts>(() => ({
     attribute: this.data()[this.attribute()],

@@ -39,6 +39,13 @@ export interface ActionRollData {
 /** Les quatre attributs qu'on peut choisir pour un jet d'action. */
 export type ActionAttribute = 'agilite' | 'vigueur' | 'esprit' | 'aura';
 
+/** Un réglage du panneau de jet venu d'un jet de la scène (« Lancer pour ») : les attributs qu'il demande (le héros prend son meilleur ;
+ * aucun, l'attribut ne change pas) et sa difficulté. */
+export interface ActionRollPreset {
+  readonly attributs: readonly ActionAttribute[];
+  readonly difficulty: ActionDifficulty;
+}
+
 /** Un niveau de difficulté d'un jet d'action et son modificateur. */
 export interface ActionDifficulty {
   readonly label: string;

@@ -15,16 +15,26 @@ import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/models/pending-changes-guard.model';
 import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmLeaveUnsaved} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {BolSceneDistributionSaisie, SceneMeteo, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
+import {BolSceneDistributionSaisie, SceneJetAttribut, SceneMeteo, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
 import {BolCatalogService} from '../../services/bol-catalog.service';
 import {BolScenarioService} from '../../services/bol-scenario.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {SCENE_TITLE_MAX} from '../../session/play/scene-list/scene.util';
+import {
+  JET_ATTRIBUTS,
+  JET_ATTRIBUTS_MAX,
+  JET_DIFFICULTE_PAR_DEFAUT,
+  JET_DIFFICULTES,
+  JET_TEXTE_MAX,
+  JET_TITRE_MAX,
+  JETS_MAX,
+  libelleDifficulte,
+} from '../../shared/scene-jets.util';
 import {METEOS, MOMENTS, sceneDecor} from '../../session/play/theatre/theatre.util';
 import {titreDeChapitre} from '../../session/scenario.util';
 import {openPersonnagesDialog} from './personnages-dialog/personnages-dialog';
-import {SceneOnglet, SceneTexte} from '../models/scene-form.model';
+import {JetSaisie, SceneOnglet, SceneTexte} from '../models/scene-form.model';
 import {SceneCarteComponent} from './scene-carte/scene-carte';
 import {
   ambianceEnPhrase,
@@ -48,15 +58,30 @@ const RETOUR_PAR_DEFAUT = '/library/scenarios';
 /** Les trois textes d'une scène, un onglet chacun ; leur aide se lit dans le champ vide. */
 const TEXTES: readonly {cle: SceneTexte; label: string; max: number; aide: string}[] = [
   {cle: 'lecture', label: 'À lire aux joueurs', max: LECTURE_MAX, aide: 'Lu à voix haute quand la scène commence…'},
-  {cle: 'jeu', label: 'En jeu', max: JEU_MAX, aide: "Jets, difficultés, tables d'effets : visibles pendant toute la scène…"},
+  {cle: 'jeu', label: 'Mise en scène', max: JEU_MAX, aide: "Comment jouer la scène : les consignes et les lieux, les tables d'effets ; les jets ont leur onglet…"},
   {cle: 'notes', label: 'Secret du MJ', max: NOTES_MAX, aide: 'Ce que les joueurs ne savent pas…'},
 ];
+
+/** Les onglets de la carte, dans l'ordre du carnet de la table : le texte à lire, les jets, la mise en scène, le secret, les pistes. */
+const ONGLETS: readonly {cle: SceneOnglet; label: string}[] = [
+  {cle: 'lecture', label: 'À lire aux joueurs'},
+  {cle: 'jets', label: 'Jets'},
+  {cle: 'jeu', label: 'Mise en scène'},
+  {cle: 'notes', label: 'Secret du MJ'},
+  {cle: 'pistes', label: 'Pistes'},
+];
+
+/** Un jet tout neuf : un titre à écrire, sans attribut, de difficulté Moyenne. */
+function jetVide(): JetSaisie {
+  return {titre: '', attributs: [], difficulte: JET_DIFFICULTE_PAR_DEFAUT, enjeu: '', echec: '', reussite: '', carriere: '', quand: ''};
+}
 
 /**
  * « Préparer la scène », sur sa propre page (`/create/scene/:id`, ou `/create/scene?chapitre=…` pour une nouvelle), comme une affiche :
  * en haut, l'illustration de la scène en bandeau (celle de la table, sinon son décor par défaut ; elle ne s'édite pas ici), avec par-dessus
  * son lieu et sa région, son titre, et son ambiance en pastilles (moment, météo, danger), chacun se changeant sur place ; dessous, son
- * texte (à lire aux joueurs, en jeu, secret du MJ) et ses pistes, un onglet chacun, et « La distribution » : ses personnages (PNJ,
+ * texte (à lire aux joueurs, mise en scène, secret du MJ), ses jets et ses pistes, un onglet chacun, et « La distribution » : ses
+ * personnages (PNJ,
  * créatures, démons du catalogue et du compte) en cartes portraits, leur nombre, leur camp et leur attitude au chargement se réglant d'un
  * clic sur la carte. Enregistre, puis revient d'où l'on venait (`returnUrl` : la table, la bibliothèque des scénarios).
  */
@@ -89,8 +114,12 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly moments = MOMENTS;
   protected readonly meteos = METEOS;
   protected readonly dangers = [1, 2, 3, 4];
-  protected readonly textes = TEXTES;
+  protected readonly onglets = ONGLETS;
   protected readonly pistesMax = PISTES_MAX;
+  protected readonly jetsMax = JETS_MAX;
+  protected readonly jetAttributs = JET_ATTRIBUTS;
+  protected readonly jetAttributsMax = JET_ATTRIBUTS_MAX;
+  protected readonly jetDifficultes = JET_DIFFICULTES.map((d) => ({cle: d.cle, label: libelleDifficulte(d.cle)}));
 
   private readonly returnUrl = readReturnUrl() ?? RETOUR_PAR_DEFAUT;
   /** La scène à préparer ; pour une nouvelle, celle créée au premier enregistrement (un second essai, après un échec, la reprend). */
@@ -124,6 +153,13 @@ export class SceneFormPageComponent implements HasPendingChanges {
     maxLength(path.jeu, JEU_MAX);
     maxLength(path.notes, NOTES_MAX);
     applyEach(path.pistes, (piste) => maxLength(piste.texte, 200));
+    applyEach(path.jets, (jet) => {
+      required(jet.titre);
+      maxLength(jet.titre, JET_TITRE_MAX);
+      for (const texte of [jet.enjeu, jet.echec, jet.reussite, jet.carriere, jet.quand]) {
+        maxLength(texte, JET_TEXTE_MAX);
+      }
+    });
   });
 
   /** Les personnages de la scène, dans l'ordre où ils entrent ; à part du formulaire, réglés ligne par ligne. */
@@ -155,8 +191,9 @@ export class SceneFormPageComponent implements HasPendingChanges {
   protected readonly region = computed(() => this.regions().find((r) => r.id === this.value().region_id)?.region ?? null);
 
   protected readonly valid = computed(() => this.sceneForm().valid());
-  /** L'onglet ouvert (un texte, ou les pistes), et le texte qu'il montre : son libellé, sa longueur et son maximum, son aide. */
+  /** L'onglet ouvert (un texte, les jets ou les pistes), et le texte qu'il montre : son libellé, sa longueur et son maximum, son aide. */
   protected readonly onglet = signal<SceneOnglet>('lecture');
+  protected readonly surUnTexte = computed(() => TEXTES.some((t) => t.cle === this.onglet()));
   protected readonly texte = computed(() => {
     const texte = TEXTES.find((t) => t.cle === this.onglet()) ?? TEXTES[0];
     return {...texte, longueur: this.value()[texte.cle].length};
@@ -164,6 +201,7 @@ export class SceneFormPageComponent implements HasPendingChanges {
   /** Le temps de lire à voix haute le texte « À lire aux joueurs ». */
   protected readonly dureeLecture = computed(() => dureeDeLecture(this.value().lecture));
   protected readonly pisteCount = computed(() => this.value().pistes.length);
+  protected readonly jetCount = computed(() => this.value().jets.length);
   /** Les pistes écrites, sous le texte : chacune avec la scène où elle mène. */
   protected readonly pistesEcrites = computed(() =>
     this.value()
@@ -198,8 +236,13 @@ export class SceneFormPageComponent implements HasPendingChanges {
   }
 
   /** Un texte de la scène a été écrit : son onglet le dit. */
-  protected rempli(cle: SceneTexte): boolean {
-    return this.value()[cle].trim() !== '';
+  protected rempli(cle: SceneOnglet): boolean {
+    return cle !== 'jets' && cle !== 'pistes' && this.value()[cle].trim() !== '';
+  }
+
+  /** Le nombre de jets ou de pistes, dans leur onglet ; 0 pour un texte. */
+  protected compte(cle: SceneOnglet): number {
+    return cle === 'jets' ? this.jetCount() : cle === 'pistes' ? this.pisteCount() : 0;
   }
 
   protected imageNonChargee(): void {
@@ -255,6 +298,50 @@ export class SceneFormPageComponent implements HasPendingChanges {
 
   protected removePiste(index: number): void {
     this.value.update((value) => ({...value, pistes: value.pistes.filter((_, position) => position !== index)}));
+  }
+
+  protected addJet(): void {
+    if (this.jetCount() < JETS_MAX) {
+      this.value.update((value) => ({...value, jets: [...value.jets, jetVide()]}));
+    }
+  }
+
+  protected removeJet(index: number): void {
+    this.value.update((value) => ({...value, jets: value.jets.filter((_, position) => position !== index)}));
+  }
+
+  /** Monte (-1) ou descend (+1) un jet dans la liste. */
+  protected deplacerJet(index: number, delta: -1 | 1): void {
+    const cible = index + delta;
+    this.value.update((value) => {
+      if (cible < 0 || cible >= value.jets.length) {
+        return value;
+      }
+      const jets = [...value.jets];
+      [jets[index], jets[cible]] = [jets[cible], jets[index]];
+      return {...value, jets};
+    });
+  }
+
+  /** Ajoute ou retire un attribut d'un jet ; deux au plus. */
+  protected basculerAttribut(index: number, attribut: SceneJetAttribut): void {
+    this.value.update((value) => ({
+      ...value,
+      jets: value.jets.map((jet, position) => {
+        if (position !== index) {
+          return jet;
+        }
+        if (jet.attributs.includes(attribut)) {
+          return {...jet, attributs: jet.attributs.filter((a) => a !== attribut)};
+        }
+        return jet.attributs.length < JET_ATTRIBUTS_MAX ? {...jet, attributs: [...jet.attributs, attribut]} : jet;
+      }),
+    }));
+  }
+
+  /** L'attribut est déjà demandé par ce jet. */
+  protected demande(jet: JetSaisie, attribut: SceneJetAttribut): boolean {
+    return jet.attributs.includes(attribut);
   }
 
   /** `(submit)` natif : enregistre la scène (créée d'abord dans son chapitre si elle est nouvelle) et ses personnages, puis revient. */

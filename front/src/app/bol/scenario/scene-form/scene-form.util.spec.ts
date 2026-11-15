@@ -16,6 +16,7 @@ const SCENE: BolSceneModel = {
   danger: null,
   lecture: null,
   jeu: null,
+  jets: null,
   pistes: null,
   image: '/assets/bol/gue.webp',
 };
@@ -32,6 +33,7 @@ describe('sceneChanges', () => {
       lecture: '  Il pleut.  ',
       jeu: ' ',
       notes: '',
+      jets: [],
       pistes: [
         {texte: ' Suivre ', scene_id: 's3'},
         {texte: '  ', scene_id: null},
@@ -47,9 +49,28 @@ describe('sceneChanges', () => {
       lecture: 'Il pleut.',
       jeu: null,
       notes: null,
+      jets: null,
       pistes: [{texte: 'Suivre', scene_id: 's3'}],
     });
     expect('image' in changes).toBe(false);
+  });
+
+  it('les jets : textes rognés, vides à null, un jet sans titre retiré ; aucun jet devient null', () => {
+    const jet = {titre: ' Coquillage ', attributs: ['vigueur' as const], difficulte: 'ardue' as const, enjeu: ' dégager sa jambe ', echec: '', reussite: ' ', carriere: 'Marin', quand: ''};
+    const sansTitre = {...jet, titre: '  '};
+
+    expect(sceneChanges({...sceneFormValue(SCENE), jets: [jet, sansTitre]}).jets).toEqual([
+      {titre: 'Coquillage', attributs: ['vigueur'], difficulte: 'ardue', enjeu: 'dégager sa jambe', echec: null, reussite: null, carriere: 'Marin', quand: null},
+    ]);
+    expect(sceneChanges({...sceneFormValue(SCENE), jets: [sansTitre]}).jets).toBeNull();
+  });
+
+  it('une scène sans jets donne une liste vide à saisir ; ses jets reviennent avec des textes vides', () => {
+    expect(sceneFormValue(SCENE).jets).toEqual([]);
+    const jets = [{titre: 'Algues', attributs: ['esprit' as const], difficulte: 'ardue' as const, enjeu: null, echec: 'tombe', reussite: null, carriere: null, quand: null}];
+
+    expect(sceneFormValue({...SCENE, jets}).jets).toEqual([{titre: 'Algues', attributs: ['esprit'], difficulte: 'ardue', enjeu: '', echec: 'tombe', reussite: '', carriere: '', quand: ''}]);
+    expect(sceneChanges(sceneFormValue({...SCENE, jets})).jets).toEqual(jets);
   });
 
   it('aucune piste devient null', () => {

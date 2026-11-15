@@ -19,6 +19,7 @@ function scene(id: string, notes: string, jeu: string | null = null): BolSceneMo
     danger: null,
     lecture: 'Il pleut.',
     jeu,
+    jets: null,
     pistes: null,
     image: null,
   };

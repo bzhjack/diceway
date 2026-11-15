@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Exceptions\Bol\SceneLoadNotAllowedException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolSceneDistribution;
+use App\Http\Services\Bol\BolSceneJets;
 use App\Http\Services\Bol\BolScenePreparation;
 use App\Http\Services\Bol\BolSceneService;
 use Illuminate\Http\Request;
@@ -50,6 +51,18 @@ class BolSceneController extends Controller
             'danger'      => 'sometimes|nullable|integer|between:1,4',
             'lecture'     => 'sometimes|nullable|string|max:5000',
             'jeu'         => 'sometimes|nullable|string|max:10000',
+            // Un jet sans titre est retiré par le service (BolSceneJets::nettoyer), pas refusé ; un attribut de combat ou une difficulté
+            // inconnue le sont.
+            'jets'              => 'sometimes|nullable|array|max:' . BolSceneJets::JETS_MAX,
+            'jets.*.titre'      => 'nullable|string|max:' . BolSceneJets::TITRE_MAX,
+            'jets.*.attributs'  => 'nullable|array|max:' . BolSceneJets::ATTRIBUTS_MAX,
+            'jets.*.attributs.*' => ['string', Rule::in(BolSceneJets::ATTRIBUTS)],
+            'jets.*.difficulte' => ['nullable', Rule::in(array_keys(BolSceneJets::DIFFICULTES))],
+            'jets.*.enjeu'      => 'nullable|string|max:' . BolSceneJets::TEXTE_MAX,
+            'jets.*.echec'      => 'nullable|string|max:' . BolSceneJets::TEXTE_MAX,
+            'jets.*.reussite'   => 'nullable|string|max:' . BolSceneJets::TEXTE_MAX,
+            'jets.*.carriere'   => 'nullable|string|max:' . BolSceneJets::TEXTE_MAX,
+            'jets.*.quand'      => 'nullable|string|max:' . BolSceneJets::TEXTE_MAX,
             'pistes'      => 'sometimes|nullable|array|max:' . BolScenePreparation::PISTES_MAX,
             // Une piste vide est retirée par le service (BolScenePreparation::pistes), pas refusée.
             'pistes.*.texte'    => 'nullable|string|max:' . BolScenePreparation::PISTE_TEXTE_MAX,
@@ -68,7 +81,7 @@ class BolSceneController extends Controller
             Auth::id(),
             $data['id'],
             array_intersect_key($data, array_flip([
-                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'pistes', 'image', 'distribution',
+                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'jets', 'pistes', 'image', 'distribution',
             ])),
         );
 

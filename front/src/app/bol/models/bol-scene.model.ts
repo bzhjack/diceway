@@ -33,9 +33,28 @@ export interface BolScenePiste {
   scene_id: string | null;
 }
 
+/** Un attribut qu'un jet de scène peut demander : jamais Mêlée, Tir ni Défense (les combats ont leur écran). */
+export type SceneJetAttribut = 'vigueur' | 'agilite' | 'esprit' | 'aura';
+
+/** Un cran de l'échelle de difficulté du livre, en slug (`BolSceneJets::DIFFICULTES`). */
+export type SceneJetDifficulte = 'tres-facile' | 'facile' | 'moyenne' | 'ardue' | 'difficile' | 'tres-difficile' | 'impossible' | 'heroique';
+
+/** Un jet de la scène, hors combat : l'obstacle ou le déclencheur, zéro attribut (un effet automatique), un ou deux (« au choix »), une
+ * difficulté, et ses textes facultatifs — ce qu'on tente, ce qui arrive si ça rate ou si ça réussit, la carrière qui aide, le moment. */
+export interface BolSceneJet {
+  titre: string;
+  attributs: SceneJetAttribut[];
+  difficulte: SceneJetDifficulte;
+  enjeu: string | null;
+  echec: string | null;
+  reussite: string | null;
+  carriere: string | null;
+  quand: string | null;
+}
+
 /** Une scène : une distribution de PNJ, créatures et démons qu'on peut charger sur la table, rangée dans un
- * scénario, avec sa préparation — décor (région, lieu, illustration), ambiance, texte à lire, règles du MJ
- * (`jeu`), secret du MJ (`notes`) et pistes. */
+ * scénario, avec sa préparation — décor (région, lieu, illustration), ambiance, texte à lire, mise en scène
+ * (`jeu`), jets, secret du MJ (`notes`) et pistes. */
 export interface BolSceneModel {
   id: string;
   scenario_id: string | null;
@@ -55,8 +74,10 @@ export interface BolSceneModel {
   danger: number | null;
   /** Texte à lire aux joueurs. */
   lecture: string | null;
-  /** Règles de la scène pour le MJ : jets, difficultés, tables d'effets. */
+  /** Mise en scène pour le MJ : consignes, lieux, tables d'effets (« Mise en scène » à l'écran ; `jeu` dans l'API). */
   jeu: string | null;
+  /** Les jets de la scène, dans l'ordre ; null sans jet. */
+  jets: BolSceneJet[] | null;
   pistes: BolScenePiste[] | null;
   /** Adresse de l'illustration (`https://…` ou `/assets/…`). */
   image: string | null;
@@ -95,6 +116,7 @@ export interface BolSceneChanges {
   danger?: number | null;
   lecture?: string | null;
   jeu?: string | null;
+  jets?: BolSceneJet[] | null;
   pistes?: BolScenePiste[] | null;
   image?: string | null;
   /** Les personnages de la scène, remplacés en entier. */
