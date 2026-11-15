@@ -194,8 +194,9 @@ souvent « Moyenne ».
 - **La reprise commence par un scénario** (Lionel, 2026-11-13) : la Perle du Beshaar (5 chapitres, 49 phrases de jets), celle de
   l'exemple ; les autres suivent une fois le format validé.
 - **« En jeu » devient « Mise en scène »** (Lionel, 2026-11-13) : il ne garde que la façon de jouer la scène, les consignes
-  au MJ et les lieux. Les onglets du carnet : « À lire aux joueurs », « Jets », « Mise en scène », « Secret du MJ ». Le champ garde son
-  nom en base et dans l'import (`jeu`), seul le libellé change.
+  au MJ et les lieux. Les onglets du carnet : « À lire aux joueurs », « Jets », « Mise en scène », « Secret du MJ », « Pistes » (les
+  pistes ont leur onglet depuis le 2026-11-15 ; elles étaient avant au pied du carnet, sous « Ensuite »). Le champ garde son nom en base
+  et dans l'import (`jeu`), seul le libellé change.
 
 ## Découpage possible
 

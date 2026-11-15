@@ -259,13 +259,16 @@ Vérifié le 2026-11-09 : rien n'a touché au code Cyberpunk depuis ; suite comp
 
 ### Étape 3 — les écrans de création (le prochain chantier)
 
-Pas commencée au 2026-11-09 : aucun écran, `front/src/app/cpr/` n'existe pas encore, l'accueil n'a pas de lien vers `/cpr`.
+Pas commencée au 2026-11-15 : aucun écran, `front/src/app/cpr/` n'existe pas encore, l'accueil n'a pas de lien vers `/cpr`.
 
 Depuis la rédaction de cette étape, `CLAUDE.md` fixe deux cadres à suivre : l'**écran de référence** de 1440 × 704 px (ce qu'un écran
-sert à faire tient sans défilement) et les **bibliothèques en lignes** (`creature-library-page` pour modèle, comme les héros de BoL :
-filtres à gauche, tableau triable à droite).
+sert à faire tient sans défilement) et les **bibliothèques en tuiles** (`creature-library-page` pour modèle, « Library in tiles » de
+`CLAUDE.md`) : la page tient dans l'écran ; un en-tête sur toute la largeur (le titre et le total, les actions, le retour en or) ; une barre
+de filtres sur une ligne (la recherche, la source côte à côte, les autres filtres en listes qui disent leur valeur, le compte, « Effacer
+les filtres ») ; puis une tuile par fiche (portrait, nom, l'essentiel, un cœur), rangées par nom, sans tri ; un clic ouvre la fiche. Les
+bibliothèques de BoL sont passées des tableaux aux tuiles le 13 novembre, puis des filtres à gauche à cette barre le 15.
 
-- Une bibliothèque des personnages sous `/cpr/library/characters`, en lignes.
+- Une bibliothèque des personnages sous `/cpr/library/characters`, en tuiles.
 - Un formulaire de création qui suit les trois méthodes : **Edgerunner** d'abord (rôle, tirage des CARAC, 86 points de compétences, dotation),
   puis **Formule complète** (62 points de CARAC, 86 de compétences, 2 550 ED d'achats et 800 ED de vêtements), puis **Rat des Rues**
   (tout imposé, le plus simple, mais le moins utile une fois les deux autres faits).
