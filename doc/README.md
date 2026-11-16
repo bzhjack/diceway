@@ -19,7 +19,7 @@ Chaque jeu suit le même découpage, pour qu'on sache où chercher d'un jeu à l
 | `pdf/` | Les PDF d'origine. Hors git (`/doc/*/pdf/`) : à copier à la main sur chaque poste. |
 | `specs/` | Ce que l'application doit respecter à la création des fiches. |
 | `scenarios/` | Une saga par dossier, avec `app/` pour les fichiers d'import. |
-| `image-prompts/` | Prompts des bannières et des portraits. |
+| `image-prompts/` | Prompts des bannières, des décors de fond et des portraits. |
 | `plans/` | Notes de travail datées sur la partie de l'application propre au jeu : états des lieux, revues de code, reste à faire. |
 
 Un jeu n'a que les sous-dossiers dont il a besoin.
