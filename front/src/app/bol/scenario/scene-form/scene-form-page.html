@@ -34,7 +34,7 @@
           <div class="sfp-lieu">
             <mat-icon class="sfp-lieu-icone" aria-hidden="true">place</mat-icon>
             <input id="sfp-lieu" class="sfp-lieu-champ" aria-label="Lieu" placeholder="Un lieu : le gué du Tyr, la citadelle…" autocomplete="off" [formField]="sceneForm.lieu" />
-            <button type="button" class="sfp-region" aria-haspopup="dialog" [attr.aria-label]="'Région : ' + (region() ?? 'aucune') + ', choisir sur la carte'" (click)="choisirSurLaCarte()">
+            <button type="button" class="sfp-region" aria-haspopup="dialog" [disabled]="regions().length === 0" [attr.aria-label]="'Région : ' + (region() ?? 'aucune') + ', choisir sur la carte'" (click)="choisirSurLaCarte()">
               <mat-icon aria-hidden="true">map</mat-icon>{{ region() ?? 'Région' }}
             </button>
           </div>

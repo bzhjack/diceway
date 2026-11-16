@@ -16,7 +16,7 @@ describe('RegionCarteDialogComponent', () => {
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
     const ligne = (nom: string) => [...el.querySelectorAll<HTMLButtonElement>('.rcd-ligne')].find((b) => b.textContent?.trim() === nom)!;
-    return {el, ligne, close};
+    return {el, ligne, close, fixture};
   }
 
   const REGIONS = [
@@ -25,14 +25,20 @@ describe('RegionCarteDialogComponent', () => {
     {id: 99, region: 'Ailleurs'},
   ];
 
-  it('place un point par région connue de la carte, la région choisie en rouge', async () => {
+  it('montre la carte avec les régions, la choisie marquée', async () => {
     const {el} = await rendre({regions: REGIONS, regionId: 6});
 
-    const points = [...el.querySelectorAll<HTMLElement>('.rcd-point')];
-    expect(points).toHaveLength(2);
-    expect(points[0].style.left).toBe('35.2%');
-    expect(points[0].style.top).toBe('64.3%');
-    expect(points[1].classList).toContain('rcd-point--choisi');
+    expect(el.querySelectorAll('bol-region-carte .rca-point')).toHaveLength(2);
+    expect(el.querySelector('.rca-point--choisi')?.getAttribute('aria-label')).toBe('Choisir la région Lysor');
+  });
+
+  it('survoler une ligne allume son point', async () => {
+    const {el, ligne, fixture} = await rendre({regions: REGIONS, regionId: null});
+
+    ligne('Satarla').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+
+    expect(el.querySelector('.rca-point--survole')?.getAttribute('aria-label')).toBe('Choisir la région Satarla');
   });
 
   it('liste « Aucune » puis les régions, la choisie marquée', async () => {
@@ -46,11 +52,20 @@ describe('RegionCarteDialogComponent', () => {
   it('un clic sur un point ou une ligne choisit et ferme ; « Aucune » rend null', async () => {
     const {el, ligne, close} = await rendre({regions: REGIONS, regionId: null});
 
-    el.querySelector<HTMLButtonElement>('.rcd-point')!.click();
+    el.querySelector<HTMLButtonElement>('.rca-point')!.click();
     expect(close).toHaveBeenLastCalledWith(14);
     ligne('Lysor').click();
     expect(close).toHaveBeenLastCalledWith(6);
     ligne('Aucune').click();
     expect(close).toHaveBeenLastCalledWith(null);
+  });
+
+  it('« Annuler » ferme sans rien rendre : la région reste ce qu’elle était', async () => {
+    const {el, close} = await rendre({regions: REGIONS, regionId: 6});
+
+    [...el.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.textContent?.trim() === 'Annuler')!.click();
+
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(close.mock.calls[0]).toEqual([]);
   });
 });

@@ -180,6 +180,12 @@
   font-size: 0.78rem;
   cursor: pointer;
 
+  // Tant que les régions ne sont pas chargées : la carte n'aurait rien à proposer.
+  &:disabled {
+    opacity: 0.5;
+    cursor: progress;
+  }
+
   mat-icon {
     width: 1.1rem;
     height: 1.1rem;

@@ -250,10 +250,11 @@ export class SceneFormPageComponent implements HasPendingChanges {
     this.imageEnEchec.set(true);
   }
 
-  /** La région se choisit sur la carte de Lémurie ; fermer la carte sans choisir la laisse comme elle était. */
+  /** La région se choisit sur la carte de Lémurie ; fermer la carte sans choisir (ou avec autre chose qu'un id ou `null`) la
+   * laisse comme elle était. */
   protected choisirSurLaCarte(): void {
     openRegionCarte(this.dialog, {regions: this.regions(), regionId: this.value().region_id}).subscribe((regionId) => {
-      if (regionId !== undefined) {
+      if (typeof regionId === 'number' || regionId === null) {
         this.value.update((value) => ({...value, region_id: regionId}));
       }
     });

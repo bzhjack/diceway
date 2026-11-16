@@ -1,43 +1,28 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {RegionCarteDialogData, RegionCarteDialogResult} from '../models/region-carte-dialog.model';
-import {REGION_MAP_COORDINATES} from './region-map-coordinates';
+import {RegionCarteComponent} from './region-carte';
 
 /**
- * Choisir une région sur la carte de Lémurie : un point par région (son nom en infobulle), la liste à côté, « Aucune » en tête.
- * Un clic choisit et ferme. Les points ne sont que pour la souris : au clavier, la liste fait le même choix.
+ * Choisir une région sur la carte de Lémurie (`bol-region-carte`), la liste à côté, « Aucune » en tête ; survoler l'une allume
+ * l'autre. Un clic choisit et ferme ; « Annuler » ou Échap ferme sans rien rendre. Au clavier, la liste fait le choix.
  */
 @Component({
   selector: 'bol-region-carte-dialog',
-  imports: [NgOptimizedImage, MatButtonModule, MatDialogModule, MatTooltipModule],
+  imports: [MatButtonModule, MatDialogModule, RegionCarteComponent],
   template: `
     <h2 mat-dialog-title>Choisir la région</h2>
     <mat-dialog-content class="rcd-contenu">
-      <div class="rcd-carte">
-        <img class="rcd-image" ngSrc="/assets/bol/cartes/carte.jpg" width="1137" height="1491" alt="Carte de Lémurie" />
-        <div class="rcd-points" aria-hidden="true">
-          @for (point of points; track point.id) {
-            <button
-              type="button"
-              tabindex="-1"
-              class="rcd-point"
-              [class.rcd-point--choisi]="point.id === data.regionId"
-              [class.rcd-point--survole]="point.id === survolee()"
-              [style.left.%]="point.x"
-              [style.top.%]="point.y"
-              [matTooltip]="point.region"
-              matTooltipPosition="above"
-              (click)="choisir(point.id)"
-              (mouseenter)="survolee.set(point.id)"
-              (mouseleave)="survolee.set(null)"
-            ></button>
-          }
-        </div>
-      </div>
+      <bol-region-carte
+        class="rcd-carte"
+        [regions]="data.regions"
+        [choisie]="data.regionId"
+        [survolee]="survolee()"
+        (choisir)="choisir($event)"
+        (survol)="survolee.set($event)"
+      />
       <ul class="rcd-liste" aria-label="Régions">
         <li>
           <button type="button" class="rcd-ligne rcd-ligne--aucune" [attr.aria-pressed]="data.regionId === null" (click)="choisir(null)">Aucune</button>
@@ -62,7 +47,7 @@ import {REGION_MAP_COORDINATES} from './region-map-coordinates';
       </ul>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+      <button mat-stroked-button type="button" (click)="annuler()">Annuler</button>
     </mat-dialog-actions>
   `,
   styles: `
@@ -78,51 +63,8 @@ import {REGION_MAP_COORDINATES} from './region-map-coordinates';
     }
 
     .rcd-carte {
-      position: relative;
       flex: none;
       height: var(--rcd-hauteur);
-      aspect-ratio: 1137 / 1491;
-      overflow: hidden;
-      border: 1px solid var(--dw-forge-bronze);
-      border-radius: 4px;
-      background: var(--dw-forge-recess);
-    }
-
-    .rcd-image {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .rcd-point {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      padding: 0;
-      border: 2px solid var(--dw-color-legendary-muted);
-      border-radius: 50%;
-      background: rgba(69, 26, 3, 0.65);
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-      transition:
-        transform 120ms ease,
-        background 120ms ease;
-
-      &:hover {
-        transform: translate(-50%, -50%) scale(1.4);
-        border-color: var(--dw-forge-white);
-      }
-    }
-
-    .rcd-point--survole {
-      background: rgba(251, 191, 36, 0.85);
-    }
-
-    .rcd-point--choisi {
-      border-color: var(--dw-region-pin-active);
-      background: var(--dw-region-pin-active);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.45);
-      transform: translate(-50%, -50%) scale(1.3);
     }
 
     .rcd-liste {
@@ -187,15 +129,15 @@ export class RegionCarteDialogComponent {
   protected readonly data = inject<RegionCarteDialogData>(MAT_DIALOG_DATA);
   private readonly ref = inject<MatDialogRef<RegionCarteDialogComponent, RegionCarteDialogResult>>(MatDialogRef);
 
-  /** Les régions proposées qui ont une place connue sur la carte. */
-  protected readonly points = this.data.regions.flatMap((r) => {
-    const position = REGION_MAP_COORDINATES[r.id];
-    return position ? [{...r, ...position}] : [];
-  });
   protected readonly survolee = signal<number | null>(null);
 
   protected choisir(regionId: number | null): void {
     this.ref.close(regionId);
+  }
+
+  /** Fermer sans valeur : la région reste ce qu'elle était (un `mat-dialog-close` nu rendrait `''`). */
+  protected annuler(): void {
+    this.ref.close();
   }
 }
 

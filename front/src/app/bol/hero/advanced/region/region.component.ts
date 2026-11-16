@@ -1,4 +1,3 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -6,35 +5,26 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {matchesTerm} from '../../../../shared/list.utils';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
-import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
+import {RegionCarteComponent} from '../../../shared/region/region-carte';
 import {HeroAdvancedTraitRowComponent} from './trait-row/trait-row.component';
 import {HeroAdvancedRegionDialogData, HeroAdvancedRegionDialogResult} from '../../models/hero-advanced-region.model';
-
-/** Point cliquable sur la carte, positionné en % via {@link REGION_MAP_COORDINATES}. */
-interface RegionPin {
-  readonly region: BolRegionModel;
-  readonly x: number;
-  readonly y: number;
-}
 
 @Component({
   selector: 'bol-hero-advanced-region',
   imports: [
-    NgOptimizedImage,
     FormField,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatTooltipModule,
     MatDialogModule,
     DwTagComponent,
     HeroAdvancedTraitRowComponent,
+    RegionCarteComponent,
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss',
@@ -63,13 +53,6 @@ export class HeroAdvancedRegionComponent {
     (this.selectedRegion()?.noms ?? []).filter((nom: BolNomModel) => nom.gender === 'M'),
   );
 
-  /** Points cliquables sur la carte : régions du catalogue ayant une position connue. */
-  protected readonly regionPins = computed<readonly RegionPin[]>(() =>
-    (this.regionList() ?? []).flatMap((region) => {
-      const coordinates = REGION_MAP_COORDINATES[Number(region.id)];
-      return coordinates ? [{region, x: coordinates.x, y: coordinates.y}] : [];
-    }),
-  );
   protected readonly hoveredRegionId = signal<number | null>(null);
 
   constructor() {
@@ -87,6 +70,13 @@ export class HeroAdvancedRegionComponent {
   protected setCurrentRegion(region: BolRegionModel): void {
     this.selectedName.set(undefined);
     this.regionId.set(region.id);
+  }
+
+  protected choisirSurLaCarte(regionId: number): void {
+    const region = (this.regionList() ?? []).find((r) => Number(r.id) === regionId);
+    if (region) {
+      this.setCurrentRegion(region);
+    }
   }
 
   protected setHoveredRegion(regionId: number | null): void {

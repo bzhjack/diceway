@@ -39,7 +39,7 @@ const CATALOGUE = [
 ] as unknown as CombatCatalogEntry[];
 
 describe('SceneFormPageComponent', () => {
-  async function rendre(params: {id?: string; chapitre?: string; jets?: BolSceneModel['jets']} = {id: 's1'}) {
+  async function rendre(params: {id?: string; chapitre?: string; jets?: BolSceneModel['jets']; regions?: {id: number; region: string}[]} = {id: 's1'}) {
     const sceneService = {
       scenes: vi.fn(() => of([{...SCENE, jets: params.jets ?? null}, {...SCENE, id: 's2', titre: 'La citadelle', ordre: 1}])),
       update: vi.fn((id: string) => of({...SCENE, id})),
@@ -61,7 +61,7 @@ describe('SceneFormPageComponent', () => {
         },
         {provide: BolSceneService, useValue: sceneService},
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'dv1', titre: 'L’oracle de Nemmereth', numero: 1, saga: {id: 'dv', titre: 'Le Dieu voilé'}}])}},
-        {provide: BolCatalogService, useValue: {regions: () => of([])}},
+        {provide: BolCatalogService, useValue: {regions: () => of(params.regions ?? [])}},
         {provide: CombatSelectionService, useValue: {catalog: signal(CATALOGUE), loadCatalog: vi.fn(), loading: signal(false), loadFailed: signal(false)}},
         {provide: MatDialog, useValue: {open}},
         {provide: MatSnackBar, useValue: {open: vi.fn()}},
@@ -241,6 +241,32 @@ describe('SceneFormPageComponent', () => {
     expect(titres()).toEqual(['Algues', 'Tentacules']);
     await cliquer(bouton('Retirer le jet 1'));
     expect(titres()).toEqual(['Tentacules']);
+  });
+
+  it('la région se choisit sur la carte ; fermer la carte sans choix la laisse comme elle était', async () => {
+    const {page, texte, fixture, open, sceneService, enregistrer} = await rendre({id: 's1', regions: [{id: 14, region: 'Satarla'}, {id: 6, region: 'Lysor'}]});
+    const pastille = page.querySelector<HTMLButtonElement>('.sfp-region')!;
+    const fermeAvec = async (resultat: unknown) => {
+      open.mockReturnValueOnce({afterClosed: () => of(resultat)});
+      pastille.click();
+      await fixture.whenStable();
+    };
+
+    await fermeAvec(6);
+    expect((open.mock.calls[0] as unknown[])[1]).toEqual(expect.objectContaining({data: {regions: [{id: 6, region: 'Lysor'}, {id: 14, region: 'Satarla'}], regionId: null}}));
+    expect(texte(pastille)).toContain('Lysor');
+    await fermeAvec(undefined);
+    await fermeAvec('');
+    expect(texte(pastille)).toContain('Lysor');
+
+    await enregistrer();
+    expect(((sceneService.update.mock.calls[0] as unknown[])[1] as Record<string, unknown>)['region_id']).toBe(6);
+  });
+
+  it('la carte des régions ne s’ouvre pas tant que les régions ne sont pas chargées', async () => {
+    const {page} = await rendre();
+
+    expect(page.querySelector<HTMLButtonElement>('.sfp-region')!.disabled).toBe(true);
   });
 
   it('un clic sur l’attitude choisie l’efface', async () => {

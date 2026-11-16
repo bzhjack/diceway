@@ -3,28 +3,13 @@
 <mat-dialog-content>
 <div class="flex flex-col gap-4 lg:flex-row lg:items-start">
   <div class="hrg-map-col">
-    <div class="hrg-map-wrap">
-      <img class="hrg-map-img" ngSrc="/assets/bol/cartes/carte.jpg" width="1137" height="1491" alt="Carte de Lémurie" />
-
-      @for (pin of regionPins(); track pin.region.id) {
-        <button
-          type="button"
-          class="hrg-pin"
-          [class.hrg-pin--active]="pin.region.id === regionId()"
-          [class.hrg-pin--hovered]="pin.region.id === hoveredRegionId()"
-          [style.left.%]="pin.x"
-          [style.top.%]="pin.y"
-          [matTooltip]="pin.region.region"
-          matTooltipPosition="above"
-          [attr.aria-label]="'Choisir la région ' + pin.region.region"
-          (click)="setCurrentRegion(pin.region)"
-          (mouseenter)="setHoveredRegion(pin.region.id)"
-          (mouseleave)="setHoveredRegion(null)"
-          (focus)="setHoveredRegion(pin.region.id)"
-          (blur)="setHoveredRegion(null)"
-        ></button>
-      }
-    </div>
+    <bol-region-carte
+      [regions]="regionList() ?? []"
+      [choisie]="regionId()"
+      [survolee]="hoveredRegionId()"
+      (choisir)="choisirSurLaCarte($event)"
+      (survol)="setHoveredRegion($event)"
+    />
 
     <p class="hrg-map-hint">
       Cliquez sur un point de la carte pour choisir une région, ou utilisez la recherche.

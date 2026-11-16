@@ -18,59 +18,10 @@
   }
 }
 
-.hrg-map-wrap {
-  position: relative;
-  border: 1px solid var(--dw-forge-bronze);
-  background: var(--dw-forge-recess);
-  overflow: hidden;
-}
-
-.hrg-map-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .hrg-map-hint {
   margin: 0;
   font-size: 0.75rem;
   color: var(--dw-surface-500);
-}
-
-// Point cliquable sur la carte, positionné en % via [style.left.%]/[style.top.%].
-.hrg-pin {
-  position: absolute;
-  z-index: 1;
-  width: 14px;
-  height: 14px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 2px solid var(--dw-color-legendary-muted);
-  background: rgba(69, 26, 3, 0.65);
-  cursor: pointer;
-  padding: 0;
-  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
-
-  &:hover,
-  &:focus-visible {
-    transform: translate(-50%, -50%) scale(1.4);
-    border-color: var(--dw-forge-white);
-  }
-}
-
-.hrg-pin--hovered {
-  background: rgba(251, 191, 36, 0.85);
-}
-
-.hrg-pin--active {
-  border-color: var(--dw-region-pin-active);
-  background: var(--dw-region-pin-active);
-  transform: translate(-50%, -50%) scale(1.3);
-
-  &:hover,
-  &:focus-visible {
-    transform: translate(-50%, -50%) scale(1.5);
-  }
 }
 
 .hrg-selected-region {
