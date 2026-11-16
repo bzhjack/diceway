@@ -12,7 +12,6 @@ import {refreshableResource} from '../../../shared/refreshable-resource';
 import {LibraryFondComponent} from '../../shared/library/library-fond/library-fond';
 import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
 import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
-import {LibrarySegmentsComponent} from '../../shared/library/library-segments/library-segments';
 import {TuileComponent} from '../../shared/tuile/tuile';
 import {BolLibraryRowsPageBase, compteDit} from '../../shared/library/library-rows-page.base';
 import {LibraryOption} from '../../shared/models/library-rows.model';
@@ -39,7 +38,6 @@ type Statut = 'tous' | 'actifs' | 'en-cours';
     LibraryBarreComponent,
     LibraryFacetteComponent,
     LibraryFondComponent,
-    LibrarySegmentsComponent,
     MatMenuModule,
     TuileComponent,
   ],
@@ -63,7 +61,6 @@ export class HeroLibraryPageComponent extends BolLibraryRowsPageBase<BolHerosMod
     const heros = this.heroes.data();
     const actifs = heros.filter((h) => h.active).length;
     return [
-      {cle: 'tous', label: 'Tous', compte: heros.length},
       {cle: 'actifs', label: 'Actifs', compte: actifs},
       {cle: 'en-cours', label: 'En cours de création', compte: heros.length - actifs},
     ];

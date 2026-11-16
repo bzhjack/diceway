@@ -5,8 +5,8 @@ livre p. 42-57, PDF p. 44-59) sans rouvrir le texte complet
 [../04-le-plus-vieux-reve-de-lom.md](../04-le-plus-vieux-reve-de-lom.md). Les stats viennent du
 PDF (`pdftotext -layout`, PDF p. 58-59), relues le 2026-10-23.
 
-Version jouable dans l'app : `../app/le-plus-vieux-reve-de-lom.json` (scénario « Chroniques
-lémuriennes — Le plus vieux rêve de Lôm », 10 scènes).
+Version jouable dans l'app : `../app/le-plus-vieux-reve-de-lom.json` (scénario « Le plus vieux rêve de Lôm »,
+10 scènes).
 
 > Sauf indication contraire, un jet est un test normal, difficulté Moyenne (+0). Une séance.
 > Aventure de montagne, d'exploration et de négociation : le combat n'est jamais obligatoire,

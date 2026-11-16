@@ -132,59 +132,11 @@
   background: var(--dw-lr-voile);
 }
 
+// La recherche : un quart de l'écran, à gauche ; les filtres, le compte et « Effacer les filtres » s'alignent à droite.
 .dw-lr-recherche {
-  flex: 1 1 14rem;
-  min-width: 12rem;
-}
-
-// La source (le statut des héros) : ses options côte à côte, en boutons bascule dans un cadre, chacune avec son nombre.
-.dw-lr-seg {
-  display: inline-flex;
   flex: none;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--dw-forge-recess) 70%, transparent);
-}
-
-.dw-lr-seg-option {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  height: 2rem;
-  padding: 0 0.7rem;
-  border: 0;
-  border-radius: var(--dw-radius-toggle);
-  background: transparent;
-  color: var(--dw-forge-bone);
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 2rem;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 170, 60, 0.08);
-  }
-
-  &[aria-pressed='true'] {
-    background: color-mix(in srgb, var(--dw-color-legendary) 20%, transparent);
-    box-shadow: inset 0 0 0 1px var(--dw-color-legendary);
-    color: var(--dw-color-text-bright);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-forge-hot);
-    outline-offset: 1px;
-  }
-}
-
-.dw-lr-seg-compte {
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--dw-forge-caption);
+  width: 25vw;
+  margin-right: auto;
 }
 
 // Un filtre en liste (`bol-library-facette`) : un bouton qui dit son titre ; sa valeur, bordé d'or, dès qu'elle est choisie.

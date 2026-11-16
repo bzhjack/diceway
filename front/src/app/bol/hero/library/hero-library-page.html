@@ -41,7 +41,7 @@
         [actifs]="filtresActifs()"
         (effacer)="clearFilters()"
       >
-        <bol-library-segments titre="Statut" [options]="statuts()" [(valeur)]="statut" />
+        <bol-library-facette titre="Statut" tous="Tous les héros" [total]="totalHeroCount()" [options]="statuts()" [(valeur)]="statut" vide="tous" />
         <bol-library-facette titre="Région" tous="Toutes les régions" [total]="totalHeroCount()" [options]="regionOptions()" [(valeur)]="searchRegion" vide="" />
       </bol-library-barre>
 

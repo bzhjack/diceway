@@ -73,7 +73,7 @@ describe('PnjLibraryPageComponent', () => {
   it('filtre par rang et par région, chacun dans sa liste, puis par scénario', async () => {
     const {page, texte, noms, choisir} = await rendre();
 
-    expect(page.querySelector('.dw-lr-effacer')).toBeNull();
+    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')?.getAttribute('aria-disabled')).toBe('true');
     expect(page.querySelector('mat-select')).toBeNull();
 
     expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('3 PNJ');
@@ -81,7 +81,7 @@ describe('PnjLibraryPageComponent', () => {
     await choisir('Rang', 'Rival');
     expect(noms()).toEqual(['Ajhaskar']);
     expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('1 sur 3 PNJ');
-    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
+    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')?.getAttribute('aria-disabled')).not.toBe('true');
 
     // Un second clic sur une option choisie la retire.
     await choisir('Rang', 'Rival');

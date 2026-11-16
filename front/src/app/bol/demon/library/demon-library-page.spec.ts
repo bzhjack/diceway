@@ -104,12 +104,12 @@ describe('DemonLibraryPageComponent', () => {
   });
 
   it('filtre par source et par scénario', async () => {
-    const {noms, bouton, cliquer, choisir} = await rendre();
+    const {noms, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-seg-option', 'Catalogue'));
+    await choisir('Source', 'Catalogue');
     expect(noms()).toEqual(['Diablotin']);
 
-    await cliquer(bouton('.dw-lr-seg-option', 'Tous'));
+    await choisir('Source', 'Toutes les sources');
     await choisir('Scénario', 'Perle du Beshaar');
     expect(noms()).toEqual(['Ilirk', 'Limier']);
   });

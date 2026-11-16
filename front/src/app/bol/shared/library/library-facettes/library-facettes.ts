@@ -1,18 +1,17 @@
 import {ChangeDetectionStrategy, Component, computed, input, model} from '@angular/core';
 import {LibraryOption, LibraryScenarioOption, LibrarySource} from '../../models/library-rows.model';
 import {LibraryFacetteComponent} from '../library-facette/library-facette';
-import {LibrarySegmentsComponent} from '../library-segments/library-segments';
 
 /**
- * Les filtres partagés d'une bibliothèque de fiches, dans sa barre : la source (côte à côte), le scénario (une liste, chacun à la teinte
+ * Les filtres partagés d'une bibliothèque de fiches, dans sa barre, chacun en liste : la source (catalogue, mes fiches), le scénario (une liste, chacun à la teinte
  * de sa saga ; absent tant qu'aucun scénario importé ne cite de fiche), puis ceux que la page projette (rang, taille, catégorie, région),
  * chaque option avec son nombre de fiches. Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-facettes',
-  imports: [LibraryFacetteComponent, LibrarySegmentsComponent],
+  imports: [LibraryFacetteComponent],
   template: `
-    <bol-library-segments titre="Source" [options]="sources()" [(valeur)]="source" />
+    <bol-library-facette titre="Source" tous="Toutes les sources" [total]="total()" [options]="sourceOptions()" [(valeur)]="source" [vide]="'tout'" />
     @if (scenarioOptions().length) {
       <bol-library-facette
         titre="Scénario"
@@ -40,6 +39,8 @@ export class LibraryFacettesComponent {
 
   /** Toutes les fiches de la bibliothèque : le nombre de « Tous les scénarios ». */
   protected readonly total = computed(() => this.sources().find((s) => s.cle === 'tout')?.compte);
+  /** Le catalogue et les fiches du compte ; « Toutes les sources » est l'option qui retire le filtre. */
+  protected readonly sourceOptions = computed(() => this.sources().filter((s) => s.cle !== 'tout'));
   protected readonly scenarioOptions = computed((): LibraryOption<string | null>[] =>
     this.scenarios().map((s) => ({cle: s.id, label: s.titre, teinte: s.teinte, compte: s.compte})),
   );

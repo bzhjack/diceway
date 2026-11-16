@@ -123,16 +123,20 @@ describe('CreatureLibraryPageComponent', () => {
     expect(tuile('Andrak').querySelector('.dw-tuile__menu button')).toBeNull();
   });
 
-  it('filtre par source, chaque option avec son nombre de créatures', async () => {
-    const {noms, bouton, cliquer, texte} = await rendre();
+  it('filtre par source dans une liste, comme les autres filtres, chaque option avec son nombre de créatures', async () => {
+    const {page, noms, texte, liste, cliquer, choisir} = await rendre();
 
-    expect(texte(bouton('.dw-lr-seg-option', 'Catalogue').querySelector('.dw-lr-seg-compte'))).toBe('3');
-    expect(texte(bouton('.dw-lr-seg-option', 'Mes fiches').querySelector('.dw-lr-seg-compte'))).toBe('2');
-    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
+    expect(page.querySelector('.dw-lr-seg-option')).toBeNull();
+    expect(texte(liste('Source').querySelector('.dw-lr-choix-valeur'))).toBe('Source');
+    await cliquer(liste('Source'));
+    const options = [...document.querySelectorAll('.dw-lr-menu .dw-lr-option')].map((o) => [texte(o.querySelector('.dw-lr-option-label')), texte(o.querySelector('.dw-lr-option-compte'))]);
+    expect(options).toEqual([['Toutes les sources', '5'], ['Catalogue', '3'], ['Mes fiches', '2']]);
+    await cliquer(liste('Source'));
 
+    await choisir('Source', 'Mes fiches');
     expect(noms()).toEqual(['Fille de Djidaâ', 'Momie royale']);
-    expect(bouton('.dw-lr-seg-option', 'Mes fiches').getAttribute('aria-pressed')).toBe('true');
-    expect(bouton('.dw-lr-seg-option', 'Tous').getAttribute('aria-pressed')).toBe('false');
+    expect(texte(liste('Source').querySelector('.dw-lr-choix-valeur'))).toBe('Mes fiches');
+    expect(liste('Source').classList).toContain('dw-lr-choix--pose');
   });
 
   it('filtre par scénario, catalogue compris, à la teinte de chaque saga ; un second clic le retire', async () => {
@@ -183,17 +187,18 @@ describe('CreatureLibraryPageComponent', () => {
     expect(noms()).toEqual(['Cathgan', 'Fille de Djidaâ']);
   });
 
-  it('« Effacer les filtres » paraît avec un filtre et les retire tous', async () => {
-    const {page, noms, bouton, cliquer, choisir} = await rendre();
-    expect(page.querySelector('.dw-lr-effacer')).toBeNull();
+  it('« Effacer les filtres » est toujours là, désactivé sans filtre ; avec un filtre, il les retire tous', async () => {
+    const {page, noms, cliquer, choisir} = await rendre();
+    const effacer = () => page.querySelector<HTMLButtonElement>('.dw-lr-barre .dw-lr-effacer')!;
+    expect(effacer().getAttribute('aria-disabled')).toBe('true');
 
-    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
+    await choisir('Source', 'Mes fiches');
     await choisir('Rang', 'Coriace');
-    expect(page.querySelector('.dw-lr-barre .dw-lr-effacer')).not.toBeNull();
-    await cliquer(page.querySelector<HTMLButtonElement>('.dw-lr-effacer')!);
+    expect(effacer().getAttribute('aria-disabled')).not.toBe('true');
+    await cliquer(effacer());
 
     expect(noms().length).toBe(5);
-    expect(page.querySelector('.dw-lr-effacer')).toBeNull();
+    expect(effacer().getAttribute('aria-disabled')).toBe('true');
   });
 
   it('un clic sur la tuile ouvre le statbloc', async () => {
@@ -205,14 +210,14 @@ describe('CreatureLibraryPageComponent', () => {
   });
 
   it('l’en-tête dit le total, la barre le compte ; un filtre posé se voit sur son bouton, bordé d’or, et nulle part ailleurs', async () => {
-    const {page, bouton, cliquer, texte, liste, choisir} = await rendre();
+    const {page, texte, liste, choisir} = await rendre();
 
     expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('5 créatures');
     expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('5 créatures');
     expect(texte(liste('Rang').querySelector('.dw-lr-choix-valeur'))).toBe('Rang');
     expect(liste('Rang').getAttribute('aria-label')).toBe('Rang : Tous les rangs');
 
-    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
+    await choisir('Source', 'Mes fiches');
     await choisir('Rang', 'Coriace');
 
     expect(texte(page.querySelector('.dw-lr-entete .dw-lr-compte'))).toBe('5 créatures');
@@ -225,9 +230,9 @@ describe('CreatureLibraryPageComponent', () => {
   });
 
   it('sans résultat, le dit', async () => {
-    const {page, bouton, cliquer, texte, choisir} = await rendre();
+    const {page, texte, choisir} = await rendre();
 
-    await cliquer(bouton('.dw-lr-seg-option', 'Mes fiches'));
+    await choisir('Source', 'Mes fiches');
     await choisir('Rang', 'Piétaille');
 
     expect(texte(page.querySelector('.dw-lr-vide'))).toBe('Aucune créature ne correspond à ces filtres.');

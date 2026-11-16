@@ -89,13 +89,18 @@ describe('HeroLibraryPageComponent', () => {
     ]);
   });
 
-  it('filtre par statut, chaque option avec son nombre de héros', async () => {
-    const {noms, bouton, cliquer, texte} = await rendre();
+  it('filtre par statut dans une liste, chaque option avec son nombre de héros', async () => {
+    const {page, noms, cliquer, texte, liste, choisir} = await rendre();
 
-    expect(texte(bouton('.dw-lr-seg-option', 'En cours de création').querySelector('.dw-lr-seg-compte'))).toBe('1');
-    await cliquer(bouton('.dw-lr-seg-option', 'En cours de création'));
+    expect(page.querySelector('.dw-lr-seg-option')).toBeNull();
+    await cliquer(liste('Statut'));
+    const options = [...document.querySelectorAll('.dw-lr-menu .dw-lr-option')].map((o) => [texte(o.querySelector('.dw-lr-option-label')), texte(o.querySelector('.dw-lr-option-compte'))]);
+    expect(options).toEqual([['Tous les héros', '3'], ['Actifs', '2'], ['En cours de création', '1']]);
+    await cliquer(liste('Statut'));
 
+    await choisir('Statut', 'En cours de création');
     expect(noms()).toEqual(['Balaram']);
+    expect(texte(liste('Statut').querySelector('.dw-lr-choix-valeur'))).toBe('En cours de création');
   });
 
   it('filtre par région, dans sa liste', async () => {

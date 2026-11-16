@@ -9,7 +9,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 /**
  * La barre d'une bibliothèque en tuiles, sous son en-tête, sur une ligne : la recherche ; les filtres que la page projette (la source
  * côte à côte, puis chacun en liste, qui dit sa valeur dès qu'elle est choisie) ; le compte des fiches gardées ; un bouton rond qui
- * retire tous les filtres. Les styles sont ceux de `styles/_library-rows.scss`.
+ * retire tous les filtres, désactivé tant qu'il n'y en a aucun. Les styles sont ceux de `styles/_library-rows.scss`.
  */
 @Component({
   selector: 'bol-library-barre',
@@ -25,11 +25,19 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 
     <span class="dw-lr-separateur" aria-hidden="true"></span>
     <span class="dw-lr-nombre" aria-live="polite">{{ nombre() }}</span>
-    @if (actifs()) {
-      <button mat-icon-button type="button" class="dw-lr-effacer" aria-label="Effacer les filtres" matTooltip="Effacer les filtres" (click)="effacer.emit()">
-        <mat-icon>filter_alt_off</mat-icon>
-      </button>
-    }
+    <!-- Toujours à sa place ; désactivé tant qu'aucun filtre n'est posé (son infobulle le dit quand même). -->
+    <button
+      mat-icon-button
+      type="button"
+      class="dw-lr-effacer"
+      aria-label="Effacer les filtres"
+      [matTooltip]="actifs() ? 'Effacer les filtres' : 'Aucun filtre à effacer'"
+      [disabled]="!actifs()"
+      disabledInteractive
+      (click)="actifs() && effacer.emit()"
+    >
+      <mat-icon>filter_alt_off</mat-icon>
+    </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,7 +46,7 @@ export class LibraryBarreComponent {
   readonly searchTerm = model('');
   /** Ce que la barre dit du compte : « 16 sur 62 démons ». */
   readonly nombre = input.required<string>();
-  /** Un filtre est posé (la recherche comprise) : le bouton qui les retire tous paraît. */
+  /** Un filtre est posé (la recherche comprise) : le bouton qui les retire tous s'active. */
   readonly actifs = input(false);
   readonly effacer = output<void>();
 
