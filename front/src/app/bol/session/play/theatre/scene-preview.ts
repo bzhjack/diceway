@@ -221,6 +221,13 @@ const STATUTS: Record<ActeStatut, string> = {jouee: 'Déjà jouée', 'en-cours':
       min-width: 0;
     }
 
+    // Une scène d'« Ensuite » par ligne : le panneau s'élargit pour elle ; au-delà de sa largeur maximale, elle finit en « … ».
+    .spv-suite {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .spv-cranes {
       flex-direction: row;
       gap: 0.1rem;

@@ -14,10 +14,11 @@ html {
 }
 
 // Aperçu d'une scène (frise des actes, pistes) : la vignette touche les bords, le panneau est plus large
-// que les 280px d'un menu ordinaire.
+// que les 280px d'un menu ordinaire, et s'élargit pour que chaque scène d'« Ensuite » tienne sur sa ligne.
 .mat-mdc-menu-panel.thr-apercu-menu {
-  width: 21.5rem;
-  max-width: calc(100vw - 2rem);
+  width: max-content;
+  min-width: 21.5rem;
+  max-width: min(36rem, calc(100vw - 2rem));
 
   .mat-mdc-menu-content {
     padding-top: 0;
