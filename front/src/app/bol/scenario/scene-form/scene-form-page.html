@@ -23,9 +23,13 @@
     @if (loading()) {
       <p class="sfp-chargement" role="status">Chargement de la scène…</p>
     } @else {
-      <!-- L'affiche : l'illustration de la scène, son lieu, son titre, son ambiance ; tout se change sur place. -->
+      <!-- L'illustration de la scène couvre toute la page, derrière l'en-tête, l'affiche et le corps. -->
+      <div class="sfp-decor" aria-hidden="true">
+        <img class="sfp-decor-image" [src]="decor()" alt="" (error)="imageNonChargee()" />
+      </div>
+
+      <!-- L'affiche : le lieu, le titre et l'ambiance de la scène, posés sur son illustration ; tout se change sur place. -->
       <section class="sfp-affiche" aria-label="Le décor">
-        <img class="sfp-affiche-image" [src]="decor()" alt="" (error)="imageNonChargee()" />
         <div class="sfp-affiche-contenu">
           <div class="sfp-lieu">
             <mat-icon class="sfp-lieu-icone" aria-hidden="true">place</mat-icon>

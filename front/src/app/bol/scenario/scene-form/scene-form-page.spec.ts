@@ -84,7 +84,7 @@ describe('SceneFormPageComponent', () => {
 
     expect(texte(page.querySelector('.sfp-fil'))).toBe('Le Dieu voilé — 1. L’oracle de Nemmereth · scène 1 sur 2');
     expect(page.querySelector<HTMLInputElement>('#sfp-titre')!.value).toBe('Cap au sud');
-    expect(page.querySelector<HTMLImageElement>('.sfp-affiche-image')!.getAttribute('src')).toBe('/assets/bol/halakh.webp');
+    expect(page.querySelector<HTMLImageElement>('.sfp-decor-image')!.getAttribute('src')).toBe('/assets/bol/halakh.webp');
     expect(texte(page.querySelector('.sfp-pastille--jour b'))).toBe('Jour');
     expect(page.querySelector<HTMLTextAreaElement>('#sfp-lecture')!.value).toBe('Quinze jours de galère.');
     expect([...page.querySelectorAll('.sca-nom')].map((e) => texte(e))).toEqual(['Loup géant']);

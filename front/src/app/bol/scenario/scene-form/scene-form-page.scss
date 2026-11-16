@@ -11,10 +11,38 @@
 
 // La page tient dans l'écran : l'en-tête, l'affiche, puis le texte et la distribution jusqu'en bas.
 .sfp {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   height: 100dvh;
   min-height: 38rem;
+}
+
+// L'illustration de la scène, sous toute la page. Un voile la fonce : à gauche sous le titre, puis de plus en plus vers le
+// bas, où se lisent la distribution et ses notes ; l'en-tête et la carte du texte restent opaques par-dessus.
+.sfp-decor {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--dw-forge-recess) 85%, transparent) 0%, color-mix(in srgb, var(--dw-forge-recess) 45%, transparent) 40%, transparent 75%) top / 100% 18rem no-repeat,
+      linear-gradient(180deg, color-mix(in srgb, var(--dw-forge-recess) 10%, transparent) 0%, color-mix(in srgb, var(--dw-forge-recess) 55%, transparent) 35%, color-mix(in srgb, var(--dw-forge-recess) 78%, transparent) 100%);
+  }
+}
+
+.sfp-decor-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: brightness(0.85) saturate(0.9);
 }
 
 // ── L'en-tête ────────────────────────────────────────────────────────────────────────────────────
@@ -26,7 +54,7 @@
   min-height: 3.25rem;
   padding: 0.4rem 1.5rem;
   border-bottom: 1px solid var(--dw-forge-bronze-edge);
-  background: var(--dw-forge-recess);
+  background: color-mix(in srgb, var(--dw-forge-recess) 92%, transparent);
 }
 
 .sfp-medaille {
@@ -72,32 +100,10 @@
 }
 
 // ── L'affiche ────────────────────────────────────────────────────────────────────────────────────
+// Sans fond : l'illustration est celle de la page (`sfp-decor`).
 .sfp-affiche {
-  position: relative;
   flex: none;
   height: 14.75rem;
-  overflow: hidden;
-
-  // Un voile : sombre à gauche pour le texte, puis fondu dans la suie en bas.
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(90deg, color-mix(in srgb, var(--dw-forge-recess) 92%, transparent) 0%, color-mix(in srgb, var(--dw-forge-recess) 55%, transparent) 45%, color-mix(in srgb, var(--dw-forge-recess) 15%, transparent) 100%),
-      linear-gradient(0deg, var(--dw-forge-recess) 0%, transparent 45%);
-  }
-}
-
-.sfp-affiche-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  // Les illustrations sont larges et le bandeau bas : on en garde le tiers du haut, où sont les visages.
-  object-position: 50% 15%;
-  filter: brightness(0.8) saturate(0.85);
 }
 
 .sfp-affiche-contenu {
