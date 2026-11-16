@@ -117,20 +117,7 @@ docker exec diceway rm -rf /tmp/portraits
 
 Toujours avec `-u www-data` quand on écrit : en root, Apache ne peut plus écrire dans le dossier des portraits.
 
-**Reporter les portraits d'un poste à l'autre** : les fiches importées se retrouvent par leur clé, la même sur les deux postes. On sort
-leurs portraits nommés `<saga>--<clé>`, puis on les pose de l'autre côté, une fois les mêmes scénarios importés. Les fiches créées à la
-main n'ont pas de clé : la commande les nomme, leur portrait se repose dans l'app.
-
-```bash
-# sur le poste d'origine
-docker exec diceway php artisan bol:export-portraits /tmp/portraits-export --user=<email>
-docker cp diceway:/tmp/portraits-export ./portraits-export
-
-# sur l'autre poste
-docker cp portraits-export/. diceway:/tmp/portraits
-docker exec diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force --dry-run
-docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force
-```
+**Reporter les portraits d'un poste à l'autre** : voir « Reporter un compte sur un autre poste », plus bas.
 
 **Les fichiers** sont dans `storage/app/public/portraits/` du conteneur.
 
@@ -143,6 +130,55 @@ docker exec -u www-data diceway php artisan bol:extract-portraits           # un
 
 `bol:prune-portraits` ignore les fichiers de moins de 24 heures (un portrait tout juste envoyé n'est peut-être pas
 encore enregistré sur sa fiche) : un portrait remplacé aujourd'hui n'est effacé que le lendemain.
+
+## Reporter un compte sur un autre poste
+
+Chaque poste a sa base : les scénarios et les portraits d'un compte ne passent pas par git. Les fiches des scénarios importés se
+retrouvent d'un poste à l'autre par leur clé d'import, la même partout (les ids, eux, changent) ; ce qui a été créé dans l'app sans
+fichier (un scénario, un héros, une fiche à la main) n'a pas de clé et se refait à la main.
+
+**1. Sur le poste d'origine, sortir les portraits** des fiches importées, nommés `<saga>--<clé>`, puis en faire un zip à copier
+(clé USB, drive…) :
+
+```bash
+docker exec diceway php artisan bol:export-portraits /tmp/portraits-export --user=<email>
+docker cp diceway:/tmp/portraits-export ~/diceway-portraits-export
+docker exec diceway rm -rf /tmp/portraits-export
+cd ~ && zip -rq diceway-portraits-export.zip diceway-portraits-export
+```
+
+La commande liste aussi les fiches créées à la main qui ont un portrait : à reposer dans l'app à l'étape 4.
+
+**2. Sur l'autre poste, importer les scénarios**, tous, chapitres dans l'ordre (un chapitre reprend des personnages des précédents) :
+
+```bash
+# depuis la racine du dépôt, à jour (git pull)
+for f in la-perle-du-beshaar/app/ch{1..5} \
+         le-dieu-voile/app/intro le-dieu-voile/app/ch{1..5} \
+         chroniques-lemuriennes-1/app/{un-ennui-mortel,les-trois-coffres,mariage-amer,la-tour-d-ajhaskar,le-plus-vieux-reve-de-lom}; do
+  docker cp doc/bol/scenarios/$f.json diceway:/tmp/import.json
+  echo "== $f"; docker exec diceway php artisan bol:import-scenario /tmp/import.json --user=<email> || break
+done
+docker exec diceway rm -f /tmp/import.json
+```
+
+Un réimport écrase les scènes et les fiches modifiées dans l'app depuis (voir « Scénarios ») ; en cas de doute, passer d'abord la même
+boucle avec `--dry-run`.
+
+**3. Poser les portraits**, une fois le zip décompressé dans `~` :
+
+```bash
+docker cp ~/diceway-portraits-export/. diceway:/tmp/portraits
+docker exec diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force --dry-run   # ce qui sera posé
+docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force
+docker exec diceway rm -rf /tmp/portraits
+```
+
+`--force` remplace un portrait déjà posé ; `-u www-data`, sinon Apache ne peut plus écrire dans le dossier des portraits. Une clé
+introuvable au `--dry-run` veut dire qu'un scénario manque sur ce poste (étape 2).
+
+**4. Refaire à la main** ce qui n'a pas de fichier : les portraits des fiches que l'étape 1 a nommées, et les scénarios créés dans
+l'app.
 
 ## Cyberpunk RED
 
