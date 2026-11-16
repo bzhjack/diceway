@@ -58,6 +58,10 @@ docker exec diceway php artisan bol:import-scenario /tmp/ch1.json --user=<email>
 - Import a saga's chapters **in order** (e.g. `intro`, then `ch1`…`ch5`): a chapter reuses characters created by earlier ones, so a dry-run of a later chapter fails until the earlier ones are really imported.
 - Re-importing updates what the file created (`bol_import_ref`), without duplicates, but **overwrites** sheets edited in the app since.
 - Check what is already imported: `docker exec diceway php artisan tinker --execute='echo json_encode(DB::table("bol_import_ref")->select("saga", DB::raw("count(*) n"))->groupBy("saga")->get());'`
+- **After pulling the 2026-11-16 changes, on each machine** (ask the user before re-importing: it overwrites scenes edited in the app):
+  1. `docker exec diceway php artisan migrate` (adds `bol_scene.jets` if not there yet);
+  2. re-import the three scénarios, chapters in order, to bring their scene rolls (`jets`): `la-perle-du-beshaar` (ch1…ch5), `le-dieu-voile` (intro, ch1…ch5), `chroniques-lemuriennes-1` (the five files);
+  3. the Chroniques lémuriennes are now five separate scénarios (one chapter each, titled by the adventure alone): after their re-import, the old scénario « Chroniques lémuriennes » is left empty — delete it from the scenario library (or `App\Models\Bol\BolSaga::where('titre', 'Chroniques lémuriennes')->first()?->delete()` in tinker, once it has no chapter left).
 
 ## Vocabulary (UI)
 
