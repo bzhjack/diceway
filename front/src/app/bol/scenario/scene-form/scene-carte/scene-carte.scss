@@ -5,11 +5,13 @@
   height: 100%;
 }
 
-// La carte : le portrait en haut, fondu dans le fer ; le nom par-dessus son bas ; la bande du camp tout en bas.
+// La carte : le portrait en haut, fondu dans le fer ; le nom par-dessus son bas ; la bande des réglages, à la couleur du camp, tout en bas.
 .sca {
   --sca-camp: var(--dw-color-echec);
 
   position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   border: 1px solid color-mix(in srgb, var(--sca-camp) 45%, transparent);
   border-radius: 12px;
@@ -29,9 +31,9 @@
 
 .sca-regler {
   display: flex;
+  flex: 1;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   padding: 0;
   border: 0;
   background: transparent;
@@ -98,11 +100,24 @@
   padding: 0 0.75rem 0.6rem;
 }
 
+// Le nom, puis la pastille de l'attitude calée à droite de sa ligne, au-dessus de l'icône des réglages.
 .sca-nom {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: 'Muse Display Harmony', serif;
   font-size: 1.1rem;
   line-height: 1.05;
   color: var(--dw-forge-name);
+}
+
+// Sur une ligne : un nom trop long finit en « … » (il est en entier dans les réglages de la carte).
+.sca-nom-texte {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sca-detail {
@@ -114,32 +129,17 @@
   color: var(--dw-forge-caption);
 }
 
+// La bande du bas, à la couleur du camp : les réglages (un de moins, un de plus, le camp), hors du bouton de la carte.
 .sca-bande {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: auto;
-  min-height: 1.9rem;
-  padding: 0 0.75rem;
+  flex: none;
+  padding: 0.4rem 0.5rem;
   border-top: 1px solid color-mix(in srgb, var(--sca-camp) 50%, transparent);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--sca-camp) 42%, transparent), color-mix(in srgb, var(--sca-camp) 14%, transparent));
-  color: var(--dw-color-text-bright);
-  font-size: 0.75rem;
-  font-weight: 700;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sca-camp) 30%, transparent), color-mix(in srgb, var(--sca-camp) 10%, transparent));
 }
 
-// L'attitude, juste après le nom (`bol-attitude-puce`), son nom en infobulle.
+// L'attitude (`bol-attitude-puce`), son nom en infobulle, au bord droit de la carte.
 .sca-puce {
-  margin-left: 0.4rem;
-  vertical-align: 0.1em;
-}
-
-.sca-reglages {
-  width: 0.95rem;
-  height: 0.95rem;
-  font-size: 0.95rem;
-  opacity: 0.8;
+  margin-right: 0.1rem;
 }
 
 // Le nombre en médaille dorée, et la croix pour retirer, posés sur le portrait.
@@ -219,11 +219,4 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--dw-forge-caption);
-}
-
-.sca-pop-camp {
-  align-self: flex-start;
-  --mat-button-toggle-height: 2rem;
-  --mat-button-toggle-label-text-size: 0.8rem;
-  --mat-button-toggle-shape: var(--dw-radius-toggle);
 }

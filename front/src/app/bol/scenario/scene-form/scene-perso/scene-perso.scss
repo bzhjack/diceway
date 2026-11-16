@@ -125,77 +125,6 @@
 
 .spe-reglages {
   grid-area: reglages;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.spe-rond {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.4rem;
-  height: 1.4rem;
-  aspect-ratio: 1;
-  box-sizing: border-box;
-  padding: 0;
-  border: 1px solid var(--dw-forge-bronze-dim);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--dw-forge-name);
-  cursor: pointer;
-
-  mat-icon {
-    width: 0.9rem;
-    height: 0.9rem;
-    font-size: 0.9rem;
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: default;
-  }
-}
-
-.spe-camp {
-  display: inline-flex;
-  margin-left: auto;
-}
-
-.spe-camp-option {
-  height: 1.55rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--dw-forge-bronze-edge);
-  background: transparent;
-  color: var(--dw-forge-caption);
-  font: inherit;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:first-child {
-    border-radius: var(--dw-radius-toggle) 0 0 var(--dw-radius-toggle);
-  }
-
-  &:last-child {
-    margin-left: -1px;
-    border-radius: 0 var(--dw-radius-toggle) var(--dw-radius-toggle) 0;
-  }
-
-  &[aria-pressed='true'] {
-    position: relative;
-    border-color: color-mix(in srgb, var(--spe-option) 70%, transparent);
-    background: color-mix(in srgb, var(--spe-option) 26%, transparent);
-    color: var(--dw-color-text-bright);
-  }
-}
-
-.spe-camp-option--adversaires {
-  --spe-option: var(--dw-color-echec);
-}
-
-.spe-camp-option--heros {
-  --spe-option: var(--dw-color-reussite);
 }
 
 // L'attitude, juste après le nom : sa pastille (`bol-attitude-puce`) dans un bouton ; son nom en infobulle, un clic ouvre son menu.
@@ -214,11 +143,7 @@
   &:hover bol-attitude-puce {
     transform: scale(1.25);
   }
-}
 
-.spe-rond,
-.spe-camp-option,
-.spe-attitude {
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
     outline-offset: 2px;

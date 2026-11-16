@@ -89,7 +89,7 @@ describe('SceneFormPageComponent', () => {
     expect(page.querySelector<HTMLTextAreaElement>('#sfp-lecture')!.value).toBe('Quinze jours de galère.');
     expect([...page.querySelectorAll('.sca-nom')].map((e) => texte(e))).toEqual(['Loup géant']);
     expect(texte(page.querySelector('.sca-nombre'))).toBe('×2');
-    expect([...page.querySelectorAll('.sca-bande > span')].map((e) => texte(e))).toEqual(['Adversaire']);
+    expect(page.querySelector('.sca-bande .prg-camp-option--adversaires')?.getAttribute('aria-pressed')).toBe('true');
     expect(page.querySelector('.sca-nom bol-attitude-puce')?.classList).toContain('apu--hostile');
     expect(texte(page.querySelector('.sca-corps'))).toContain('Hostile');
   });
@@ -269,6 +269,24 @@ describe('SceneFormPageComponent', () => {
     const {page} = await rendre();
 
     expect(page.querySelector<HTMLButtonElement>('.sfp-region')!.disabled).toBe(true);
+  });
+
+  it('sous le rang, « + » et « − » changent le nombre, le camp se choisit d’un clic ; tout s’enregistre', async () => {
+    const {page, fixture, texte, sceneService, enregistrer} = await rendre();
+    const bande = page.querySelector('.sca-bande')!;
+
+    bande.querySelector<HTMLButtonElement>('[aria-label="Un Loup géant de plus"]')!.click();
+    await fixture.whenStable();
+    expect(texte(page.querySelector('.sca-nombre'))).toBe('×3');
+    bande.querySelector<HTMLButtonElement>('[aria-label="Un Loup géant de moins"]')!.click();
+    bande.querySelector<HTMLButtonElement>('.prg-camp-option--heros')!.click();
+    await fixture.whenStable();
+    expect(texte(page.querySelector('.sca-nombre'))).toBe('×2');
+    expect(page.querySelector('.sca--allie')).not.toBeNull();
+    await enregistrer();
+
+    const distribution = ((sceneService.update.mock.calls[0] as unknown[])[1] as {distribution: {qty: number; camp: string}[]}).distribution;
+    expect(distribution[0]).toEqual(expect.objectContaining({qty: 2, camp: 'heros'}));
   });
 
   it('un clic sur l’attitude choisie l’efface', async () => {

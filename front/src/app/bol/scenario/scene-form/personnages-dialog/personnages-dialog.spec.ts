@@ -121,7 +121,7 @@ describe('PersonnagesDialogComponent', () => {
   it('la distribution règle le camp et retire ; « Annuler » ne change rien', async () => {
     const {panier, bouton, stable, ferme, texte} = await ouvrir(null, [LOUPS]);
 
-    document.querySelector<HTMLButtonElement>('.pdg-distribution .spe-camp-option--heros')!.click();
+    document.querySelector<HTMLButtonElement>('.pdg-distribution .prg-camp-option--heros')!.click();
     stable();
     expect(document.querySelector('.pdg-distribution .spe--allie')).not.toBeNull();
     expect([...document.querySelectorAll('.pdg-camps-texte span')].map((e) => texte(e))).toEqual(['0 adversaire', '2 alliés']);

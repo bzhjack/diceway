@@ -5,20 +5,20 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
-import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {ATTITUDES} from '../../../session/play/theatre/theatre.util';
 import {ScenePersonnageVue} from '../../models/scene-form.model';
-import {aUnPortrait, QTY_MAX} from '../scene-form.util';
+import {PersoReglagesComponent} from '../perso-reglages/perso-reglages';
+import {aUnPortrait} from '../scene-form.util';
 
 /**
  * Un personnage de la distribution d'« Ajouter des personnages », en petit : son portrait et son nombre, son nom suivi de la pastille de
- * son attitude (son nom en infobulle, un clic ouvre son menu), de quoi le retirer ; dessous, un de plus ou de moins, et son camp calé
- * à droite. Le liseré dit le camp. Ne fait que dire le réglage (`regle`) ou le retrait (`retire`).
+ * son attitude (son nom en infobulle, un clic ouvre son menu), de quoi le retirer ; dessous, ses réglages (`bol-perso-reglages`) : un de
+ * plus ou de moins, et son camp calé à droite. Le liseré dit le camp. Ne fait que dire le réglage (`regle`) ou le retrait (`retire`).
  */
 @Component({
   selector: 'bol-scene-perso',
-  imports: [AttitudePuceComponent, AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [AttitudePuceComponent, AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, PersoReglagesComponent],
   template: `
     <div class="spe" [class.spe--allie]="perso().camp === 'heros'" [class.spe--introuvable]="perso().introuvable" [class.spe--nouveau]="nouveau()">
       <span class="spe-portrait">
@@ -59,20 +59,7 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
         <mat-icon>close</mat-icon>
       </button>
 
-      <div class="spe-reglages">
-        <button type="button" class="spe-rond" [attr.aria-label]="'Un ' + perso().nom + ' de moins'" [disabled]="perso().qty <= 1" (click)="regle.emit({qty: perso().qty - 1})">
-          <mat-icon>remove</mat-icon>
-        </button>
-        <button type="button" class="spe-rond" [attr.aria-label]="'Un ' + perso().nom + ' de plus'" [disabled]="perso().qty >= qtyMax" (click)="regle.emit({qty: perso().qty + 1})">
-          <mat-icon>add</mat-icon>
-        </button>
-        <span class="spe-camp" role="group" [attr.aria-label]="'Camp de ' + perso().nom">
-          <button type="button" class="spe-camp-option spe-camp-option--adversaires" [attr.aria-pressed]="perso().camp === 'adversaires'" (click)="choisirLeCamp('adversaires')">
-            Adversaire
-          </button>
-          <button type="button" class="spe-camp-option spe-camp-option--heros" [attr.aria-pressed]="perso().camp === 'heros'" (click)="choisirLeCamp('heros')">Allié</button>
-        </span>
-      </div>
+      <bol-perso-reglages class="spe-reglages" [nom]="perso().nom" [qty]="perso().qty" [camp]="perso().camp" (regle)="regle.emit($event)" />
     </div>
   `,
   styleUrl: './scene-perso.scss',
@@ -85,12 +72,7 @@ export class ScenePersoComponent {
   readonly regle = output<Partial<Pick<BolSceneDistributionSaisie, 'qty' | 'camp' | 'attitude'>>>();
   readonly retire = output();
 
-  protected readonly qtyMax = QTY_MAX;
   protected readonly attitudes = ATTITUDES;
   protected readonly portrait = computed(() => aUnPortrait(this.perso().avatar));
   protected readonly attitudeLabel = computed(() => ATTITUDES.find((a) => a.value === this.perso().attitude)?.label ?? 'Sans attitude');
-
-  protected choisirLeCamp(camp: CombatCamp): void {
-    this.regle.emit({camp});
-  }
 }

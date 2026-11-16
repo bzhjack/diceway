@@ -1,0 +1,85 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.prg-rond {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  box-sizing: border-box;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dw-forge-recess) 60%, transparent);
+  color: var(--dw-forge-name);
+  cursor: pointer;
+
+  mat-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-forge-name);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.prg-camp {
+  display: inline-flex;
+  margin-left: auto;
+}
+
+.prg-camp-option {
+  height: 1.55rem;
+  padding: 0 0.38rem;
+  border: 1px solid var(--dw-forge-bronze-edge);
+  background: color-mix(in srgb, var(--dw-forge-recess) 60%, transparent);
+  color: var(--dw-forge-caption);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:first-child {
+    border-radius: var(--dw-radius-toggle) 0 0 var(--dw-radius-toggle);
+  }
+
+  &:last-child {
+    margin-left: -1px;
+    border-radius: 0 var(--dw-radius-toggle) var(--dw-radius-toggle) 0;
+  }
+
+  &[aria-pressed='true'] {
+    position: relative;
+    border-color: color-mix(in srgb, var(--prg-option) 70%, transparent);
+    background: color-mix(in srgb, var(--prg-option) 30%, var(--dw-forge-recess));
+    color: var(--dw-color-text-bright);
+  }
+}
+
+.prg-camp-option--adversaires {
+  --prg-option: var(--dw-color-echec);
+}
+
+.prg-camp-option--heros {
+  --prg-option: var(--dw-color-reussite);
+}
+
+.prg-rond,
+.prg-camp-option {
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
