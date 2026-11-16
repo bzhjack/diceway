@@ -117,6 +117,21 @@ docker exec diceway rm -rf /tmp/portraits
 
 Toujours avec `-u www-data` quand on écrit : en root, Apache ne peut plus écrire dans le dossier des portraits.
 
+**Reporter les portraits d'un poste à l'autre** : les fiches importées se retrouvent par leur clé, la même sur les deux postes. On sort
+leurs portraits nommés `<saga>--<clé>`, puis on les pose de l'autre côté, une fois les mêmes scénarios importés. Les fiches créées à la
+main n'ont pas de clé : la commande les nomme, leur portrait se repose dans l'app.
+
+```bash
+# sur le poste d'origine
+docker exec diceway php artisan bol:export-portraits /tmp/portraits-export --user=<email>
+docker cp diceway:/tmp/portraits-export ./portraits-export
+
+# sur l'autre poste
+docker cp portraits-export/. diceway:/tmp/portraits
+docker exec diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force --dry-run
+docker exec -u www-data diceway php artisan bol:import-portraits /tmp/portraits --user=<email> --force
+```
+
 **Les fichiers** sont dans `storage/app/public/portraits/` du conteneur.
 
 ```bash
