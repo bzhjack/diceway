@@ -1,4 +1,3 @@
-@use 'forge-mixins' as forge;
 
 // Une tuile de personnage (`bol-tuile`), celle de la table et des bibliothèques : le portrait couvre la tuile, un voile sombre vers le bas
 // porte le nom et la ligne du dessous, la vitalité dans un cœur en bas à droite (dans le pied pour un héros). Les styles sont globaux :
@@ -264,48 +263,11 @@
   right: 0.45rem;
   bottom: 0.4rem;
   pointer-events: none;
-
-  // Un petit cœur, un gros chiffre : la vitalité se lit d'un coup d'œil, le cœur ne pèse pas sur la tuile.
-  .dw-tuile__coeur {
-    width: 1.65rem;
-    height: 1.5rem;
-
-    b {
-      font-size: 0.95rem;
-    }
-  }
 }
 
-// Le cœur de la vitalité, celui de la fiche ; plus sombre quand la vitalité est basse, gris à terre. Le clic le traverse jusqu'au portrait.
+// Le cœur de la vitalité (`bol-coeur`) : le clic le traverse jusqu'au portrait.
 .dw-tuile__coeur {
-  @include forge.coeur;
-
-  position: relative;
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 1.65rem;
-  height: 1.5rem;
-  box-sizing: border-box;
-  // Le chiffre un peu bas : au milieu du ventre du cœur, sous ses deux lobes.
-  padding-top: 0.14rem;
-  filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
   pointer-events: none;
-
-  b {
-    @include forge.coeur-chiffre;
-
-    font: 400 0.78rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-.dw-tuile__coeur--bas {
-  --coeur-fond: linear-gradient(160deg, var(--bar-v-2), var(--bar-v-3));
-}
-
-.dw-tuile__coeur--tombe {
-  --coeur-fond: linear-gradient(160deg, var(--dw-surface-500), color-mix(in srgb, var(--dw-surface-500) 35%, black));
 }
 
 // Un héros : le nom descend contre son pied, le voile commence plus bas ; le pied porte son dé (projeté), son écusson et son cœur.
@@ -345,12 +307,9 @@
   }
 
   .dw-tuile__coeur {
-    width: 1.8rem;
-    height: 1.62rem;
-
-    b {
-      font-size: 1rem;
-    }
+    --coeur-largeur: 1.8rem;
+    --coeur-hauteur: 1.62rem;
+    --coeur-chiffre: 1rem;
   }
 }
 

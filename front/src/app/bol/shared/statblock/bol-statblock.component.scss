@@ -181,18 +181,9 @@
 }
 
 .bs-heart {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.35rem;
-  padding-bottom: 0.1rem;
-  font: 400 1.2rem 'Muse Display Harmony', 'Muse Sans', serif;
-  letter-spacing: 0;
-  color: var(--dw-forge-white);
-  text-shadow: -1px -1px 0 var(--dw-forge-shade), 1px -1px 0 var(--dw-forge-shade), -1px 1px 0 var(--dw-forge-shade), 1px 1px 0 var(--dw-forge-shade);
-
-  @include forge.coeur;
+  --coeur-largeur: 2.6rem;
+  --coeur-hauteur: 2.35rem;
+  --coeur-chiffre: 1.2rem;
 }
 
 // Une gemme par point d'héroïsme, allumée s'il reste à dépenser.

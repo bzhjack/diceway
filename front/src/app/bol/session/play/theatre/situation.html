@@ -130,16 +130,16 @@
       <span bolTuileVie class="sit-vie-groupe">
         <button
           type="button"
-          class="dw-tuile__coeur sit-coeur--groupe"
+          class="sit-coeur--groupe"
           cdkOverlayOrigin
           #origineVie="cdkOverlayOrigin"
-          [class.dw-tuile__coeur--bas]="c.basse"
-          [class.dw-tuile__coeur--tombe]="c.tombe"
           aria-haspopup="dialog"
           [attr.aria-expanded]="vieOuverte() === c.key"
           [attr.aria-label]="'Vitalité des ' + c.cards.length + ' exemplaires de ' + c.nom"
           (click)="vieOuverte.set(c.key)"
-        ></button>
+        >
+          <bol-coeur [etat]="c.tombe ? 'tombe' : c.basse ? 'basse' : null" />
+        </button>
         <ng-template
           cdkConnectedOverlay
           dwPopover="end"
@@ -161,9 +161,7 @@
                     [attr.aria-label]="'Ouvrir la carte de ' + e.card.nom + ' (vitalité ' + e.vitalite + ')'"
                     (click)="ouvrirExemplaire(e.card)"
                   >
-                    <span class="dw-tuile__coeur" [class.dw-tuile__coeur--bas]="e.low" [class.dw-tuile__coeur--tombe]="e.tombe">
-                      <ng-container [ngTemplateOutlet]="coeur" [ngTemplateOutletContext]="{$implicit: e}" />
-                    </span>
+                    <bol-coeur [valeur]="e.card.vitaliteCourante ?? '—'" [etat]="e.tombe ? 'tombe' : e.low ? 'basse' : null" />
                   </button>
                 </li>
               }
@@ -180,11 +178,6 @@
       </button>
     }
   </bol-tuile>
-</ng-template>
-
-<!-- La vitalité d'un exemplaire, posée sur son cœur (dessiné en CSS). -->
-<ng-template #coeur let-e>
-  <b aria-hidden="true">{{ e.card.vitaliteCourante ?? '—' }}</b>
 </ng-template>
 
 <mat-menu #menuAttitude="matMenu">

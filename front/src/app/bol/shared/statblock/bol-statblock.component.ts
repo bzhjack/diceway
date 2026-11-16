@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
+import {CoeurComponent} from '../coeur/coeur';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -28,7 +29,7 @@ interface TileGroup {
  * (`sheetActions`) et un pied (`sheetFooter`). */
 @Component({
   selector: 'bol-statblock',
-  imports: [DwGemmesComponent, MatButtonModule, MatIconModule, MatTooltipModule, RouterLink],
+  imports: [CoeurComponent, DwGemmesComponent, MatButtonModule, MatIconModule, MatTooltipModule, RouterLink],
   templateUrl: './bol-statblock.component.html',
   styleUrl: './bol-statblock.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

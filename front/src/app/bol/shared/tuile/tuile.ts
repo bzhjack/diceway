@@ -1,5 +1,6 @@
 import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, ElementRef, input, linkedSignal, output, signal, viewChild} from '@angular/core';
+import {CoeurComponent} from '../coeur/coeur';
 import {MatTooltip} from '@angular/material/tooltip';
 import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 
@@ -67,19 +68,17 @@ import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 
     <ng-template #coeur>
       @if (vitalite() !== null || vitaliteMax() !== null) {
-        <span
+        <bol-coeur
           class="dw-tuile__coeur"
-          [class.dw-tuile__coeur--bas]="etatVie() === 'basse'"
-          [class.dw-tuile__coeur--tombe]="etatVie() === 'tombe'"
           role="img"
+          [valeur]="vitalite() ?? '—'"
+          [etat]="etatVie()"
           [attr.aria-label]="'Vitalité de ' + nom() + ' : ' + (vitalite() ?? 'inconnue') + (vitaliteMax() !== null ? '/' + vitaliteMax() : '')"
-        >
-          <b aria-hidden="true">{{ vitalite() ?? '—' }}</b>
-        </span>
+        />
       }
     </ng-template>
   `,
-  imports: [MatTooltip, NgTemplateOutlet],
+  imports: [CoeurComponent, MatTooltip, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TuileComponent {

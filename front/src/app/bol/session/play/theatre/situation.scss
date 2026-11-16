@@ -219,8 +219,9 @@
   }
 }
 
-// Le cœur d'un groupe (`dw-tuile__coeur`, celui de la tuile) : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.
+// Le cœur d'un groupe (`bol-coeur`, vide) : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.
 .sit-coeur--groupe {
+  display: grid;
   padding: 0;
   border: 0;
   background: none;

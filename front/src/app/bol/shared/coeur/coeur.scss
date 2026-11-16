@@ -1,0 +1,32 @@
+@use 'styles/forge-mixins' as forge;
+
+:host {
+  @include forge.coeur;
+
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--coeur-largeur, 1.65rem);
+  height: var(--coeur-hauteur, 1.5rem);
+  box-sizing: border-box;
+  // Le chiffre un peu bas : au milieu du ventre du cœur, sous ses deux lobes.
+  padding-top: calc(var(--coeur-hauteur, 1.5rem) * 0.09);
+  filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
+}
+
+b {
+  @include forge.coeur-chiffre;
+
+  font: 400 var(--coeur-chiffre, 0.95rem) / 1 'Muse Display Harmony', 'Muse Sans', serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+:host(.coeur--bas) {
+  --coeur-fond: linear-gradient(160deg, var(--bar-v-2), var(--bar-v-3));
+}
+
+:host(.coeur--tombe) {
+  --coeur-fond: linear-gradient(160deg, var(--dw-surface-500), color-mix(in srgb, var(--dw-surface-500) 35%, black));
+}

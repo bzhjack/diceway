@@ -23,7 +23,7 @@
       </p>
       <div class="bs-vitals">
         @if (showVitality() && vitality(); as vit) {
-          <span class="bs-vit"><b class="bs-heart">{{ vit.value }}</b> Vitalité</span>
+          <span class="bs-vit"><bol-coeur class="bs-heart" [valeur]="vit.value" /> Vitalité</span>
         }
         <ng-content select="[sheetSide]" />
         @if (heroism(); as h) {
