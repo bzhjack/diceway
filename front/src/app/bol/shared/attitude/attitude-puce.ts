@@ -3,7 +3,7 @@ import {CombatantAttitude} from '../../models/bol-fight-session.model';
 
 /**
  * La pastille de l'attitude d'un personnage, toujours juste après son nom : un point à sa couleur (hostile rouge, méfiant orange,
- * neutre gris, amical vert), un cercle en pointillés sans attitude, une roue des quatre quand les exemplaires d'un groupe diffèrent.
+ * neutre gris, amical vert), un rond vide sans attitude, une roue des quatre quand les exemplaires d'un groupe diffèrent.
  * Elle ne fait que montrer : le parent la met dans son bouton (menu, popover) et lui donne son nom (infobulle, `aria-label`).
  */
 @Component({
@@ -44,8 +44,9 @@ import {CombatantAttitude} from '../../models/bol-fight-session.model';
       --apu-couleur: var(--dw-color-reussite);
     }
 
+    // Sans attitude : un rond vide, d'un trait plein (des pointillés, à cette taille, se lisaient comme une roue de chargement).
     :host(.apu--aucune) {
-      border: 2px dashed var(--dw-forge-caption);
+      border: 1.5px solid var(--dw-forge-caption);
       background: transparent;
       box-shadow: none;
     }
