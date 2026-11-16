@@ -119,7 +119,7 @@ const RANG_DE_LA_CLE = {rival: 'R', coriace: 'C', pietaille: 'P'} as const;
 /** Ce qu'on lit à voix haute en une minute, en mots. */
 const MOTS_PAR_MINUTE = 150;
 
-/** Le rang d'une fiche, en lettre comme dans les bibliothèques (`dw-lr-rang--R`). */
+/** Le rang d'une fiche, en lettre comme dans les bibliothèques (`bol-rang`). */
 export function rangDe(fiche: CombatCatalogEntry): LibraryRang {
   const cle = combatantRankKey(fiche);
   return cle ? RANG_DE_LA_CLE[cle] : 'C';

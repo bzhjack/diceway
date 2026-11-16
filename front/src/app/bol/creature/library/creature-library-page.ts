@@ -15,7 +15,8 @@ import {LibraryFondComponent} from '../../shared/library/library-fond/library-fo
 import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
 import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, compteDit, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {BolFichesPageBase, compteDit} from '../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../shared/rang/rang';
 import {LibraryOption, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
@@ -31,6 +32,7 @@ import {creatureImage} from '../creature.util';
 @Component({
   selector: 'bol-creature-library-page',
   imports: [
+    RangComponent,
     RouterLink,
     MatButtonModule,
     MatIconModule,
@@ -86,12 +88,12 @@ export class CreatureLibraryPageComponent extends BolFichesPageBase<BolCreatureM
   });
   protected readonly creatureCount = computed(() => this.filteredCreatures().length);
 
-  /** Les tuiles : la créature, son portrait, le nom de son rang, si elle est au compte. */
+  /** Les tuiles : la créature, son portrait, son rang, si elle est au compte. */
   protected readonly lignes = computed(() =>
     this.filteredCreatures().map((creature) => ({
       creature,
       image: creatureImage(creature),
-      rangLabel: RANG_LABELS[this.rangDe(creature)],
+      rang: this.rangDe(creature),
       mienne: Boolean(creature.user_id),
     })),
   );

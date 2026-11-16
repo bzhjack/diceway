@@ -111,7 +111,7 @@
     }
 
     @if (c.card.kind !== 'hero' && c.card.rang) {
-      <span bolTuileSous class="dw-tuile-rang">{{ c.card.rang }}</span>
+      <bol-rang bolTuileSous [rang]="rangs[c.card.rang] ?? 'C'" />
     }
     @if (c.card.kind !== 'hero') {
       <span bolTuileSous class="dw-tuile-sorte" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>

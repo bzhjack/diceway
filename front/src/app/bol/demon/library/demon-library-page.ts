@@ -15,7 +15,8 @@ import {LibraryFondComponent} from '../../shared/library/library-fond/library-fo
 import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
 import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, compteDit, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {BolFichesPageBase, compteDit} from '../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../shared/rang/rang';
 import {LibraryOption, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
@@ -31,6 +32,7 @@ import {demonImage} from '../demon.util';
 @Component({
   selector: 'bol-demon-library-page',
   imports: [
+    RangComponent,
     RouterLink,
     MatButtonModule,
     MatIconModule,
@@ -84,14 +86,14 @@ export class DemonLibraryPageComponent extends BolFichesPageBase<BolDemonModel> 
   });
   protected readonly demonCount = computed(() => this.filteredDemons().length);
 
-  /** Les tuiles : le démon, son portrait, le nom de son rang, s'il est au compte. */
+  /** Les tuiles : le démon, son portrait, son rang, s'il est au compte. */
   protected readonly lignes = computed(() =>
     this.filteredDemons().map((demon) => {
       const rang = this.rangDe(demon);
       return {
         demon,
         image: demonImage(demon),
-        rangLabel: RANG_LABELS[rang],
+        rang: rang,
         mien: Boolean(demon.user_id),
       };
     }),

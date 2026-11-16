@@ -367,34 +367,6 @@
   }
 }
 
-// Le rang d'une fiche en pastille, à sa couleur : les cartes de « Préparer la scène » et de son casting.
-.dw-lr-rang {
-  padding: 0.1rem 0.35rem;
-  border: 1px solid;
-  border-radius: 5px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.dw-lr-rang--R {
-  border-color: color-mix(in srgb, var(--dw-color-rival) 55%, transparent);
-  background: color-mix(in srgb, var(--dw-color-rival) 15%, transparent);
-  color: var(--dw-forge-alert);
-}
-
-.dw-lr-rang--C {
-  border-color: color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
-  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
-  color: var(--dw-forge-name);
-}
-
-.dw-lr-rang--P {
-  border-color: var(--dw-forge-bronze-dim);
-  color: var(--dw-forge-caption);
-}
-
 // ── Les tuiles : une par fiche (`bol-tuile`), autant par rangée que la page en tient ; la grille prend la hauteur qui reste et défile
 // seule (un peu de marge à droite pour sa barre, en bas pour l'ombre des dernières tuiles).
 .dw-lr-grille {

@@ -58,7 +58,7 @@ describe('PnjLibraryPageComponent', () => {
     const {fixture, noms, tuile, texte} = await rendre();
 
     expect(noms()).toEqual(['Acolyte', 'Ajhaskar', 'Archer de Tyrus']);
-    expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile-rang'))).toBe('Rival');
+    expect(texte(tuile('Ajhaskar').querySelector('bol-rang'))).toBe('Rival');
     expect(tuile('Ajhaskar').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('PNJ');
     expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile__coeur b'))).toBe('11');
     expect(texte(tuile('Ajhaskar').querySelector('.dw-tuile-marque'))).toBe('Mes fiches');

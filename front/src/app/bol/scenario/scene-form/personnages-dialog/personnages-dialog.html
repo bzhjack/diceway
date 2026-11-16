@@ -137,7 +137,7 @@
                 <span class="pdg-tuile-corps">
                   <span class="pdg-nom">{{ ligne.fiche.nom }}</span>
                   <span class="pdg-detail">
-                    <span class="dw-lr-rang" [class]="'dw-lr-rang--' + ligne.rang">{{ rangLabels[ligne.rang] }}</span>
+                    <bol-rang [rang]="ligne.rang" />
                     {{ ligne.fiche.vitalite }} PV
                   </span>
                 </span>

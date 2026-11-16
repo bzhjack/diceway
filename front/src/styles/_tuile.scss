@@ -121,7 +121,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 20%;
+    // Calé en haut : le portrait est rogné par le bas, la tête reste entière.
+    object-position: 50% 0;
   }
 
   &:focus-visible {
@@ -221,19 +222,7 @@
   }
 }
 
-// Le rang, en pastille ; la sorte, en icône (son nom en `aria-label`) ; une pastille dorée sur le portrait (« Mes fiches », « En cours »).
-.dw-tuile-rang {
-  padding: 0.05rem 0.3rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
-  color: var(--dw-forge-name);
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
+// Le rang est `bol-rang` (bol/shared/rang/) ; la sorte, en icône (son nom en `aria-label`) ; une pastille dorée sur le portrait (« Mes fiches », « En cours »).
 .dw-tuile-sorte {
   display: inline-flex;
   color: var(--dw-forge-caption);

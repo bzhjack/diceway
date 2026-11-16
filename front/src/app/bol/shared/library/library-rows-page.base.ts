@@ -5,6 +5,8 @@ import {BolLibraryPageBase} from './library-page.base';
 import {scenariosDesFiches} from './library-scenarios.util';
 
 export const RANG_LABELS: Record<LibraryRang, string> = {R: 'Rival', C: 'Coriace', P: 'Piétaille'};
+/** Le rang d'après son nom (« Rival » → `R`), pour les cartes de la table qui le disent en toutes lettres. */
+export const RANG_DU_LIBELLE: Readonly<Record<string, LibraryRang>> = {Rival: 'R', Coriace: 'C', Piétaille: 'P'};
 
 /** Le compte que disent l'en-tête et la barre d'une bibliothèque : « 103 créatures », ou « 75 sur 103 créatures » quand un filtre en écarte. */
 export function compteDit(gardees: number, total: number, singulier: string, pluriel: string): string {

@@ -66,6 +66,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    // Le portrait est carré et la bande large : on en garde le haut, où est la tête ; le zoom du survol part du haut aussi.
+    object-position: 50% 0;
+    transform-origin: 50% 0;
     transition: transform 0.25s ease;
   }
 

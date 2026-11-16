@@ -58,7 +58,7 @@
                     <mat-icon>more_horiz</mat-icon>
                   </button>
                 }
-                <span bolTuileSous class="dw-tuile-rang">{{ ligne.rangLabel }}</span>
+                <bol-rang bolTuileSous [rang]="ligne.rang" />
                 <span bolTuileSous class="dw-tuile-sorte" role="img" aria-label="PNJ"><mat-icon aria-hidden="true">person</mat-icon></span>
               </bol-tuile>
             </li>

@@ -10,7 +10,7 @@ import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-st
 import {CombatantAttitude, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {AttitudeChoixComponent} from '../../../shared/attitude/attitude-choix';
-import {RANG_LABELS} from '../../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../../shared/rang/rang';
 import {ATTITUDES} from '../../../session/play/theatre/theatre.util';
 import {ScenePersonnageVue} from '../../models/scene-form.model';
 import {aUnPortrait, QTY_MAX} from '../scene-form.util';
@@ -25,6 +25,7 @@ let suivant = 0;
 @Component({
   selector: 'bol-scene-carte',
   imports: [
+    RangComponent,
     A11yModule,
     AttitudeChoixComponent,
     AvatarFallbackDirective,
@@ -59,7 +60,7 @@ let suivant = 0;
           <span class="sr-only">, {{ perso().qty }} exemplaire{{ perso().qty > 1 ? 's' : '' }}</span>
           <span class="sca-detail">
             @if (perso().rang; as rang) {
-              <span class="dw-lr-rang" [class]="'dw-lr-rang--' + rang">{{ rangLabels[rang] }}</span>
+              <bol-rang [rang]="rang" />
             }
             {{ perso().type }}{{ perso().vitalite === null ? '' : ' · ' + perso().vitalite + ' PV' }}
           </span>
@@ -115,7 +116,6 @@ export class SceneCarteComponent {
   protected readonly ouvert = signal(false);
   protected readonly uid = ++suivant;
   protected readonly qtyMax = QTY_MAX;
-  protected readonly rangLabels = RANG_LABELS;
   protected readonly portrait = computed(() => aUnPortrait(this.perso().avatar));
   protected readonly attitudeLabel = computed(() => ATTITUDES.find((a) => a.value === this.perso().attitude)?.label ?? 'Sans attitude');
 

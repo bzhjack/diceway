@@ -13,6 +13,8 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {TuileComponent} from '../../../shared/tuile/tuile';
+import {RANG_DU_LIBELLE} from '../../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../../shared/rang/rang';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {AmbianceOption} from '../../models/theatre.model';
 import {CombatantAttitude, CombatCamp} from '../../../models/bol-fight-session.model';
@@ -112,6 +114,7 @@ function totalVitalite(cards: readonly TapisCard[]): string {
 @Component({
   selector: 'bol-situation',
   imports: [
+    RangComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,
     CdkDrag,
@@ -148,6 +151,8 @@ export class SituationComponent {
   readonly changed = output<TableChange>();
 
   protected readonly attitudes = ATTITUDES;
+  /** La carte dit son rang en toutes lettres (« Rival ») ; la pastille le veut en lettre. */
+  protected readonly rangs = RANG_DU_LIBELLE;
   /** La tuile (sa clé) dont le détail de la vie est ouvert. */
   protected readonly vieOuverte = signal<string | null>(null);
 

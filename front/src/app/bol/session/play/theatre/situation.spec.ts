@@ -137,7 +137,7 @@ describe('SituationComponent', () => {
     const {element, texte, bulle} = await rendre([CHEMDI, GRIMAR, LOUP]);
 
     const chemdi = element.querySelector('.sit-camp--face bol-tuile')!;
-    expect(texte(chemdi.querySelector('.dw-tuile-rang'))).toBe('Coriace');
+    expect(texte(chemdi.querySelector('bol-rang'))).toBe('Coriace');
     expect(chemdi.querySelector('.dw-tuile-sorte')!.getAttribute('aria-label')).toBe('PNJ');
     expect(bulle(chemdi.querySelector('.dw-tuile-sorte')!)).toBe('PNJ');
     expect(bulle(chemdi.querySelector('.sit-attitude')!)).toBe('Hostile');

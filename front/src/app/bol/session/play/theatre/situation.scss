@@ -162,12 +162,6 @@
 // La tuile partagée (`bol-tuile`, `styles/_tuile.scss`), en ligne dans la compagnie (`dw-tuile--ligne`) ; la table y pose le liseré de
 // l'attitude (`--dw-tuile-c`), le point de l'attitude, la vilenie d'un rival, le cœur d'un groupe et le dé d'un héros.
 
-// Dans la colonne d'en face, le rang se resserre : la sorte ne touche pas le cœur.
-.dw-tuile-rang {
-  padding: 0.05rem 0.25rem;
-  letter-spacing: 0.05em;
-}
-
 .dw-tuile-sorte {
   margin-left: -0.1rem;
 }

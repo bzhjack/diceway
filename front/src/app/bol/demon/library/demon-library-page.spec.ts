@@ -89,7 +89,7 @@ describe('DemonLibraryPageComponent', () => {
     const {fixture, noms, tuile, texte} = await rendre();
 
     expect(noms()).toEqual(['Diablotin', 'Ilirk', 'Limier']);
-    expect(texte(tuile('Ilirk').querySelector('.dw-tuile-rang'))).toBe('Rival');
+    expect(texte(tuile('Ilirk').querySelector('bol-rang'))).toBe('Rival');
     expect(tuile('Ilirk').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('Démon');
     expect(texte(tuile('Ilirk').querySelector('.dw-tuile__coeur b'))).toBe('30');
     expect(texte(tuile('Ilirk').querySelector('.dw-tuile-marque'))).toBe('Mes fiches');

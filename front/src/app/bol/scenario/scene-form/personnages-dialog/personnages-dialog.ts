@@ -8,7 +8,7 @@ import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
-import {RANG_LABELS} from '../../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../../shared/rang/rang';
 import {LibraryRang, LibrarySource} from '../../../shared/models/library-rows.model';
 import {PersonnagesDialogData, PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
 import {ScenePersonnageVue} from '../../models/scene-form.model';
@@ -26,7 +26,7 @@ import {fichesDeScene, filtrerFiches, lignesDesFiches, optionsDesFiltres, scenar
  */
 @Component({
   selector: 'bol-personnages-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, ScenePersoComponent],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RangComponent, ScenePersoComponent],
   templateUrl: './personnages-dialog.html',
   styleUrl: './personnages-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +72,6 @@ class PersonnagesDialogComponent {
 
   /** Ouvert depuis la table : on choisit ceux qui entrent, rien de ce qui y est déjà. */
   protected readonly pourLaTable = this.data.cible === 'table';
-  protected readonly rangLabels = RANG_LABELS;
   protected readonly aUnPortrait = aUnPortrait;
 
   constructor() {

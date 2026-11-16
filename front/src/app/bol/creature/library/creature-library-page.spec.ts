@@ -102,7 +102,7 @@ describe('CreatureLibraryPageComponent', () => {
 
     expect(page.querySelector('table')).toBeNull();
     expect(noms()).toEqual(['Andrak', 'Azhdarkho', 'Cathgan', 'Fille de Djidaâ', 'Momie royale']);
-    expect(texte(tuile('Cathgan').querySelector('.dw-tuile-rang'))).toBe('Piétaille');
+    expect(texte(tuile('Cathgan').querySelector('bol-rang'))).toBe('Piétaille');
     expect(tuile('Cathgan').querySelector('.dw-tuile-sorte')?.getAttribute('aria-label')).toBe('Créature');
     expect(texte(tuile('Cathgan').querySelector('.dw-tuile__coeur b'))).toBe('2');
     expect(texte(page.querySelector('.dw-lr-barre .dw-lr-nombre'))).toBe('5 créatures');

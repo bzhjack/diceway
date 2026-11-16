@@ -14,7 +14,8 @@ import {LibraryFondComponent} from '../../shared/library/library-fond/library-fo
 import {LibraryBarreComponent} from '../../shared/library/library-barre/library-barre';
 import {LibraryFacetteComponent} from '../../shared/library/library-facette/library-facette';
 import {TuileComponent} from '../../shared/tuile/tuile';
-import {BolFichesPageBase, compteDit, RANG_LABELS} from '../../shared/library/library-rows-page.base';
+import {BolFichesPageBase, compteDit} from '../../shared/library/library-rows-page.base';
+import {RangComponent} from '../../shared/rang/rang';
 import {LibraryOption, LibraryRang} from '../../shared/models/library-rows.model';
 import {LibraryDeleteTexts} from '../../shared/models/library-page.model';
 import {carrieresDe, languesDe} from '../../shared/personnage.util';
@@ -31,6 +32,7 @@ import {pnjImage} from '../pnj.util';
 @Component({
   selector: 'bol-pnj-library-page',
   imports: [
+    RangComponent,
     RouterLink,
     MatButtonModule,
     MatIconModule,
@@ -101,7 +103,7 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel> {
   });
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
 
-  /** Les tuiles : le PNJ, son nom, son portrait, le nom de son rang, s'il est au compte. */
+  /** Les tuiles : le PNJ, son nom, son portrait, son rang, s'il est au compte. */
   protected readonly lignes = computed(() =>
     this.filteredPnjs().map((pnj) => {
       const rang = this.rangDe(pnj);
@@ -109,7 +111,7 @@ export class PnjLibraryPageComponent extends BolFichesPageBase<BolHerosModel> {
         pnj,
         nom: this.nomDe(pnj),
         image: pnjImage(pnj),
-        rangLabel: RANG_LABELS[rang],
+        rang: rang,
         mien: Boolean(pnj.user_id),
       };
     }),
