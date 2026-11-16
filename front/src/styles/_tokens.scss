@@ -76,6 +76,8 @@
   --dw-forge-gauge:         #090503; // le fond d'une jauge
   --dw-forge-bone-dim:      #efe2c8; // ce que change un verdict
   --dw-forge-caption:       #b8a582; // une légende sous un chiffre
+  // Le texte indicatif d'un champ vide (placeholder) : tamisé, pour ne pas passer pour une valeur déjà saisie.
+  --dw-placeholder:         color-mix(in srgb, var(--dw-forge-caption) 60%, transparent);
   --dw-forge-chance-mid:    #e8b04a; // des chances moyennes
   --dw-forge-total:         #ffe9bd; // la case du total
   --dw-forge-out-edge:      #b3261e; // le bord du bouton d'un exclu

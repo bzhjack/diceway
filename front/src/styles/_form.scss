@@ -128,3 +128,16 @@ input[type='number'] {
   color: var(--dw-forge-verdict-echec) !important;
   margin-top: 0.35rem;
 }
+
+// Les placeholders, dans toute l'appli : tamisés (`--dw-placeholder`) et un peu plus petits que la saisie, pour qu'un champ vide ne passe
+// pas pour un champ déjà rempli. Les champs Material prennent la même couleur par leurs jetons (`_material-form-field-theme`, `_forge-page`).
+input::placeholder,
+textarea::placeholder {
+  color: var(--dw-placeholder);
+  font-size: 0.8em;
+  opacity: 1;
+}
+
+.mat-mdc-select-placeholder {
+  font-size: 0.8em;
+}

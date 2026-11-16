@@ -554,7 +554,7 @@ bol-tas-attaquant:has(> .tas-head-fantome) > .tas-head:not(.tas-head-fantome) {
     color: var(--dw-forge-bone);
 
     &::placeholder {
-      color: var(--dw-forge-stud-text);
+      color: var(--dw-placeholder);
     }
 
     &:focus {

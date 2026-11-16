@@ -136,7 +136,7 @@
   outline: none;
 
   &::placeholder {
-    color: var(--dw-forge-caption);
+    color: var(--dw-placeholder);
   }
 
   &:hover,
@@ -417,7 +417,7 @@
   outline: none;
 
   &::placeholder {
-    color: var(--dw-forge-caption);
+    color: var(--dw-placeholder);
     font-style: italic;
   }
 

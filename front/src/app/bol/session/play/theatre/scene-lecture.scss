@@ -129,13 +129,14 @@
   line-height: 1.6;
   white-space: pre-line;
 
+  // Une lettrine montante : sur la première ligne seulement, le reste du mot posé à son pied (même ligne de base) ; les lignes
+  // suivantes repartent sous elle, à la marge.
   &::first-letter {
-    float: left;
-    padding: 0.08em 0.1em 0 0;
+    padding-right: 0.04em;
     color: var(--dw-forge-gold);
     font-family: 'Muse Display Harmony', serif;
-    font-size: 3.35em;
-    line-height: 0.82;
+    font-size: 2.1em;
+    line-height: 1;
   }
 }
 

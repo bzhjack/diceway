@@ -187,9 +187,9 @@
                             <input matInput [formField]="jet.echec" autocomplete="off" placeholder="Ce qui arrive si ça rate" />
                           </mat-form-field>
                         </div>
-                        <details class="sfp-jet-plus">
+                        <details class="sfp-jet-plus" #plus [open]="plusDeplie(jet, jet().value())" (toggle)="basculerPlus(jet, plus.open)">
                           <summary>
-                            Réussite, carrière, moment
+                            Réussite, carrière, quand
                             @if (jet().value().reussite || jet().value().carriere || jet().value().quand) {
                               <span class="sfp-rempli" aria-hidden="true"></span>
                               <span class="sr-only">(écrit)</span>

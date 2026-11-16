@@ -39,9 +39,9 @@ const CATALOGUE = [
 ] as unknown as CombatCatalogEntry[];
 
 describe('SceneFormPageComponent', () => {
-  async function rendre(params: {id?: string; chapitre?: string} = {id: 's1'}) {
+  async function rendre(params: {id?: string; chapitre?: string; jets?: BolSceneModel['jets']} = {id: 's1'}) {
     const sceneService = {
-      scenes: vi.fn(() => of([SCENE, {...SCENE, id: 's2', titre: 'La citadelle', ordre: 1}])),
+      scenes: vi.fn(() => of([{...SCENE, jets: params.jets ?? null}, {...SCENE, id: 's2', titre: 'La citadelle', ordre: 1}])),
       update: vi.fn((id: string) => of({...SCENE, id})),
       create: vi.fn(() => of({...SCENE, id: 'nouvelle', distribution: []})),
     };
@@ -198,6 +198,19 @@ describe('SceneFormPageComponent', () => {
     expect((sceneService.update.mock.calls[0] as unknown[])[1]).toMatchObject({
       jets: [{titre: 'Coquillage', attributs: ['vigueur'], difficulte: 'ardue', enjeu: 'dégager sa jambe', echec: 'le pied reste pris', reussite: null, carriere: null, quand: null}],
     });
+  });
+
+  it('le moment d’un jet se lit sous « Réussite, carrière, quand », déplié d’office quand l’un d’eux est écrit', async () => {
+    const trou = {titre: 'Trou', attributs: ['esprit' as const], difficulte: 'moyenne' as const, enjeu: null, echec: null, reussite: null, carriere: null, quand: 'si le joueur regarde où il marche'};
+    const coquillage = {...trou, titre: 'Coquillage', quand: null};
+    const {page, texte, fixture} = await rendre({id: 's1', jets: [trou, coquillage]});
+    [...page.querySelectorAll<HTMLButtonElement>('.sfp-onglet')].find((b) => texte(b)?.startsWith('Jets'))!.click();
+    await fixture.whenStable();
+
+    const plus = [...page.querySelectorAll<HTMLDetailsElement>('details.sfp-jet-plus')];
+    expect(plus.map((d) => texte(d.querySelector('summary'))?.replace(' (écrit)', ''))).toEqual(['Réussite, carrière, quand', 'Réussite, carrière, quand']);
+    expect(plus.map((d) => d.open)).toEqual([true, false]);
+    expect(plus[0].querySelector<HTMLInputElement>('.sfp-jet-quand input')?.value).toBe('si le joueur regarde où il marche');
   });
 
   it('un jet sans titre empêche d’enregistrer ; on le monte, on le descend, on le retire', async () => {

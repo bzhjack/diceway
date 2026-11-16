@@ -300,6 +300,26 @@ export class SceneFormPageComponent implements HasPendingChanges {
     this.value.update((value) => ({...value, pistes: value.pistes.filter((_, position) => position !== index)}));
   }
 
+  /** Les jets dont « Réussite, carrière, quand » a été déplié : il le reste, même quand on vide ses champs en tapant. */
+  private readonly plusOuverts = signal<ReadonlySet<object>>(new Set());
+
+  /** « Réussite, carrière, quand » est déplié d'office quand l'un d'eux est écrit, ou quand le MJ l'a ouvert. */
+  protected plusDeplie(jet: object, valeur: JetSaisie): boolean {
+    return this.plusOuverts().has(jet) || Boolean(valeur.reussite || valeur.carriere || valeur.quand);
+  }
+
+  protected basculerPlus(jet: object, ouvert: boolean): void {
+    this.plusOuverts.update((ouverts) => {
+      const suite = new Set(ouverts);
+      if (ouvert) {
+        suite.add(jet);
+      } else {
+        suite.delete(jet);
+      }
+      return suite;
+    });
+  }
+
   protected addJet(): void {
     if (this.jetCount() < JETS_MAX) {
       this.value.update((value) => ({...value, jets: [...value.jets, jetVide()]}));

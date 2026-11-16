@@ -9,7 +9,7 @@ html {
     outlined-label-text-color: var(--dw-surface-500),
     outlined-hover-label-text-color: var(--dw-surface-700),
     outlined-input-text-color: var(--dw-surface-800),
-    outlined-input-text-placeholder-color: var(--dw-surface-600),
+    outlined-input-text-placeholder-color: var(--dw-placeholder),
     leading-icon-color: var(--dw-surface-500),
     trailing-icon-color: var(--dw-surface-500),
     container-height: 40px,
@@ -17,7 +17,7 @@ html {
   ));
   @include mat.select-overrides((
     enabled-trigger-text-color: var(--dw-surface-800),
-    placeholder-text-color: var(--dw-surface-600),
+    placeholder-text-color: var(--dw-placeholder),
   ));
 }
 
