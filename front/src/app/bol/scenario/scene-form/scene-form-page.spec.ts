@@ -292,7 +292,7 @@ describe('SceneFormPageComponent', () => {
     await fixture.whenStable();
     await enregistrer();
 
-    expect(sceneService.create).toHaveBeenCalledWith('La citadelle', 'dv1', null);
+    expect(sceneService.create).toHaveBeenCalledWith('La citadelle', 'dv1');
     expect(sceneService.update).toHaveBeenCalledWith('nouvelle', expect.objectContaining({titre: 'La citadelle', distribution: []}));
   });
 });

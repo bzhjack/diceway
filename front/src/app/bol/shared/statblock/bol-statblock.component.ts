@@ -23,7 +23,7 @@ interface TileGroup {
 
 /** Fiche d'un personnage BoL, faite pour tenir à l'écran : un bandeau d'identité (médaillon, nom, type, vitalité en cœur, héroïsme
  * en gemmes), les chiffres en tuiles rangés par famille (attributs, combat, ce qu'il a en main), puis les listes en colonnes
- * (carrières, traits, armes, armures, capacités…). Sert aux bibliothèques et à la réserve (dialogue du statbloc) et à la carte d'un
+ * (carrières, traits, armes, armures, capacités…). Sert aux bibliothèques (dialogue du statbloc) et à la carte d'un
  * PNJ, d'une créature ou d'un démon sur la table : celle-ci y projette son stepper de vitalité (`sheetSide`), ses boutons
  * (`sheetActions`) et un pied (`sheetFooter`). */
 @Component({

@@ -1,5 +1,5 @@
 // Scénario : le théâtre du mode libre. Une scène préparée se charge rideau fermé, son cartouche, ses règles (« En jeu ») et son
-// secret s'affichent, un personnage entre depuis les coulisses ; le lieu ouvre la carte, la région cerclée ; une scène bondée ne
+// secret s'affichent, un personnage entre par le casting d'« Ajouter un personnage » ; le lieu ouvre la carte, la région cerclée ; une scène bondée ne
 // fait pas défiler la page en largeur ; une illustration cassée retombe sur l'image par défaut.
 // Lancer son propre `npx ng serve --port 4400` d'abord ; ne jamais utiliser le port 4200 (serveur IntelliJ de Lionel).
 import {tmpdir} from 'node:os';
@@ -50,7 +50,11 @@ const debordements = () =>
       lecture: lecture ? lecture.scrollHeight - lecture.clientHeight : 0,
     };
   });
-const troupeCount = () => page.locator('bol-troupe .trp-slot').count();
+/** Les personnages non héros de la table, d'après l'API : les tuiles regroupent les exemplaires d'une fiche. */
+const troupeCount = async () => {
+  const session = await api('GET', `bol/fight-session/${sessionId}`);
+  return (session.pnjs?.length ?? 0) + (session.creatures?.length ?? 0) + (session.demons?.length ?? 0);
+};
 
 await page.goto(base + '/login', {waitUntil: 'domcontentloaded'});
 await page.evaluate(async ({email, password}) => {
@@ -143,27 +147,20 @@ try {
   if ((await jeu.innerText()).trim() !== 'Gué : Vigueur Ardu (-1).') fail('« En jeu » n’est pas mis à jour au retour à la table');
   await page.screenshot({path: `${shots}/theatre-1-en-jeu.png`});
 
-  // 5. Un PNJ glissé des coulisses sur la troupe entre en scène (zone de dépôt `adversaires`).
+  // 5. « Ajouter un personnage » ouvre le casting de « Préparer la scène » : la première fiche choisie entre à la table.
   const avant = await troupeCount();
-  await page.getByRole('button', {name: 'Ajouter des personnages'}).click();
-  await page.getByRole('radio', {name: 'PNJ'}).or(page.getByRole('button', {name: 'PNJ', exact: true})).first().click();
-  await page.waitForTimeout(500);
-  const ligne = await page.locator('.rsv-row:not(.rsv-row--on-table)').first().boundingBox();
-  const rampe = await page.locator('bol-troupe .trp').boundingBox();
-  await page.mouse.move(ligne.x + 40, ligne.y + ligne.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(ligne.x + 30, ligne.y + ligne.height / 2 + 10, {steps: 3});
-  await page.mouse.move(rampe.x + rampe.width / 2, rampe.y + rampe.height / 2, {steps: 15});
-  await page.mouse.up();
-  await page.waitForTimeout(1500);
-  if ((await troupeCount()) !== avant + 1) fail('le PNJ glissé depuis les coulisses n’est pas entré en scène');
-  await page.screenshot({path: `${shots}/theatre-2-coulisses.png`});
+  await page.getByRole('button', {name: 'Ajouter un personnage'}).click();
+  const casting = page.getByRole('dialog');
+  await casting.locator('.pdg-tuile[aria-label^="Ajouter "]').first().click();
+  await casting.getByRole('button', {name: 'Ajouter à la table'}).click();
+  await casting.waitFor({state: 'detached'});
+  await page.waitForTimeout(800);
+  if ((await troupeCount()) !== avant + 1) fail('le personnage choisi dans le casting n’est pas entré à la table');
+  await page.screenshot({path: `${shots}/theatre-2-casting.png`});
 
   // 6. Scène bondée, texte à lire très long : le plateau ne déborde pas en largeur ; la troupe et la lecture défilent
   // chacune dans leur zone (à 1440 × 900, le plateau tient sans défiler).
   await addCrowd();
-  // Les coulisses, ouvertes à l'étape 5, sont refermées : le plateau est mesuré dans toute sa largeur.
-  await page.getByRole('button', {name: 'Fermer les coulisses'}).click();
   for (const [width, height] of [[1440, 900], [1024, 768]]) {
     await page.setViewportSize({width, height});
     await page.reload({waitUntil: 'networkidle'});

@@ -3,7 +3,8 @@ import {CombatCatalogEntry} from '../../models/combat-selection.model';
 import {LibraryRang, LibrarySource} from '../../shared/models/library-rows.model';
 
 /** Ce que reçoit « Ajouter des personnages » : le scénario de la scène (ses fiches sont proposées d'abord) ; son titre, son
- * illustration et son ambiance, pour le bandeau ; et ses personnages, qui forment « La distribution ». */
+ * illustration et son ambiance, pour le bandeau ; et ses personnages, qui forment « La distribution ». Pour la table (`cible`), il
+ * s'ouvre vide et rend seulement ceux qui entrent. */
 export interface PersonnagesDialogData {
   readonly scenarioId: string | null;
   readonly sceneTitre: string;
@@ -11,6 +12,8 @@ export interface PersonnagesDialogData {
   /** « Jalad Nût, de nuit, danger 4 » ; vide sans lieu, moment ni danger. */
   readonly sceneAmbiance: string;
   readonly personnages: readonly BolSceneDistributionSaisie[];
+  /** `scene` (« Préparer la scène », par défaut) : valider rend toute la distribution ; `table` : les personnages à ajouter à la table. */
+  readonly cible?: 'scene' | 'table';
 }
 
 /** Le type d'une fiche à mettre en scène ; null : tous. */

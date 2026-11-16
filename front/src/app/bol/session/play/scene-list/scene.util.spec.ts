@@ -1,13 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import {BolSceneEntry, BolSceneModel} from '../../../models/bol-scene.model';
+import {BolSceneModel} from '../../../models/bol-scene.model';
 import {
-  distributionSummary,
   ignoresMessage,
   loadMessage,
-  moveScene,
   needsLoadChoice,
-  normalizeTitre,
-  scenarioFilterFor,
   scenesOf,
   tableTitle,
   headerTitle,
@@ -16,23 +12,6 @@ import {
 function scene(id: string, scenarioId: string | null, ordre: number, titre = id): BolSceneModel {
   return {id, scenario_id: scenarioId, titre, ordre, notes: null, distribution: [], region_id: null, lieu: null, moment: null, meteo: null, danger: null, lecture: null, jeu: null, jets: null, pistes: null, image: null};
 }
-
-function entry(kind: BolSceneEntry['kind'], qty: number): BolSceneEntry {
-  return {kind, source_id: 'x', qty};
-}
-
-describe('scenarioFilterFor', () => {
-  const known = new Set(['s1', 's2']);
-
-  it('shows the scenario of the table when the account knows it', () => {
-    expect(scenarioFilterFor('s2', known)).toBe('s2');
-  });
-
-  it('falls back to « On improvise » (null) for a table without scenario or with an unknown one', () => {
-    expect(scenarioFilterFor(null, known)).toBeNull();
-    expect(scenarioFilterFor('gone', known)).toBeNull();
-  });
-});
 
 describe('scenesOf', () => {
   const scenes = [scene('b', 's1', 1), scene('a', 's1', 0), scene('c', null, 0), scene('d', 's2', 0)];
@@ -55,45 +34,6 @@ describe('scenesOf', () => {
   it('breaks an order tie by title so the list is stable', () => {
     const tied = [scene('2', null, 0, 'Temple'), scene('1', null, 0, 'Auberge')];
     expect(scenesOf(tied, null, known).map((s) => s.titre)).toEqual(['Auberge', 'Temple']);
-  });
-});
-
-describe('distributionSummary', () => {
-  it('says there is nobody for an empty distribution', () => {
-    expect(distributionSummary([])).toBe('Aucun personnage');
-  });
-
-  it('counts instances per kind, with French plurals', () => {
-    expect(distributionSummary([entry('pnj', 1), entry('pnj', 1), entry('creature', 3), entry('demon', 1)])).toBe(
-      '2 PNJ · 3 créatures · 1 démon',
-    );
-  });
-
-  it('omits the kinds that are absent', () => {
-    expect(distributionSummary([entry('creature', 1)])).toBe('1 créature');
-  });
-});
-
-describe('moveScene', () => {
-  const ids = ['a', 'b', 'c'];
-
-  it('moves a scene one rank up or down', () => {
-    expect(moveScene(ids, 'b', -1)).toEqual(['b', 'a', 'c']);
-    expect(moveScene(ids, 'b', 1)).toEqual(['a', 'c', 'b']);
-  });
-
-  it('returns null when the first scene goes up or the last one goes down', () => {
-    expect(moveScene(ids, 'a', -1)).toBeNull();
-    expect(moveScene(ids, 'c', 1)).toBeNull();
-  });
-
-  it('returns null for a scene that is not in the list', () => {
-    expect(moveScene(ids, 'zzz', 1)).toBeNull();
-  });
-
-  it('does not mutate the list it is given', () => {
-    moveScene(ids, 'b', 1);
-    expect(ids).toEqual(['a', 'b', 'c']);
   });
 });
 
@@ -121,22 +61,6 @@ describe('tableTitle', () => {
 
   it('shows the scene alone when it has no scenario', () => {
     expect(tableTitle('x', {id: '1', titre: 'Le temple', scenario: null})).toBe('Le temple');
-  });
-});
-
-describe('normalizeTitre', () => {
-  it('trims the title', () => {
-    expect(normalizeTitre('  Le temple ')).toBe('Le temple');
-  });
-
-  it('rejects an empty or blank title', () => {
-    expect(normalizeTitre('')).toBeNull();
-    expect(normalizeTitre('   ')).toBeNull();
-    expect(normalizeTitre(null)).toBeNull();
-  });
-
-  it('cuts a title longer than 120 characters', () => {
-    expect(normalizeTitre('a'.repeat(200))).toHaveLength(120);
   });
 });
 

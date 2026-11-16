@@ -26,13 +26,10 @@ class BolSceneController extends Controller
         $data = $request->validate([
             'titre'       => 'required|string|max:120',
             'scenario_id' => 'nullable|string',
-            'session_id'  => 'nullable|string',
         ]);
 
-        // Depuis la table, la scène prend ce qui y est posé ; depuis la bibliothèque des scénarios, elle naît vide.
-        $scene = isset($data['session_id'])
-            ? $this->sceneService->createFromSession(Auth::id(), $data['titre'], $data['scenario_id'] ?? null, $data['session_id'])
-            : $this->sceneService->createVide(Auth::id(), $data['titre'], $data['scenario_id'] ?? null);
+        // Une scène naît vide, dans la bibliothèque des scénarios ; elle se prépare ensuite dans « Préparer la scène ».
+        $scene = $this->sceneService->createVide(Auth::id(), $data['titre'], $data['scenario_id'] ?? null);
 
         return $scene ? response()->json($scene) : $this->notFound();
     }
@@ -101,15 +98,6 @@ class BolSceneController extends Controller
         return response()->json(true);
     }
 
-    public function replaceDistribution(Request $request, string $id)
-    {
-        $data = $request->validate(['session_id' => 'required|string']);
-
-        $scene = $this->sceneService->replaceDistribution(Auth::id(), $id, $data['session_id']);
-
-        return $scene ? response()->json($scene) : $this->notFound();
-    }
-
     public function delete(string $id)
     {
         $this->sceneService->delete(Auth::id(), $id);
@@ -128,6 +116,23 @@ class BolSceneController extends Controller
             $result = $this->sceneService->loadIntoSession(Auth::id(), $id, $data['scene_id'], $data['mode']);
         } catch (SceneLoadNotAllowedException) {
             return response()->json(['error' => 'Terminez le combat avant de charger une scène.'], 409);
+        }
+
+        return $result ? response()->json($result) : $this->notFound();
+    }
+
+    /** « Ajouter des personnages » à la table : la distribution du casting s'assied à côté de ce qui y est. */
+    public function ajouterALaTable(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'distribution'   => 'present|array|max:' . BolSceneDistribution::SAISIE_MAX,
+            'distribution.*' => 'array',
+        ]);
+
+        try {
+            $result = $this->sceneService->ajouterALaTable(Auth::id(), $id, $data['distribution']);
+        } catch (SceneLoadNotAllowedException) {
+            return response()->json(['error' => 'Terminez le combat avant d\'ajouter des personnages.'], 409);
         }
 
         return $result ? response()->json($result) : $this->notFound();

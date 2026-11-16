@@ -41,7 +41,7 @@ import {lieuTexte} from './theatre.util';
       </div>
     } @else {
       <h2 class="ctc-titre">Aucune scène chargée</h2>
-      <p class="ctc-aide">Choisis une scène dans la frise, ou fais entrer des personnages depuis les coulisses.</p>
+      <p class="ctc-aide">Choisis une scène dans la frise, ou fais entrer des personnages avec « Ajouter un personnage ».</p>
     }
   `,
   styles: `

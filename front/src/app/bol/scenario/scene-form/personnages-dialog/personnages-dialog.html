@@ -153,7 +153,7 @@
 
   <!-- La distribution : la scène telle qu'elle sera, le camp en couleur. -->
   <aside class="pdg-distribution" aria-labelledby="pdg-distribution-titre">
-    <h3 class="pdg-distribution-titre" id="pdg-distribution-titre">La distribution</h3>
+    <h3 class="pdg-distribution-titre" id="pdg-distribution-titre">{{ pourLaTable ? 'À ajouter à la table' : 'La distribution' }}</h3>
     @if (total()) {
       <div class="pdg-camps" aria-hidden="true">
         <span class="pdg-camps-adversaires" [style.flex-grow]="camps().adversaires"></span>
@@ -179,10 +179,18 @@
 
 <mat-dialog-actions class="pdg-actions">
   <span class="pdg-total" role="status">
-    <b>{{ total() }} personnage{{ total() > 1 ? 's' : '' }}</b> dans la scène{{ nouveaux() ? ' · ' + nouveaux() + ' nouveau' + (nouveaux() > 1 ? 'x' : '') : '' }}{{
-      pleine() ? ' : la scène est pleine (60 fiches au plus)' : ''
-    }}
+    @if (pourLaTable) {
+      <b>{{ total() }} personnage{{ total() > 1 ? 's' : '' }}</b> à ajouter à la table{{ pleine() ? ' (60 fiches au plus)' : '' }}
+    } @else {
+      <b>{{ total() }} personnage{{ total() > 1 ? 's' : '' }}</b> dans la scène{{ nouveaux() ? ' · ' + nouveaux() + ' nouveau' + (nouveaux() > 1 ? 'x' : '') : '' }}{{
+        pleine() ? ' : la scène est pleine (60 fiches au plus)' : ''
+      }}
+    }
   </span>
   <button mat-stroked-button type="button" [mat-dialog-close]="undefined">Annuler</button>
-  <button mat-flat-button type="button" [disabled]="!change()" (click)="valider()"><mat-icon>check</mat-icon> Valider la distribution</button>
+  @if (pourLaTable) {
+    <button mat-flat-button type="button" [disabled]="!change()" (click)="valider()"><mat-icon>person_add</mat-icon> Ajouter à la table</button>
+  } @else {
+    <button mat-flat-button type="button" [disabled]="!change()" (click)="valider()"><mat-icon>check</mat-icon> Valider la distribution</button>
+  }
 </mat-dialog-actions>

@@ -21,7 +21,8 @@ import {fichesDeScene, filtrerFiches, lignesDesFiches, optionsDesFiltres, scenar
  * la recherche ; puis les filtres (type, scénario, rang, source), chaque option avec son nombre ; à gauche, toutes les fiches de PNJ, de
  * créatures et de démons (catalogue et compte) en portraits, un clic en faisant entrer une (un second clic, un exemplaire de plus) ; à
  * droite, « La distribution » : les personnages de la scène, à régler (nombre, camp, attitude) ou à retirer. Se ferme avec les personnages
- * de la scène tels que la distribution les montre (ou rien, pour ne rien changer).
+ * de la scène tels que la distribution les montre (ou rien, pour ne rien changer). Ouvert depuis la table, la distribution part vide et
+ * « Ajouter à la table » rend ceux qui entrent.
  */
 @Component({
   selector: 'bol-personnages-dialog',
@@ -69,6 +70,8 @@ class PersonnagesDialogComponent {
   protected readonly pleine = computed(() => this.personnages().length >= PERSONNAGES_MAX);
   protected readonly change = computed(() => !memesPersonnages(this.personnages(), this.data.personnages));
 
+  /** Ouvert depuis la table : on choisit ceux qui entrent, rien de ce qui y est déjà. */
+  protected readonly pourLaTable = this.data.cible === 'table';
   protected readonly rangLabels = RANG_LABELS;
   protected readonly aUnPortrait = aUnPortrait;
 
@@ -126,7 +129,7 @@ class PersonnagesDialogComponent {
   }
 
   protected nouveau(perso: ScenePersonnageVue): boolean {
-    return !this.initiaux.has(cleDuPersonnage(perso.kind, perso.source_id));
+    return !this.pourLaTable && !this.initiaux.has(cleDuPersonnage(perso.kind, perso.source_id));
   }
 
   protected valider(): void {

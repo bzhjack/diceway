@@ -28,32 +28,6 @@ class BolSceneService
             ->get();
     }
 
-    /** Crée une scène à partir de l'état de la table ; elle devient la scène courante de la session. */
-    public function createFromSession(string $userId, string $titre, ?string $scenarioId, string $sessionId): ?BolScene
-    {
-        $session = $this->ownedSession($sessionId, $userId);
-        if (!$session || !$this->scenarioAllowed($scenarioId, $userId)) {
-            return null;
-        }
-
-        return DB::transaction(function () use ($userId, $titre, $scenarioId, $session) {
-            $scene = BolScene::create([
-                'user_id'      => $userId,
-                'scenario_id'  => $scenarioId,
-                'titre'        => $titre,
-                'ordre'        => $this->nextOrdre($userId, $scenarioId),
-                'notes'        => null,
-                'distribution' => $this->distributionOf($session),
-            ]);
-            $session->update([
-                'scene_id'      => $scene->id,
-                'scenes_jouees' => BolScenePreparation::played($session->scenes_jouees, $scene->id),
-            ] + $this->scenarioDeLaScene($scene, $session));
-
-            return $scene->load('scenario:id,titre');
-        });
-    }
-
     /** Une scène vide, au dernier rang de son chapitre (du compte, ou aucun) : elle se prépare dans la bibliothèque des scénarios, ses
      * figurants se posent ensuite à la table. `null` pour le chapitre d'un autre compte. */
     public function createVide(string $userId, string $titre, ?string $scenarioId): ?BolScene
@@ -138,20 +112,6 @@ class BolSceneService
         });
     }
 
-    /** Remplace la distribution de la scène par l'état actuel de la table. */
-    public function replaceDistribution(string $userId, string $sceneId, string $sessionId): ?BolScene
-    {
-        $scene = $this->ownedScene($sceneId, $userId);
-        $session = $this->ownedSession($sessionId, $userId);
-        if (!$scene || !$session) {
-            return null;
-        }
-
-        $scene->update(['distribution' => $this->distributionOf($session)]);
-
-        return $scene->load('scenario:id,titre');
-    }
-
     public function delete(string $userId, string $sceneId): void
     {
         DB::transaction(fn () => BolScene::where('id', $sceneId)->where('user_id', $userId)->first()?->delete());
@@ -188,35 +148,7 @@ class BolSceneService
                 }
             }
 
-            $ignored = 0;
-            foreach ($scene->distribution ?? [] as $entry) {
-                $kind = (string) ($entry['kind'] ?? '');
-                $sourceId = (string) ($entry['source_id'] ?? '');
-                $qty = max(1, (int) ($entry['qty'] ?? 1));
-                $camp = BolSceneDistribution::entryCamp($entry);
-                if ($camp === 'heros' && isset($allies[$kind . ':' . $sourceId])) {
-                    continue;
-                }
-
-                $rows = match ($kind) {
-                    'pnj'      => $this->fightSessionService->createPnjRows($sessionId, $sourceId, $camp, $qty),
-                    'creature' => $this->fightSessionService->createCreatureRows($sessionId, $sourceId, $camp, $qty),
-                    'demon'    => $this->fightSessionService->createDemonRows($sessionId, $sourceId, $camp, $qty),
-                    default    => [],
-                };
-
-                if ($rows === []) {
-                    $ignored++;
-                    continue;
-                }
-
-                $attitude = BolSceneDistribution::entryAttitude($entry);
-                if ($attitude !== null) {
-                    foreach ($rows as $row) {
-                        $row->update(['attitude' => $attitude]);
-                    }
-                }
-            }
+            $ignored = $this->asseoir($sessionId, $scene->distribution ?? [], $allies);
 
             $session->update([
                 'scene_id'      => $scene->id,
@@ -228,6 +160,74 @@ class BolSceneService
                 'ignored' => $ignored,
             ];
         });
+    }
+
+    /**
+     * « Ajouter des personnages » à la table : la distribution choisie dans le casting (nombre, camp, attitude) s'assied à côté de ce qui
+     * y est, en une transaction ; seules les fiches que le compte peut mettre en scène sont posées.
+     *
+     * @param array<int, array<string, mixed>> $saisie
+     * @return array{session: BolFightSession|null, ignored: int}|null null si la table est introuvable
+     * @throws SceneLoadNotAllowedException si la table n'est pas en mode libre
+     */
+    public function ajouterALaTable(string $userId, string $sessionId, array $saisie): ?array
+    {
+        $session = $this->ownedSession($sessionId, $userId);
+        if (!$session) {
+            return null;
+        }
+        if ($session->statut !== 'libre') {
+            throw new SceneLoadNotAllowedException();
+        }
+        $distribution = BolSceneDistribution::fromSaisie($saisie, $this->fichesAccessibles($userId, $saisie));
+
+        return DB::transaction(fn () => [
+            'ignored' => $this->asseoir($session->id, $distribution, []),
+            'session' => $this->fightSessionService->getSessionWithRelations($session->id),
+        ]);
+    }
+
+    /**
+     * Assied une distribution à la table : chaque entrée en autant de lignes que d'exemplaires, dans son camp, avec son attitude. Un allié
+     * déjà assis (`allies`, clés `kind:source_id`) ne l'est pas une seconde fois.
+     *
+     * @param array<int, array<string, mixed>> $distribution
+     * @param array<string, true>              $allies
+     * @return int les entrées ignorées : fiche disparue, ou PNJ qui ne peut pas s'asseoir
+     */
+    private function asseoir(string $sessionId, array $distribution, array $allies): int
+    {
+        $ignored = 0;
+        foreach ($distribution as $entry) {
+            $kind = (string) ($entry['kind'] ?? '');
+            $sourceId = (string) ($entry['source_id'] ?? '');
+            $qty = max(1, (int) ($entry['qty'] ?? 1));
+            $camp = BolSceneDistribution::entryCamp($entry);
+            if ($camp === 'heros' && isset($allies[$kind . ':' . $sourceId])) {
+                continue;
+            }
+
+            $rows = match ($kind) {
+                'pnj'      => $this->fightSessionService->createPnjRows($sessionId, $sourceId, $camp, $qty),
+                'creature' => $this->fightSessionService->createCreatureRows($sessionId, $sourceId, $camp, $qty),
+                'demon'    => $this->fightSessionService->createDemonRows($sessionId, $sourceId, $camp, $qty),
+                default    => [],
+            };
+
+            if ($rows === []) {
+                $ignored++;
+                continue;
+            }
+
+            $attitude = BolSceneDistribution::entryAttitude($entry);
+            if ($attitude !== null) {
+                foreach ($rows as $row) {
+                    $row->update(['attitude' => $attitude]);
+                }
+            }
+        }
+
+        return $ignored;
     }
 
     /**
@@ -352,18 +352,6 @@ class BolSceneService
         return $scene->scenario_id !== null && $session->peutPasserSur($scene->scenario_id)
             ? ['scenario_id' => $scene->scenario_id]
             : [];
-    }
-
-    /** @return array<int, array<string, mixed>> */
-    private function distributionOf(BolFightSession $session): array
-    {
-        $sessionId = $session->id;
-
-        return BolSceneDistribution::fromSession(
-            BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id', 'camp', 'attitude'])->toArray(),
-            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'camp', 'attitude'])->toArray(),
-            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'camp', 'attitude'])->toArray(),
-        );
     }
 
     /**

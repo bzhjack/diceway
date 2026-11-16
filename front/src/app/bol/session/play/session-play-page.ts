@@ -1,12 +1,10 @@
-import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, viewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSidenavContent, MatSidenavModule} from '@angular/material/sidenav';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {isEditable, isEndTurnShortcut} from './shortcut.util';
 import {SessionHeaderComponent} from './session-header/session-header';
-import {ReserveComponent} from './reserve/reserve';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {CombatEndService} from './table/combat-end.service';
 import {CombatStatsStore} from './table/combat-stats.store';
@@ -21,7 +19,6 @@ import {SceneActsComponent} from './theatre/scene-acts';
 import {SceneDecorComponent} from './theatre/scene-decor';
 import {SceneStageStore} from './theatre/scene-stage.store';
 import {TheatreComponent} from './theatre/theatre';
-import {ReservePlacementService} from '../reserve-placement.service';
 
 /** Ce que la page demande au plateau. Le composant est chargé par son `@defer` : ce fichier ne doit le citer que dans `imports`. */
 interface CombatBoardHandle {
@@ -30,12 +27,12 @@ interface CombatBoardHandle {
 
 /**
  * La table : page d'accueil d'une session. Mode libre : la frise des actes dans l'en-tête, le carnet du MJ et la feuille de situation
- * (`bol-theatre`, `bol-situation`) et la réserve. Mode combat : `bol-combat-board`. La page assemble l'écran, écoute le clavier et
+ * (`bol-theatre`, `bol-situation`). Mode combat : `bol-combat-board`. La page assemble l'écran, écoute le clavier et
  * lance le chargement ; tout le reste vit dans `table/`, un service par domaine.
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, TurnOrderComponent, SceneActsComponent, SceneDecorComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
+  imports: [RouterLink, MatIconModule, SessionHeaderComponent, CombatBoardComponent, TurnOrderComponent, SceneActsComponent, SceneDecorComponent, RideauComponent, TheatreComponent, MatButtonModule],
   // Une instance par table : la frise de l'en-tête et le plateau partagent les scènes et le rideau.
   providers: [SceneStageStore, TableStore, CombatTurnStore, CombatStatsStore, CombatWoundsService, CombatEndService, ExpandedCardStore, TableCommandsService],
   templateUrl: './session-play-page.html',
@@ -57,28 +54,10 @@ export class SessionPlayPageComponent {
   protected readonly ending = inject(CombatEndService);
   protected readonly expanded = inject(ExpandedCardStore);
   protected readonly commands = inject(TableCommandsService);
-  /** Un glisser des coulisses vers la scène en cours : le backdrop s'efface pour laisser viser la scène. */
-  protected readonly placement = inject(ReservePlacementService);
 
   private readonly combatBoard = viewChild<CombatBoardHandle>('combatBoard');
-  /** Le plateau sous les coulisses : Material le rend `inert` derrière le voile. */
-  private readonly sceneContent = viewChild(MatSidenavContent, {read: ElementRef});
 
   constructor() {
-    // Un élément `inert` échappe à `document.elementFromPoint` : pendant un glisser des coulisses vers la scène, le plateau redevient
-    // visable (le dépôt cherche la zone sous le pointeur), puis repasse derrière le voile tant que les coulisses restent ouvertes.
-    effect(() => {
-      const content = this.sceneContent()?.nativeElement as HTMLElement | undefined;
-      if (!content) {
-        return;
-      }
-      if (this.placement.dragging()) {
-        content.removeAttribute('inert');
-      } else if (this.table.reserveOpen()) {
-        content.setAttribute('inert', 'true');
-      }
-    });
-
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.table.errorMessage.set('Session introuvable.');

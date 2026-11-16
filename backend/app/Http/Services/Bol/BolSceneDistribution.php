@@ -18,6 +18,31 @@ class BolSceneDistribution
     public const QTY_MAX = 30;
 
     /**
+     * Une entrée par personnage : les entrées de la même fiche, du même camp et de la même attitude n'en font qu'une, à la place
+     * de la première, avec la somme de leurs exemplaires (au plus `QTY_MAX`) ; « Préparer la scène » et la table en font un
+     * paquet (« ×5 »).
+     *
+     * @param array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null}> $entries
+     * @return list<array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null}>
+     */
+    public static function regroupee(array $entries): array
+    {
+        $result = [];
+        $index = [];
+        foreach ($entries as $entry) {
+            $cle = implode("\0", [$entry['kind'], $entry['source_id'], $entry['camp'], $entry['attitude'] ?? '']);
+            if (isset($index[$cle])) {
+                $result[$index[$cle]]['qty'] = min(self::QTY_MAX, $result[$index[$cle]]['qty'] + $entry['qty']);
+                continue;
+            }
+            $index[$cle] = count($result);
+            $result[] = $entry;
+        }
+
+        return $result;
+    }
+
+    /**
      * Distribution saisie dans « Préparer la scène » : les entrées dont la fiche est accessible au compte (`accessibles`, clés
      * `kind:source_id`), avec leur nombre d'exemplaires (un PNJ aussi : trois gardes d'une même fiche), le camp et l'attitude normalisés.
      *
@@ -44,53 +69,7 @@ class BolSceneDistribution
             ];
         }
 
-        return $entries;
-    }
-
-    /**
-     * Distribution d'une session : une entrée par ligne PNJ, créature puis démon. Une ligne dont la
-     * fiche source a été supprimée est ignorée. Les héros n'en font jamais partie.
-     *
-     * @param array<int, array<string, mixed>> $pnjs      lignes avec `id`, `pnj_id`
-     * @param array<int, array<string, mixed>> $creatures lignes avec `id`, `creature_id`, `qty`
-     * @param array<int, array<string, mixed>> $demons    lignes avec `id`, `demon_id`, `qty`
-     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null}>
-     */
-    public static function fromSession(array $pnjs, array $creatures, array $demons): array
-    {
-        $entries = [];
-
-        foreach ($pnjs as $row) {
-            $sourceId = self::sourceId($row['pnj_id'] ?? null);
-            if ($sourceId === null) {
-                continue;
-            }
-            $entries[] = [
-                'kind'      => 'pnj',
-                'source_id' => $sourceId,
-                'qty'       => 1,
-                'camp'      => self::entryCamp($row),
-                'attitude'  => self::entryAttitude($row),
-            ];
-        }
-
-        foreach ([['creature', 'creature_id', $creatures], ['demon', 'demon_id', $demons]] as [$kind, $column, $rows]) {
-            foreach ($rows as $row) {
-                $sourceId = self::sourceId($row[$column] ?? null);
-                if ($sourceId === null) {
-                    continue;
-                }
-                $entries[] = [
-                    'kind'      => $kind,
-                    'source_id' => $sourceId,
-                    'qty'       => max(1, (int) ($row['qty'] ?? 1)),
-                    'camp'      => self::entryCamp($row),
-                    'attitude'  => self::entryAttitude($row),
-                ];
-            }
-        }
-
-        return $entries;
+        return self::regroupee($entries);
     }
 
     /**

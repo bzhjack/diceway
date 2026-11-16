@@ -39,10 +39,8 @@ export class TheatreComponent {
   readonly sceneChanged = output<BolSceneLoadResult>();
   /** Une vitalité ou un héroïsme a été enregistré. */
   readonly changed = output<TableChange>();
-  /** Les coulisses (la réserve) sont ouvertes. */
-  readonly coulissesOpen = input(false);
-  /** « Ajouter des personnages » : ouvre les coulisses, d'où ils entrent en scène. */
-  readonly coulissesRequested = output<void>();
+  /** « Ajouter un personnage » : la page ouvre le casting de « Préparer la scène ». */
+  readonly ajoutRequested = output<void>();
   /** « Démarrer un combat ». */
   readonly combatRequested = output<void>();
   /** Un jet de la scène lancé, depuis le carnet, pour un héros : la page ouvre sa carte, le panneau de jet réglé. */

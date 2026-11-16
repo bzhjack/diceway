@@ -20,8 +20,8 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {combatantKindIcon} from '../../combat-statblock.util';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
-import {ReservePlacementService} from '../../reserve-placement.service';
-import {StageDragDirective} from '../reserve/stage-drag.directive';
+import {StageDragDirective} from './stage-drag.directive';
+import {StageDragService} from './stage-drag.service';
 import {isLowVitalite, vitaliteText} from '../tapis/tapis.util';
 import {ATTITUDES, compagnie, troupe} from './theatre.util';
 
@@ -107,7 +107,7 @@ function totalVitalite(cards: readonly TapisCard[]): string {
  * détail de chaque exemplaire) ; le nom suivi du point de l'attitude de ceux d'en face (son nom en infobulle, son menu d'un clic), le
  * rang et l'icône de la sorte. Un clic n'importe où ouvre la carte du personnage, où se règlent sa vitalité et son héroïsme ;
  * Ctrl + clic la sélectionne. L'attitude est enregistrée aussitôt et rendue à la page (`changed`). Les deux camps sont les zones de
- * dépôt `adversaires` et `heros` : un personnage glissé depuis les coulisses y entre, une tuile glissée de l'un à l'autre change de camp.
+ * dépôt `adversaires` et `heros` : une tuile glissée de l'un à l'autre change de camp.
  */
 @Component({
   selector: 'bol-situation',
@@ -133,7 +133,7 @@ function totalVitalite(cards: readonly TapisCard[]): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SituationComponent {
-  private readonly placement = inject(ReservePlacementService);
+  private readonly drag = inject(StageDragService);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -168,11 +168,11 @@ export class SituationComponent {
 
   /** Une zone s'allume pendant un glisser qui peut y finir : pas une ligne qui en part, ni un héros vers les adversaires. */
   protected readonly enFaceDroppable = computed(
-    () => this.placement.dragging() && this.placement.originCamp() !== 'adversaires' && this.placement.adversairesDroppable(),
+    () => this.drag.dragging() && this.drag.originCamp() !== 'adversaires' && this.drag.adversairesDroppable(),
   );
-  protected readonly compagnieDroppable = computed(() => this.placement.dragging() && this.placement.originCamp() !== 'heros');
-  protected readonly enFaceHot = computed(() => this.placement.hoverCamp() === 'adversaires');
-  protected readonly compagnieHot = computed(() => this.placement.hoverCamp() === 'heros');
+  protected readonly compagnieDroppable = computed(() => this.drag.dragging() && this.drag.originCamp() !== 'heros');
+  protected readonly enFaceHot = computed(() => this.drag.hoverCamp() === 'adversaires');
+  protected readonly compagnieHot = computed(() => this.drag.hoverCamp() === 'heros');
 
   /** Aucune liste ne reçoit de ligne : CDK n'est là que pour l'aperçu du glisser. */
   protected readonly rejectDrop = (): boolean => false;

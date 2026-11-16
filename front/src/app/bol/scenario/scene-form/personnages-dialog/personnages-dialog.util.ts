@@ -1,12 +1,20 @@
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {BolFicheScenario} from '../../../models/bol-fiche-scenario.model';
-import {KIND_LABEL, normalizeSearch} from '../../../session/play/reserve/reserve.util';
 import {RANG_LABELS} from '../../../shared/library/library-rows-page.base';
 import {scenariosDesFiches} from '../../../shared/library/library-scenarios.util';
 import {LibraryOption, LibraryRang, LibraryScenarioOption, LibrarySource} from '../../../shared/models/library-rows.model';
 import {PersonnageLigne, PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
-import {cleDuPersonnage, PERSONNAGES_MAX, QTY_MAX, rangDe} from '../scene-form.util';
+import {cleDuPersonnage, KIND_LABEL, PERSONNAGES_MAX, QTY_MAX, rangDe} from '../scene-form.util';
+
+/** Minuscules sans diacritiques : « Prêtre » et « pretre » se valent pour la recherche. */
+function normalizeSearch(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase()
+    .trim();
+}
 
 const TYPES: readonly {cle: PersonnageType; label: string}[] = [
   {cle: null, label: 'Tous'},

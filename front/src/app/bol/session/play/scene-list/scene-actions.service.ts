@@ -2,18 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {map, Observable, of, switchMap, take, tap} from 'rxjs';
-import {promptDialog} from '../../../../shared/dw-prompt-dialog/dw-prompt-dialog';
 import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneLoadDialogComponent} from './scene-load-dialog';
 import {SceneLoadDialogData} from '../../models/scene-load-dialog.model';
-import {loadMessage, needsLoadChoice, normalizeTitre, SCENE_TITLE_MAX} from './scene.util';
+import {loadMessage, needsLoadChoice} from './scene.util';
 
-/** Les deux gestes sur les scènes qui touchent la table, partagés par l'onglet Scènes et la barre de
- * commande pour qu'ils fassent exactement la même chose : dialogues, appel réseau, message. Chaque
- * méthode émet `null` si l'utilisateur annule ; l'appelant recharge la session sur une valeur non
- * nulle et affiche l'erreur éventuelle. */
+/** Charger une scène sur la table : le choix « Remplacer ou Ajouter », l'appel réseau, le message. Émet `null` si l'utilisateur
+ * annule ; l'appelant recharge la session sur une valeur non nulle et affiche l'erreur éventuelle. */
 @Injectable({providedIn: 'root'})
 export class SceneActionsService {
   private readonly fightSessionService = inject(BolFightSessionService);
@@ -42,27 +39,6 @@ export class SceneActionsService {
       return;
     }
     this.snackBar.open(loadMessage(titre, result.ignored), undefined, {duration: 4000});
-  }
-
-  /** « Enregistrer la table comme scène » : demande un titre, puis crée la scène dans le scénario
-   * donné (`null` = « On improvise »). Elle devient la scène courante de la session. */
-  saveTable(sessionId: string, scenarioId: string | null): Observable<BolSceneModel | null> {
-    return promptDialog(this.dialog, {
-      title: 'Enregistrer la table comme scène',
-      label: 'Titre de la scène',
-      maxLength: SCENE_TITLE_MAX,
-      confirmLabel: 'Enregistrer',
-    }).pipe(
-      map((raw) => normalizeTitre(raw)),
-      switchMap((titre) => {
-        if (!titre) {
-          return of(null);
-        }
-        return this.sceneService
-          .create(titre, scenarioId, sessionId)
-          .pipe(tap((scene) => this.snackBar.open(`Scène « ${scene.titre} » enregistrée.`, undefined, {duration: 2500})));
-      }),
-    );
   }
 
   private chooseMode(scene: BolSceneModel, nonHeroCount: number): Observable<SceneLoadMode | null> {

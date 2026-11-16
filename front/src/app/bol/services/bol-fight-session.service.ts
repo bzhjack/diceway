@@ -14,7 +14,7 @@ import {
   EtatCombatDto,
   InitiativeResultat,
 } from '../models/bol-fight-session.model';
-import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
+import {BolSceneDistributionSaisie, BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 
 /** Délai d'un appel sur la table : passé ce délai sans réponse, l'appel échoue (comme une erreur réseau) et la file repart. */
 export const DELAI_APPEL_TABLE_MS = 15_000;
@@ -151,6 +151,11 @@ export class BolFightSessionService {
   /** Charge une scène sur la table (opération serveur unique) — cf. `BolSceneService` côté backend. */
   loadScene(sessionId: string, sceneId: string, mode: SceneLoadMode): Observable<BolSceneLoadResult> {
     return this.inOrder(this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/load-scene`, {scene_id: sceneId, mode}));
+  }
+
+  /** « Ajouter des personnages » : la distribution du casting s'assied à la table, à côté de ce qui y est (nombre, camp, attitude). */
+  ajouterDesPersonnages(sessionId: string, distribution: readonly BolSceneDistributionSaisie[]): Observable<BolSceneLoadResult> {
+    return this.inOrder(this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/personnages`, {distribution}));
   }
 
   /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */

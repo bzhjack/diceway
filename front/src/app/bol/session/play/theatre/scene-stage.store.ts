@@ -50,6 +50,8 @@ export class SceneStageStore {
   readonly scenes = this.scenesState.asReadonly();
   private readonly scenariosState = signal<readonly BolSceneScenarioRef[]>([]);
   readonly scenarios = this.scenariosState.asReadonly();
+  /** Le scénario (la saga) de chaque chapitre, par id de chapitre. */
+  private readonly sagasState = signal<ReadonlyMap<string, string>>(new Map());
   /** Scénario de la table d'après la page, ou choisi dans la frise pour l'afficher sans attendre. */
   private readonly scenarioIdState = signal<string | null>(null);
   private readonly regionNomsState = signal<ReadonlyMap<number, string>>(new Map());
@@ -83,6 +85,11 @@ export class SceneStageStore {
     const scenarioId = scene.scenario_id && this.knownScenarioIds().has(scene.scenario_id) ? scene.scenario_id : null;
     return scenarioId === this.scenarioId() ? scene : null;
   });
+  /** Le scénario du chapitre affiché (`BolSaga`), dont « Ajouter des personnages » propose d'abord les fiches ; `null` en improvisant. */
+  readonly sagaId = computed(() => {
+    const chapitre = this.scenarioId();
+    return chapitre === null ? null : (this.sagasState().get(chapitre) ?? null);
+  });
   /** L'acte en cours, s'il est dans la frise affichée. */
   readonly currentActe = computed(() => this.acts().find((a) => a.statut === 'en-cours') ?? null);
 
@@ -100,7 +107,7 @@ export class SceneStageStore {
 
   /** Session chargée par la page : sa scène courante, ses scènes jouées et son scénario (seule source de la frise, choisi
    * à l'accueil). Les scènes sont rechargées au premier appel, ou si la scène courante n'est pas connue
-   * (créée depuis la réserve). */
+   * (créée depuis une autre page). */
   sync(
     sessionId: string,
     currentSceneId: string | null,
@@ -142,7 +149,9 @@ export class SceneStageStore {
       this.loading = false;
       this.scenesState.set(scenes);
       if (scenarios) {
-        this.scenariosState.set(scenarios.filter((s): s is typeof s & {id: string} => !!s.id).map((s) => ({id: s.id, titre: titreDeChapitre(s)})));
+        const chapitres = scenarios.filter((s): s is typeof s & {id: string} => !!s.id);
+        this.scenariosState.set(chapitres.map((s) => ({id: s.id, titre: titreDeChapitre(s)})));
+        this.sagasState.set(new Map(chapitres.flatMap((s) => (s.saga?.id ? [[s.id, s.saga.id] as const] : []))));
       }
     });
   }

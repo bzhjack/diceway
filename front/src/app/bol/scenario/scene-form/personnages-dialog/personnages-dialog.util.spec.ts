@@ -33,6 +33,7 @@ describe('les fiches d’« Ajouter des personnages »', () => {
     expect(noms({rang: 'P'})).toEqual(['Loup']);
     expect(noms({scenarioId: 'dv'})).toEqual(['Drajit', 'Loup']);
     expect(noms({recherche: 'auberg'})).toEqual(['Aubergiste']);
+    expect(noms({recherche: '  DRÂJIT '})).toEqual(['Drajit']);
   });
 
   it('compte ce que chaque option montrerait, les autres filtres appliqués', () => {

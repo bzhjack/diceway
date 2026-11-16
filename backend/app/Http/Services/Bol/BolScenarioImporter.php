@@ -299,7 +299,8 @@ final class BolScenarioImporter
     }
 
     /**
-     * La distribution d'une scène. Un PNJ n'a qu'un exemplaire par entrée : « deux prêtres » donnent deux entrées.
+     * La distribution d'une scène : une entrée par personnage, avec son nombre d'exemplaires (« deux prêtres » : une
+     * entrée, `qty` 2 ; la table en assied deux).
      *
      * @param list<array{perso: string, qty: int, camp: string, attitude: string|null}> $entries
      * @param array<string, array{0: string, 1: string}> $ids
@@ -307,23 +308,17 @@ final class BolScenarioImporter
      */
     public static function distribution(array $entries, array $ids): array
     {
-        $result = [];
-        foreach ($entries as $entry) {
+        return BolSceneDistribution::regroupee(array_map(static function (array $entry) use ($ids): array {
             [$kind, $sourceId] = $ids[$entry['perso']];
-            $copies = $kind === 'pnj' ? $entry['qty'] : 1;
-            $qty = $kind === 'pnj' ? 1 : $entry['qty'];
-            for ($i = 0; $i < $copies; $i++) {
-                $result[] = [
-                    'kind'      => $kind,
-                    'source_id' => $sourceId,
-                    'qty'       => $qty,
-                    'camp'      => $entry['camp'],
-                    'attitude'  => $entry['attitude'],
-                ];
-            }
-        }
 
-        return $result;
+            return [
+                'kind'      => $kind,
+                'source_id' => $sourceId,
+                'qty'       => $entry['qty'],
+                'camp'      => $entry['camp'],
+                'attitude'  => $entry['attitude'],
+            ];
+        }, $entries));
     }
 
     private function owned(string $kind, string $userId, string $id): ?Model

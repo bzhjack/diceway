@@ -1,8 +1,5 @@
 import {BolSessionSceneRef} from '../../../models/bol-fight-session.model';
-import {BolSceneEntry, BolSceneModel, SceneEntryKind} from '../../../models/bol-scene.model';
-
-/** Valeur du sélecteur de scénario pour « On improvise » (`mat-select` n'accepte pas `null` proprement). */
-export const NO_SCENARIO = '__none__';
+import {BolSceneModel} from '../../../models/bol-scene.model';
 
 export const SCENE_TITLE_MAX = 120;
 
@@ -19,45 +16,6 @@ export function scenesOf(
       return effective === scenarioId;
     })
     .sort((left, right) => left.ordre - right.ordre || left.titre.localeCompare(right.titre, 'fr'));
-}
-
-/** Scénario que le filtre des scènes montre pour une table : le sien, s'il est connu du compte, sinon `null` (« On improvise »).
- * Jamais déduit de la scène courante. */
-export function scenarioFilterFor(tableScenarioId: string | null, knownScenarioIds: ReadonlySet<string>): string | null {
-  return tableScenarioId && knownScenarioIds.has(tableScenarioId) ? tableScenarioId : null;
-}
-
-const KIND_LABELS: Record<SceneEntryKind, readonly [string, string]> = {
-  pnj: ['PNJ', 'PNJ'],
-  creature: ['créature', 'créatures'],
-  demon: ['démon', 'démons'],
-};
-
-/** Résumé d'une distribution, en nombre d'exemplaires par type : « 2 PNJ · 3 créatures ». */
-export function distributionSummary(entries: readonly BolSceneEntry[]): string {
-  const parts = (Object.keys(KIND_LABELS) as SceneEntryKind[])
-    .map((kind) => {
-      const count = entries.filter((e) => e.kind === kind).reduce((sum, e) => sum + Math.max(1, e.qty), 0);
-      return count > 0 ? `${count} ${KIND_LABELS[kind][count > 1 ? 1 : 0]}` : null;
-    })
-    .filter((part): part is string => part !== null);
-
-  return parts.length ? parts.join(' · ') : 'Aucun personnage';
-}
-
-/** Nouvelle liste d'ids après avoir monté (−1) ou descendu (+1) une scène d'un rang. `null` si rien
- * ne change (déjà en bout de liste, ou scène absente). */
-export function moveScene(ids: readonly string[], id: string, delta: -1 | 1): string[] | null {
-  const from = ids.indexOf(id);
-  const to = from + delta;
-  if (from < 0 || to < 0 || to >= ids.length) {
-    return null;
-  }
-
-  const next = [...ids];
-  next.splice(from, 1);
-  next.splice(to, 0, id);
-  return next;
 }
 
 /** Faut-il demander « Remplacer ou Ajouter » ? Seulement si la table porte autre chose que des héros. */
@@ -77,12 +35,6 @@ export function tableTitle(sessionTitre: string | null, scene: BolSessionSceneRe
  * déjà le scénario et la scène ; en combat, « Scénario · Scène » (cf. `tableTitle`). */
 export function headerTitle(mode: 'libre' | 'combat', sessionTitre: string | null, scene: BolSessionSceneRef | null | undefined): string | null {
   return mode === 'libre' ? sessionTitre : tableTitle(sessionTitre, scene);
-}
-
-/** Titre saisi, rogné et borné à 120 caractères ; `null` s'il est vide. */
-export function normalizeTitre(raw: string | null | undefined): string | null {
-  const trimmed = (raw ?? '').trim();
-  return trimmed ? trimmed.slice(0, SCENE_TITLE_MAX) : null;
 }
 
 export function loadMessage(titre: string, ignored: number): string {

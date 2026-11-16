@@ -194,13 +194,13 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/scenario-termine', [BolFightSessionController::class, 'marquerScenarioTermine']);
     Route::patch('/bol/fight-session/{id}/etat-combat', [BolFightSessionController::class, 'updateCombatState']);
     Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
+    Route::post('/bol/fight-session/{id}/personnages', [BolSceneController::class, 'ajouterALaTable']);
 
     // Scènes
     Route::get('/bol/scene', [BolSceneController::class, 'getAll']);
     Route::post('/bol/scene/create', [BolSceneController::class, 'create']);
     Route::post('/bol/scene/update', [BolSceneController::class, 'update']);
     Route::patch('/bol/scene/ordre', [BolSceneController::class, 'reorder']);
-    Route::patch('/bol/scene/{id}/distribution', [BolSceneController::class, 'replaceDistribution']);
     Route::delete('/bol/scene/delete/{id}', [BolSceneController::class, 'delete']);
 
     /**

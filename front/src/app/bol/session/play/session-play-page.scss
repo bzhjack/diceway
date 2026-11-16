@@ -80,8 +80,6 @@
   }
 }
 
-// Sous l'en-tête, en mode libre : le théâtre, et les coulisses (la réserve) qui s'ouvrent à droite en le
-// poussant — la scène reste entière visible pour y glisser un personnage.
 // En mode libre, le décor de la scène couvre toute la table : derrière l'en-tête et le bandeau (tous deux sans fond), puis derrière les
 // deux camps, un peu transparents (seule leur transparence règle ce qu'on en voit) ; le carnet, au centre, le cache. En haut, seule la
 // gauche, sous les titres, est voilée.
@@ -95,56 +93,10 @@
   z-index: 0;
 }
 
-.spp-coulisses {
-  --mat-sidenav-scrim-color: rgba(8, 5, 3, 0.45);
-
+// Le théâtre, sous l'en-tête, prend toute la place qui reste.
+.spp-scene {
   flex: 1;
   min-height: 0;
-  background: transparent;
-}
-
-// Pendant un glisser des coulisses vers la scène, leur voile s'efface : voir `styles/_forge-page.scss` (`spp-coulisses--glisser`).
-
-// Le plateau garde toute sa largeur sous le panneau, qui glisse par-dessus : ni les cartes ni le cartouche de la scène ne bougent quand les
-// coulisses s'ouvrent (réduire le contenu à chaque image, comme le fait Material, ferait aussi ramer l'animation).
-.spp-scene {
   display: flex;
-  margin-right: 0 !important;
   overflow: hidden;
-}
-
-.spp-coulisses-panel {
-  width: 21rem;
-  max-width: 85vw;
-  border-left: 2px solid var(--dw-forge-bronze);
-  background: var(--dw-forge-iron) 0 0 / 420px, var(--dw-table-panel);
-  // Il passe au-dessus des cartes : une ombre portée l'en détache.
-  box-shadow:
-    inset 8px 0 14px -8px rgba(0, 0, 0, 0.8),
-    -10px 0 24px rgba(0, 0, 0, 0.6);
-  color: inherit;
-}
-
-.spp-coulisses-inner {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.spp-coulisses-tete {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.5rem 0.5rem 0 1rem;
-}
-
-.spp-coulisses-titre {
-  margin: 0;
-  color: var(--dw-forge-gold);
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 1.3rem;
-  font-weight: 400;
 }

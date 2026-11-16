@@ -375,7 +375,7 @@ export class SceneFormPageComponent implements HasPendingChanges {
     const sceneId = this.sceneId();
     const enregistrement = sceneId
       ? this.sceneService.update(sceneId, changes)
-      : this.sceneService.create(this.value().titre.trim(), this.chapitreId, null).pipe(
+      : this.sceneService.create(this.value().titre.trim(), this.chapitreId).pipe(
           tap((scene) => this.sceneId.set(scene.id)),
           switchMap((scene) => this.sceneService.update(scene.id, changes)),
         );

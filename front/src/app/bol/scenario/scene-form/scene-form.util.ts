@@ -1,12 +1,14 @@
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {BolSceneChanges, BolSceneDistributionSaisie, BolSceneJet, BolSceneModel, SceneMoment} from '../../models/bol-scene.model';
-import {CombatCatalogEntry} from '../../models/combat-selection.model';
+import {CombatantKind, CombatCatalogEntry} from '../../models/combat-selection.model';
 import {combatantRankKey} from '../../session/combat-statblock.util';
-import {KIND_LABEL} from '../../session/play/reserve/reserve.util';
 import {LibraryRang} from '../../shared/models/library-rows.model';
 import {EMPTY_AVATAR} from '../../../shared/avatar-fallback/avatar.util';
 import {JetSaisie, SceneFormValue, ScenePersonnageVue} from '../models/scene-form.model';
+
+/** Nom du type d'une fiche, au singulier. */
+export const KIND_LABEL: Record<CombatantKind, string> = {hero: 'Héros', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
 
 /** Au plus, les exemplaires d'une créature ou d'un démon (`BolSceneDistribution::QTY_MAX`). */
 export const QTY_MAX = 30;

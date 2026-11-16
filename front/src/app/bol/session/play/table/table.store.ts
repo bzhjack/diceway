@@ -6,14 +6,13 @@ import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {buildPlayBoard} from '../../combat-play.util';
 import {headerTitle, ignoresMessage} from '../scene-list/scene.util';
-import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from '../table-state.util';
 import {TableChange} from '../../models/table-change.model';
 import {applyTableChange} from '../table-change.util';
 import {buildTapisCards} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 import {SceneStageStore} from '../theatre/scene-stage.store';
 
-/** La table d'une session : la session chargée et ce qui s'en déduit, les coulisses, la sélection. Tous les autres services de la page la lisent et y posent la session que le serveur leur renvoie. */
+/** La table d'une session : la session chargée et ce qui s'en déduit, la sélection. Tous les autres services de la page la lisent et y posent la session que le serveur leur renvoie. */
 @Injectable()
 export class TableStore {
   private readonly fightSessionService = inject(BolFightSessionService);
@@ -46,9 +45,6 @@ export class TableStore {
     () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
   );
 
-  /** Coulisses (la réserve) ouvertes à droite du théâtre — fermées par défaut : la scène d'abord. */
-  readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, false));
-
   /** Cartes de la table, une par ligne de session. */
   readonly cards = computed(() => {
     const session = this.session();
@@ -79,18 +75,6 @@ export class TableStore {
         );
       }
     });
-  }
-
-  /** Les coulisses se sont ouvertes ou fermées d'elles-mêmes (Échap) : l'état retenu suit. */
-  onCoulissesChange(open: boolean): void {
-    if (open !== this.reserveOpen()) {
-      this.setReserveOpen(open);
-    }
-  }
-
-  setReserveOpen(open: boolean): void {
-    this.reserveOpen.set(open);
-    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, open);
   }
 
   reloadSession(): void {

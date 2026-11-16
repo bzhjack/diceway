@@ -87,8 +87,8 @@ Un personnage est soit une fiche créée pour le scénario, soit une référence
 - **Points d'un rival :** la fiche PNJ et le combat n'utilisent que `vilenie`. Les points d'héroïsme d'un
   rival allié (Surdral) se portent donc en `vilenie`. `heroisme` est enregistré, mais l'app ne l'affiche pas
   pour un PNJ.
-- **Exemplaires :** un PNJ n'a qu'un exemplaire par entrée de distribution. `"qty": 2` produit deux entrées,
-  donc deux cartes.
+- **Exemplaires :** `"qty": 2` donne une entrée de distribution de deux exemplaires, comme pour une créature ;
+  la table assied deux PNJ, regroupés en paquet (« ×2 »).
 
 **Créature :**
 

@@ -13,14 +13,9 @@ export class BolSceneService {
     return this.http.get<BolSceneModel[]>(this.base);
   }
 
-  /** Crée une scène : depuis une table, avec ce qui y est posé (distribution lue côté serveur) ; sans table (`sessionId` null, la
-   * bibliothèque des scénarios), vide, au dernier rang de son chapitre. */
-  create(titre: string, scenarioId: string | null, sessionId: string | null): Observable<BolSceneModel> {
-    return this.http.post<BolSceneModel>(`${this.base}/create`, {
-      titre,
-      scenario_id: scenarioId,
-      session_id: sessionId,
-    });
+  /** Crée une scène vide, au dernier rang de son chapitre ; elle se prépare ensuite dans « Préparer la scène ». */
+  create(titre: string, scenarioId: string | null): Observable<BolSceneModel> {
+    return this.http.post<BolSceneModel>(`${this.base}/create`, {titre, scenario_id: scenarioId});
   }
 
   update(id: string, changes: BolSceneChanges): Observable<BolSceneModel> {
@@ -29,11 +24,6 @@ export class BolSceneService {
 
   reorder(scenarioId: string | null, ids: readonly string[]): Observable<boolean> {
     return this.http.patch<boolean>(`${this.base}/ordre`, {scenario_id: scenarioId, ordre: ids});
-  }
-
-  /** Remplace la distribution de la scène par l'état actuel de la table. */
-  replaceDistribution(id: string, sessionId: string): Observable<BolSceneModel> {
-    return this.http.patch<BolSceneModel>(`${this.base}/${id}/distribution`, {session_id: sessionId});
   }
 
   delete(id: string): Observable<boolean> {

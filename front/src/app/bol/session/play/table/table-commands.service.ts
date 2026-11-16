@@ -1,16 +1,22 @@
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {concatMap, from, last} from 'rxjs';
+import {concatMap, filter, from, last, map, switchMap} from 'rxjs';
+import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {BolSceneLoadResult} from '../../../models/bol-scene.model';
+import {BolSceneDistributionSaisie, BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {openPersonnagesDialog} from '../../../scenario/scene-form/personnages-dialog/personnages-dialog';
+import {ambianceEnPhrase} from '../../../scenario/scene-form/scene-form.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
+import {sceneDecor} from '../theatre/theatre.util';
 import {REMOVE_ACTION_LABEL} from '../tapis/tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 import {SceneStageStore} from '../theatre/scene-stage.store';
 import {TableStore} from './table.store';
 import {ExpandedCardStore} from './expanded-card.store';
+import {arriveeALaTable} from './table-commands.util';
 
 /** Ce que le MJ commande à la table hors du tour : ajouter, retirer, changer de camp, démarrer un combat, suivre les scènes chargées. */
 @Injectable()
@@ -21,6 +27,38 @@ export class TableCommandsService {
   private readonly stage = inject(SceneStageStore);
   private readonly table = inject(TableStore);
   private readonly expanded = inject(ExpandedCardStore);
+  private readonly snackBar = inject(MatSnackBar);
+
+  /** « Ajouter un personnage » : le casting de « Préparer la scène », vide, au bandeau de la scène en cours, ses fiches du scénario
+   * d'abord ; ceux qu'il rend s'asseyent à la table (nombre, camp, attitude), à côté de ceux qui y sont. */
+  ajouterDesPersonnages(): void {
+    const sessionId = this.table.sessionId();
+    if (!sessionId) {
+      return;
+    }
+    const scene = this.stage.displayedScene();
+    openPersonnagesDialog(this.dialog, {
+      cible: 'table',
+      scenarioId: this.stage.sagaId(),
+      sceneTitre: scene?.titre ?? this.table.session()?.titre ?? 'La table',
+      sceneImage: sceneDecor(scene),
+      sceneAmbiance: scene ? ambianceEnPhrase({lieu: scene.lieu ?? '', moment: scene.moment, danger: scene.danger ?? 0}) : '',
+      personnages: [],
+    })
+      .pipe(
+        filter((personnages): personnages is BolSceneDistributionSaisie[] => !!personnages?.length),
+        switchMap((personnages) =>
+          this.fightSessionService.ajouterDesPersonnages(sessionId, personnages).pipe(map((result) => ({result, personnages}))),
+        ),
+      )
+      .subscribe({
+        next: ({result, personnages}) => {
+          this.table.session.set(result.session);
+          this.snackBar.open(arriveeALaTable(personnages, result.ignored), 'OK', {duration: 4000});
+        },
+        error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible d’ajouter ces personnages.'), 'Fermer', {duration: 5000}),
+      });
+  }
 
   openAddCombatantDialog(): void {
     const sessionId = this.table.sessionId();

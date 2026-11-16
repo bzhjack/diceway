@@ -42,59 +42,26 @@
 
     @if (table.sessionId(); as sid) {
       @if (table.mode() === 'libre') {
-        <!-- Mode libre : le théâtre, et les coulisses (la réserve) à droite. Chacun des deux modes a son paquet : on ne charge que celui qu'on affiche. -->
+        <!-- Mode libre : le théâtre. Chacun des deux modes a son paquet : on ne charge que celui qu'on affiche. -->
         @defer (on immediate) {
-          <!-- Les coulisses passent au-dessus du plateau, derrière un voile : un clic sur le voile les ferme. -->
-          <mat-sidenav-container class="spp-coulisses" [class.spp-coulisses--glisser]="placement.dragging()" [hasBackdrop]="true">
-            <mat-sidenav
-              id="spp-coulisses-panel"
-              class="spp-coulisses-panel"
-              position="end"
-              mode="side"
-              role="complementary"
-              aria-label="Coulisses"
-              [opened]="table.reserveOpen()"
-              (openedChange)="table.onCoulissesChange($event)"
-            >
-              <div class="spp-coulisses-inner">
-                <div class="spp-coulisses-tete">
-                  <h2 class="spp-coulisses-titre">Coulisses</h2>
-                  <button mat-icon-button type="button" aria-label="Fermer les coulisses" (click)="table.setReserveOpen(false)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-                <bol-reserve
-                  [titre]="null"
-                  [sessionId]="sid"
-                  [existingHeroIds]="table.existingHeroIds()"
-                  [currentSceneId]="table.session()?.scene_id ?? null"
-                  [scenarioId]="table.session()?.scenario_id ?? null"
-                  [nonHeroCount]="table.nonHeroCount()"
-                  (sceneChanged)="commands.onSceneChanged()"
-                  (placed)="table.reloadSession()"
-                />
-              </div>
-            </mat-sidenav>
-            <mat-sidenav-content class="spp-scene">
-              <bol-theatre
-                [cards]="table.cards()"
-                [sessionId]="sid"
-                [selectedKeys]="table.selectedKeys()"
-                (cardToggled)="expanded.onCardToggled($event)"
-                (selectToggled)="table.toggleSelected($event)"
-                (campToggleRequested)="commands.toggleCamp($event)"
-                (sceneChanged)="commands.onSceneLoaded($event)"
-                (changed)="table.onTableChanged($event)"
-                [coulissesOpen]="table.reserveOpen()"
-                (coulissesRequested)="table.setReserveOpen(true)"
-                (combatRequested)="commands.openStartCombat()"
-                (jetLance)="expanded.lancerJet($event.hero, $event.jet)"
-              />
-            </mat-sidenav-content>
-          </mat-sidenav-container>
+          <div class="spp-scene">
+            <bol-theatre
+              [cards]="table.cards()"
+              [sessionId]="sid"
+              [selectedKeys]="table.selectedKeys()"
+              (cardToggled)="expanded.onCardToggled($event)"
+              (selectToggled)="table.toggleSelected($event)"
+              (campToggleRequested)="commands.toggleCamp($event)"
+              (sceneChanged)="commands.onSceneLoaded($event)"
+              (changed)="table.onTableChanged($event)"
+              (ajoutRequested)="commands.ajouterDesPersonnages()"
+              (combatRequested)="commands.openStartCombat()"
+              (jetLance)="expanded.lancerJet($event.hero, $event.jet)"
+            />
+          </div>
         }
       } @else {
-        <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
+        <!-- Mode combat : l'écran de combat. -->
         @defer (on immediate) {
           <bol-combat-board
             #combatBoard

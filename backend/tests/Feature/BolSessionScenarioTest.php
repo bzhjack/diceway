@@ -77,25 +77,21 @@ class BolSessionScenarioTest extends TestCase
         $this->assertNull($fresh->chapitres_quittes);
     }
 
-    public function test_saving_a_scene_of_the_same_scenario_moves_the_partie(): void
+    /** Une scène naît vide, depuis la bibliothèque des scénarios : la table ne s'enregistre plus comme scène. */
+    public function test_creating_a_scene_never_takes_the_table(): void
     {
         [$ch1, $ch2] = $this->saga('Perle du Beshaar', 2);
         $session = $this->tableSession($ch1->id);
+        $garde = $this->pnj('Garde');
+        BolFightSessionPnj::create($this->lignePnj($session->id, $garde->id, 'adversaires', 8));
 
-        $this->postJson('/api/bol/scene/create', ['titre' => 'Scène', 'scenario_id' => $ch2->id, 'session_id' => $session->id])->assertOk();
+        $response = $this->postJson('/api/bol/scene/create', ['titre' => 'Scène', 'scenario_id' => $ch2->id, 'session_id' => $session->id])->assertOk();
 
-        $this->assertSame($ch2->id, $session->fresh()->scenario_id);
-    }
-
-    public function test_saving_a_scene_of_another_scenario_keeps_the_partie(): void
-    {
-        $a = $this->scenario('A');
-        $b = $this->scenario('B');
-        $session = $this->tableSession($a->id);
-
-        $this->postJson('/api/bol/scene/create', ['titre' => 'Scène', 'scenario_id' => $b->id, 'session_id' => $session->id])->assertOk();
-
-        $this->assertSame($a->id, $session->fresh()->scenario_id);
+        $this->assertSame([], $response->json('distribution'));
+        $fresh = $session->fresh();
+        $this->assertSame($ch1->id, $fresh->scenario_id);
+        $this->assertNull($fresh->scene_id);
+        $this->patchJson("/api/bol/scene/{$response->json('id')}/distribution", ['session_id' => $session->id])->assertNotFound();
     }
 
     /** Une partie improvisée prend le scénario de la première scène chargée qui en a un. */
@@ -122,19 +118,6 @@ class BolSessionScenarioTest extends TestCase
         $this->assertSame($a->id, $fresh->scenario_id);
         $this->assertSame($scene->id, $fresh->scene_id);
         $this->assertNull($fresh->chapitres_quittes);
-    }
-
-    public function test_saving_an_improvised_scene_keeps_the_table_scenario(): void
-    {
-        $a = $this->scenario('A');
-        $session = $this->tableSession($a->id);
-
-        $response = $this->postJson('/api/bol/scene/create', ['titre' => 'Taverne', 'scenario_id' => null, 'session_id' => $session->id])->assertOk();
-
-        $this->assertNull($response->json('scenario_id'));
-        $fresh = $session->fresh();
-        $this->assertSame($a->id, $fresh->scenario_id);
-        $this->assertSame($response->json('id'), $fresh->scene_id);
     }
 
     /** « Changer de chapitre » dans son scénario : la même table passe dessus, ses scènes jouées restent jouées, l'ancien est quitté. */

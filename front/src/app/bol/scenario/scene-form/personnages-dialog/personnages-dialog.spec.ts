@@ -18,12 +18,12 @@ const CATALOGUE = [
 const LOUPS: BolSceneDistributionSaisie = {kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: 'hostile'};
 
 describe('PersonnagesDialogComponent', () => {
-  async function ouvrir(scenarioId: string | null = 'dv', personnages: BolSceneDistributionSaisie[] = []) {
+  async function ouvrir(scenarioId: string | null = 'dv', personnages: BolSceneDistributionSaisie[] = [], cible: 'scene' | 'table' = 'scene') {
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [{provide: CombatSelectionService, useValue: {catalog: signal(CATALOGUE), loadCatalog: vi.fn(), loading: signal(false), loadFailed: signal(false)}}],
     });
-    const ferme = firstValueFrom(openPersonnagesDialog(TestBed.inject(MatDialog), {scenarioId, sceneTitre: 'Le gué', sceneImage: '/assets/bol/gue.webp', sceneAmbiance: 'Le gué, de nuit', personnages}));
+    const ferme = firstValueFrom(openPersonnagesDialog(TestBed.inject(MatDialog), {scenarioId, sceneTitre: 'Le gué', sceneImage: '/assets/bol/gue.webp', sceneAmbiance: 'Le gué, de nuit', personnages, cible}));
     TestBed.tick();
     const texte = (el: Element | null | undefined) => el?.textContent?.replace(/\s+/g, ' ').trim() ?? null;
     const noms = () => [...document.querySelectorAll('.pdg-nom')].map((e) => texte(e));
@@ -83,6 +83,24 @@ describe('PersonnagesDialogComponent', () => {
     stable();
 
     expect(await ferme).toEqual([LOUPS, {kind: 'pnj', source_id: 'p1', qty: 1, camp: 'adversaires', attitude: null}]);
+  });
+
+  it('pour la table, s’ouvre vide et « Ajouter à la table » rend ceux qui entrent, sans marque « nouveau »', async () => {
+    const {panier, plus, bouton, stable, ferme, texte} = await ouvrir(null, [], 'table');
+
+    expect(texte(document.querySelector('.pdg-distribution-titre'))).toBe('À ajouter à la table');
+    expect(bouton('Ajouter à la table').disabled).toBe(true);
+    plus('Ajouter Loup').click();
+    stable();
+    plus('Un Loup de plus').click();
+    stable();
+    expect(panier()).toEqual(['Loup']);
+    expect(document.querySelector('.pdg-distribution .spe-nouveau')).toBeNull();
+    expect(texte(document.querySelector('.pdg-total'))).toBe('2 personnages à ajouter à la table');
+    bouton('Ajouter à la table').click();
+    stable();
+
+    expect(await ferme).toEqual([{kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: null}]);
   });
 
   it('un second clic ajoute un exemplaire, d’une créature comme d’un PNJ', async () => {
