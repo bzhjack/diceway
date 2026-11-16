@@ -3,6 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
@@ -17,7 +18,7 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
  */
 @Component({
   selector: 'bol-scene-perso',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [AttitudePuceComponent, AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
   template: `
     <div class="spe" [class.spe--allie]="perso().camp === 'heros'" [class.spe--introuvable]="perso().introuvable" [class.spe--nouveau]="nouveau()">
       <span class="spe-portrait">
@@ -32,12 +33,14 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
         <span class="spe-texte">{{ perso().nom }}</span>
         <button
           type="button"
-          [class]="'spe-attitude spe-attitude--' + (perso().attitude ?? 'aucune')"
+          class="spe-attitude"
           [attr.aria-label]="'Attitude de ' + perso().nom + ' : ' + attitudeLabel()"
           [matTooltip]="attitudeLabel()"
           matTooltipPosition="above"
           [matMenuTriggerFor]="menuAttitude"
-        ></button>
+        >
+          <bol-attitude-puce [attitude]="perso().attitude" />
+        </button>
         <mat-menu #menuAttitude="matMenu">
           @for (option of attitudes; track option.value) {
             <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === option.value" (click)="regle.emit({attitude: option.value})">

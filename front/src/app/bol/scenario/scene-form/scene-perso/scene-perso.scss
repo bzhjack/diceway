@@ -198,11 +198,8 @@
   --spe-option: var(--dw-color-reussite);
 }
 
-// L'attitude, juste après le nom : une pastille de couleur, comme sur la table ; son nom en infobulle, un clic ouvre son menu.
-// Sans attitude : un cercle en pointillés.
+// L'attitude, juste après le nom : sa pastille (`bol-attitude-puce`) dans un bouton ; son nom en infobulle, un clic ouvre son menu.
 .spe-attitude {
-  --spe-couleur: var(--dw-forge-bronze-dim);
-
   display: grid;
   flex: none;
   place-items: center;
@@ -214,42 +211,9 @@
   background: transparent;
   cursor: pointer;
 
-  &::before {
-    content: '';
-    width: 0.75rem;
-    height: 0.75rem;
-    box-sizing: border-box;
-    border-radius: 50%;
-    background: var(--spe-couleur);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--spe-couleur) 70%, transparent);
-    transition: transform 0.12s ease;
-  }
-
-  &:hover::before {
+  &:hover bol-attitude-puce {
     transform: scale(1.25);
   }
-}
-
-.spe-attitude--aucune::before {
-  border: 2px dashed var(--dw-forge-caption);
-  background: transparent;
-  box-shadow: none;
-}
-
-.spe-attitude--hostile {
-  --spe-couleur: var(--dw-color-echec);
-}
-
-.spe-attitude--mefiant {
-  --spe-couleur: var(--dw-color-warn);
-}
-
-.spe-attitude--neutre {
-  --spe-couleur: var(--dw-surface-500);
-}
-
-.spe-attitude--amical {
-  --spe-couleur: var(--dw-color-reussite);
 }
 
 .spe-rond,

@@ -129,17 +129,17 @@
   font-weight: 700;
 }
 
-.sca-attitude {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+// L'attitude, juste après le nom (`bol-attitude-puce`), son nom en infobulle.
+.sca-puce {
+  margin-left: 0.4rem;
+  vertical-align: 0.1em;
+}
 
-  mat-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-    font-size: 0.95rem;
-    opacity: 0.8;
-  }
+.sca-reglages {
+  width: 0.95rem;
+  height: 0.95rem;
+  font-size: 0.95rem;
+  opacity: 0.8;
 }
 
 // Le nombre en médaille dorée, et la croix pour retirer, posés sur le portrait.

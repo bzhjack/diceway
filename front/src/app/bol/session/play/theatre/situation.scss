@@ -193,8 +193,8 @@
   }
 }
 
-// L'attitude de ceux d'en face : un point à sa couleur à droite du nom, au-dessus de la zone de clic du portrait ; son nom en infobulle,
-// un clic ouvre son menu. Creux sans attitude, en roue quand les exemplaires diffèrent.
+// L'attitude de ceux d'en face : sa pastille (`bol-attitude-puce`) à droite du nom, dans un bouton au-dessus de la zone de clic du
+// portrait ; son nom en infobulle, un clic ouvre son menu.
 .sit-attitude {
   position: relative;
   z-index: 1;
@@ -209,18 +209,7 @@
   background: transparent;
   cursor: pointer;
 
-  &::before {
-    content: '';
-    width: 0.7rem;
-    height: 0.7rem;
-    box-sizing: border-box;
-    border-radius: 50%;
-    background: var(--dw-tuile-c);
-    box-shadow: 0 0 6px color-mix(in srgb, var(--dw-tuile-c) 70%, transparent);
-    transition: transform 0.12s ease;
-  }
-
-  &:hover::before {
+  &:hover bol-attitude-puce {
     transform: scale(1.25);
   }
 
@@ -228,22 +217,6 @@
     outline: 2px solid var(--dw-color-legendary);
     outline-offset: 1px;
   }
-}
-
-.sit-attitude--sans::before {
-  border: 2px dashed var(--dw-forge-caption);
-  background: transparent;
-  box-shadow: none;
-}
-
-.sit-attitude--diverses::before {
-  background: conic-gradient(
-    var(--sit-att-hostile) 0 25%,
-    var(--sit-att-mefiant) 0 50%,
-    var(--sit-att-neutre) 0 75%,
-    var(--sit-att-amical) 0
-  );
-  box-shadow: none;
 }
 
 // Le cœur d'un groupe (`dw-tuile__coeur`, celui de la tuile) : le bouton du détail de ses exemplaires, seul de la vie à recevoir le clic.

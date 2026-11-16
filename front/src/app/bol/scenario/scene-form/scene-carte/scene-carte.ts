@@ -4,11 +4,13 @@ import {ChangeDetectionStrategy, Component, computed, input, output, signal} fro
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {CombatantAttitude, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
+import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {AttitudeChoixComponent} from '../../../shared/attitude/attitude-choix';
 import {RangComponent} from '../../../shared/rang/rang';
 import {ATTITUDES} from '../../../session/play/theatre/theatre.util';
@@ -18,13 +20,14 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
 let suivant = 0;
 
 /**
- * Un personnage de « La distribution » de « Préparer la scène », en carte portrait : son nombre en médaille, son nom, son rang, son type
- * et sa vitalité ; en bas, une bande à la couleur de son camp dit son camp et son attitude. Un clic sur la carte ouvre ses réglages
+ * Un personnage de « La distribution » de « Préparer la scène », en carte portrait : son nombre en médaille, son nom suivi de la pastille
+ * de son attitude (son nom en infobulle), son rang, son type et sa vitalité ; en bas, une bande à la couleur de son camp dit son camp. Un clic sur la carte ouvre ses réglages
  * (nombre, camp, attitude) dans un popover ; × le retire. Ne fait que dire le réglage (`regle`) ou le retrait (`retire`).
  */
 @Component({
   selector: 'bol-scene-carte',
   imports: [
+    AttitudePuceComponent,
     RangComponent,
     A11yModule,
     AttitudeChoixComponent,
@@ -34,6 +37,7 @@ let suivant = 0;
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
+    MatTooltipModule,
     OverlayModule,
   ],
   template: `
@@ -56,8 +60,11 @@ let suivant = 0;
         </span>
         <span class="sca-corps">
           <span class="sr-only">Régler</span>
-          <span class="sca-nom">{{ perso().nom }}</span>
-          <span class="sr-only">, {{ perso().qty }} exemplaire{{ perso().qty > 1 ? 's' : '' }}</span>
+          <span class="sca-nom"
+            >{{ perso().nom
+            }}<bol-attitude-puce class="sca-puce" [attitude]="perso().attitude" [matTooltip]="attitudeLabel()" matTooltipPosition="above"
+          /></span>
+          <span class="sr-only">, {{ attitudeLabel() }}, {{ perso().qty }} exemplaire{{ perso().qty > 1 ? 's' : '' }}</span>
           <span class="sca-detail">
             @if (perso().rang; as rang) {
               <bol-rang [rang]="rang" />
@@ -67,7 +74,7 @@ let suivant = 0;
         </span>
         <span class="sca-bande">
           <span>{{ perso().camp === 'heros' ? 'Allié' : 'Adversaire' }}</span>
-          <span class="sca-attitude">{{ attitudeLabel() }}<mat-icon aria-hidden="true">tune</mat-icon></span>
+          <mat-icon class="sca-reglages" aria-hidden="true">tune</mat-icon>
         </span>
       </button>
       <span class="sca-nombre" aria-hidden="true">×{{ perso().qty }}</span>

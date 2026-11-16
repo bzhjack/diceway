@@ -14,6 +14,7 @@ import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {TuileComponent} from '../../../shared/tuile/tuile';
 import {RANG_DU_LIBELLE} from '../../../shared/library/library-rows-page.base';
+import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {RangComponent} from '../../../shared/rang/rang';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {AmbianceOption} from '../../models/theatre.model';
@@ -114,6 +115,7 @@ function totalVitalite(cards: readonly TapisCard[]): string {
 @Component({
   selector: 'bol-situation',
   imports: [
+    AttitudePuceComponent,
     RangComponent,
     AvatarFallbackDirective,
     CdkConnectedOverlay,

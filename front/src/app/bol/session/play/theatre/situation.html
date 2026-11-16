@@ -100,14 +100,14 @@
         bolTuileTete
         type="button"
         class="sit-attitude"
-        [class.sit-attitude--sans]="!c.attitude && !c.attitudesDiverses"
-        [class.sit-attitude--diverses]="c.attitudesDiverses"
         [attr.aria-label]="'Attitude de ' + c.nom + ' : ' + (c.attitude?.label ?? (c.attitudesDiverses ? 'diverses' : 'aucune'))"
         [matTooltip]="c.attitudeTitre"
         matTooltipPosition="above"
         [matMenuTriggerFor]="menuAttitude"
         [matMenuTriggerData]="{cards: c.cards, attitude: c.attitude?.value ?? null}"
-      ></button>
+      >
+        <bol-attitude-puce [attitude]="c.attitudesDiverses ? 'diverses' : (c.attitude?.value ?? null)" />
+      </button>
     }
 
     @if (c.card.kind !== 'hero' && c.card.rang) {

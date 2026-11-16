@@ -89,7 +89,9 @@ describe('SceneFormPageComponent', () => {
     expect(page.querySelector<HTMLTextAreaElement>('#sfp-lecture')!.value).toBe('Quinze jours de galère.');
     expect([...page.querySelectorAll('.sca-nom')].map((e) => texte(e))).toEqual(['Loup géant']);
     expect(texte(page.querySelector('.sca-nombre'))).toBe('×2');
-    expect([...page.querySelectorAll('.sca-bande > span')].map((e) => texte(e))).toEqual(['Adversaire', 'Hostiletune']);
+    expect([...page.querySelectorAll('.sca-bande > span')].map((e) => texte(e))).toEqual(['Adversaire']);
+    expect(page.querySelector('.sca-nom bol-attitude-puce')?.classList).toContain('apu--hostile');
+    expect(texte(page.querySelector('.sca-corps'))).toContain('Hostile');
   });
 
   it('enregistre le texte et les personnages, sans toucher à l’illustration, puis revient', async () => {
