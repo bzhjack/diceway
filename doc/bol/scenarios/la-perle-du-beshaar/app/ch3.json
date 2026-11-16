@@ -150,7 +150,7 @@
       "moment": "nuit",
       "danger": 3,
       "lecture": "De part et d'autre de la salle, deux renfoncements abritent chacun la statue d'un Roi-Sorcier en longues robes, les bras levés touchant le plafond, la bouche grande ouverte sur quelque imprécation funeste.\n\nAlors que vous gagnez le milieu de la pièce, les deux statues baissent soudain les bras. Au plafond, deux larges trappes s'ouvrent et déversent des torrents de sable, tandis que les portes de pierre se referment dans un grondement sinistre.",
-      "jeu": "Deux moyens d'en sortir :\nLa salle est pleine en 6 rounds : qui reste dedans meurt étouffé.\nSi Salishmè suit les héros, sa maîtresse des sables peut les tirer de là.",
+      "jeu": "Deux moyens d'en sortir : voir les jets.\nLa salle est pleine en 6 rounds : qui reste dedans meurt étouffé.\nSi Salishmè suit les héros, sa maîtresse des sables peut les tirer de là.",
       "jets": [
         {"titre": "Bloquer une porte", "attributs": ["esprit"], "difficulte": "difficile", "enjeu": "bloquer une porte avant qu’elle se ferme (elles s’ouvrent vers l’intérieur), et avoir de quoi la caler"},
         {"titre": "Rouvrir la porte", "attributs": ["vigueur"], "difficulte": "tres-difficile", "enjeu": "rouvrir une porte avant que le sable la bloque", "quand": "en 3 rounds : Très difficile au 1er, puis Impossible, puis Héroïque ; la salle est pleine en 6 rounds"}

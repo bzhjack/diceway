@@ -37,7 +37,14 @@ interface JetAffiche {
               <span class="scj-badge scj-badge--sans">Sans jet</span>
             }
             @if (j.attributs && heros().length) {
-              <button mat-stroked-button type="button" class="scj-lancer" [matMenuTriggerFor]="menuHeros" [matMenuTriggerData]="{jet: j.jet}">
+              <button
+                mat-stroked-button
+                type="button"
+                class="scj-lancer"
+                [attr.aria-label]="'Lancer « ' + j.jet.titre + ' » pour un héros'"
+                [matMenuTriggerFor]="menuHeros"
+                [matMenuTriggerData]="{jet: j.jet}"
+              >
                 <mat-icon>casino</mat-icon> Lancer pour
               </button>
             }
@@ -74,7 +81,8 @@ export class SceneJetsComponent {
       jet,
       attributs: attributsEnClair(jet.attributs),
       difficulte: libelleDifficulte(jet.difficulte),
-      detail: [jet.enjeu, jet.echec ? `échec : ${jet.echec}` : null].filter(Boolean).join(' · '),
+      // Un effet sans jet n'a rien à rater : sa conséquence se lit telle quelle.
+      detail: [jet.enjeu, jet.echec && jet.attributs.length ? `échec : ${jet.echec}` : jet.echec].filter(Boolean).join(' · '),
       autres: [
         jet.reussite ? `Réussite : ${jet.reussite}` : null,
         jet.carriere ? `Carrière : ${jet.carriere}` : null,

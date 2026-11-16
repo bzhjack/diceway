@@ -142,6 +142,17 @@ export class ActionRollPanelComponent {
         return;
       }
       untracked(() => {
+        // Un autre jet de la scène : le panneau repart de zéro (dés, résultat, carrière, coups de pouce), sur son attribut et sa difficulté.
+        this.resetTierChoices();
+        this.favorPending.set(false);
+        this.manualEntry.set(false);
+        this.manualTotal.set(null);
+        this.rolled.set(null);
+        this.dice.set(null);
+        this.carriere.set(null);
+        this.modifier.set(0);
+        this.gmDie.set(null);
+        this.selectedDiceTraits.set(new Set());
         const attribut = meilleurAttribut(preset.attributs, this.data());
         if (attribut) {
           this.attribute.set(attribut);

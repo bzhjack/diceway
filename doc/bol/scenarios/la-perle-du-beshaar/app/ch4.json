@@ -300,7 +300,7 @@
       "lecture": "Parmi les bouteilles, les bocaux et les sacs de grains, sous un drap jeté à même le sol, gît le corps pourrissant d'une femme. Elle a été atrocement torturée.\n\nLa lumière vacille. Derrière vous, l'escalier semble plus loin qu'il ne devrait.",
       "jeu": "Option 2 seulement. Karstus a laissé un démon gardien, chargé de tuer quiconque descend dans la cave : Ghashtalarann.\nIl concentre ses attaques sur ceux qui ont résisté et laisse les autres s'épuiser.\nMaître du déguisement : il se change en objet inerte (pan de mur, commode, coffre) quand personne ne le regarde, puis attaque avec un dé de bonus de surprise.",
       "jets": [
-        {"titre": "Le dédale illusoire", "attributs": ["esprit"], "difficulte": "difficile", "enjeu": "ne pas se perdre dans le dédale de portes, d’escaliers et de couloirs ; le livre dit -3 : Difficile et un coup de pouce de -1", "echec": "il tourne en rond dans la cave, isolé des autres qu’il entend tout proches ; le premier coup reçu rompt l’enchantement", "quand": "chaque héros, dès que le piège se déclenche"}
+        {"titre": "Le dédale illusoire", "attributs": ["esprit"], "difficulte": "difficile", "enjeu": "ne pas se perdre dans le dédale de portes, d’escaliers et de couloirs ; le livre dit -3 : Difficile, plus un modificateur de −1", "echec": "il tourne en rond dans la cave, isolé des autres qu’il entend tout proches ; le premier coup reçu rompt l’enchantement", "quand": "chaque héros, dès que le piège se déclenche"}
       ],
       "notes": "La morte est la jeune domestique torturée sous les yeux d'Arjanek pour le briser, quand Karstus a enlevé Marika.",
       "pistes": [{ "texte": "Enquêter en ville", "vers": "enquete" }],

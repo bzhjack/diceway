@@ -21,7 +21,6 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | Effort |
 | --- | --- | --- |
 | 1 | Images | hors code |
-| 2 | Jets : reprendre le Dieu voilé et les Chroniques | M (relecture) |
 
 ## 1. Images (hors code)
 
@@ -29,13 +28,6 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
   - `doc/bol/scenarios/chroniques-lemuriennes-1/portraits.md` : P1 à P9, environ 51 portraits.
   - `doc/bol/scenarios/la-perle-du-beshaar/portraits.md` : P1 à P7, environ 41 portraits.
   - `doc/bol/scenarios/le-dieu-voile/portraits.md` : P1 à P15, environ 89 portraits.
-
-## 2. Les jets d'une scène : reprendre les deux autres scénarios
-
-Les jets sont faits (analyse et plan : `2026-11-13-jets-de-scene-analyse.md`, `2026-11-13-jets-de-scene-plan.md`) et la Perle du Beshaar
-est reprise (51 jets). Reste à faire de même pour **le Dieu voilé** et **les Chroniques lémuriennes** : lancer
-`python3 -I doc/bol/scenarios/outils/extraire-jets.py doc/bol/scenarios/<saga>`, relire son rapport `app/jets-a-relire.md`, écrire les
-`jets` des scènes et retirer de `jeu` les phrases reprises, puis `--dry-run` et réimport des chapitres dans l'ordre.
 
 ## Hors périmètre, pour mémoire
 

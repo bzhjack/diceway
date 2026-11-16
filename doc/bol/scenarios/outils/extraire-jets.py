@@ -75,7 +75,8 @@ def main(saga: str) -> None:
               'Proposition du script `doc/bol/scenarios/outils/extraire-jets.py`, à relire : rien n\'est écrit dans les fichiers JSON.', '']
     total = 0
     for fichier in sorted(glob.glob(os.path.join(saga, 'app', '*.json'))):
-        data = json.load(open(fichier, encoding='utf-8'))
+        with open(fichier, encoding='utf-8') as f:
+            data = json.load(f)
         lignes.append(f'## {os.path.basename(fichier)}')
         lignes.append('')
         for scene in data.get('scenes', []):
@@ -94,7 +95,8 @@ def main(saga: str) -> None:
     lignes.insert(3, f'{total} phrases proposées.')
     lignes.insert(4, '')
     sortie = os.path.join(saga, 'app', 'jets-a-relire.md')
-    open(sortie, 'w', encoding='utf-8').write('\n'.join(lignes) + '\n')
+    with open(sortie, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lignes) + '\n')
     print(f'{total} phrases → {sortie}')
 
 

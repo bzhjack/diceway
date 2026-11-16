@@ -15,6 +15,9 @@
         @if (onglet.cle === 'pistes') {
           <span class="lec-onglet-compte">{{ pistes().length }}</span>
         }
+        @if (onglet.cle === 'jets') {
+          <span class="lec-onglet-compte">{{ scene().jets?.length }}</span>
+        }
       </button>
     }
   </div>
