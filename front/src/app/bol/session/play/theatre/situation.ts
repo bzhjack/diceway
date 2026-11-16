@@ -3,7 +3,6 @@ import {CdkDrag, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output, signal} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -127,7 +126,6 @@ function totalVitalite(cards: readonly TapisCard[]): string {
     CdkOverlayOrigin,
     CdkTrapFocus,
     DwPopoverDirective,
-    MatButtonModule,
     MatIconModule,
     MatMenuModule,
     MatTooltipModule,

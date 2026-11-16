@@ -66,7 +66,7 @@
 
 <!-- Une tuile (`bol-tuile`, en ligne dans la compagnie), réduite à l'essentiel : le portrait, et posés dessus le nombre d'exemplaires,
      la vilenie d'un rival et un cœur ; le nom suivi du point de l'attitude (son menu), le rang et l'icône de la sorte. Un héros a un
-     pied : son jet, ses points d'héroïsme et son cœur. Les exemplaires d'une fiche s'empilent en paquet. Un clic n'importe où, hors de
+     pied : ses points d'héroïsme et son cœur (son jet est sur sa carte, qu'ouvre un clic sur la tuile). Les exemplaires d'une fiche s'empilent en paquet. Un clic n'importe où, hors de
      ses boutons, ouvre le détail du personnage, où se règlent sa vitalité et son héroïsme. -->
 <ng-template #tuile let-c let-ligne="ligne">
   <bol-tuile
@@ -171,12 +171,6 @@
       </span>
     }
 
-    <!-- Le pied d'un héros commence par son jet (sur sa carte, comme le clic sur son portrait). -->
-    @if (c.card.kind === 'hero') {
-      <button bolTuilePied mat-icon-button type="button" class="sit-plus sit-jet" [attr.aria-label]="'Jet d’action de ' + c.card.nom" (click)="cardToggled.emit(c.card)">
-        <mat-icon>casino</mat-icon>
-      </button>
-    }
   </bol-tuile>
 </ng-template>
 

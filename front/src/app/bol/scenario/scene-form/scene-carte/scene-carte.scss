@@ -1,5 +1,3 @@
-@use 'styles/forge-mixins' as forge;
-
 :host {
   display: block;
   height: 100%;
@@ -29,27 +27,12 @@
   opacity: 0.75;
 }
 
-.sca-regler {
+// Le haut de la carte : le portrait, le nom et le rang ; il ne se clique pas, les réglages ont chacun leur bouton.
+.sca-haut {
   display: flex;
   flex: 1;
   flex-direction: column;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  &:hover .sca-portrait img {
-    transform: scale(1.04);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: -2px;
-  }
+  min-height: 0;
 }
 
 .sca-portrait {
@@ -68,10 +51,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    // Le portrait est carré et la bande large : on en garde le haut, où est la tête ; le zoom du survol part du haut aussi.
+    // Le portrait est carré et la bande large : on en garde le haut, où est la tête.
     object-position: 50% 0;
-    transform-origin: 50% 0;
-    transition: transform 0.25s ease;
   }
 
   &::after {
@@ -137,9 +118,9 @@
   background: linear-gradient(90deg, color-mix(in srgb, var(--sca-camp) 30%, transparent), color-mix(in srgb, var(--sca-camp) 10%, transparent));
 }
 
-// L'attitude (`bol-attitude-puce`), son nom en infobulle, au bord droit de la carte.
-.sca-puce {
-  margin-right: 0.1rem;
+// L'attitude (`bol-attitude-menu`), au bord droit de la carte.
+.sca-attitude {
+  margin-right: -0.2rem;
 }
 
 // Le nombre en médaille dorée, et la croix pour retirer, posés sur le portrait.
@@ -191,32 +172,4 @@
     outline: 2px solid var(--dw-color-legendary);
     outline-offset: 2px;
   }
-}
-
-// Le popover des réglages : une plaque de fer sous la carte.
-.sca-pop {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  width: 18rem;
-  padding: 0.85rem 1rem 1rem;
-  border: 1px solid var(--dw-forge-bronze);
-  border-radius: 10px;
-  @include forge.plate;
-}
-
-.sca-pop-titre {
-  margin: 0 0 0.2rem;
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 1.15rem;
-  color: var(--dw-forge-name);
-}
-
-.sca-pop-label {
-  margin-top: 0.3rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dw-forge-caption);
 }

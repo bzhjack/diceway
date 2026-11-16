@@ -85,7 +85,7 @@ describe('SituationComponent', () => {
     const ecusson = element.querySelector('.sit-vilenie')!;
     expect(ecusson.getAttribute('aria-label')).toBe('Vilenie de Marsus : 3');
     expect(texte(ecusson)).toBe('3');
-    expect(element.querySelector('.mat-mdc-button-base:not(.sit-plus)')).toBeNull();
+    expect(element.querySelector('.mat-mdc-button-base')).toBeNull();
   });
 
   it('la compagnie dit qu’on peut y glisser quelqu’un d’en face ; sans personne en face, où les faire entrer', async () => {
@@ -152,7 +152,7 @@ describe('SituationComponent', () => {
     expect(texte(grimar)).not.toContain('Clara');
     expect(grimar.querySelector('.dw-tuile__vies')).toBeNull();
     expect([...grimar.querySelectorAll('.dw-tuile__pied b')].map((b) => texte(b))).toEqual(['2', '8']);
-    expect(grimar.querySelector('.dw-tuile__pied [aria-label="Jet d’action de Grimar"]')).not.toBeNull();
+    expect(grimar.querySelector('.dw-tuile__pied button')).toBeNull();
     expect(loup.querySelector('.dw-tuile__pied')).toBeNull();
     expect(loup.querySelector('.sit-attitude')).toBeNull();
     expect(loup.querySelector('.dw-tuile-sorte')!.getAttribute('aria-label')).toBe('Créature');
@@ -181,13 +181,5 @@ describe('SituationComponent', () => {
 
     expect(ouvertes).toEqual([GRIMAR]);
     expect(selectionnees).toEqual([garde1, garde2]);
-  });
-
-  it('le dé d’un héros ouvre sa carte, où se trouve son jet d’action', async () => {
-    const {bouton, ouvertes} = await rendre([GRIMAR]);
-
-    bouton('Jet d’action de Grimar').click();
-
-    expect(ouvertes).toEqual([GRIMAR]);
   });
 });

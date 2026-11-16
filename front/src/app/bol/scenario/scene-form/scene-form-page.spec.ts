@@ -91,7 +91,6 @@ describe('SceneFormPageComponent', () => {
     expect(texte(page.querySelector('.sca-nombre'))).toBe('×2');
     expect(page.querySelector('.sca-bande .prg-camp-option--adversaires')?.getAttribute('aria-pressed')).toBe('true');
     expect(page.querySelector('.sca-nom bol-attitude-puce')?.classList).toContain('apu--hostile');
-    expect(texte(page.querySelector('.sca-corps'))).toContain('Hostile');
   });
 
   it('enregistre le texte et les personnages, sans toucher à l’illustration, puis revient', async () => {
@@ -289,12 +288,14 @@ describe('SceneFormPageComponent', () => {
     expect(distribution[0]).toEqual(expect.objectContaining({qty: 2, camp: 'heros'}));
   });
 
-  it('un clic sur l’attitude choisie l’efface', async () => {
+  it('la pastille de l’attitude ouvre son menu ; « Sans attitude » l’efface', async () => {
     const {page, fixture, sceneService, enregistrer} = await rendre();
 
-    page.querySelector<HTMLButtonElement>('.sca-regler')!.click();
+    const pastille = page.querySelector<HTMLButtonElement>('.sca-attitude button')!;
+    expect(pastille.getAttribute('aria-label')).toBe('Attitude de Loup géant : Hostile');
+    pastille.click();
     await fixture.whenStable();
-    document.querySelector<HTMLButtonElement>('.sca-pop .atp-option[aria-pressed="true"]')!.click();
+    [...document.querySelectorAll<HTMLButtonElement>('.mat-mdc-menu-item')].find((b) => b.textContent?.includes('Sans attitude'))!.click();
     await fixture.whenStable();
     await enregistrer();
 

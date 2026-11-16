@@ -166,17 +166,6 @@
   margin-left: -0.1rem;
 }
 
-// Le dé d'un héros, au début de son pied, au-dessus de la zone de clic du portrait.
-.sit-plus {
-  position: relative;
-  z-index: 1;
-  flex: none;
-  --mat-icon-button-state-layer-size: 1.5rem;
-  --mat-icon-button-icon-size: 1rem;
-  padding: 0;
-  color: var(--dw-color-text-bright);
-}
-
 // La vilenie d'un rival : l'écusson de la tuile, sombre, en haut à droite du portrait ; son nom en infobulle.
 .sit-vilenie {
   margin: 0.2rem;

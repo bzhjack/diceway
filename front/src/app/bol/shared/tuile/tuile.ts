@@ -10,7 +10,7 @@ import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
  * tuile est le bouton du portrait (`ouvrir`) ; les emplacements projetés passent au-dessus de sa zone de clic :
  * - `[bolTuileCoin]` en haut à gauche (« Mes fiches », `×n`), `[bolTuileMenu]` en haut à droite (le menu `⋯`) ;
  * - `[bolTuileTete]` après le nom (le point d'attitude), `[bolTuileSous]` la ligne sous le nom (rang, sorte, joueur) ;
- * - `[bolTuileVie]` à la place du cœur (celui d'un groupe, quand `vitalite` est null), `[bolTuilePied]` au début du pied d'un héros (son dé).
+ * - `[bolTuileVie]` à la place du cœur (celui d'un groupe, quand `vitalite` est null).
  * Ses styles sont globaux (`styles/_tuile.scss`, classes `dw-tuile*`), pour que le contenu projeté les partage ; la page pose sur la tuile
  * les variantes `dw-tuile--sombre` (liseré sans couleur), `--allie` (en pointillés, le texte en bas), `--paquet` (plusieurs exemplaires),
  * `--choisie` (sélectionnée), `--tombee` (à terre).
@@ -52,7 +52,6 @@ import {usableAvatar} from '../../../shared/avatar-fallback/avatar.util';
 
     @if (heroisme() !== null) {
       <div class="dw-tuile__pied">
-        <ng-content select="[bolTuilePied]" />
         <span class="dw-tuile__ecusson" role="img" [attr.aria-label]="'Héroïsme de ' + nom() + ' : ' + heroisme()">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5.25 3.4 10.15 8 11.35 4.6-1.2 8-6.1 8-11.35V5l-8-3z" /></svg>
           <b aria-hidden="true">{{ heroisme() }}</b>

@@ -1,24 +1,21 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
+import {AttitudeMenuComponent} from '../../../shared/attitude/attitude-menu';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
-import {ATTITUDES} from '../../../session/play/theatre/theatre.util';
 import {ScenePersonnageVue} from '../../models/scene-form.model';
 import {PersoReglagesComponent} from '../perso-reglages/perso-reglages';
 import {aUnPortrait} from '../scene-form.util';
 
 /**
  * Un personnage de la distribution d'« Ajouter des personnages », en petit : son portrait et son nombre, son nom suivi de la pastille de
- * son attitude (son nom en infobulle, un clic ouvre son menu), de quoi le retirer ; dessous, ses réglages (`bol-perso-reglages`) : un de
+ * son attitude (`bol-attitude-menu` : son nom en infobulle, un clic ouvre son menu), de quoi le retirer ; dessous, ses réglages (`bol-perso-reglages`) : un de
  * plus ou de moins, et son camp calé à droite. Le liseré dit le camp. Ne fait que dire le réglage (`regle`) ou le retrait (`retire`).
  */
 @Component({
   selector: 'bol-scene-perso',
-  imports: [AttitudePuceComponent, AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, PersoReglagesComponent],
+  imports: [AttitudeMenuComponent, AvatarFallbackDirective, MatButtonModule, MatIconModule, PersoReglagesComponent],
   template: `
     <div class="spe" [class.spe--allie]="perso().camp === 'heros'" [class.spe--introuvable]="perso().introuvable" [class.spe--nouveau]="nouveau()">
       <span class="spe-portrait">
@@ -31,26 +28,7 @@ import {aUnPortrait} from '../scene-form.util';
       </span>
       <span class="spe-nom">
         <span class="spe-texte">{{ perso().nom }}</span>
-        <button
-          type="button"
-          class="spe-attitude"
-          [attr.aria-label]="'Attitude de ' + perso().nom + ' : ' + attitudeLabel()"
-          [matTooltip]="attitudeLabel()"
-          matTooltipPosition="above"
-          [matMenuTriggerFor]="menuAttitude"
-        >
-          <bol-attitude-puce [attitude]="perso().attitude" />
-        </button>
-        <mat-menu #menuAttitude="matMenu">
-          @for (option of attitudes; track option.value) {
-            <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === option.value" (click)="regle.emit({attitude: option.value})">
-              <mat-icon>{{ option.icon }}</mat-icon>{{ option.label }}
-            </button>
-          }
-          <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === null" (click)="regle.emit({attitude: null})">
-            <mat-icon>remove</mat-icon>Sans attitude
-          </button>
-        </mat-menu>
+        <bol-attitude-menu [attitude]="perso().attitude" [nom]="perso().nom" (choisie)="regle.emit({attitude: $event})" />
         @if (nouveau()) {
           <span class="spe-nouveau">nouveau</span>
         }
@@ -72,7 +50,5 @@ export class ScenePersoComponent {
   readonly regle = output<Partial<Pick<BolSceneDistributionSaisie, 'qty' | 'camp' | 'attitude'>>>();
   readonly retire = output();
 
-  protected readonly attitudes = ATTITUDES;
   protected readonly portrait = computed(() => aUnPortrait(this.perso().avatar));
-  protected readonly attitudeLabel = computed(() => ATTITUDES.find((a) => a.value === this.perso().attitude)?.label ?? 'Sans attitude');
 }

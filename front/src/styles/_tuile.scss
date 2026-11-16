@@ -271,7 +271,7 @@
   pointer-events: none;
 }
 
-// Un héros : le nom descend contre son pied, le voile commence plus bas ; le pied porte son dé (projeté), son écusson et son cœur.
+// Un héros : le nom descend contre son pied, le voile commence plus bas ; le pied porte son écusson et son cœur, à droite.
 .dw-tuile--heros {
   --dw-tuile-voile-debut: -2rem;
   --dw-tuile-voile-plein: 1rem;
@@ -301,11 +301,6 @@
   color: var(--dw-color-text-bright);
   font-size: 0.7rem;
   font-weight: 700;
-
-  // Le premier élément projeté (le dé) part à gauche ; l'écusson et le cœur restent à droite.
-  > :first-child:not(.dw-tuile__ecusson) {
-    margin-right: auto;
-  }
 
   .dw-tuile__coeur {
     --coeur-largeur: 1.95rem;
@@ -344,7 +339,7 @@
 }
 
 // En ligne (la compagnie, à la table) : la tuile mise à plat. Le portrait n'occupe que son carré, à gauche, sans voile ; à droite le
-// nom, puis le pied d'un héros (son dé, son écusson, son cœur au bout) ou la ligne d'un allié, son cœur au bout de la ligne.
+// nom, puis le pied d'un héros (son écusson, son cœur au bout) ou la ligne d'un allié, son cœur au bout de la ligne.
 .dw-tuile--ligne {
   --dw-tuile-ombre: 0 4px 10px color-mix(in srgb, black 40%, transparent);
 
