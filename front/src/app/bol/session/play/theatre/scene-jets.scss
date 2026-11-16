@@ -1,0 +1,89 @@
+// Les jets de la scène, dans le carnet : une ligne par jet, séparées par un filet ; le titre, les badges et « Lancer pour » sur la
+// première ligne, l'enjeu et l'échec dessous. La taille suit celle du carnet (`--lec-k`, plus grand en lecture agrandie).
+:host {
+  display: block;
+}
+
+.scj-liste {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scj-jet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.65rem 0.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-forge-bronze) 30%, transparent);
+
+  &:first-child {
+    padding-top: 0.2rem;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.scj-tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scj-titre {
+  margin-right: 0.2rem;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: calc(1.05rem * var(--lec-k, 1));
+  font-weight: 400;
+  color: var(--dw-forge-name);
+}
+
+// Un badge : la difficulté, en contour ; les attributs, en or plein, ce qu'on lit d'abord ; « Sans jet », éteint.
+.scj-badge {
+  padding: 0.12rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  border-radius: 5px;
+  color: var(--dw-forge-name);
+  font-size: calc(0.72rem * var(--lec-k, 1));
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.scj-badge--attribut {
+  border-color: var(--dw-color-legendary);
+  background: var(--dw-color-legendary);
+  color: var(--dw-forge-ink);
+}
+
+.scj-badge--sans {
+  border-color: var(--dw-forge-bronze-dim);
+  color: var(--dw-forge-caption);
+}
+
+.scj-lancer {
+  margin-left: auto;
+
+  --mat-button-outlined-container-height: 1.9rem;
+  --mat-button-outlined-label-text-size: 0.78rem;
+  --mat-button-outlined-horizontal-padding: 0.75rem;
+}
+
+.scj-detail,
+.scj-autre {
+  margin: 0;
+  color: var(--dw-forge-bone);
+  font-size: calc(0.86rem * var(--lec-k, 1));
+  line-height: 1.4;
+}
+
+.scj-autre {
+  color: var(--dw-forge-caption);
+  font-size: calc(0.78rem * var(--lec-k, 1));
+}

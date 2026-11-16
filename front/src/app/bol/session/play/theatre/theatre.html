@@ -21,7 +21,15 @@
 
   <!-- Au centre, le carnet du MJ : le texte à lire, ce qui se joue, le secret, les pistes ; il défile seul. -->
   @if (store.displayedScene(); as scene) {
-    <bol-scene-lecture class="thr-carnet" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" (grandToggled)="agrandirLecture()" />
+    <bol-scene-lecture
+      class="thr-carnet"
+      [scene]="scene"
+      [acts]="store.acts()"
+      [heros]="heros()"
+      (sceneChanged)="sceneChanged.emit($event)"
+      (grandToggled)="agrandirLecture()"
+      (jetLance)="jetLance.emit($event)"
+    />
   }
 
   <!-- La situation, de part et d'autre du carnet : la compagnie à gauche, ceux d'en face à droite. Ses deux camps se placent eux-mêmes

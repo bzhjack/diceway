@@ -88,6 +88,7 @@
                 [coulissesOpen]="table.reserveOpen()"
                 (coulissesRequested)="table.setReserveOpen(true)"
                 (combatRequested)="commands.openStartCombat()"
+                (jetLance)="expanded.lancerJet($event.hero, $event.jet)"
               />
             </mat-sidenav-content>
           </mat-sidenav-container>

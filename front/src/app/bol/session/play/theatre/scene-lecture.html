@@ -64,6 +64,9 @@
         }
       </ul>
     }
+    @case ('jets') {
+      <bol-scene-jets [jets]="scene().jets ?? []" [heros]="heros()" (lancer)="jetLance.emit($event)" />
+    }
     @case ('jeu') {
       <p class="lec-jeu">{{ scene().jeu }}</p>
     }

@@ -140,7 +140,10 @@
       "meteo": "clair",
       "danger": 1,
       "lecture": "Sortis des venelles crasseuses du Cloaque, vous traversez rues et places où la fête bat son plein. La foule est encore dense malgré l'heure tardive, et il règne un joyeux tumulte dans la ville.\n\nAprès avoir franchi le pont qui relie l'île fluviale d'Ajamba au reste de la cité, vous gagnez la pointe de l'île. Les rues sont ici plus calmes. Sur la courte esplanade devant l'entrée monumentale du temple de Shazzadion, qui fait face à l'estuaire, un petit groupe de Satarlans avachis sur les marches de marbre du porche achèvent de s'enivrer en faisant circuler un gros cruchon.",
-      "jeu": "Aucun jet obligatoire. Un héros attentif (Esprit) remarque que le groupe est « escorté » par des hommes de Marsus, qui suivent — ou surveillent — sa progression.",
+      "jeu": "Aucun jet obligatoire.",
+      "jets": [
+        {"titre": "Remarquer l’escorte", "attributs": ["esprit"], "difficulte": "moyenne", "enjeu": "remarquer que des hommes de Marsus suivent — ou surveillent — le groupe", "quand": "un héros attentif"}
+      ],
       "pistes": [{ "texte": "Entrer dans le temple", "vers": "temple" }]
     },
     {
@@ -177,7 +180,16 @@
       "moment": "nuit",
       "danger": 3,
       "lecture": "Un frisson parcourt la surface de l'eau. Sous vos pieds, les tesselles ondulent, les algues ondoient, les poissons frémissent : la mosaïque prend vie !",
-      "jeu": "Piocher 2 ou 3 effets selon le nombre de héros entrés ; garder les hippocampes pour la fin.\n• Tentacules (1 à 3) : Att +2, dégâts d6, s'enroulent (jet de Vigueur ou d'Agilité pour ne pas être emprisonné). 6 PV chacun.\n• Coquillage : se referme sur un pied. Vigueur Ardu (-1) pour dégager sa jambe.\n• Poissons volants : d3 dégâts automatiques, puis à chaque round tant que le héros a les pieds dans l'eau (récupération comme des dégâts à mains nues).\n• Trou dans la mosaïque : Esprit pour repérer le bleu sombre uniforme si le joueur regarde où il marche ; sinon aspiré, Vigueur Ardu (-1) pour remonter.\n• Algues : Réaction Ardu (-1) pour ne pas tomber ; d3 rounds pour se dégager (un de moins avec l'aide d'un camarade).\n• Hippocampes géants (en dernier, quand les héros vont sortir) : Att +1, dégâts d6M, 6 PV. L'un donne des coups de tête ; l'autre va souffler dans la conque. Le son profond retentit alors que les héros s'éloignent : leur intrusion ne passera pas inaperçue.",
+      "jeu": "Piocher 2 ou 3 effets selon le nombre de héros entrés ; garder les hippocampes pour la fin.",
+      "jets": [
+        {"titre": "Tentacules", "attributs": ["vigueur", "agilite"], "difficulte": "moyenne", "enjeu": "ne pas être emprisonné", "echec": "enroulé et emprisonné (les tentacules ont leur fiche : 6 PV chacun)"},
+        {"titre": "Coquillage", "attributs": ["vigueur"], "difficulte": "ardue", "enjeu": "dégager sa jambe", "echec": "le pied reste pris"},
+        {"titre": "Poissons volants", "attributs": [], "difficulte": "moyenne", "echec": "d3 dégâts automatiques, puis à chaque round tant que le héros a les pieds dans l’eau (récupérés comme des dégâts à mains nues)"},
+        {"titre": "Trou dans la mosaïque", "attributs": ["esprit"], "difficulte": "moyenne", "enjeu": "repérer le bleu sombre uniforme", "echec": "aspiré dans le trou", "quand": "si le joueur regarde où il marche"},
+        {"titre": "Remonter du trou", "attributs": ["vigueur"], "difficulte": "ardue", "enjeu": "remonter", "quand": "après avoir été aspiré dans le trou de la mosaïque"},
+        {"titre": "Algues", "attributs": ["esprit"], "difficulte": "ardue", "enjeu": "ne pas tomber", "echec": "à terre ; d3 rounds pour se dégager (un de moins avec l’aide d’un camarade)"},
+        {"titre": "Hippocampes géants", "attributs": [], "difficulte": "moyenne", "echec": "l’un donne des coups de tête, l’autre souffle dans la conque : le son profond retentit, l’intrusion ne passera pas inaperçue", "quand": "en dernier, quand les héros vont sortir"}
+      ],
       "notes": "Et si… un héros reste piégé (pied coincé dans une huître…) : capture possible. Après un interrogatoire musclé, une cage en osier pour nourrir les crocators du fleuve — ou une évasion à jouer plus tard. Les héros de remplacement peuvent être des compagnons de Surdral, sur le navire.",
       "pistes": [{ "texte": "Fuir vers le quai du Pendu", "vers": "fuite" }],
       "distribution": [
@@ -234,7 +246,10 @@
       "moment": "jour",
       "meteo": "clair",
       "lecture": "Après une quinzaine de jours de navigation, la traversée du golfe de Satarla et la remontée du cours paresseux du Malak, la Jalinha s'amarre enfin aux longs quais fluviaux de Malakut, qui bruissent d'activité à toute heure.\n\nSurdral affiche un sourire satisfait. Dès qu'il pose le pied sur le quai, des passants le saluent, souvent avec déférence. Il vous guide à travers les rues populeuses en vous faisant les honneurs de sa belle cité, jusqu'à sa demeure : une magnifique bâtisse entourée d'un parc arboré. Le portail est déjà ouvert ; un domestique attend son maître.\n\nVous entrez dans un univers de luxe et de raffinement. Le jardin est magnifique, la façade de pierre blanche aux sculptures harmonieuses. Le hall s'ouvre sur un grand escalier d'apparat en marbre. Les serviteurs accueillent leur maître avec des visages heureux. Surdral s'excuse : il est pressé d'aller saluer son épouse.\n\nAlors qu'il monte l'escalier de son pas claudicant, une silhouette féminine apparaît brièvement sur le palier, voilée, deux pieds nus délicats aux chevilles ornées de bracelets dont le doux tintement résonne dans le hall. Un parfum flotte un instant, floral et capiteux, impossible à identifier.",
-      "jeu": "Un héros attentif remarque sur le portail, fixé par un clou doré, un blason : un jemadar rampant devant deux khastoks entrecroisés. Esprit + scribe ou soldat pour reconnaître les armoiries de la famille régnante (automatique pour un Malakuti). Plusieurs trous comblés de clous dorés : ce n'est pas la première fois que la maison reçoit cet honneur. Surdral en explique volontiers le sens.\nSi les héros se sont emparés de la Jalinha, Surdral n'y voit aucune objection (« une prime bien méritée ! ») et peut les aider à recruter un équipage ou faire surveiller le navire.",
+      "jeu": "Un héros attentif remarque sur le portail, fixé par un clou doré, un blason : un jemadar rampant devant deux khastoks entrecroisés. Plusieurs trous comblés de clous dorés : ce n'est pas la première fois que la maison reçoit cet honneur. Surdral en explique volontiers le sens.\nSi les héros se sont emparés de la Jalinha, Surdral n'y voit aucune objection (« une prime bien méritée ! ») et peut les aider à recruter un équipage ou faire surveiller le navire.",
+      "jets": [
+        {"titre": "Reconnaître les armoiries", "attributs": ["esprit"], "difficulte": "moyenne", "enjeu": "reconnaître les armoiries de la famille régnante", "carriere": "scribe ou soldat", "quand": "automatique pour un Malakuti"}
+      ],
       "notes": "Léhéné, l'épouse de Surdral, est une demi-démone, fruit des expériences d'un démoniste ; Surdral l'a délivrée de sa cage. Elle subjugue malgré elle les esprits faibles (les domestiques lui sont farouchement attachés). Ne jamais la montrer : un parfum, un tintement, une silhouette. Surdral répond évasivement ; trop d'indiscrétion le contrarierait.",
       "pistes": [{ "texte": "Au coucher du soleil, le salon de Surdral", "vers": "arjanek" }],
       "distribution": [{ "perso": "surdral", "camp": "heros", "attitude": "amical" }]

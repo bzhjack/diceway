@@ -25,6 +25,7 @@ import {CardVitaliteComponent} from './card-vitalite';
 import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {libelleVitalite} from './pouvoirs-combat.util';
 import {TableChange} from '../../models/table-change.model';
+import {ActionRollPreset} from '../../models/action-roll.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
@@ -66,6 +67,8 @@ export class ExpandedCardComponent {
   readonly hero = input<ExpandedHeroData | null>(null);
   /** Statbloc d'un PNJ / créature / démon, `null` tant qu'il charge ou si la fiche a disparu. */
   readonly statblock = input<BolStatblockData | null>(null);
+  /** Le jet de la scène lancé pour ce héros : son panneau de jet s'y règle. */
+  readonly jetPreset = input<ActionRollPreset | null>(null);
   readonly returnUrl = input<string | null>(null);
   /** Un rival en combat qui peut encore prendre la fuite (« Fuite opportune ») : le bouton paraît sous sa vilénie. */
   readonly canFlee = input(false);

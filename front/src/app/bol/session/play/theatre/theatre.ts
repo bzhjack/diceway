@@ -5,6 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {TableChange} from '../../models/table-change.model';
 import {TapisCard} from '../../models/tapis.model';
+import {JetLance} from '../../models/theatre.model';
 import {BraisesComponent} from './braises';
 import {SceneCartoucheComponent} from './scene-cartouche';
 import {SceneLectureComponent} from './scene-lecture';
@@ -44,7 +45,11 @@ export class TheatreComponent {
   readonly coulissesRequested = output<void>();
   /** « Démarrer un combat ». */
   readonly combatRequested = output<void>();
+  /** Un jet de la scène lancé, depuis le carnet, pour un héros : la page ouvre sa carte, le panneau de jet réglé. */
+  readonly jetLance = output<JetLance>();
 
+  /** Les héros de la table, à qui le carnet propose de lancer un jet de la scène. */
+  protected readonly heros = computed(() => this.cards().filter((card) => card.kind === 'hero'));
   protected readonly regionNom = computed(() => this.store.regionNom(this.store.displayedScene()));
 
   /** Ouvre les notes de la scène en grand ; une scène chargée depuis une piste y est relayée à la page. */

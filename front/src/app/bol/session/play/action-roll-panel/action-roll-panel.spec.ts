@@ -90,4 +90,21 @@ describe('ActionRollPanelComponent', () => {
     expect(attribut()).toBe('Esprit');
     expect(difficulte()).toBe('Ardue');
   });
+
+  it('un nouveau préréglage efface le résultat du jet précédent', async () => {
+    const {fixture, page} = await rendre({attributs: ['vigueur'], difficulty: ARDUE});
+    const verdict = () => page.querySelector('.ard-verdict')?.textContent?.replace(/\s+/g, ' ').trim();
+    const saisie = page.querySelector<HTMLInputElement>('.ard-manual-input')!;
+    saisie.value = '9';
+    saisie.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    page.querySelector<HTMLButtonElement>('.ard-manual-btn')!.click();
+    await fixture.whenStable();
+    expect(verdict()).not.toBe('Les dés attendent.');
+
+    fixture.componentRef.setInput('preset', {attributs: ['esprit'], difficulty: DIFFICILE});
+    await fixture.whenStable();
+    expect(verdict()).toBe('Les dés attendent.');
+    expect(saisie.value).toBe('');
+  });
 });

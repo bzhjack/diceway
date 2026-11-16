@@ -1,4 +1,4 @@
-import {BolSceneModel, BolScenePiste} from '../../models/bol-scene.model';
+import {BolSceneJet, BolSceneModel, BolScenePiste} from '../../models/bol-scene.model';
 import {TapisCard} from './tapis.model';
 
 /** Où en est une scène de la frise : déjà jouée sur cette table, en cours, ou à venir. */
@@ -76,4 +76,10 @@ export interface RideauBraises {
   rate: number;
   alpha: number;
   stop(): void;
+}
+
+/** Un jet de la scène lancé, depuis le carnet, pour un héros de la table : sa carte s'ouvre, le panneau de jet réglé sur le jet. */
+export interface JetLance {
+  readonly jet: BolSceneJet;
+  readonly hero: TapisCard;
 }

@@ -4,6 +4,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Observable, take} from 'rxjs';
 import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolHerosModel} from '../../../models/bol-heros.model';
+import {BolSceneJet} from '../../../models/bol-scene.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolCreaturesService} from '../../../services/bol-creatures.service';
 import {BolDemonsService} from '../../../services/bol-demons.service';
@@ -11,7 +12,8 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {BolPnjService} from '../../../services/bol-pnj.service';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
 import {creatureStatblockData, demonStatblockData, pnjStatblockData} from '../../../shared/statblock/bol-statblock.builders';
-import {ActionRollDiceTrait} from '../../models/action-roll.model';
+import {ActionRollDiceTrait, ActionRollPreset} from '../../models/action-roll.model';
+import {actionDifficultyDu} from '../../../shared/scene-jets.util';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
 import {ExpandedCardDialogData} from '../../models/expanded-card-dialog.model';
 import {ExpandedCardDialogComponent} from '../tapis/expanded-card-dialog';
@@ -57,10 +59,25 @@ export class ExpandedCardStore {
 
   private readonly expandedStatblock = signal<BolStatblockData | null>(null);
 
+  /** Le jet de la scène lancé pour le héros ouvert : son panneau de jet s'y règle. `null` pour une carte ouverte d'un simple clic. */
+  private readonly jetPreset = signal<ActionRollPreset | null>(null);
+
   private cardDialog: MatDialogRef<ExpandedCardDialogComponent> | null = null;
 
   /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */
   onCardToggled(card: TapisCard): void {
+    this.jetPreset.set(null);
+    this.ouvrir(card);
+  }
+
+  /** Un jet de la scène lancé, depuis le carnet, pour ce héros : sa carte s'ouvre, le panneau de jet réglé sur l'attribut et la
+   * difficulté du jet ; si elle est déjà ouverte, seul le réglage change. */
+  lancerJet(card: TapisCard, jet: BolSceneJet): void {
+    this.jetPreset.set({attributs: jet.attributs, difficulty: actionDifficultyDu(jet.difficulte)});
+    this.ouvrir(card);
+  }
+
+  private ouvrir(card: TapisCard): void {
     this.table.selectedKeys.set(new Set());
     if (this.expandedKey() === card.key) {
       return;
@@ -71,6 +88,7 @@ export class ExpandedCardStore {
   }
 
   foldCard(): void {
+    this.jetPreset.set(null);
     this.cardDialog?.close();
     this.expandedKey.set(null);
   }
@@ -88,6 +106,7 @@ export class ExpandedCardStore {
       card: this.expandedCard,
       hero: this.expandedHero,
       statblock: this.expandedStatblock,
+      jetPreset: this.jetPreset.asReadonly(),
       returnUrl: this.table.returnUrl,
       canFlee: this.expandedCanFlee,
       canWithdraw: this.expandedCanWithdraw,

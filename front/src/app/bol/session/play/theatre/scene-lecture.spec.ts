@@ -1,10 +1,10 @@
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {BolSceneModel} from '../../../models/bol-scene.model';
+import {BolSceneJet, BolSceneModel} from '../../../models/bol-scene.model';
 import {SceneLectureComponent} from './scene-lecture';
 import {SceneStageStore} from './scene-stage.store';
 
-function scene(id: string, notes: string, jeu: string | null = null): BolSceneModel {
+function scene(id: string, notes: string, jeu: string | null = null, jets: BolSceneJet[] | null = null): BolSceneModel {
   return {
     id,
     scenario_id: null,
@@ -19,7 +19,7 @@ function scene(id: string, notes: string, jeu: string | null = null): BolSceneMo
     danger: null,
     lecture: 'Il pleut.',
     jeu,
-    jets: null,
+    jets,
     pistes: null,
     image: null,
   };
@@ -54,16 +54,32 @@ describe('SceneLectureComponent', () => {
     expect(host.querySelector('.lec-texte')).toBeNull();
   });
 
-  it("propose l’onglet « En jeu » seulement quand la scène a des règles", async () => {
+  it("propose l’onglet « Mise en scène » seulement quand la scène en a une", async () => {
     const host = fixture.nativeElement as HTMLElement;
-    expect(onglet(host, 'En jeu')).toBeUndefined();
+    expect(onglet(host, 'Mise en scène')).toBeUndefined();
     fixture.componentRef.setInput('scene', scene('s1', 'Le sceau est dans la sacoche.', 'Vigueur Ardu (-1) pour se dégager.'));
     await fixture.whenStable();
 
-    onglet(host, 'En jeu').click();
+    expect(onglet(host, 'En jeu')).toBeUndefined();
+    onglet(host, 'Mise en scène').click();
     await fixture.whenStable();
 
     expect(host.querySelector('.lec-jeu')?.textContent).toBe('Vigueur Ardu (-1) pour se dégager.');
+  });
+
+  it('range les onglets : à lire, jets, mise en scène, secret ; les jets n’ont leur onglet que s’il y en a', async () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const libelles = () => [...host.querySelectorAll('.lec-onglet')].map((b) => b.textContent?.replace('visibility_off', '').trim());
+    expect(libelles()).toEqual(['À lire aux joueurs', 'Secret du MJ']);
+
+    const coquillage: BolSceneJet = {titre: 'Coquillage', attributs: ['vigueur'], difficulte: 'ardue', enjeu: null, echec: null, reussite: null, carriere: null, quand: null};
+    fixture.componentRef.setInput('scene', scene('s1', 'Le sceau.', 'Piocher 2 effets.', [coquillage]));
+    await fixture.whenStable();
+    expect(libelles()).toEqual(['À lire aux joueurs', 'Jets 1', 'Mise en scène', 'Secret du MJ']);
+
+    onglet(host, 'Jets').click();
+    await fixture.whenStable();
+    expect(host.querySelector('bol-scene-jets .scj-titre')?.textContent?.trim()).toBe('Coquillage');
   });
 
   it('propose d’agrandir la lecture, et en grand ne garde qu’une croix pour la fermer', async () => {

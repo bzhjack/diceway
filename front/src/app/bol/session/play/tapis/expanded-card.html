@@ -63,7 +63,7 @@
 
     @if (hero(); as h) {
       <section class="exc-roll" aria-label="Jet d'action">
-        <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
+        <bol-action-roll-panel [data]="h.actionRoll" [preset]="jetPreset()" [(heroisme)]="heroisme" />
       </section>
     }
   } @else {

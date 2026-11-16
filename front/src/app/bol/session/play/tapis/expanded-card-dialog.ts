@@ -19,6 +19,7 @@ import {ExpandedCardComponent} from './expanded-card';
         [sessionId]="data.sessionId"
         [hero]="data.hero()"
         [statblock]="data.statblock()"
+        [jetPreset]="data.jetPreset()"
         [returnUrl]="data.returnUrl()"
         [canFlee]="data.canFlee()"
         (fleeRequested)="data.flee($event)"

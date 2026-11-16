@@ -1,5 +1,6 @@
 import {Signal} from '@angular/core';
 import {BolStatblockData} from '../../shared/models/bol-statblock.model';
+import {ActionRollPreset} from './action-roll.model';
 import {ExpandedHeroData} from './expanded-card.model';
 import {TableChange} from './table-change.model';
 import {TapisCard} from './tapis.model';
@@ -12,6 +13,8 @@ export interface ExpandedCardDialogData {
   readonly card: Signal<TapisCard | null>;
   readonly hero: Signal<ExpandedHeroData | null>;
   readonly statblock: Signal<BolStatblockData | null>;
+  /** Le jet de la scène lancé pour ce héros, auquel son panneau de jet se règle ; `null` sinon. */
+  readonly jetPreset: Signal<ActionRollPreset | null>;
   readonly returnUrl: Signal<string | null>;
   /** La carte ouverte est un rival en combat qui peut encore prendre la fuite. */
   readonly canFlee: Signal<boolean>;

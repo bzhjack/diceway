@@ -21,7 +21,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | Effort |
 | --- | --- | --- |
 | 1 | Images | hors code |
-| 2 | Les jets d'une scène | L |
+| 2 | Jets : reprendre le Dieu voilé et les Chroniques | M (relecture) |
 
 ## 1. Images (hors code)
 
@@ -30,16 +30,12 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
   - `doc/bol/scenarios/la-perle-du-beshaar/portraits.md` : P1 à P7, environ 41 portraits.
   - `doc/bol/scenarios/le-dieu-voile/portraits.md` : P1 à P15, environ 89 portraits.
 
-## 2. Les jets d'une scène
+## 2. Les jets d'une scène : reprendre les deux autres scénarios
 
-Conçu le 2026-11-13, **pas commencé** au 2026-11-15 : rien dans le code (ni `bol_scene.jets`, ni `BolSceneJets`, ni `bol-scene-jets`).
-
-- Analyse et décisions : `2026-11-13-jets-de-scene-analyse.md` (approche A ; pas de jets de combat, « réaction » = Esprit, pas de case
-  « fait », « En jeu » devient « Mise en scène »).
-- Plan : `2026-11-13-jets-de-scene-plan.md`, 8 tâches — le modèle et la saisie côté serveur (S), l'import, l'onglet « Jets » de
-  « Préparer la scène » (M), le préréglage du panneau de jet, l'onglet « Jets » du carnet avec « Lancer pour » (M), la reprise de la Perle
-  du Beshaar pour valider le format (M), la documentation.
-- Ensuite, hors de ce plan : reprendre de même le Dieu voilé et les Chroniques lémuriennes.
+Les jets sont faits (analyse et plan : `2026-11-13-jets-de-scene-analyse.md`, `2026-11-13-jets-de-scene-plan.md`) et la Perle du Beshaar
+est reprise (51 jets). Reste à faire de même pour **le Dieu voilé** et **les Chroniques lémuriennes** : lancer
+`python3 -I doc/bol/scenarios/outils/extraire-jets.py doc/bol/scenarios/<saga>`, relire son rapport `app/jets-a-relire.md`, écrire les
+`jets` des scènes et retirer de `jeu` les phrases reprises, puis `--dry-run` et réimport des chapitres dans l'ordre.
 
 ## Hors périmètre, pour mémoire
 

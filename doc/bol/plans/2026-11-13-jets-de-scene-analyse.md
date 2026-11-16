@@ -1,6 +1,6 @@
 # Les jets d'une scène — analyse
 
-Date : 2026-11-13. Statut : conception validée (approche A, décisions ci-dessous) ; plan : `2026-11-13-jets-de-scene-plan.md`.
+Date : 2026-11-13. Statut : réalisé le 2026-11-16 (plan : `2026-11-13-jets-de-scene-plan.md`) ; la Perle du Beshaar est reprise (51 jets), le Dieu voilé et les Chroniques restent à reprendre.
 
 ## La demande
 
