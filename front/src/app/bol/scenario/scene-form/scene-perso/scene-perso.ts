@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, input, output} from '@angu
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
@@ -10,13 +11,13 @@ import {ScenePersonnageVue} from '../../models/scene-form.model';
 import {aUnPortrait, QTY_MAX} from '../scene-form.util';
 
 /**
- * Un personnage de la distribution d'« Ajouter des personnages », en petit : son portrait et son nombre, son nom, de quoi le retirer ;
- * dessous, un de plus ou de moins, son camp, et son attitude dans un menu. Le liseré dit le camp. Ne fait que
- * dire le réglage (`regle`) ou le retrait (`retire`).
+ * Un personnage de la distribution d'« Ajouter des personnages », en petit : son portrait et son nombre, son nom suivi de la pastille de
+ * son attitude (son nom en infobulle, un clic ouvre son menu), de quoi le retirer ; dessous, un de plus ou de moins, et son camp calé
+ * à droite. Le liseré dit le camp. Ne fait que dire le réglage (`regle`) ou le retrait (`retire`).
  */
 @Component({
   selector: 'bol-scene-perso',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
   template: `
     <div class="spe" [class.spe--allie]="perso().camp === 'heros'" [class.spe--introuvable]="perso().introuvable" [class.spe--nouveau]="nouveau()">
       <span class="spe-portrait">
@@ -29,6 +30,24 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
       </span>
       <span class="spe-nom">
         <span class="spe-texte">{{ perso().nom }}</span>
+        <button
+          type="button"
+          [class]="'spe-attitude spe-attitude--' + (perso().attitude ?? 'aucune')"
+          [attr.aria-label]="'Attitude de ' + perso().nom + ' : ' + attitudeLabel()"
+          [matTooltip]="attitudeLabel()"
+          matTooltipPosition="above"
+          [matMenuTriggerFor]="menuAttitude"
+        ></button>
+        <mat-menu #menuAttitude="matMenu">
+          @for (option of attitudes; track option.value) {
+            <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === option.value" (click)="regle.emit({attitude: option.value})">
+              <mat-icon>{{ option.icon }}</mat-icon>{{ option.label }}
+            </button>
+          }
+          <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === null" (click)="regle.emit({attitude: null})">
+            <mat-icon>remove</mat-icon>Sans attitude
+          </button>
+        </mat-menu>
         @if (nouveau()) {
           <span class="spe-nouveau">nouveau</span>
         }
@@ -50,24 +69,6 @@ import {aUnPortrait, QTY_MAX} from '../scene-form.util';
           </button>
           <button type="button" class="spe-camp-option spe-camp-option--heros" [attr.aria-pressed]="perso().camp === 'heros'" (click)="choisirLeCamp('heros')">Allié</button>
         </span>
-        <button
-          type="button"
-          [class]="'spe-attitude spe-attitude--' + (perso().attitude ?? 'aucune')"
-          [attr.aria-label]="'Attitude de ' + perso().nom + ' : ' + attitudeLabel()"
-          [matMenuTriggerFor]="menuAttitude"
-        >
-          {{ attitudeLabel() }}<mat-icon aria-hidden="true">arrow_drop_down</mat-icon>
-        </button>
-        <mat-menu #menuAttitude="matMenu" xPosition="before">
-          @for (option of attitudes; track option.value) {
-            <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === option.value" (click)="regle.emit({attitude: option.value})">
-              <mat-icon>{{ option.icon }}</mat-icon>{{ option.label }}
-            </button>
-          }
-          <button mat-menu-item role="menuitemradio" [attr.aria-checked]="perso().attitude === null" (click)="regle.emit({attitude: null})">
-            <mat-icon>remove</mat-icon>Sans attitude
-          </button>
-        </mat-menu>
       </div>
     </div>
   `,

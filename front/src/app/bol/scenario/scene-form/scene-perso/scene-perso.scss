@@ -93,8 +93,8 @@
 .spe-nom {
   grid-area: nom;
   display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
+  align-items: center;
+  gap: 0.3rem;
   min-width: 0;
 }
 
@@ -132,9 +132,12 @@
 
 .spe-rond {
   display: grid;
+  flex: none;
   place-items: center;
   width: 1.4rem;
   height: 1.4rem;
+  aspect-ratio: 1;
+  box-sizing: border-box;
   padding: 0;
   border: 1px solid var(--dw-forge-bronze-dim);
   border-radius: 50%;
@@ -156,6 +159,7 @@
 
 .spe-camp {
   display: inline-flex;
+  margin-left: auto;
 }
 
 .spe-camp-option {
@@ -194,39 +198,42 @@
   --spe-option: var(--dw-color-reussite);
 }
 
-// L'attitude, en menu : sa pastille de couleur, son nom.
+// L'attitude, juste après le nom : une pastille de couleur, comme sur la table ; son nom en infobulle, un clic ouvre son menu.
+// Sans attitude : un cercle en pointillés.
 .spe-attitude {
   --spe-couleur: var(--dw-forge-bronze-dim);
 
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  height: 1.55rem;
-  margin-left: auto;
-  padding: 0 0.1rem 0 0.45rem;
-  border: 1px solid var(--spe-couleur);
-  border-radius: var(--dw-radius-toggle);
-  background: color-mix(in srgb, var(--spe-couleur) 18%, transparent);
-  color: var(--dw-color-text-bright);
-  font: inherit;
-  font-size: 0.7rem;
-  font-weight: 600;
-  white-space: nowrap;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
   cursor: pointer;
 
   &::before {
     content: '';
-    width: 0.45rem;
-    height: 0.45rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    box-sizing: border-box;
     border-radius: 50%;
     background: var(--spe-couleur);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--spe-couleur) 70%, transparent);
+    transition: transform 0.12s ease;
   }
 
-  mat-icon {
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
+  &:hover::before {
+    transform: scale(1.25);
   }
+}
+
+.spe-attitude--aucune::before {
+  border: 2px dashed var(--dw-forge-caption);
+  background: transparent;
+  box-shadow: none;
 }
 
 .spe-attitude--hostile {
