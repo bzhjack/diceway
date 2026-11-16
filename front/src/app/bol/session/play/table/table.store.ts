@@ -41,10 +41,6 @@ export class TableStore {
     return id ? `/session/${id}/play` : null;
   });
 
-  readonly existingHeroIds = computed<ReadonlySet<string>>(
-    () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
-  );
-
   /** Cartes de la table, une par ligne de session. */
   readonly cards = computed(() => {
     const session = this.session();

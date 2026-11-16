@@ -66,16 +66,17 @@ class BolTablePersonnagesTest extends TestCase
         $this->assertSame(0, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
     }
 
-    public function test_is_refused_during_a_combat(): void
+    public function test_seats_them_during_a_combat_too(): void
     {
         $garde = $this->pnj('Garde');
         $session = $this->table('combat');
 
         $this->postJson("/api/bol/fight-session/{$session->id}/personnages", ['distribution' => [
-            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 1, 'camp' => 'adversaires'],
-        ]])->assertStatus(409);
+            ['kind' => 'pnj', 'source_id' => $garde->id, 'qty' => 2, 'camp' => 'adversaires', 'attitude' => 'hostile'],
+        ]])->assertOk()->assertJsonPath('ignored', 0);
 
-        $this->assertSame(0, BolFightSessionPnj::where('fight_session_id', $session->id)->count());
+        $this->assertSame(2, BolFightSessionPnj::where('fight_session_id', $session->id)->where('attitude', 'hostile')->count());
+        $this->assertSame('combat', $session->fresh()->statut);
     }
 
     public function test_the_table_of_another_account_answers_404(): void

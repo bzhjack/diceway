@@ -70,10 +70,6 @@ export class BolFightSessionService {
     return this.http.delete<boolean>(`${this.base}/delete/${id}`).pipe(tap(() => browserStorage()?.removeItem(ISSUE_ANNONCEE + id)));
   }
 
-  addCombatant(sessionId: string, payload: BolFightSessionAddCombatantPayload): Observable<BolFightSessionModel> {
-    return this.inOrder(this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/combatant`, payload));
-  }
-
   removeCombatant(
     sessionId: string,
     kind: BolFightSessionAddCombatantPayload['kind'],

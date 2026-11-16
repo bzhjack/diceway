@@ -163,21 +163,18 @@ class BolSceneService
     }
 
     /**
-     * « Ajouter des personnages » à la table : la distribution choisie dans le casting (nombre, camp, attitude) s'assied à côté de ce qui
-     * y est, en une transaction ; seules les fiches que le compte peut mettre en scène sont posées.
+     * « Ajouter des personnages » à la table, hors combat comme en combat (le « + » de l'ordre d'action) : la distribution choisie dans le
+     * casting (nombre, camp, attitude) s'assied à côté de ce qui y est, en une transaction ; seules les fiches que le compte peut mettre en
+     * scène sont posées. En combat, l'ordre d'action les prend comme tout combattant ajouté.
      *
      * @param array<int, array<string, mixed>> $saisie
      * @return array{session: BolFightSession|null, ignored: int}|null null si la table est introuvable
-     * @throws SceneLoadNotAllowedException si la table n'est pas en mode libre
      */
     public function ajouterALaTable(string $userId, string $sessionId, array $saisie): ?array
     {
         $session = $this->ownedSession($sessionId, $userId);
         if (!$session) {
             return null;
-        }
-        if ($session->statut !== 'libre') {
-            throw new SceneLoadNotAllowedException();
         }
         $distribution = BolSceneDistribution::fromSaisie($saisie, $this->fichesAccessibles($userId, $saisie));
 

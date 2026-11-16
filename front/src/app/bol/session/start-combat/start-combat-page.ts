@@ -46,7 +46,8 @@ import {normalizeEtat} from '../play/tapis/combat-turn.util';
 import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatContext} from '../models/start-combat.model';
 import {OrdreFriseComponent} from '../ordre-frise/ordre-frise';
 import {REACTION_BONUS_TRAIT_LABEL, REACTION_MALUS_TRAIT_LABEL, REACTION_ROLL_THRESHOLD, reactionDiceNet, reactionFrise, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../reaction-roll.util';
-import {AddCombatantDialogComponent} from '../play/add-combatant-dialog/add-combatant-dialog';
+import {ajouterParLeCasting} from '../play/table/casting-table';
+import {sceneDecor} from '../play/theatre/theatre.util';
 import {pnjAvatar} from '../combat-play.util';
 import {DwPopoverDirective} from '../../../shared/popover/popover.directive';
 import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
@@ -188,7 +189,6 @@ export class StartCombatPageComponent {
   protected readonly rolling = signal(false);
   private readonly adversaries = signal<readonly AdversaryRow[]>([]);
   private readonly heroes = signal<readonly HeroRow[]>([]);
-  private readonly existingHeroIds = signal<ReadonlySet<string>>(new Set());
 
   /** Héroïsme courant par héros (clé pivotId) — signal dédié car `applyHeroismeDelta` le mute en place. */
   private readonly heroismeByPivot = new Map<number, WritableSignal<number>>();
@@ -398,7 +398,6 @@ export class StartCombatPageComponent {
             ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null), sourceId: c.creature_id, rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
             ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null), sourceId: d.demon_id, rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
           ]);
-          this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
           const heroEntries = session.heros ?? [];
           if (heroEntries.length === 0) {
@@ -539,23 +538,15 @@ export class StartCombatPageComponent {
     this.initiativeOverride.set(value === this.detectedInitiative() ? null : value);
   }
 
+  /** « + » : le casting de « Préparer la scène », vide ; ceux qu'il rend s'asseyent à la table et rejoignent la liste des adversaires
+   * (ou des alliés), les jets déjà faits restant. */
   protected openAddAdversary(): void {
-    this.dialog
-      .open(AddCombatantDialogComponent, {
-        width: 'min(760px, 94vw)',
-        maxWidth: '94vw',
-        maxHeight: '85vh',
-        data: {
-          sessionId: this.data.sessionId,
-          existingHeroIds: this.existingHeroIds(),
-        },
-      })
-      .afterClosed()
-      .subscribe((didAdd: boolean | undefined) => {
-        if (didAdd) {
-          this.reload(true);
-        }
-      });
+    ajouterParLeCasting({dialog: this.dialog, fightSessionService: this.fightSessionService, snackBar: this.snackBar}, this.data.sessionId, {
+      scenarioId: null,
+      sceneTitre: this.where() || 'La table',
+      sceneImage: sceneDecor(null),
+      sceneAmbiance: '',
+    }).subscribe(() => this.reload(true));
   }
 
   /** Saisie du total des deux dés lancés à table (pas le résultat avec ses bonus). De 2 à 9 un chiffre suffit : le jet est pris tout

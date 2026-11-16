@@ -121,7 +121,7 @@ class BolSceneController extends Controller
         return $result ? response()->json($result) : $this->notFound();
     }
 
-    /** « Ajouter des personnages » à la table : la distribution du casting s'assied à côté de ce qui y est. */
+    /** « Ajouter des personnages » à la table, hors combat ou en combat : la distribution du casting s'assied à côté de ce qui y est. */
     public function ajouterALaTable(Request $request, string $id)
     {
         $data = $request->validate([
@@ -129,11 +129,7 @@ class BolSceneController extends Controller
             'distribution.*' => 'array',
         ]);
 
-        try {
-            $result = $this->sceneService->ajouterALaTable(Auth::id(), $id, $data['distribution']);
-        } catch (SceneLoadNotAllowedException) {
-            return response()->json(['error' => 'Terminez le combat avant d\'ajouter des personnages.'], 409);
-        }
+        $result = $this->sceneService->ajouterALaTable(Auth::id(), $id, $data['distribution']);
 
         return $result ? response()->json($result) : $this->notFound();
     }

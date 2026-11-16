@@ -265,12 +265,13 @@
   bottom: 0.4rem;
   pointer-events: none;
 
+  // Un petit cœur, un gros chiffre : la vitalité se lit d'un coup d'œil, le cœur ne pèse pas sur la tuile.
   .dw-tuile__coeur {
-    width: 1.8rem;
-    height: 1.6rem;
+    width: 1.5rem;
+    height: 1.35rem;
 
     b {
-      font-size: 0.8rem;
+      font-size: 0.95rem;
     }
   }
 }
@@ -343,11 +344,11 @@
   }
 
   .dw-tuile__coeur {
-    width: 1.95rem;
-    height: 1.75rem;
+    width: 1.65rem;
+    height: 1.5rem;
 
     b {
-      font-size: 0.88rem;
+      font-size: 1rem;
     }
   }
 }
