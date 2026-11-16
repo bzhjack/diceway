@@ -34,6 +34,7 @@ import {
 import {METEOS, MOMENTS, sceneDecor} from '../../session/play/theatre/theatre.util';
 import {titreDeChapitre} from '../../session/scenario.util';
 import {openPersonnagesDialog} from './personnages-dialog/personnages-dialog';
+import {openRegionCarte} from '../../shared/region/region-carte-dialog';
 import {JetSaisie, SceneOnglet, SceneTexte} from '../models/scene-form.model';
 import {SceneCarteComponent} from './scene-carte/scene-carte';
 import {
@@ -249,8 +250,13 @@ export class SceneFormPageComponent implements HasPendingChanges {
     this.imageEnEchec.set(true);
   }
 
-  protected choisirLaRegion(regionId: number | null): void {
-    this.value.update((value) => ({...value, region_id: regionId}));
+  /** La région se choisit sur la carte de Lémurie ; fermer la carte sans choisir la laisse comme elle était. */
+  protected choisirSurLaCarte(): void {
+    openRegionCarte(this.dialog, {regions: this.regions(), regionId: this.value().region_id}).subscribe((regionId) => {
+      if (regionId !== undefined) {
+        this.value.update((value) => ({...value, region_id: regionId}));
+      }
+    });
   }
 
   protected choisirLeMoment(moment: SceneMoment | null): void {
