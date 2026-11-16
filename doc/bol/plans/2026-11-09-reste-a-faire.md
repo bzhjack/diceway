@@ -28,8 +28,8 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ## 1. Images (hors code)
 
-- Portraits des PNJ de scénario : aucune planche faite.
-  - `doc/bol/scenarios/chroniques-lemuriennes-1/portraits.md` : P1 à P9, environ 51 portraits.
+- Portraits des PNJ de scénario :
+  - `doc/bol/scenarios/chroniques-lemuriennes-1/portraits.md` : P4 à P9, environ 33 portraits (P1 à P3 faites le 2026-11-16).
   - `doc/bol/scenarios/la-perle-du-beshaar/portraits.md` : P1 à P7, environ 41 portraits.
   - `doc/bol/scenarios/le-dieu-voile/portraits.md` : P1 à P15, environ 89 portraits.
 

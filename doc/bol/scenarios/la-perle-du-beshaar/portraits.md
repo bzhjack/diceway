@@ -13,10 +13,10 @@ doit trancher, sans contredire le texte.
 ## Où vont les portraits
 
 Ces fiches appartiennent à un compte : leur portrait n'est pas un fichier `assets/bol/pnj/<id>.jpg` (réservé au
-catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de la fiche, carré de 256×256 en PNG).
+catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de la fiche, carré de 512×512 en WebP, qualité 90 : net sur les tuiles, environ 120 Ko ; l'import prend aussi le PNG et le JPEG).
 
-- Nommer chaque portrait découpé d'après la **clé d'import** de sa fiche : `<clé>.png` (ex. `marsus.png`,
-  `guerrier-ilemah.png`). La clé est stable d'un compte à l'autre, alors que l'id change.
+- Nommer chaque portrait découpé d'après la **clé d'import** de sa fiche : `<clé>.webp` (ex. `marsus.webp`,
+  `guerrier-ilemah.webp`). La clé est stable d'un compte à l'autre, alors que l'id change.
 - Pour les poser : un par un depuis le formulaire de la fiche (avatar), ou d'un coup avec `bol:import-portraits`, qui
   retrouve chaque fiche par sa clé d'import. Une fiche qui a déjà un portrait le garde (sauf `--force`), une clé qui
   renvoie au catalogue n'est pas touchée :
@@ -140,9 +140,9 @@ deux premières cases de la ligne du bas ; la dernière case en fond noir uni) :
 Si les cases sont bien alignées (ImageMagick, depuis le dossier de la planche) :
 
 ```bash
-magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
+magick planche-p1.png -crop 512x512 +repage -shave 3x3 -resize 512x512 -quality 90 case-%d.webp
 # case-0 … case-5 (lignes de gauche à droite, du haut vers le bas) ; renommer d'après le tableau des planches :
-# P1 → marsus.png, pretre.png, marin.png, gallus.png, tertus.png, pillard.png ; etc.
+# P1 → marsus.webp, pretre.webp, marin.webp, gallus.webp, tertus.webp, pillard.webp ; etc.
 # P6 : case-5 ne sert pas.
 ```
 

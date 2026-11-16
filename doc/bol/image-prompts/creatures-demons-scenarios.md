@@ -13,9 +13,9 @@ catalogue. Les planches sont regroupées par éclairage, plutôt que par scénar
 ## Où vont les portraits
 
 Ces fiches appartiennent à un compte : leur portrait n'est pas un fichier de `front/src/assets/bol/` (réservé au
-catalogue), mais le champ `avatar` de la fiche (carré de 256×256 en PNG).
+catalogue), mais le champ `avatar` de la fiche (carré de 512×512 en WebP, qualité 90 : net sur les tuiles, environ 120 Ko ; l'import prend aussi le PNG et le JPEG).
 
-- Nommer chaque portrait découpé comme dans le tableau des planches : `<saga>--<clé>.png`. La saga et la clé sont
+- Nommer chaque portrait découpé comme dans le tableau des planches : `<saga>--<clé>.webp`. La saga et la clé sont
   stables d'un compte à l'autre, alors que l'id change.
 - Pour les poser, `bol:import-portraits` retrouve chaque fiche par sa clé d'import. Il faut `--force`, sinon une fiche
   garde le portrait qu'elle a déjà :
@@ -35,9 +35,9 @@ copier ce dossier avant :
 
 Une planche = une image **1536×1024 (paysage), 3 colonnes × 2 lignes** de portraits carrés de 512×512. Ordre des cases :
 ligne du haut de gauche à droite, puis ligne du bas de gauche à droite. Découpe : voir « Découpe » dans
-`doc/bol/image-prompts/creatures-demons.md`, en sortant du 256×256 en PNG.
+`doc/bol/image-prompts/creatures-demons.md`, en sortant du 512×512 en WebP (qualité 90).
 
-| Planche | Consignes | Fichiers (cases 1 à 6, sans `.png`) |
+| Planche | Consignes | Fichiers (cases 1 à 6, sans extension) |
 | --- | --- | --- |
 | ✅ CS1 | plein jour | `cl1-mariage-amer--jeune-elasmotherium`, `dieu-voile--ch5-macaque-hurleur`, `dieu-voile--ch5-blob-attrapeur`, `cl1-les-trois-coffres--gardien-rouge`, `dieu-voile--intro-bubalus-zombie`, `perle-du-beshaar--crabe` |
 | ✅ CS2 | pénombre | `perle-du-beshaar--fille-djidaa`, `perle-du-beshaar--djidaa`, `dieu-voile--ch2-momie-royale`, `dieu-voile--ch2-momie-enfant`, `perle-du-beshaar--slorth-automate`, `perle-du-beshaar--ver-des-sables` |

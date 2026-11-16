@@ -11,10 +11,10 @@ descriptions viennent du livre, reprises dans le commentaire de chaque fiche.
 ## Où vont les portraits
 
 Ces fiches appartiennent à un compte : leur portrait n'est pas un fichier `assets/bol/pnj/<id>.jpg` (réservé au
-catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de la fiche, carré de 256×256 en PNG).
+catalogue), mais le champ `avatar` de la fiche (choisi depuis le formulaire de la fiche, carré de 512×512 en WebP, qualité 90 : net sur les tuiles, environ 120 Ko ; l'import prend aussi le PNG et le JPEG).
 
-- Nommer chaque portrait découpé d'après la **clé d'import** de sa fiche : `<clé>.png` (ex. `lok-kozaar.png`,
-  `ch3-oda-unjab.png`). La clé est stable d'un compte à l'autre, alors que l'id change.
+- Nommer chaque portrait découpé d'après la **clé d'import** de sa fiche : `<clé>.webp` (ex. `lok-kozaar.webp`,
+  `ch3-oda-unjab.webp`). La clé est stable d'un compte à l'autre, alors que l'id change.
 - Pour les poser : un par un depuis le formulaire de la fiche (avatar), ou d'un coup avec `bol:import-portraits`, qui
   retrouve chaque fiche par sa clé d'import. Une fiche qui a déjà un portrait le garde (sauf `--force`), une clé qui
   renvoie au catalogue n'est pas touchée :
@@ -223,9 +223,9 @@ deux premières cases de la ligne du bas ; la dernière case en fond noir uni) :
 Si les cases sont bien alignées (ImageMagick, depuis le dossier de la planche) :
 
 ```bash
-magick planche-p1.png -crop 512x512 +repage -resize 256x256 case-%d.png
+magick planche-p1.png -crop 512x512 +repage -shave 3x3 -resize 512x512 -quality 90 case-%d.webp
 # case-0 … case-5 (lignes de gauche à droite, du haut vers le bas) ; renommer d'après le tableau des planches :
-# P1 → lok-kozaar.png, qirmar.png, almar-de-chebeg.png, malcar.png, maben.png, soldat-nef-volante.png ; etc.
+# P1 → lok-kozaar.webp, qirmar.webp, almar-de-chebeg.webp, malcar.webp, maben.webp, soldat-nef-volante.webp ; etc.
 ```
 
 Si ChatGPT ne respecte pas la grille (cases décalées, portraits verticaux), recadrer à la main chaque case en carré
