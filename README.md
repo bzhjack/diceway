@@ -149,9 +149,9 @@ sur 4200 :
 cd front
 npx ng serve --port 4400 &
 APP_URL=http://localhost:4400 npm run screenshot -- /login /tmp/login.png   # une capture pleine page, avec les erreurs de la console
-npm run e2e:theatre                                # scénario de bout en bout de la table en mode libre
+npm run e2e:theatre                                # la table de bout en bout : mode libre, scènes, casting, y compris en combat
 npm run e2e:petit-bouclier
 ```
 
-Les scripts e2e créent des tables « TMP … » sur le compte de test et les suppriment à la fin ; un script coupé en cours
+Les scripts e2e créent des tables « TMP … » (et `e2e:theatre` un scénario « TMP Théâtre ») sur le compte de test et les suppriment à la fin ; un script coupé en cours
 peut en laisser une.

@@ -267,8 +267,8 @@
 
   // Un petit cœur, un gros chiffre : la vitalité se lit d'un coup d'œil, le cœur ne pèse pas sur la tuile.
   .dw-tuile__coeur {
-    width: 1.5rem;
-    height: 1.35rem;
+    width: 1.65rem;
+    height: 1.5rem;
 
     b {
       font-size: 0.95rem;
@@ -287,7 +287,8 @@
   width: 1.65rem;
   height: 1.5rem;
   box-sizing: border-box;
-  padding-bottom: 0.1rem;
+  // Le chiffre un peu bas : au milieu du ventre du cœur, sous ses deux lobes.
+  padding-top: 0.14rem;
   filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
   pointer-events: none;
 
@@ -344,8 +345,8 @@
   }
 
   .dw-tuile__coeur {
-    width: 1.65rem;
-    height: 1.5rem;
+    width: 1.8rem;
+    height: 1.62rem;
 
     b {
       font-size: 1rem;
