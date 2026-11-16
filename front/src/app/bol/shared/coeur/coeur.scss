@@ -11,7 +11,7 @@
   height: var(--coeur-hauteur, 1.5rem);
   box-sizing: border-box;
   // Le chiffre un peu bas : au milieu du ventre du cœur, sous ses deux lobes.
-  padding-top: calc(var(--coeur-hauteur, 1.5rem) * 0.09);
+  padding-top: calc(var(--coeur-hauteur, 1.5rem) * 0.05);
   filter: drop-shadow(0 2px 3px color-mix(in srgb, black 60%, transparent));
 }
 

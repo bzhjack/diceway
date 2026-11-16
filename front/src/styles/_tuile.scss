@@ -191,8 +191,9 @@
   min-width: 0;
 }
 
+// Le nom prend la ligne : ce qui le suit (la pastille de l'attitude, `bolTuileTete`) se cale à droite, au-dessus du cœur.
 .dw-tuile__nom {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -307,9 +308,9 @@
   }
 
   .dw-tuile__coeur {
-    --coeur-largeur: 1.8rem;
-    --coeur-hauteur: 1.62rem;
-    --coeur-chiffre: 1rem;
+    --coeur-largeur: 1.95rem;
+    --coeur-hauteur: 1.75rem;
+    --coeur-chiffre: 0.95rem;
   }
 }
 
