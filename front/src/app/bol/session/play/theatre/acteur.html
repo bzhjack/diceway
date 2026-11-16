@@ -24,10 +24,12 @@
   </span>
 
   <span class="act-bas">
-    @if (attitude(); as attitude) {
-      <span [class]="'act-attitude act-attitude--' + attitude.value">{{ attitude.label }}</span>
-    }
-    <span class="act-nom">{{ card().nom }}</span>
+    <span class="act-ligne">
+      <span class="act-nom">{{ card().nom }}</span>
+      @if (attitude(); as attitude) {
+        <bol-attitude-puce [attitude]="attitude.value" [matTooltip]="attitude.label" matTooltipPosition="above" />
+      }
+    </span>
     <span class="act-vit" aria-hidden="true"><i [class.act-vit--bas]="low()" [style.width.%]="percent()"></i></span>
   </span>
 </button>

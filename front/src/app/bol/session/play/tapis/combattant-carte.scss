@@ -56,8 +56,7 @@
   gap: 0.35rem;
 }
 
-.cc-rang,
-.cc-attitude {
+.cc-rang {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -172,31 +171,6 @@
   line-height: 1.4;
 }
 
-// L'attitude : une pastille de sa couleur devant son nom.
-.cc-attitude {
-  --cc-attitude: var(--dw-surface-500);
-
-  &::before {
-    content: '';
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--cc-attitude);
-  }
-}
-
-.cc-attitude--hostile {
-  --cc-attitude: var(--dw-color-echec);
-}
-
-.cc-attitude--mefiant {
-  --cc-attitude: var(--dw-color-warn);
-}
-
-.cc-attitude--amical {
-  --cc-attitude: var(--dw-color-reussite);
-}
-
 .cc-titre {
   display: flex;
   flex-wrap: wrap;
@@ -209,6 +183,12 @@
   font: 400 1.5rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
   color: var(--dw-forge-name);
   text-shadow: 0 1px 3px var(--dw-forge-shade);
+}
+
+// L'attitude, juste après le nom (`bol-attitude-puce`), son nom en infobulle.
+.cc-puce {
+  align-self: center;
+  margin-left: -0.25rem;
 }
 
 .cc-chance {
@@ -332,7 +312,6 @@
   }
 
   .cc-rang,
-  .cc-attitude,
   .cc-pouvoir {
     font-size: 0.66rem;
   }

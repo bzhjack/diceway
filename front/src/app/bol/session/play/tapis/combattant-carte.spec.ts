@@ -44,6 +44,21 @@ describe('CombattantCarteComponent', () => {
 
   const popover = () => document.querySelector<HTMLElement>('.cc-faible-pop');
 
+  it('l’attitude d’un adversaire est la pastille juste après son nom, son nom dit aux lecteurs d’écran', async () => {
+    const carte = await rendre({...demon({}), attitude: 'hostile'});
+
+    const titre = carte.querySelector('.cc-titre')!;
+    expect(titre.querySelector('.cc-nom + bol-attitude-puce')?.classList).toContain('apu--hostile');
+    expect(titre.querySelector('.sr-only')?.textContent).toContain('Hostile');
+    expect(carte.querySelector('.cc-tags')?.textContent).not.toContain('Hostile');
+  });
+
+  it('un allié n’a pas de pastille d’attitude', async () => {
+    const carte = await rendre({...demon({}), camp: 'heros', attitude: 'amical'});
+
+    expect(carte.querySelector('bol-attitude-puce')).toBeNull();
+  });
+
   it('la vulnérabilité est une icône : son texte n’est plus écrit sur la carte, il est dans son nom', async () => {
     const carte = await rendre(demon({vulnerabilite: {element: LONGUE}}));
 

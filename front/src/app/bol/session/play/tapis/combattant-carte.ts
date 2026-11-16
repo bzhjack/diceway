@@ -3,15 +3,17 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
+import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from '../theatre/theatre.util';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 import {libelleVulnerabilite} from './pouvoirs-combat.util';
 
 /** La carte d'un combattant dans l'assistant de tour, la même pour celui qui joue et pour sa cible : à gauche son portrait, carré sur toute la hauteur, qui se fond vers la droite ;
- * à côté son rang et son attitude (et en haut à droite les boutons projetés avec `ccActions`), son nom, ses chances et sa barre de vie
+ * à côté son rang (et en haut à droite les boutons projetés avec `ccActions`), son nom suivi de la pastille de son attitude, ses chances et sa barre de vie
  * (avec ce que le coup va lui retirer), puis ce que l'assistant y projette (chiffres, effets ; sa vie réglable en bas, avec `ccBas`). Le liseré dit son camp. */
 @Component({
   selector: 'bol-combattant-carte',
@@ -29,9 +31,6 @@ import {libelleVulnerabilite} from './pouvoirs-combat.util';
           <span class="cc-tags">
             @if (etiquette(); as e) {
               <span class="cc-rang">{{ e }}</span>
-            }
-            @if (attitude(); as a) {
-              <span [class]="'cc-attitude cc-attitude--' + a.value">{{ a.label }}</span>
             }
             <!-- Les pouvoirs d'un démon à garder en tête en combat (Poison, Intangible), et sa faiblesse : une icône et leur nom -->
             @for (pouvoir of avertissements(); track pouvoir) {
@@ -78,6 +77,10 @@ import {libelleVulnerabilite} from './pouvoirs-combat.util';
         </div>
         <p class="cc-titre">
           <b class="cc-nom">{{ card().nom }}</b>
+          @if (attitude(); as a) {
+            <bol-attitude-puce class="cc-puce" [attitude]="a.value" [matTooltip]="a.label" matTooltipPosition="above" />
+            <span class="sr-only">, {{ a.label }}</span>
+          }
           @if (chance(); as c) {
             <em class="cc-chance">{{ c }}</em>
           }
@@ -89,7 +92,7 @@ import {libelleVulnerabilite} from './pouvoirs-combat.util';
     <!-- Ce qui se règle, sous le portrait et le texte -->
     <ng-content select="[ccBas]" />
   `,
-  imports: [MatIconModule, MatButtonModule, CdkConnectedOverlay, CdkOverlayOrigin, A11yModule, DwPopoverDirective],
+  imports: [AttitudePuceComponent, MatIconModule, MatButtonModule, MatTooltipModule, CdkConnectedOverlay, CdkOverlayOrigin, A11yModule, DwPopoverDirective],
   styleUrl: './combattant-carte.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

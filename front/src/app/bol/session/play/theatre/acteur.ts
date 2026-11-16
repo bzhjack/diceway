@@ -1,7 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {usableAvatar} from '../../../../shared/avatar-fallback/avatar.util';
 import {CombatantKind} from '../../../models/combat-selection.model';
+import {AttitudePuceComponent} from '../../../shared/attitude/attitude-puce';
 import {TapisCard} from '../../models/tapis.model';
 import {TroupeTaille} from '../../models/theatre.model';
 import {cardAriaLabel, isLowVitalite, vitalitePercent} from '../tapis/tapis.util';
@@ -15,7 +17,7 @@ const KIND_ICONS: Record<CombatantKind, string> = {hero: 'person', pnj: 'group',
  * (Ctrl/Cmd + clic sélectionne, un clic simple ouvre la carte). */
 @Component({
   selector: 'bol-acteur',
-  imports: [MatIconModule],
+  imports: [AttitudePuceComponent, MatIconModule, MatTooltipModule],
   templateUrl: './acteur.html',
   styleUrl: './acteur.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
