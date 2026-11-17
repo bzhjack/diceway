@@ -1,6 +1,9 @@
 <div class="bs">
-  <!-- Bandeau d'identité : le médaillon, le nom, ce qu'il est, sa vie -->
-  <header class="bs-head">
+  <!-- Bandeau d'identité : le portrait (en grand, et flouté en fond du bandeau), le nom, ce qu'il est, sa vie -->
+  <header #entete class="bs-head" [class.bs-head--image]="hasAvatar()">
+    @if (hasAvatar()) {
+      <img class="bs-head-fond" [src]="imageSrc()" alt="" aria-hidden="true" />
+    }
     <div class="bs-portrait">
       @if (hasAvatar()) {
         <button type="button" class="bs-portrait-zoom" [attr.aria-label]="'Voir le portrait de ' + displayName()" (click)="openPortrait()">
@@ -55,8 +58,12 @@
     </div>
   </header>
 
-  <!-- Les chiffres, en tuiles rangées par famille -->
-  <div class="bs-stats">
+  <!-- Les chiffres, en tuiles rangées par famille ; collés en haut quand la fiche défile, le portrait en petit devant eux une fois
+       le bandeau sorti de la vue. -->
+  <div class="bs-stats" [class.bs-stats--colle]="bandeauCache()">
+    @if (hasAvatar() && bandeauCache()) {
+      <img class="bs-stats-mini" [src]="imageSrc()" alt="" aria-hidden="true" />
+    }
     @for (group of groups(); track group.label) {
       <section class="bs-group" [attr.aria-label]="group.label">
         <h4 class="bs-sec">{{ group.label }}</h4>

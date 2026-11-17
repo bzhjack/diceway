@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input, signal, viewChild} from '@angular/core';
 import {CoeurComponent} from '../coeur/coeur';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
@@ -7,6 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NavigationStart, Router, RouterLink} from '@angular/router';
 import {filter} from 'rxjs';
+import {EMPTY_AVATAR} from '../../../shared/avatar-fallback/avatar.util';
 import {openImageDialog} from '../../../shared/dw-image-dialog/dw-image-dialog';
 import {BolStatblockData, BolStatblockEntry, BolStatblockTile} from '../models/bol-statblock.model';
 import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
@@ -56,8 +57,24 @@ export class BolStatblockComponent {
   protected readonly dialogRef = inject(MatDialogRef, {optional: true});
   private readonly dialog = inject(MatDialog);
   private readonly avatarFailed = signal(false);
+  private readonly entete = viewChild<ElementRef<HTMLElement>>('entete');
+  /** Le bandeau d'identité est sorti de la vue (la fiche a défilé) : la rangée des chiffres, collée en haut, montre le portrait en
+   * petit. */
+  protected readonly bandeauCache = signal(false);
 
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const entete = this.entete()?.nativeElement;
+      if (!entete || typeof IntersectionObserver === 'undefined') {
+        return;
+      }
+      // Le défilement se fait dans la fiche (dialogue) ou dans la carte (table) : l'observateur tient compte de leur découpe.
+      const observateur = new IntersectionObserver(([entree]) => this.bandeauCache.set(!entree.isIntersecting));
+      observateur.observe(entete);
+      destroyRef.onDestroy(() => observateur.disconnect());
+    });
+
     // Posée dans un dialogue (bibliothèques), la fiche le ferme quand un de ses liens (« Modifier la fiche ») navigue.
     if (this.dialogRef) {
       inject(Router)
@@ -85,7 +102,8 @@ export class BolStatblockComponent {
     const subtitle = (this.displaySubtitle() ?? '').toLowerCase();
     return this.data().chips.filter((chip) => !subtitle.includes(chip.label.toLowerCase()));
   });
-  protected readonly hasAvatar = computed(() => !!this.imageSrc() && !this.avatarFailed());
+  /** Un vrai portrait : l'avatar vide des fiches sans image n'en est pas un (la fiche montre alors le médaillon de son type). */
+  protected readonly hasAvatar = computed(() => !!this.imageSrc() && this.imageSrc() !== EMPTY_AVATAR && !this.avatarFailed());
   protected readonly kindIcon = computed(() => KIND_ICON[this.sheetKind()]);
 
   /** Vitalité du statbloc, pour le cœur fixe. */
