@@ -1,10 +1,10 @@
 import {BolHerosArmureModel} from '../../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
+import {BolFightSessionHerosModel, BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
 import {creaturePortrait, demonPortrait, heroPortrait, pnjPortrait} from '../../combat-play.util';
-import {TapisKind, TapisCard, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
+import {TapisKind, TapisCard, HeroEquipement, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
 import {libelleVitalite, pouvoirsDeCombat} from './pouvoirs-combat.util';
 
 const NO_VALUE = '—';
@@ -28,6 +28,19 @@ function rankLabel(rang: string | null | undefined): string {
 
 function badgeFor(camp: CombatCamp, rang: string): string {
   return camp === 'heros' ? 'Allié' : rang;
+}
+
+/** Ce que porte un héros de la table : les noms de ses armes et de ses armures équipées, et leurs chiffres pour l'infobulle. */
+export function equipementDuHeros(heros: BolFightSessionHerosModel['heros']): HeroEquipement {
+  const armes = (heros?.armes ?? []).filter((a) => isArmeEquipee(a) && a.arme).map((a) => a.arme!);
+  const armures = (heros?.armures ?? []).filter((a) => a.equipee && a.armure).map((a) => a.armure!);
+  const detail = (parts: (string | null | undefined)[]): string | null => parts.filter(Boolean).join(', ') || null;
+  return {
+    arme: armes.map((a) => a.arme).join(' · ') || 'Mains nues',
+    armeDetail: armes.length ? armes.map((a) => (a.degats ? `${a.arme} : dégâts ${a.degats}` : a.arme)).join(' · ') : 'Mains nues : dégâts d3 + Vigueur/2',
+    armure: armures.map((a) => a.armure).join(' · ') || 'Sans armure',
+    armureDetail: armures.length ? armures.map((a) => `${a.armure} : ${detail([a.protection ? `protection ${a.protection}` : null, a.malus])}`).join(' · ') : null,
+  };
 }
 
 /** Les cartes du tapis, une par ligne de session : héros, puis PNJ, créatures et démons. */
@@ -54,6 +67,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       heroisme: h.heros?.ressources?.heroisme ?? null,
       attitude: null,
       vilenie: null,
+      equipement: equipementDuHeros(h.heros),
     });
   }
 

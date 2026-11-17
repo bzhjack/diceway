@@ -186,4 +186,5 @@ autour du visage, comme pour la planche C des PNJ du catalogue (`doc/bol/image-p
 | ✅ P3 | fait le 2026-11-16 : grille exacte, 3 px rognés par bord, aucun recadrage, 512×512 en WebP ; posée sur les fiches (elles n'avaient pas de portrait) |
 | ✅ P4 | fait le 2026-11-17 : grille exacte (512, 1024 ; ligne à 512), 3 px rognés par bord, aucun recadrage, 512×512 en WebP ; posée sur les fiches (elles n'avaient pas de portrait) |
 | ✅ P5 | fait le 2026-11-17 : grille exacte (512, 1024 ; ligne à 513), 3 px rognés par bord, aucun recadrage, 512×512 en WebP ; posée sur les fiches (elles n'avaient pas de portrait) |
-| P6 à P9 | à faire (remplacent les illustrations du livre) |
+| ✅ P6 | fait le 2026-11-17 : grille exacte (512, 1024 ; ligne à 512), 3 px rognés par bord, aucun recadrage, 512×512 en WebP ; posée avec `--force` (les anciens portraits sont gardés dans `backend/storage/app/sauvegardes/portraits-avant-p6/`) |
+| P7 à P9 | à faire (remplacent les illustrations du livre) |

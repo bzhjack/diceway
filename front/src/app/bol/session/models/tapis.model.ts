@@ -6,6 +6,15 @@ export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 /** Une carte du tapis : une ligne de session (héros, PNJ, créature ou démon), avec sa face déjà
  * calculée. Chaque créature ou démon est sa propre ligne, donc sa propre carte. */
+/** Ce qu'un héros porte, pour sa ligne de la compagnie : les noms de ses armes et de ses armures équipées (« Mains nues », « Sans
+ * armure » sinon), et leurs chiffres pour l'infobulle (dégâts ; protection et malus). */
+export interface HeroEquipement {
+  readonly arme: string;
+  readonly armeDetail: string | null;
+  readonly armure: string;
+  readonly armureDetail: string | null;
+}
+
 export interface TapisCard {
   /** `{kind}-{pivotId}`. */
   readonly key: string;
@@ -36,6 +45,8 @@ export interface TapisCard {
   readonly mortVivant?: boolean;
   /** La taille d'une créature ou d'un démon (`bol_taille`, 4 = moyenne) — absente pour les autres cartes, qui comptent comme moyennes. */
   readonly taille?: number | null;
+  /** Ce que porte un héros (armes, armures) — absent pour les autres cartes. */
+  readonly equipement?: HeroEquipement;
   /** Ce que les pouvoirs d'un démon changent en combat — absent pour les autres cartes. */
   readonly pouvoirs?: CardPouvoirs;
 }

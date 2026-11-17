@@ -166,6 +166,47 @@
   margin-left: -0.1rem;
 }
 
+// Ce que porte un héros, sous son nom, sur toute la largeur de sa ligne : son arme puis son armure, une ligne chacune, coupée par « … »
+// si elle déborde ; leurs chiffres en infobulle (au-dessus de la zone de clic du portrait, pour la recevoir au survol).
+.sit-equipement {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.sit-equip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--dw-color-text-bright);
+  white-space: nowrap;
+
+  mat-icon {
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--dw-forge-name);
+  }
+}
+
+.sit-equip-nom {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sit-equip--sans {
+  font-style: italic;
+  color: var(--dw-forge-caption);
+}
+
 // La vilenie d'un rival : l'écusson de la tuile, sombre, en haut à droite du portrait ; son nom en infobulle.
 .sit-vilenie {
   margin: 0.2rem;

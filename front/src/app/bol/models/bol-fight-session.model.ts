@@ -84,6 +84,8 @@ export interface BolFightSessionHerosModel {
     combat?: {defense: number; defense_effective: number};
     /** Armes du héros (chargées avec la session pour afficher ses dégâts sur sa carte). */
     armes?: {equipee?: boolean; arme?: {arme: string; degats: string | null} | null}[];
+    /** Armures du héros (armure, bouclier, casque), chargées avec la session : celles qu'il porte se nomment sur sa ligne de la compagnie. */
+    armures?: {equipee?: boolean; armure?: {armure: string; protection?: string | null; malus?: string | null} | null}[];
   };
 }
 

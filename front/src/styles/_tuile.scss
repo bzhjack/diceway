@@ -401,6 +401,58 @@
   }
 }
 
+// Un héros en ligne (la compagnie) : un portrait un peu plus grand ; à sa droite, le nom en plus gros avec, sur sa ligne, l'héroïsme
+// et le cœur ; dessous, sur toute la largeur, ce qu'il porte (`bolTuileSous`), une ligne chacun, coupée par « … » au besoin.
+.dw-tuile--ligne.dw-tuile--heros {
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  row-gap: 0.25rem;
+  align-items: start;
+  padding: 0.35rem 0.55rem 0.4rem 0.35rem;
+
+  .dw-tuile__portrait {
+    width: 4rem;
+    height: 4rem;
+
+    img {
+      inset: 0.35rem auto auto 0.35rem;
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+
+  .dw-tuile__initiale {
+    font-size: 1.9rem;
+  }
+
+  // Le nom et ce qu'il porte se placent eux-mêmes dans la grille de la tuile.
+  .dw-tuile__texte {
+    display: contents;
+  }
+
+  .dw-tuile__tete {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .dw-tuile__nom {
+    font-size: 1.15rem;
+  }
+
+  .dw-tuile__sous {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+
+  .dw-tuile__pied {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+    margin: 0;
+  }
+}
+
 .dw-tuile--ligne.dw-tuile--allie .dw-tuile__texte {
   grid-row: 1 / 3;
   align-self: center;

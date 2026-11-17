@@ -113,6 +113,17 @@
     @if (c.card.kind !== 'hero' && c.card.rang) {
       <bol-rang bolTuileSous [rang]="rangs[c.card.rang] ?? 'C'" />
     }
+    <!-- Ce que porte un héros, en clair sous son nom : son arme, puis son armure ; leurs chiffres en infobulle. -->
+    @if (c.card.equipement; as eq) {
+      <span bolTuileSous class="sit-equipement">
+        <span class="sit-equip" [matTooltip]="eq.armeDetail" matTooltipPosition="right"
+          ><mat-icon svgIcon="sword" aria-hidden="true" /><span class="sr-only">Arme : </span><span class="sit-equip-nom">{{ eq.arme }}</span></span
+        >
+        <span class="sit-equip" [class.sit-equip--sans]="!eq.armureDetail" [matTooltip]="eq.armureDetail" matTooltipPosition="right"
+          ><mat-icon aria-hidden="true">shield</mat-icon><span class="sr-only">Armure : </span><span class="sit-equip-nom">{{ eq.armure }}</span></span
+        >
+      </span>
+    }
     @if (c.card.kind !== 'hero') {
       <span bolTuileSous class="dw-tuile-sorte" role="img" [attr.aria-label]="c.type" [matTooltip]="c.type"><mat-icon aria-hidden="true">{{ c.icone }}</mat-icon></span>
     }

@@ -158,6 +158,21 @@ describe('SituationComponent', () => {
     expect(loup.querySelector('.dw-tuile-sorte')!.getAttribute('aria-label')).toBe('Créature');
   });
 
+  it('un héros montre son arme et son armure sous son nom, leurs chiffres en infobulle ; sans armure, il le dit', async () => {
+    const equipe = {...GRIMAR, equipement: {arme: 'Hache d’abordage', armeDetail: 'Hache d’abordage : dégâts d6B', armure: 'Armure moyenne', armureDetail: 'Armure moyenne : protection d6-2(2)'}};
+    const nu = {...GRIMAR, key: 'hero-2', nom: 'Axel', equipement: {arme: 'Mains nues', armeDetail: 'Mains nues : dégâts d3 + Vigueur/2', armure: 'Sans armure', armureDetail: null}};
+    const {element, texte, bulle} = await rendre([equipe, nu]);
+    const [grimar, axel] = [...element.querySelectorAll('.sit-camp--compagnie bol-tuile')];
+    const lignes = (tuile: Element) => [...tuile.querySelectorAll('.sit-equip')];
+
+    expect(lignes(grimar).map((l) => texte(l.querySelector('.sit-equip-nom')))).toEqual(['Hache d’abordage', 'Armure moyenne']);
+    expect(lignes(grimar).map((l) => texte(l.querySelector('.sr-only')))).toEqual(['Arme :', 'Armure :']);
+    expect(lignes(grimar).map((l) => bulle(l))).toEqual(['Hache d’abordage : dégâts d6B', 'Armure moyenne : protection d6-2(2)']);
+    expect(lignes(axel).map((l) => texte(l.querySelector('.sit-equip-nom')))).toEqual(['Mains nues', 'Sans armure']);
+    expect(lignes(axel)[1].classList).toContain('sit-equip--sans');
+    expect(element.querySelector('.sit-camp--face .sit-equip')).toBeNull();
+  });
+
   it('change l’attitude d’un menu, et la rend à la page', async () => {
     const {bouton, stable, changements} = await rendre([SOLDAT]);
 

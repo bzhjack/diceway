@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine, keepDetailsOrder} from './tapis.util';
+import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine, keepDetailsOrder, equipementDuHeros} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -396,5 +396,30 @@ describe('keepDetailsOrder', () => {
   it('returns the new details as they are when there is no previous list', () => {
     const next = details([2, 1]);
     expect(keepDetailsOrder(next, null)).toBe(next);
+  });
+});
+
+describe('equipementDuHeros', () => {
+  const heros = (armes: unknown[], armures: unknown[]) =>
+    ({id: 'h1', origines: {nom: 'Axel', avatar: null, joueur: null}, armes, armures}) as NonNullable<BolFightSessionModel['heros']>[number]['heros'];
+
+  it('nomme les armes et les armures portées, leurs chiffres pour l’infobulle', () => {
+    expect(
+      equipementDuHeros(
+        heros(
+          [{equipee: true, arme: {arme: 'Hache d’abordage', degats: 'd6B'}}, {equipee: false, arme: {arme: 'Arc', degats: 'd6'}}],
+          [{equipee: true, armure: {armure: 'Armure moyenne', protection: 'd6-2(2)', malus: 'Social / Agilité -1'}}, {equipee: false, armure: {armure: 'Casque', protection: '1'}}],
+        ),
+      ),
+    ).toEqual({
+      arme: 'Hache d’abordage',
+      armeDetail: 'Hache d’abordage : dégâts d6B',
+      armure: 'Armure moyenne',
+      armureDetail: 'Armure moyenne : protection d6-2(2), Social / Agilité -1',
+    });
+  });
+
+  it('sans rien d’équipé : mains nues, sans armure', () => {
+    expect(equipementDuHeros(heros([], []))).toEqual({arme: 'Mains nues', armeDetail: 'Mains nues : dégâts d3 + Vigueur/2', armure: 'Sans armure', armureDetail: null});
   });
 });
