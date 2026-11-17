@@ -36,13 +36,13 @@ const RESULT = {session: {id: 'sess', titre: null, statut: 'libre'}, ignored: 0}
 
 describe('SceneStageStore', () => {
   let store: SceneStageStore;
-  const loadAs = vi.fn();
+  const load = vi.fn();
   const announceLoad = vi.fn();
   const open = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
-    loadAs.mockReset();
+    load.mockReset();
     announceLoad.mockReset();
     open.mockReset();
     TestBed.configureTestingModule({
@@ -51,7 +51,7 @@ describe('SceneStageStore', () => {
         {provide: BolSceneService, useValue: {scenes: () => of(SCENES)}},
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'sc1', titre: 'Le Sceau d’Ambre'}])}},
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
-        {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
+        {provide: SceneActionsService, useValue: {load, announceLoad}},
         {provide: MatDialog, useValue: {open, closeAll: vi.fn()}},
       ],
     });
@@ -91,17 +91,17 @@ describe('SceneStageStore', () => {
   });
 
   it('ne charge qu’une fois sur un double clic', async () => {
-    loadAs.mockReturnValue(of(RESULT));
+    load.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2).subscribe();
     const second = await firstValueFrom(store.load(S2));
     expect(second).toBeNull();
     vi.advanceTimersByTime(1000);
-    expect(loadAs).toHaveBeenCalledTimes(1);
+    expect(load).toHaveBeenCalledTimes(1);
   });
 
   it('ferme le rideau pendant le chargement et le rouvre à la fin du carton', () => {
-    loadAs.mockReturnValue(of(RESULT));
+    load.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     const values: unknown[] = [];
     store.load(S2).subscribe((v) => values.push(v));
@@ -118,12 +118,12 @@ describe('SceneStageStore', () => {
     expect(store.rideau()).toBe('ouvert');
     expect(store.busy()).toBe(false);
     // Le chargement est annoncé à la réouverture, pas par-dessus le carton.
-    expect(loadAs).toHaveBeenCalledWith('sess', S2, 'replace', false);
+    expect(load).toHaveBeenCalledWith('sess', S2);
     expect(announceLoad).toHaveBeenCalledWith(S2.titre, RESULT);
   });
 
   it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
-    loadAs.mockReturnValue(of(RESULT));
+    load.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2).subscribe();
     vi.advanceTimersByTime(3000);
@@ -134,7 +134,7 @@ describe('SceneStageStore', () => {
   });
 
   it('rouvre le rideau au bout de 3 s si la page ne montre pas la session', () => {
-    loadAs.mockReturnValue(of(RESULT));
+    load.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2).subscribe();
     vi.advanceTimersByTime(1400 + 2900);
@@ -175,7 +175,7 @@ describe('SceneStageStore', () => {
   });
 
   it('rouvre le rideau après une erreur', () => {
-    loadAs.mockReturnValue(throwError(() => new Error('409')));
+    load.mockReturnValue(throwError(() => new Error('409')));
     store.sync('sess', 's1', []);
     store.load(S2).subscribe({error: () => undefined});
     vi.advanceTimersByTime(1000);

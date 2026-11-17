@@ -185,7 +185,7 @@ export class SceneStageStore {
       this.cartonState.set({titre: scene.titre});
       this.finCarton = Date.now() + durees.fermeture + cartonTenue(reduit);
       this.rideauState.set('ferme');
-      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, 'replace', false)]).pipe(
+      return forkJoin([timer(durees.fermeture), this.sceneActions.load(sessionId, scene)]).pipe(
         map(([, result]) => result),
         tap({
           // Avant que l'appelant ne reçoive le résultat : la page qui pose la session appellera `sync` ensuite.

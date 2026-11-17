@@ -88,6 +88,8 @@ describe('SceneLectureComponent', () => {
     fixture.componentInstance.grandToggled.subscribe(() => demandes.push(true));
 
     expect(host.classList).not.toContain('lec--grand');
+    // La scène se modifie depuis son aperçu, sur la frise : pas de crayon dans le carnet.
+    expect(host.querySelector('button.lec-preparer')).toBeNull();
     host.querySelector<HTMLButtonElement>('button.lec-agrandir')!.click();
     expect(demandes).toHaveLength(1);
 

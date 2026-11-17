@@ -1,35 +1,21 @@
 import {inject, Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {map, Observable, of, switchMap, take, tap} from 'rxjs';
-import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../../../models/bol-scene.model';
+import {Observable} from 'rxjs';
+import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
-import {BolSceneService} from '../../../services/bol-scene.service';
-import {SceneLoadDialogComponent} from './scene-load-dialog';
-import {SceneLoadDialogData} from '../../models/scene-load-dialog.model';
-import {loadMessage, needsLoadChoice} from './scene.util';
+import {loadMessage} from './scene.util';
 
-/** Charger une scène sur la table : le choix « Remplacer ou Ajouter », l'appel réseau, le message. Émet `null` si l'utilisateur
- * annule ; l'appelant recharge la session sur une valeur non nulle et affiche l'erreur éventuelle. */
+/** Charger une scène sur la table : l'appel réseau, puis le message des personnages ignorés. L'appelant (`SceneStageStore`) recharge
+ * la session et affiche l'erreur éventuelle. */
 @Injectable({providedIn: 'root'})
 export class SceneActionsService {
   private readonly fightSessionService = inject(BolFightSessionService);
-  private readonly sceneService = inject(BolSceneService);
-  private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
-  /** Charge une scène sur la table. Si la table porte autre chose que des héros, demande d'abord
-   * « Remplacer ou Ajouter » ; sinon charge directement. */
-  load(sessionId: string, scene: BolSceneModel, nonHeroCount: number): Observable<BolSceneLoadResult | null> {
-    return this.chooseMode(scene, nonHeroCount).pipe(switchMap((mode) => (mode ? this.loadAs(sessionId, scene, mode) : of(null))));
-  }
-
-  /** Charge une scène sur la table dans le mode donné, sans rien demander (le plateau propose lui-même
-   * « Charger la scène » ou « Ajouter ses personnages »), puis annonce le résultat — sauf si `announce` est faux :
-   * le plateau l'annonce lui-même, une fois le rideau rouvert (`announceLoad`). */
-  loadAs(sessionId: string, scene: BolSceneModel, mode: SceneLoadMode, announce = true): Observable<BolSceneLoadResult> {
-    const load = this.fightSessionService.loadScene(sessionId, scene.id, mode);
-    return announce ? load.pipe(tap((result) => this.announceLoad(scene.titre, result))) : load;
+  /** Charge une scène sur la table : elle remplace ce qui y est (les héros et leurs alliés restent). Le plateau annonce lui-même le
+   * résultat, une fois le rideau rouvert (`announceLoad`). */
+  load(sessionId: string, scene: BolSceneModel): Observable<BolSceneLoadResult> {
+    return this.fightSessionService.loadScene(sessionId, scene.id, 'replace');
   }
 
   /** Annonce les personnages ignorés par un chargement de scène ; une scène chargée sans accroc se voit sur le plateau,
@@ -39,20 +25,5 @@ export class SceneActionsService {
       return;
     }
     this.snackBar.open(loadMessage(titre, result.ignored), undefined, {duration: 4000});
-  }
-
-  private chooseMode(scene: BolSceneModel, nonHeroCount: number): Observable<SceneLoadMode | null> {
-    if (!needsLoadChoice(nonHeroCount)) {
-      return of<SceneLoadMode>('replace');
-    }
-
-    const data: SceneLoadDialogData = {titre: scene.titre, nonHeroCount};
-    return this.dialog
-      .open(SceneLoadDialogComponent, {data, width: '420px'})
-      .afterClosed()
-      .pipe(
-        take(1),
-        map((mode: SceneLoadMode | undefined) => mode ?? null),
-      );
   }
 }

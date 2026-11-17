@@ -13,20 +13,6 @@ bol-combat-board .cb-dice .dw-dice-box-host {
   background: transparent;
 }
 
-// `bol-reserve` : les onglets sont étroits (trois par ligne), leur libellé serré dans un toggle plus bas que celui de Material…
-bol-reserve .rsv-tabs .mat-button-toggle-label-content {
-  padding: 0 0.3rem;
-  font-size: 0.74rem;
-  line-height: 2rem;
-  letter-spacing: 0.03em;
-}
-
-// … et le champ de recherche est un cuir sombre, plus arrondi que son contour.
-bol-reserve .rsv-search .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
-  background: var(--dw-surface-0);
-  border-radius: 8px;
-}
-
 // `bol-hero-details` : le panneau de ses menus (`class="hd-menu"`) est une plaque de fer, comme les panneaux du jet.
 .hd-menu.mat-mdc-menu-panel {
   min-width: 15rem;

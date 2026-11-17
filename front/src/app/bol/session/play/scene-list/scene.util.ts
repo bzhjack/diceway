@@ -18,11 +18,6 @@ export function scenesOf(
     .sort((left, right) => left.ordre - right.ordre || left.titre.localeCompare(right.titre, 'fr'));
 }
 
-/** Faut-il demander « Remplacer ou Ajouter » ? Seulement si la table porte autre chose que des héros. */
-export function needsLoadChoice(nonHeroCount: number): boolean {
-  return nonHeroCount > 0;
-}
-
 /** Titre de la barre du haut : « Scénario · Scène », la scène seule, ou le titre de la session. */
 export function tableTitle(sessionTitre: string | null, scene: BolSessionSceneRef | null | undefined): string | null {
   if (!scene) {

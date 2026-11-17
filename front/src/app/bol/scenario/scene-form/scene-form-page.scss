@@ -100,10 +100,10 @@
 }
 
 // ── L'affiche ────────────────────────────────────────────────────────────────────────────────────
-// Sans fond : l'illustration est celle de la page (`sfp-decor`).
+// Sans fond : l'illustration est celle de la page (`sfp-decor`). Deux lignes, à la hauteur de leur contenu : le lieu, puis le titre et
+// son ambiance ; le texte et la distribution gardent le reste de l'écran.
 .sfp-affiche {
   flex: none;
-  height: 14.75rem;
 }
 
 .sfp-affiche-contenu {
@@ -111,10 +111,17 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  height: 100%;
+  gap: 0.35rem;
   box-sizing: border-box;
-  padding: 1.25rem 2rem 1.1rem;
+  padding: 0.85rem 1.5rem 0.75rem;
+}
+
+// Le titre, puis l'ambiance à sa suite, alignés sur le bas du titre ; trop longs pour une ligne, l'ambiance passe dessous.
+.sfp-titre-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
 }
 
 .sfp-lieu {
@@ -200,7 +207,7 @@
   min-width: 18rem;
   max-width: 100%;
   font-family: 'Muse Display Harmony', serif;
-  font-size: 3.4rem;
+  font-size: 2.4rem;
   line-height: 1.1;
   color: var(--dw-color-text-bright);
   text-shadow: 0 3px 18px color-mix(in srgb, black 80%, transparent);
@@ -214,8 +221,7 @@
 .sfp-ambiance {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-top: auto;
+  gap: 0.5rem;
 }
 
 // Une pastille d'ambiance : un médaillon de bronze, teinté par la valeur (la nuit bleue, le jour doré, le danger rouge), puis son nom.
@@ -224,9 +230,9 @@
 
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  height: 3.25rem;
-  padding: 0 1rem 0 0.4rem;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 0.9rem 0 0.3rem;
   border: 1px solid color-mix(in srgb, var(--dw-forge-name) 45%, transparent);
   border-radius: var(--dw-radius-pill);
   background: color-mix(in srgb, var(--dw-forge-recess) 72%, transparent);
@@ -284,7 +290,7 @@
   flex-direction: column;
 
   small {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -292,7 +298,8 @@
   }
 
   b {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+    line-height: 1.15;
     color: var(--dw-forge-name);
   }
 }
@@ -313,8 +320,8 @@
   display: grid;
   flex: none;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   border: 1px solid var(--dw-forge-bronze);
   border-radius: 50%;
   background: var(--dw-forge-stud);
@@ -322,18 +329,10 @@
   color: var(--dw-forge-name);
 
   mat-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    font-size: 1.25rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
   }
-}
-
-.sfp-astuce {
-  align-self: flex-end;
-  margin: 0 0 0 auto;
-  font-size: 0.75rem;
-  color: var(--dw-forge-bone);
-  text-shadow: 0 1px 6px var(--dw-forge-recess);
 }
 
 // ── Le corps : le texte à gauche, la distribution à droite ───────────────────────────────────────
@@ -341,7 +340,7 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 35rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 40rem) minmax(0, 1fr);
   gap: 1.4rem;
   padding: 0.4rem 1.5rem 1.1rem;
 }
@@ -375,7 +374,7 @@
   background: transparent;
   color: var(--dw-forge-caption);
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -425,8 +424,8 @@
   background: transparent;
   color: var(--dw-color-text-bright);
   font: inherit;
-  font-size: 0.97rem;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.65;
   resize: none;
   outline: none;
 

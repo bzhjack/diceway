@@ -94,7 +94,12 @@
 }
 
 // Le théâtre, sous l'en-tête, prend toute la place qui reste.
+// Au-dessus du décor (`spp-decor`, positionné), comme l'en-tête : sinon il passe devant tout ce qui n'est pas positionné — le fond,
+// le cadre et le titre des camps — et, sous le pointeur, il prend la place des zones de dépôt, où le glisser d'un camp à l'autre
+// ne trouve plus rien.
 .spp-scene {
+  position: relative;
+  z-index: 1;
   flex: 1;
   min-height: 0;
   display: flex;

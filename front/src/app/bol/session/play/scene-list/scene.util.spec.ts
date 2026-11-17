@@ -3,7 +3,6 @@ import {BolSceneModel} from '../../../models/bol-scene.model';
 import {
   ignoresMessage,
   loadMessage,
-  needsLoadChoice,
   scenesOf,
   tableTitle,
   headerTitle,
@@ -34,16 +33,6 @@ describe('scenesOf', () => {
   it('breaks an order tie by title so the list is stable', () => {
     const tied = [scene('2', null, 0, 'Temple'), scene('1', null, 0, 'Auberge')];
     expect(scenesOf(tied, null, known).map((s) => s.titre)).toEqual(['Auberge', 'Temple']);
-  });
-});
-
-describe('needsLoadChoice', () => {
-  it('loads directly when only heroes are on the table', () => {
-    expect(needsLoadChoice(0)).toBe(false);
-  });
-
-  it('asks replace or add as soon as another character is present', () => {
-    expect(needsLoadChoice(1)).toBe(true);
   });
 });
 

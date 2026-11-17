@@ -24,33 +24,58 @@ html {
     padding-top: 0;
   }
 
-  // « Charger la scène » : l'action de l'aperçu, un bouton doré sur toute la largeur, sous la fiche (un élément du menu, pour rester
-  // atteignable au clavier).
-  .thr-apercu-charger {
-    --mat-menu-item-label-text-color: var(--dw-forge-ink);
-    --mat-menu-item-icon-color: var(--dw-forge-ink);
+  // Les actions de l'aperçu, sur une ligne à droite sous la fiche, à leur taille : « Charger la scène » au bout, doré ; « Modifier la
+  // scène » avant lui, en contour. Des éléments du menu, pour rester atteignables au clavier (« Charger » le premier).
+  .thr-apercu-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.5rem;
+    padding: 0.15rem 1rem 0.85rem;
+  }
 
-    justify-content: center;
-    width: calc(100% - 2rem);
-    min-height: 2.5rem;
-    margin: 0.15rem 1rem 0.85rem;
+  .thr-apercu-charger,
+  .thr-apercu-modifier {
+    flex: none;
+    width: auto;
+    min-height: 2.25rem;
+    padding: 0 1rem;
     border-radius: var(--dw-radius-pill);
-    background: var(--dw-color-legendary);
     font-weight: 600;
 
     .mat-mdc-menu-item-text {
       flex: none;
     }
 
+    &.cdk-keyboard-focused {
+      outline: 2px solid var(--dw-color-text-bright);
+      outline-offset: 2px;
+    }
+  }
+
+  .thr-apercu-charger {
+    --mat-menu-item-label-text-color: var(--dw-forge-ink);
+    --mat-menu-item-icon-color: var(--dw-forge-ink);
+
+    background: var(--dw-color-legendary);
+
     &:hover,
     &.cdk-keyboard-focused,
     &.cdk-program-focused {
       background: color-mix(in srgb, var(--dw-color-legendary) 85%, white);
     }
+  }
 
-    &.cdk-keyboard-focused {
-      outline: 2px solid var(--dw-color-text-bright);
-      outline-offset: 2px;
+  .thr-apercu-modifier {
+    --mat-menu-item-label-text-color: var(--dw-forge-name);
+    --mat-menu-item-icon-color: var(--dw-forge-name);
+
+    border: 1px solid var(--dw-forge-bronze);
+
+    &:hover,
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused {
+      border-color: var(--dw-forge-hot);
+      background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
     }
   }
 }
