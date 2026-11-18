@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
-import {provideNoopAnimations} from '@angular/platform-browser/animations';
+import {MATERIAL_ANIMATIONS} from '@angular/material/core';
 import {promptDialog} from './dw-prompt-dialog';
 
 describe('promptDialog', () => {
@@ -13,7 +13,7 @@ describe('promptDialog', () => {
 
   beforeEach(async () => {
     results = [];
-    TestBed.configureTestingModule({providers: [provideNoopAnimations()]});
+    TestBed.configureTestingModule({providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}]});
     promptDialog(TestBed.inject(MatDialog), {title: 'Renommer', label: 'Nom', value: 'Conan', maxLength: 10}).subscribe((value) => results.push(value));
     await stable();
   });
