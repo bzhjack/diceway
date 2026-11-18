@@ -4,3 +4,6 @@
 .DS_Store
 
 vendor
+
+# Caches de Laravel du poste (paquets découverts, services) : l'image refait les siens, sinon un paquet retiré y reste cité
+bootstrap/cache/*.php
