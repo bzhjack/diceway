@@ -449,7 +449,6 @@ class BolAccessTest extends TestCase
             '/api/bol/heros/' . $this->sheet($userId, 'C')->id,
             '/api/bol/creature/' . $this->creature($userId)->id,
             '/api/bol/demon/' . $this->demon($userId)->id,
-            '/api/bol/scenario/' . $this->scenario($userId)->id,
             '/api/bol/fight-session/' . $this->fightSession($userId)->id,
         ];
     }

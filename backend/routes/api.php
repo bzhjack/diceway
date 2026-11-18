@@ -46,7 +46,7 @@ use Illuminate\Support\Facades\Route;
  * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
-    Route::post('auth/login', [LoginController::class, 'login'])->name('login'); // Authentification
+    Route::post('auth/login', [LoginController::class, 'login'])->middleware('throttle:login')->name('login'); // Authentification, 5 essais par minute
     Route::post('auth/logout', [LoginController::class, 'logout']); // déconnection
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
     Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
@@ -157,7 +157,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/compagnie/update', [BolCompagnieController::class, 'update']);
     Route::delete('/bol/compagnie/delete/{id}', [BolCompagnieController::class, 'delete']);
     Route::get('/bol/scenario', [BolScenarioController::class, 'getAll']);
-    Route::get('/bol/scenario/{id}', [BolScenarioController::class, 'getOne']);
     Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);
     Route::post('/bol/scenario/update', [BolScenarioController::class, 'update']);
     Route::delete('/bol/scenario/delete/{id}', [BolScenarioController::class, 'delete']);

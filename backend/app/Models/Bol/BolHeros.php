@@ -27,7 +27,7 @@ class BolHeros extends Model
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues', 'commentaire'
     ];
-    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order', 'equipement_effectif'];
+    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'equipement_effectif'];
     protected $fillable = [
         'user_id',
         'type',
@@ -61,8 +61,6 @@ class BolHeros extends Model
         'agilite' => 'integer',
         'esprit' => 'integer',
         'aura' => 'integer',
-
-        'type_order' => 'integer',
 
     ];
 
@@ -194,21 +192,5 @@ class BolHeros extends Model
             'pouvoir_perdu' => (int) $this->pouvoir_perdu,
             'creation' => $this->creation,
         ];
-    }
-
-    public function getTypeOrderAttribute()
-    {
-        switch ($this->type) {
-            case 'H':
-                return 1;
-            case 'R':
-                return 2;
-            case 'C':
-                return 3;
-            case 'P':
-                return 4;
-            default:
-                return null;
-        }
     }
 }

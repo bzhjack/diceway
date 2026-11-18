@@ -105,6 +105,11 @@ export class LoginPageComponent {
             return;
           }
 
+          if (status === 429) {
+            this.messages.set(['Trop de tentatives : réessayez dans une minute.']);
+            return;
+          }
+
           this.messages.set(extractApiErrors(error, 'Connexion impossible.'));
         },
       });

@@ -14,11 +14,6 @@ class BolScenarioService
 {
     public function __construct(private readonly BolSagaService $sagaService) {}
 
-    public function getScenario(string $id): ?BolScenario
-    {
-        return BolScenario::with('saga:id,titre')->where('id', $id)->first();
-    }
-
     public function getScenarios()
     {
         return BolScenario::with('saga:id,titre')

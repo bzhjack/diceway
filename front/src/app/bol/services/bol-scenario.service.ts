@@ -13,10 +13,6 @@ export class BolScenarioService {
     return this.http.get<BolScenarioModel[]>(this.base);
   }
 
-  scenario(id: string): Observable<BolScenarioModel> {
-    return this.http.get<BolScenarioModel>(`${this.base}/${id}`);
-  }
-
   create(data: Record<string, unknown>): Observable<BolScenarioModel> {
     return this.http.post<BolScenarioModel>(`${this.base}/create`, data);
   }

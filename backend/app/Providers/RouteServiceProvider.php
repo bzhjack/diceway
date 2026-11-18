@@ -6,16 +6,18 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * Define your route model bindings, pattern filters, and other route configuration.
+     * La connexion par mot de passe : 5 essais par minute pour un même email depuis une même adresse, contre les essais de mots de
+     * passe en série ; au-delà, 429.
      */
     public function boot(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by(Str::lower((string) $request->input('email')) . '|' . $request->ip());
         });
     }
 }

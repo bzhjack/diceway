@@ -13,7 +13,6 @@ export interface BolHerosModel {
   user_id: string | null;
   active: boolean;
   type: string;
-  type_order?: number;
   combat: BolHerosCombat;
   attributs: BolHerosAttributs;
   origines: BolHerosOrigines;
