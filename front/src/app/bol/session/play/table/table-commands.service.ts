@@ -52,14 +52,6 @@ export class TableCommandsService {
     void this.router.navigate(['/session', sessionId, 'combat'], reroll ? {queryParams: {reroll: 1}} : {});
   }
 
-  /** Une scène a été chargée, enregistrée, renommée ou supprimée : la table a pu changer du tout au
-   * tout, la carte dépliée est repliée avant de recharger la session. */
-  onSceneChanged(): void {
-    this.expanded.foldCard();
-    this.table.reloadSession();
-    this.stage.reload();
-  }
-
   /** Une scène vient d'être chargée depuis la frise ou une piste : la réponse porte déjà la session à jour, posée
    * telle quelle (sans second aller-retour) pour que le rideau se rouvre sur la nouvelle scène. */
   onSceneLoaded(result: BolSceneLoadResult): void {

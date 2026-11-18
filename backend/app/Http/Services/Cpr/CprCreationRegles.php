@@ -5,7 +5,6 @@ namespace App\Http\Services\Cpr;
 use App\Models\Cpr\CprAccessoire;
 use App\Models\Cpr\CprAmeliorationVehicule;
 use App\Models\Cpr\CprArme;
-use App\Models\Cpr\CprArmure;
 use App\Models\Cpr\CprCompetence;
 use App\Models\Cpr\CprCyber;
 use App\Models\Cpr\CprPersonnage;

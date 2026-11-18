@@ -47,9 +47,6 @@ export class TableStore {
     return session ? buildTapisCards(session) : [];
   });
 
-  /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
-  readonly nonHeroCount = computed(() => (this.board()?.tokens ?? []).filter((t) => t.kind !== 'hero').length);
-
   /** Titre de la barre du haut : celui de la session en mode libre, « Scénario · Scène » en combat. */
   readonly headerTitle = computed(() => headerTitle(this.mode(), this.session()?.titre ?? null, this.session()?.scene));
 
