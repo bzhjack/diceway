@@ -33,7 +33,8 @@ describe('CompagnieDialogComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatIconTestingModule],
       providers: [
-        provideRouter([]),
+        // « Créer un héros » navigue vraiment : sans cette route, la navigation échoue après la fin du test et lève NG0205.
+        provideRouter([{path: 'create/hero', children: []}]),
         {provide: MAT_DIALOG_DATA, useValue: {compagnie, reprendreLaSelection, nomEnCours}},
         {provide: MatDialogRef, useValue: {close: fermer}},
         {provide: MatDialog, useValue: {open: vi.fn()}},

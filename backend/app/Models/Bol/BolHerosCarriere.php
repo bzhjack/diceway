@@ -2,14 +2,11 @@
 
 namespace App\Models\Bol;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolHerosCarriere extends Model
 {
-    use HasFactory;
-
     protected $table = 'bol_heros_carriere';
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = [

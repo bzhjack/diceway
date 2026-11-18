@@ -67,7 +67,7 @@ const ajouterParLeCasting = async () => {
   await casting.waitFor();
   const titre = (await casting.locator('.pdg-distribution-titre').innerText()).trim();
   if (titre !== 'À ajouter à la table') fail(`le casting s’ouvre sur « ${titre} » au lieu de « À ajouter à la table »`);
-  await casting.locator('.pdg-tuile:not([disabled])').first().click();
+  await casting.locator('.pdg-tuile-plus:not([disabled])').first().click();
   await casting.getByRole('button', {name: 'Ajouter à la table'}).click();
   await casting.waitFor({state: 'detached'});
   await page.waitForTimeout(800);

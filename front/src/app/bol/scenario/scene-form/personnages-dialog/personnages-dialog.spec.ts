@@ -12,7 +12,7 @@ const DIEU = {id: 'dv', titre: 'Le Dieu voilé'};
 const CATALOGUE = [
   {catalogId: 'pnj:p1', kind: 'pnj', sourceId: 'p1', nom: 'Drajit', vitalite: 10, avatar: '', raw: {user_id: null, type: 'R', scenarios: [DIEU]}},
   {catalogId: 'pnj:p2', kind: 'pnj', sourceId: 'p2', nom: 'Aubergiste', vitalite: 8, avatar: '', raw: {user_id: null, type: 'C', scenarios: []}},
-  {catalogId: 'creature:c1', kind: 'creature', sourceId: 'c1', nom: 'Loup', vitalite: 5, avatar: '', raw: {user_id: null, rang: 'pietaille', scenarios: [DIEU]}},
+  {catalogId: 'creature:c1', kind: 'creature', sourceId: 'c1', nom: 'Loup', vitalite: 5, avatar: '', raw: {user_id: null, rang: 'pietaille', taille: {taille: 'Moyenne', type: 'Animal', deplacement: 'Normal'}, capacites: [], scenarios: [DIEU]}},
 ] as unknown as CombatCatalogEntry[];
 
 const LOUPS: BolSceneDistributionSaisie = {kind: 'creature', source_id: 'c1', qty: 2, camp: 'adversaires', attitude: 'hostile'};
@@ -29,7 +29,7 @@ describe('PersonnagesDialogComponent', () => {
     const noms = () => [...document.querySelectorAll('.pdg-nom')].map((e) => texte(e));
     const panier = () => [...document.querySelectorAll('.pdg-distribution .spe-texte')].map((e) => texte(e));
     const bouton = (libelle: string) => [...document.querySelectorAll<HTMLButtonElement>('button')].find((b) => texte(b)?.includes(libelle))!;
-    const plus = (libelle: string) => document.querySelector<HTMLButtonElement>(`.pdg-tuile[aria-label="${libelle}"]`)!;
+    const plus = (libelle: string) => document.querySelector<HTMLButtonElement>(`.pdg-tuile-plus[aria-label="${libelle}"]`)!;
     const stable = () => {
       TestBed.tick();
     };
@@ -70,7 +70,7 @@ describe('PersonnagesDialogComponent', () => {
     expect(document.querySelector<HTMLImageElement>('.pdg-bandeau-image')!.getAttribute('src')).toBe('/assets/bol/gue.webp');
   });
 
-  it('un clic sur un portrait le fait entrer dans la distribution ; « Valider » rend la scène entière, ceux d’avant puis les nouveaux', async () => {
+  it('« + » fait entrer une fiche dans la distribution ; « Valider » rend la scène entière, ceux d’avant puis les nouveaux', async () => {
     const {panier, plus, bouton, stable, ferme, texte} = await ouvrir(null, [LOUPS]);
 
     expect(bouton('Valider').disabled).toBe(true);
@@ -110,12 +110,33 @@ describe('PersonnagesDialogComponent', () => {
     plus('Un Drajit de plus').click();
     stable();
 
-    expect(texte(plus('Un Loup de plus').querySelector('.pdg-tuile-nombre'))).toBe('×3');
-    expect(texte(plus('Un Drajit de plus').querySelector('.pdg-tuile-nombre'))).toBe('×2');
+    expect(texte(plus('Un Loup de plus').closest('.pdg-tuile')!.querySelector('.pdg-tuile-nombre'))).toBe('×3');
+    expect(texte(plus('Un Drajit de plus').closest('.pdg-tuile')!.querySelector('.pdg-tuile-nombre'))).toBe('×2');
     expect([...document.querySelectorAll('.pdg-distribution .spe-nombre')].map((e) => texte(e))).toEqual(['3', '2']);
     bouton('Valider').click();
     stable();
     expect((await ferme)?.map((p) => p.qty)).toEqual([3, 2]);
+  });
+
+  it('seul « + » fait entrer une fiche : un clic ailleurs sur la tuile ne change rien', async () => {
+    const {panier, plus, stable} = await ouvrir(null);
+
+    plus('Ajouter Loup').closest<HTMLElement>('.pdg-tuile')!.querySelector<HTMLElement>('.pdg-portrait')!.click();
+    stable();
+
+    expect(panier()).toEqual([]);
+  });
+
+  it('« Voir la fiche » ouvre la statblock de la fiche, sans la faire entrer', async () => {
+    const {panier, stable} = await ouvrir(null);
+    const open = vi.spyOn(MatDialog.prototype, 'open');
+
+    document.querySelector<HTMLButtonElement>('.pdg-tuile-fiche[aria-label="Voir la fiche de Loup"]')!.click();
+    stable();
+
+    expect(open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({panelClass: 'dw-statblock-dialog'}));
+    expect(panier()).toEqual([]);
+    open.mockRestore();
   });
 
   it('la distribution règle le camp et retire ; « Annuler » ne change rien', async () => {

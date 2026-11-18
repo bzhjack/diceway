@@ -80,7 +80,7 @@ export function optionsDesFiltres(
   };
 }
 
-/** Les portraits : chaque fiche avec ce que la scène en a déjà. Un clic ajoute un exemplaire d'une fiche déjà là (jusqu'à `QTY_MAX`),
+/** Les portraits : chaque fiche avec ce que la scène en a déjà. Son « + » ajoute un exemplaire d'une fiche déjà là (jusqu'à `QTY_MAX`),
  * ou fait entrer une fiche absente tant que la scène a de la place. */
 export function lignesDesFiches(fiches: readonly CombatCatalogEntry[], personnages: readonly BolSceneDistributionSaisie[]): PersonnageLigne[] {
   const enScene = new Map(personnages.map((p) => [cleDuPersonnage(p.kind, p.source_id), p.qty]));

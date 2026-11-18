@@ -3,11 +3,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 import {BolSceneDistributionSaisie} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
+import {openCombatantStatblock} from '../../../session/combat-statblock.util';
 import {RangComponent} from '../../../shared/rang/rang';
 import {LibraryRang, LibrarySource} from '../../../shared/models/library-rows.model';
 import {PersonnagesDialogData, PersonnagesFiltres, PersonnageType} from '../../models/personnages-dialog.model';
@@ -19,14 +21,14 @@ import {fichesDeScene, filtrerFiches, lignesDesFiches, optionsDesFiltres, scenar
 /**
  * « Ajouter des personnages » à une scène, comme un casting : en haut, un bandeau à l'illustration de la scène, son titre, son ambiance et
  * la recherche ; puis les filtres (type, scénario, rang, source), chaque option avec son nombre ; à gauche, toutes les fiches de PNJ, de
- * créatures et de démons (catalogue et compte) en portraits, un clic en faisant entrer une (un second clic, un exemplaire de plus) ; à
+ * créatures et de démons (catalogue et compte) en portraits, « + » en faisant entrer une (un second, un exemplaire de plus) et « Voir la fiche » ouvrant sa statblock ; à
  * droite, « La distribution » : les personnages de la scène, à régler (nombre, camp, attitude) ou à retirer. Se ferme avec les personnages
  * de la scène tels que la distribution les montre (ou rien, pour ne rien changer). Ouvert depuis la table, la distribution part vide et
  * « Ajouter à la table » rend ceux qui entrent.
  */
 @Component({
   selector: 'bol-personnages-dialog',
-  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, RangComponent, ScenePersoComponent],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, MatTooltipModule, RangComponent, ScenePersoComponent],
   templateUrl: './personnages-dialog.html',
   styleUrl: './personnages-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +37,7 @@ class PersonnagesDialogComponent {
   protected readonly data = inject<PersonnagesDialogData>(MAT_DIALOG_DATA);
   private readonly ref = inject(MatDialogRef<PersonnagesDialogComponent, BolSceneDistributionSaisie[]>);
   private readonly catalogue = inject(CombatSelectionService);
+  private readonly dialog = inject(MatDialog);
 
   private readonly fiches = computed(() => fichesDeScene(this.catalogue.catalog()));
   /** Un catalogue déjà lu reste montré, même si une relecture échoue. */
@@ -113,6 +116,10 @@ class PersonnagesDialogComponent {
     this.rang.set(null);
     this.scenarioId.set(null);
     this.recherche.set('');
+  }
+
+  protected voirLaFiche(fiche: CombatCatalogEntry): void {
+    openCombatantStatblock(this.dialog, fiche);
   }
 
   protected ajouter(fiche: CombatCatalogEntry): void {

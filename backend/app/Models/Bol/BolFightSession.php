@@ -3,14 +3,13 @@
 namespace App\Models\Bol;
 
 use App\Traits\Uuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BolFightSession extends Model
 {
-    use HasFactory, Uuids;
+    use Uuids;
 
     protected $table = 'bol_fight_session';
     public $incrementing = false;

@@ -2,7 +2,6 @@
 
 namespace App\Models\Bol;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BolRegion extends Model
 {
-    use HasFactory;
-
     protected $table = 'bol_region';
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = ['region', 'description', 'langue_native_id', 'premiere_carriere_id', 'carrieres_requises', 'carrieres_interdites'];

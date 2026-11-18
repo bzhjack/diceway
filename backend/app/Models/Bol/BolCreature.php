@@ -6,14 +6,13 @@ use App\Traits\AccessibleToUser;
 use App\Traits\CiteeDansLesScenes;
 use App\Traits\HasPortrait;
 use App\Traits\Uuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolCreature extends Model
 {
-    use HasFactory, HasPortrait, Uuids, AccessibleToUser, CiteeDansLesScenes;
+    use HasPortrait, Uuids, AccessibleToUser, CiteeDansLesScenes;
 
     /** Le nom sous lequel une scène ou une référence d'import cite cette fiche. */
     public const KIND_DE_SCENE = 'creature';
@@ -49,7 +48,6 @@ class BolCreature extends Model
         'defense' => 'integer',
         'id_taille' => 'integer',
         'mort_vivant' => 'boolean',
-        'type_order' => 'string'
     ];
 
     public function capacites(): HasMany

@@ -44,11 +44,6 @@ class BolReferenceData
         return $this->remember('bol_regions_all', fn () => BolRegion::with(self::REGION_RELATIONS)->get());
     }
 
-    public function region(string $id): ?BolRegion
-    {
-        return BolRegion::with(self::REGION_RELATIONS)->where('id', $id)->first();
-    }
-
     public function tailles()
     {
         return $this->remember('bol_creatures_tailles', fn () => BolTaille::orderBy('id', 'asc')->get());

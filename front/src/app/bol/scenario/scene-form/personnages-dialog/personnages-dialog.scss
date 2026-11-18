@@ -298,51 +298,23 @@
   list-style: none;
 }
 
-// Un portrait : l'image fondue dans le fer, l'icône du type, le nom, le rang et la vitalité ; « + » au survol ; en scène, un cadre doré
-// et le nombre en médaille.
+// Un portrait : l'image fondue dans le fer, l'icône du type, le nom, le rang et la vitalité, et en bas à droite « Voir la fiche » et
+// « + » ; la tuile elle-même ne se clique pas. En scène, un cadre doré et le nombre en médaille.
 .pdg-tuile {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100%;
-  padding: 0;
   overflow: hidden;
   border: 1px solid var(--dw-forge-bronze-edge);
   border-radius: 10px;
   background: var(--dw-forge-recess);
   box-shadow: 0 6px 16px color-mix(in srgb, black 40%, transparent);
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
+}
 
-  &:hover:not(:disabled),
-  &:focus-visible {
-    border-color: var(--dw-forge-name);
-
-    .pdg-tuile-plus {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .pdg-portrait img {
-      transform: scale(1.05);
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    cursor: default;
-  }
-
-  &:disabled:not(.pdg-tuile--en-scene) {
-    opacity: 0.45;
-  }
+// Plus de place dans la scène pour une fiche qui n'y est pas encore.
+.pdg-tuile--fermee {
+  opacity: 0.45;
 }
 
 .pdg-tuile--en-scene {
@@ -369,10 +341,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    // Le portrait est carré et la bande large : on en garde le haut, où est la tête ; le zoom du survol part du haut aussi.
+    // Le portrait est carré et la bande large : on en garde le haut, où est la tête.
     object-position: 50% 0;
-    transform-origin: 50% 0;
-    transition: transform 0.25s ease;
   }
 
   &::after {
@@ -430,24 +400,64 @@
   box-shadow: 0 2px 6px color-mix(in srgb, black 60%, transparent);
 }
 
+.pdg-pv {
+  white-space: nowrap;
+}
+
+// En bas à droite, sur la ligne du rang : « Voir la fiche » (cerclé), puis « + » (doré, l'action de la tuile).
+.pdg-tuile-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.pdg-tuile-fiche,
 .pdg-tuile-plus {
-  position: absolute;
-  top: 5.2rem;
-  right: 0.5rem;
-  z-index: 1;
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
   border-radius: 50%;
+  cursor: pointer;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+}
+
+.pdg-tuile-fiche {
+  border: 1px solid var(--dw-forge-bronze-edge);
+  background: var(--dw-forge-plate);
+  color: var(--dw-forge-name);
+
+  &:hover {
+    border-color: var(--dw-forge-name);
+  }
+}
+
+.pdg-tuile-plus {
+  border: 0;
   background: var(--dw-color-legendary);
   color: var(--dw-forge-ink);
-  box-shadow: 0 3px 8px color-mix(in srgb, black 60%, transparent);
-  opacity: 0;
-  transform: scale(0.8);
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
+  box-shadow: 0 2px 6px color-mix(in srgb, black 60%, transparent);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
 }
 
 .pdg-tuile-corps {
@@ -472,7 +482,7 @@
 .pdg-detail {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   font-size: 0.7rem;
   color: var(--dw-forge-caption);
 }

@@ -4,7 +4,6 @@ namespace App\Models\Bol;
 
 use App\Http\Services\Bol\BolCache;
 use App\Traits\Uuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
  * scénario (`saga_id`). */
 class BolScenario extends Model
 {
-    use HasFactory, Uuids;
+    use Uuids;
 
     protected $table = 'bol_scenario';
     public $incrementing = false;

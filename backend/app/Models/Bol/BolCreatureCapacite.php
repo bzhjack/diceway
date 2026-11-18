@@ -2,14 +2,11 @@
 
 namespace App\Models\Bol;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolCreatureCapacite extends Model
 {
-    use HasFactory;
-
     protected $table = 'bol_creature_capacite';
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = [

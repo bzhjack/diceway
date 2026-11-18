@@ -100,13 +100,10 @@
         <ul class="pdg-grille" aria-label="Les fiches">
           @for (ligne of lignes(); track ligne.fiche.catalogId) {
             <li>
-              <button
-                type="button"
+              <div
                 class="pdg-tuile"
                 [class.pdg-tuile--en-scene]="ligne.dansLaScene > 0"
-                [attr.aria-label]="ligne.ajout"
-                [disabled]="!ligne.ajoutable"
-                (click)="ajouter(ligne.fiche)"
+                [class.pdg-tuile--fermee]="!ligne.ajoutable && ligne.dansLaScene === 0"
               >
                 <span class="pdg-portrait">
                   @if (aUnPortrait(ligne.fiche.avatar)) {
@@ -131,17 +128,35 @@
                 @if (ligne.dansLaScene > 0) {
                   <span class="pdg-tuile-nombre">×{{ ligne.dansLaScene }}</span>
                 }
-                @if (ligne.ajoutable) {
-                  <span class="pdg-tuile-plus"><mat-icon>add</mat-icon></span>
-                }
                 <span class="pdg-tuile-corps">
                   <span class="pdg-nom">{{ ligne.fiche.nom }}</span>
                   <span class="pdg-detail">
                     <bol-rang [rang]="ligne.rang" />
-                    {{ ligne.fiche.vitalite }} PV
+                    <span class="pdg-pv">{{ ligne.fiche.vitalite }} PV</span>
+                    <span class="pdg-tuile-actions">
+                      <button
+                        type="button"
+                        class="pdg-tuile-fiche"
+                        matTooltip="Voir la fiche"
+                        [attr.aria-label]="'Voir la fiche de ' + ligne.fiche.nom"
+                        (click)="voirLaFiche(ligne.fiche)"
+                      >
+                        <mat-icon aria-hidden="true">description</mat-icon>
+                      </button>
+                      <button
+                        type="button"
+                        class="pdg-tuile-plus"
+                        [matTooltip]="ligne.ajout"
+                        [attr.aria-label]="ligne.ajout"
+                        [disabled]="!ligne.ajoutable"
+                        (click)="ajouter(ligne.fiche)"
+                      >
+                        <mat-icon aria-hidden="true">add</mat-icon>
+                      </button>
+                    </span>
                   </span>
                 </span>
-              </button>
+              </div>
             </li>
           } @empty {
             <li class="pdg-vide">Aucune fiche ne correspond à ces filtres.</li>
@@ -173,7 +188,7 @@
     } @else {
       <p class="pdg-vide">Personne pour l'instant : un clic sur un portrait le fait entrer.</p>
     }
-    <p class="pdg-astuce">Un clic sur un portrait l'ajoute ; un second, un exemplaire de plus.</p>
+    <p class="pdg-astuce">« + » ajoute un portrait ; un second, un exemplaire de plus.</p>
   </aside>
 </mat-dialog-content>
 

@@ -3,12 +3,11 @@
 namespace App\Models\Bol;
 
 use App\Traits\AccessibleToUser;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BolArme extends Model
 {
-    use HasFactory, AccessibleToUser;
+    use AccessibleToUser;
 
     protected $table = 'bol_arme';
     protected $hidden = ['created_at', 'updated_at'];

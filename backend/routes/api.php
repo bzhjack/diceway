@@ -21,7 +21,6 @@ use App\Http\Controllers\Bol\BolArmureController;
 use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
-use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolAccueilController;
 use App\Http\Controllers\Bol\BolCompagnieController;
 use App\Http\Controllers\Bol\BolSagaController;
@@ -30,7 +29,6 @@ use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
 use App\Http\Controllers\Bol\BolFightSessionController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 
 /*
@@ -53,7 +51,6 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
     Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
     Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->middleware('signed')->name('verification.verify'); // Lien de retour de verification du mail (signed)
-    Route::get('auth/avatar/{id}', [ProfileController::class, 'show']);
     Route::get('bol/portraits/{file}', [BolPortraitController::class, 'show'])->where('file', BolPortraits::FILE_PATTERN);
     // Gestion du mot de passe
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
@@ -67,17 +64,13 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-    Route::get('auth/me', [ProfileController::class, 'me']);
      /**
      * BARBARIAN OF LEMURIA
      **/
-    // Gestion du dashboard
-    Route::get('/bol/dashboard/count', [BolDashboardController::class, 'getCounts']);
     // Accueil
     Route::get('/bol/accueil', [BolAccueilController::class, 'show']);
     // Gestion de la région
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
-    Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
     // Gestion des traits régionaux
     Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
