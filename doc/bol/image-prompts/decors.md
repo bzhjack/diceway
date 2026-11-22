@@ -5,7 +5,7 @@ Prompts pour générer (via ChatGPT) des illustrations de **décor** à poser en
 actuels (`front/src/assets/bol/fond-*.webp`) : pulp sword & sorcery des années 1980, encré et peint. Chaque image
 montre un lieu de Lémurie habité de quelques personnages, sans en faire un portrait : le lieu reste le sujet.
 
-Rien n'est encore généré : cocher ✅ chaque décor fait, dans sa ligne et dans le tableau des fichiers.
+Cocher ✅ chaque décor fait, dans sa ligne et dans le tableau des fichiers. Faits : 1 à 3 (le 2026-11-22).
 
 ## Format et contraintes des écrans
 
@@ -18,17 +18,25 @@ Rien n'est encore généré : cocher ✅ chaque décor fait, dans sa ligne et da
 
 - L'image est **recouverte** : un en-tête presque opaque en haut, le titre et ses textes à gauche, des colonnes
   translucides par-dessus. Il faut donc :
-  - un **tiers gauche et une bande du haut calmes** (ciel, brume, ombre, mur), sans visage ni détail important ;
-  - le sujet et les personnages dans le **tiers droit ou au centre-droit**, à mi-hauteur ;
-  - des personnages **petits ou moyens** (en pied, jamais en gros plan), pour qu'un fond reste un fond ;
+  - une **moitié gauche et un quart du haut calmes** (ciel, brume, eau, paroi, ombre), sans personnage, animal ni objet
+    marquant ;
+  - le sujet et les personnages dans la **moitié droite**, au second plan ou plus loin ;
+  - des personnages **petits** : en pied, chacun à moins d'un tiers de la hauteur, jamais au premier plan ni coupés par
+    le bord, pour qu'un fond reste un fond ;
   - un contraste modéré dans les zones calmes : le texte clair doit rester lisible par-dessus.
 - Aucun texte, logo, signature, cadre ni watermark.
 
 ## Dans ChatGPT
 
 Une image par message. Coller la **consigne commune** ci-dessous, puis, à la ligne, **un seul décor** de la liste (sa
-phrase, sans le numéro). Pour enchaîner dans la même conversation : « Même consigne, décor suivant : » suivi de la
-phrase du décor suivant.
+phrase, sans le numéro). **Recoller la consigne commune en entier à chaque image** : en enchaînant par « Même consigne,
+décor suivant », ChatGPT oublie la composition et revient à un personnage en gros plan au centre. Si l'image montre
+encore un grand personnage, répondre : « Même scène, mais vue de beaucoup plus loin : personnages minuscules dans la
+moitié droite, moitié gauche vide. »
+
+Pourquoi c'est appuyé : le 2026-11-22, avec l'ancienne consigne (« tiers gauche calme, personnages petits ou moyens »),
+le village de l'Axos et le campement beshaari sont sortis avec un personnage en pied sur presque toute la hauteur et une
+moitié gauche chargée ; seul le village de pêcheurs la respectait.
 
 Exemple, pour le décor 1 :
 
@@ -42,10 +50,13 @@ Exemple, pour le décor 1 :
 > comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo, couvertures de Conan), contours d'encrage visibles,
 > fort contraste, ombres profondes, grain de peinture. Monde de Lémurie, préhistoire fantastique barbare : pas
 > d'acier moderne, pas de poudre, pas d'architecture médiévale européenne ; bronze, pierre taillée, cuir, soie,
-> plumes, ossements. Composition large, horizon visible : le lieu est le sujet, les personnages sont petits ou moyens,
-> en pied, jamais en gros plan. Le tiers gauche et le haut de l'image restent calmes et sombres (ciel, brume, ombre),
-> sans visage ni détail important, car du texte s'y affichera ; le sujet principal et les personnages se tiennent dans
-> le tiers droit, à mi-hauteur. Aucun texte, légende, logo, signature, cadre ni watermark.
+> plumes, ossements. Plan large, vu de loin, horizon visible : le lieu est le sujet, pas les personnages.
+> COMPOSITION OBLIGATOIRE : la moitié gauche de l'image est vide de personnages, d'animaux et d'objets marquants ; elle
+> ne montre que du ciel, de la brume, de l'eau calme, une paroi ou de l'ombre, sombres et peu contrastés, car du texte
+> s'y affichera. Le haut de l'image (le quart supérieur) est lui aussi calme. Les personnages sont de petites
+> silhouettes en pied, chacun à moins d'un tiers de la hauteur de l'image, placés dans la moitié droite, au second plan
+> ou plus loin, jamais au premier plan, jamais coupés par le bord de l'image, jamais vus de près. Rien de grand au
+> premier plan, ni personnage, ni animal, ni objet. Aucun texte, légende, logo, signature, cadre ni watermark.
 
 L'éclairage et la dominante de couleur sont donnés par chaque décor : ils varient d'une image à l'autre, pour que les
 écrans ne se ressemblent pas tous.
@@ -56,9 +67,9 @@ Chaque image, une fois convertie (voir plus haut), prend le nom de sa ligne.
 
 | N° | Décor | Fichier |
 | --- | --- | --- |
-| 1 | Village de pêcheurs | `fond-village-pecheurs.webp` |
-| 2 | Village de l'Axos | `fond-village-axos.webp` |
-| 3 | Campement beshaari | `fond-campement-beshaari.webp` |
+| ✅ 1 | Village de pêcheurs | `fond-village-pecheurs.webp` |
+| ✅ 2 | Village de l'Axos | `fond-village-axos.webp` |
+| ✅ 3 | Campement beshaari | `fond-campement-beshaari.webp` |
 | 4 | Village de la jungle | `fond-village-jungle.webp` |
 | 5 | Hameau des marais | `fond-hameau-marais.webp` |
 | 6 | Campement céruléen | `fond-campement-ceruleen.webp` |
@@ -87,11 +98,11 @@ Chaque image, une fois convertie (voir plus haut), prend le nom de sa ligne.
 
 ## Villages et campements
 
-> 1. Village de pêcheurs : sur pilotis au bord d'une lagune, huttes de roseaux et de bois flotté, filets qui sèchent, pirogues à balancier tirées sur le sable. Deux pêcheurs halent un filet plein de poissons étranges ; un enfant court sur une passerelle. Aube brumeuse, dominante bleu-vert et nacre, soleil pâle à droite.
+> 1. ✅ Village de pêcheurs : sur pilotis au bord d'une lagune, huttes de roseaux et de bois flotté, filets qui sèchent, pirogues à balancier tirées sur le sable. Deux pêcheurs halent un filet plein de poissons étranges ; un enfant court sur une passerelle. Aube brumeuse, dominante bleu-vert et nacre, soleil pâle à droite.
 >
-> 2. Village de l'Axos : village de barbares des montagnes, à flanc de vallée ; maisons basses de pierre sèche aux toits de lauzes, enclos de chèvres à longs poils, fumée des foyers. Un chasseur de grande taille, peau claire, fronde à la ceinture, rentre en portant un bouquetin sur les épaules. Fin d'après-midi d'automne, dominante ocre et gris, lumière rasante.
+> 2. ✅ Village de l'Axos : village de barbares des montagnes, à flanc de vallée ; maisons basses de pierre sèche aux toits de lauzes, enclos de chèvres à longs poils, fumée des foyers. Un chasseur de grande taille, peau claire, fronde à la ceinture, rentre en portant un bouquetin sur les épaules. Fin d'après-midi d'automne, dominante ocre et gris, lumière rasante.
 >
-> 3. Campement beshaari : nomades du désert de Beshaar au pied d'une dune ; tentes de peau teintes en rouge et indigo, grands oiseaux coureurs (semblables à des autruches) entravés, feu de crottin. Un guerrier beshaari, javelots en faisceau, scrute l'horizon ; une femme voilée attise le feu. Crépuscule, ciel orange et violet, dominante ambre.
+> 3. ✅ Campement beshaari : nomades du désert de Beshaar au pied d'une dune ; tentes de peau teintes en rouge et indigo, grands oiseaux coureurs (semblables à des autruches) entravés, feu de crottin. Un guerrier beshaari, javelots en faisceau, scrute l'horizon ; une femme voilée attise le feu. Crépuscule, ciel orange et violet, dominante ambre.
 >
 > 4. Village de la jungle : dans la jungle de Qush, sous la canopée ; huttes rondes sur plateformes reliées par des ponts de lianes, totems peints, fleurs géantes. Une chasseresse à la peau sombre, sarbacane à la main, descend une échelle de liane ; des singes la suivent. Lumière verte filtrée par les feuilles, rais de soleil dans la brume.
 >
