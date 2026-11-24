@@ -15,7 +15,7 @@
   }
   <span class="tas-stack">
     <span class="tas-r1">
-      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="p.dice" [total]="p.total" [slots]="p.slots" />
+      <dw-dice-row class="tas-row-dice" size="2.5rem" [dice]="p.dice" [total]="p.total" [slots]="p.slots" />
     </span>
     <dw-roll-sum aria-label="Calcul de l’attaque" [terms]="p.sum" />
   </span>
@@ -57,7 +57,7 @@
           <mat-icon>casino</mat-icon>
         </button>
       </span>
-      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attack.attackRowDice()" [total]="attack.diceSum()" [slots]="loadout.diceCount()" />
+      <dw-dice-row class="tas-row-dice" size="2.5rem" [dice]="attack.attackRowDice()" [total]="attack.diceSum()" [slots]="loadout.diceCount()" />
       <!-- Le dé que le MJ accorde ou impose selon les circonstances (3d6, on garde les deux meilleurs ou les deux moins bons) et son modificateur,
            à côté des dés qu'ils changent -->
       <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="turn.rolling()" [attr.inert]="turn.rolling() ? '' : null">

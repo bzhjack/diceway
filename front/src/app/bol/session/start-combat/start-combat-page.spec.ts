@@ -34,7 +34,12 @@ function fiche(id: string, nom: string, agilite: number): BolHerosModel {
   } as unknown as BolHerosModel;
 }
 
-const FICHES: Record<string, BolHerosModel> = {h1: fiche('h1', 'Grimar', 1), h2: fiche('h2', 'Axel', 3)};
+const AXEL = fiche('h2', 'Axel', 3);
+(AXEL as {carrieres: unknown}).carrieres = [
+  {carriere_id: 1, carriere: {carriere: 'Chasseur'}, value: 1},
+  {carriere_id: 2, carriere: {carriere: 'Barbare'}, value: 2},
+];
+const FICHES: Record<string, BolHerosModel> = {h1: fiche('h1', 'Grimar', 1), h2: AXEL};
 
 function session(over: Partial<BolFightSessionModel> = {}): BolFightSessionModel {
   return {
@@ -140,6 +145,74 @@ describe('StartCombatPageComponent', () => {
 
     expect(texte()).toContain('Lancer pour tous');
     expect(updateHeroInitiative.mock.calls.at(-1)?.[2]).toBeNull();
+  });
+
+  it('le fond de la page est l’illustration de la scène en cours, comme à la table ; sans image, le décor par défaut', async () => {
+    await rendre(session({scene: {id: 'sc1', titre: 'Les gardiens s’éveillent', image: '/assets/bol/scenes/gardiens.webp'}}));
+    expect((element.querySelector('.scd-shell') as HTMLElement).style.getPropertyValue('--scd-decor')).toBe('url("/assets/bol/scenes/gardiens.webp")');
+
+    TestBed.resetTestingModule();
+    await rendre(session({scene: {id: 'sc2', titre: 'Trajet jusqu’au temple', image: null}}));
+    expect((element.querySelector('.scd-shell') as HTMLElement).style.getPropertyValue('--scd-decor')).toBe('url("/assets/bol/fond-heros.webp")');
+  });
+
+  it('les options de la rencontre sont toujours en vue : l’embuscade, le dé du MJ pour tous (un second clic le retire), le malus adverse', async () => {
+    await rendre(session());
+    const bandeau = element.querySelector('.scd-rencontre')!;
+    const bouton = (texteOuLabel: string) =>
+      [...bandeau.querySelectorAll<HTMLButtonElement>('button')].find((b) => b.getAttribute('aria-label') === texteOuLabel || (b.textContent ?? '').replace(/\s+/g, ' ').trim().startsWith(texteOuLabel))!;
+    const cliquer = async (b: HTMLButtonElement) => {
+      b.click();
+      await stable();
+    };
+
+    expect(bandeau).not.toBeNull();
+    expect(element.querySelector('#scd-options-btn')).toBeNull();
+    expect([...bandeau.querySelectorAll('.scd-label')].map((l) => l.textContent?.trim())).toEqual(['Embuscade', 'Dé du MJ pour tous', 'Malus adverse']);
+
+    await cliquer(bouton('Tendue par les héros'));
+    expect(bouton('Tendue par les héros').getAttribute('aria-pressed')).toBe('true');
+
+    const bonus = bouton('Dé de bonus du MJ pour tous les héros');
+    await cliquer(bonus);
+    expect(bonus.getAttribute('aria-pressed')).toBe('true');
+    expect(bandeau.querySelector('.scd-rencontre-groupe:nth-child(2) .scd-hint')?.textContent?.trim()).toBe('bonus pour tous');
+    await cliquer(bouton('Dé de malus du MJ pour tous les héros'));
+    expect(bonus.getAttribute('aria-pressed')).toBe('false');
+    await cliquer(bouton('Dé de malus du MJ pour tous les héros'));
+    expect(bandeau.querySelector('.scd-rencontre-groupe:nth-child(2) .scd-hint')?.textContent?.trim()).toBe('aucun');
+    expect(bandeau.querySelector('.scd-stepper')).not.toBeNull();
+    // D'où vient le malus : dans l'infobulle du « i », à côté du compteur.
+    expect(bandeau.querySelector('.scd-info')?.getAttribute('aria-label')).toMatch(/^Malus adverse : /);
+  });
+
+  it('ce que le MJ accorde est dans la ligne de chaque héros : ses dés, et sa carrière dans un menu', async () => {
+    await rendre(session());
+    const cliquer = async (b: HTMLButtonElement) => {
+      b.click();
+      await stable();
+    };
+    const axel = element.querySelector('[aria-label="Ce que le MJ accorde à Axel"]')!;
+    const grimar = element.querySelector('[aria-label="Ce que le MJ accorde à Grimar"]')!;
+    const bonus = axel.querySelector<HTMLButtonElement>('.scd-de--bonus')!;
+
+    // Plus de panneau : tout est en vue.
+    expect(element.querySelector('.scd-mods-btn')).toBeNull();
+    await cliquer(bonus);
+    expect(bonus.getAttribute('aria-pressed')).toBe('true');
+    await cliquer(bonus);
+    expect(bonus.getAttribute('aria-pressed')).toBe('false');
+
+    expect(grimar.querySelector('.scd-carriere--aucune')?.textContent?.trim()).toBe('Sans carrière');
+    const carriere = axel.querySelector<HTMLButtonElement>('button.scd-carriere')!;
+    expect(carriere.getAttribute('aria-label')).toBe('Carrière utile pour Axel : aucune');
+    await cliquer(carriere);
+    const choix = [...document.querySelectorAll<HTMLButtonElement>('.scd-carrieres-menu [role="menuitemradio"]')];
+    expect(choix.map((b) => b.textContent?.replace('check', '').trim())).toEqual(['Aucune', 'Chasseur +1', 'Barbare +2']);
+    expect(choix[0].getAttribute('aria-checked')).toBe('true');
+    await cliquer(choix[2]);
+    expect(carriere.getAttribute('aria-label')).toBe('Carrière utile pour Axel : Barbare +2');
+    expect(carriere.classList).toContain('scd-carriere--choisie');
   });
 
   it('ne démarre pas sans adversaire', async () => {

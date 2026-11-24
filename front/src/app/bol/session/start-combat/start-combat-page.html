@@ -1,12 +1,12 @@
 <!-- Un clic n'importe où, ou Échap, dégage les dés 3D restés posés sur la page. Ce conteneur n'est pas une commande : `role="presentation"`. -->
-<div class="scd-shell" role="presentation" (click)="dismissDice()" (keydown.escape)="dismissDice()">
+<div class="scd-shell" role="presentation" [style.--scd-decor]="decorCss()" (click)="dismissDice()" (keydown.escape)="dismissDice()">
   <!-- Le canvas de dés mesure son conteneur à la création : ne l'instancier qu'une fois le panneau
        à sa taille finale (liste des héros chargée), sinon il se fige sur une résolution minuscule
        et déforme les dés une fois étiré en CSS. -->
   @if (!loading()) {
     <app-dice-box-host
       class="scd-dice-layer"
-      [scale]="6"
+      [scale]="8"
       [theme]="'wooden-red'"
       [themeColor]="'#ef4444'"
     />
@@ -37,111 +37,6 @@
         </div>
 
         <div class="scd-actions">
-          <!-- Les options de la rencontre (embuscade, dé du MJ pour tous, malus adverse), dans un popover ; l'embuscade et le dé du MJ choisis se lisent sur le bouton -->
-          <button
-            mat-stroked-button
-            type="button"
-            id="scd-options-btn"
-            cdkOverlayOrigin
-            #optionsOrigin="cdkOverlayOrigin"
-            aria-haspopup="dialog"
-            [attr.aria-expanded]="optionsOpen()"
-            matTooltip="Embuscade, dé du MJ pour tous, malus adverse"
-            (click)="optionsOpen.set(!optionsOpen())"
-          >
-            <mat-icon>tune</mat-icon> Options
-            @if (ambushBonus(); as bonus) {
-              <b class="scd-options-bonus" aria-hidden="true">{{ bonus }}</b>
-              <span class="cdk-visually-hidden">, embuscade {{ bonus }}</span>
-            }
-            <!-- Le malus adverse, seulement s'il a été corrigé à la main : une petite épée et sa valeur, en rouge -->
-            @if (adversaryMalusChosen()) {
-              <b class="scd-options-malus" aria-hidden="true"><mat-icon svgIcon="sword" />−{{ adversaryInitiativeMalus() }}</b>
-              <span class="cdk-visually-hidden">, malus adverse −{{ adversaryInitiativeMalus() }}</span>
-            }
-            <!-- Le dé du MJ pour tous : un petit dé vert (bonus) ou rouge (malus) -->
-            @if (globalGmDie(); as gm) {
-              <span [class]="'scd-options-die scd-options-die--' + (gm === 1 ? 'plus' : 'minus')"
-                ><mat-icon>casino</mat-icon><span class="cdk-visually-hidden">, dé de {{ gm === 1 ? 'bonus' : 'malus' }} du MJ pour tous</span></span
-              >
-            }
-          </button>
-          <ng-template
-            cdkConnectedOverlay
-            dwPopover="end"
-            [cdkConnectedOverlayOrigin]="optionsOrigin"
-            [cdkConnectedOverlayOpen]="optionsOpen()"
-            (backdropClick)="closeOptions()"
-            (overlayKeydown)="onOptionsKeydown($event)"
-            (detach)="optionsOpen.set(false)"
-          >
-            <div class="scd-pop" role="dialog" aria-label="Options de la rencontre" cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
-              <p class="scd-pop-title">Options de la rencontre</p>
-              <div class="scd-pop-group" role="group" aria-labelledby="scd-ambush-label">
-                <span class="scd-label" id="scd-ambush-label">Embuscade</span>
-                <div class="scd-seg">
-                  @for (option of ambushOptions; track option.label) {
-                    <button type="button" [attr.aria-pressed]="ambushState() === option.value" (click)="setAmbush(option.value)">
-                      {{ option.hint || option.label }}
-                      @if (option.bonus) {
-                        <b>{{ option.bonus }}</b>
-                      }
-                    </button>
-                  }
-                </div>
-              </div>
-              <!-- Un dé du MJ pour tous les héros : il s'ajoute à celui que le MJ accorde à chacun et à ses traits, deux dés au plus -->
-              <div class="scd-pop-group" role="group" aria-labelledby="scd-gm-all-label">
-                <span class="scd-label" id="scd-gm-all-label">Dé du MJ pour tous</span>
-                <div class="scd-seg">
-                  <button type="button" [attr.aria-pressed]="globalGmDie() === null" (click)="setGlobalGmDie(null)">Aucun</button>
-                  <button
-                    type="button"
-                    class="scd-gm-opt scd-gm-opt--plus"
-                    [attr.aria-pressed]="globalGmDie() === 1"
-                    (click)="setGlobalGmDie(1)"
-                  >
-                    Dé de bonus
-                  </button>
-                  <button
-                    type="button"
-                    class="scd-gm-opt scd-gm-opt--minus"
-                    [attr.aria-pressed]="globalGmDie() === -1"
-                    (click)="setGlobalGmDie(-1)"
-                  >
-                    Dé de malus
-                  </button>
-                </div>
-              </div>
-              <!-- Le malus adverse, toujours là : prérempli avec la plus haute initiative des rivaux et coriaces, s'il y en a -->
-              <div class="scd-pop-group" role="group" aria-labelledby="scd-enemy-label">
-                <span class="scd-label" id="scd-enemy-label">Malus adverse</span>
-                <div class="scd-pop-line">
-                  <div class="scd-stepper">
-                    <button
-                      type="button"
-                      aria-label="Diminuer le malus adverse"
-                      [disabled]="adversaryInitiativeMalus() <= 0"
-                      (click)="stepAdversaryMalus(-1)"
-                    >
-                      −
-                    </button>
-                    <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
-                    <button type="button" aria-label="Augmenter le malus adverse" (click)="stepAdversaryMalus(1)">+</button>
-                  </div>
-                  <span class="scd-hint">
-                    @if (initiativeSource(); as source) {
-                      Automatique : l'initiative de {{ source.nom }} ({{ source.initiative }}), la plus haute des rivaux et coriaces, retranchée à chaque jet.
-                    } @else if (hasInitiativeAdversary()) {
-                      Aucun rival ni coriace avec une initiative au-dessus de 0 ; retranché à chaque jet.
-                    } @else {
-                      Aucun rival ni coriace avec une initiative ; retranché à chaque jet.
-                    }
-                  </span>
-                </div>
-              </div>
-            </div>
-          </ng-template>
 
           <!-- Les jets, tapés dans les lignes ou lancés ici pour tous : le bouton plein tant qu'il en reste, sauf sans adversaire (le « + » de
                la frise passe avant). Tous faits, le bouton s'en va. -->
@@ -202,6 +97,66 @@
           <span class="scd-warn" role="status"><mat-icon aria-hidden="true">warning</mat-icon> Aucun adversaire</span>
         }
       </div>
+
+      <!-- Les options de la rencontre, toujours en vue sous l'ordre d'action (cachées dans un panneau, on n'y pensait pas) : l'embuscade,
+           le dé du MJ pour tous les héros, le malus adverse. -->
+      <section class="scd-rencontre" aria-label="Options de la rencontre">
+        <div class="scd-rencontre-groupe" role="group" aria-labelledby="scd-ambush-label">
+          <span class="scd-label" id="scd-ambush-label">Embuscade</span>
+          <div class="scd-seg">
+            @for (option of ambushOptions; track option.label) {
+              <button type="button" [attr.aria-pressed]="ambushState() === option.value" (click)="setAmbush(option.value)">
+                {{ option.hint || option.label }}
+                @if (option.bonus) {
+                  <b>{{ option.bonus }}</b>
+                }
+              </button>
+            }
+          </div>
+        </div>
+        <!-- Un dé du MJ pour tous les héros, comme dans l'assistant de tour : le dé vert (bonus) ou rouge (malus), un second clic le retire ; il
+             s'ajoute à celui que le MJ accorde à chacun et à ses traits, deux dés au plus. -->
+        <div class="scd-rencontre-groupe" role="group" aria-labelledby="scd-gm-all-label">
+          <span class="scd-label" id="scd-gm-all-label">Dé du MJ pour tous</span>
+          <div class="scd-rencontre-ligne">
+            <button
+              type="button"
+              class="scd-de scd-de--bonus"
+              aria-label="Dé de bonus du MJ pour tous les héros"
+              matTooltip="Dé de bonus pour tous, quand les circonstances aident : 3d6, on garde les deux meilleurs"
+              [attr.aria-pressed]="globalGmDie() === 1"
+              (click)="setGlobalGmDie(globalGmDie() === 1 ? null : 1)"
+            >
+              <mat-icon aria-hidden="true">casino</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="scd-de scd-de--malus"
+              aria-label="Dé de malus du MJ pour tous les héros"
+              matTooltip="Dé de malus pour tous, quand les circonstances gênent : 3d6, on garde les deux moins bons"
+              [attr.aria-pressed]="globalGmDie() === -1"
+              (click)="setGlobalGmDie(globalGmDie() === -1 ? null : -1)"
+            >
+              <mat-icon aria-hidden="true">casino</mat-icon>
+            </button>
+            <span class="scd-hint" aria-live="polite">{{ globalGmDie() === 1 ? 'bonus pour tous' : globalGmDie() === -1 ? 'malus pour tous' : 'aucun' }}</span>
+          </div>
+        </div>
+        <!-- Le malus adverse : prérempli avec la plus haute initiative des rivaux et coriaces, s'il y en a. -->
+        <div class="scd-rencontre-groupe" role="group" aria-labelledby="scd-enemy-label">
+          <span class="scd-label" id="scd-enemy-label">Malus adverse</span>
+          <div class="scd-rencontre-ligne">
+            <div class="scd-stepper">
+              <button type="button" aria-label="Diminuer le malus adverse" [disabled]="adversaryInitiativeMalus() <= 0" (click)="stepAdversaryMalus(-1)">−</button>
+              <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
+              <button type="button" aria-label="Augmenter le malus adverse" (click)="stepAdversaryMalus(1)">+</button>
+            </div>
+            <button type="button" class="scd-info" [attr.aria-label]="'Malus adverse : ' + malusExplication()" [matTooltip]="malusExplication()">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </section>
     </header>
 
     <main class="scd-content">
@@ -418,119 +373,68 @@
                   </span>
                 }
 
-                <!-- Les modificateurs, la fiche et l'exclusion, en boutons icônes collés : un clic suffit -->
-                <span class="scd-row-icons">
-                  @if (!card.excluded) {
-                    <!-- Les modificateurs du jet accordés par le MJ (dé de bonus ou de malus, carrière utile), dans un popover -->
-                    <button
-                      type="button"
-                      class="scd-icon scd-mods-btn"
-                      cdkOverlayOrigin
-                      #modsOrigin="cdkOverlayOrigin"
-                      [id]="'scd-mods-' + card.hero.pivotId"
-                      aria-haspopup="dialog"
-                      [attr.aria-expanded]="modsOpen() === card.hero.pivotId"
-                      [attr.aria-label]="card.modsLabel"
-                      matTooltip="Modificateurs : dé du MJ, carrière utile"
-                      (click)="toggleMods(card.hero.pivotId)"
-                    >
-                      <mat-icon aria-hidden="true">tune</mat-icon>
-                      <!-- Ce qui est accordé, comme sur le bouton des options : un petit dé vert ou rouge, le bonus de la carrière -->
-                      @if (card.gmDie; as gm) {
-                        <span [class]="'scd-mods-die scd-mods-die--' + (gm === 1 ? 'plus' : 'minus')" aria-hidden="true"><mat-icon>casino</mat-icon></span>
-                      }
-                      @if (card.career; as career) {
-                        <b class="scd-mods-career" aria-hidden="true">+{{ career.value }}</b>
-                      }
-                    </button>
-                    <ng-template
-                      cdkConnectedOverlay
-                      dwPopover="end"
-                      [cdkConnectedOverlayOrigin]="modsOrigin"
-                      [cdkConnectedOverlayOpen]="modsOpen() === card.hero.pivotId"
-                      (backdropClick)="closeMods()"
-                      (overlayKeydown)="onModsKeydown($event)"
-                      (detach)="modsOpen.set(null)"
-                    >
-                      <div
-                        class="scd-pop"
-                        role="dialog"
-                        [attr.aria-label]="'Modificateurs du jet de ' + card.hero.nom"
-                        cdkTrapFocus
-                        [cdkTrapFocusAutoCapture]="true"
+                <!-- Ce que le MJ accorde pour ce jet, toujours en vue dans la ligne : le dé de bonus ou de malus, la carrière utile -->
+                @if (!card.excluded) {
+                  <span class="scd-mj" role="group" [attr.aria-label]="'Ce que le MJ accorde à ' + card.hero.nom">
+                    <span class="scd-mj-ligne">
+                      <button
+                        type="button"
+                        class="scd-de scd-de--petit scd-de--bonus"
+                        [attr.aria-label]="'Dé de bonus du MJ pour ' + card.hero.nom"
+                        matTooltip="Dé de bonus du MJ : un dé de plus, on garde les deux meilleurs"
+                        [attr.aria-pressed]="card.gmDie === 1"
+                        (click)="setGmDie(card.hero, card.gmDie === 1 ? null : 1)"
                       >
-                        <p class="scd-pop-title">Modificateurs du jet de {{ card.hero.nom }}</p>
-                        @if (card.traitNote; as trait) {
-                          <p class="scd-pop-note" [class.scd-pop-note--plus]="card.hero.diceNet > 0" [class.scd-pop-note--minus]="card.hero.diceNet < 0">{{ trait }}</p>
-                        }
-                        <div class="scd-pop-group" role="group" [attr.aria-label]="'Dé du MJ'">
-                          <span class="scd-label">Dé du MJ</span>
-                          <div class="scd-seg">
-                            <button
-                              type="button"
-                              [attr.aria-pressed]="card.gmDie === null"
-                              (click)="setGmDie(card.hero, null)"
-                            >
-                              Aucun
-                            </button>
-                            <button
-                              type="button"
-                              class="scd-gm-opt scd-gm-opt--plus"
-                              [attr.aria-pressed]="card.gmDie === 1"
-                              (click)="setGmDie(card.hero, 1)"
-                            >
-                              Dé de bonus
-                            </button>
-                            <button
-                              type="button"
-                              class="scd-gm-opt scd-gm-opt--minus"
-                              [attr.aria-pressed]="card.gmDie === -1"
-                              (click)="setGmDie(card.hero, -1)"
-                            >
-                              Dé de malus
-                            </button>
-                          </div>
-                          <small class="scd-hint"
-                            >Un dé de plus : on garde les deux meilleurs (bonus) ou les deux moins
-                            bons (malus).</small
-                          >
-                        </div>
-                        <div
-                          class="scd-pop-group"
-                          role="group"
-                          [attr.aria-label]="'Carrière utile'"
+                        <mat-icon aria-hidden="true">casino</mat-icon>
+                      </button>
+                      <button
+                        type="button"
+                        class="scd-de scd-de--petit scd-de--malus"
+                        [attr.aria-label]="'Dé de malus du MJ pour ' + card.hero.nom"
+                        matTooltip="Dé de malus du MJ : un dé de plus, on garde les deux moins bons"
+                        [attr.aria-pressed]="card.gmDie === -1"
+                        (click)="setGmDie(card.hero, card.gmDie === -1 ? null : -1)"
+                      >
+                        <mat-icon aria-hidden="true">casino</mat-icon>
+                      </button>
+                      @if (card.hero.carrieres.length > 0) {
+                        <button
+                          type="button"
+                          class="scd-carriere"
+                          [class.scd-carriere--choisie]="card.career !== null"
+                          [matMenuTriggerFor]="carrieres"
+                          [attr.aria-label]="'Carrière utile pour ' + card.hero.nom + ' : ' + (card.career ? card.career.label + ' +' + card.career.value : 'aucune')"
+                          matTooltip="Carrière utile, accordée par le MJ quand elle sert la réaction : son rang s’ajoute au jet"
                         >
-                          <span class="scd-label">Carrière utile</span>
-                          @if (card.hero.carrieres.length > 0) {
-                            <div class="scd-seg">
-                              <button
-                                type="button"
-                                [attr.aria-pressed]="card.career === null"
-                                (click)="setCareer(card.hero, null)"
-                              >
-                                Aucune
-                              </button>
-                              @for (c of card.hero.carrieres; track c.label) {
-                                <button
-                                  type="button"
-                                  [attr.aria-pressed]="card.career?.label === c.label"
-                                  (click)="setCareer(card.hero, c.label)"
-                                >
-                                  {{ c.label }} <b>+{{ c.value }}</b>
-                                </button>
-                              }
-                            </div>
-                            <small class="scd-hint"
-                              >Accordée par le MJ quand elle sert la réaction : son rang s’ajoute au
-                              jet.</small
-                            >
+                          @if (card.career; as career) {
+                            <span class="scd-carriere-nom">{{ career.label }}</span> <b>+{{ career.value }}</b>
                           } @else {
-                            <small class="scd-hint">Aucune carrière sur sa fiche.</small>
+                            <span class="scd-carriere-nom">Carrière</span>
                           }
-                        </div>
-                      </div>
-                    </ng-template>
-                  }
+                          <mat-icon aria-hidden="true">expand_more</mat-icon>
+                        </button>
+                        <mat-menu #carrieres="matMenu" class="scd-carrieres-menu">
+                          <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.career === null" (click)="setCareer(card.hero, null)">
+                            <mat-icon class="scd-carrieres-coche" [class.scd-carrieres-coche--vide]="card.career !== null" aria-hidden="true">check</mat-icon>
+                            <span class="scd-carrieres-item">Aucune</span>
+                          </button>
+                          @for (c of card.hero.carrieres; track c.label) {
+                            <button mat-menu-item role="menuitemradio" [attr.aria-checked]="card.career?.label === c.label" (click)="setCareer(card.hero, c.label)">
+                              <mat-icon class="scd-carrieres-coche" [class.scd-carrieres-coche--vide]="card.career?.label !== c.label" aria-hidden="true">check</mat-icon>
+                              <span class="scd-carrieres-item">{{ c.label }} <b>+{{ c.value }}</b></span>
+                            </button>
+                          }
+                        </mat-menu>
+                      } @else {
+                        <span class="scd-carriere scd-carriere--aucune">Sans carrière</span>
+                      }
+                    </span>
+                    <span class="scd-mj-tag" aria-hidden="true">Le MJ accorde</span>
+                  </span>
+                }
+
+                <!-- La fiche et l'exclusion, en boutons icônes collés : un clic suffit -->
+                <span class="scd-row-icons">
                   <button
                     type="button"
                     class="scd-icon scd-icon--sheet"

@@ -14,8 +14,7 @@ import {
   viewChildren,
   WritableSignal,
 } from '@angular/core';
-import {A11yModule} from '@angular/cdk/a11y';
-import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -49,7 +48,6 @@ import {REACTION_BONUS_TRAIT_LABEL, REACTION_MALUS_TRAIT_LABEL, REACTION_ROLL_TH
 import {ajouterParLeCasting} from '../play/table/casting-table';
 import {sceneDecor} from '../play/theatre/theatre.util';
 import {pnjAvatar} from '../combat-play.util';
-import {DwPopoverDirective} from '../../../shared/popover/popover.directive';
 import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
 import {DwRollSumComponent} from '../../../shared/roll-sum/roll-sum';
 
@@ -116,10 +114,6 @@ interface HeroCard {
   readonly diceWhyLabel: string;
   /** Le dé de bonus (1) ou de malus (−1) accordé par le MJ pour ce jet, en plus de celui du trait ; `null` sans. */
   readonly gmDie: 1 | -1 | null;
-  /** Le nom du bouton « Modificateurs », avec ce que le MJ a accordé (dé du MJ, carrière), que le bouton marque à ses coins. */
-  readonly modsLabel: string;
-  /** Le trait qui lui donne un dé de bonus ou de malus, rappelé en tête du popover des modificateurs ; `null` sans. */
-  readonly traitNote: string | null;
   readonly verdict: ReactionVerdict | null;
   /** L'addition du jet : un nombre par terme, son nom dessous, le total à la fin. */
   readonly sum: readonly RollSumTerm[];
@@ -161,7 +155,7 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [DwRollSumComponent, DwGemmesComponent, DwPopoverDirective, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [DwRollSumComponent, DwGemmesComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrls: ['./start-combat-page.scss', './start-combat-registre.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -231,13 +225,22 @@ export class StartCombatPageComponent {
    * ils ont une initiative) ; le MJ peut la corriger à la main. */
   private readonly initiativeAdversaries = computed(() => this.activeAdversaries().filter((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')));
   protected readonly hasInitiativeAdversary = computed(() => this.initiativeAdversaries().length > 0);
+  /** D'où vient le malus adverse, dans l'infobulle du « i » à côté de son compteur. */
+  protected readonly malusExplication = computed(() => {
+    const source = this.initiativeSource();
+    if (source) {
+      return `Automatique : l'initiative de ${source.nom} (${source.initiative}), la plus haute des rivaux et coriaces, retranchée à chaque jet de réaction.`;
+    }
+    return this.hasInitiativeAdversary()
+      ? 'Aucun rival ni coriace avec une initiative au-dessus de 0 ; le malus est retranché à chaque jet de réaction.'
+      : 'Aucun rival ni coriace avec une initiative ; le malus est retranché à chaque jet de réaction.';
+  });
   protected readonly detectedInitiative = computed(() => Math.max(0, ...this.initiativeAdversaries().map((a) => a.initiative)));
   private readonly initiativeOverride = signal<number | null>(null);
   /** Le malus adverse : prérempli avec l'initiative détectée (0 sans rival ni coriace), corrigé à la main au besoin. */
   protected readonly adversaryInitiativeMalus = computed(() => this.initiativeOverride() ?? this.detectedInitiative());
   /** Le bouton Options ne montre que ce que le MJ a choisi : le malus déduit des adversaires est une règle, pas une option. Il se lit
    * dans la formule de chaque jet et dans le popover. */
-  protected readonly adversaryMalusChosen = computed(() => this.initiativeOverride() !== null && this.adversaryInitiativeMalus() > 0);
   /** Celui dont l'initiative fait le malus (le premier, à égalité). */
   protected readonly initiativeSource = computed(() => this.initiativeAdversaries().find((a) => a.initiative > 0 && a.initiative === this.detectedInitiative()) ?? null);
 
@@ -274,8 +277,6 @@ export class StartCombatPageComponent {
         diceSources,
         diceWhyLabel: diceSources.length > 0 ? ` ${diceLabel ? diceLabel[0].toUpperCase() + diceLabel.slice(1) : 'Dés annulés'} : ${diceSources.map((source) => source.label).join(', ')}.` : '',
         gmDie: this.gmDieByPivot().get(hero.pivotId) ?? null,
-        modsLabel: this.modsLabel(hero, parts.carriere ?? null),
-        traitNote: hero.diceNet > 0 ? `${REACTION_BONUS_TRAIT_LABEL} : un dé de bonus, toujours.` : hero.diceNet < 0 ? `${REACTION_MALUS_TRAIT_LABEL} : un dé de malus, toujours.` : null,
         dice,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts, net),
@@ -311,6 +312,9 @@ export class StartCombatPageComponent {
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   /** Où on en est, au-dessus du titre : la session, puis la scène en cours s'il y en a une. */
   protected readonly where = signal('');
+  /** Le fond de la page : l'illustration de la scène en cours, comme à la table, sinon le décor par défaut. */
+  protected readonly decor = signal(sceneDecor(null));
+  protected readonly decorCss = computed(() => `url("${this.decor()}")`);
   /** Aucun adversaire (une fois la table chargée) : le combat ne peut pas commencer, ajouter un adversaire devient l'action principale. */
   /** Les adversaires qui comptent pour démarrer : ni exclus, ni du camp des héros (un allié ne suffit pas à faire un combat). */
   private readonly activeEnemies = computed(() => this.activeAdversaries().filter((a) => !a.ally));
@@ -392,6 +396,7 @@ export class StartCombatPageComponent {
             this.excluded.set(new Set(normalizeEtat(session.etat_combat).exclus));
           }
           this.where.set([session.titre, session.scene?.titre].filter((part): part is string => !!part).join(' · '));
+          this.decor.set(sceneDecor(session.scene ?? null));
           // Mêmes portraits que sur la table (`combat-play.util.ts`) : celui de la fiche, sinon l'image du catalogue.
           this.adversaries.set([
             ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, avatar: pnjAvatar(p), sourceId: p.pnj_id, rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
@@ -544,7 +549,7 @@ export class StartCombatPageComponent {
     ajouterParLeCasting({dialog: this.dialog, fightSessionService: this.fightSessionService, snackBar: this.snackBar}, this.data.sessionId, {
       scenarioId: null,
       sceneTitre: this.where() || 'La table',
-      sceneImage: sceneDecor(null),
+      sceneImage: this.decor(),
       sceneAmbiance: '',
     }).subscribe(() => this.reload(true));
   }
@@ -667,54 +672,6 @@ export class StartCombatPageComponent {
       next.delete(hero.pivotId);
       return next;
     });
-  }
-
-  /** Le nom du bouton des modificateurs d'un héros, avec ce qui est accordé (dé du MJ, carrière) : les marques du bouton, en clair. */
-  private modsLabel(hero: HeroRow, carriere: ActionRollCarriere | null): string {
-    const gm = this.gmDieByPivot().get(hero.pivotId);
-    const actifs = [gm === 1 ? 'dé de bonus du MJ' : gm === -1 ? 'dé de malus du MJ' : '', carriere ? `carrière ${carriere.label} +${carriere.value}` : ''];
-    const detail = actifs.filter((part) => part).join(', ');
-    return `Modificateurs du jet de ${hero.nom}${detail ? ' : ' + detail : ''}`;
-  }
-
-  /** Le popover des modificateurs ouvert (clé pivotId du héros), `null` sinon : un seul à la fois. */
-  protected readonly modsOpen = signal<number | null>(null);
-  /** Le popover des options de la rencontre (embuscade, dé du MJ pour tous, malus adverse). */
-  protected readonly optionsOpen = signal(false);
-  /** Le bonus de l'embuscade choisie, lu sur le bouton des options (« +2 », « −1 ») ; vide sans embuscade. */
-  protected readonly ambushBonus = computed(() => AMBUSH_OPTIONS.find((option) => option.value === this.ambushState())?.bonus ?? '');
-
-  /** Ferme le popover des options et rend le focus à son bouton. */
-  protected closeOptions(): void {
-    this.optionsOpen.set(false);
-    document.getElementById('scd-options-btn')?.focus();
-  }
-
-  protected onOptionsKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.closeOptions();
-    }
-  }
-
-  protected toggleMods(pivotId: number): void {
-    this.modsOpen.update((open) => (open === pivotId ? null : pivotId));
-  }
-
-  /** Ferme le popover des modificateurs et rend le focus à son bouton. */
-  protected closeMods(): void {
-    const pivotId = this.modsOpen();
-    this.modsOpen.set(null);
-    if (pivotId !== null) {
-      document.getElementById(`scd-mods-${pivotId}`)?.focus();
-    }
-  }
-
-  protected onModsKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.closeMods();
-    }
   }
 
   /** Le MJ accorde à un héros le rang d'une de ses carrières pour ce jet, ou le retire (`null`). */

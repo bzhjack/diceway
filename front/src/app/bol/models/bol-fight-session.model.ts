@@ -28,6 +28,8 @@ export interface EtatCombatDto {
 export interface BolSessionSceneRef {
   id: string;
   titre: string;
+  /** L'illustration de la scène (`https://…` ou `/assets/…`), le fond de la table et de « Démarrer le combat ». */
+  image?: string | null;
   scenario?: {id: string; titre: string} | null;
 }
 

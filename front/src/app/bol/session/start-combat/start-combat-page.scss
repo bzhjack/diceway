@@ -8,8 +8,8 @@ bol-start-combat-page {
   height: 100dvh;
 }
 
-// Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté. Le fond : de la
-// suie, et la lueur de la peinture du bandeau qui descend sur la page.
+// Toute la fenêtre : l'en-tête et ses boutons restent en haut, le registre et l'ordre d'action défilent chacun de leur côté. Le fond :
+// l'illustration de la scène en cours sur toute la page (`::before`, `--scd-decor` posé par le composant), comme à la table.
 .scd-shell {
   position: relative;
   display: flex;
@@ -22,6 +22,20 @@ bol-start-combat-page {
     radial-gradient(55% 45% at 100% 100%, rgba(150, 52, 14, 0.16), transparent 70%),
     radial-gradient(70% 70% at 0% 100%, rgba(0, 0, 0, 0.6), transparent 72%),
     var(--dw-forge-soot);
+
+  // Le décor de la scène, sur toute la page : plus sombre à gauche (sous le titre et l'ordre d'action) et vers le bas (sous les lignes
+  // des héros), à peine voilé en haut à droite, pour que tout reste lisible.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(90deg, rgba(10, 6, 4, 0.9) 10%, rgba(10, 6, 4, 0.55) 38%, rgba(10, 6, 4, 0.25) 66%, rgba(10, 6, 4, 0.5)),
+      linear-gradient(180deg, transparent 0, rgba(10, 6, 4, 0.35) 30%, rgba(10, 6, 4, 0.7) 100%),
+      var(--scd-decor, none) center 35% / cover no-repeat;
+    pointer-events: none;
+  }
 }
 
 // Au-dessus du contenu (z-index 2) : posé derrière les panneaux, les dés se retrouveraient à moitié masqués.
@@ -64,21 +78,6 @@ bol-start-combat-page {
   isolation: isolate;
   flex: none;
   padding: 0.55rem 1.4rem 0.9rem;
-
-  // L'image du combat de la table, plus contrastée et plus chaude, à peine voilée au milieu ; plus sombre à gauche, sous le titre et la frise,
-  // pour qu'ils restent lisibles. Pas de bordure en bas : l'image s'y fond dans la page (sur un calque à part, pour ne pas estomper le contenu).
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      linear-gradient(90deg, rgba(10, 6, 4, 0.92) 12%, rgba(10, 6, 4, 0.5) 40%, rgba(10, 6, 4, 0.14) 68%, rgba(10, 6, 4, 0.5)),
-      url('/assets/bol/header-combat.webp') center 40% / cover no-repeat;
-    filter: saturate(1.22) contrast(1.07);
-    mask-image: linear-gradient(var(--dw-forge-shade) 62%, transparent);
-    pointer-events: none;
-  }
 }
 
 // La première rangée : le lieu et le titre à gauche, les boutons à droite ; ils passent sous le titre quand la place manque.
@@ -272,49 +271,86 @@ bol-start-combat-page {
   --mat-button-outlined-disabled-outline-color: var(--dw-forge-bronze-off);
 }
 
-// L'embuscade choisie, sur le bouton des options.
-.scd-options-bonus {
-  margin-left: 0.35rem;
-  color: var(--dw-color-legendary);
+// Les options de la rencontre, toujours en vue sous l'ordre d'action (dans le panneau d'un bouton, on n'y pensait pas) : l'embuscade, le
+// dé du MJ pour tous, le malus adverse, sur une ligne ; trop étroit, elles passent à la ligne.
+.scd-rencontre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.6rem 1.75rem;
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.9rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--dw-forge-bronze) 55%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 78%, transparent);
 }
 
-// Le malus adverse en cours, sur le bouton des options : une petite épée et sa valeur, en rouge (deux classes : plus fort que Material).
-.scd-actions .scd-options-malus {
-  display: inline-flex;
+.scd-rencontre-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.scd-rencontre-ligne {
+  display: flex;
   align-items: center;
-  gap: 0.15rem;
-  margin-left: 0.45rem;
-  color: var(--dw-color-echec);
+  gap: 0.45rem;
+  min-height: var(--scd-ctl);
+}
+
+// Le dé du MJ (pour tous, et dans la ligne de chaque héros), comme dans l'assistant de tour : un dé vert (bonus) et un dé rouge (malus), pleins une fois choisis.
+.scd-de {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-toggle);
+  background: var(--dw-surface-0);
+  cursor: pointer;
 
   .mat-icon {
-    width: 0.95rem;
-    height: 0.95rem;
-    margin: 0;
-    font-size: 0.95rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
   }
 }
 
-// Le dé du MJ pour tous, sur le bouton des options : vert pour un dé de bonus, rouge pour un dé de malus (deux classes : plus fort que
-// la couleur des icônes de Material).
-.scd-actions .scd-options-die {
-  display: inline-flex;
-  margin-left: 0.4rem;
-  vertical-align: middle;
+.scd-de--petit {
+  width: 1.75rem;
+  height: 1.75rem;
 
   .mat-icon {
     width: 1.1rem;
     height: 1.1rem;
-    margin: 0;
     font-size: 1.1rem;
   }
 }
 
-.scd-actions .scd-options-die--plus {
-  color: var(--dw-color-reussite);
+.scd-de--bonus {
+  color: var(--dw-forge-verdict-reussite);
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-reussite);
+    background: var(--dw-color-reussite);
+    color: var(--dw-forge-on-reussite);
+  }
 }
 
-.scd-actions .scd-options-die--minus {
-  color: var(--dw-color-echec);
+.scd-de--malus {
+  color: var(--dw-forge-verdict-echec);
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-echec);
+    background: var(--dw-color-echec);
+    color: var(--dw-forge-on-echec);
+  }
 }
 
 // ── Le registre des jets, qui défile seul sous l'en-tête ─────────────────────────────────────────────────────────
@@ -360,7 +396,7 @@ bol-start-combat-page {
 }
 
 // Le crédit des icônes (licence CC BY), tout en bas.
-// ── Les choix en groupe : l'embuscade, et le dé du MJ et la carrière dans le popover ─────────────────────────────
+// ── Les choix en groupe : l'embuscade ─────────────────────────────
 .scd-seg {
   display: flex;
   flex-wrap: wrap;
@@ -392,13 +428,6 @@ bol-start-combat-page {
       }
     }
   }
-}
-
-// L'initiative ennemie, dans le popover des options : le compteur, et à côté ce qu'il vaut.
-.scd-pop-line {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
 }
 
 // L'initiative ennemie : la valeur entre deux boutons ronds, dans une capsule de la hauteur des autres contrôles.

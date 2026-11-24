@@ -57,7 +57,7 @@
           <mat-icon>casino</mat-icon>
         </button>
       </span>
-      <dw-dice-row class="tas-row-dice" size="1.9rem" [dice]="attack.sortRowDice()" [total]="attack.sortDiceSum()" [slots]="loadout.diceCount()" />
+      <dw-dice-row class="tas-row-dice" size="2.5rem" [dice]="attack.sortRowDice()" [total]="attack.sortDiceSum()" [slots]="loadout.diceCount()" />
       <div class="tas-mj" role="group" aria-label="Ce que dit le MJ" [class.tas-off]="turn.rolling() || flow.sortLance()" [attr.inert]="turn.rolling() || flow.sortLance() ? '' : null">
         <div class="tas-mj-row">
           <button type="button" class="tas-chip tas-chip--de tas-chip--bonus" [attr.aria-pressed]="loadout.gmDie() === 'bonus'" aria-label="Dé de bonus du MJ" matTooltip="Dé de bonus, quand les circonstances aident : 3d6, on garde les deux meilleurs" (click)="loadout.toggleGmDie('bonus')">

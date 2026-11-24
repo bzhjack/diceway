@@ -53,7 +53,7 @@ const DECOR_PAR_DEFAUT = '/assets/bol/fond-heros.webp';
 
 /** Le fond du plateau pour une scène : son illustration, sinon l'image par défaut. La région n'y change rien : la carte se
  * consulte à part, depuis le lieu du cartouche. */
-export function sceneDecor(scene: Pick<BolSceneModel, 'image'> | null): string {
+export function sceneDecor(scene: {readonly image?: string | null} | null): string {
   return scene?.image?.trim() || DECOR_PAR_DEFAUT;
 }
 

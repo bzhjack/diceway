@@ -231,18 +231,19 @@
   .tas-mj-row {
     display: flex;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.3rem;
   }
 
   // Le dé seul : vert pour le bonus, rouge pour le malus (trois classes : plus fort que les options, déclarées plus bas).
-  // Une case carrée fixe, l'icône calée au centre : sa hauteur de ligne par défaut la décalerait.
+  // Une case carrée fixe, l'icône calée au centre : sa hauteur de ligne par défaut la décalerait. À la taille de ceux de « Démarrer le
+  // combat » : des dés qu'on voit et qu'on touche sans viser.
   .tas-mj .tas-chip.tas-chip--de {
     display: inline-flex;
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 2rem;
+    height: 2rem;
     min-width: 0;
     min-height: 0;
     padding: 0;
@@ -250,9 +251,9 @@
 
     .mat-icon {
       display: block;
-      width: 1.05rem;
-      height: 1.05rem;
-      font-size: 1.05rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      font-size: 1.3rem;
       line-height: 1;
     }
   }
@@ -391,12 +392,13 @@
     }
 
     .vs__btn {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.75rem;
+      height: 1.75rem;
     }
 
     .vs__value {
-      width: 1.5rem;
+      width: 1.75rem;
+      font-size: 1.05rem;
       color: var(--dw-forge-bone);
     }
   }
