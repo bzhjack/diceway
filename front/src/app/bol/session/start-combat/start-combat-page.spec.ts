@@ -215,6 +215,22 @@ describe('StartCombatPageComponent', () => {
     expect(carriere.classList).toContain('scd-carriere--choisie');
   });
 
+  it('une carte par héros, quatre de large au moins ; le verdict est tamponné sur le portrait', async () => {
+    await rendre(session());
+    const cartes = element.querySelector<HTMLElement>('.scd-cartes')!;
+
+    expect(element.querySelectorAll('.scd-carte').length).toBe(2);
+    // Deux héros : les cartes gardent la largeur de quatre, elles ne s'étalent pas.
+    expect(cartes.style.getPropertyValue('--scd-colonnes')).toBe('4');
+    expect(element.querySelector('.scd-sceau b')).toBeNull();
+    expect(element.querySelector('.scd-carte--attente')).not.toBeNull();
+
+    await saisir(0, '12');
+
+    expect(element.querySelector('.scd-sceau b')?.textContent?.trim()).not.toBe('');
+    expect(element.querySelector('.scd-carte:not(.scd-carte--attente) .scd-sceau b')).not.toBeNull();
+  });
+
   it('ne démarre pas sans adversaire', async () => {
     await rendre(session({pnjs: []}));
 

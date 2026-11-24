@@ -147,11 +147,11 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
 /**
  * La page « Démarrer le combat » (`session/:id/combat`, `?reroll=1` pour un nouveau jet en plein combat), sur tout l'écran : elle
  * ajoute les adversaires (dialog existant, réutilisé) puis recueille le jet de réaction de chaque héros avant de démarrer le
- * combat. Un registre, une ligne par héros dont les colonnes s'alignent d'un héros à l'autre : ce qu'il lui faut aux dés et ses
- * chances, la case où taper le total de ses deux dés lancés à table (un bouton les lance à l'écran, sur le plateau de dés partagé),
- * ses dés, son verdict et l'option d'héroïsme qu'il ouvre. À droite, l'ordre d'action se remplit à mesure des jets, et c'est là
- * qu'on coche les adversaires qui jouent. Les modificateurs d'embuscade et d'initiative adverse (02-actions-combat.md) sont communs à
- * toute la rencontre, réglés une fois au-dessus des lignes. Le calcul est dans `reaction-roll.util.ts`.
+ * combat. Une carte par héros, six de front au plus : son portrait, ce qu'il lui faut aux dés et ses chances, son verdict en tampon ;
+ * dessous, la case où taper le total de ses deux dés lancés à table (un bouton les lance à l'écran, sur le plateau de dés partagé),
+ * ses dés, l'addition, ce que le jet change, l'option d'héroïsme qu'il ouvre et ce que le MJ lui accorde. En haut, l'ordre d'action
+ * se remplit à mesure des jets. Les modificateurs d'embuscade et d'initiative adverse (02-actions-combat.md) sont communs à toute la
+ * rencontre, réglés une fois au-dessus des cartes. Le calcul est dans `reaction-roll.util.ts`.
  */
 @Component({
   selector: 'bol-start-combat-page',
@@ -246,6 +246,9 @@ export class StartCombatPageComponent {
 
   /** Ce que les modificateurs de la rencontre ajoutent au jet de chaque héros. */
   private readonly tableModifier = computed(() => this.ambushModifier() - this.adversaryInitiativeMalus());
+
+  /** Combien de cartes de front : une par héros, entre quatre (qu'une petite compagnie ne s'étale pas) et six (au-delà, une seconde rangée). */
+  protected readonly colonnes = computed(() => Math.min(6, Math.max(4, this.heroCards().length)));
 
   protected readonly heroCards = computed<readonly HeroCard[]>(() =>
     this.heroes().map((hero) => {

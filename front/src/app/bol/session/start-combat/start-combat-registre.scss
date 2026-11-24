@@ -1,109 +1,191 @@
 @use 'styles/forge-mixins' as forge;
 
-// La suite de `start-combat-page.scss`, chargée après elle et sans encapsulation elle aussi : le registre des héros et son focus.
+// La suite de `start-combat-page.scss`, chargée après elle et sans encapsulation elle aussi : les cartes des héros et leur focus.
 
-// ── Le registre : une ligne par héros ──────────────────────────────────────────────────────────────────────────────
-// Une seule grille pour toutes les lignes (chaque ligne en subgrid) : ce qu'il faut, le total, les dés et le verdict tombent dans les
-// mêmes colonnes d'un héros à l'autre. Les colonnes d'extrémité sont en `auto` : la marge intérieure de la ligne s'ajoute à leur
-// largeur (une colonne fixe la ferait chevaucher le portrait).
-.scd-rows {
-  // Largeurs fixes pour le nom, ce qu'il faut et les dés : une étiquette qui apparaît (« Dé MJ − »), « 2 dés de malus » au lieu de
-  // « aux dés » ou un dé de plus ne décalent plus la ligne. Le résultat prend le reste, options d'héroïsme comprises.
-  --scd-col-who: 9rem;
-  --scd-col-need: 8.5rem;
-  --scd-col-faces: 7.6rem;
-
+// ── Les cartes des héros ────────────────────────────────────────────────────────────────────────────────────────
+// Une carte par héros, de front : autant de colonnes que de héros, entre quatre et six (`--scd-colonnes`, posé par la page) ; au-delà,
+// une seconde rangée, et la zone défile. Les cartes prennent toute la hauteur qui reste sous l'en-tête.
+.scd-cartes {
   display: grid;
-  grid-template-columns: auto var(--scd-col-who) var(--scd-col-need) auto var(--scd-col-faces) minmax(6rem, 1fr) auto auto;
-  gap: 0.6rem 0.9rem;
+  flex: 1 0 auto;
+  grid-template-columns: repeat(var(--scd-colonnes, 4), minmax(0, 1fr));
+  grid-auto-rows: minmax(24rem, 1fr);
+  gap: 0.65rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.scd-row {
-  // Le retrait haut et bas de la ligne : le portrait le reprend en marge négative pour toucher les bords. Sa taille : le carré qui
-  // remplit la hauteur de la ligne.
-  --scd-row-py: 0.5rem;
-  --scd-med-size: 4.9rem;
-  // La couleur du résultat, qui chauffe la plaque : le liseré, le voile de gauche et la lueur autour.
+.scd-carte {
+  // La couleur du résultat, qui chauffe la carte : le liseré et la lueur autour.
   --heat: transparent;
-  // La hauteur du mot du verdict et des options d'héroïsme à sa droite.
+  // La hauteur des options d'héroïsme.
   --scd-verdict-h: 1.6rem;
 
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  grid-template-rows: auto auto auto;
-  align-content: center;
-  align-items: center;
-  row-gap: 0.1rem;
-  // Hauteur fixe, quel que soit l'écran : le portrait carré plus le liseré.
-  height: calc(var(--scd-med-size) + 3px);
-  padding: var(--scd-row-py) 0.9rem;
-  // Une plaque de fer rivetée, bordée de bronze, posée sur la suie.
-  border: 1.5px solid color-mix(in srgb, var(--heat) 62%, var(--dw-forge-bronze-edge));
-  border-radius: 7px;
-  background:
-    var(--dw-forge-rivets),
-    linear-gradient(90deg, color-mix(in srgb, var(--heat) 22%, transparent), transparent 52%),
-    var(--dw-forge-plate);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  // Une plaque de fer bordée de bronze, posée sur la suie.
+  border: 1.5px solid color-mix(in srgb, var(--heat) 70%, var(--dw-forge-bronze-edge));
+  border-radius: 10px;
+  background: var(--dw-forge-plate);
   box-shadow:
-    0 0 16px -5px var(--heat),
+    0 0 22px -6px var(--heat),
     var(--dw-forge-plate-shadow);
 }
 
-// Trois niveaux : le nom, l'héroïsme et la vie ; ce qu'il faut et les chances. Portrait, case du total, dés, résultat, ce que le MJ
-// accorde et les boutons tiennent toute la hauteur.
-.scd-row > .scd-med,
-.scd-row > .scd-entry,
-.scd-row > .scd-faces,
-.scd-row > .scd-res,
-.scd-row > .scd-mj,
-.scd-row > .scd-row-icons {
-  grid-row: 1 / 4;
+// En attente du total : la carte est cerclée d'or, c'est à elle de jouer.
+.scd-carte--attente:not(.scd-carte--out) {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
 }
 
-// Le portrait : un carré collé au bord gauche de la ligne, qui en fixe la hauteur, ses coins gauches épousant ceux de la ligne (7px moins
-// le liseré) ; il se fond vers la droite dans le fond de la ligne.
-.scd-row > .scd-med {
-  grid-column: 1;
-  width: var(--scd-med-size);
-  height: var(--scd-med-size);
-  margin: calc(-1 * var(--scd-row-py)) 0 calc(-1 * var(--scd-row-py)) -0.9rem;
+// La tête : le portrait sur toute la largeur, qui prend la hauteur que le corps laisse ; posés dessus, ce qu'il faut (en haut à gauche),
+// les boutons (en haut à droite), le verdict en tampon et le nom (en bas, sur le fondu).
+.scd-carte-tete {
+  position: relative;
+  flex: 1 1 9rem;
+  min-height: 7rem;
+}
+
+.scd-portrait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
   border: 0;
-  border-radius: 5.5px 0 0 5.5px;
-  background: linear-gradient(90deg, var(--dw-forge-portrait-fade), transparent);
-  color: var(--dw-forge-bone);
+  background: radial-gradient(circle at 50% 40%, var(--dw-surface-200), var(--dw-forge-recess) 75%);
+  cursor: pointer;
 
   img {
-    mask-image: linear-gradient(90deg, var(--dw-forge-shade) 72%, transparent);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 22%;
   }
 
-  &:hover {
-    box-shadow: none;
-    filter: brightness(1.15);
+  // Le fondu vers le corps de la carte, sous le nom.
+  &::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--dw-forge-recess) 96%, transparent));
+    content: '';
+  }
+
+  &:hover img {
+    filter: brightness(1.12);
   }
 }
 
-// Le contour de focus à l'intérieur du portrait, qui touche le bord de la ligne. Plus fort que le focus commun du contenu.
-.scd-content .scd-row > .scd-med:focus-visible {
-  outline-offset: -2px;
+// Le contour de focus à l'intérieur du portrait : il touche le bord de la carte.
+.scd-content .scd-portrait:focus-visible {
+  outline-offset: -3px;
 }
 
-.scd-row > .scd-name {
-  grid-column: 2;
-  grid-row: 1;
+// Sans portrait, l'initiale en grand, en bronze.
+.scd-portrait-initiale {
+  font: 400 4rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  color: var(--dw-forge-bronze);
 }
 
-.scd-row > .scd-tags {
-  grid-column: 2;
-  grid-row: 2;
+// Ce qu'il lui faut, en cartouche : le seuil en grand, ses chances dessous.
+.scd-carte > .scd-carte-tete > .scd-need {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--dw-forge-bronze-dim);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--dw-forge-recess) 85%, transparent);
+  pointer-events: none;
 }
 
-.scd-row > .scd-vit {
-  grid-column: 2;
-  grid-row: 3;
+// Le verdict, tamponné sur le portrait : le mot dans un double cadre, penché, à la couleur du résultat.
+.scd-sceau {
+  position: absolute;
+  top: 3rem;
+  right: -0.25rem;
+  z-index: 1;
+  pointer-events: none;
+
+  b {
+    display: block;
+    padding: 0.2rem 0.7rem;
+    border: 3px double currentColor;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--dw-forge-recess) 75%, transparent);
+    box-shadow: 0 4px 14px var(--dw-forge-shade);
+    font: 400 1.15rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    letter-spacing: 0.03em;
+    transform: rotate(8deg);
+    white-space: nowrap;
+  }
+}
+
+.scd-carte-icones {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  display: flex;
+  gap: 0.25rem;
+
+  .scd-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+
+    .mat-icon {
+      width: 1rem;
+      height: 1rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Le nom, l'héroïsme et la vie, en bas du portrait.
+.scd-carte-nom {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.45rem;
+  left: 0.7rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  pointer-events: none;
+
+  .scd-name {
+    font-size: 1.35rem;
+  }
+}
+
+.scd-carte-etat {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+// Le corps : le jet, ce qu'il change, ce que le MJ accorde au pied.
+.scd-carte-corps {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.55rem 0.65rem 0.65rem;
+}
+
+.scd-carte-corps > .scd-mj {
+  margin-top: 0.15rem;
 }
 
 // Sa vie : le cœur, une barre courte et les points.
@@ -150,114 +232,50 @@
   }
 }
 
-.scd-row > .scd-need {
-  grid-column: 3;
-  grid-row: 1;
-  align-self: end;
-  justify-self: start;
-}
-
-.scd-row > .scd-chance {
-  grid-column: 3;
-  grid-row: 2;
-  align-self: start;
-}
-
-.scd-row > .scd-dice-why {
-  grid-column: 3;
-  grid-row: 3;
-  align-self: start;
-}
-
-.scd-row > .scd-entry {
-  grid-column: 4;
-}
-
-.scd-row > .scd-faces {
-  grid-column: 5;
-}
-
-.scd-row > .scd-res {
-  grid-column: 6;
-}
-
-// Le résultat : le verdict et ses options, ce qu'il change, et l'addition dessous. Il tient dans la hauteur fixe de la ligne sans en décaler
-// le reste : sa taille propre ne compte pas (`contain`), il prend celle des trois niveaux, plus un peu du retrait haut et bas de la ligne.
-.scd-row > .scd-res {
-  contain: size;
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  min-width: 0;
-  margin-block: -0.2rem;
-}
-
-// Le haut du résultat : le mot du verdict et, à sa droite, à la même hauteur, les options d'héroïsme.
-.scd-res-top {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.6rem;
-  height: var(--scd-verdict-h);
-  min-width: 0;
-}
-
-// Ce que le verdict change au combat ; le texte complet est dans son infobulle s'il est coupé.
+// Ce que le verdict change au combat, sur deux lignes au plus ; le texte complet est dans son infobulle s'il est coupé.
 .scd-consequence {
   display: -webkit-box;
   flex: none;
+  min-height: calc(2 * 1.25 * 0.8rem);
+  margin: 0;
   overflow: hidden;
   color: var(--dw-forge-bone-dim);
-  font-size: 0.76rem;
-  line-height: 1.22;
+  font-size: 0.8rem;
+  line-height: 1.25;
   white-space: normal;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
 }
 
-// Écran peu haut (portable) : les lignes, à hauteur fixe, se rapprochent un peu.
-@media (max-height: 46rem) {
-  .scd-main {
-    gap: 0.7rem;
-    padding-top: 0.7rem;
-  }
-
-  .scd-rows {
-    row-gap: 0.4rem;
-  }
+.scd-attente {
+  color: var(--dw-surface-500);
 }
 
-// La plaque chauffe à la couleur de son résultat. Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
-.scd-row--reussite {
+// La carte chauffe à la couleur de son résultat. Le succès légendaire en violet, comme dans le reste de l'app (l'héroïque est doré).
+.scd-carte--reussite {
   --heat: var(--dw-forge-heat-reussite);
 }
 
-.scd-row--heroique {
+.scd-carte--heroique {
   --heat: var(--dw-forge-heat-heroique);
 }
 
-.scd-row--legendaire {
+.scd-carte--legendaire {
   --heat: var(--dw-forge-heat-legendaire);
 }
 
-.scd-row--echec {
+.scd-carte--echec {
   --heat: var(--dw-forge-heat-echec);
 }
 
-.scd-row--echec_critique {
+.scd-carte--echec_critique {
   --heat: var(--dw-forge-heat-critique);
 }
 
-// Exclu de ce combat : la ligne s'estompe, seuls ses boutons restent nets pour l'y réintégrer.
-.scd-row--out > :not(.scd-row-icons) {
+// Exclu de ce combat : la carte s'estompe, seuls ses boutons restent nets pour l'y réintégrer.
+.scd-carte--out .scd-portrait,
+.scd-carte--out .scd-carte-nom {
   opacity: 0.4;
-}
-
-// La fiche et l'exclusion, toujours dans la dernière colonne, même quand une ligne exclue n'a pas les cellules du milieu.
-.scd-row > .scd-row-icons {
-  display: flex;
-  grid-column: -2;
-  gap: 0.3rem;
 }
 
 // Des boutons icônes ronds, du même gabarit que celui des modificateurs : des clous de bronze, qui rougeoient au survol.
@@ -295,45 +313,7 @@
   color: var(--dw-color-legendary);
 }
 
-// Le portrait d'un héros : un bouton vers sa fiche.
-.scd-med {
-  display: grid;
-  place-items: center;
-  flex: none;
-  overflow: hidden;
-  border: 2px solid var(--bar-pj-2, var(--dw-forge-portrait-edge));
-  border-radius: 50%;
-  background: var(--dw-surface-200);
-  color: var(--dw-surface-900);
-  font-weight: 800;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.scd-med {
-  width: 2.6rem;
-  height: 2.6rem;
-  font-size: 1.05rem;
-}
-
-.scd-med--btn {
-  padding: 0;
-  font-family: inherit;
-  cursor: pointer;
-  transition:
-    box-shadow 0.15s,
-    filter 0.15s;
-
-  &:hover {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
-  }
-}
-
-// Le nom ; dessous, les gemmes d'héroïsme et les badges du jet (dé du trait, carrière, dé du MJ).
+// Le nom, sur le portrait.
 .scd-name {
   overflow: hidden;
   font: 400 1.3rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
@@ -341,13 +321,6 @@
   white-space: nowrap;
   color: var(--dw-forge-name);
   text-shadow: 0 1px 2px var(--dw-forge-shade);
-}
-
-.scd-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 0.45rem;
 }
 
 .scd-stats {
@@ -373,7 +346,7 @@
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
-// Ce qu'il lui faut aux dés, en grand, et ses chances à côté (vert, ambre ou rouge).
+// Ce qu'il lui faut aux dés, en grand, et ses chances dessous (vert, ambre ou rouge).
 .scd-need {
   > b {
     font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
@@ -516,75 +489,56 @@
   }
 }
 
-// Les dés alignés à gauche dans leur colonne (le composant les centre) : avec un dé de bonus ou de malus, les deux dés gardés restent à
-// la même place que ceux des autres lignes, le dé écarté vient à leur droite.
-.scd-row .scd-faces {
+// Les dés à droite du total, alignés à gauche (le composant les centre) : le dé écarté par un bonus ou un malus vient à droite des deux
+// dés gardés.
+.scd-carte .scd-faces {
   --dw-die-size: 1.6rem;
   justify-content: flex-start;
+  min-width: 0;
 }
 
 // Un peu de relief sur les dés, comme les dés 3D (trois sélecteurs : plus fort que le composant).
-.scd-row .scd-faces [data-v] {
+.scd-carte .scd-faces [data-v] {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -2px 3px rgba(0, 0, 0, 0.45),
     0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-// Le verdict, écrit à la hauteur des options d'héroïsme.
-.scd-verdict {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.2;
-
-  b {
-    font: 400 var(--scd-verdict-h) / 1 'Muse Display Harmony', 'Muse Sans', serif;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-}
-
-.scd-verdict-wait.scd-verdict-wait {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--dw-surface-500);
-  font-size: 0.8rem;
-}
-
-// Le titre du verdict brille de la couleur qui chauffe la plaque.
-.scd-row--reussite .scd-verdict b {
+// Le tampon du verdict brille de la couleur qui chauffe la carte.
+.scd-carte--reussite .scd-sceau b {
   color: var(--dw-forge-verdict-reussite);
   text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
 }
 
-.scd-row--heroique .scd-verdict b {
+.scd-carte--heroique .scd-sceau b {
   color: var(--dw-forge-verdict-heroique);
   text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
 }
 
-.scd-row--legendaire .scd-verdict b {
+.scd-carte--legendaire .scd-sceau b {
   color: var(--dw-forge-verdict-legendaire);
   text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
 }
 
-.scd-row--echec .scd-verdict b {
+.scd-carte--echec .scd-sceau b {
   color: var(--dw-forge-verdict-echec);
   text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
 }
 
-.scd-row--echec_critique .scd-verdict b {
+.scd-carte--echec_critique .scd-sceau b {
   color: var(--dw-forge-verdict-critique);
   text-shadow: 0 0 14px rgba(255, 58, 26, 0.75);
 }
 
-// L'option d'héroïsme du jet (son prix en points à droite) et la faveur divine après un échec, juste après le mot du verdict.
+// L'option d'héroïsme du jet (son prix en points à droite) et la faveur divine après un échec, sous ce que le jet change. Sa place est
+// gardée, vide, pour que le pied des cartes reste aligné.
 .scd-opt {
   display: flex;
   flex: none;
+  flex-wrap: wrap;
   gap: 0.3rem;
+  min-height: var(--scd-verdict-h);
 }
 
 .scd-act {
@@ -683,11 +637,10 @@
 }
 
 
-// Ce que le MJ accorde pour le jet, dans l'avant-dernière colonne : les deux dés et la carrière sur une ligne, « Le MJ accorde » dessous,
-// dans un cadre en pointillés, comme les coups de pouce de l'assistant de tour.
-.scd-row > .scd-mj {
+// Ce que le MJ accorde pour le jet, au pied de la carte : les deux dés et la carrière sur une ligne, « Le MJ accorde » dessous, dans un
+// cadre en pointillés, comme les coups de pouce de l'assistant de tour.
+.scd-mj {
   display: flex;
-  grid-column: -3;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.2rem;
@@ -773,57 +726,10 @@
   visibility: hidden;
 }
 
-// Moins de 1600 px : les colonnes fixes restent resserrées, pour que la place aille au résultat.
-@container scd-main (max-width: 100rem) {
-  // Les dés un peu plus petits, les colonnes fixes resserrées.
-  .scd-rows {
-    --scd-col-who: 8rem;
-    --scd-col-need: 7rem;
-    --scd-col-faces: 6.4rem;
-
-    column-gap: 0.65rem;
-  }
-
-
-  .scd-row .scd-faces {
-    --dw-die-size: 1.35rem;
-
-    gap: 0.3rem;
-  }
-}
-
-// Zone étroite (moins de 1120 px) : les dés s'effacent, le total est dans sa case et dans l'addition ; leur place va au résultat. Les autres
-// colonnes se resserrent encore.
-@container scd-main (max-width: 70rem) {
-  .scd-rows {
-    --scd-col-who: 7rem;
-    --scd-col-need: 5.6rem;
-    --scd-col-faces: 0;
-  }
-
-  .scd-row > .scd-faces {
-    display: none;
-  }
-
-}
-
-// Moins de 1024 px : le bouton de la fiche s'efface, le portrait l'ouvre déjà ; sa place va à l'addition.
-@container scd-main (max-width: 64rem) {
-  .scd-icon--sheet {
-    display: none;
-  }
-}
-
 // Focus visible commun aux boutons, champs et médaillons du contenu (les boutons Material ont le leur).
 .scd-content button:not(.mat-mdc-button-base):focus-visible,
 .scd-content input:not(.mdc-checkbox__native-control):focus-visible,
 .scd-bar button:not(.mat-mdc-button-base):focus-visible {
   outline: 2px solid var(--dw-color-legendary);
   outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scd-med--btn {
-    transition: none;
-  }
 }
