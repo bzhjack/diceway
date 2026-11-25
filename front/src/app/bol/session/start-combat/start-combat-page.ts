@@ -1,5 +1,6 @@
 import {
   afterNextRender,
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -49,6 +50,7 @@ import {ajouterParLeCasting} from '../play/table/casting-table';
 import {sceneDecor} from '../play/theatre/theatre.util';
 import {pnjAvatar} from '../combat-play.util';
 import {DwGemmesComponent} from '../../../shared/gemmes/gemmes';
+import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
 import {DwRollSumComponent} from '../../../shared/roll-sum/roll-sum';
 
 /** Un PNJ, une créature ou un démon tel que la page le charge : ce que l'ordre d'action en montre, plus son initiative. */
@@ -155,11 +157,12 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
  */
 @Component({
   selector: 'bol-start-combat-page',
-  imports: [DwRollSumComponent, DwGemmesComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [DwRollSumComponent, DwGemmesComponent, DwValueStepperComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, OrdreFriseComponent, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-page.html',
   styleUrls: ['./start-combat-page.scss', './start-combat-registre.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: {'(window:resize)': 'mesurerCartes()'},
 })
 export class StartCombatPageComponent {
   private readonly router = inject(Router);
@@ -177,6 +180,10 @@ export class StartCombatPageComponent {
   private readonly diceBox = viewChild(DiceBoxHostComponent);
   private readonly totalInputs = viewChildren<ElementRef<HTMLInputElement>>('totalInput');
   private readonly startButton = viewChild('startButton', {read: ElementRef<HTMLButtonElement>});
+  /** La rangée des cartes, qui défile en largeur au-delà de six héros, et de quel côté il en reste hors de vue : un chevron s'y montre. */
+  private readonly cartes = viewChild<ElementRef<HTMLElement>>('cartes');
+  protected readonly peutGauche = signal(false);
+  protected readonly peutDroite = signal(false);
 
   protected readonly loading = signal(true);
   protected readonly starting = signal(false);
@@ -246,9 +253,6 @@ export class StartCombatPageComponent {
 
   /** Ce que les modificateurs de la rencontre ajoutent au jet de chaque héros. */
   private readonly tableModifier = computed(() => this.ambushModifier() - this.adversaryInitiativeMalus());
-
-  /** Combien de cartes de front : une par héros, entre quatre (qu'une petite compagnie ne s'étale pas) et six (au-delà, une seconde rangée). */
-  protected readonly colonnes = computed(() => Math.min(6, Math.max(4, this.heroCards().length)));
 
   protected readonly heroCards = computed<readonly HeroCard[]>(() =>
     this.heroes().map((hero) => {
@@ -333,6 +337,12 @@ export class StartCombatPageComponent {
 
   constructor() {
     this.reload();
+
+    // Les chevrons suivent la rangée : à chaque rendu des cartes (un héros de plus, exclu…), au défilement et quand la fenêtre change.
+    afterRenderEffect(() => {
+      this.heroCards();
+      this.mesurerCartes();
+    });
 
     // Un modificateur change (embuscade, malus adverse, carrière accordée) : les jets déjà faits sont recalculés avec leurs dés.
     effect(() => {
@@ -541,19 +551,38 @@ export class StartCombatPageComponent {
   }
 
   /** Corrige à la main le malus adverse ; revenu à la valeur détectée, elle suit de nouveau les adversaires présents. */
-  protected stepAdversaryMalus(delta: number): void {
-    const value = Math.max(0, this.adversaryInitiativeMalus() + delta);
+  protected setAdversaryMalus(valeur: number): void {
+    const value = Math.max(0, valeur);
     this.initiativeOverride.set(value === this.detectedInitiative() ? null : value);
   }
 
-  /** « + » : le casting de « Préparer la scène », vide ; ceux qu'il rend s'asseyent à la table et rejoignent la liste des adversaires
-   * (ou des alliés), les jets déjà faits restant. */
+  /** De quel côté la rangée a encore des cartes hors de vue. */
+  protected mesurerCartes(): void {
+    const rangee = this.cartes()?.nativeElement;
+    this.peutGauche.set(!!rangee && rangee.scrollLeft > 1);
+    this.peutDroite.set(!!rangee && rangee.scrollLeft + rangee.clientWidth < rangee.scrollWidth - 1);
+  }
+
+  /** Un chevron fait défiler la rangée d'une carte, vers la gauche (-1) ou la droite (+1). */
+  protected defilerCartes(sens: -1 | 1): void {
+    const rangee = this.cartes()?.nativeElement;
+    const carte = rangee?.querySelector<HTMLElement>('.scd-carte');
+    if (!rangee || !carte) {
+      return;
+    }
+    const ecart = parseFloat(getComputedStyle(rangee).columnGap) || 0;
+    rangee.scrollBy?.({left: sens * (carte.offsetWidth + ecart), behavior: 'smooth'});
+  }
+
+  /** « + » : le casting de « Préparer la scène », vide, avec les héros du compte qui ne sont pas encore assis ; ceux qu'il rend
+   * s'asseyent à la table et rejoignent les adversaires, les alliés ou les cartes des héros, les jets déjà faits restant. */
   protected openAddAdversary(): void {
     ajouterParLeCasting({dialog: this.dialog, fightSessionService: this.fightSessionService, snackBar: this.snackBar}, this.data.sessionId, {
       scenarioId: null,
       sceneTitre: this.where() || 'La table',
       sceneImage: this.decor(),
       sceneAmbiance: '',
+      herosAssis: this.heroes().map((h) => h.herosId),
     }).subscribe(() => this.reload(true));
   }
 

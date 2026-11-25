@@ -538,6 +538,26 @@
   color: color-mix(in srgb, var(--dw-color-reussite) 45%, white);
 }
 
+.pdg-camps-texte--heros {
+  color: var(--dw-color-legendary);
+}
+
+// Un héros n'a pas de rang : « Héros » à la place de la pastille, au même gabarit, en or.
+.pdg-heros {
+  flex: none;
+  padding: 0 0.25rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 50%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 15%, transparent);
+  color: var(--dw-color-legendary);
+  font-size: 0.55rem;
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .pdg-distribution-liste {
   display: flex;
   flex-direction: column;

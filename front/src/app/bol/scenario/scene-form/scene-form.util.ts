@@ -140,10 +140,15 @@ export function aUnPortrait(avatar: string | null | undefined): boolean {
 }
 
 /** Combien de personnages la scène met de chaque côté, exemplaires compris. */
-export function compteDesCamps(personnages: readonly BolSceneDistributionSaisie[]): {adversaires: number; allies: number} {
+export function compteDesCamps(personnages: readonly BolSceneDistributionSaisie[]): {adversaires: number; allies: number; heros: number} {
   return personnages.reduce(
-    (compte, p) => (p.camp === 'heros' ? {...compte, allies: compte.allies + p.qty} : {...compte, adversaires: compte.adversaires + p.qty}),
-    {adversaires: 0, allies: 0},
+    (compte, p) =>
+      p.kind === 'hero'
+        ? {...compte, heros: compte.heros + 1}
+        : p.camp === 'heros'
+          ? {...compte, allies: compte.allies + p.qty}
+          : {...compte, adversaires: compte.adversaires + p.qty},
+    {adversaires: 0, allies: 0, heros: 0},
   );
 }
 
@@ -161,11 +166,13 @@ export function cleDuPersonnage(kind: string, sourceId: string | number): string
 /** La scène avec une fiche de plus, en adversaire, sans attitude : une fiche déjà là (PNJ, créature ou démon) gagne un exemplaire plutôt
  * qu'une ligne de plus (jusqu'à `QTY_MAX`), et une scène pleine (`PERSONNAGES_MAX`) ne prend plus de fiche nouvelle. */
 export function avecLaFiche(personnages: readonly BolSceneDistributionSaisie[], fiche: CombatCatalogEntry): BolSceneDistributionSaisie[] {
-  if (fiche.kind === 'hero') {
-    return [...personnages];
-  }
   const kind = fiche.kind;
   const sourceId = String(fiche.sourceId);
+  // Un héros (casting de la table) entre une fois, dans son camp, sans attitude.
+  if (kind === 'hero') {
+    const absent = !personnages.some((p) => p.kind === 'hero' && p.source_id === sourceId);
+    return absent && personnages.length < PERSONNAGES_MAX ? [...personnages, {kind, source_id: sourceId, qty: 1, camp: 'heros', attitude: null}] : [...personnages];
+  }
   const deja = personnages.findIndex((p) => p.kind === kind && p.source_id === sourceId);
   if (deja >= 0) {
     return avecLeReglage(personnages, deja, {qty: personnages[deja].qty + 1});

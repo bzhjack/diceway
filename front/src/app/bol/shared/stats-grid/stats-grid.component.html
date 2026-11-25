@@ -9,7 +9,7 @@
             @if (cell.text) {
               <input class="hs-text" type="text" [formField]="textFieldFor(cell.control)" [attr.aria-label]="cell.label" />
             } @else {
-              <dw-value-stepper [formField]="fieldFor(cell.control)" [ariaLabel]="cell.label" />
+              <dw-value-stepper taille="grande" [formField]="fieldFor(cell.control)" [ariaLabel]="cell.label" />
             }
           </div>
         }

@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, Component, computed, input, model, output} from
 import {FormValueControl} from '@angular/forms/signals';
 
 /** Un nombre à régler : `[formField]` dans un formulaire, `[value]` et `(valueChange)` pour un chiffre seul. Dans un formulaire, les bornes
- * viennent du schéma (`min()`, `max()`). */
+ * viennent du schéma (`min()`, `max()`). Une pilule cerclée, « − » et « + » en or de part et d'autre du chiffre, en trois tailles
+ * (`taille`) ; avec `heart`, le chiffre sur un cœur entre deux clous (la vitalité). */
 @Component({
   selector: 'dw-value-stepper',
   templateUrl: './value-stepper.html',
   styleUrl: './value-stepper.scss',
+  host: {'[class]': "'vs--' + taille()"},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwValueStepperComponent implements FormValueControl<number> {
@@ -18,6 +20,8 @@ export class DwValueStepperComponent implements FormValueControl<number> {
   readonly ariaLabel = input<string | null>(null);
   /** Pose un cœur derrière la valeur (vitalité). */
   readonly heart = input(false);
+  /** `petite` dans une ligne serrée (la carte, l'assistant de tour), `moyenne` par défaut, `grande` pour lire de loin (les caractéristiques). */
+  readonly taille = input<'petite' | 'moyenne' | 'grande'>('moyenne');
   readonly touch = output();
 
   protected readonly isMin = computed(() => {

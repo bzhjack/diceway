@@ -21,7 +21,7 @@ interface DonDeFoi {
   imports: [MatIconModule, MatMenuModule, MatTooltipModule, DwValueStepperComponent],
   template: `
     <span class="dfo-row">
-      <dw-value-stepper [value]="foi()" (valueChange)="stepped.emit($event - foi())" [min]="0" [ariaLabel]="'Points de foi de ' + pretre().nom" />
+      <dw-value-stepper taille="petite" [value]="foi()" (valueChange)="stepped.emit($event - foi())" [min]="0" [ariaLabel]="'Points de foi de ' + pretre().nom" />
       <!-- Fermé par un verrou, il reste focalisable (aria-disabled, que le menu respecte) : son infobulle dit pourquoi. -->
       <button
         type="button"

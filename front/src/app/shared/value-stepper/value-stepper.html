@@ -1,4 +1,4 @@
-<div class="vs" [attr.aria-label]="ariaLabel()">
+<div class="vs" [class.vs--coeur]="heart()" [attr.aria-label]="ariaLabel()">
   <button
     type="button"
     class="vs__btn"
@@ -8,7 +8,7 @@
   >
     −
   </button>
-  <span class="vs__field" [class.vs__field--heart]="heart()">
+  <span class="vs__field">
     <input
       class="vs__value"
       type="number"

@@ -95,19 +95,6 @@
     max-width: 100%;
   }
 
-  // Chiffres plus grands que le stepper par défaut (lecture en séance)
-  .hs-cell .vs__value {
-    font-size: 1.3rem;
-    width: 2.6rem;
-    height: 1.7rem;
-  }
-
-  .hs-cell .vs__btn {
-    width: 1.35rem;
-    height: 1.35rem;
-    font-size: 0.9rem;
-  }
-
   @media (max-width: 1100px) {
     .hs-blocks {
       grid-template-columns: 1fr;

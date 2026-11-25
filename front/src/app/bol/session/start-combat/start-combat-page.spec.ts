@@ -181,7 +181,7 @@ describe('StartCombatPageComponent', () => {
     expect(bonus.getAttribute('aria-pressed')).toBe('false');
     await cliquer(bouton('Dé de malus du MJ pour tous les héros'));
     expect(bandeau.querySelector('.scd-rencontre-groupe:nth-child(2) .scd-hint')?.textContent?.trim()).toBe('aucun');
-    expect(bandeau.querySelector('.scd-stepper')).not.toBeNull();
+    expect(bandeau.querySelector('dw-value-stepper')).not.toBeNull();
     // D'où vient le malus : dans l'infobulle du « i », à côté du compteur.
     expect(bandeau.querySelector('.scd-info')?.getAttribute('aria-label')).toMatch(/^Malus adverse : /);
   });
@@ -215,20 +215,20 @@ describe('StartCombatPageComponent', () => {
     expect(carriere.classList).toContain('scd-carriere--choisie');
   });
 
-  it('une carte par héros, quatre de large au moins ; le verdict est tamponné sur le portrait', async () => {
+  it('une carte par héros ; le jet fait, le cartouche du seuil dit le verdict et ce qu’il fallait', async () => {
     await rendre(session());
-    const cartes = element.querySelector<HTMLElement>('.scd-cartes')!;
+    const cartouche = () => element.querySelector('.scd-carte:not(.scd-carte--attente) .scd-need');
 
     expect(element.querySelectorAll('.scd-carte').length).toBe(2);
-    // Deux héros : les cartes gardent la largeur de quatre, elles ne s'étalent pas.
-    expect(cartes.style.getPropertyValue('--scd-colonnes')).toBe('4');
-    expect(element.querySelector('.scd-sceau b')).toBeNull();
-    expect(element.querySelector('.scd-carte--attente')).not.toBeNull();
+    expect(element.querySelector('.scd-need-verdict')).toBeNull();
+    expect(element.querySelector('.scd-need .sr-only')?.textContent).toMatch(/^Il te faut /);
 
     await saisir(0, '12');
 
-    expect(element.querySelector('.scd-sceau b')?.textContent?.trim()).not.toBe('');
-    expect(element.querySelector('.scd-carte:not(.scd-carte--attente) .scd-sceau b')).not.toBeNull();
+    expect(cartouche()?.classList).toContain('scd-need--verdict');
+    expect(cartouche()?.querySelector('.scd-need-verdict')?.textContent?.trim()).not.toBe('');
+    expect(cartouche()?.querySelector('.scd-need-rappel')?.textContent).toMatch(/^il fallait \d+\+$/);
+    expect(element.querySelector('.scd-sceau')).toBeNull();
   });
 
   it('ne démarre pas sans adversaire', async () => {

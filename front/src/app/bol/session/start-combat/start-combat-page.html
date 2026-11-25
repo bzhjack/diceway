@@ -146,11 +146,7 @@
         <div class="scd-rencontre-groupe" role="group" aria-labelledby="scd-enemy-label">
           <span class="scd-label" id="scd-enemy-label">Malus adverse</span>
           <div class="scd-rencontre-ligne">
-            <div class="scd-stepper">
-              <button type="button" aria-label="Diminuer le malus adverse" [disabled]="adversaryInitiativeMalus() <= 0" (click)="stepAdversaryMalus(-1)">−</button>
-              <span aria-live="polite">{{ adversaryInitiativeMalus() }}</span>
-              <button type="button" aria-label="Augmenter le malus adverse" (click)="stepAdversaryMalus(1)">+</button>
-            </div>
+            <dw-value-stepper [value]="adversaryInitiativeMalus()" (valueChange)="setAdversaryMalus($event)" [min]="0" ariaLabel="Malus adverse" />
             <button type="button" class="scd-info" [attr.aria-label]="'Malus adverse : ' + malusExplication()" [matTooltip]="malusExplication()">
               <mat-icon>info_outline</mat-icon>
             </button>
@@ -160,12 +156,16 @@
     </header>
 
     <main class="scd-content">
-      <!-- Les cartes des héros, par agilité décroissante : six de front au plus, quatre de large au moins. -->
+      <!-- Les cartes des héros, par agilité décroissante, sur une seule rangée : six de front, au-delà elle défile en largeur sous deux chevrons. -->
       <section class="scd-main" aria-label="Les jets des héros">
         @if (loading()) {
           <p class="scd-empty">Chargement…</p>
         } @else {
-          <ol class="scd-cartes" [style.--scd-colonnes]="colonnes()" aria-label="Jets de réaction des héros">
+          <div class="scd-plateau" [class.scd-plateau--gauche]="peutGauche()" [class.scd-plateau--droite]="peutDroite()">
+          <button mat-icon-button type="button" class="scd-caret scd-caret--gauche" aria-label="Héros précédents" [disabled]="!peutGauche()" (click)="defilerCartes(-1)">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <ol class="scd-cartes" #cartes aria-label="Jets de réaction des héros" (scroll)="mesurerCartes()">
             @for (card of heroCards(); track card.hero.pivotId) {
               <li [class]="'scd-carte scd-carte--' + (card.hero.resultat ?? 'attente')" [class.scd-carte--out]="card.excluded">
                 <!-- La tête de la carte : le portrait (qui ouvre la fiche), et posés dessus ce qu'il faut, le verdict en tampon, les boutons, le nom -->
@@ -184,50 +184,48 @@
                     }
                   </button>
                   @if (!card.excluded) {
-                    <!-- En cartouche sur le portrait : ce qu'il lui faut aux dés ; dessous, ses chances et ses dés de bonus ou de malus -->
-                    <span
-                      class="scd-need"
-                      role="img"
-                      [attr.aria-label]="'Il te faut ' + card.target.big + ' ' + card.target.small + ', ' + card.chance + ' % de chances.' + card.diceWhyLabel"
-                    >
-                      <b aria-hidden="true">{{ card.target.big }}</b>
-                      <span class="scd-chance" aria-hidden="true">
-                        <em
-                          [class]="
-                            card.chance >= 50
-                              ? 'scd-chance--good'
-                              : card.chance >= 25
-                                ? 'scd-chance--mid'
-                                : 'scd-chance--low'
-                          "
-                          >{{ card.chance }} %</em
-                        >
-                        @if (card.diceLabel; as dice) {
-                          <small
+                    <!-- En cartouche sur le portrait : ce qu'il lui faut aux dés, ses chances et ses dés de bonus ou de malus ; une fois le jet fait,
+                         le verdict à la couleur du résultat, et ce qu'il fallait -->
+                    <span class="scd-need" [class.scd-need--verdict]="card.verdict !== null" aria-live="polite">
+                      @if (card.verdict; as v) {
+                        <b class="scd-need-verdict">{{ v.title }}</b>
+                        <small class="scd-need-rappel">il fallait {{ card.target.big }}</small>
+                      } @else {
+                        <span class="sr-only">{{ 'Il te faut ' + card.target.big + ' ' + card.target.small + ', ' + card.chance + ' % de chances.' + card.diceWhyLabel }}</span>
+                        <b aria-hidden="true">{{ card.target.big }}</b>
+                        <span class="scd-chance" aria-hidden="true">
+                          <em
                             [class]="
-                              'scd-dice-note scd-dice-note--' + (card.diceNet > 0 ? 'plus' : 'minus')
+                              card.chance >= 50
+                                ? 'scd-chance--good'
+                                : card.chance >= 25
+                                  ? 'scd-chance--mid'
+                                  : 'scd-chance--low'
                             "
-                            >{{ dice }}</small
+                            >{{ card.chance }} %</em
                           >
-                        } @else {
-                          <small>{{ card.target.small }}</small>
-                        }
-                      </span>
-                      <!-- Pourquoi ces dés, dans le cartouche : le trait ou le MJ, en vert pour un bonus, en rouge pour un malus -->
-                      @if (card.diceSources.length > 0) {
-                        <span class="scd-dice-why" aria-hidden="true">
-                          @for (source of card.diceSources; track source.label) {
-                            <small [class]="'scd-dice-why--' + source.tone">{{ source.label }}</small>
+                          @if (card.diceLabel; as dice) {
+                            <small
+                              [class]="
+                                'scd-dice-note scd-dice-note--' + (card.diceNet > 0 ? 'plus' : 'minus')
+                              "
+                              >{{ dice }}</small
+                            >
+                          } @else {
+                            <small>{{ card.target.small }}</small>
                           }
                         </span>
+                        <!-- Pourquoi ces dés, dans le cartouche : le trait ou le MJ, en vert pour un bonus, en rouge pour un malus -->
+                        @if (card.diceSources.length > 0) {
+                          <span class="scd-dice-why" aria-hidden="true">
+                            @for (source of card.diceSources; track source.label) {
+                              <small [class]="'scd-dice-why--' + source.tone">{{ source.label }}</small>
+                            }
+                          </span>
+                        }
                       }
                     </span>
                   }
-                  <span class="scd-sceau" aria-live="polite">
-                    @if (!card.excluded && card.verdict; as v) {
-                      <b>{{ v.title }}</b>
-                    }
-                  </span>
                   <!-- La fiche et l'exclusion, en haut à droite du portrait -->
                   <span class="scd-carte-icones">
                     <button
@@ -462,6 +460,10 @@
               <li class="scd-empty">Aucun héros à table.</li>
             }
           </ol>
+          <button mat-icon-button type="button" class="scd-caret scd-caret--droite" aria-label="Héros suivants" [disabled]="!peutDroite()" (click)="defilerCartes(1)">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+          </div>
         }
       </section>
     </main>

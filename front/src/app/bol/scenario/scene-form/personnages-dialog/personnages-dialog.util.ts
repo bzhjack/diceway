@@ -18,6 +18,7 @@ function normalizeSearch(value: string): string {
 
 const TYPES: readonly {cle: PersonnageType; label: string}[] = [
   {cle: null, label: 'Tous'},
+  {cle: 'hero', label: 'Héros'},
   {cle: 'pnj', label: 'PNJ'},
   {cle: 'creature', label: 'Créatures'},
   {cle: 'demon', label: 'Démons'},
@@ -37,9 +38,13 @@ function sourceDe(fiche: CombatCatalogEntry): Exclude<LibrarySource, 'tout'> {
   return (fiche.raw as {user_id?: string | null}).user_id ? 'miennes' : 'catalogue';
 }
 
-/** Ce qu'une scène peut contenir : PNJ, créatures et démons (pas de héros), par nom. */
-export function fichesDeScene(catalogue: readonly CombatCatalogEntry[]): CombatCatalogEntry[] {
-  return catalogue.filter((fiche) => fiche.kind !== 'hero').sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+/** Ce qu'une scène peut contenir : PNJ, créatures et démons, par nom. Pour la table (`herosAssis` donné), aussi les héros actifs du compte
+ * qui n'y sont pas encore assis, en tête. */
+export function fichesDeScene(catalogue: readonly CombatCatalogEntry[], herosAssis: readonly string[] | null = null): CombatCatalogEntry[] {
+  const assis = new Set(herosAssis ?? []);
+  const heros = herosAssis === null ? [] : catalogue.filter((fiche) => fiche.kind === 'hero' && (fiche.raw as {active?: boolean}).active !== false && !assis.has(String(fiche.sourceId)));
+  const parNom = (a: CombatCatalogEntry, b: CombatCatalogEntry) => a.nom.localeCompare(b.nom, 'fr');
+  return [...heros.sort(parNom), ...catalogue.filter((fiche) => fiche.kind !== 'hero').sort(parNom)];
 }
 
 /** Les fiches que montrent ces filtres ; `sauf` en ignore un, pour compter ce que chacune de ses options montrerait. */
@@ -53,8 +58,9 @@ export function filtrerFiches(
     (fiche) =>
       (sauf === 'type' || filtres.type === null || fiche.kind === filtres.type) &&
       (sauf === 'source' || filtres.source === 'tout' || sourceDe(fiche) === filtres.source) &&
-      (sauf === 'rang' || filtres.rang === null || rangDe(fiche) === filtres.rang) &&
-      (sauf === 'scenarioId' || filtres.scenarioId === null || scenariosDe(fiche).some((s) => s.id === filtres.scenarioId)) &&
+      // Un héros n'a pas de rang ; aucun scénario ne le cite, mais il reste proposé quel que soit le scénario.
+      (sauf === 'rang' || filtres.rang === null || (fiche.kind !== 'hero' && rangDe(fiche) === filtres.rang)) &&
+      (sauf === 'scenarioId' || filtres.scenarioId === null || fiche.kind === 'hero' || scenariosDe(fiche).some((s) => s.id === filtres.scenarioId)) &&
       (sauf === 'recherche' || !terme || normalizeSearch(fiche.nom).includes(terme)),
   );
 }
@@ -70,11 +76,15 @@ export function optionsDesFiltres(
   const parRang = filtrerFiches(fiches, filtres, 'rang');
   const avecScenarios = (liste: readonly CombatCatalogEntry[]) => liste.map((fiche) => ({scenarios: scenariosDe(fiche)}));
   return {
-    types: TYPES.map((o) => ({...o, compte: parType.filter((f) => o.cle === null || f.kind === o.cle).length})),
+    // « Héros » seulement quand il y en a à proposer (le casting de la table).
+    types: TYPES.filter((o) => o.cle !== 'hero' || fiches.some((f) => f.kind === 'hero')).map((o) => ({
+      ...o,
+      compte: parType.filter((f) => o.cle === null || f.kind === o.cle).length,
+    })),
     sources: SOURCES.map((o) => ({...o, compte: parSource.filter((f) => o.cle === 'tout' || sourceDe(f) === o.cle).length})),
     rangs: [
       {cle: null, label: 'Tous', compte: parRang.length},
-      ...(['R', 'C', 'P'] as const).map((cle) => ({cle, label: RANG_LABELS[cle], compte: parRang.filter((f) => rangDe(f) === cle).length})),
+      ...(['R', 'C', 'P'] as const).map((cle) => ({cle, label: RANG_LABELS[cle], compte: parRang.filter((f) => f.kind !== 'hero' && rangDe(f) === cle).length})),
     ],
     scenarios: scenariosDesFiches(avecScenarios(fiches), avecScenarios(filtrerFiches(fiches, filtres, 'scenarioId')), filtres.scenarioId),
   };
@@ -87,8 +97,9 @@ export function lignesDesFiches(fiches: readonly CombatCatalogEntry[], personnag
   const pleine = personnages.length >= PERSONNAGES_MAX;
   return fiches.map((fiche) => {
     const dansLaScene = enScene.get(cleDuPersonnage(fiche.kind, fiche.sourceId)) ?? 0;
-    const ajoutable = dansLaScene === 0 ? !pleine : dansLaScene < QTY_MAX;
-    const ajout = dansLaScene === 0 ? `Ajouter ${fiche.nom}` : `Un ${fiche.nom} de plus`;
+    // Un héros n'entre qu'une fois.
+    const ajoutable = dansLaScene === 0 ? !pleine : fiche.kind !== 'hero' && dansLaScene < QTY_MAX;
+    const ajout = dansLaScene === 0 ? `Ajouter ${fiche.nom}` : fiche.kind === 'hero' ? `${fiche.nom} entre déjà` : `Un ${fiche.nom} de plus`;
     return {fiche, rang: rangDe(fiche), type: KIND_LABEL[fiche.kind], dansLaScene, ajoutable, ajout};
   });
 }

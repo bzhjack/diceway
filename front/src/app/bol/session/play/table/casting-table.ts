@@ -8,14 +8,15 @@ import {CastingTableOutils} from '../../models/casting-table.model';
 import {arriveeALaTable} from './table-commands.util';
 
 /**
- * Ajouter des personnages à une table, hors combat comme en combat : le casting de « Préparer la scène », vide, au bandeau donné ;
+ * Ajouter des personnages à une table, hors combat comme en combat : le casting de « Préparer la scène », vide, au bandeau donné, avec
+ * les héros du compte qui ne sont pas encore assis (`herosAssis`) ;
  * ceux qu'il rend s'asseyent (nombre, camp, attitude, `POST …/personnages`) et la table dit qui est arrivé. Émet la table à jour ;
  * rien si le MJ ferme sans choisir, ni en cas d'erreur (dite elle aussi).
  */
 export function ajouterParLeCasting(
   outils: CastingTableOutils,
   sessionId: string,
-  bandeau: Pick<PersonnagesDialogData, 'scenarioId' | 'sceneTitre' | 'sceneImage' | 'sceneAmbiance'>,
+  bandeau: Pick<PersonnagesDialogData, 'scenarioId' | 'sceneTitre' | 'sceneImage' | 'sceneAmbiance' | 'herosAssis'>,
 ): Observable<BolFightSessionModel> {
   return openPersonnagesDialog(outils.dialog, {...bandeau, cible: 'table', personnages: []}).pipe(
     filter((personnages): personnages is BolSceneDistributionSaisie[] => !!personnages?.length),

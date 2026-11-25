@@ -362,9 +362,6 @@ bol-start-combat-page {
 }
 
 .scd-main {
-  // Les colonnes du registre se règlent sur la largeur de cette zone (requêtes de conteneur plus bas), pas sur celle de la fenêtre : le
-  // zoom du navigateur ou l'échelle de l'écran la font varier.
-  container: scd-main / inline-size;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -427,52 +424,5 @@ bol-start-combat-page {
         color: var(--dw-forge-ink);
       }
     }
-  }
-}
-
-// L'initiative ennemie : la valeur entre deux boutons ronds, dans une capsule de la hauteur des autres contrôles.
-.scd-stepper {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 0.1rem;
-  box-sizing: border-box;
-  height: var(--scd-ctl);
-  padding: 0 0.2rem;
-  border: 1px solid var(--dw-border);
-  border-radius: var(--dw-radius-pill);
-  background: var(--dw-surface-0);
-
-  button {
-    display: grid;
-    place-items: center;
-    width: 1.65rem;
-    height: 1.65rem;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: none;
-    color: var(--dw-color-legendary);
-    font: inherit;
-    font-weight: 800;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
-    }
-
-    &:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-  }
-
-  span {
-    display: grid;
-    place-items: center;
-    min-width: 1.5rem;
-    color: var(--dw-surface-900);
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
   }
 }

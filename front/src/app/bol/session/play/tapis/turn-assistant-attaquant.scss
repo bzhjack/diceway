@@ -375,34 +375,6 @@
     letter-spacing: 0.08em;
   }
 
-  // Les boutons du stepper, partagé avec d'autres écrans : des clous de bronze ici seulement. Celui du MJ, resserré à côté des dés de l'attaque.
-  .tas-head dw-value-stepper .vs__btn,
-  .tas-mj dw-value-stepper .vs__btn,
-  .tas-target dw-value-stepper .vs__btn {
-    width: 1.3rem;
-    height: 1.3rem;
-    border-color: var(--dw-forge-bronze-dim);
-    @include forge.stud-face;
-    color: var(--dw-forge-bronze-text);
-  }
-
-  .tas-mj dw-value-stepper {
-    .vs {
-      gap: 0.05rem;
-    }
-
-    .vs__btn {
-      width: 1.75rem;
-      height: 1.75rem;
-    }
-
-    .vs__value {
-      width: 1.75rem;
-      font-size: 1.05rem;
-      color: var(--dw-forge-bone);
-    }
-  }
-
   // Les boutons ronds : des clous de bronze, qui rougeoient au survol.
   .tas-head .tas-ib,
   .tas-target .tas-ib {

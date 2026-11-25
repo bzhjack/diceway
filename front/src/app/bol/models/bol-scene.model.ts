@@ -3,6 +3,9 @@ import {BolFightSessionModel, CombatantAttitude, CombatCamp} from './bol-fight-s
 /** Types de personnages qu'une scène peut contenir — les héros restent à la table, hors scène. */
 export type SceneEntryKind = 'pnj' | 'creature' | 'demon';
 
+/** Ce que le casting « Ajouter un personnage » peut faire entrer : en plus, un héros du compte, mais pour la table seulement. */
+export type CastingEntryKind = SceneEntryKind | 'hero';
+
 /** Un personnage (ou un lot) de la distribution d'une scène : référence à la bibliothèque, quantité,
  * et position de chaque exemplaire sur la carte (null = jamais déplacé, placement par défaut). */
 export interface BolSceneEntry {
@@ -94,9 +97,9 @@ export interface BolSceneLoadResult {
 }
 
 /** Un personnage de la scène tel que « Préparer la scène » l'enregistre : sa fiche, le nombre d'exemplaires (un PNJ est seul), son
- * camp et son attitude au chargement. */
+ * camp et son attitude au chargement. Un héros (`hero`) n'y vient que du casting ouvert pour la table : le serveur l'écarte d'une scène. */
 export interface BolSceneDistributionSaisie {
-  kind: SceneEntryKind;
+  kind: CastingEntryKind;
   source_id: string;
   qty: number;
   camp: CombatCamp;

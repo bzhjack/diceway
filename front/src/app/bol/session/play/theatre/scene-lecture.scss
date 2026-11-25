@@ -16,11 +16,12 @@
     0 18px 40px rgba(0, 0, 0, 0.55);
 }
 
-// En grand : une fenêtre de lecture, le texte une fois et demie plus gros.
+// En grand : une fenêtre de lecture, le texte une fois et demie plus gros, toujours à la même taille : changer d'onglet ne la fait ni
+// grandir ni rétrécir, un texte long défile dedans.
 :host(.lec--grand) {
   --lec-k: 1.5;
   width: min(80rem, 96vw);
-  max-height: 88dvh;
+  height: 88dvh;
   border-color: var(--dw-forge-bronze);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75);
 }

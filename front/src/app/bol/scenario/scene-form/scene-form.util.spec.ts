@@ -158,7 +158,7 @@ describe('ce que montrent l’affiche et la distribution', () => {
         {kind: 'creature', source_id: 'c1', qty: 5, camp: 'adversaires', attitude: null},
         {kind: 'pnj', source_id: 'p1', qty: 1, camp: 'heros', attitude: null},
       ]),
-    ).toEqual({adversaires: 5, allies: 1});
+    ).toEqual({adversaires: 5, allies: 1, heros: 0});
   });
 
   it('dit le temps de lire un texte à voix haute, à la minute près', () => {

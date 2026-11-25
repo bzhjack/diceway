@@ -24,7 +24,7 @@
     <!-- Sa vitalité et ses points sous ses chiffres, comme pour celui qui joue -->
     <div class="tas-cible-regl">
       <div class="tas-vit">
-        <dw-value-stepper [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="turn.targetVitaliteLabel() + ' de ' + t.nom" [heart]="true" />
+        <dw-value-stepper taille="petite" [value]="turn.targetVitaliteShown()" (valueChange)="turn.adjustTargetVitalite($event)" [min]="turn.targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="turn.targetVitaliteLabel() + ' de ' + t.nom" [heart]="true" />
         <span class="tas-tag">{{ turn.targetVitaliteLabel() }} /{{ t.vitaliteMax ?? '—' }}</span>
       </div>
       @if (cible.pointsCible(); as pts) {

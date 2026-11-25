@@ -1,5 +1,5 @@
 import {CombatCamp, CombatantAttitude} from '../../models/bol-fight-session.model';
-import {SceneEntryKind, SceneJetAttribut, SceneJetDifficulte, SceneMeteo, SceneMoment} from '../../models/bol-scene.model';
+import {CastingEntryKind, SceneJetAttribut, SceneJetDifficulte, SceneMeteo, SceneMoment} from '../../models/bol-scene.model';
 import {LibraryRang} from '../../shared/models/library-rows.model';
 
 /** Valeur du formulaire « Préparer la scène » : des textes vides plutôt que `null`, et un danger à 0 pour « aucun ». L'illustration
@@ -32,7 +32,7 @@ export interface JetSaisie {
 
 /** Un personnage de la scène dans la colonne « Les personnages » : ce qui s'enregistre, et ce qui se montre (nom, portrait, type). */
 export interface ScenePersonnageVue {
-  kind: SceneEntryKind;
+  kind: CastingEntryKind;
   source_id: string;
   qty: number;
   camp: CombatCamp;

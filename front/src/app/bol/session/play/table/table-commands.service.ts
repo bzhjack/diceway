@@ -27,8 +27,8 @@ export class TableCommandsService {
   private readonly snackBar = inject(MatSnackBar);
 
   /** « Ajouter un personnage » du théâtre et « + » de l'ordre d'action en combat : le casting de « Préparer la scène », vide, au bandeau
-   * de la scène en cours, ses fiches du scénario d'abord ; ceux qu'il rend s'asseyent à la table (nombre, camp, attitude), à côté de
-   * ceux qui y sont. */
+   * de la scène en cours, ses fiches du scénario d'abord, et les héros du compte qui ne sont pas encore assis ; ceux qu'il rend
+   * s'asseyent à la table (nombre, camp, attitude ; un héros seul, dans la compagnie), à côté de ceux qui y sont. */
   ajouterDesPersonnages(): void {
     const sessionId = this.table.sessionId();
     if (!sessionId) {
@@ -40,6 +40,7 @@ export class TableCommandsService {
       sceneTitre: scene?.titre ?? this.table.session()?.titre ?? 'La table',
       sceneImage: sceneDecor(scene),
       sceneAmbiance: scene ? ambianceEnPhrase({lieu: scene.lieu ?? '', moment: scene.moment, danger: scene.danger ?? 0}) : '',
+      herosAssis: (this.table.session()?.heros ?? []).map((h) => h.heros_id),
     }).subscribe((session) => this.table.session.set(session));
   }
 

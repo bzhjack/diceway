@@ -27,6 +27,9 @@
           <button type="button" class="pdg-type" [attr.aria-pressed]="type() === option.cle" (click)="type.set(option.cle)">
             <span class="pdg-type-icone" aria-hidden="true">
               @switch (option.cle) {
+                @case ('hero') {
+                  <mat-icon>shield</mat-icon>
+                }
                 @case ('pnj') {
                   <mat-icon>person</mat-icon>
                 }
@@ -114,6 +117,9 @@
                 </span>
                 <span class="pdg-type-pastille">
                   @switch (ligne.fiche.kind) {
+                    @case ('hero') {
+                      <mat-icon>shield</mat-icon>
+                    }
                     @case ('pnj') {
                       <mat-icon>person</mat-icon>
                     }
@@ -125,13 +131,17 @@
                     }
                   }
                 </span>
-                @if (ligne.dansLaScene > 0) {
+                @if (ligne.dansLaScene > 0 && ligne.fiche.kind !== 'hero') {
                   <span class="pdg-tuile-nombre">×{{ ligne.dansLaScene }}</span>
                 }
                 <span class="pdg-tuile-corps">
                   <span class="pdg-nom">{{ ligne.fiche.nom }}</span>
                   <span class="pdg-detail">
-                    <bol-rang [rang]="ligne.rang" />
+                    @if (ligne.fiche.kind === 'hero') {
+                      <span class="pdg-heros">Héros</span>
+                    } @else {
+                      <bol-rang [rang]="ligne.rang" />
+                    }
                     <span class="pdg-pv">{{ ligne.fiche.vitalite }} PV</span>
                     <span class="pdg-tuile-actions">
                       <button
@@ -177,6 +187,9 @@
       <p class="pdg-camps-texte">
         <span class="pdg-camps-texte--adversaires">{{ camps().adversaires }} adversaire{{ camps().adversaires > 1 ? 's' : '' }}</span>
         <span class="pdg-camps-texte--allies">{{ camps().allies }} allié{{ camps().allies > 1 ? 's' : '' }}</span>
+        @if (camps().heros) {
+          <span class="pdg-camps-texte--heros">{{ camps().heros }} héros</span>
+        }
       </p>
       <ul class="pdg-distribution-liste">
         @for (perso of panier(); track $index; let index = $index) {

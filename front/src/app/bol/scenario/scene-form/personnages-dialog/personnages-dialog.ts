@@ -23,8 +23,9 @@ import {fichesDeScene, filtrerFiches, lignesDesFiches, optionsDesFiltres, scenar
  * la recherche ; puis les filtres (type, scénario, rang, source), chaque option avec son nombre ; à gauche, toutes les fiches de PNJ, de
  * créatures et de démons (catalogue et compte) en portraits, « + » en faisant entrer une (un second, un exemplaire de plus) et « Voir la fiche » ouvrant sa statblock ; à
  * droite, « La distribution » : les personnages de la scène, à régler (nombre, camp, attitude) ou à retirer. Se ferme avec les personnages
- * de la scène tels que la distribution les montre (ou rien, pour ne rien changer). Ouvert depuis la table, la distribution part vide et
- * « Ajouter à la table » rend ceux qui entrent.
+ * de la scène tels que la distribution les montre (ou rien, pour ne rien changer). Ouvert depuis la table, la distribution part vide,
+ * les héros du compte qui n'y sont pas encore assis sont proposés en tête (un seul exemplaire, dans le camp des héros), et « Ajouter à
+ * la table » rend ceux qui entrent.
  */
 @Component({
   selector: 'bol-personnages-dialog',
@@ -39,7 +40,9 @@ class PersonnagesDialogComponent {
   private readonly catalogue = inject(CombatSelectionService);
   private readonly dialog = inject(MatDialog);
 
-  private readonly fiches = computed(() => fichesDeScene(this.catalogue.catalog()));
+  /** Ouvert depuis la table : on choisit ceux qui entrent, rien de ce qui y est déjà ; les héros du compte qui n'y sont pas sont proposés. */
+  protected readonly pourLaTable = this.data.cible === 'table';
+  private readonly fiches = computed(() => fichesDeScene(this.catalogue.catalog(), this.pourLaTable ? (this.data.herosAssis ?? []) : null));
   /** Un catalogue déjà lu reste montré, même si une relecture échoue. */
   protected readonly etat = computed(() =>
     this.fiches().length > 0 ? 'pret' : this.catalogue.loadFailed() ? 'echec' : this.catalogue.loading() ? 'chargement' : 'pret',
@@ -73,8 +76,6 @@ class PersonnagesDialogComponent {
   protected readonly pleine = computed(() => this.personnages().length >= PERSONNAGES_MAX);
   protected readonly change = computed(() => !memesPersonnages(this.personnages(), this.data.personnages));
 
-  /** Ouvert depuis la table : on choisit ceux qui entrent, rien de ce qui y est déjà. */
-  protected readonly pourLaTable = this.data.cible === 'table';
   protected readonly aUnPortrait = aUnPortrait;
 
   constructor() {

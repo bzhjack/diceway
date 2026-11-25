@@ -87,7 +87,7 @@
   <!-- Sa vitalité sur son cœur et ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici -->
   <div class="tas-zone-vit">
     <div class="tas-vit">
-      <dw-value-stepper [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="turn.vitaliteLabel() + ' de ' + turn.card().nom" [heart]="true" />
+      <dw-value-stepper taille="petite" [value]="turn.vitaliteShown()" (valueChange)="turn.adjustVitalite($event)" [min]="turn.vitaliteMin()" [max]="turn.card().vitaliteMax ?? undefined" [ariaLabel]="turn.vitaliteLabel() + ' de ' + turn.card().nom" [heart]="true" />
       <span class="tas-tag">{{ turn.vitaliteLabel() }} /{{ turn.card().vitaliteMax ?? '—' }}</span>
     </div>
     @if (attack.pointsAttaquant(); as p) {
@@ -104,7 +104,7 @@
     @let pouvoir = turn.attacker()?.magie?.pouvoir ?? null;
     @if (pouvoir !== null) {
       <div class="tas-vit tas-vit--pouvoir">
-        <dw-value-stepper [value]="pouvoir" (valueChange)="turn.ajusterRessource(turn.card(), 'pouvoir', $event - pouvoir)" [min]="0" [ariaLabel]="'Points de pouvoir de ' + turn.card().nom" />
+        <dw-value-stepper taille="petite" [value]="pouvoir" (valueChange)="turn.ajusterRessource(turn.card(), 'pouvoir', $event - pouvoir)" [min]="0" [ariaLabel]="'Points de pouvoir de ' + turn.card().nom" />
         <span class="tas-tag">Pouvoir</span>
       </div>
     }

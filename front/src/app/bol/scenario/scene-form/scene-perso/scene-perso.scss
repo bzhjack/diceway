@@ -126,3 +126,11 @@
 .spe-reglages {
   grid-area: reglages;
 }
+
+.spe-heros {
+  grid-area: reglages;
+  align-self: center;
+  color: var(--dw-color-legendary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}

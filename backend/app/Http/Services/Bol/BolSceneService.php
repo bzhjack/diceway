@@ -176,7 +176,7 @@ class BolSceneService
         if (!$session) {
             return null;
         }
-        $distribution = BolSceneDistribution::fromSaisie($saisie, $this->fichesAccessibles($userId, $saisie));
+        $distribution = BolSceneDistribution::fromSaisie($saisie, $this->fichesAccessibles($userId, $saisie, avecHeros: true));
 
         return DB::transaction(fn () => [
             'ignored' => $this->asseoir($session->id, $distribution, []),
@@ -201,6 +201,11 @@ class BolSceneService
             $qty = max(1, (int) ($entry['qty'] ?? 1));
             $camp = BolSceneDistribution::entryCamp($entry);
             if ($camp === 'heros' && isset($allies[$kind . ':' . $sourceId])) {
+                continue;
+            }
+            // Un héros (de « Ajouter un personnage » seulement : une scène n'en a pas) s'assied une fois, dans son camp, sans attitude.
+            if ($kind === 'hero') {
+                $this->fightSessionService->asseoirLeHeros($sessionId, $sourceId);
                 continue;
             }
 
@@ -353,14 +358,21 @@ class BolSceneService
 
     /**
      * Les fiches d'une distribution saisie que ce compte peut mettre en scène (les siennes et celles du catalogue), en clés
-     * `kind:source_id`.
+     * `kind:source_id`. Pour la table (`avecHeros`), aussi ses héros actifs : une scène n'en a jamais.
      *
      * @param array<int, array<string, mixed>> $saisie
      * @return array<int, string>
      */
-    private function fichesAccessibles(string $userId, array $saisie): array
+    private function fichesAccessibles(string $userId, array $saisie, bool $avecHeros = false): array
     {
         $cles = [];
+        if ($avecHeros) {
+            $ids = array_column(array_filter($saisie, fn ($entree) => ($entree['kind'] ?? null) === 'hero'), 'source_id');
+            $heros = BolHeros::where('user_id', $userId)->where('type', 'H')->where('active', true)->whereIn('id', array_map('strval', $ids))->pluck('id');
+            foreach ($heros as $id) {
+                $cles[] = 'hero:' . $id;
+            }
+        }
         foreach (['pnj' => BolHeros::class, 'creature' => BolCreature::class, 'demon' => BolDemon::class] as $kind => $model) {
             $ids = array_column(array_filter($saisie, fn ($entree) => ($entree['kind'] ?? null) === $kind), 'source_id');
             // Un PNJ au sens de BolHeros::isPnj() : ni un héros, ni une fiche sans type.

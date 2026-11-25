@@ -642,6 +642,22 @@ class BolFightSessionService
         $row->update(['vitalite_courante' => $next]);
     }
 
+    /**
+     * Fait asseoir un héros du compte à une table déjà lancée (« Ajouter un personnage ») : dans le camp des héros, avec toute sa vitalité,
+     * sans jet de réaction. Un héros déjà assis ne l'est pas une seconde fois.
+     *
+     * @return bool s'il s'est assis
+     */
+    public function asseoirLeHeros(string $sessionId, string $heroId): bool
+    {
+        if ($this->hasHero($sessionId, $heroId)) {
+            return false;
+        }
+        $this->createHeroRow($sessionId, $heroId, 'heros');
+
+        return true;
+    }
+
     private function hasHero(string $sessionId, string $heroId): bool
     {
         return BolFightSessionHeros::where('fight_session_id', $sessionId)->where('heros_id', $heroId)->exists();

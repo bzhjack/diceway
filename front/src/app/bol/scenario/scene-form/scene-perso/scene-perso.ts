@@ -24,11 +24,15 @@ import {aUnPortrait} from '../scene-form.util';
         } @else {
           <span class="spe-initiale" aria-hidden="true">{{ perso().nom.charAt(0) }}</span>
         }
-        <span class="spe-nombre">{{ perso().qty }}</span>
+        @if (perso().kind !== 'hero') {
+          <span class="spe-nombre">{{ perso().qty }}</span>
+        }
       </span>
       <span class="spe-nom">
         <span class="spe-texte">{{ perso().nom }}</span>
-        <bol-attitude-menu [attitude]="perso().attitude" [nom]="perso().nom" (choisie)="regle.emit({attitude: $event})" />
+        @if (perso().kind !== 'hero') {
+          <bol-attitude-menu [attitude]="perso().attitude" [nom]="perso().nom" (choisie)="regle.emit({attitude: $event})" />
+        }
         @if (nouveau()) {
           <span class="spe-nouveau">nouveau</span>
         }
@@ -37,7 +41,12 @@ import {aUnPortrait} from '../scene-form.util';
         <mat-icon>close</mat-icon>
       </button>
 
-      <bol-perso-reglages class="spe-reglages" [nom]="perso().nom" [qty]="perso().qty" [camp]="perso().camp" (regle)="regle.emit($event)" />
+      <!-- Un héros entre seul, dans son camp, sans attitude : rien à régler. -->
+      @if (perso().kind === 'hero') {
+        <span class="spe-heros">Héros · rejoint la compagnie</span>
+      } @else {
+        <bol-perso-reglages class="spe-reglages" [nom]="perso().nom" [qty]="perso().qty" [camp]="perso().camp" (regle)="regle.emit($event)" />
+      }
     </div>
   `,
   styleUrl: './scene-perso.scss',

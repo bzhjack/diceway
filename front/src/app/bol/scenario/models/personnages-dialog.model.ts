@@ -14,10 +14,12 @@ export interface PersonnagesDialogData {
   readonly personnages: readonly BolSceneDistributionSaisie[];
   /** `scene` (« Préparer la scène », par défaut) : valider rend toute la distribution ; `table` : les personnages à ajouter à la table. */
   readonly cible?: 'scene' | 'table';
+  /** Pour la table : les héros déjà assis (`bol_heros.id`). Les autres héros actifs du compte sont proposés, une scène n'en a jamais. */
+  readonly herosAssis?: readonly string[];
 }
 
 /** Le type d'une fiche à mettre en scène ; null : tous. */
-export type PersonnageType = 'pnj' | 'creature' | 'demon' | null;
+export type PersonnageType = 'hero' | 'pnj' | 'creature' | 'demon' | null;
 
 /** Les filtres du dialogue, ceux des bibliothèques en tuiles en plus du type ; `rang` et `scenarioId` null : tous. */
 export interface PersonnagesFiltres {

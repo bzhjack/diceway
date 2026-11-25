@@ -3,17 +3,102 @@
 // La suite de `start-combat-page.scss`, chargée après elle et sans encapsulation elle aussi : les cartes des héros et leur focus.
 
 // ── Les cartes des héros ────────────────────────────────────────────────────────────────────────────────────────
-// Une carte par héros, de front : autant de colonnes que de héros, entre quatre et six (`--scd-colonnes`, posé par la page) ; au-delà,
-// une seconde rangée, et la zone défile. Les cartes prennent toute la hauteur qui reste sous l'en-tête.
+// Une carte par héros, sur une seule rangée, toujours à la largeur de six de front quel que soit leur nombre (quatre héros laissent la
+// place de deux à droite) ; au-delà de six, la rangée défile en largeur sous deux chevrons, sans barre, une carte à la fois. Les cartes
+// prennent toute la hauteur qui reste sous l'en-tête.
+.scd-plateau {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 24rem;
+
+  // Un fondu du côté où des cartes restent hors de vue.
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 3rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    content: '';
+  }
+
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--dw-forge-recess), transparent);
+  }
+
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--dw-forge-recess), transparent);
+  }
+}
+
+.scd-plateau--gauche::before,
+.scd-plateau--droite::after {
+  opacity: 1;
+}
+
 .scd-cartes {
+  --scd-ecart: 0.65rem;
+
   display: grid;
-  flex: 1 0 auto;
-  grid-template-columns: repeat(var(--scd-colonnes, 4), minmax(0, 1fr));
-  grid-auto-rows: minmax(24rem, 1fr);
-  gap: 0.65rem;
+  flex: 1;
+  grid-auto-columns: calc((100% - 5 * var(--scd-ecart)) / 6);
+  grid-auto-flow: column;
+  grid-template-rows: 100%;
+  gap: var(--scd-ecart);
+  min-width: 0;
   margin: 0;
   padding: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
   list-style: none;
+}
+
+.scd-cartes > .scd-carte {
+  scroll-snap-align: start;
+}
+
+// Un chevron de chaque côté, à mi-hauteur, posé sur la rangée (plus fort que la position du bouton Material) : un clou de bronze,
+// absent quand la rangée est au bout.
+.scd-plateau > .scd-caret {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  --mat-icon-button-state-layer-size: 2.2rem;
+  --mat-icon-button-icon-size: 1.4rem;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 1px solid var(--dw-forge-bronze);
+  background: var(--dw-forge-stud);
+  box-shadow: var(--dw-forge-stud-shadow);
+  color: var(--dw-forge-name);
+  transform: translateY(-50%);
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-forge-hot);
+    color: var(--dw-forge-hot-text);
+  }
+
+  &:disabled {
+    visibility: hidden;
+  }
+}
+
+.scd-plateau > .scd-caret--gauche {
+  left: -0.6rem;
+}
+
+.scd-plateau > .scd-caret--droite {
+  right: -0.6rem;
 }
 
 .scd-carte {
@@ -41,8 +126,8 @@
   border-color: color-mix(in srgb, var(--dw-color-legendary) 75%, transparent);
 }
 
-// La tête : le portrait sur toute la largeur, qui prend la hauteur que le corps laisse ; posés dessus, ce qu'il faut (en haut à gauche),
-// les boutons (en haut à droite), le verdict en tampon et le nom (en bas, sur le fondu).
+// La tête : le portrait sur toute la largeur, qui prend la hauteur que le corps laisse ; posés dessus, ce qu'il faut puis le verdict
+// (en haut à gauche), les boutons (en haut à droite) et le nom (en bas, sur le fondu).
 .scd-carte-tete {
   position: relative;
   flex: 1 1 9rem;
@@ -109,26 +194,22 @@
   pointer-events: none;
 }
 
-// Le verdict, tamponné sur le portrait : le mot dans un double cadre, penché, à la couleur du résultat.
-.scd-sceau {
-  position: absolute;
-  top: 3rem;
-  right: -0.25rem;
-  z-index: 1;
-  pointer-events: none;
+// Le jet fait, le cartouche dit le verdict, en grand, à la couleur du résultat (le liseré aussi), et dessous ce qu'il fallait.
+.scd-carte > .scd-carte-tete > .scd-need--verdict {
+  border-color: color-mix(in srgb, var(--heat) 75%, transparent);
+  box-shadow: 0 0 14px -4px var(--heat);
+}
 
-  b {
-    display: block;
-    padding: 0.2rem 0.7rem;
-    border: 3px double currentColor;
-    border-radius: 6px;
-    background: color-mix(in srgb, var(--dw-forge-recess) 75%, transparent);
-    box-shadow: 0 4px 14px var(--dw-forge-shade);
-    font: 400 1.15rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
-    letter-spacing: 0.03em;
-    transform: rotate(8deg);
-    white-space: nowrap;
-  }
+.scd-need-verdict {
+  font: 400 1.25rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.scd-need-rappel {
+  color: var(--dw-forge-caption);
+  font-size: 0.68rem;
+  white-space: nowrap;
 }
 
 .scd-carte-icones {
@@ -505,28 +586,28 @@
     0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-// Le tampon du verdict brille de la couleur qui chauffe la carte.
-.scd-carte--reussite .scd-sceau b {
+// Le verdict du cartouche brille de la couleur qui chauffe la carte.
+.scd-carte--reussite .scd-need-verdict {
   color: var(--dw-forge-verdict-reussite);
   text-shadow: 0 0 12px rgba(62, 207, 119, 0.5);
 }
 
-.scd-carte--heroique .scd-sceau b {
+.scd-carte--heroique .scd-need-verdict {
   color: var(--dw-forge-verdict-heroique);
   text-shadow: 0 0 12px rgba(234, 181, 74, 0.55);
 }
 
-.scd-carte--legendaire .scd-sceau b {
+.scd-carte--legendaire .scd-need-verdict {
   color: var(--dw-forge-verdict-legendaire);
   text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
 }
 
-.scd-carte--echec .scd-sceau b {
+.scd-carte--echec .scd-need-verdict {
   color: var(--dw-forge-verdict-echec);
   text-shadow: 0 0 12px rgba(232, 80, 46, 0.6);
 }
 
-.scd-carte--echec_critique .scd-sceau b {
+.scd-carte--echec_critique .scd-need-verdict {
   color: var(--dw-forge-verdict-critique);
   text-shadow: 0 0 14px rgba(255, 58, 26, 0.75);
 }

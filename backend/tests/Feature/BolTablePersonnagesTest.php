@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolFightSession;
 use App\Models\Bol\BolFightSessionCreature;
+use App\Models\Bol\BolFightSessionHeros;
 use App\Models\Bol\BolFightSessionPnj;
 use App\Models\Bol\BolHeros;
 use App\Models\User;
@@ -77,6 +78,36 @@ class BolTablePersonnagesTest extends TestCase
 
         $this->assertSame(2, BolFightSessionPnj::where('fight_session_id', $session->id)->where('attitude', 'hostile')->count());
         $this->assertSame('combat', $session->fresh()->statut);
+    }
+
+    public function test_seats_a_hero_of_the_account_once_with_full_vitality(): void
+    {
+        $kaja = BolHeros::create(['nom' => 'Kaja', 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'H', 'active' => true, 'vitalite' => 11]);
+        $session = $this->table('combat');
+        $saisie = ['distribution' => [['kind' => 'hero', 'source_id' => $kaja->id, 'qty' => 3, 'camp' => 'adversaires', 'attitude' => 'hostile']]];
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/personnages", $saisie)->assertOk()->assertJsonPath('ignored', 0);
+        $this->postJson("/api/bol/fight-session/{$session->id}/personnages", $saisie)->assertOk();
+
+        $lignes = BolFightSessionHeros::where('fight_session_id', $session->id)->get();
+        $this->assertCount(1, $lignes);
+        $this->assertSame('heros', $lignes[0]->camp);
+        $this->assertSame(11, (int) $lignes[0]->vitalite_courante);
+        $this->assertNull($lignes[0]->initiative_resultat);
+    }
+
+    public function test_ignores_a_hero_of_another_account_or_in_creation(): void
+    {
+        $etranger = BolHeros::create(['nom' => 'Étranger', 'joueur' => 'J', 'user_id' => User::factory()->create()->id, 'type' => 'H', 'active' => true]);
+        $enCours = BolHeros::create(['nom' => 'En cours', 'joueur' => 'J', 'user_id' => $this->user->id, 'type' => 'H', 'active' => false]);
+        $session = $this->table();
+
+        $this->postJson("/api/bol/fight-session/{$session->id}/personnages", ['distribution' => [
+            ['kind' => 'hero', 'source_id' => $etranger->id, 'qty' => 1, 'camp' => 'heros'],
+            ['kind' => 'hero', 'source_id' => $enCours->id, 'qty' => 1, 'camp' => 'heros'],
+        ]])->assertOk();
+
+        $this->assertSame(0, BolFightSessionHeros::where('fight_session_id', $session->id)->count());
     }
 
     public function test_the_table_of_another_account_answers_404(): void
