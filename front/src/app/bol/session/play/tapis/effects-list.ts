@@ -92,7 +92,7 @@ interface EffetAffiche {
           <span id="efl-duree">Jusqu’à</span>
           <div class="efl-segs" role="group" aria-labelledby="efl-duree">
             @for (d of durees(); track d.type) {
-              <button type="button" class="efl-seg" [attr.aria-pressed]="duree() === d.type" (click)="duree.set(d.type)">{{ d.compte ? nombre() + ' ' + d.libelle : d.libelle }}</button>
+              <button type="button" class="efl-seg" [attr.aria-pressed]="duree() === d.type" (click)="duree.set(d.type)">{{ d.compte ? nombre() + ' ' + (nombre() > 1 ? d.libelle : (d.singulier ?? d.libelle)) : d.libelle }}</button>
             }
           </div>
           @if (dureeAvecNombre()) {

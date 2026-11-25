@@ -36,7 +36,7 @@ describe('EffectsListComponent : effet libre', () => {
     segment('Défense').click();
     await stable();
     element.querySelector<HTMLButtonElement>('.efl-libre .vs__btn[aria-label="Augmenter"]')!.click();
-    segment('1 attaques subies').click();
+    segment('1 attaque subie').click();
     await stable();
     element.querySelector<HTMLFormElement>('.efl-libre')!.dispatchEvent(new Event('submit'));
     await stable();

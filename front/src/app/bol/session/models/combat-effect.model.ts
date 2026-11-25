@@ -100,4 +100,6 @@ export interface DureeLibre {
   readonly type: EffectDuration['type'];
   readonly libelle: string;
   readonly compte: boolean;
+  /** Pour une durée comptée, le libellé d'une seule (« 1 round », « 1 attaque subie ») ; `libelle` est au pluriel. */
+  readonly singulier?: string;
 }

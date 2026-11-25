@@ -593,13 +593,13 @@ export function dureesLibres(stat: EffectStat): readonly DureeLibre[] {
   const durees: DureeLibre[] = [
     {type: 'fin-round', libelle: 'fin du round', compte: false},
     {type: 'debut-tour-porteur', libelle: 'son prochain tour', compte: false},
-    {type: 'rounds', libelle: 'rounds', compte: true},
+    {type: 'rounds', libelle: 'rounds', singulier: 'round', compte: true},
     {type: 'combat', libelle: 'fin du combat', compte: false},
   ];
   if (stat === 'action') {
     return [action, ...durees];
   }
-  return stat === 'defense' ? [...durees.slice(0, 3), {type: 'usages', libelle: 'attaques subies', compte: true}, durees[3]] : durees;
+  return stat === 'defense' ? [...durees.slice(0, 3), {type: 'usages', libelle: 'attaques subies', singulier: 'attaque subie', compte: true}, durees[3]] : durees;
 }
 
 /** La durée choisie, en effet : un nombre (1 à 20) pour les rounds et les attaques subies. */
