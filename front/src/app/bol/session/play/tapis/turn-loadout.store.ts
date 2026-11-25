@@ -288,14 +288,28 @@ export class TurnLoadoutStore {
   /** L'échelle des postures, de la défense totale à l'attaque intrépide. Une créature ou un démon n'a pas de posture (`visibleOptions`) : il
    * attaque, ou se défend. */
   readonly postureChoices = computed<readonly PostureChoice[]>(() => {
-    const totale: PostureChoice = {slug: DEFENSE_TOTALE, name: 'Déf. totale', effect: `— · ${signedTerm(2)}`, hint: 'Défense totale : le round entier à esquiver et parer, pas d’attaque. « Fin du tour » applique le +2.'};
+    const totale: PostureChoice = {
+      slug: DEFENSE_TOTALE,
+      name: 'Déf. totale',
+      effect: `— · ${signedTerm(2)}`,
+      hint: 'Défense totale : le round entier à esquiver et parer, pas d’attaque. « Fin du tour » applique le +2.',
+      attaque: null,
+      defense: 2,
+    };
     const echelle = this.scalePostures();
     if (echelle.length === 0) {
-      return [{slug: 'none', name: 'Attaque', effect: 'une attaque', hint: ''}, totale];
+      return [{slug: 'none', name: 'Attaque', effect: 'une attaque', hint: '', attaque: 0, defense: 0}, totale];
     }
     return [
       totale,
-      ...echelle.map((o) => ({slug: o.slug, name: this.scaleName(o), effect: `${signedOrZero(o.modificateur)} · ${signedOrZero(POSTURE_DEFENSE[o.slug] ?? 0)}`, hint: o.note ?? ''})),
+      ...echelle.map((o) => ({
+        slug: o.slug,
+        name: this.scaleName(o),
+        effect: `${signedOrZero(o.modificateur)} · ${signedOrZero(POSTURE_DEFENSE[o.slug] ?? 0)}`,
+        hint: o.note ?? '',
+        attaque: o.modificateur,
+        defense: POSTURE_DEFENSE[o.slug] ?? 0,
+      })),
     ];
   });
 

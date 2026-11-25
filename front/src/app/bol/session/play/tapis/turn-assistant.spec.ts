@@ -156,6 +156,20 @@ describe('TurnAssistantComponent', () => {
     await stable();
   }
 
+  /** Un mot de la phrase du coup (son nom pour un lecteur d'écran commence par `mot`) ouvre son menu ; on y choisit `choix`. */
+  async function ouvrir(mot: string): Promise<void> {
+    element.querySelector<HTMLButtonElement>(`.tas-phrase button[aria-label^="${mot}"]`)!.click();
+    await stable();
+  }
+
+  const choixDuMenu = (libelle: string) => [...document.querySelectorAll<HTMLButtonElement>('.tas-menu [mat-menu-item]')].find((b) => (b.textContent ?? '').includes(libelle))!;
+
+  async function choisir(mot: string, libelle: string): Promise<void> {
+    await ouvrir(mot);
+    choixDuMenu(libelle).click();
+    await stable();
+  }
+
   beforeEach(() => {
     Object.values(events).forEach((liste) => (liste.length = 0));
   });
@@ -342,10 +356,10 @@ describe('TurnAssistantComponent', () => {
     it('en rechargement, l’arbalète ne se prend pas : il passe à mains nues', async () => {
       await viser({armes: [arbalete], ownedArmes: [arbalete], effets: [{...effetRechargement('hero-1', 'Arbalète', 1), id: 'e-1'}]});
 
-      const bouton = element.querySelector<HTMLButtonElement>('button[aria-label^="Arbalète"]')!;
-      expect(bouton.getAttribute('aria-disabled')).toBe('true');
-      expect(bouton.getAttribute('aria-pressed')).toBe('false');
-      expect(element.querySelector<HTMLButtonElement>('button[aria-label^="Mains nues"]')!.getAttribute('aria-pressed')).toBe('true');
+      await ouvrir('Arme');
+      expect(choixDuMenu('Arbalète').disabled).toBe(true);
+      expect(choixDuMenu('Arbalète').getAttribute('aria-checked')).toBe('false');
+      expect(choixDuMenu('Mains nues').getAttribute('aria-checked')).toBe('true');
     });
 
     it('une arbalète déjà en rechargement ne repart pas pour un tour de plus', async () => {
@@ -399,17 +413,14 @@ describe('TurnAssistantComponent', () => {
     it('une créature frappe d’une case comme les armes : une patte, ses dégâts dessous', async () => {
       await rendre({card: carte({kind: 'creature', degats: 'd6B'}), armes: [], ownedArmes: []});
 
-      const zone = element.querySelector('.tas-zone--armes')!;
-      const cas = zone.querySelector('.tas-pick--fige');
-      expect(cas?.getAttribute('aria-label')).toBe('Dégâts, d6B');
-      expect(cas?.querySelector('mat-icon')?.textContent?.trim()).toBe('pets');
-      expect(cas?.querySelector('em')?.textContent?.trim()).toBe('d6B');
+      // Sans arme, la phrase dit ses dégâts : « … attaque qui ? pour d6B ».
+      expect(element.querySelector('.tas-phrase')?.textContent).toMatch(/pour\s*d6B/);
     });
 
     it('un démon frappe avec son icône de démon', async () => {
       await rendre({card: carte({kind: 'demon', degats: 'd6+1'}), armes: [], ownedArmes: []});
 
-      expect(element.querySelector('.tas-zone--armes .tas-pick--fige mat-icon')?.textContent?.trim()).toBe('bolt');
+      expect(element.querySelector('.tas-phrase')?.textContent).toMatch(/pour\s*d6\+1/);
     });
   });
 
@@ -451,11 +462,10 @@ describe('TurnAssistantComponent', () => {
 
       await cliquer('Appliquer');
 
-      const zone = element.querySelector('.tas-zone--armes')!;
-      expect(zone.querySelector('.tas-played')).toBeNull();
-      const fige = zone.querySelector('.tas-pick--fige');
-      expect(fige?.getAttribute('aria-label')).toMatch(/, d\d/);
-      expect(zone.querySelector('button')).toBeNull();
+      // La phrase se fige : la cible et l'arme du coup, sans rien à changer.
+      const phrase = element.querySelector('.tas-phrase--jouee')!;
+      expect(phrase.textContent).toContain('Épée');
+      expect(phrase.querySelector('button')).toBeNull();
     });
 
     it('une cible choisie donne la main à la case du jet', async () => {
@@ -504,7 +514,7 @@ describe('TurnAssistantComponent', () => {
     it('la posture offensive ajoute 1 à l’attaque', async () => {
       await viser();
 
-      await cliquer('Offensive');
+      await choisir('Posture', 'Offensive');
 
       expect(texte()).toContain('6+');
     });
@@ -512,7 +522,7 @@ describe('TurnAssistantComponent', () => {
     it('la défense totale n’a pas de jet : « Fin du tour » l’applique', async () => {
       await rendre();
 
-      await cliquer('Déf. totale');
+      await choisir('Ce qu’il fait', 'défense totale');
       expect(texte()).toContain('Pas d’attaque ce round');
 
       await cliquer('Fin du tour');
@@ -523,7 +533,7 @@ describe('TurnAssistantComponent', () => {
     it('la défense totale renonce à la cible visée', async () => {
       await viser();
 
-      await cliquer('Déf. totale');
+      await choisir('Ce qu’il fait', 'défense totale');
 
       expect(events.target).toEqual([null]);
     });
@@ -534,7 +544,9 @@ describe('TurnAssistantComponent', () => {
 
       // L'épée est prise d'office : les dégâts restent ceux d'un d6.
       expect(texte()).toContain('Épée');
-      expect(element.querySelector('[aria-label^="Grande hache"]')!.getAttribute('aria-pressed')).toBe('false');
+      await ouvrir('Arme');
+      expect(choixDuMenu('Grande hache').disabled).toBe(true);
+      expect(choixDuMenu('Grande hache').getAttribute('aria-checked')).toBe('false');
     });
   });
 
@@ -759,7 +771,7 @@ describe('TurnAssistantComponent', () => {
 
       expect(events.horde.at(-1)).toEqual(['pnj-2']);
       expect(texte()).toContain('d6M');
-      expect(texte()).toContain('Horde');
+      expect(texte()).toContain('En horde');
     });
   });
 
@@ -845,7 +857,7 @@ describe('TurnAssistantComponent', () => {
 
     it('un sorcier lance un sort au lieu d’attaquer : 2d6 + esprit + sorcier, et le premier jet paie le sort, armure comprise', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
 
       // 1er cercle : 5 points, +1 pour l'armure légère ; +2 esprit, +2 sorcier, Moyenne : il faut 5 aux dés.
       expect(texte()).toContain('6 pts de pouvoir');
@@ -862,7 +874,7 @@ describe('TurnAssistantComponent', () => {
 
     it('un sort qui blesse passe aux dégâts : d6, sans vigueur ni protection', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('Blesse');
       await saisirAttaque('7');
       await saisirDegats('4');
@@ -876,7 +888,7 @@ describe('TurnAssistantComponent', () => {
 
     it('un sort sur l’esprit retranche l’esprit de la cible', async () => {
       await viser({attacker: sorcier(), targetStats: cibleEsprit(3)});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('Sur l’esprit');
 
       // +2 +2 −3 : il faut 8 aux dés.
@@ -886,7 +898,7 @@ describe('TurnAssistantComponent', () => {
 
     it('un sort raté dépense le pouvoir ; vider la case avant de le valider le rend', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await saisirAttaque('3');
 
       expect(texte()).toContain('Le sort échoue');
@@ -896,7 +908,7 @@ describe('TurnAssistantComponent', () => {
 
     it('sans assez de pouvoir, le jet reste fermé', async () => {
       await viser({attacker: sorcier({pouvoir: 4})});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
 
       expect(texte()).toContain('Pas assez de pouvoir');
       expect(element.querySelector<HTMLInputElement>('input[aria-label^="Total des deux dés du sort"]')!.disabled).toBe(true);
@@ -904,7 +916,7 @@ describe('TurnAssistantComponent', () => {
 
     it('le 2e cercle coûte 10 points, et une condition en plus en retire 1', async () => {
       await viser({attacker: sorcier({surcoutArmure: 0})});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('2e cercle');
       expect(texte()).toContain('10 pts de pouvoir');
       expect(texte()).toContain('Difficile');
@@ -919,7 +931,7 @@ describe('TurnAssistantComponent', () => {
 
     it('un échec critique accepté se défait quand le total est retapé : le point d’héroïsme est repris', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       // « 2 » se lit comme un double 1 : le sort échoue, le héros peut en faire un échec critique.
       await saisirAttaque('2');
       await cliquer('Échec critique : gagner 1 point d’héroïsme');
@@ -936,7 +948,7 @@ describe('TurnAssistantComponent', () => {
 
     it('les dégâts du sort appliqués, sa case se fige : la vider ne rend pas le pouvoir et ne rouvre pas les dégâts', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('Blesse');
       await saisirAttaque('7');
       await saisirDegats('4');
@@ -954,8 +966,8 @@ describe('TurnAssistantComponent', () => {
 
     it('en défense totale, pas de sort : sa case reste fermée', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
-      await cliquer('Déf. totale');
+      await choisir('Ce qu’il fait', 'Lancer un sort');
+      await choisir('Ce qu’il fait', 'défense totale');
 
       expect(texte()).toContain('Pas de sort ce round');
       expect(element.querySelector('li[bol-tas-degats]')).toBeNull();
@@ -965,7 +977,7 @@ describe('TurnAssistantComponent', () => {
 
     it('la même carte qui rejoue au round suivant (elle avait retardé) repart d’un tour neuf : son sort n’est plus payé', async () => {
       await viser({attacker: sorcier(), round: 1});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('Blesse');
       await saisirAttaque('7');
       await saisirDegats('4');
@@ -976,7 +988,7 @@ describe('TurnAssistantComponent', () => {
 
       expect(texte()).not.toContain('· payé');
       expect(texte()).toContain('L’attaque');
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       expect(caseSort().disabled).toBe(false);
       await saisirAttaque('7');
       expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
@@ -987,7 +999,7 @@ describe('TurnAssistantComponent', () => {
       const hasard = vi.spyOn(Math, 'random').mockReturnValue(0);
       try {
         await viser({attacker: sorcier()});
-        await cliquer(/^ *Sort *null$/);
+        await choisir('Ce qu’il fait', 'Lancer un sort');
         await cliquer(desDuSort);
         expect(texte()).toContain('Le sort échoue');
         expect(events.ressources.map((r) => r.delta)).toEqual([-6]);
@@ -1008,7 +1020,7 @@ describe('TurnAssistantComponent', () => {
       const hasard = vi.spyOn(Math, 'random').mockReturnValue(0);
       try {
         await viser({attacker: sorcier({pouvoir: 6})});
-        await cliquer(/^ *Sort *null$/);
+        await choisir('Ce qu’il fait', 'Lancer un sort');
         await cliquer(desDuSort);
         // La page a enregistré le débit : il ne lui reste rien.
         fixture.componentRef.setInput('attacker', sorcier({pouvoir: 0}));
@@ -1024,7 +1036,7 @@ describe('TurnAssistantComponent', () => {
     it('changer d’adversaire après le jet du sort le remet à zéro, comme l’attaque : le sort lancé est perdu, un nouveau se paie', async () => {
       const autre = carte({key: 'pnj-8', kind: 'pnj', camp: 'adversaires', pivotId: 8, sourceId: '16', nom: 'Thurgal', joueur: null, heroisme: null});
       await viser({attacker: sorcier(), targets: [cible, autre]});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await cliquer('Blesse');
       await saisirAttaque('7');
       // La page renvoie la trace du sort payé, enregistrée dans l'état du combat.
@@ -1045,14 +1057,17 @@ describe('TurnAssistantComponent', () => {
       expect(events.removed).toEqual(['e-1']);
       expect(texte()).toContain('le sort lancé contre l’ancienne cible est perdu');
       // Il a coûté l'action : pas d'attaque à la place.
-      expect(bouton(/^ *Attaque *null$/).disabled).toBe(true);
+      await ouvrir('Ce qu’il fait');
+      expect(choixDuMenu('Attaquer').disabled).toBe(true);
+      document.querySelector<HTMLElement>('.cdk-overlay-backdrop')?.click();
+      await stable();
       await saisirAttaque('7');
       expect(events.ressources.map((r) => r.delta)).toEqual([-6, -6]);
     });
 
     it('le sort payé laisse une trace dans l’état du combat, et la vider la retire avec le remboursement', async () => {
       await viser({attacker: sorcier()});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await saisirAttaque('3');
 
       expect(events.nouveaux).toEqual([effetSortPaye('hero-1', 6, saisieSortParDefaut())]);
@@ -1069,7 +1084,10 @@ describe('TurnAssistantComponent', () => {
 
       expect(texte()).toContain('6 pts déjà payés ce tour-ci');
       expect(texte()).not.toContain('Pas assez de pouvoir');
-      expect(bouton(/^ *Attaque *null$/).disabled).toBe(true);
+      await ouvrir('Ce qu’il fait');
+      expect(choixDuMenu('Attaquer').disabled).toBe(true);
+      document.querySelector<HTMLElement>('.cdk-overlay-backdrop')?.click();
+      await stable();
       await saisirAttaque('7');
 
       expect(texte()).toContain('Le sort agit');
@@ -1108,25 +1126,24 @@ describe('TurnAssistantComponent', () => {
       await viser({attacker: sorcier()});
       fixture.componentInstance.choiceChanged.subscribe((c) => choix.push(c));
       const defense = () => [...element.querySelectorAll('bol-tas-attaquant .tas-tile')].find((t) => t.querySelector('span')?.textContent?.trim() === 'Défense')?.querySelector('b')?.textContent?.trim();
-      await cliquer('Offensive');
+      await choisir('Posture', 'Offensive');
       expect(choix.at(-1)?.posture?.slug).toBe('offensive');
       expect(defense()).toBe('0');
 
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
 
       expect(choix.at(-1)?.posture ?? null).toBeNull();
       expect(defense()).toBe('1');
-      expect(bouton('Défensive').getAttribute('aria-disabled')).toBe('true');
-      await cliquer('Défensive');
-      expect(choix.at(-1)?.posture ?? null).toBeNull();
+      // Pendant le sort, la phrase ne propose plus de posture.
+      expect(element.querySelector('.tas-phrase button[aria-label^="Posture"]')).toBeNull();
       // Revenu à l'attaque, sa posture compte de nouveau.
-      await cliquer(/^ *Attaque *null$/);
+      await choisir('Ce qu’il fait', 'Attaquer');
       expect(choix.at(-1)?.posture?.slug).toBe('offensive');
     });
 
     it('la trace d’une autre carte ne vaut rien pour ce tour', async () => {
       await viser({attacker: sorcier(), effets: [{...effetSortPaye('pnj-7', 6, saisieSortParDefaut()), id: 'e-1'}]});
-      await cliquer(/^ *Sort *null$/);
+      await choisir('Ce qu’il fait', 'Lancer un sort');
       await saisirAttaque('7');
 
       expect(events.ressources.map((r) => r.delta)).toEqual([-6]);

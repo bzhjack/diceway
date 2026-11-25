@@ -273,16 +273,16 @@
 
   .cc-body {
     display: grid;
-    grid-template-columns: 22rem 24.6rem minmax(0, 1fr);
+    grid-template-columns: 22rem minmax(0, 1fr);
     grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas:
-      'who post armes'
-      'chiffres post armes'
-      'vit post armes';
+      'who phrase'
+      'chiffres phrase'
+      'vit phrase';
     gap: 0.25rem 0;
     // Une hauteur fixe, celle de son contenu le plus chargé à cette largeur (toutes ses notes, une feinte retentée, une horde) : elle ne bouge
     // ni d'un combattant à l'autre, ni une fois le coup joué. Les paliers ci-dessous suivent les retours à la ligne de ce contenu.
-    min-height: 12.4rem;
+    min-height: 11rem;
     padding: 0.5rem 1.15rem 0.6rem 0.8rem;
   }
 
@@ -324,45 +324,12 @@
   }
 }
 
-@container (max-width: 82rem) {
-  :host(.cc--ligne) .cc-body {
-    grid-template-columns: 22rem minmax(0, 1fr);
-    grid-template-rows: auto auto auto minmax(0, 1fr);
-    grid-template-areas:
-      'who post'
-      'chiffres post'
-      'vit post'
-      'armes armes';
-    row-gap: 0.5rem;
-    min-height: 15.9rem;
-  }
-}
-
-@container (max-width: 72rem) {
-  :host(.cc--ligne) .cc-body {
-    min-height: 20.7rem;
-  }
-}
-
 @container (max-width: 64rem) {
   :host(.cc--ligne) .cc-body {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto minmax(0, 1fr);
-    grid-template-areas:
-      'who'
-      'chiffres'
-      'vit'
-      'post'
-      'armes';
-    min-height: 26.7rem;
-  }
-}
-
-@container (max-width: 44rem) {
-  :host(.cc--ligne) .cc-body {
-    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
-    grid-template-areas: 'who' 'chiffres' 'vit' 'post' 'armes';
+    grid-template-areas: 'who' 'chiffres' 'vit' 'phrase';
+    row-gap: 0.5rem;
     min-height: 0;
   }
 }

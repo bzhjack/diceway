@@ -44,12 +44,171 @@
     border-left: 1px dashed var(--dw-forge-bronze-edge);
   }
 
-  .tas-zone--post {
-    grid-area: post;
+  // Le coup, en phrase : toute la droite de la carte.
+  .tas-zone--phrase {
+    grid-area: phrase;
+    align-content: start;
+    gap: 0.7rem;
+    padding: 0.2rem 0 0 1.2rem;
   }
 
-  .tas-zone--armes {
-    grid-area: armes;
+  // La phrase : grande, lisible de loin ; les mots qui se changent en or, soulignés de pointillés, un chevron pour dire qu'ils s'ouvrent.
+  .tas-phrase {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.55rem;
+    margin: 0;
+    color: var(--dw-forge-bone);
+    font: 400 1.75rem/1.25 'Muse Display Harmony', 'Muse Sans', serif;
+  }
+
+  .tas-phrase-virgule {
+    margin-left: -0.45rem;
+  }
+
+  .tas-mot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.05rem 0.35rem 0.1rem 0.5rem;
+    border: 0;
+    border-bottom: 2px dashed color-mix(in srgb, var(--dw-color-legendary) 70%, transparent);
+    border-radius: 8px 8px 2px 2px;
+    background: color-mix(in srgb, var(--dw-color-legendary) 9%, transparent);
+    color: var(--dw-forge-gold);
+    font: inherit;
+    cursor: pointer;
+
+    .mat-icon {
+      width: 1.1em;
+      height: 1.1em;
+      font-size: 0.7em;
+      line-height: 1.6;
+      opacity: 0.75;
+    }
+
+    &:hover,
+    &[aria-expanded='true'] {
+      border-bottom-style: solid;
+      background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--dw-color-legendary);
+      outline-offset: 2px;
+    }
+  }
+
+  // Ce qui reste à choisir (« qui ? ») : en or plein, qui appelle le clic.
+  .tas-mot--attente {
+    border-bottom-style: solid;
+    background: var(--dw-color-legendary);
+    color: var(--dw-forge-ink);
+  }
+
+  // Un mot qui ne se change pas (une seule arme, le coup joué) : sans souligné ni chevron.
+  .tas-mot--fige {
+    border-bottom-color: transparent;
+    background: none;
+    color: var(--dw-forge-name);
+    font-weight: inherit;
+    cursor: default;
+  }
+
+  // Les précisions, sous la phrase : plus petites, en texte courant.
+  .tas-phrase-suite {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.4rem;
+    margin: 0;
+    color: var(--dw-forge-caption);
+    font-size: 0.85rem;
+  }
+
+  .tas-phrase-precision {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .tas-mot--petit {
+    font: 700 0.88rem/1.4 'Muse Sans', sans-serif;
+  }
+
+  // Une précision laissée par défaut (« aucune », « non ») : le mot se lit encore, mais sans attirer l'œil.
+  .tas-mot--neutre {
+    border-bottom-color: color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+    background: none;
+    color: var(--dw-forge-bone-dim);
+  }
+
+  .tas-phrase-degats {
+    color: var(--dw-forge-caption);
+    font: 700 0.95rem 'Muse Sans', sans-serif;
+  }
+
+  // Les menus des mots (rendus hors de la carte, mais dans `.tas-scope`) : chaque choix, son nom puis ce qu'il fait, en clair.
+  &.tas-menu {
+    min-width: 17rem;
+    max-width: 24rem;
+  }
+
+  .tas-menu-titre {
+    margin: 0;
+    padding: 0.5rem 1rem 0.3rem;
+    color: var(--dw-forge-caption);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .tas-menu-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.2rem 0;
+    line-height: 1.25;
+
+    b {
+      color: var(--dw-forge-name);
+      font-weight: 700;
+    }
+
+    small {
+      color: var(--dw-forge-caption);
+      font-size: 0.75rem;
+      white-space: normal;
+    }
+
+    em {
+      color: var(--dw-forge-gold);
+      font-style: normal;
+      font-weight: 800;
+    }
+  }
+
+  .tas-menu-item--ligne {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+
+    em {
+      margin-left: auto;
+    }
+  }
+
+  .tas-menu-arme {
+    display: grid;
+    place-items: center;
+    width: 1.4rem;
+    color: var(--dw-forge-gold);
+  }
+
+  .mat-mdc-menu-item[aria-checked='true'] {
+    background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
   }
 
   // En haut à droite de la carte, à côté de son rang : ses icônes rondes, puis « Fin du tour ».
@@ -595,39 +754,6 @@
     font-size: 0.62rem;
     font-weight: 800;
     line-height: 1;
-  }
-
-  // Quand les armes passent sous le reste : elles s'étalent sur un seul rang, le combat à deux armes au bout (la largeur est celle de la carte,
-  // conteneur de la ligne).
-  @container (max-width: 82rem) {
-    .tas-zone--armes {
-      grid-auto-flow: column;
-      justify-content: start;
-      align-items: end;
-      gap: 1.2rem;
-      padding: 0.4rem 0 0;
-      border-top: 1px dashed var(--dw-forge-bronze-edge);
-      border-left: 0;
-    }
-  }
-
-  // Et quand la posture y passe aussi : sa manœuvre à côté d'elle.
-  @container (max-width: 64rem) {
-    .tas-zone--post {
-      grid-auto-flow: column;
-      justify-content: start;
-      gap: 1.2rem;
-      padding: 0.4rem 0 0;
-      border-top: 1px dashed var(--dw-forge-bronze-edge);
-      border-left: 0;
-    }
-  }
-
-  @container (max-width: 44rem) {
-    .tas-zone--post,
-    .tas-zone--armes {
-      grid-auto-flow: row;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {

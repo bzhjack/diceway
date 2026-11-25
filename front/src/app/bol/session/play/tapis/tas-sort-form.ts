@@ -17,10 +17,6 @@ import {TurnFlowStore} from './turn-flow.store';
     <div class="tas-bloc" role="group" aria-labelledby="tas-sort-titre">
       <div class="tas-cap">
         <span id="tas-sort-titre">Sort</span>
-        <span class="tas-segm tas-segm--mini" role="group" aria-label="Ce qu’il fait de son action">
-          <button type="button" class="tas-seg" [attr.aria-pressed]="false" [disabled]="flow.attaqueEngagee()" (click)="loadout.setMode('attaque')"><b>Attaque</b></button>
-          <button type="button" class="tas-seg" [attr.aria-pressed]="true"><b>Sort</b></button>
-        </span>
         <em [matTooltip]="'Coût en points de pouvoir : ' + loadout.sortCoutDetail()">{{ loadout.sortCout().total }} pts de pouvoir</em>
       </div>
       <div class="tas-sortf" [class.tas-off]="flow.sortLance()" [attr.inert]="flow.sortLance() ? '' : null">

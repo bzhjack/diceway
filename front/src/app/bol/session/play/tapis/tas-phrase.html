@@ -1,0 +1,300 @@
+@if (flow.played(); as p) {
+  <!-- Le coup joué : la phrase, figée, jusqu'à la fin du tour -->
+  <p class="tas-phrase tas-phrase--jouee" aria-label="Le coup joué">
+    <span>{{ turn.card().nom }} a attaqué</span>
+    <b class="tas-mot tas-mot--fige">{{ p.target.nom }}</b>
+    @if (p.arme) {
+      <span>avec</span>
+      <b class="tas-mot tas-mot--fige">{{ p.arme }}</b>
+    }
+    <span class="tas-phrase-degats">{{ p.degats }}</span>
+  </p>
+  @if (p.options.length > 0) {
+    <p class="tas-phrase-suite tas-phrase-suite--jouee">{{ p.options.join(' · ') }}</p>
+  }
+} @else {
+  <p class="tas-phrase" role="group" [attr.aria-label]="'Le coup de ' + turn.card().nom">
+    <span class="tas-phrase-sujet">{{ turn.card().nom }}</span>
+    <button type="button" class="tas-mot" [matMenuTriggerFor]="mAction" [attr.aria-label]="'Ce qu’il fait : ' + action()">
+      {{ action() }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+    </button>
+
+    @if (!loadout.defenseTotale() && !loadout.sortMode()) {
+      <!-- Qui il vise : le menu dit les chances contre chacun -->
+      @if (turn.target(); as t) {
+        <button type="button" class="tas-mot" [matMenuTriggerFor]="mCible" [attr.aria-label]="'Cible : ' + t.nom + ', changer'">
+          {{ t.nom }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+        </button>
+      } @else {
+        <button type="button" class="tas-mot tas-mot--attente" [matMenuTriggerFor]="mCible" aria-label="Choisir sa cible">
+          qui ?<mat-icon aria-hidden="true">expand_more</mat-icon>
+        </button>
+      }
+
+      <!-- Avec quoi : son arme (un menu s'il en a plusieurs), ou ses dégâts s'il frappe sans arme -->
+      @if (loadout.rackArmes().length > 1) {
+        <span>avec</span>
+        <button type="button" class="tas-mot" [matMenuTriggerFor]="mArme" [attr.aria-label]="'Arme : ' + loadout.armeNom() + ', changer'">
+          {{ loadout.armeNom() }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+        </button>
+      } @else if (loadout.rackArmes().length === 1) {
+        <span>avec</span>
+        <b class="tas-mot tas-mot--fige">{{ loadout.armeNom() }}</b>
+      } @else {
+        <span>pour</span>
+        <b class="tas-mot tas-mot--fige">{{ turn.card().degats }}</b>
+      }
+
+      @if (echelle()) {
+        <span class="tas-phrase-virgule" aria-hidden="true">,</span>
+        <button type="button" class="tas-mot" [matMenuTriggerFor]="mPosture" [attr.aria-label]="'Posture : ' + posture() + ', changer'">
+          {{ posture() }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+        </button>
+      }
+    }
+  </p>
+
+  @if (loadout.defenseTotale()) {
+    <p class="tas-phrase-suite"><span class="tas-note">Pas d’attaque ce round : +2 en défense jusqu’à son prochain tour, appliqué par « Fin du tour ».</span></p>
+  } @else if (loadout.sortMode()) {
+    <!-- Un sorcier lance un sort au lieu d'attaquer : le sort se règle ici -->
+    <bol-tas-sort-form />
+  } @else {
+    <!-- Les précisions : seulement celles qui servent à ce combattant, avec cette arme -->
+    <div class="tas-phrase-suite">
+      @if (loadout.manoeuvres().length > 0) {
+        <span class="tas-phrase-precision">
+          <span>Manœuvre</span>
+          <button type="button" class="tas-mot tas-mot--petit" [class.tas-mot--neutre]="!manoeuvre()" [matMenuTriggerFor]="mManoeuvre">
+            @if (manoeuvre(); as m) {
+              {{ loadout.specialName(m) }}
+            } @else {
+              aucune
+            }
+            <mat-icon aria-hidden="true">expand_more</mat-icon>
+          </button>
+        </span>
+      }
+      @if (loadout.usefulCarrieres().length > 0) {
+        <span class="tas-phrase-precision">
+          <span>Carrière</span>
+          <button
+            type="button"
+            class="tas-mot tas-mot--petit"
+            [class.tas-mot--neutre]="!loadout.career()"
+            [matMenuTriggerFor]="mCarriere"
+            matTooltip="Le joueur décrit sa manœuvre ou sa feinte : le MJ ajoute le rang de la carrière à l’attaque ou aux dégâts, jamais aux deux."
+          >
+            @if (loadout.career(); as c) {
+              {{ c.label }} +{{ c.value }}
+            } @else {
+              aucune
+            }
+            <mat-icon aria-hidden="true">expand_more</mat-icon>
+          </button>
+          @if (loadout.career()) {
+            <button type="button" class="tas-mot tas-mot--petit" [matMenuTriggerFor]="mCarriereSur">
+              {{ loadout.careerOn() === 'attaque' ? 'pour toucher' : 'aux dégâts' }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+            </button>
+          }
+        </span>
+      }
+      @if (turn.isHero() && loadout.dualPossible() && loadout.dualChoices().length > 0 && turn.hordeMates().length === 0) {
+        <span class="tas-phrase-precision">
+          <span>Deux armes</span>
+          <button type="button" class="tas-mot tas-mot--petit" [class.tas-mot--neutre]="!loadout.isDualWieldSelected()" [matMenuTriggerFor]="mDeux">
+            {{ deuxArmes() ?? 'non' }}<mat-icon aria-hidden="true">expand_more</mat-icon>
+          </button>
+        </span>
+      }
+
+      <!-- Ce qui ne sert qu'à certaines armes : bagarre, deux mains, non létal, mêlée ou tir, portée -->
+      @if (loadout.canBrawl()) {
+        <button type="button" class="tas-chip" [attr.aria-pressed]="loadout.brawl()" matTooltip="Au choix du MJ (livre p. 62) : la vigueur remplace l'agilité dans le bonus d'attaque." (click)="loadout.toggleBrawl()">Bagarre</button>
+      }
+      @if (loadout.polyvalente()) {
+        <button
+          type="button"
+          class="tas-chip"
+          [attr.aria-pressed]="loadout.deuxMains()"
+          [attr.aria-disabled]="loadout.deuxMainsInterdit() !== null || null"
+          [matTooltip]="loadout.deuxMainsInterdit() ?? 'Arme maniée à une ou deux mains (Mythic+) : à deux mains, elle frappe avec son second dé.'"
+          (click)="loadout.toggleDeuxMains()"
+        >
+          À deux mains <em>{{ loadout.degatsDeuxMains() }}</em>
+        </button>
+      }
+      @if (loadout.canNonLetal()) {
+        <button type="button" class="tas-chip" [attr.aria-pressed]="loadout.nonLetal()" matTooltip="Au choix (livre p. 50) : la cible ne passe pas sous 0, elle tombe assommée." (click)="loadout.toggleNonLetal()">Non létal</button>
+      }
+      @if (loadout.ignoreBouclier()) {
+        <span class="tas-chip" matTooltip="Livre p. 50 : ni le petit ni le grand bouclier de la cible ne jouent contre ce coup.">Ignore les boucliers</span>
+      }
+      @if (loadout.rechargeNote(); as note) {
+        <span class="tas-chip" [matTooltip]="note">Se recharge</span>
+      } @else if (loadout.rechargementDuTir(); as r) {
+        <span class="tas-chip" matTooltip="Après le tir, elle se recharge : elle ne tire plus avant que ces rounds soient passés.">Rechargement <em>{{ r.rounds }} {{ r.rounds > 1 ? 'rounds' : 'round' }}</em></span>
+      }
+      @if (turn.attacker()?.attaque === null && loadout.distanceModes().length > 1) {
+        <span class="tas-segm tas-segm--mini" role="group" aria-label="Distance">
+          <button type="button" class="tas-seg" [attr.aria-pressed]="!loadout.useTir()" (click)="loadout.useTir.set(false)"><b>Mêlée</b></button>
+          <button type="button" class="tas-seg" [attr.aria-pressed]="loadout.useTir()" (click)="loadout.useTir.set(true)"><b>Tir</b></button>
+        </span>
+      }
+      @if (loadout.range(); as r) {
+        <!-- Facteur de portée : la portée de l'arme est celle du bout portant, chaque multiple au-delà descend d'un cran (livre p. 62) -->
+        <span class="tas-range" role="group" aria-label="Portée">
+          <button type="button" class="tas-mini" aria-label="Plus près" [disabled]="loadout.rangeIndex() === 0" (click)="loadout.stepRange(-1)">‹</button>
+          <span class="tas-chip" aria-live="polite" matTooltip="La portée de l'arme est celle du bout portant ; chaque multiple au-delà descend d'un cran : courte, moyenne, longue…">
+            {{ r.label }}{{ r.reach ? ', ' + r.reach : '' }} <em>{{ r.text }}</em>
+          </span>
+          <button type="button" class="tas-mini" aria-label="Plus loin" [disabled]="loadout.rangeIndex() === loadout.rangeFactors.length - 1" (click)="loadout.stepRange(1)">›</button>
+        </span>
+      }
+      @if (turn.isHero() && !loadout.dualPossible() && loadout.rackArmes().length > 1) {
+        <span class="tas-note" matTooltip="Il lui faut deux vraies armes légères ou moyennes, tenues d’une main.">Deux armes : il en faut deux légères ou moyennes</span>
+      }
+    </div>
+
+    @if (turn.hordeMates().length > 0) {
+      <!-- Règle de horde (livre p. 132) : les piétailles qui attaquent la même cible ne font qu'une attaque -->
+      <div class="tas-phrase-suite" role="group" aria-labelledby="tas-horde">
+        <span class="tas-phrase-precision">
+          <span id="tas-horde">En horde</span>
+          <em class="tas-note">{{ loadout.hordeSize() > 0 ? 'une seule attaque à ' + loadout.hordeSize() + ' : +' + loadout.hordeSize() + ', ' + loadout.hordeDegats : 'qui attaque avec lui ?' }}</em>
+        </span>
+        @for (m of loadout.hordeChips(); track m.card.key) {
+          <button type="button" class="tas-chip" [attr.aria-pressed]="loadout.horde().includes(m.card)" [attr.aria-label]="m.card.nom" [matTooltip]="m.card.nom" (click)="loadout.toggleHordeMate(m.card.key)">{{ m.court }}</button>
+        }
+      </div>
+    }
+    @if (attack.feintRetry()) {
+      <p class="tas-phrase-suite"><span class="tas-note">Feinte déjà tentée contre {{ turn.target()?.nom }} : la même ne marche pas deux fois.</span></p>
+    }
+  }
+}
+
+<!-- Les menus des mots : chaque choix dit en clair ce qu'il fait -->
+<mat-menu #mAction="matMenu" class="tas-scope tas-menu">
+  <!-- Un sort lancé a coûté l'action : plus d'attaque à la place -->
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="!loadout.defenseTotale() && !loadout.sortMode()" [disabled]="loadout.sortMode() && flow.attaqueEngagee()" (click)="attaquer()">
+    <span class="tas-menu-item"><b>Attaquer</b><small>un jet pour toucher, puis les dégâts</small></span>
+  </button>
+  @if (loadout.canCast()) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.sortMode()" [disabled]="flow.attaqueEngagee()" (click)="lancerUnSort()">
+      <span class="tas-menu-item"><b>Lancer un sort</b><small>esprit + sorcier, au prix de points de pouvoir</small></span>
+    </button>
+  }
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.defenseTotale()" [disabled]="flow.attaqueEngagee()" (click)="loadout.selectOption('total')">
+    <span class="tas-menu-item"><b>Se mettre en défense totale</b><small>pas d’attaque ; +2 en défense jusqu’à son prochain tour</small></span>
+  </button>
+  <button mat-menu-item [disabled]="flow.attaqueEngagee()" (click)="turn.delayRequested.emit()">
+    <span class="tas-menu-item"><b>Retarder son action</b><small>il jouera à la fin du round</small></span>
+  </button>
+  @if (turn.canRescue()) {
+    <button mat-menu-item [disabled]="flow.attaqueEngagee()" (click)="turn.rescueRequested.emit()">
+      <span class="tas-menu-item"><b>Secourir un héros mourant</b><small>le stabiliser, à la place de l’attaque ; termine le tour</small></span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #mCible="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Qui {{ turn.card().nom }} attaque-t-il ?</p>
+  @for (c of cibles(); track c.card.key) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="turn.target()?.key === c.card.key" (click)="choisirCible(c.card)">
+      <span class="tas-menu-item tas-menu-item--ligne">
+        <b>{{ c.nom }}</b>
+        @if (c.odds) {
+          <em>{{ c.odds }}</em>
+        }
+      </span>
+    </button>
+  } @empty {
+    <p class="tas-menu-titre">Personne à attaquer.</p>
+  }
+</mat-menu>
+
+<mat-menu #mArme="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Avec quoi frappe-t-il ?</p>
+  @for (a of loadout.rackArmes(); track a.id) {
+    @let rang = loadout.armeRang(a);
+    <button
+      mat-menu-item
+      role="menuitemradio"
+      [attr.aria-checked]="rang !== null"
+      [disabled]="loadout.armeInterdite(a)"
+      [matTooltip]="loadout.armeHint(a)"
+      matTooltipPosition="right"
+      (click)="loadout.pickArme(a)"
+    >
+      <span class="tas-menu-item tas-menu-item--ligne">
+        <span class="tas-menu-arme" aria-hidden="true"><dw-arme-icon [nom]="a.arme?.arme" /></span>
+        <b>{{ a.arme?.arme }}</b>
+        @if (loadout.isDualWieldSelected() && rang !== null) {
+          <small>{{ rang === 1 ? 'main principale' : 'seconde main' }}</small>
+        }
+        @if (a.arme?.degats) {
+          <em>{{ loadout.armeDegats(a) }}</em>
+        }
+      </span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #mPosture="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Sa posture ce round</p>
+  @for (c of postures(); track c.slug) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.posturePressed() === c.slug" [disabled]="loadout.postureFermee(c.slug)" (click)="choisirPosture(c)">
+      <span class="tas-menu-item">
+        <b>{{ c.slug === 'none' ? 'Sans posture' : c.name }}</b>
+        <small>{{ enClair(c) }}{{ c.slug === 'intrepid' ? ' ; perd son bouclier ce round' : '' }}</small>
+      </span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #mManoeuvre="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Une manœuvre ?</p>
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="!manoeuvre()" (click)="sansManoeuvre()">
+    <span class="tas-menu-item"><b>Aucune</b><small>une attaque simple</small></span>
+  </button>
+  @for (o of loadout.manoeuvres(); track o.slug) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="manoeuvre()?.slug === o.slug" [disabled]="loadout.sansPosture()" (click)="choisirManoeuvre(o.slug)">
+      <span class="tas-menu-item"><b>{{ loadout.specialName(o) }}</b><small>{{ o.note }}</small></span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #mCarriere="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Une carrière qui sert le coup ?</p>
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="!loadout.career()" (click)="choisirCarriere(null)">
+    <span class="tas-menu-item"><b>Aucune</b></span>
+  </button>
+  @for (c of loadout.usefulCarrieres(); track c.label) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.career()?.label === c.label" (click)="choisirCarriere(c.label)">
+      <span class="tas-menu-item tas-menu-item--ligne"><b>{{ c.label }}</b><em>+{{ c.value }}</em></span>
+    </button>
+  }
+</mat-menu>
+
+<mat-menu #mCarriereSur="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Son rang s’ajoute…</p>
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.careerOn() === 'attaque'" (click)="loadout.careerOn.set('attaque')">
+    <span class="tas-menu-item"><b>pour toucher</b><small>au jet d’attaque</small></span>
+  </button>
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.careerOn() === 'degats'" (click)="loadout.careerOn.set('degats')">
+    <span class="tas-menu-item"><b>aux dégâts</b><small>si le coup porte</small></span>
+  </button>
+</mat-menu>
+
+<mat-menu #mDeux="matMenu" class="tas-scope tas-menu">
+  <p class="tas-menu-titre">Le combat à deux armes</p>
+  <button mat-menu-item role="menuitemradio" [attr.aria-checked]="!loadout.isDualWieldSelected()" (click)="loadout.setDual(null)">
+    <span class="tas-menu-item"><b>Non</b><small>une seule arme</small></span>
+  </button>
+  @for (o of loadout.dualChoices(); track o.slug) {
+    <button mat-menu-item role="menuitemradio" [attr.aria-checked]="loadout.effectiveSpecial()?.slug === o.slug" [disabled]="o.interdit" (click)="loadout.setDual(o.slug)">
+      <span class="tas-menu-item"><b>{{ o.name }}</b><small>{{ o.hint }}</small></span>
+    </button>
+  }
+</mat-menu>

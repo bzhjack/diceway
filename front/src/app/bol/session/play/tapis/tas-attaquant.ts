@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, DestroyRef, effect, ElementRef, inje
 import {A11yModule} from '@angular/cdk/a11y';
 import {CdkConnectedOverlay, CdkOverlayOrigin} from '@angular/cdk/overlay';
 import {CombattantCarteComponent} from './combattant-carte';
-import {DwArmeIconComponent} from '../../../shared/arme/arme-icon';
 import {DwPopoverDirective} from '../../../../shared/popover/popover.directive';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {EffectsListComponent} from './effects-list';
@@ -13,7 +12,7 @@ import {RideauEtat, RideauRythme, SceneCarton} from '../../models/theatre.model'
 import {RideauComponent} from '../theatre/rideau';
 import {PointsStepperComponent} from './points-stepper';
 import {DeFoiComponent} from './de-foi';
-import {TasSortFormComponent} from './tas-sort-form';
+import {TasPhraseComponent} from './tas-phrase';
 import {TurnContextStore} from './turn-context.store';
 import {TurnLoadoutStore} from './turn-loadout.store';
 import {TurnAttackStore} from './turn-attack.store';
@@ -25,10 +24,10 @@ const RYTHME_PASSAGE: RideauRythme = {fondu: 800, effacement: 150, ouverture: 10
 /** Combien de temps le nom de celui qui joue reste à l'écran. */
 const NOM_TENUE_MS = 700;
 
-/** Qui joue : une ligne lue de gauche à droite, sans popover pour préparer le coup — sa vie et ses points, ses chiffres, ce que dit le MJ, sa posture, ses armes, puis ce qu'il peut faire au lieu d'attaquer et la fin de son tour. */
+/** Qui joue : une ligne lue de gauche à droite — sa vie et ses points, ses chiffres, puis son coup écrit comme une phrase (`bol-tas-phrase`), sa fiche, ses effets et la fin de son tour. */
 @Component({
   selector: 'bol-tas-attaquant',
-  imports: [RideauComponent, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, DwArmeIconComponent, DwValueStepperComponent, DwPopoverDirective, CombattantCarteComponent, EffectsListComponent, PointsStepperComponent, DeFoiComponent, TasSortFormComponent],
+  imports: [RideauComponent, A11yModule, CdkConnectedOverlay, CdkOverlayOrigin, MatButtonModule, MatIconModule, MatTooltipModule, DwValueStepperComponent, DwPopoverDirective, CombattantCarteComponent, EffectsListComponent, PointsStepperComponent, DeFoiComponent, TasPhraseComponent],
   templateUrl: './tas-attaquant.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

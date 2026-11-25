@@ -9,6 +9,10 @@ export interface PostureChoice {
   readonly name: string;
   readonly effect: string;
   readonly hint: string;
+  /** Ce qu'elle ajoute au jet d'attaque ; `null` : pas d'attaque (la défense totale). */
+  readonly attaque: number | null;
+  /** Ce qu'elle ajoute à sa défense jusqu'à son prochain tour. */
+  readonly defense: number;
 }
 
 /** Un mode du combat à deux armes, et s'il est interdit pour l'instant. */
